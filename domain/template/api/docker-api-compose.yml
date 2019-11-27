@@ -1,0 +1,10 @@
+version: '3.7'
+
+services:
+
+  api:
+    image: erp:${{{param_api_tag}}}
+    container_name: erp
+    ports:
+      - ${{{param_api_host_port}}}:${{{param_api_container_port}}}
+    restart: always
