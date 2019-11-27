@@ -1,0 +1,7 @@
+mysql --database=erp --host=localhost --port=3306 --user=root --password=sasa -vvv < D:\Developer\JavaProject\erp\_temp\db\all_in_one.sql > local_upgrade_db.py.log
+
+
+mysql --host=localhost --port=3306 --user=root --password=sasa -e "drop database if exists erp; create database if not exists erp default charset utf8 collate utf8_general_ci;" && mysqldump erp_bak --host=localhost --port=3306 --user=root --password=sasa | mysql --database=erp --host=localhost --port=3306 --user=root --password=sasa
+
+
+mysql --database=erp --host=localhost --port=3306 --user=root --password=sasa -e "update release_config set config_value='110' where config_key='Version';update release_config set config_value=Now() where config_key='BuildDate'"

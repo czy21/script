@@ -1,0 +1,5 @@
+FROM openjdk:11
+VOLUME /tmp
+ARG jar_file
+ADD ${jar_file} app.jar
+ENTRYPOINT ["java","-jar","/app.jar"]
