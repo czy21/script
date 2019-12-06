@@ -1,4 +1,4 @@
-From openjdk:11-jdk-alpine
+From openjdk:11.0.4-jdk-slim
 VOLUME /home/erp
 ARG jar
 COPY ${jar} /home/erp/api.jar

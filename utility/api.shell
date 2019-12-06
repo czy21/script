@@ -1,8 +1,7 @@
  # 打包api
- sudo docker run --rm -u gradle -v /home/bruce/erp/code/api/:/home/gradle/project -v /home/bruce/init.gradle:/home/gradle/.gradle/init.gradle -w /home/gradle/project/portal/ gradle:jdk11 gradle clean build
-
+ sudo docker run --rm -u gradle -v "$PWD"/code/api/:/home/gradle/project -v "$HOME"/init.gradle:/home/gradle/.gradle/init.gradle -w /home/gradle/project/ gradle:jdk11 gradle clean build -b portal/build.gradle
  #构建docker镜像
- sudo docker build -t czy/erp .
+ sudo docker build --tag erp:1.0.0 --file script/domain/template/api/Dockerfile --build-arg jar=code/api/portal/build/libs/portal.jar .
 
  #运行api
  sudo docker run -d -p 8075:8075 --name=erp --net=host czy/erp
