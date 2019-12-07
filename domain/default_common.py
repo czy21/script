@@ -17,3 +17,11 @@ param_main_db_mongo_output_file_name = ""
 # mssql
 param_main_db_mssql_file_path = ""
 param_main_db_mssql_output_file_name = ""
+
+# api
+param_api_extra_config_template_name = ""
+param_tmp_api_extra_config_template_name = ""
+param_api_file_name = "api.jar"
+param_api_yml_override_template_name = ""
+param_api_root_project_path = ""
+param_api_output_path = path_default.output_api
