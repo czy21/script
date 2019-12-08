@@ -25,3 +25,8 @@ param_api_file_name = "api.jar"
 param_api_yml_override_template_name = ""
 param_api_root_project_path = ""
 param_api_output_path = path_default.output_api
+param_injected = {}
+
+
+def getParams():
+    return dict({k: v for k, v in globals().items() if isinstance(v, str) and k.startswith("param")}, **param_injected)

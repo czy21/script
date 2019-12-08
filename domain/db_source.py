@@ -12,9 +12,6 @@ from script.utility import path, template
 
 init(autoreset=True)
 
-commonVars = {k: v for k, v in vars(common).items()
-              if isinstance(v, str) and k.startswith("param")}
-
 
 # assemble source sql files to target file
 def assemble_sql(s_path, t_file_name, db_meta, file_suffix):
@@ -28,7 +25,7 @@ def assemble_sql(s_path, t_file_name, db_meta, file_suffix):
             with io.open(s, "r", encoding="utf-8", newline="\n") as current_sql_file:
                 t_file.write(
                     template.StringTemplate(current_sql_file.read() + "\n")
-                        .safe_substitute(dict(db_meta.self["substitution"], **commonVars)))
+                        .safe_substitute(dict(db_meta.self["substitution"], **common.getParams())))
             t_file.write(u'{}'.format(footer.safe_substitute(file_path=s) + "\n\n"))
 
 
