@@ -7,6 +7,8 @@ from script.domain import default_common as common
 from script.utility import template
 
 
+tmp_api_extra_config=""
+
 def build_extra_config():
     with io.open(common.param_api_extra_config_template_name, "r", encoding="utf-8", newline="\n") as extra_config_template:
         tmp_api_extra_config = Path(common.path_default.output_tmp).resolve().joinpath(
@@ -15,4 +17,10 @@ def build_extra_config():
             tmp_output.write(template.StringTemplate(extra_config_template.read() + "\n")
                              .safe_substitute(common.getParams()))
 
-# def build_override_yml():
+
+def build_override_yml():
+    print(build_override_yml.__name__)
+
+
+def build_api():
+    print(build_api.__name__)
