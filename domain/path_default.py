@@ -18,6 +18,7 @@ project_db_create_version = Path(project_db_create).resolve().joinpath("2_versio
 
 # child dir of output
 output_api = Path(output).resolve().joinpath("api").as_posix()
+output_api_resource = Path(output_api).resolve().joinpath("resources").as_posix()
 output_web = Path(output).resolve().joinpath("web").as_posix()
 output_app = Path(output).resolve().joinpath("app").as_posix()
 output_db = Path(output).resolve().joinpath("db").as_posix()
@@ -33,5 +34,5 @@ def mkdir(path):
             Path(p).mkdir(parents=True)
 
 
-paths = [output_tmp, output_api, output_web, output_app, output_db_bak, output_db_all_in_one]
+paths = [output_tmp, output_api_resource, output_web, output_app, output_db_bak, output_db_all_in_one]
 mkdir(paths)
