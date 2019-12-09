@@ -3,10 +3,12 @@ import io
 import os
 from pathlib import Path
 
-from colorama import Fore
+from colorama import Fore, init
 
 from script.domain import default_common as common
 from script.utility import template
+
+init(autoreset=True)
 
 
 def build_by_template(template_name, output_path):
@@ -29,11 +31,10 @@ def build_override_yml():
 
 
 def build_api():
-    print(build_api.__name__)
     output_extra_config_name = build_extra_config()
-    command = "gradle clean build " \
+    command = "gradle clean build" \
               " --build-file " + Path(common.param_api_root_project_path).joinpath("build.gradle").as_posix() + \
               " --project-prop extraConfig=" + output_extra_config_name
-    print(Fore.CYAN + "building => " + Fore.WHITE + command)
+    print(Fore.CYAN + build_api.__name__ + " => " + Fore.WHITE + command)
     os.system(command)
     build_override_yml()

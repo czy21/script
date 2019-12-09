@@ -5,3 +5,6 @@
 
  #运行api
  sudo docker run -d -p 8075:8075 --name=erp --net=host czy/erp
+
+
+ sudo docker images | grep erp | awk '{print $3}' | xargs sudo docker rmi
