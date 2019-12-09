@@ -25,7 +25,7 @@ def assemble_sql(s_path, t_file_name, db_meta, file_suffix):
             with io.open(s, "r", encoding="utf-8", newline="\n") as current_sql_file:
                 t_file.write(
                     template.StringTemplate(current_sql_file.read() + "\n")
-                        .safe_substitute(dict(db_meta.self["substitution"], **common.getParams())))
+                        .safe_substitute(dict(db_meta.self["substitution"], **common.get_params())))
             t_file.write(u'{}'.format(footer.safe_substitute(file_path=s) + "\n\n"))
 
 
@@ -41,17 +41,17 @@ def filter_execution(iterator):
 # execute import sql file
 def upgrade_mysql():
     command = recreate_mysql_command(common.param_main_db_host,
-                                     common.param_main_db_port,
-                                     common.param_main_db_user,
-                                     common.param_main_db_pass,
+                                     common.param_main_db_mysql_port,
+                                     common.param_main_db_mysql_user,
+                                     common.param_main_db_mysql_pass,
                                      common.param_main_db_name) + \
               " && mysql" \
               " --default-character-set=utf8" \
               " --database=" + common.param_main_db_name + \
               " --host=" + common.param_main_db_host + \
-              " --port=" + common.param_main_db_port + \
-              " --user=" + common.param_main_db_user + \
-              " --password=" + common.param_main_db_pass + \
+              " --port=" + common.param_main_db_mysql_port + \
+              " --user=" + common.param_main_db_mysql_user + \
+              " --password=" + common.param_main_db_mysql_pass + \
               " -N < " + common.param_main_db_mysql_output_file_name
     print(Fore.CYAN + upgrade_mysql.__name__ + " => " + Fore.WHITE + command)
     callback = filter_execution(os.popen(command).readlines())
@@ -64,23 +64,23 @@ def upgrade_mysql():
 # backup db
 def backup_mysql():
     command = recreate_mysql_command(common.param_main_db_host,
-                                     common.param_main_db_port,
-                                     common.param_main_db_user,
-                                     common.param_main_db_pass,
+                                     common.param_main_db_mysql_port,
+                                     common.param_main_db_mysql_user,
+                                     common.param_main_db_mysql_pass,
                                      common.param_main_db_bak_name) + \
               " && mysqldump " + common.param_main_db_name + \
               " --default-character-set=utf8" \
               " --host=" + common.param_main_db_host + \
-              " --port=" + common.param_main_db_port + \
-              " --user=" + common.param_main_db_user + \
-              " --password=" + common.param_main_db_pass + \
+              " --port=" + common.param_main_db_mysql_port + \
+              " --user=" + common.param_main_db_mysql_user + \
+              " --password=" + common.param_main_db_mysql_pass + \
               "| mysql " \
               " --default-character-set=utf8" \
               " --database=" + common.param_main_db_bak_name + \
               " --host=" + common.param_main_db_host + \
-              " --port=" + common.param_main_db_port + \
-              " --user=" + common.param_main_db_user + \
-              " --password=" + common.param_main_db_pass
+              " --port=" + common.param_main_db_mysql_port + \
+              " --user=" + common.param_main_db_mysql_user + \
+              " --password=" + common.param_main_db_mysql_pass
     print(Fore.CYAN + "restoring => " + Fore.WHITE + command)
     os.system(command)
 
@@ -98,9 +98,9 @@ def recreate_mysql_command(host, port, user, password, db_name):
 # recreate target db
 def recreate_mysql():
     command = recreate_mysql_command(common.param_main_db_host,
-                                     common.param_main_db_port,
-                                     common.param_main_db_user,
-                                     common.param_main_db_pass,
+                                     common.param_main_db_mysql_port,
+                                     common.param_main_db_mysql_user,
+                                     common.param_main_db_mysql_pass,
                                      common.param_main_db_name)
     print(Fore.CYAN + recreate_mysql.__name__ + " => " + Fore.WHITE + command)
     os.system(command)

@@ -3,24 +3,37 @@ import io
 import os
 from pathlib import Path
 
+from colorama import Fore
+
 from script.domain import default_common as common
 from script.utility import template
 
 
-tmp_api_extra_config=""
+def build_by_template(template_name, output_path):
+    output_name = Path(output_path).resolve().joinpath(os.path.basename(template_name)).as_posix()
+    with io.open(template_name, "r", encoding="utf-8", newline="\n") as source_template:
+        with io.open(output_name, "w+", encoding="utf-8", newline="\n") as target_output:
+            target_output.write(template.StringTemplate(source_template.read() + "\n")
+                                .safe_substitute(common.get_params()))
+    return output_name
+
 
 def build_extra_config():
-    with io.open(common.param_api_extra_config_template_name, "r", encoding="utf-8", newline="\n") as extra_config_template:
-        tmp_api_extra_config = Path(common.path_default.output_tmp).resolve().joinpath(
-            os.path.basename(common.param_api_extra_config_template_name)).as_posix()
-        with io.open(tmp_api_extra_config, "w+", encoding="utf-8", newline="\n") as tmp_output:
-            tmp_output.write(template.StringTemplate(extra_config_template.read() + "\n")
-                             .safe_substitute(common.getParams()))
+    print(Fore.CYAN + build_extra_config.__name__)
+    return build_by_template(common.param_api_extra_config_template_name, common.path_default.output_tmp)
 
 
 def build_override_yml():
-    print(build_override_yml.__name__)
+    print(Fore.CYAN + build_override_yml.__name__)
+    return build_by_template(common.param_api_yml_override_template_name, common.param_api_output_resource_path)
 
 
 def build_api():
     print(build_api.__name__)
+    output_extra_config_name = build_extra_config()
+    command = "gradle clean build " \
+              " --build-file " + Path(common.param_api_root_project_path).joinpath("build.gradle").as_posix() + \
+              " --project-prop extraConfig=" + output_extra_config_name
+    print(Fore.CYAN + "building => " + Fore.WHITE + command)
+    os.system(command)
+    build_override_yml()
