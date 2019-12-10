@@ -1,0 +1,13 @@
+version: '3.7'
+
+services:
+
+  mongo:
+    image: jenkins/jenkins:lts-centos
+    container_name: jenkins
+    ports:
+      - 8090:8080
+      - 50000:50000
+    volumes:
+      - /data/volumes/jenkins/:/var/jenkins_home/
+    restart: always
