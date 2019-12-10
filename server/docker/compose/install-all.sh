@@ -1,22 +1,26 @@
 #!/usr/bin/env bash
 
-# ./install-all.sh user@host -upload
+# $1: user@host
+# $2: --upload | --exec
+# $3: --config
+
+# ./install-all.sh user@host --upload --all
 
 case "$2" in
-        -upload)
+        --upload)
         scp -r ././../compose/ $1:
-        ssh $1 '$HOME/compose/install-all.sh cent_a -exec;'
+        ssh $1 '$HOME/compose/install-all.sh cent_a --exec '$3';'
         ;;
-        -exec)
+        --exec)
         for t in `ls -ld $HOME/compose/* | grep "^d" | awk '{print $9}'`
         do
           config_file=${t}/config.sh
-          if [ -f ${config_file} ]; then
+          if [[ -f ${config_file} ]] && [[ $3 == '--config' ]]; then
               echo -e "\033[32m executing => ${config_file}\n\033[0m"
               sudo ${config_file}
           fi
           compose_file=${t}/docker-compose.yml
-          if [ -f ${compose_file} ];then
+          if [[ -f ${compose_file} ]];then
               echo -e "\033[32m starting => ${compose_file}\n\033[0m"
               sudo docker-compose -f ${compose_file} up -d
           fi
