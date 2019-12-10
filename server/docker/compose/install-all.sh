@@ -12,12 +12,12 @@ case "$2" in
         do
           config_file=${t}/config.sh
           if [ -f ${config_file} ]; then
-              echo -e "\033[32mexecuting => ${config_file}\n\033[0m"
+              echo -e "\033[32m executing => ${config_file}\n\033[0m"
               sudo ${config_file}
           fi
           compose_file=${t}/docker-compose.yml
           if [ -f ${compose_file} ];then
-              echo -e "\033[32mstarting => ${compose_file}\n\033[0m"
+              echo -e "\033[32m starting => ${compose_file}\n\033[0m"
               sudo docker-compose -f ${compose_file} up -d
           fi
         done
