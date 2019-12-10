@@ -5,20 +5,25 @@
 case "$2" in
         -upload)
         scp -r ././../compose/ $1:
-        ssh $1 ' ./compose/install-all.sh cent_a -exec;'
+        ssh $1 '$HOME/compose/install-all.sh cent_a -exec;'
         ;;
         -exec)
-        for tar_dir in `ls compose`
+        for t in `ls -ld $HOME/compose/* | grep "^d" | awk '{print $9}'`
         do
-          if [ -d compose/${tar_dir} ]
-          then
-          sudo ./compose/${tar_dir}/config.sh
-          sudo docker-compose -f compose/${tar_dir}/docker-compose.yml up -d
+          config_file=${t}/config.sh
+          if [ -f ${config_file} ]; then
+              echo -e "\033[32mexecuting => ${config_file}\n\033[0m"
+              sudo ${config_file}
+          fi
+          compose_file=${t}/docker-compose.yml
+          if [ -f ${compose_file} ];then
+              echo -e "\033[32mstarting => ${compose_file}\n\033[0m"
+              sudo docker-compose -f ${compose_file} up -d
           fi
         done
         rm -rf compose
         ;;
         *)
-        echo -e "\033[40;33m unknow input param \033[0m"
+        echo -e "\033[40;33m un_know input param \033[0m"
         ;;
 esac
