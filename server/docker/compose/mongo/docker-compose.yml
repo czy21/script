@@ -3,7 +3,7 @@ version: '3.7'
 services:
 
   mongo:
-    image: mongo:4.0
+    image: mongo:4.2.1
     container_name: mongo
     ports:
       - 27017:27017
