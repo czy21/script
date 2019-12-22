@@ -2,14 +2,13 @@
 
 set -e
 
-local_ip=$(ip addr | grep 'state UP' -A2 | tail -n1 | awk '{print $2}' | cut -f1 -d '/')
 sudo mkdir -p /etc/docker
 sudo mkdir -p /data/config/ /data/volumes/
-sudo bash -c 'echo -e "
+sudo tee /etc/docker/daemon.json <<-'EOF'
 {
-  \"registry-mirrors\": [\"https://idyylogn.mirror.aliyuncs.com\"],
-  \"insecure-registries\":[\"'$local_ip'\"]
-}" > /etc/docker/daemon.json'
+  "registry-mirrors": ["https://idyylogn.mirror.aliyuncs.com"]
+}
+EOF
 sudo yum install -y yum-utils device-mapper-persistent-data lvm2
 sudo yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
 sudo yum makecache fast
