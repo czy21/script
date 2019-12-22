@@ -3,10 +3,13 @@ version: '3.7'
 services:
 
   mssql:
-    image: mcr.microsoft.com/mssql/server:2019-latest
+    image: registry.cn-shenzhen.aliyuncs.com/czy-registry/mssql:2019-latest
     container_name: mssql
     ports:
       - 1433:1433
+    volumes:
+      - /data/volumes/mssql/:/var/opt/mssql/
+    user: root
     environment:
       - ACCEPT_EULA=Y
-      - SA_PASSWORD=***REMOVED***
+      - MSSQL_SA_PASSWORD=***REMOVED***
