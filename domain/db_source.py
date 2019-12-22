@@ -46,7 +46,7 @@ def upgrade_mysql():
                                      common.param_main_db_mysql_pass,
                                      common.param_main_db_name) + \
               " && mysql" \
-              " --default-character-set=utf8" \
+              " --default-character-set=utf8mb4" \
               " --database=" + common.param_main_db_name + \
               " --host=" + common.param_main_db_host + \
               " --port=" + common.param_main_db_mysql_port + \
@@ -69,13 +69,13 @@ def backup_mysql():
                                      common.param_main_db_mysql_pass,
                                      common.param_main_db_bak_name) + \
               " && mysqldump " + common.param_main_db_name + \
-              " --default-character-set=utf8" \
+              " --default-character-set=utf8mb4" \
               " --host=" + common.param_main_db_host + \
               " --port=" + common.param_main_db_mysql_port + \
               " --user=" + common.param_main_db_mysql_user + \
               " --password=" + common.param_main_db_mysql_pass + \
               "| mysql " \
-              " --default-character-set=utf8" \
+              " --default-character-set=utf8mb4" \
               " --database=" + common.param_main_db_bak_name + \
               " --host=" + common.param_main_db_host + \
               " --port=" + common.param_main_db_mysql_port + \
@@ -87,12 +87,12 @@ def backup_mysql():
 
 def recreate_mysql_command(host, port, user, password, db_name):
     return "mysql" \
-           " --default-character-set=utf8" \
+           " --default-character-set=utf8mb4" \
            " --host=" + host + \
            " --port=" + port + \
            " --user=" + user + \
            " --password=" + password + \
-           " -e \"drop database if exists " + db_name + ";create database if not exists " + db_name + " default charset utf8 collate utf8_general_ci;\""
+           " -e \"drop database if exists " + db_name + ";create database if not exists " + db_name + " default charset utf8mb4 collate utf8mb4_0900_ai_ci;\""
 
 
 # recreate target db
