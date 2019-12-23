@@ -10,6 +10,7 @@ services:
     volumes:
       - /data/volumes/nexus/:/nexus-data/
     user: root
+    environment:
+      INSTALL4J_ADD_VM_PARAMS: -Xms500M -Xmx500M -XX:MaxDirectMemorySize=3g
     restart: always
-
 
