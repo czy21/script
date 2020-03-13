@@ -18,16 +18,11 @@ ClientAliveInterval 30
 " >> /etc/ssh/sshd_config
 
 # use ali yum.repo
-if [ ! -f "/etc/yum.repos.d/CentOS-Base.repo_bak" ];then
-    sudo mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo_bak
-fi
-wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
+sudo mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
+wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-8.repo
+sed -i -e '/mirrors.cloud.aliyuncs.com/d' -e '/mirrors.aliyuncs.com/d' /etc/yum.repos.d/CentOS-Base.repo
 yum clean all
 yum makecache
-
-echo "
-export PATH=\$PATH:\$HOME/bin
-" >> /etc/bashrc
 
 # add first user
 useradd -m bruce
