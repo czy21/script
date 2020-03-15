@@ -5,8 +5,9 @@ sudo docker run -i -d --name ubuntu_one -p 4022:22 ubuntu:18.04
 sudo docker exec -i ubuntu_one /bin/bash -c "
 sed -i 's/http:\/\/archive.ubuntu.com/http:\/\/mirrors.aliyun.com/g' /etc/apt/sources.list;
 apt-get update;
-apt install -y openssh-client openssh-server subversion g++ zlib1g-dev build-essential git python rsync man-db;
-apt install -y libncurses5-dev gawk gettext unzip file libssl-dev wget zip time vim sudo nscd;
+apt-get -y upgrade;
+apt-get install -y openssh-client openssh-server;
+apt-get install -y subversion build-essential libncurses5-dev zlib1g-dev gawk git ccache gettext libssl-dev xsltproc zip;
 useradd -m bruce -d /home/bruce -s /bin/bash;passwd -d bruce;
 sed -i -r 's/^\s*UseDNS\s+\w+/#\0/; s/^\s*PermitRootLogin\s+\w+/#\0/; s/^\s*PasswordAuthentication\s+\w+/#\0/; s/^\s*ClientAliveInterval\s+\w+/#\0/' /etc/ssh/sshd_config;
 echo '
