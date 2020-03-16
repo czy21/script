@@ -1,8 +1,8 @@
 #!/bin/bash
 
-sudo docker run -i -d --name ubuntu_one -p 4022:22 ubuntu:18.04
+sudo docker run -i -d --name ubuntu -p 4022:22 ubuntu:18.04
 
-sudo docker exec -i ubuntu_one /bin/bash -c "
+sudo docker exec -i ubuntu /bin/bash -c "
 sed -i 's/http:\/\/archive.ubuntu.com/http:\/\/mirrors.aliyun.com/g' /etc/apt/sources.list;
 apt-get update;
 apt-get -y upgrade;
