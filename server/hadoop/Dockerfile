@@ -1,8 +1,9 @@
 FROM centos:7.6.1810
-MAINTAINER bruce
-ENV container docker
+ARG HADOOP_VERSION=3.2.1
+ARG JDK_VERSION=1.8
 WORKDIR /root/
 COPY ./___temp/ .
+ENV container docker
 RUN (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == \
 systemd-tmpfiles-setup.service ] || rm -f $i; done); \
 rm -f /lib/systemd/system/multi-user.target.wants/*;\
@@ -21,9 +22,9 @@ RUN ssh-keygen -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key
 RUN ssh-keygen -t ed25519 -f /etc/ssh/ssh_host_ed25519_key
 RUN ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key
 RUN echo "root:root" | chpasswd
-RUN rpm -ivh jdk-8u241-linux-x64.rpm
-RUN tar -zxvf hadoop-3.2.1.tar.gz -C /usr/local/
-ENV JAVA_HOME=/usr/java/jdk1.8.0_241-amd64 HADOOP_HOME=/usr/local/hadoop-3.2.1
+RUN mkdir -p /usr/local/java/jdk${JDK_VERSION} && tar -zxf jdk-${JDK_VERSION}.tar.gz --strip-components 1 -C /usr/local/java/jdk${JDK_VERSION}
+RUN mkdir -p /usr/local/hadoop/ && tar -zxf hadoop-${HADOOP_VERSION}.tar.gz --strip-components 1 -C /usr/local/hadoop/
+ENV JAVA_HOME=/usr/java/jdk${JDK_VERSION} HADOOP_HOME=/usr/local/hadoop
 ENV PATH $JAVA_HOME/bin:$HADOOP_HOME/bin:$PATH
 EXPOSE 22
 VOLUME [ "/sys/fs/cgroup" ]
