@@ -1,21 +1,29 @@
 #!/usr/bin/env bash
 
-# $1: user@host
-# $2: --upload | --exec
-# $3: --config
+# sh install-all.sh --init user@host --start --config
+# sh install-all.sh --start --config
 
-# ./install-all.sh user@host --upload --config
-
-case "$2" in
-        --upload)
-        scp -r ././../compose/ $1:
-        ssh $1 '$HOME/compose/install-all.sh '$2' --exec '$3';'
-        ;;
-        --exec)
-        for t in `ls -ld $HOME/compose/* | grep "^d" | awk '{print $9}'`
+while [[ $# -ge 1 ]];
+do
+	case $1 in
+		--init)
+			if [[ ! $2 ]] || [[ "$2" =~ ^"--".* ]]; then
+			  echo -e "\033[31m$1 value is null \033[0m"
+			  shift 1
+        continue
+      fi
+      host=$2
+      shift 2
+      ssh $host "rm -rf compose/" && scp -r ../compose $host:
+      ssh $host '$HOME/compose/install-all.sh '$@';'
+      break
+			;;
+		--start)
+		  shift 1
+      for t in `ls -ld $HOME/compose/* | grep "^d" | awk '{print $9}'`
         do
           config_file=${t}/config.sh
-          if [[ -f ${config_file} ]] && [[ $3 == '--config' ]]; then
+          if [[ -f ${config_file} ]] && [[ $1 == '--config' ]]; then
               echo -e "\033[32m executing => ${config_file}\n\033[0m"
               sudo sh ${config_file}
           fi
@@ -25,9 +33,11 @@ case "$2" in
               sudo docker-compose -f ${compose_file} up -d
           fi
         done
-        rm -rf compose
-        ;;
-        *)
-        echo -e "\033[40;33m un_know input param \033[0m"
-        ;;
-esac
+        shift 1
+			;;
+		*)
+		  echo -e "\033[31m$1 un_know input param \033[0m"
+			break
+			;;
+	esac
+done
