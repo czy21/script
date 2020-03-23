@@ -14,9 +14,10 @@ do
 			  shift 1
         continue
       fi
-#      ssh $2 "rm -rf ./hadoop/"
-      scp -r ../hadoop/ $2:
-      ssh $2 '$HOME/hadoop/builder.sh --tag '$4';'
+      host=$2
+      shift 2
+      ssh $host "rm -rf ./hadoop/" && scp -r ../hadoop/ host:
+      ssh $host '$HOME/hadoop/builder.sh '$@';'
       break
 			;;
 		--tag)
