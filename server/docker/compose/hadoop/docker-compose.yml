@@ -1,0 +1,13 @@
+version: '3.7'
+
+services:
+
+  hadoop:
+    image: hadoop:1.0.0
+    container_name: hadoop
+    privileged: true
+    ports:
+      - "6022:22"
+    volumes:
+      - /data/volumes/hadoop/sys/fs/cgroup/:/sys/fs/cgroup/
+    restart: always

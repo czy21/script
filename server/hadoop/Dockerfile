@@ -24,8 +24,9 @@ RUN ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key
 RUN echo "root:root" | chpasswd
 RUN mkdir -p /usr/local/java/jdk${JDK_VERSION} && tar -zxf jdk-${JDK_VERSION}.tar.gz --strip-components 1 -C /usr/local/java/jdk${JDK_VERSION}
 RUN mkdir -p /usr/local/hadoop/ && tar -zxf hadoop-${HADOOP_VERSION}.tar.gz --strip-components 1 -C /usr/local/hadoop/
-ENV JAVA_HOME=/usr/java/jdk${JDK_VERSION} HADOOP_HOME=/usr/local/hadoop
+ENV JAVA_HOME=/usr/local/java/jdk${JDK_VERSION} HADOOP_HOME=/usr/local/hadoop
 ENV PATH $JAVA_HOME/bin:$HADOOP_HOME/bin:$PATH
+RUN rm -rf jdk-${JDK_VERSION}.tar.gz hadoop-${HADOOP_VERSION}.tar.gz
 EXPOSE 22
 VOLUME [ "/sys/fs/cgroup" ]
 CMD ["/usr/sbin/init","/usr/sbin/sshd","-D"]
