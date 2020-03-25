@@ -16,8 +16,8 @@ do
       fi
       host=$2
       shift 2
-      ssh $host "rm -rf ./hadoop/" && scp -r ../hadoop/ $host:
-      ssh $host '$HOME/hadoop/builder.sh '$@';'
+      ssh $host "rm -rf ./shadowsocks/" && scp -r ../shadowsocks/ $host:
+      ssh $host '$HOME/shadowsocks/builder.sh '$@';'
       break
 			;;
 		--tag)
@@ -26,8 +26,8 @@ do
 			  shift 1
         continue
       fi
-      sudo docker build --no-cache --force-rm --tag hadoop:$2 --file hadoop/Dockerfile hadoop/
-      rm -rf hadoop/
+      sudo docker build --no-cache --force-rm --tag shadowsocks:$2 --file shadowsocks/Dockerfile shadowsocks/
+      rm -rf shadowsocks/
       shift 2
 			;;
 		*)
