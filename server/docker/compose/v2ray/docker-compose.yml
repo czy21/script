@@ -1,0 +1,14 @@
+version: '3.7'
+
+services:
+
+  v2ray:
+    image: v2ray/official:latest
+    container_name: v2ray
+    ports:
+      - "40879:9000"
+      - "40879:9000/udp"
+    volumes:
+      - /data/volumes/v2ray/:/etc/v2ray
+    command: v2ray -config=/etc/v2ray/config.json
+    restart: always
