@@ -20,6 +20,5 @@
     <property>
         <name>dfs.replication</name>
         <value>1</value>
-        <description>副本个数，配置默认是3,应小于datanode机器数量</description>
     </property>
 </configuration>
