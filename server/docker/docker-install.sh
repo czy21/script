@@ -7,16 +7,9 @@ while [[ $# -ge 1 ]];
 do
 	case $1 in
 		-h)
-      if [[ ! $2 ]] || [[ "$2" =~ ^"-".* ]]; then
-        echo -e "\033[31m$1 value is null \033[0m"
-        shift 1
-        continue
-      fi
-      host=$2
-      shift 2
       sh_file='docker-install.sh'
-      scp -r $sh_file $host:
-      ssh $host '$HOME/'$sh_file' '$@';rm -rf $HOME/'$sh_file';'
+      source ../../utility/share.sh
+      upload_exec $@
       break
 			;;
 		-t)
