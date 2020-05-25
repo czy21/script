@@ -4,43 +4,37 @@
 # must as root
 set -e
 
-if [ $1 == '-h' ]; then
-  if [[ ! $2 ]] || [[ "$2" =~ ^"-".* ]]; then
-    echo -e "\033[31m$1 value is null \033[0m"
-    shift 1
-    continue
-  fi
-  host=$2
-  shift 2
-  scp -r init-machine-centos.sh $host:
-  ssh $host '$HOME/init-machine-centos.sh '$@';'
-  ssh $host 'rm -rf $HOME/init-machine-centos.sh'
-  exit
-fi
-
-# install tools
-yum -y install wget vim
-
-# edit sshd_config
-sed -i -r "s/ll='ls\s+-l/\0va/" /etc/profile.d/colorls.sh
-sed -i -r "s/\s*#\s*(%wheel\s+ALL=\(ALL\)\s+ALL)/\1/" /etc/sudoers
-sed -i -r "s/^\s*UseDNS\s+\w+/#\0/; s/^\s*PermitRootLogin\s+\w+/#\0/; s/^\s*PasswordAuthentication\s+\w+/#\0/; s/^\s*ClientAliveInterval\s+\w+/#\0/" /etc/ssh/sshd_config
-echo "
-UseDNS no
-PermitRootLogin no
-PasswordAuthentication no
-ClientAliveInterval 30
-" >>/etc/ssh/sshd_config
-
 while [[ $# -ge 1 ]]; do
   case $1 in
-  -t)
+  -h)
     if [[ ! $2 ]] || [[ "$2" =~ ^"-".* ]]; then
       echo -e "\033[31m$1 value is null \033[0m"
       shift 1
       continue
     fi
+    host=$2
+    shift 2
+    sh_file='init-machine-centos.sh'
+    scp -r $sh_file $host:
+    ssh $host '$HOME/'$sh_file' '$@';rm -rf $HOME/'$sh_file';'
+    break
+    ;;
+  -t)
     shift 1
+    # install tools
+    yum -y install wget vim
+
+    # edit sshd_config
+    sed -i -r "s/ll='ls\s+-l/\0va/" /etc/profile.d/colorls.sh
+    sed -i -r "s/\s*#\s*(%wheel\s+ALL=\(ALL\)\s+ALL)/\1/" /etc/sudoers
+    sed -i -r "s/^\s*UseDNS\s+\w+/#\0/; s/^\s*PermitRootLogin\s+\w+/#\0/; s/^\s*PasswordAuthentication\s+\w+/#\0/; s/^\s*ClientAliveInterval\s+\w+/#\0/" /etc/ssh/sshd_config
+    echo "
+      UseDNS no
+      PermitRootLogin no
+      PasswordAuthentication no
+      ClientAliveInterval 30
+      " >>/etc/ssh/sshd_config
+
     if [ $1 == 'ali' ]; then
       # use ali yum.repo
       sudo mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
@@ -49,10 +43,21 @@ while [[ $# -ge 1 ]]; do
       yum clean all
       yum makecache
     fi
+
     if [ $1 == 'offical' ]; then
       break
     fi
-    break
+
+    # add first user
+    useradd -m bruce
+    usermod -aG wheel bruce
+    passwd -d bruce
+    sudo -u bruce bash -c "set -e;cd;mkdir .ssh;chmod 700 .ssh;echo ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC3nTRJ/aVb67l1xMaN36jmIbabU7Hiv/xpZ8bwLVvNO3Bj7kUzYTp7DIbPcHQg4d6EsPC6j91E8zW6CrV2fo2Ai8tDO/rCq9Se/64F3+8oEIiI6E/OfUZfXD1mPbG7M/kcA3VeQP6wxNPhWBbKRisqgUc6VTKhl+hK6LwRTZgeShxSNcey+HZst52wJxjQkNG+7CAEY5bbmBzAlHCSl4Z0RftYTHR3q8LcEg7YLNZasUogX68kBgRrb+jw1pRMNo7o7RI9xliDAGX+E4C3vVZL0IsccKgr90222axsADoEjC9O+Q6uwKjahemOVaau+9sHIwkelcOcCzW5SuAwkezv 805899926@qq.com > .ssh/authorized_keys;chmod 644 .ssh/authorized_keys"
+    systemctl disable firewalld
+    sed -i -r "s/SELINUX=enforcing/SELINUX=disabled/" /etc/selinux/config
+    shutdown -r now
+
+    shift 1
     ;;
   *)
     echo -e "\033[31m$1 un_know input param \033[0m"
@@ -60,12 +65,3 @@ while [[ $# -ge 1 ]]; do
     ;;
   esac
 done
-
-# add first user
-useradd -m bruce
-usermod -aG wheel bruce
-passwd -d bruce
-sudo -u bruce bash -c "set -e;cd;mkdir .ssh;chmod 700 .ssh;echo ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC3nTRJ/aVb67l1xMaN36jmIbabU7Hiv/xpZ8bwLVvNO3Bj7kUzYTp7DIbPcHQg4d6EsPC6j91E8zW6CrV2fo2Ai8tDO/rCq9Se/64F3+8oEIiI6E/OfUZfXD1mPbG7M/kcA3VeQP6wxNPhWBbKRisqgUc6VTKhl+hK6LwRTZgeShxSNcey+HZst52wJxjQkNG+7CAEY5bbmBzAlHCSl4Z0RftYTHR3q8LcEg7YLNZasUogX68kBgRrb+jw1pRMNo7o7RI9xliDAGX+E4C3vVZL0IsccKgr90222axsADoEjC9O+Q6uwKjahemOVaau+9sHIwkelcOcCzW5SuAwkezv 805899926@qq.com > .ssh/authorized_keys;chmod 644 .ssh/authorized_keys"
-systemctl disable firewalld
-sed -i -r "s/SELINUX=enforcing/SELINUX=disabled/" /etc/selinux/config
-shutdown -r now
