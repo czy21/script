@@ -1,7 +1,22 @@
 #!/bin/bash
-
+#sh init-machine-centos.sh -h user@host -t ali
+# -t ali | offical
 # must as root
 set -e
+
+if [ $1 == '-h' ]; then
+  if [[ ! $2 ]] || [[ "$2" =~ ^"-".* ]]; then
+    echo -e "\033[31m$1 value is null \033[0m"
+    shift 1
+    continue
+  fi
+  host=$2
+  shift 2
+  scp -r init-machine-centos.sh $host:
+  ssh $host '$HOME/init-machine-centos.sh '$@';'
+  ssh $host 'rm -rf $HOME/init-machine-centos.sh'
+  exit
+fi
 
 # install tools
 yum -y install wget vim
@@ -15,14 +30,36 @@ UseDNS no
 PermitRootLogin no
 PasswordAuthentication no
 ClientAliveInterval 30
-" >> /etc/ssh/sshd_config
+" >>/etc/ssh/sshd_config
 
-# use ali yum.repo
-sudo mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
-wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-8.repo
-sed -i -e '/mirrors.cloud.aliyuncs.com/d' -e '/mirrors.aliyuncs.com/d' /etc/yum.repos.d/CentOS-Base.repo
-yum clean all
-yum makecache
+while [[ $# -ge 1 ]]; do
+  case $1 in
+  -t)
+    if [[ ! $2 ]] || [[ "$2" =~ ^"-".* ]]; then
+      echo -e "\033[31m$1 value is null \033[0m"
+      shift 1
+      continue
+    fi
+    shift 1
+    if [ $1 == 'ali' ]; then
+      # use ali yum.repo
+      sudo mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
+      wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-8.repo
+      sed -i -e '/mirrors.cloud.aliyuncs.com/d' -e '/mirrors.aliyuncs.com/d' /etc/yum.repos.d/CentOS-Base.repo
+      yum clean all
+      yum makecache
+    fi
+    if [ $1 == 'offical' ]; then
+      break
+    fi
+    break
+    ;;
+  *)
+    echo -e "\033[31m$1 un_know input param \033[0m"
+    break
+    ;;
+  esac
+done
 
 # add first user
 useradd -m bruce
