@@ -7,7 +7,7 @@ while [[ $# -ge 1 ]];
 do
 	case $1 in
 		-h)
-			if [[ ! $2 ]] || [[ "$2" =~ ^"--".* ]]; then
+			if [[ ! $2 ]] || [[ "$2" =~ ^"-".* ]]; then
 			  echo -e "\033[31m$1 value is null \033[0m"
 			  shift 1
         continue
