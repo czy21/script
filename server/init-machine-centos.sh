@@ -9,12 +9,14 @@ while [[ $# -ge 1 ]]; do
   -h)
     source ../utility/share.sh
     sh_file='init-machine-centos.sh'
+    cp_path=$sh_file
+    rm_path=$sh_file
     upload_exec $@
     break
     ;;
   -t)
     shift 1
-    
+
     # install tools
     yum -y install wget vim
 

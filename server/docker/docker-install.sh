@@ -9,6 +9,8 @@ do
 		-h)
       source ../../utility/share.sh
       sh_file='docker-install.sh'
+      cp_path=$sh_file
+      rm_path=$sh_file
       upload_exec $@
       break
 			;;
