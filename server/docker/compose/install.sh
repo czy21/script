@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 # sh install.sh -h user@host -i -c
 # sh install.sh -i -c
