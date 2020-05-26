@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#!/usr/bin/env bash
+#!/bin/bash
 
 # sh builder.sh --init user@host --tag <image_tag>
 # sh builder.sh --tag <image_tag>
