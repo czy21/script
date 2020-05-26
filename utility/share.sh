@@ -10,5 +10,5 @@ function upload_exec() {
   host=$2
   shift 2
   scp -r $sh_file $host:
-  ssh $host '$HOME/'$sh_file' '$@';rm -rf $HOME/'$sh_file';'
+  ssh $host 'sh -x $HOME/'$sh_file' '$@';rm -rf $HOME/'$sh_file';'
 }
