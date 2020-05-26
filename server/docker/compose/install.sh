@@ -7,15 +7,11 @@ while [[ $# -ge 1 ]];
 do
 	case $1 in
 		-h)
-			if [[ ! $2 ]] || [[ "$2" =~ ^"-".* ]]; then
-			  echo -e "\033[31m$1 value is null \033[0m"
-			  shift 1
-        continue
-      fi
-      host=$2
-      shift 2
-      ssh $host "rm -rf compose/" && scp -r ../compose $host:
-      ssh $host '$HOME/compose/install.sh '$@';'
+      source ../../../utility/share.sh
+      sh_file='compose/install.sh'
+      cp_path='../compose'
+      rm_path='compose/'
+      upload_exec $@
       break
 			;;
 		-i)

@@ -7,8 +7,14 @@ function upload_exec() {
     shift 1
     continue
   fi
+
   host=$2
   shift 2
-  scp -r $sh_file $host:
-  ssh $host 'sh -x $HOME/'$sh_file' '$@';rm -rf $HOME/'$sh_file';'
+
+  ssh $host 'rm -rf $HOME/'$rm_path';'
+
+  scp -r $cp_path $host:
+  ssh $host 'sh -x $HOME/'$sh_file' '$@';'
+
+  ssh $host 'rm -rf $HOME/'$rm_path';'
 }
