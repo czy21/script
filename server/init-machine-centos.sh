@@ -12,8 +12,8 @@ while [[ $# -ge 1 ]]; do
     sh_file='init-machine-centos.sh'
     cp_path=$sh_file
     rm_path=$sh_file
-    upload_exec $@
     shift 2
+    upload_exec $@
     break
     ;;
   -t)
