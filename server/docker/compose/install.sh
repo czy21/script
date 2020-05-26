@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# sh install-all.sh -h user@host -i -c
-# sh install-all.sh -i -c
+# sh install.sh -h user@host -i -c
+# sh install.sh -i -c
 
 while [[ $# -ge 1 ]];
 do
@@ -15,7 +15,7 @@ do
       host=$2
       shift 2
       ssh $host "rm -rf compose/" && scp -r ../compose $host:
-      ssh $host '$HOME/compose/install-all.sh '$@';'
+      ssh $host '$HOME/compose/install.sh '$@';'
       break
 			;;
 		-i)
@@ -33,7 +33,7 @@ do
               sudo docker-compose -f ${compose_file} up -d
           fi
         done
-        shift 1
+      shift 1
 			;;
 		*)
 		  echo -e "\033[31m$1 un_know input param \033[0m"
