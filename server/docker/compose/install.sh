@@ -8,10 +8,12 @@ do
 	case $1 in
 		-h)
       source ../../../utility/share.sh
+      host=$2
       sh_file='compose/install.sh'
       cp_path='../compose'
       rm_path='compose/'
       upload_exec $@
+      shift 2
       break
 			;;
 		-i)
