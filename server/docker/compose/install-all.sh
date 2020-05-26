@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-# sh install-all.sh --init user@host --start --config
-# sh install-all.sh --start --config
+# sh install-all.sh -h user@host -i -c
+# sh install-all.sh -i -c
 
 while [[ $# -ge 1 ]];
 do
 	case $1 in
-		--init)
+		-h)
 			if [[ ! $2 ]] || [[ "$2" =~ ^"--".* ]]; then
 			  echo -e "\033[31m$1 value is null \033[0m"
 			  shift 1
@@ -18,12 +18,12 @@ do
       ssh $host '$HOME/compose/install-all.sh '$@';'
       break
 			;;
-		--start)
+		-i)
 		  shift 1
       for t in `ls -ld $HOME/compose/* | grep "^d" | awk '{print $9}'`
         do
           config_file=${t}/config.sh
-          if [[ -f ${config_file} ]] && [[ $1 == '--config' ]]; then
+          if [[ -f ${config_file} ]] && [[ $1 == '-c' ]]; then
               echo -e "\033[32m executing => ${config_file}\n\033[0m"
               sudo sh ${config_file}
           fi

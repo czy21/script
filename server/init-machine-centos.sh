@@ -7,8 +7,8 @@ set -e
 while [[ $# -ge 1 ]]; do
   case $1 in
   -h)
-    sh_file='init-machine-centos.sh'
     source ../utility/share.sh
+    sh_file='init-machine-centos.sh'
     upload_exec $@
     break
     ;;
