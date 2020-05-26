@@ -12,8 +12,8 @@ do
       sh_file='compose/install.sh'
       cp_path='../compose'
       rm_path='compose/'
-      upload_exec $@
       shift 2
+      upload_exec $@
       break
 			;;
 		-i)
