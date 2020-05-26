@@ -8,10 +8,12 @@ do
 	case $1 in
 		-h)
       source ../../utility/share.sh
+      host=$2
       sh_file='docker-install.sh'
       cp_path=$sh_file
       rm_path=$sh_file
       upload_exec $@
+      shift 2
       break
 			;;
 		-t)
