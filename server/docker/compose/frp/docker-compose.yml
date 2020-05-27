@@ -9,8 +9,6 @@ services:
     ports:
       - "7000:7000"
       - "7500:7500"
-      - "80:80"
-      - "443:443"
     volumes:
       - /data/config/frp/conf/:/usr/local/frp/conf/
     restart: always
