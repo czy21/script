@@ -8,5 +8,5 @@ function upload_exec() {
   scp -r $cp_path $host:
   ssh $host 'sh $HOME/'$sh_file' '$@';'
 
-#  ssh $host 'rm -rf $HOME/'$rm_path';'
+  ssh $host 'rm -rf $HOME/'$rm_path';'
 }
