@@ -26,9 +26,13 @@ do
            path=${t[1]}
            all_map[$id]="${id} ${name} ${path}"
       done
+      view_map=
       for (( i = 0; i < ${#all_map[@]}; i++ )); do
-        echo ${all_map[`expr $i + 1`]}
+         index=`expr $i + 1`
+         internal_map=(${all_map[index]})
+         view_map[index]="${internal_map[0]}"."${internal_map[1]}"
       done
+      echo ${view_map[@]}
       shift 1
 			;;
 		*)
