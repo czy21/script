@@ -18,19 +18,17 @@ do
 			;;
 		-i)
 		  shift 1
-      for t in `ls -ld $HOME/compose/* | grep "^d" | awk '{print $9}'`
-        do
-          config_file=${t}/config.sh
-          if [[ -f ${config_file} ]] && [[ $1 == '-c' ]]; then
-              echo -e "\033[32m executing => ${config_file}\n\033[0m"
-              sudo sh ${config_file}
-          fi
-          compose_file=${t}/docker-compose.yml
-          if [[ -f ${compose_file} ]];then
-              echo -e "\033[32m starting => ${compose_file}\n\033[0m"
-              sudo docker-compose -f ${compose_file} up -d
-          fi
-        done
+      all_map=
+      for t in `find $HOME/compose/* -type d | cat -n | awk '{print $1","$2}'`; do
+           t=(${t/","/" "})
+           id=${t[0]}
+           name=${t[1]##*/}
+           path=${t[1]}
+           all_map[$id]="${id} ${name} ${path}"
+      done
+      for (( i = 0; i < ${#all_map[@]}; i++ )); do
+        echo ${all_map[`expr $i + 1`]}
+      done
       shift 1
 			;;
 		*)
