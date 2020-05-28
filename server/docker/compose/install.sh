@@ -1,7 +1,21 @@
 #!/bin/bash
 
-# sh install.sh -h user@host -i -c
+# sh install.sh -h user@host -i
 # sh install.sh -i -c
+
+
+function config_start() {
+    config_file=${target_path}/config.sh
+    if [[ -f ${config_file} ]]; then
+        echo -e "\033[32m ${number} configing => ${config_file}\n\033[0m"
+#        sudo sh ${config_file}
+    fi
+    compose_file=${target_path}/docker-compose.yml
+    if [[ -f ${compose_file} ]];then
+        echo -e "\033[32m ${number} starting => ${compose_file}\n\033[0m"
+#        sudo docker-compose -f ${compose_file} up -d
+    fi
+}
 
 while [[ $# -ge 1 ]];
 do
@@ -37,29 +51,27 @@ do
         fi
       done
       echo ${view_map[@]}
-      ret_path=
       echo -n "please select install number(default all)"
       read arg
       arg=($arg)
+      if [ "${arg[0]}" = "all" ]; then
+          for (( j = 0; j < ${#all_map[@]}; j++ )); do
+               internal_map=(${all_map[j]})
+                 target_path=${internal_map[2]}
+                 number=${internal_map[0]}
+                 config_start
+          done
+          exit
+      fi
       for (( i = 0; i < ${#arg[@]}; i++ )); do
           for (( j = 0; j < ${#all_map[@]}; j++ )); do
                internal_map=(${all_map[j]})
                if test ${arg[i]} -eq ${internal_map[0]}; then
-                 ret_path[$i]=${internal_map[2]}
+                 target_path=${internal_map[2]}
+                 number=${internal_map[0]}
+                 config_start
                fi
           done
-      done
-      for t in ${ret_path[@]} ; do
-          config_file=${t}/config.sh
-          if [[ -f ${config_file} ]] && [[ $1 == '-c' ]]; then
-              echo -e "\033[32m executing => ${config_file}\n\033[0m"
-              sudo sh ${config_file}
-          fi
-          compose_file=${t}/docker-compose.yml
-          if [[ -f ${compose_file} ]];then
-              echo -e "\033[32m starting => ${compose_file}\n\033[0m"
-              sudo docker-compose -f ${compose_file} up -d
-          fi
       done
       shift 1
 			;;
