@@ -1,5 +1,5 @@
 FROM alpine:3.11
-ARG FRP_VERSION=0.33.0
+ARG FRP_VERSION=0.32.0
 WORKDIR /root/
 
 RUN mkdir -p /usr/local/frp/conf/

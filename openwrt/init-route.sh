@@ -10,17 +10,23 @@ uci commit network
 
 # google clound
 uci add shadowsocksr servers
+
 uci set shadowsocksr.@servers[0].alias='gg_hk'
 uci set shadowsocksr.@servers[0].type='v2ray'
-uci set shadowsocksr.@servers[0].server='34.96.138.30'
-uci set shadowsocksr.@servers[0].server_port='40879'
 uci set shadowsocksr.@servers[0].alter_id='4'
 uci set shadowsocksr.@servers[0].vmess_id='e85f98fb-83b4-4234-a51f-85df46403a8e'
 uci set shadowsocksr.@servers[0].local_port='1234'
 uci set shadowsocksr.@servers[0].security='auto'
-uci set shadowsocksr.@servers[0].transport='tcp'
-uci set shadowsocksr.@servers[0].tcp_guise='http'
 uci set shadowsocksr.@servers[0].switch_enable='0'
+uci set shadowsocksr.@servers[0].server_port='443'
+uci set shadowsocksr.@servers[0].tls='1'
+uci set shadowsocksr.@servers[0].transport='ws'
+uci set shadowsocksr.@servers[0].ws_path='/ray'
+uci set shadowsocksr.@servers[0].ws_host='czy-home.cn'
+uci set shadowsocksr.@servers[0].tls_host='czy-home.cn'
+uci set shadowsocksr.@servers[0].mux='1'
+uci set shadowsocksr.@servers[0].concurrency='8'
+uci set shadowsocksr.@servers[0].server='czy-home.cn'
 
 # ali clound
 uci add shadowsocksr servers

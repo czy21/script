@@ -8,7 +8,8 @@ sudo tee /data/volumes/v2ray/config.json <<-'EOF'
 {
     "inbounds": [
         {
-            "port": 9000,
+            "port": 40879,
+            "listen": "127.0.0.1",
             "protocol": "vmess",
             "settings": {
                 "clients": [
@@ -17,6 +18,12 @@ sudo tee /data/volumes/v2ray/config.json <<-'EOF'
                         "alterId": 4
                     }
                 ]
+            },
+            "streamSettings": {
+                "network": "ws",
+                "wsSettings": {
+                    "path": "/ray"
+                }
             }
         }
     ],

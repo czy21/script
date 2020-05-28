@@ -5,12 +5,8 @@ services:
   web:
     image: nginx:1.14
     container_name: nginx
-    ports:
-      - "80:80"
     volumes:
       - /data/config/nginx/conf.d/:/etc/nginx/conf.d/
       - /data/config/nginx/log/:/var/log/nginx/
       - /data/config/nginx/nginx.conf:/etc/nginx/nginx.conf
     restart: always
-
-
