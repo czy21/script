@@ -2,9 +2,8 @@
 
 set -e
 
+sudo rm -rf /data/config/nginx/conf.d/
 sudo mkdir -p /data/config/nginx/conf.d/
-
-sudo docker network create nginx-proxy
 
 sudo tee /data/config/nginx/nginx.conf <<-'EOF'
 user  nginx;
@@ -52,14 +51,37 @@ server {
     location = /50x.html {
         root   /usr/share/nginx/html;
     }
+}
+EOF
 
-    location /v2ray/ {
-        proxy_redirect off;
-        proxy_pass http://127.0.0.1:40879;
-        proxy_http_version 1.1;
+sudo tee /data/config/nginx/conf.d/custom.conf <<-'EOF'
+server {
+		listen 80;
+		server_name czy-home.cn;
+
+    location /ray {
+        root   /usr/share/nginx/html;
+        index  index.html index.htm;
+    }
+    location /frp-dashboard {
+        proxy_pass http://127.0.0.1:7500;
+    }
+}
+EOF
+
+sudo tee /data/config/nginx/conf.d/frp.conf <<-'EOF'
+server {
+		listen 80;
+		server_name *.czy-home.cn;
+
+		location / {
+        proxy_pass http://127.0.0.1:6080;
+        proxy_set_header Host $host:80;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "upgrade";
-        proxy_set_header Host $http_host;
-  }
+			}
 }
 EOF
