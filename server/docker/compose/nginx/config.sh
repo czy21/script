@@ -54,34 +54,58 @@ server {
 }
 EOF
 
-sudo tee /data/config/nginx/conf.d/custom.conf <<-'EOF'
-server {
-		listen 80;
-		server_name czy-home.cn;
+#sudo tee /data/config/nginx/conf.d/custom.conf <<-'EOF'
+#server {
+#		listen 80;
+#		server_name czy-home.cn;
+#
+#    location /ray {
+#        root   /usr/share/nginx/html;
+#        index  index.html index.htm;
+#    }
+#    location /frp-dashboard {
+#        proxy_pass http://127.0.0.1:7500;
+#    }
+#}
+#EOF
 
-    location /ray {
-        root   /usr/share/nginx/html;
-        index  index.html index.htm;
-    }
-    location /frp-dashboard {
-        proxy_pass http://127.0.0.1:7500;
-    }
-}
-EOF
+#sudo tee /data/config/nginx/conf.d/custom_https.conf <<-'EOF'
+#server {
+#      listen  443 ssl;
+#      ssl on;
+#      ssl_certificate       /etc/v2ray/v2ray.crt;
+#      ssl_certificate_key   /etc/v2ray/v2ray.key;
+#      ssl_protocols         TLSv1 TLSv1.1 TLSv1.2;
+#      ssl_ciphers           HIGH:!aNULL:!MD5;
+#      server_name           czy-home.cn;
+#
+#      location /ray {
+#          proxy_redirect off;
+#          proxy_pass http://127.0.0.1:9000;
+#          proxy_http_version 1.1;
+#          proxy_set_header Upgrade $http_upgrade;
+#          proxy_set_header Connection "upgrade";
+#          proxy_set_header Host $http_host;
+#
+#          proxy_set_header X-Real-IP $remote_addr;
+#          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+#      }
+#}
+#EOF
 
-sudo tee /data/config/nginx/conf.d/frp.conf <<-'EOF'
-server {
-		listen 80;
-		server_name *.czy-home.cn;
-
-		location / {
-        proxy_pass http://127.0.0.1:6080;
-        proxy_set_header Host $host:80;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection "upgrade";
-			}
-}
-EOF
+#sudo tee /data/config/nginx/conf.d/frp.conf <<-'EOF'
+#server {
+#		listen 80;
+#		server_name *.czy-home.cn;
+#
+#		location / {
+#        proxy_pass http://127.0.0.1:6080;
+#        proxy_set_header Host $host:80;
+#        proxy_set_header X-Real-IP $remote_addr;
+#        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+#
+#        proxy_set_header Upgrade $http_upgrade;
+#        proxy_set_header Connection "upgrade";
+#			}
+#}
+#EOF
