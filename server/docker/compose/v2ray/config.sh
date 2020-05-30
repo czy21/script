@@ -18,6 +18,12 @@ sudo tee /data/volumes/v2ray/config.json <<-'EOF'
                         "alterId": 4
                     }
                 ]
+            },
+            "streamSettings": {
+                "network": "ws",
+                "wsSettings": {
+                    "path": "/ray"
+                }
             }
         }
     ],
