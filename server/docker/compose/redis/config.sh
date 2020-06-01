@@ -511,7 +511,7 @@ replica-priority 100
 # 150k passwords per second against a good box. This means that you should
 # use a very strong password otherwise it will be very easy to break.
 #
-# requirepass team3059
+requirepass ***REMOVED***
 
 # Command renaming.
 #
