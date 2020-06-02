@@ -23,7 +23,7 @@ do
         sudo mkdir -p /etc/docker
         sudo tee /etc/docker/daemon.json <<-'EOF'
         {
-          "registry-mirrors": ["https://idyylogn.mirror.aliyuncs.com"]
+          "registry-mirrors": ["https://idyylogn.mirror.aliyuncs.com","https://registry.docker-cn.com"]
         }
         EOF
         sudo yum install -y yum-utils device-mapper-persistent-data lvm2
