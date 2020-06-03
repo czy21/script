@@ -5,7 +5,7 @@ services:
   v2ray:
     image: v2ray/official:latest
     container_name: v2ray
-    network_mode: host
+    network_mode: "container:nginx"
     volumes:
       - /data/volumes/v2ray/:/etc/v2ray
     command: v2ray -config=/etc/v2ray/config.json
