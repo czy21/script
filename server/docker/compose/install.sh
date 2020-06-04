@@ -12,6 +12,7 @@ function exec_init_config() {
         echo -e "${number}.\033[32m init_config => \033[0m ${config_file}"
         sudo sh -x ${config_file}
     fi
+    echo -e '\n'
 }
 
 function exec_post_config() {
@@ -20,6 +21,7 @@ function exec_post_config() {
         echo -e "${number}.\033[32m post_config => \033[0m ${config_file}"
         sudo sh -x ${config_file}
     fi
+    echo -e '\n'
 }
 
 function start_compose() {
