@@ -33,7 +33,7 @@ function start_compose() {
 
 function print_app_list() {
     all_map=
-    find_filter=(`find $HOME/compose/* -type d | cat -n | awk '{print $1","$2}'`)
+    find_filter=(`find $HOME/compose/* -type d -maxdepth 0 | cat -n | awk '{print $1","$2}'`)
     for (( i = 0; i < ${#find_filter[@]}; i++ )); do
       t=(${find_filter[i]/","/" "})
       id=${t[0]}
