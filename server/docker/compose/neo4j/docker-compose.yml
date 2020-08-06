@@ -1,0 +1,16 @@
+version: '3.7'
+
+services:
+
+  db:
+    image: neo4j
+    container_name: neo4j
+    ports:
+      - 7474:7474
+      - 7687:7687
+    volumes:
+      - /data/volumes/neo4j/data/:/data/
+      - /data/volumes/neo4j/logs/:/logs/
+    restart: always
+    environment:
+      NEO4J_AUTH: neo4j/czy.1121
