@@ -10,7 +10,15 @@ function exec_init_config() {
     config_file=${target_path}/init_config.sh
     if [[ -f ${config_file} ]]; then
         echo -e "${number}.\033[32m init_config => \033[0m ${config_file}"
+        config_path=/data/config/${name}/
         sudo sh -x ${config_file}
+        sudo mkdir -p ${config_path}
+        if [ -d ${target_path}/conf/ ]; then
+          echo "copy conf finished"
+          sudo cp -r ${target_path}/conf/* ${config_path}
+        else
+          echo "no exist conf"
+        fi
     fi
     echo -e '\n'
 }
@@ -75,10 +83,11 @@ do
       if [ "${arg}" = "all" ]; then
           for (( j = 0; j < ${#all_map[@]}; j++ )); do
                internal_map=(${all_map[j]})
-                 target_path=${internal_map[2]}
-                 number=${internal_map[0]}
-                 exec_init_config
-                 start_compose
+               target_path=${internal_map[2]}
+               number=${internal_map[0]}
+               name=${internal_map[1]}
+               exec_init_config
+               start_compose
           done
           exit
       fi
@@ -89,6 +98,7 @@ do
              if test $i -eq ${internal_map[0]}; then
                target_path=${internal_map[2]}
                number=${internal_map[0]}
+               name=${internal_map[1]}
                exec_init_config
                start_compose
              fi
