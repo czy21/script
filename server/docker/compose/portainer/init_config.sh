@@ -2,6 +2,9 @@
 
 set -e
 
-sudo mkdir -p /data/config/portainer/
+dir=$(cd "$(dirname "$0")"; pwd)
+config_path=/data/config/portainer/
 
-sudo echo -n Czy.190878 > /data/config/portainer/portainer_password
+sudo mkdir -p ${config_path}
+
+sudo cp -r $dir/conf/* ${config_path}

@@ -11,7 +11,7 @@ services:
     volumes:
       - /data/volumes/neo4j/data/:/data/
       - /data/volumes/neo4j/logs/:/logs/
-      - /data/config/neo4j/conf/:/conf/
+      - /data/config/neo4j/:/conf/
     restart: always
     environment:
       NEO4J_AUTH: neo4j/czy.1121
