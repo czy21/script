@@ -2,35 +2,8 @@
 
 set -e
 
-sudo mkdir -p /data/volumes/v2ray/
+dir=$(cd "$(dirname "$0")"; pwd)
+config_path=/data/config/v2ray/
 
-sudo tee /data/volumes/v2ray/config.json <<-'EOF'
-{
-    "inbounds": [
-        {
-            "port": 9000,
-            "protocol": "vmess",
-            "settings": {
-                "clients": [
-                    {
-                        "id": "e85f98fb-83b4-4234-a51f-85df46403a8e",
-                        "alterId": 4
-                    }
-                ]
-            },
-            "streamSettings": {
-                "network": "ws",
-                "wsSettings": {
-                    "path": "/ray"
-                }
-            }
-        }
-    ],
-    "outbounds": [
-        {
-            "protocol": "freedom",
-            "settings": {}
-        }
-    ]
-}
-EOF
+sudo mkdir -p ${config_path}
+sudo cp -r $dir/conf/* ${config_path}

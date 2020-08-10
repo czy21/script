@@ -8,5 +8,5 @@ services:
     privileged: true
     network_mode: host
     volumes:
-      - /data/config/frp/conf/:/usr/local/frp/conf/
+      - /data/config/frp/:/usr/local/frp/conf/
     restart: always
