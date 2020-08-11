@@ -2,4 +2,4 @@
 
 set -e
 
-dir=$(cd "$(dirname "$0")"; pwd
+dir=$(cd "$(dirname "$0")"; pwd)
