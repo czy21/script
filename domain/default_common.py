@@ -1,6 +1,6 @@
 # !/usr/bin/env python
-
 from script.domain import path_default
+from script.utility import path as path_util
 
 param_main_db_host = ""
 param_main_db_name = ""
@@ -10,19 +10,26 @@ param_main_db_bak_name = ""
 param_main_db_mysql_port = ""
 param_main_db_mysql_user = ""
 param_main_db_mysql_pass = ""
-param_main_db_mysql_file_path = path_default.project_db_create
+param_main_db_mysql_file_path = path_util.pure_path_join(path_default.project_db, "mysql")
 param_main_db_mysql_output_file_name = path_default.output_db_all_in_one_mysql
+
+# mssql
+param_main_db_mssql_file_path = path_util.pure_path_join(path_default.project_db, "mssql")
+param_main_db_mssql_output_file_name = path_default.output_db_all_in_one_mssql
+
+# neo4j
+param_main_db_neo4j_port = ""
+param_main_db_neo4j_user = ""
+param_main_db_neo4j_pass = ""
+param_main_db_neo4j_file_path = path_util.pure_path_join(path_default.project_db, "neo4j")
+param_main_db_neo4j_output_file_name = path_default.output_db_all_in_one_neo4j
 
 # mongo
 param_main_db_mongo_port = ""
 param_main_db_mongo_user = ""
 param_main_db_mongo_pass = ""
-param_main_db_mongo_file_path = ""
-param_main_db_mongo_output_file_name = ""
-
-# mssql
-param_main_db_mssql_file_path = ""
-param_main_db_mssql_output_file_name = ""
+param_main_db_mongo_file_path = path_util.pure_path_join(path_default.project_db, "mongo")
+param_main_db_mongo_output_file_name = path_default.output_db_all_in_one_mongo
 
 # api
 param_api_archive_file_name = "api.jar"

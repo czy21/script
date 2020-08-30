@@ -1,31 +1,32 @@
 # !/usr/bin/env python
 from pathlib import Path
 
-root_path = Path('../../').as_posix()
-output = Path(root_path).resolve().joinpath("___output").as_posix()
-project_code = Path(root_path).resolve().joinpath("code").as_posix()
-project_db = Path(root_path).resolve().joinpath("db").as_posix()
+from script.utility import path as path_util
+
+root_path = path_util.pure_path_join("../../")
+output = path_util.pure_path_join(root_path, "___output")
+project_code = path_util.pure_path_join(root_path, "code")
+project_db = path_util.pure_path_join(root_path, "db")
 
 # child dir of code
-project_code_api = Path(project_code).resolve().joinpath("api").as_posix()
-project_code_web = Path(project_code).resolve().joinpath("web").as_posix()
-project_code_app = Path(project_code).resolve().joinpath("app").as_posix()
-
-# child dir of db
-project_db_create = Path(project_db).resolve().joinpath("create").as_posix()
-project_db_create_prepare = Path(project_db_create).resolve().joinpath("1_prepare").as_posix()
-project_db_create_version = Path(project_db_create).resolve().joinpath("2_version").as_posix()
+project_code_api = path_util.pure_path_join(project_code, "api")
+project_code_web = path_util.pure_path_join(project_code, "web")
+project_code_app = path_util.pure_path_join(project_code, "app")
 
 # child dir of output
-output_api = Path(output).resolve().joinpath("api").as_posix()
-output_api_resource = Path(output_api).resolve().joinpath("resources").as_posix()
-output_web = Path(output).resolve().joinpath("web").as_posix()
-output_app = Path(output).resolve().joinpath("app").as_posix()
-output_db = Path(output).resolve().joinpath("db").as_posix()
-output_db_bak = Path(output_db).resolve().joinpath("bak").as_posix()
-output_db_all_in_one = Path(output_db).resolve().joinpath("all_in_one").as_posix()
-output_db_all_in_one_mysql = Path(output_db_all_in_one).resolve().joinpath("mysql.mysql").as_posix()
-output_tmp = Path(output).resolve().joinpath("tmp").as_posix()
+output_api = path_util.pure_path_join(output, "api")
+output_api_resource = path_util.pure_path_join(output_api, "resources")
+output_web = path_util.pure_path_join(output, "web")
+output_app = path_util.pure_path_join(output, "app")
+output_db = path_util.pure_path_join(output, "db")
+output_db_bak = path_util.pure_path_join(output_db, "bak")
+output_db_all_in_one = path_util.pure_path_join(output_db, "all_in_one")
+
+output_db_all_in_one_mongo = path_util.pure_path_join(output_db_all_in_one, "mongo.mongo")
+output_db_all_in_one_mysql = path_util.pure_path_join(output_db_all_in_one, "mysql.mysql")
+output_db_all_in_one_mssql = path_util.pure_path_join(output_db_all_in_one, "mssql.mssql")
+output_db_all_in_one_neo4j = path_util.pure_path_join(output_db_all_in_one, "neo4j.neo4j")
+output_tmp = path_util.pure_path_join(output, "tmp")
 
 
 def mkdir(path):
@@ -34,5 +35,4 @@ def mkdir(path):
             Path(p).mkdir(parents=True)
 
 
-paths = [output_tmp, output_api_resource, output_web, output_app, output_db_bak, output_db_all_in_one]
-mkdir(paths)
+mkdir([output_tmp, output_api_resource, output_web, output_app, output_db_bak, output_db_all_in_one])
