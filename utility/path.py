@@ -1,6 +1,7 @@
 # !/usr/bin/env python
 import os
 import re
+from pathlib import Path
 
 
 def dfs_dir(target_path, pattern=None):
@@ -8,7 +9,7 @@ def dfs_dir(target_path, pattern=None):
     sort_target = os.listdir(target_path)
     sort_target.sort(key=lambda x: re.compile("^\\d+").match(x).group() if re.compile("^\\d+").match(x) else x)
     for sub_p in sort_target:
-        tmp_path = join(target_path, sub_p)
+        tmp_path = os_path_join(target_path, sub_p)
         if os.path.isfile(tmp_path):
             if pattern:
                 match = pattern.match(tmp_path)
@@ -21,5 +22,12 @@ def dfs_dir(target_path, pattern=None):
     return ret
 
 
-def join(path, *paths):
+def os_path_join(path, *paths):
     return os.path.join(path, *paths).replace('\\', '/').strip()
+
+
+def pure_path_join(root, *elements):
+    left_path = Path(root).resolve()
+    for p in elements:
+        left_path = left_path.joinpath(p)
+    return left_path.as_posix()
