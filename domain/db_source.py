@@ -99,7 +99,7 @@ def recreate_mysql_command(host, port, user, password, db_name):
 
 
 def recreate_neo4j_command(host, port, user, password, db_name):
-    return "cypher-shell --help"
+    return "echo %PATH% "
     # return "cypher-shell" \
     #        " --address neo4j://" + host + ":" + port + \
     #        " --username " + user + \
