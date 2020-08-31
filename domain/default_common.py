@@ -18,6 +18,7 @@ param_main_db_mssql_file_path = path_util.pure_path_join(path_default.project_db
 param_main_db_mssql_output_file_name = path_default.output_db_all_in_one_mssql
 
 # neo4j
+param_main_db_neo4j_db_name = ""
 param_main_db_neo4j_port = ""
 param_main_db_neo4j_user = ""
 param_main_db_neo4j_pass = ""
