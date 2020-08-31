@@ -9,9 +9,7 @@ from colorama import init, Fore
 from script.domain import default_common as common
 # from script.domain.db_meta import mysql as mysql_meta
 from script.domain.db_meta import \
-    mssql as mssql_meta, \
     mysql as mysql_meta, \
-    mongo as mongo_meta, \
     neo4j as neo4j_meta
 from script.utility import path, template
 
@@ -100,6 +98,25 @@ def recreate_mysql_command(host, port, user, password, db_name):
            " -e \"drop database if exists " + db_name + ";create database if not exists " + db_name + " default charset utf8mb4 collate utf8mb4_0900_ai_ci;\""
 
 
+def recreate_neo4j_command(host, port, user, password, db_name):
+    return "cypher-shell --help"
+    # return "cypher-shell" \
+    #        " --address neo4j://" + host + ":" + port + \
+    #        " --username " + user + \
+    #        " --password " + password + \
+    #        " --database " + db_name + " \"match(n) return n;\""
+
+
+def recreate_neo4j():
+    command = recreate_neo4j_command(common.param_main_db_host,
+                                     common.param_main_db_neo4j_port,
+                                     common.param_main_db_neo4j_user,
+                                     common.param_main_db_neo4j_pass,
+                                     "neo4j")
+    print(Fore.CYAN + recreate_neo4j.__name__ + " => " + Fore.WHITE + command)
+    os.system(command)
+
+
 # recreate target db
 def recreate_mysql():
     command = recreate_mysql_command(common.param_main_db_host,
@@ -122,3 +139,4 @@ def rebuild_mysql():
 
 def rebuild_neo4j():
     assemble_neo4j()
+    recreate_neo4j()
