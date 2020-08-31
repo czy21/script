@@ -8,10 +8,15 @@ from colorama import init, Fore
 
 from script.domain import default_common as common
 # from script.domain.db_meta import mysql as mysql_meta
-from script.domain.db_meta import 
+from script.domain.db_meta import \
+    mssql as mssql_meta, \
+    mysql as mysql_meta, \
+    mongo as mongo_meta, \
+    neo4j as neo4j_meta
 from script.utility import path, template
 
 init(autoreset=True)
+
 
 # assemble source sql files to target file
 def assemble_ql(s_path, t_file_name, db_meta, file_suffix):
@@ -107,12 +112,13 @@ def recreate_mysql():
 
 
 def assemble_neo4j():
-    assemble_ql(common.param_main_db_neo4j_file_path, common.param_main_db_neo4j_output_file_name, mysql_meta, "cql")
+    assemble_ql(common.param_main_db_neo4j_file_path, common.param_main_db_neo4j_output_file_name, neo4j_meta, "cql")
 
 
 def rebuild_mysql():
     assemble_mysql()
     upgrade_mysql()
+
 
 def rebuild_neo4j():
     assemble_neo4j()
