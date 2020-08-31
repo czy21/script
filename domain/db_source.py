@@ -57,7 +57,8 @@ def upgrade_mysql():
               " --password=" + common.param_main_db_mysql_pass + \
               " -N < " + common.param_main_db_mysql_output_file_name
     print(Fore.CYAN + upgrade_mysql.__name__ + " => " + Fore.WHITE + command)
-    callback = filter_execution(os.popen(command).readlines())
+    mysql_msg = os.popen(command).readlines()
+    callback = filter_execution(mysql_msg)
     for m in callback[1::2]:
         print(Fore.GREEN + m.replace("\n", ""))
     if math.modf(len(callback) / 2)[0] > 0:
@@ -99,12 +100,34 @@ def recreate_mysql_command(host, port, user, password, db_name):
 
 
 def recreate_neo4j_command(host, port, user, password, db_name):
-    return "echo %PATH% "
-    # return "cypher-shell" \
-    #        " --address neo4j://" + host + ":" + port + \
-    #        " --username " + user + \
-    #        " --password " + password + \
-    #        " --database " + db_name + " \"match(n) return n;\""
+    return "cypher-shell" \
+           " --address neo4j://" + host + ":" + port + \
+           " --username " + user + \
+           " --password " + password + \
+           " --database " + db_name + " \"match(n) detach delete n;\""
+
+
+def upgrade_neo4j():
+    command = recreate_neo4j_command(common.param_main_db_host,
+                                     common.param_main_db_neo4j_port,
+                                     common.param_main_db_neo4j_user,
+                                     common.param_main_db_neo4j_pass,
+                                     common.param_main_db_neo4j_db_name) + \
+              " && cypher-shell" \
+              " --address neo4j://" + common.param_main_db_host + ":" + common.param_main_db_neo4j_port + \
+              " --database=" + common.param_main_db_name + \
+              " --username " + common.param_main_db_neo4j_user + \
+              " --password " + common.param_main_db_neo4j_pass + \
+              " --database " + common.param_main_db_neo4j_db_name + \
+              " --file " + common.param_main_db_neo4j_output_file_name
+    print(Fore.CYAN + upgrade_mysql.__name__ + " => " + Fore.WHITE + command)
+    callback = os.popen(command).readlines()
+    # callback = filter_execution(os.popen(command).readlines())
+    print(callback)
+    # for m in callback[1::2]:
+    #     print(Fore.GREEN + m.replace("\n", ""))
+    # if math.modf(len(callback) / 2)[0] > 0:
+    #     print(Fore.RED + callback[len(callback) - 1])
 
 
 def recreate_neo4j():
@@ -112,7 +135,7 @@ def recreate_neo4j():
                                      common.param_main_db_neo4j_port,
                                      common.param_main_db_neo4j_user,
                                      common.param_main_db_neo4j_pass,
-                                     "neo4j")
+                                     common.param_main_db_neo4j_db_name)
     print(Fore.CYAN + recreate_neo4j.__name__ + " => " + Fore.WHITE + command)
     os.system(command)
 
@@ -139,4 +162,4 @@ def rebuild_mysql():
 
 def rebuild_neo4j():
     assemble_neo4j()
-    recreate_neo4j()
+    upgrade_neo4j()
