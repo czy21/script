@@ -3,7 +3,8 @@ import io
 import math
 import os
 import re
-
+import json
+import pickle
 from colorama import init, Fore
 
 from script.domain import default_common as common
@@ -121,7 +122,9 @@ def upgrade_neo4j():
               " --database " + common.param_main_db_neo4j_db_name + \
               " --file " + common.param_main_db_neo4j_output_file_name
     print(Fore.CYAN + upgrade_mysql.__name__ + " => " + Fore.WHITE + command)
-    callback = os.popen(command).readlines()
+    callback = [elem for elem in os.popen(command).readlines() if elem != "msg\n"]
+    for t in callback:
+        print(t)
     # callback = filter_execution(os.popen(command).readlines())
     print(callback)
     # for m in callback[1::2]:
