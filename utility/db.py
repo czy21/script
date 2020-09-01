@@ -10,7 +10,7 @@ from script.utility import path as path_util, template as template_util
 init(autoreset=True)
 
 
-def assemble_ql(s_path, t_file_name, db_meta, file_suffix, params):
+def assemble_ql(s_path, t_file_name, db_meta, file_suffix):
     db_file_paths = path_util.dfs_dir(s_path, re.compile(r".*" + file_suffix))
     with io.open(t_file_name, "w+", encoding="utf-8", newline="\n") as t_file:
         for s in db_file_paths:

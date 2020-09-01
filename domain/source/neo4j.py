@@ -9,7 +9,7 @@ from script.utility import db as db_util, list as list_util
 class Neo4j:
     @staticmethod
     def assemble():
-        db_util.assemble_ql(default_common.param_main_db_neo4j_file_path, default_common.param_main_db_neo4j_output_file_name, neo4j_meta, "cql", default_common)
+        db_util.assemble_ql(default_common.param_main_db_neo4j_file_path, default_common.param_main_db_neo4j_output_file_name, neo4j_meta, "cql")
 
     @staticmethod
     def get_main_db_param_dict():
