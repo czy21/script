@@ -44,6 +44,13 @@ def print_cmd(class_name, method_name, command):
     print(Fore.CYAN + class_name + "_" + method_name + " => " + Fore.WHITE + command)
 
 
+def arr_param_to_str(*items):
+    arr = []
+    for t in items:
+        arr[len(arr):len(arr)] = t
+    return " ".join(["", " ".join(arr), ""])
+
+
 class Mysql:
     @staticmethod
     def assemble():
@@ -60,28 +67,43 @@ class Mysql:
         os.system(command)
 
     @staticmethod
+    def get_basic_param(host, port, user, password, db_name):
+        return [
+            "--default-character-set=utf8mb4",
+            "--database=" + db_name,
+            "--host=" + host,
+            "--port=" + port,
+            "--user=" + user,
+            "--password=" + password
+        ]
+
+    @staticmethod
+    def get_main_db_param_dict():
+        return Mysql.get_basic_param(common.param_main_db_host,
+                                     common.param_main_db_mysql_port,
+                                     common.param_main_db_mysql_user,
+                                     common.param_main_db_mysql_pass,
+                                     common.param_main_db_name)
+
+    @staticmethod
     def exec():
-        command = " mysql" \
-                  " --default-character-set=utf8mb4" \
-                  " --database=" + common.param_main_db_name + \
-                  " --host=" + common.param_main_db_host + \
-                  " --port=" + common.param_main_db_mysql_port + \
-                  " --user=" + common.param_main_db_mysql_user + \
-                  " --password=" + common.param_main_db_mysql_pass + \
-                  " -N < " + common.param_main_db_mysql_output_file_name
+        extra_param_dict = [
+            "--skip-column-names",
+            "< " + common.param_main_db_mysql_output_file_name
+        ]
+        basic_param_str = arr_param_to_str(Mysql.get_main_db_param_dict(), extra_param_dict)
+        command = "mysql" + basic_param_str
         print_cmd(Mysql.__name__, Mysql.exec.__name__, command)
         mysql_msg = os.popen(command).readlines()
         print_msg(mysql_msg)
 
     @staticmethod
     def recreate_command(host, port, user, password, db_name):
-        return "mysql" \
-               " --default-character-set=utf8mb4" \
-               " --host=" + host + \
-               " --port=" + port + \
-               " --user=" + user + \
-               " --password=" + password + \
-               " -e \"drop database if exists " + db_name + ";create database if not exists " + db_name + " default charset utf8mb4 collate utf8mb4_0900_ai_ci;\""
+        extra_param_dict = [
+            "--execute \"drop database if exists " + db_name + ";create database if not exists " + db_name + " default charset utf8mb4 collate utf8mb4_0900_ai_ci;\""
+        ]
+        basic_param_str = arr_param_to_str(Mysql.get_basic_param(host, port, user, password, db_name), extra_param_dict)
+        return "mysql" + basic_param_str
 
     @staticmethod
     def backup_mysql():
@@ -90,19 +112,16 @@ class Mysql:
                                          common.param_main_db_mysql_user,
                                          common.param_main_db_mysql_pass,
                                          common.param_main_db_bak_name) + \
-                  " && mysqldump " + common.param_main_db_name + \
-                  " --default-character-set=utf8mb4" \
-                  " --host=" + common.param_main_db_host + \
-                  " --port=" + common.param_main_db_mysql_port + \
-                  " --user=" + common.param_main_db_mysql_user + \
-                  " --password=" + common.param_main_db_mysql_pass + \
-                  "| mysql " \
-                  " --default-character-set=utf8mb4" \
-                  " --database=" + common.param_main_db_bak_name + \
-                  " --host=" + common.param_main_db_host + \
-                  " --port=" + common.param_main_db_mysql_port + \
-                  " --user=" + common.param_main_db_mysql_user + \
-                  " --password=" + common.param_main_db_mysql_pass
+                  " && mysqldump" + arr_param_to_str(Mysql.get_basic_param(common.param_main_db_host,
+                                                                           common.param_main_db_mysql_port,
+                                                                           common.param_main_db_mysql_user,
+                                                                           common.param_main_db_mysql_pass,
+                                                                           common.param_main_db_name)) + \
+                  "| mysql" + arr_param_to_str(Mysql.get_basic_param(common.param_main_db_host,
+                                                                     common.param_main_db_mysql_port,
+                                                                     common.param_main_db_mysql_user,
+                                                                     common.param_main_db_mysql_pass,
+                                                                     common.param_main_db_bak_name))
         print(Fore.CYAN + "restoring => " + Fore.WHITE + command)
         os.system(command)
 
@@ -113,24 +132,40 @@ class Neo4j:
         assemble_ql(common.param_main_db_neo4j_file_path, common.param_main_db_neo4j_output_file_name, neo4j_meta, "cql")
 
     @staticmethod
+    def get_main_db_param_dict():
+        return Neo4j.get_basic_param(common.param_main_db_host,
+                                     common.param_main_db_neo4j_port,
+                                     common.param_main_db_neo4j_user,
+                                     common.param_main_db_neo4j_pass,
+                                     common.param_main_db_neo4j_db_name)
+
+    @staticmethod
     def exec():
-        command = "cypher-shell" \
-                  " --address neo4j://" + common.param_main_db_host + ":" + common.param_main_db_neo4j_port + \
-                  " --username " + common.param_main_db_neo4j_user + \
-                  " --password " + common.param_main_db_neo4j_pass + \
-                  " --database " + common.param_main_db_neo4j_db_name + \
-                  " --file " + common.param_main_db_neo4j_output_file_name
+        extra_param_dict = [
+            "--file ", common.param_main_db_neo4j_output_file_name
+        ]
+        basic_param_str = arr_param_to_str(Neo4j.get_main_db_param_dict(), extra_param_dict)
+        command = "cypher-shell" + basic_param_str
         print_cmd(Neo4j.__name__, Neo4j.exec.__name__, command)
         neo4j_msg = [elem.replace("\"", '') for elem in os.popen(command).readlines() if elem != "msg\n"]
         print_msg(neo4j_msg)
 
     @staticmethod
+    def get_basic_param(host, port, user, password, db_name):
+        return [
+            "--address " + "neo4j://" + host + ":" + port,
+            "--username " + user,
+            "--password " + password,
+            "--database " + db_name
+        ]
+
+    @staticmethod
     def recreate():
-        command = "cypher-shell" \
-                  " --address neo4j://" + common.param_main_db_host + ":" + common.param_main_db_neo4j_port + \
-                  " --username " + common.param_main_db_neo4j_user + \
-                  " --password " + common.param_main_db_neo4j_pass + \
-                  " --database " + common.param_main_db_neo4j_db_name + " \"match(n) detach delete n;\""
+        extra_param_dict = [
+            "\"match(n) detach delete n;\""
+        ]
+        basic_param_str = arr_param_to_str(Neo4j.get_main_db_param_dict(), extra_param_dict)
+        command = "cypher-shell" + basic_param_str
         print_cmd(Neo4j.__name__, Neo4j.recreate.__name__, command)
         os.system(command)
 
