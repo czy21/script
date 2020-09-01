@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 
 
+flat = lambda L: sum(map(flat, L), []) if isinstance(L, list) else [L]
+
+
 def arr_param_to_str(*items) -> str:
-    return " ".join(["", " ".join([x for tup in items for x in tup]), ""])
+    return " ".join(["", " ".join(flat(list(items))), ""])
