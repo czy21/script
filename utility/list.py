@@ -2,7 +2,4 @@
 
 
 def arr_param_to_str(*items) -> str:
-    arr = []
-    for t in items:
-        arr[len(arr):len(arr)] = t
-    return " ".join(["", " ".join(arr), ""])
+    return " ".join(["", " ".join([x for tup in items for x in tup]), ""])
