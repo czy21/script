@@ -8,11 +8,11 @@ from script.utility import db as db_util, list as list_util
 
 class Neo4j:
     @staticmethod
-    def assemble():
+    def assemble() -> None:
         db_util.assemble_ql(default_common.param_main_db_neo4j_file_path, default_common.param_main_db_neo4j_output_file_name, neo4j_meta, "cql")
 
     @staticmethod
-    def get_main_db_param_dict():
+    def get_main_db_param_dict() -> list:
         return Neo4j.get_basic_param(default_common.param_main_db_host,
                                      default_common.param_main_db_neo4j_port,
                                      default_common.param_main_db_neo4j_user,
@@ -20,7 +20,7 @@ class Neo4j:
                                      default_common.param_main_db_neo4j_db_name)
 
     @staticmethod
-    def exec():
+    def exec() -> None:
         extra_param_dict = [
             "--file " + default_common.param_main_db_neo4j_output_file_name
         ]
@@ -31,7 +31,7 @@ class Neo4j:
         db_util.print_msg(neo4j_msg)
 
     @staticmethod
-    def get_basic_param(host, port, user, password, db_name):
+    def get_basic_param(host, port, user, password, db_name) -> list:
         return [
             "--address " + "neo4j://" + host + ":" + port,
             "--username " + user,
@@ -40,7 +40,7 @@ class Neo4j:
         ]
 
     @staticmethod
-    def recreate():
+    def recreate() -> None:
         extra_param_dict = [
             "\"match(n) detach delete n;\""
         ]

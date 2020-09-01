@@ -10,7 +10,7 @@ from script.utility import path as path_util, template as template_util
 init(autoreset=True)
 
 
-def assemble_ql(s_path, t_file_name, db_meta, file_suffix):
+def assemble_ql(s_path, t_file_name, db_meta, file_suffix) -> None:
     db_file_paths = path_util.dfs_dir(s_path, re.compile(r".*" + file_suffix))
     with io.open(t_file_name, "w+", encoding="utf-8", newline="\n") as t_file:
         for s in db_file_paths:
@@ -24,11 +24,11 @@ def assemble_ql(s_path, t_file_name, db_meta, file_suffix):
             t_file.write(u'{}'.format(footer.safe_substitute(file_path=s) + "\n\n"))
 
 
-def filter_execution(iterator):
+def filter_execution(iterator) -> list:
     return list(filter(re.compile(r"^(executing:|executed:)").search, iterator))
 
 
-def print_msg(msg_lines):
+def print_msg(msg_lines) -> None:
     callback = filter_execution(msg_lines)
     for m in callback[1::2]:
         print(Fore.GREEN + m.replace("\n", ""))
@@ -36,5 +36,5 @@ def print_msg(msg_lines):
         print(Fore.RED + callback[len(callback) - 1])
 
 
-def print_cmd(class_name, method_name, command):
+def print_cmd(class_name, method_name, command) -> None:
     print(Fore.CYAN + class_name + "_" + method_name + " => " + Fore.WHITE + command)

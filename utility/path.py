@@ -4,7 +4,7 @@ import re
 from pathlib import Path
 
 
-def dfs_dir(target_path, pattern=None):
+def dfs_dir(target_path, pattern=None) -> list:
     ret = []
     sort_target = os.listdir(target_path)
     sort_target.sort(key=lambda x: re.compile("^\\d+").match(x).group() if re.compile("^\\d+").match(x) else x)
@@ -22,11 +22,11 @@ def dfs_dir(target_path, pattern=None):
     return ret
 
 
-def os_path_join(path, *paths):
+def os_path_join(path, *paths) -> str:
     return os.path.join(path, *paths).replace('\\', '/').strip()
 
 
-def pure_path_join(root, *elements):
+def pure_path_join(root, *elements) -> str:
     left_path = Path(root).resolve()
     for p in elements:
         left_path = left_path.joinpath(p)
