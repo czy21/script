@@ -29,7 +29,7 @@ output_db_all_in_one_neo4j = path_util.pure_path_join(output_db_all_in_one, "neo
 output_tmp = path_util.pure_path_join(output, "tmp")
 
 
-def mkdir(path):
+def mkdir(path) -> None:
     for p in path:
         if not Path(p).exists():
             Path(p).mkdir(parents=True)
