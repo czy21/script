@@ -1,4 +1,4 @@
-# !/usr/bin/env python
+#!/usr/bin/env python3
 from pathlib import Path
 
 from script.utility import path as path_util

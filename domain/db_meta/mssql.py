@@ -1,4 +1,4 @@
-# !/usr/bin/env python
+#!/usr/bin/env python3
 
 self = {
     "header": "SELECT 'Executing: ${{{file_path}}}' AS file;",
