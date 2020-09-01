@@ -9,7 +9,7 @@ from script.utility import db as db_util, list as list_util
 class Mysql:
     @staticmethod
     def assemble():
-        db_util.assemble_ql(default_common.param_main_db_mysql_file_path, default_common.param_main_db_mysql_output_file_name, mysql_meta, "sql", default_common)
+        db_util.assemble_ql(default_common.param_main_db_mysql_file_path, default_common.param_main_db_mysql_output_file_name, mysql_meta, "sql")
 
     @staticmethod
     def recreate():
