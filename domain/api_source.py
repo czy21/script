@@ -5,7 +5,7 @@ from pathlib import Path
 
 from colorama import Fore, init
 
-from script.domain import default_common as common
+from script.domain.default import default_common as common
 from script.utility import template
 
 init(autoreset=True)
