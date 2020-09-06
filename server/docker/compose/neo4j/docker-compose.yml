@@ -14,4 +14,5 @@ services:
       - /data/config/neo4j/:/conf/
     restart: always
     environment:
-      NEO4J_AUTH: neo4j/czy.1121
+      NEO4J_AUTH: neo4j/Czy.190815
+      NEO4J_dbms_memory_pagecache_size: 2g
