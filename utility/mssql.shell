@@ -1,0 +1,3 @@
+
+
+sqlcmd -S 127.0.0.1,21433 -U sa -P Czy.190815 -d cy_db -i ../Documents/dbo.ent_mdm_institution.Table.sql

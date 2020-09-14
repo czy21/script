@@ -1,0 +1,11 @@
+version: '3.7'
+
+services:
+
+  mq:
+    image: rabbitmq:3.8.8-management
+    container_name: rabbitmq
+    volumes:
+      - /data/volumes/rabbitmq/:/var/lib/rabbitmq/
+    restart: always
+
