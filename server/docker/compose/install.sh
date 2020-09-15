@@ -5,31 +5,32 @@
 # -i exec init_config.sh and start compose
 # -c exec post_config.sh
 
-
 function exec_init_config() {
+    config_path=/data/config/${name}/
+    sudo mkdir -p ${config_path}
+    if [ -d ${target_path}/conf/ ]; then
+      echo -e "${number}.\033[32m copy conf finished \033[0m"
+      sudo cp -r ${target_path}/conf/* ${config_path}
+    else
+      echo -e "${number}.\033[33m no exist conf dir \033[0m"
+    fi
     config_file=${target_path}/init_config.sh
     if [[ -f ${config_file} ]]; then
         echo -e "${number}.\033[32m init_config => \033[0m ${config_file}"
-        config_path=/data/config/${name}/
-        sudo sh -x ${config_file}
-        sudo mkdir -p ${config_path}
-        if [ -d ${target_path}/conf/ ]; then
-          echo "copy conf finished"
-          sudo cp -r ${target_path}/conf/* ${config_path}
-        else
-          echo "no exist conf"
-        fi
+        sudo sh ${config_file}
+    else
+        echo -e "${number}.\033[33m no such file \033[0m ${config_file}"
     fi
-    echo -e '\n'
 }
 
 function exec_post_config() {
     config_file=${target_path}/post_config.sh
     if [[ -f ${config_file} ]]; then
         echo -e "${number}.\033[32m post_config => \033[0m ${config_file}"
-        sudo sh -x ${config_file}
+        sudo sh ${config_file}
+    else
+        echo -e "${number}.\033[33m no such file \033[0m ${config_file}"
     fi
-    echo -e '\n'
 }
 
 function start_compose() {
@@ -38,7 +39,6 @@ function start_compose() {
         echo -e "${number}.\033[32m compose => \033[0m ${compose_file}"
         sudo docker-compose -f ${compose_file} up -d
     fi
-    echo -e '\n'
 }
 
 function print_app_list() {
@@ -80,56 +80,68 @@ do
 		  print_app_list
       echo -n "please select install app number(example:1 2 ... or all)"
       read arg
+      echo -e '\n'
       if [ "${arg}" = "all" ]; then
           for (( j = 0; j < ${#all_map[@]}; j++ )); do
                internal_map=(${all_map[j]})
-               target_path=${internal_map[2]}
                number=${internal_map[0]}
                name=${internal_map[1]}
+               target_path=${internal_map[2]}
+               echo ${internal_map[@]}
                exec_init_config
                start_compose
+               echo -e '\n'
           done
-          exit
-      fi
-      arg=($arg)
-      for i in ${arg[@]} ; do
-        for (( j = 0; j < ${#all_map[@]}; j++ )); do
-             internal_map=(${all_map[j]})
-             if test $i -eq ${internal_map[0]}; then
-               target_path=${internal_map[2]}
-               number=${internal_map[0]}
-               name=${internal_map[1]}
-               exec_init_config
-               start_compose
-             fi
+      else
+        arg=($arg)
+        for i in ${arg[@]} ; do
+          for (( j = 0; j < ${#all_map[@]}; j++ )); do
+               internal_map=(${all_map[j]})
+               if test $i -eq ${internal_map[0]}; then
+                 number=${internal_map[0]}
+                 name=${internal_map[1]}
+                 target_path=${internal_map[2]}
+                 echo ${internal_map[@]}
+                 exec_init_config
+                 start_compose
+                 echo -e '\n'
+               fi
+          done
         done
-      done
+      fi
       shift 1
 			;;
 	  -c)
 	    print_app_list
       echo -n "please select post_config app number(example:1 2 ... or all)"
       read arg
+      echo -e '\n'
       if [ "${arg}" = "all" ]; then
           for (( j = 0; j < ${#all_map[@]}; j++ )); do
-               internal_map=(${all_map[j]})
-                 target_path=${internal_map[2]}
+                 internal_map=(${all_map[j]})
                  number=${internal_map[0]}
+                 name=${internal_map[1]}
+                 target_path=${internal_map[2]}
+                 echo ${internal_map[@]}
                  exec_post_config
+                 echo -e '\n'
           done
-          exit
-      fi
-      arg=($arg)
-      for i in ${arg[@]} ; do
-        for (( j = 0; j < ${#all_map[@]}; j++ )); do
-             internal_map=(${all_map[j]})
-             if test $i -eq ${internal_map[0]}; then
-               target_path=${internal_map[2]}
-               number=${internal_map[0]}
-               exec_post_config
-             fi
+      else
+        arg=($arg)
+        for i in ${arg[@]} ; do
+          for (( j = 0; j < ${#all_map[@]}; j++ )); do
+               internal_map=(${all_map[j]})
+               if test $i -eq ${internal_map[0]}; then
+                 number=${internal_map[0]}
+                 name=${internal_map[1]}
+                 target_path=${internal_map[2]}
+                 echo ${internal_map[@]}
+                 exec_post_config
+                 echo -e '\n'
+               fi
+          done
         done
-      done
+      fi
 	    shift 1
 			;;
 		*)

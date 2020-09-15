@@ -6,6 +6,6 @@ services:
     image: rabbitmq:3.8.8-management
     container_name: rabbitmq
     volumes:
+      - /data/config/rabbitmq/:/etc/rabbitmq/
       - /data/volumes/rabbitmq/:/var/lib/rabbitmq/
     restart: always
-
