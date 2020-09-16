@@ -5,7 +5,13 @@ services:
   mq:
     image: rabbitmq:3.8.8-management
     container_name: rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
     volumes:
       - /data/config/rabbitmq/:/etc/rabbitmq/
       - /data/volumes/rabbitmq/:/var/lib/rabbitmq/
+    environment:
+      - RABBITMQ_DEFAULT_USER=root
+      - RABBITMQ_DEFAULT_PASS=root
     restart: always
