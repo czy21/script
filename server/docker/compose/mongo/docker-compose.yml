@@ -5,6 +5,7 @@ services:
   mongo:
     image: mongo:4.2.1
     container_name: mongo
+    privileged: true
     ports:
       - 27017:27017
     volumes:

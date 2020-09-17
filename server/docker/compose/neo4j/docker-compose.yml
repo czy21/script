@@ -5,6 +5,7 @@ services:
   db:
     image: neo4j:4.1.1
     container_name: neo4j
+    privileged: true
     ports:
       - 7474:7474
       - 7687:7687

@@ -5,6 +5,7 @@ services:
   web:
     image: nginx:1.14
     container_name: nginx
+    privileged: true
     ports:
       - "80:80"
       - "443:443"
