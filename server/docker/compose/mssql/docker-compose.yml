@@ -5,6 +5,7 @@ services:
   mssql:
     image: mcr.microsoft.com/mssql/server:2017-latest
     container_name: mssql
+    privileged: true
     ports:
       - 1433:1433
     volumes:

@@ -5,6 +5,7 @@ services:
   nexus:
     image: sonatype/nexus3
     container_name: nexus
+    privileged: true
     ports:
       - 8081:8081
     volumes:
