@@ -9,8 +9,8 @@ function exec_init_config() {
     config_path=/data/config/${name}/
     sudo mkdir -p ${config_path}
     if [ -d ${target_path}/conf/ ]; then
-      echo -e "${number}.\033[32m copy conf finished \033[0m"
-      sudo cp -r ${target_path}/conf/* ${config_path}
+      echo -e "${number}.\033[32m copy conf dir\033[0m"
+      sudo cp -rv ${target_path}/conf/* ${config_path}
     else
       echo -e "${number}.\033[33m no exist conf dir \033[0m"
     fi
@@ -36,7 +36,7 @@ function exec_post_config() {
 function start_compose() {
     compose_file=${target_path}/docker-compose.yml
     if [[ -f ${compose_file} ]];then
-        echo -e "${number}.\033[32m compose => \033[0m ${compose_file}"
+        echo -e "${number}.\033[32m start_compose => \033[0m ${compose_file}"
         sudo docker-compose -f ${compose_file} up -d
     fi
 }
