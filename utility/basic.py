@@ -4,5 +4,5 @@ from builtins import print as sys_print
 
 
 def print(args):
-    sleep(0.5)
+    sleep(0.2)
     sys_print(args)

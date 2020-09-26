@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 import os
 
-from script.domain.default import common as default_common
 from script.domain.db_meta import mysql as mysql_meta
+from script.domain.default import common as default_common
 from script.utility import db as db_util, list as list_util
 
 
@@ -23,14 +23,10 @@ class Mysql:
 
     @staticmethod
     def get_basic_param(host, port, user, password, db_name) -> list:
-        return [
-            "--default-character-set=utf8mb4",
-            "--database=" + db_name,
-            "--host=" + host,
-            "--port=" + port,
-            "--user=" + user,
-            "--password=" + password
-        ]
+        param = ["--default-character-set=utf8mb4", "--host=" + host, "--port=" + port, "--user=" + user, "--password=" + password]
+        if db_name:
+            param.append("--database=" + db_name)
+        return param
 
     @staticmethod
     def get_main_db_param_dict() -> list:
@@ -57,7 +53,7 @@ class Mysql:
         extra_param_dict = [
             "--execute \"drop database if exists " + db_name + ";create database if not exists " + db_name + " default charset utf8mb4 collate utf8mb4_0900_ai_ci;\""
         ]
-        basic_param_str = list_util.arr_param_to_str(Mysql.get_basic_param(host, port, user, password, db_name), extra_param_dict)
+        basic_param_str = list_util.arr_param_to_str(Mysql.get_basic_param(host, port, user, password, None), extra_param_dict)
         return "mysql" + basic_param_str
 
     @staticmethod
