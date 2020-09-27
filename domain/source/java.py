@@ -33,14 +33,15 @@ def build_override_yml():
 def build_api():
     output_extra_config_name = build_extra_config()
 
-    command = list_util.arr_param_to_str([
-        "gradle",
-        "--init-script " + default_common.param_api_gradle_init_script_file_path,
-        "--build-file " + default_common.path_util.pure_path_join(default_common.param_api_root_project_path, "build.gradle"),
-        "--project-prop extraConfig=" + output_extra_config_name,
-        "--parallel clean build -x test"
-    ])
-    command = list_util.arr_param_to_str([default_common.param_api_docker_gradle_command, command])
+    command = list_util.arr_param_to_str(
+        default_common.param_api_docker_gradle_command,
+        [
+            "gradle",
+            "--init-script " + default_common.param_api_gradle_init_script_file_path,
+            "--build-file " + default_common.path_util.pure_path_join(default_common.param_api_root_project_path, "build.gradle"),
+            "--project-prop extraConfig=" + output_extra_config_name,
+            "--parallel clean build -x test"
+        ])
     basic_util.print(Fore.CYAN + build_api.__name__ + " => " + Fore.WHITE + command)
     os.system(command)
     build_override_yml()
@@ -48,14 +49,13 @@ def build_api():
 
 def build_plugin(publish_task=None):
     command = list_util.arr_param_to_str(
+        default_common.param_api_docker_gradle_command,
         [
-            default_common.param_api_docker_gradle_command,
-            [
-                "gradle",
-                "--init-script " + default_common.param_api_gradle_init_script_file_path,
-                "--build-file " + default_common.path_util.pure_path_join(default_common.param_api_plugin_path, "build.gradle"),
-            ]
-        ])
+            "gradle",
+            "--init-script " + default_common.param_api_gradle_init_script_file_path,
+            "--build-file " + default_common.path_util.pure_path_join(default_common.param_api_plugin_path, "build.gradle"),
+        ]
+    )
 
     if publish_task:
         command = list_util.arr_param_to_str(command, publish_task)
