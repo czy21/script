@@ -22,14 +22,19 @@ class Mysql:
         os.system(command)
 
     @staticmethod
-    def get_basic_param(host, port, user, password, db_name) -> list:
-        param = ["--default-character-set=utf8mb4", "--host=" + host, "--port=" + port, "--user=" + user, "--password=" + password]
+    def get_basic_param(host, port, user, password, db_name) -> str:
+        param = ["--default-character-set=utf8mb4",
+                 "--host=" + host,
+                 "--port=" + port,
+                 "--user=" + user,
+                 "--password=" + password
+                 ]
         if db_name:
             param.append("--database=" + db_name)
-        return param
+        return list_util.arr_param_to_str(param)
 
     @staticmethod
-    def get_main_db_param_dict() -> list:
+    def get_main_db_param_dict() -> str:
         return Mysql.get_basic_param(default_common.param_main_db_host,
                                      default_common.param_main_db_mysql_port,
                                      default_common.param_main_db_mysql_user,
@@ -42,8 +47,7 @@ class Mysql:
             "--skip-column-names",
             "< " + default_common.param_main_db_mysql_output_file_name
         ]
-        basic_param_str = list_util.arr_param_to_str(Mysql.get_main_db_param_dict(), extra_param_dict)
-        command = "mysql" + basic_param_str
+        command = list_util.arr_param_to_str("mysql", Mysql.get_main_db_param_dict(), extra_param_dict)
         db_util.print_cmd(Mysql.__name__, Mysql.exec.__name__, command)
         mysql_msg = os.popen(command).readlines()
         db_util.print_msg(mysql_msg)
@@ -53,8 +57,7 @@ class Mysql:
         extra_param_dict = [
             "--execute \"drop database if exists " + db_name + ";create database if not exists " + db_name + " default charset utf8mb4 collate utf8mb4_0900_ai_ci;\""
         ]
-        basic_param_str = list_util.arr_param_to_str(Mysql.get_basic_param(host, port, user, password, None), extra_param_dict)
-        return "mysql" + basic_param_str
+        return list_util.arr_param_to_str("mysql", Mysql.get_basic_param(host, port, user, password, None), extra_param_dict)
 
     @staticmethod
     def backup_mysql() -> None:
@@ -63,16 +66,16 @@ class Mysql:
                                          default_common.param_main_db_mysql_user,
                                          default_common.param_main_db_mysql_pass,
                                          default_common.param_main_db_bak_name) + \
-                  " && mysqldump" + list_util.arr_param_to_str(Mysql.get_basic_param(default_common.param_main_db_host,
-                                                                                     default_common.param_main_db_mysql_port,
-                                                                                     default_common.param_main_db_mysql_user,
-                                                                                     default_common.param_main_db_mysql_pass,
-                                                                                     default_common.param_main_db_name)) + \
-                  "| mysql" + list_util.arr_param_to_str(Mysql.get_basic_param(default_common.param_main_db_host,
-                                                                               default_common.param_main_db_mysql_port,
-                                                                               default_common.param_main_db_mysql_user,
-                                                                               default_common.param_main_db_mysql_pass,
-                                                                               default_common.param_main_db_bak_name))
+                  "&&" + list_util.arr_param_to_str("mysqldump", Mysql.get_basic_param(default_common.param_main_db_host,
+                                                                                       default_common.param_main_db_mysql_port,
+                                                                                       default_common.param_main_db_mysql_user,
+                                                                                       default_common.param_main_db_mysql_pass,
+                                                                                       default_common.param_main_db_name)) + \
+                  "|" + list_util.arr_param_to_str("mysql", Mysql.get_basic_param(default_common.param_main_db_host,
+                                                                                  default_common.param_main_db_mysql_port,
+                                                                                  default_common.param_main_db_mysql_user,
+                                                                                  default_common.param_main_db_mysql_pass,
+                                                                                  default_common.param_main_db_bak_name))
         # print(Fore.CYAN + "restoring => " + Fore.WHITE + command)
         os.system(command)
 
