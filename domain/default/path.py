@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 from pathlib import Path
-
 from script.utility import path as path_util
 
 root_path = path_util.pure_path_join("../../")
