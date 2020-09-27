@@ -6,7 +6,7 @@ from pathlib import Path
 from colorama import Fore, init
 
 from script.domain.default import common as default_common
-from script.utility import template, basic as basic_util
+from script.utility import template, basic as basic_util, list as list_util
 
 init(autoreset=True)
 
@@ -33,10 +33,13 @@ def build_override_yml():
 def build_api():
     output_extra_config_name = build_extra_config()
 
-    command = "gradle clean build -x test --parallel" \
-              " --build-file " + Path(default_common.param_api_root_project_path).joinpath("build.gradle").as_posix() + \
-              " --project-prop extraConfig=" + output_extra_config_name
-    command = " ".join([default_common.param_api_docker_gradle_command, command])
+    command = list_util.arr_param_to_str([
+        "gradle clean build -x test --parallel",
+        "--init-script " + default_common.path_util.pure_path_join(default_common.default_path.root_path, "shell/template/init.script"),
+        "--build-file " + Path(default_common.param_api_root_project_path).joinpath("build.gradle").as_posix(),
+        "--project-prop extraConfig=" + output_extra_config_name
+    ])
+    command = list_util.arr_param_to_str([default_common.param_api_docker_gradle_command, command])
     basic_util.print(Fore.CYAN + build_api.__name__ + " => " + Fore.WHITE + command)
     os.system(command)
     build_override_yml()
