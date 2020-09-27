@@ -32,7 +32,7 @@ def build_override_yml():
 
 def build_api():
     output_extra_config_name = build_extra_config()
-    command = "gradle clean build" \
+    command = "gradle clean build -x test --parallel" \
               " --build-file " + Path(default_common.param_api_root_project_path).joinpath("build.gradle").as_posix() + \
               " --project-prop extraConfig=" + output_extra_config_name
     basic_util.print(Fore.CYAN + build_api.__name__ + " => " + Fore.WHITE + command)
