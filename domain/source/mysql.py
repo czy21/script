@@ -61,23 +61,26 @@ class Mysql:
 
     @staticmethod
     def backup_mysql() -> None:
-        command = Mysql.recreate_command(default_common.param_main_db_host,
-                                         default_common.param_main_db_mysql_port,
-                                         default_common.param_main_db_mysql_user,
-                                         default_common.param_main_db_mysql_pass,
-                                         default_common.param_main_db_bak_name) + \
-                  "&&" + list_util.arr_param_to_str("mysqldump", Mysql.get_basic_param(default_common.param_main_db_host,
-                                                                                       default_common.param_main_db_mysql_port,
-                                                                                       default_common.param_main_db_mysql_user,
-                                                                                       default_common.param_main_db_mysql_pass,
-                                                                                       default_common.param_main_db_name)) + \
-                  "|" + list_util.arr_param_to_str("mysql", Mysql.get_basic_param(default_common.param_main_db_host,
-                                                                                  default_common.param_main_db_mysql_port,
-                                                                                  default_common.param_main_db_mysql_user,
-                                                                                  default_common.param_main_db_mysql_pass,
-                                                                                  default_common.param_main_db_bak_name))
-        # print(Fore.CYAN + "restoring => " + Fore.WHITE + command)
-        os.system(command)
+        command = list_util.arr_param_to_str(Mysql.recreate_command(default_common.param_main_db_host,
+                                                                    default_common.param_main_db_mysql_port,
+                                                                    default_common.param_main_db_mysql_user,
+                                                                    default_common.param_main_db_mysql_pass,
+                                                                    default_common.param_main_db_bak_name),
+                                             "&&mysqldump",
+                                             Mysql.get_basic_param(default_common.param_main_db_host,
+                                                                   default_common.param_main_db_mysql_port,
+                                                                   default_common.param_main_db_mysql_user,
+                                                                   default_common.param_main_db_mysql_pass,
+                                                                   default_common.param_main_db_name),
+                                             "|mysql",
+                                             Mysql.get_basic_param(default_common.param_main_db_host,
+                                                                   default_common.param_main_db_mysql_port,
+                                                                   default_common.param_main_db_mysql_user,
+                                                                   default_common.param_main_db_mysql_pass,
+                                                                   default_common.param_main_db_bak_name)
+                                             )
+        db_util.print_cmd(Mysql.__name__, Mysql.backup_mysql.__name__, command)
+        # os.system(command)
 
 
 def rebuild_mysql():
