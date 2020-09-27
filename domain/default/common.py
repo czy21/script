@@ -40,6 +40,7 @@ param_api_root_project_path = ""
 param_api_output_path = default_path.output_api
 param_api_output_resource_path = default_path.output_api_resource
 param_api_docker_gradle_command = ""
+param_api_gradle_init_script_file_path = ""
 
 # tmp
 param_tmp_api_extra_config_template_name = ""
