@@ -35,7 +35,7 @@ def build_api():
 
     command = list_util.arr_param_to_str([
         "gradle clean build -x test --parallel",
-        "--init-script " + default_common.path_util.pure_path_join(default_common.default_path.root_path, "shell/template/init.script"),
+        "--init-script " + default_common.param_api_gradle_init_script_file_path,
         "--build-file " + Path(default_common.param_api_root_project_path).joinpath("build.gradle").as_posix(),
         "--project-prop extraConfig=" + output_extra_config_name
     ])
