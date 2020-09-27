@@ -3,13 +3,14 @@ import os
 
 from script.domain.db_meta import mysql as mysql_meta
 from script.domain.default import common as default_common
+from script.domain.default import path as default_path
 from script.utility import db as db_util, list as list_util
 
 
 class Mysql:
     @staticmethod
     def assemble() -> None:
-        db_util.assemble_ql(default_common.param_main_db_mysql_file_path, default_common.param_main_db_mysql_output_file_name, mysql_meta, "sql")
+        db_util.assemble_ql(default_common.param_main_db_mysql_file_path, default_path.output_db_all_in_one_mysql, mysql_meta, "sql")
 
     @staticmethod
     def recreate() -> None:
@@ -45,7 +46,7 @@ class Mysql:
     def exec() -> None:
         extra_param_dict = [
             "--skip-column-names",
-            "< " + default_common.param_main_db_mysql_output_file_name
+            "< " + default_path.output_db_all_in_one_mysql
         ]
         command = list_util.arr_param_to_str("mysql", Mysql.get_main_db_param_dict(), extra_param_dict)
         db_util.print_cmd(Mysql.__name__, Mysql.exec.__name__, command)
