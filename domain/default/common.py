@@ -9,11 +9,9 @@ param_main_db_mysql_port = ""
 param_main_db_mysql_user = ""
 param_main_db_mysql_pass = ""
 param_main_db_mysql_file_path = ""
-param_main_db_mysql_output_file_name = ""
 
 # mssql
 param_main_db_mssql_file_path = ""
-param_main_db_mssql_output_file_name = ""
 
 # neo4j
 param_main_db_neo4j_db_name = ""
@@ -21,14 +19,12 @@ param_main_db_neo4j_port = ""
 param_main_db_neo4j_user = ""
 param_main_db_neo4j_pass = ""
 param_main_db_neo4j_file_path = ""
-param_main_db_neo4j_output_file_name = ""
 
 # mongo
 param_main_db_mongo_port = ""
 param_main_db_mongo_user = ""
 param_main_db_mongo_pass = ""
 param_main_db_mongo_file_path = ""
-param_main_db_mongo_output_file_name = ""
 
 # api
 param_api_archive_file_name = ""
