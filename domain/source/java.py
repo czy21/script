@@ -53,7 +53,7 @@ def build_api():
 
 
 def build_api_image():
-    # build_api()
+    build_api()
     output_dockerfile__name = build_api_dockerfile()
     command = list_util.arr_param_to_str(
         [
@@ -65,7 +65,7 @@ def build_api_image():
             "."
         ])
     basic_util.print(Fore.CYAN + build_api_image.__name__ + " => " + Fore.WHITE + command)
-    # os.system(command)
+    os.system(command)
 
 
 def build_plugin(publish_task=None):
