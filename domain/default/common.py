@@ -37,7 +37,7 @@ param_api_output_path = ""
 param_api_output_resource_path = ""
 param_api_docker_gradle_command = ""
 param_api_gradle_init_script_file_path = ""
-param_api_plugin_path = ""
+param_api_plugin_file_path = ""
 
 # tmp
 param_tmp_api_extra_config_template_name = ""
