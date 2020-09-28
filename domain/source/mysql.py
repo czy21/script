@@ -56,7 +56,11 @@ class Mysql:
     @staticmethod
     def recreate_command(host, port, user, password, db_name) -> str:
         extra_param_dict = [
-            "--execute \"drop database if exists " + db_name + ";create database if not exists " + db_name + " default charset utf8mb4 collate utf8mb4_0900_ai_ci;\""
+            "--execute",
+            "\"",
+            "drop database if exists {0};".format(db_name),
+            "create database if not exists {0} default charset utf8mb4 collate utf8mb4_0900_ai_ci;".format(db_name),
+            "\""
         ]
         return list_util.arr_param_to_str("mysql", Mysql.get_basic_param(host, port, user, password, None), extra_param_dict)
 
