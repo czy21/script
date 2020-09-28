@@ -74,7 +74,7 @@ def build_plugin(publish_task=None):
         [
             "gradle",
             "--init-script " + default_common.param_api_gradle_init_script_file_path,
-            "--build-file " + path_util.pure_path_join(default_common.param_api_plugin_path, "build.gradle"),
+            "--build-file " + default_common.param_api_plugin_file_path,
         ]
     )
 

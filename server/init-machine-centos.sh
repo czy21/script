@@ -20,7 +20,7 @@ while [[ $# -ge 1 ]]; do
     shift 1
 
     # install tools
-    yum -y install wget vim
+    yum -y install wget vim git
     dnf install python38
 
     # edit sshd_config
