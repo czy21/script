@@ -45,7 +45,7 @@ def build_api():
             "--init-script " + default_common.param_api_gradle_init_script_file_path,
             "--build-file " + path_util.pure_path_join(default_common.param_api_root_project_path, "build.gradle"),
             "--project-prop extraConfig=" + output_extra_config_name,
-            "--parallel clean build -x test"
+            "clean build -x test"
         ])
     basic_util.print(Fore.CYAN + build_api.__name__ + " => " + Fore.WHITE + command)
     os.system(command)
