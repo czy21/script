@@ -63,7 +63,7 @@ def build_api_image():
             "--file erp/___output/tmp/Dockerfile ."
         ])
     basic_util.print(Fore.CYAN + build_api_image.__name__ + " => " + Fore.WHITE + command)
-    os.system(command)
+    # os.system(command)
 
 
 def build_plugin(publish_task=None):
