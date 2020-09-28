@@ -30,6 +30,11 @@ def build_override_yml():
     return build_by_template(default_common.param_api_yml_override_template_name, default_common.param_api_output_resource_path)
 
 
+def build_api_dockerfile():
+    basic_util.print(Fore.CYAN + build_api_dockerfile.__name__)
+    return build_by_template(default_common.param_api_dockerfile_template_name, default_common.default_path.output_tmp)
+
+
 def build_api():
     output_extra_config_name = build_extra_config()
 
@@ -45,6 +50,20 @@ def build_api():
     basic_util.print(Fore.CYAN + build_api.__name__ + " => " + Fore.WHITE + command)
     os.system(command)
     build_override_yml()
+
+
+def build_api_image():
+    build_api()
+    build_api_dockerfile()
+    command = list_util.arr_param_to_str(
+        [
+            "cd&&sudo docker build",
+            "--build-arg JAR_FILE=erp/___output/api/api.jar",
+            "--tag erp:1.0.0",
+            "--file erp/___output/tmp/Dockerfile ."
+        ])
+    basic_util.print(Fore.CYAN + build_api_image.__name__ + " => " + Fore.WHITE + command)
+    os.system(command)
 
 
 def build_plugin(publish_task=None):

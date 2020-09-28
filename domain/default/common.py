@@ -36,6 +36,7 @@ param_main_db_mongo_output_file_name = default_path.output_db_all_in_one_mongo
 param_api_archive_file_name = "api.jar"
 param_api_extra_config_template_name = ""
 param_api_yml_override_template_name = ""
+param_api_dockerfile_template_name = ""
 param_api_root_project_path = ""
 param_api_output_path = default_path.output_api
 param_api_output_resource_path = default_path.output_api_resource
