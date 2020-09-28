@@ -53,21 +53,20 @@ def build_api():
 
 
 def build_api_image():
-    build_api()
+    # build_api()
     output_dockerfile__name = build_api_dockerfile()
     command = list_util.arr_param_to_str(
         [
             "cd&&sudo docker build",
             "--build-arg JAR_FILE=."
-            + default_common.param_api_output_path.replace(Path(default_path.root_path).parent.as_posix(), "")
-            + default_common.param_api_archive_file_name,
+            + path_util.pure_path_join(default_common.param_api_output_path, default_common.param_api_archive_file_name).replace(Path(default_path.root_path).parent.as_posix(), ""),
             "--tag erp:1.0.0",
             "--file",
             output_dockerfile__name,
             "."
         ])
     basic_util.print(Fore.CYAN + build_api_image.__name__ + " => " + Fore.WHITE + command)
-    os.system(command)
+    # os.system(command)
 
 
 def build_plugin(publish_task=None):
