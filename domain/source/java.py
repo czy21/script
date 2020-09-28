@@ -32,7 +32,7 @@ def build_override_yml():
 
 def build_api_dockerfile():
     basic_util.print(Fore.CYAN + build_api_dockerfile.__name__)
-    return build_by_template(default_common.param_api_dockerfile_template_name, default_common.default_path.output_tmp)
+    return build_by_template(default_common.param_api_dockerfile_template_name, default_path.output_tmp)
 
 
 def build_api():
