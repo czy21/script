@@ -23,7 +23,7 @@ class Neo4j:
     @staticmethod
     def exec() -> None:
         extra_param_dict = [
-            "--file " + default_common.param_main_db_neo4j_output_file_name
+            "--file " + default_path.output_db_all_in_one_neo4j
         ]
         basic_param_str = list_util.arr_param_to_str(Neo4j.get_main_db_param_dict(), extra_param_dict)
         command = "cypher-shell" + basic_param_str
