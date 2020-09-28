@@ -5,8 +5,8 @@ from pathlib import Path
 
 from colorama import Fore, init
 
-from script.domain.default import common as default_common
-from script.utility import template, basic as basic_util, list as list_util
+from script.domain.default import common as default_common, path as default_path
+from script.utility import template, basic as basic_util, list as list_util, path as path_util
 
 init(autoreset=True)
 
@@ -22,7 +22,7 @@ def build_by_template(template_name, output_path):
 
 def build_extra_config():
     basic_util.print(Fore.CYAN + build_extra_config.__name__)
-    return build_by_template(default_common.param_api_extra_config_template_name, default_common.default_path.output_tmp)
+    return build_by_template(default_common.param_api_extra_config_template_name, default_path.output_tmp)
 
 
 def build_override_yml():
@@ -43,7 +43,7 @@ def build_api():
         [
             "gradle",
             "--init-script " + default_common.param_api_gradle_init_script_file_path,
-            "--build-file " + default_common.path_util.pure_path_join(default_common.param_api_root_project_path, "build.gradle"),
+            "--build-file " + path_util.pure_path_join(default_common.param_api_root_project_path, "build.gradle"),
             "--project-prop extraConfig=" + output_extra_config_name,
             "--parallel clean build -x test"
         ])
@@ -72,7 +72,7 @@ def build_plugin(publish_task=None):
         [
             "gradle",
             "--init-script " + default_common.param_api_gradle_init_script_file_path,
-            "--build-file " + default_common.path_util.pure_path_join(default_common.param_api_plugin_path, "build.gradle"),
+            "--build-file " + path_util.pure_path_join(default_common.param_api_plugin_path, "build.gradle"),
         ]
     )
 
