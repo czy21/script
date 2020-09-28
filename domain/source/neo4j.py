@@ -2,6 +2,7 @@
 import os
 
 from script.domain.default import common as default_common
+from script.domain.default import path as default_path
 from script.domain.db_meta import neo4j as neo4j_meta
 from script.utility import db as db_util, list as list_util
 
@@ -9,7 +10,7 @@ from script.utility import db as db_util, list as list_util
 class Neo4j:
     @staticmethod
     def assemble() -> None:
-        db_util.assemble_ql(default_common.param_main_db_neo4j_file_path, default_common.param_main_db_neo4j_output_file_name, neo4j_meta, "cql")
+        db_util.assemble_ql(default_common.param_main_db_neo4j_file_path, default_path.output_db_all_in_one_neo4j, neo4j_meta, "cql")
 
     @staticmethod
     def get_main_db_param_dict() -> list:
@@ -17,7 +18,7 @@ class Neo4j:
                                      default_common.param_main_db_neo4j_port,
                                      default_common.param_main_db_neo4j_user,
                                      default_common.param_main_db_neo4j_pass,
-                                     default_common.param_main_db_neo4j_db_name)
+                                     default_common.param_main_db_name)
 
     @staticmethod
     def exec() -> None:
