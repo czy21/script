@@ -32,7 +32,7 @@ def build_override_yml():
 
 def build_api_dockerfile():
     basic_util.print(Fore.CYAN + build_api_dockerfile.__name__)
-    return build_by_template(default_common.param_api_dockerfile_template_name, default_path.output_tmp)
+    return build_by_template(default_common.param_api_dockerfile_template_name, default_common.param_api_dockerfile_output_file_path)
 
 
 def build_api():
@@ -61,7 +61,7 @@ def build_api_image():
             "--build-arg JAR_FILE=" + path_util.pure_path_join(default_common.param_api_output_path, default_common.param_api_archive_file_name),
             "--tag erp:1.0.0",
             "--file",
-            default_common.param_api_dockerfile_template_name,
+            default_common.param_api_dockerfile_output_file_path,
             "."
         ])
     basic_util.print(Fore.CYAN + build_api_image.__name__ + " => " + Fore.WHITE + command)
