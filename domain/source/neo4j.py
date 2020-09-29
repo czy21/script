@@ -4,9 +4,9 @@ import os
 from script.domain.default import common as default_common
 from script.domain.default import path as default_path
 from script.domain.db_meta import neo4j as neo4j_meta
-from script.utility import db as db_util, list as list_util, basic as basic_util
+from script.utility import db as db_util, list as list_util, basic as basic_util, logging
 
-logger = basic_util.Logger(__name__)
+logger = logging.Logger(__name__)
 
 
 class Neo4j:
@@ -29,7 +29,7 @@ class Neo4j:
         ]
         basic_param_str = list_util.arr_param_to_str(Neo4j.get_main_db_param_dict(), extra_param_dict)
         command = "cypher-shell" + basic_param_str
-        logger.info(basic_util.message_formatter("_".join([Neo4j.__name__, Neo4j.exec.__name__]), command))
+        logger.info(basic_util.action_formatter("_".join([Neo4j.__name__, Neo4j.exec.__name__]), command))
         neo4j_msg = [elem.replace("\"", '') for elem in os.popen(command).readlines() if elem != "msg\n"]
         db_util.print_ql_msg(neo4j_msg)
 
@@ -49,7 +49,7 @@ class Neo4j:
         ]
         basic_param_str = list_util.arr_param_to_str(Neo4j.get_main_db_param_dict(), extra_param_dict)
         command = "cypher-shell" + basic_param_str
-        logger.info(basic_util.message_formatter("_".join([Neo4j.__name__, Neo4j.recreate.__name__]), command))
+        logger.info(basic_util.action_formatter("_".join([Neo4j.__name__, Neo4j.recreate.__name__]), command))
         os.system(command)
 
 

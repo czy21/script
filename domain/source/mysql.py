@@ -4,9 +4,9 @@ import os
 from script.domain.db_meta import mysql as mysql_meta
 from script.domain.default import common as default_common
 from script.domain.default import path as default_path
-from script.utility import db as db_util, list as list_util, basic as basic_util
+from script.utility import db as db_util, list as list_util, basic as basic_util, logging
 
-logger = basic_util.Logger(__name__)
+logger = logging.Logger(__name__)
 
 
 class Mysql:
@@ -21,7 +21,7 @@ class Mysql:
                                          default_common.param_main_db_mysql_user,
                                          default_common.param_main_db_mysql_pass,
                                          default_common.param_main_db_name)
-        logger.info(basic_util.message_formatter("_".join([Mysql.__name__, Mysql.recreate.__name__]), command))
+        logger.info(basic_util.action_formatter("_".join([Mysql.__name__, Mysql.recreate.__name__]), command))
         os.system(command)
 
     @staticmethod
@@ -51,7 +51,7 @@ class Mysql:
             "< " + default_path.output_db_all_in_one_mysql
         ]
         command = list_util.arr_param_to_str("mysql", Mysql.get_main_db_param_dict(), extra_param_dict)
-        logger.info(basic_util.message_formatter("_".join([Mysql.__name__, Mysql.exec.__name__]), command))
+        logger.info(basic_util.action_formatter("_".join([Mysql.__name__, Mysql.exec.__name__]), command))
         mysql_msg = os.popen(command).readlines()
         db_util.print_ql_msg(mysql_msg)
 
@@ -86,7 +86,7 @@ class Mysql:
                                                                    default_common.param_main_db_mysql_pass,
                                                                    default_common.param_main_db_bak_name)
                                              )
-        logger.info(basic_util.message_formatter("_".join([Mysql.__name__, Mysql.backup_mysql.__name__]), command))
+        logger.info(basic_util.action_formatter("_".join([Mysql.__name__, Mysql.backup_mysql.__name__]), command))
         # os.system(command)
 
 
