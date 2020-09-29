@@ -24,13 +24,9 @@ def assemble_ql(s_path, t_file_name, db_meta, file_suffix) -> None:
             t_file.write(u'{}'.format(footer.safe_substitute(file_path=s) + "\n\n"))
 
 
-def filter_execution(iterator) -> list:
-    return list(filter(re.compile(r"^(executing:|executed:)").search, iterator))
-
-
 def print_ql_msg(msg_lines) -> None:
-    callback = filter_execution(msg_lines)
+    callback = list(filter(re.compile(r"^(executing:|executed:)").search, [x.decode("UTF8").strip() for x in msg_lines]))
     for m in callback[1::2]:
-        logger.info(Fore.WHITE + m.replace("\n", ""))
+        logger.info(m)
     if math.modf(len(callback) / 2)[0] > 0:
-        logger.info(Fore.RED + callback[len(callback) - 1])
+        logger.error(callback[len(callback) - 1])
