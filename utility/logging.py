@@ -1,5 +1,7 @@
 # coding:utf-8
 import logging
+from time import sleep
+
 import colorlog
 
 log_colors_config = {
@@ -9,6 +11,8 @@ log_colors_config = {
     'ERROR': 'red',
     'CRITICAL': 'red',
 }
+
+log_sleep = 0.5
 
 
 class Logger:
@@ -25,13 +29,17 @@ class Logger:
         self.logger.addHandler(ch)
 
     def debug(self, message):
+        sleep(log_sleep)
         self.logger.debug(message)
 
     def info(self, message):
+        sleep(log_sleep)
         self.logger.info(message)
 
     def warning(self, message):
+        sleep(log_sleep)
         self.logger.warning(message)
 
     def error(self, message):
+        sleep(log_sleep)
         self.logger.error(message)
