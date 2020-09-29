@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import os
+import subprocess
 
 from script.domain.db_meta import mysql as mysql_meta
 from script.domain.default import common as default_common
@@ -22,7 +23,7 @@ class Mysql:
                                          default_common.param_main_db_mysql_pass,
                                          default_common.param_main_db_name)
         logger.info(basic_util.action_formatter("_".join([Mysql.__name__, Mysql.recreate.__name__]), command))
-        os.system(command)
+        basic_util.execute(command)
 
     @staticmethod
     def get_basic_param(host, port, user, password, db_name) -> str:
@@ -52,8 +53,7 @@ class Mysql:
         ]
         command = list_util.arr_param_to_str("mysql", Mysql.get_main_db_param_dict(), extra_param_dict)
         logger.info(basic_util.action_formatter("_".join([Mysql.__name__, Mysql.exec.__name__]), command))
-        mysql_msg = os.popen(command).readlines()
-        db_util.print_ql_msg(mysql_msg)
+        basic_util.execute(command, db_util.print_ql_msg)
 
     @staticmethod
     def recreate_command(host, port, user, password, db_name) -> str:

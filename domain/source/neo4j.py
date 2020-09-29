@@ -50,7 +50,7 @@ class Neo4j:
         basic_param_str = list_util.arr_param_to_str(Neo4j.get_main_db_param_dict(), extra_param_dict)
         command = "cypher-shell" + basic_param_str
         logger.info(basic_util.action_formatter("_".join([Neo4j.__name__, Neo4j.recreate.__name__]), command))
-        os.system(command)
+        basic_util.execute(command)
 
 
 def rebuild_neo4j():

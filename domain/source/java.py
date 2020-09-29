@@ -3,12 +3,9 @@ import io
 import os
 from pathlib import Path
 
-from colorama import init
-
 from script.domain.default import common as default_common, path as default_path
 from script.utility import template, basic as basic_util, list as list_util, path as path_util, logging
 
-init(autoreset=True)
 logger = logging.Logger(__name__)
 
 
@@ -49,7 +46,7 @@ def build_api():
             "clean build -x test"
         ])
     logger.info(basic_util.action_formatter(build_api.__name__, command))
-    os.system(command)
+    basic_util.execute(command)
     build_override_yml()
 
 
@@ -68,7 +65,7 @@ def build_api_image():
             "."
         ])
     logger.info(basic_util.action_formatter(build_api_image.__name__, command))
-    os.system(command)
+    basic_util.execute(command)
 
 
 def build_plugin(publish_task=None):
@@ -86,4 +83,4 @@ def build_plugin(publish_task=None):
     else:
         command = list_util.arr_param_to_str(command, "publishAllPublicationsToBuildRepository")
     logger.info(basic_util.action_formatter(build_plugin.__name__, command))
-    os.system(command)
+    basic_util.execute(command)

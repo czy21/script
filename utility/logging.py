@@ -32,14 +32,16 @@ class Logger:
         sleep(log_sleep)
         self.logger.debug(message)
 
-    def info(self, message):
-        sleep(log_sleep)
+    def info(self, message, is_sleep=True):
+        if is_sleep:
+            sleep(log_sleep)
         self.logger.info(message)
 
     def warning(self, message):
         sleep(log_sleep)
         self.logger.warning(message)
 
-    def error(self, message):
-        sleep(log_sleep)
+    def error(self, message, is_sleep=True):
+        if is_sleep:
+            sleep(log_sleep)
         self.logger.error(message)
