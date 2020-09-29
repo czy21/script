@@ -21,7 +21,7 @@ def print_default(msg_lines) -> None:
 
 
 def execute(cmd, func=print_default):
-    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, bufsize=1, shell=True)
+    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
     func(iter(proc.stdout.readline, b''))
     proc.stdout.close()
     proc.wait()
