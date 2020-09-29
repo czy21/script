@@ -3,11 +3,10 @@ import io
 import math
 import re
 
-from colorama import init, Fore
+from colorama import Fore
 
 from script.utility import path as path_util, template as template_util, basic as basic_util
 
-init(autoreset=True)
 logger = basic_util.Logger(__name__)
 
 
@@ -17,7 +16,7 @@ def assemble_ql(s_path, t_file_name, db_meta, file_suffix) -> None:
         for s in db_file_paths:
             header = template_util.StringTemplate(db_meta.self["header"])
             footer = template_util.StringTemplate(db_meta.self["footer"])
-            logger.info("loading => " + s)
+            logger.info(basic_util.message_formatter("loading", s, Fore.GREEN))
             t_file.write(u'{}'.format(header.safe_substitute(file_path=s) + "\n"))
             with io.open(s, "r", encoding="utf-8", newline="\n") as current_sql_file:
                 t_file.write(template_util.StringTemplate(current_sql_file.read() + "\n")
@@ -29,13 +28,9 @@ def filter_execution(iterator) -> list:
     return list(filter(re.compile(r"^(executing:|executed:)").search, iterator))
 
 
-def print_msg(msg_lines) -> None:
+def print_ql_msg(msg_lines) -> None:
     callback = filter_execution(msg_lines)
     for m in callback[1::2]:
-        logger.info(m.replace("\n", ""))
+        logger.info(Fore.BLACK + m.replace("\n", ""))
     if math.modf(len(callback) / 2)[0] > 0:
         logger.info(Fore.RED + callback[len(callback) - 1])
-
-
-def print_cmd(class_name, method_name, command) -> None:
-    logger.info(class_name + "_" + method_name + " => " + command)
