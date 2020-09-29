@@ -31,6 +31,6 @@ def filter_execution(iterator) -> list:
 def print_ql_msg(msg_lines) -> None:
     callback = filter_execution(msg_lines)
     for m in callback[1::2]:
-        logger.info(Fore.BLACK + m.replace("\n", ""))
+        logger.info(Fore.WHITE + m.replace("\n", ""))
     if math.modf(len(callback) / 2)[0] > 0:
         logger.info(Fore.RED + callback[len(callback) - 1])

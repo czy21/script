@@ -17,7 +17,7 @@ class Logger:
         self.logger.setLevel(logging.DEBUG)
 
         self.formatter = colorlog.ColoredFormatter(
-            '%(white)s%(asctime)s  %(log_color)s%(levelname)s %(white)s--- %(cyan)s[%(name)s] - %(message)s',
+            '%(white)s%(asctime)s  %(log_color)s%(levelname)s %(white)s--- %(cyan)s[%(name)s] %(white)s- %(message)s',
             log_colors=log_colors_config)
         ch = colorlog.StreamHandler()
         ch.setLevel(logging.DEBUG)
