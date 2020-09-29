@@ -5,9 +5,9 @@ import re
 
 from colorama import Fore
 
-from script.utility import path as path_util, template as template_util, basic as basic_util
+from script.utility import path as path_util, template as template_util, basic as basic_util, logging
 
-logger = basic_util.Logger(__name__)
+logger = logging.Logger(__name__)
 
 
 def assemble_ql(s_path, t_file_name, db_meta, file_suffix) -> None:
@@ -16,7 +16,7 @@ def assemble_ql(s_path, t_file_name, db_meta, file_suffix) -> None:
         for s in db_file_paths:
             header = template_util.StringTemplate(db_meta.self["header"])
             footer = template_util.StringTemplate(db_meta.self["footer"])
-            logger.info(basic_util.message_formatter("loading", s, Fore.GREEN))
+            logger.info(basic_util.action_formatter("loading", s, Fore.GREEN))
             t_file.write(u'{}'.format(header.safe_substitute(file_path=s) + "\n"))
             with io.open(s, "r", encoding="utf-8", newline="\n") as current_sql_file:
                 t_file.write(template_util.StringTemplate(current_sql_file.read() + "\n")
