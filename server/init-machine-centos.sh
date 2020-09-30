@@ -33,15 +33,15 @@ while [[ $# -ge 1 ]]; do
       PasswordAuthentication no
       ClientAliveInterval 30
       " >>/etc/ssh/sshd_config
-
+    wget -O /etc/yum.repos.d/VirtualBox.repo https://download.virtualbox.org/virtualbox/rpm/el/virtualbox.repo
     if [ $1 == 'ali' ]; then
       # use ali yum.repo
       sudo mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
       wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-8.repo
       sed -i -e '/mirrors.cloud.aliyuncs.com/d' -e '/mirrors.aliyuncs.com/d' /etc/yum.repos.d/CentOS-Base.repo
-      yum clean all
-      yum makecache
     fi
+    yum clean all
+    yum makecache
 
     # add first user
     useradd -m bruce
