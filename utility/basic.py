@@ -3,9 +3,9 @@ import subprocess
 
 from colorama import Fore
 
-from script.utility import logging
+from script.utility import log
 
-logger = logging.Logger(__name__)
+logger = log.Logger(__name__)
 
 
 def action_formatter(action_name, msg=None, action_color=Fore.YELLOW):
@@ -17,29 +17,20 @@ def action_formatter(action_name, msg=None, action_color=Fore.YELLOW):
 
 def print_default(msg_lines) -> None:
     for line in msg_lines:
-        logger.info(line.decode("UTF8").strip(), is_sleep=False)
+        if line:
+            logger.info(line, is_sleep=False)
 
 
 def execute(cmd, func=print_default):
-    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-    func(iter(proc.stdout.readline, b''))
+    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True, encoding="utf-8")
+    func(iter(proc.stdout.readline, ''))
     proc.stdout.close()
     proc.wait()
 
 
-def java_version():
-    cmd = "jav --version"
-    out = subprocess.getstatusoutput(cmd)
-    print(out[1])
-
-
-def mysql_version():
-    cmd = "mysql --version"
-    out = subprocess.getstatusoutput(cmd)
-    print(out[1])
-
-
 if __name__ == '__main__':
-    java_version()
-    mysql_version()
+    cmd1 = "jav --version"
+    cmd2 = "mysql --version"
+    execute(cmd1)
+    execute(cmd2)
     print("sss")

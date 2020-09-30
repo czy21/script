@@ -5,9 +5,9 @@ import re
 
 from colorama import Fore
 
-from script.utility import path as path_util, template as template_util, basic as basic_util, logging
+from script.utility import path as path_util, template as template_util, basic as basic_util, log
 
-logger = logging.Logger(__name__)
+logger = log.Logger(__name__)
 
 
 def assemble_ql(s_path, t_file_name, db_meta, file_suffix) -> None:
@@ -25,8 +25,8 @@ def assemble_ql(s_path, t_file_name, db_meta, file_suffix) -> None:
 
 
 def print_ql_msg(msg_lines) -> None:
-    callback = list(filter(re.compile(r"^(executing:|executed:)").search, [x.decode("UTF8").strip() for x in msg_lines]))
+    callback = list(filter(re.compile(r"^(executing:|executed:)").search, msg_lines))
     for m in callback[1::2]:
-        logger.info(m)
+        logger.info(m.replace("\n", ""))
     if math.modf(len(callback) / 2)[0] > 0:
-        logger.error(callback[len(callback) - 1])
+        logger.error(callback[len(callback) - 1].replace("\n", ""))
