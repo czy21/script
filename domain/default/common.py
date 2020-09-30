@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 from script.domain.default import path as default_path
-from script.utility import log as log_util
-
-logger = log_util.Logger(__name__)
 
 param_main_db_host = ""
 param_main_db_name = ""
