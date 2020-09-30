@@ -1,0 +1,3 @@
+import symbol
+
+print("ss")
