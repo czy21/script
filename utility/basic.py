@@ -17,6 +17,7 @@ def action_formatter(action_name, msg=None, action_color=Fore.YELLOW):
 
 def print_default(msg_lines) -> None:
     for line in msg_lines:
+        line = line.strip()
         if line:
             logger.info(line, is_sleep=False)
 
@@ -27,10 +28,9 @@ def execute(cmd, func=print_default):
     proc.stdout.close()
     proc.wait()
 
-
-if __name__ == '__main__':
-    cmd1 = "jav --version"
-    cmd2 = "mysql --version"
-    execute(cmd1)
-    execute(cmd2)
-    print("sss")
+    if __name__ == '__main__':
+        cmd1 = "jav --version"
+        cmd2 = "mysql --version"
+        execute(cmd1)
+        execute(cmd2)
+        print("sss")
