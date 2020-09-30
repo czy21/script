@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
+import os
 import subprocess
+import sys
 
 from colorama import Fore
 
@@ -27,10 +29,13 @@ def execute(cmd, func=print_default):
     func(iter(proc.stdout.readline, ''))
     proc.stdout.close()
     proc.wait()
+    if proc.returncode == 1:
+        sys.exit(0)
 
-    if __name__ == '__main__':
-        cmd1 = "jav --version"
-        cmd2 = "mysql --version"
-        execute(cmd1)
-        execute(cmd2)
-        print("sss")
+
+if __name__ == '__main__':
+    cmd1 = "java --version"
+    cmd2 = "mysql --version"
+    execute(cmd1)
+    execute(cmd2)
+    print("sss")
