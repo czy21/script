@@ -4,9 +4,9 @@ import os
 from pathlib import Path
 
 from script.domain.default import common as default_common, path as default_path
-from script.utility import template, basic as basic_util, list as list_util, path as path_util, logging
+from script.utility import template, basic as basic_util, list as list_util, path as path_util, log
 
-logger = logging.Logger(__name__)
+logger = log.Logger(__name__)
 
 
 def build_by_template(template_name, output_path):

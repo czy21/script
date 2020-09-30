@@ -5,9 +5,9 @@ import subprocess
 from script.domain.db_meta import mysql as mysql_meta
 from script.domain.default import common as default_common
 from script.domain.default import path as default_path
-from script.utility import db as db_util, list as list_util, basic as basic_util, logging
+from script.utility import db as db_util, list as list_util, basic as basic_util, log
 
-logger = logging.Logger(__name__)
+logger = log.Logger(__name__)
 
 
 class Mysql:
