@@ -27,6 +27,6 @@ def assemble_ql(s_path, t_file_name, db_meta, file_suffix) -> None:
 def print_ql_msg(msg_lines) -> None:
     callback = list(filter(re.compile(r"^(executing:|executed:)").search, msg_lines))
     for m in callback[1::2]:
-        logger.info(m.replace("\n", ""))
+        logger.info(m.strip())
     if math.modf(len(callback) / 2)[0] > 0:
-        logger.error(callback[len(callback) - 1].replace("\n", ""))
+        logger.error(callback[len(callback) - 1].strip())
