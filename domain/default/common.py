@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from script.domain.default import path as default_path
+from script.utility import collection as collection_util
 
 param_main_db_host = ""
 param_main_db_name = ""
@@ -48,4 +49,4 @@ param_injected = {}
 
 
 def get_params():
-    return dict({k: v for k, v in globals().items() if k.startswith("param")})
+    return collection_util.flat_dict(dict({k: v for k, v in globals().items() if k.startswith("param")}))
