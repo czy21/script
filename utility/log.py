@@ -1,7 +1,6 @@
 # coding:utf-8
 import logging
 import sys
-from logging.handlers import RotatingFileHandler
 from time import sleep
 
 import colorlog
@@ -22,17 +21,12 @@ class Logger:
         self.logger = logging.getLogger(name if name else __name__)
         self.logger.setLevel(logging.DEBUG)
 
-        self.formatter = colorlog.ColoredFormatter(
-            '%(white)s%(asctime)s %(log_color)s%(levelname)s %(purple)s%(thread)d %(white)s[ %(threadName)s ] %(cyan)s%(name)s %(white)s- %(message)s',
-            log_colors=log_colors_config)
         ch = colorlog.StreamHandler()
-        ch.setLevel(logging.DEBUG)
-        ch.setFormatter(self.formatter)
-
-        fh = RotatingFileHandler(filename="".join([sys.argv[0], ".log"]), mode='w', maxBytes=1024 * 1024 * 5, backupCount=5, encoding='utf-8')
-        fh.setLevel(logging.DEBUG)
+        ch.setFormatter(colorlog.ColoredFormatter(
+            '%(white)s%(asctime)s %(log_color)s%(levelname)s %(purple)s%(thread)d %(white)s[ %(threadName)s ] %(cyan)s%(name)s %(white)s- %(message)s',
+            log_colors=log_colors_config))
+        fh = logging.FileHandler(filename="".join([sys.argv[0], ".log"]), encoding='utf-8')
         fh.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(thread)d [ %(threadName)s ] %(name)s - %(message)s'))
-
         self.logger.addHandler(fh)
         self.logger.addHandler(ch)
 
