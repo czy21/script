@@ -31,6 +31,6 @@ output_db_all_in_one_neo4j = path_util.pure_path_join(output_db_all_in_one, "neo
 output_tmp = path_util.pure_path_join(output, "tmp")
 
 
-def mkdir() -> None:
-    shutil.rmtree(output)
+def re_mkdir() -> None:
+    shutil.rmtree(output, ignore_errors=True)
     [Path(p).mkdir(parents=True) for p in [output_tmp, output_api_resource, output_web, output_app, output_db_bak, output_db_all_in_one]]
