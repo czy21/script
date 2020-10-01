@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
+import shutil
 from pathlib import Path
+
 from script.utility import path as path_util
 
 root_path = path_util.pure_path_join("../../")
@@ -29,10 +31,6 @@ output_db_all_in_one_neo4j = path_util.pure_path_join(output_db_all_in_one, "neo
 output_tmp = path_util.pure_path_join(output, "tmp")
 
 
-def mkdir(path) -> None:
-    for p in path:
-        if not Path(p).exists():
-            Path(p).mkdir(parents=True)
-
-
-mkdir([output_tmp, output_api_resource, output_web, output_app, output_db_bak, output_db_all_in_one])
+def mkdir() -> None:
+    shutil.rmtree(output)
+    [Path(p).mkdir(parents=True) for p in [output_tmp, output_api_resource, output_web, output_app, output_db_bak, output_db_all_in_one]]
