@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import shutil
 from pathlib import Path
 
 from script.utility import path as path_util
@@ -32,5 +31,4 @@ output_tmp = path_util.pure_path_join(output, "tmp")
 
 
 def re_mkdir() -> None:
-    shutil.rmtree(output, ignore_errors=True)
-    [Path(p).mkdir(parents=True) for p in [output_tmp, output_api_resource, output_web, output_app, output_db_bak, output_db_all_in_one]]
+    [Path(p).mkdir(parents=True, exist_ok=True) for p in [output_tmp, output_api_resource, output_web, output_app, output_db_bak, output_db_all_in_one]]
