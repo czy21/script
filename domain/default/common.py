@@ -48,4 +48,4 @@ param_injected = {}
 
 
 def get_params():
-    return dict({k: v for k, v in globals().items() if k.startswith("param")}, **param_injected)
+    return dict({k: v for k, v in globals().items() if k.startswith("param")})
