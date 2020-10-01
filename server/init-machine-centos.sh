@@ -21,7 +21,7 @@ while [[ $# -ge 1 ]]; do
 
     # install tools
     yum -y install wget vim git
-    dnf install python38
+    dnf -y install python38
 
     # edit sshd_config
     sed -i -r "s/ll='ls\s+-l/\0va/" /etc/profile.d/colorls.sh
