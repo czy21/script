@@ -51,7 +51,6 @@ def build_api():
 
 
 def build_api_image():
-    build_api()
     output_dockerfile__name = build_api_dockerfile()
     command = list_util.arr_param_to_str(
         [
