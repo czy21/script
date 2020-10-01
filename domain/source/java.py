@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 
 from script.domain.default import common as default_common, path as default_path
-from script.utility import template, basic as basic_util, list as list_util, path as path_util, log
+from script.utility import template, basic as basic_util, collection as list_util, path as path_util, log
 
 logger = log.Logger(__name__)
 
@@ -14,7 +14,7 @@ def build_by_template(template_name, output_path):
     with io.open(template_name, "r", encoding="utf-8", newline="\n") as source_template:
         with io.open(output_name, "w+", encoding="utf-8", newline="\n") as target_output:
             target_output.write(template.StringTemplate(source_template.read() + "\n")
-                                .safe_substitute(default_common.get_params()))
+                                .safe_substitute(list_util.flat_dict(default_common.get_params())))
     return output_name
 
 
