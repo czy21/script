@@ -4,7 +4,7 @@ import os
 from script.domain.default import common as default_common
 from script.domain.default import path as default_path
 from script.domain.db_meta import neo4j as neo4j_meta
-from script.utility import db as db_util, list as list_util, basic as basic_util, log
+from script.utility import db as db_util, collection as list_util, basic as basic_util, log
 
 logger = log.Logger(__name__)
 
