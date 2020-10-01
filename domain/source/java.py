@@ -14,7 +14,7 @@ def build_by_template(template_name, output_path):
     with io.open(template_name, "r", encoding="utf-8", newline="\n") as source_template:
         with io.open(output_name, "w+", encoding="utf-8", newline="\n") as target_output:
             target_output.write(template.StringTemplate(source_template.read() + "\n")
-                                .safe_substitute(list_util.flat_dict(default_common.get_params())))
+                                .safe_substitute(default_common.get_params()))
     return output_name
 
 
