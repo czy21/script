@@ -19,18 +19,21 @@ def build_by_template(template_name, output_path):
 
 
 def build_extra_config():
-    logger.info(basic_util.action_formatter(build_extra_config.__name__))
-    return build_by_template(default_common.param_api_extra_config_template_name, default_path.output_tmp)
+    config_path = build_by_template(default_common.param_api_extra_config_template_name, default_path.output_tmp)
+    logger.info(basic_util.action_formatter(build_extra_config.__name__, config_path))
+    return config_path
 
 
 def build_override_yml():
-    logger.info(basic_util.action_formatter(build_override_yml.__name__))
-    return build_by_template(default_common.param_api_yml_override_template_name, default_common.param_api_output_resource_path)
+    yml_path = build_by_template(default_common.param_api_yml_override_template_name, default_common.param_api_output_resource_path)
+    logger.info(basic_util.action_formatter(build_override_yml.__name__, yml_path))
+    return yml_path
 
 
 def build_api_dockerfile():
-    logger.info(basic_util.action_formatter(build_api_dockerfile.__name__))
-    return build_by_template(default_common.param_api_dockerfile_template_name, default_common.param_api_dockerfile_output_file_path)
+    dockerfile_path = build_by_template(default_common.param_api_dockerfile_template_name, default_common.param_api_dockerfile_output_file_path)
+    logger.info(basic_util.action_formatter(build_api_dockerfile.__name__, dockerfile_path))
+    return dockerfile_path
 
 
 def build_api():
