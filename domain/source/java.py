@@ -95,4 +95,5 @@ def build_plugin(publish_task=None):
 
 
 def start_api_compose():
-    return ""
+    output_compose_name = build_api_compose_file()
+    logger.info(basic_util.action_formatter(start_api_compose.__name__, ""))
