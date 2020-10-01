@@ -36,6 +36,12 @@ def build_api_dockerfile():
     return dockerfile_path
 
 
+def build_api_compose_file():
+    compose_file_path = build_by_template(default_common.param_api_compose_template_name, default_common.param_api_compose_output_file_path)
+    logger.info(basic_util.action_formatter(build_api_compose_file.__name__, compose_file_path))
+    return compose_file_path
+
+
 def build_api():
     output_extra_config_name = build_extra_config()
 
@@ -86,3 +92,7 @@ def build_plugin(publish_task=None):
         command = list_util.arr_param_to_str(command, "publishAllPublicationsToBuildRepository")
     logger.info(basic_util.action_formatter(build_plugin.__name__, command))
     basic_util.execute(command)
+
+
+def start_api_compose():
+    return ""
