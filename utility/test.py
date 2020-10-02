@@ -1,3 +1,0 @@
-import symbol
-
-print("ss")
