@@ -13,7 +13,7 @@ def flat_dict(src, target=None, prefix=""):
         target = {}
     for k, value in src.items():
         if isinstance(value, dict):
-            flat_dict(value, target, prefix + k + ".")
+            flat_dict(value, target, prefix + k + "_")
         else:
             target[prefix + k] = value
     return target

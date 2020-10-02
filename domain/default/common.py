@@ -49,4 +49,4 @@ param_injected = {}
 
 
 def get_params():
-    return collection_util.flat_dict(dict({k: v for k, v in globals().items() if k.startswith("param")}))
+    return dict({k: v for k, v in globals().items() if k.startswith("param")})
