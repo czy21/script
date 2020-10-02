@@ -92,5 +92,5 @@ class Mysql:
 
 def rebuild_mysql():
     Mysql.assemble()
-    Mysql.recreate()
-    Mysql.exec()
+    # Mysql.recreate()
+    # Mysql.exec()

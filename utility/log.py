@@ -13,7 +13,7 @@ log_colors_config = {
     'CRITICAL': 'red',
 }
 
-log_sleep = 0.5
+log_sleep = 0.1
 
 
 class Logger:
