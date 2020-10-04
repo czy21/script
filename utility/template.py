@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+import re
+
 from mako import parsetree
 from mako.lexer import Lexer
 from mako.template import Template
@@ -22,6 +24,35 @@ class CustomLexerCls(Lexer):
                 lineno=line,
                 pos=pos,
             )
+            return True
+        else:
+            return False
+
+    def match_text(self):
+        match = self.match(
+            r"""
+                (.*?)         # anything, followed by:
+                (
+                 (?<=\n)(?=[ \t]*(?=%|\#\#)) # an eval or line-based
+                                             # comment preceded by a
+                                             # consumed newline and whitespace
+                 |
+                 (?=\${{{)      # an expression
+                 |
+                 (?=</?[%&])  # a substitution or block or call start or end
+                              # - don't consume
+                 |
+                 (\\\r?\n)    # an escaped newline  - throw away
+                 |
+                 \Z           # end of string
+                )""",
+            re.X | re.S,
+        )
+
+        if match:
+            text = match.group(1)
+            if text:
+                self.append_node(parsetree.Text, text)
             return True
         else:
             return False
