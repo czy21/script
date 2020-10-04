@@ -44,7 +44,6 @@ def build_api_compose_file():
 
 def build_api():
     output_extra_config_name = build_extra_config()
-
     command = list_util.arr_param_to_str(
         default_common.param_api_docker_gradle_command,
         [
@@ -66,8 +65,8 @@ def build_api_image():
         [
             "cd&&sudo docker build",
             "--build-arg JAR_FILE=."
-            + path_util.pure_path_join(default_common.param_api_output_path, default_common.param_api_archive_file_name).replace(Path(default_path.root_path).parent.as_posix(),
-                                                                                                                                 ""),
+            + path_util.pure_path_join(default_common.param_api_output_path,
+                                       default_common.param_api_archive_file_name).replace(Path(default_path.root_path).parent.as_posix(), ""),
             "--tag " + ":".join([param_injected["param_project_name"], param_injected["param_api_image_tag"]]),
             "--file",
             output_dockerfile__name,
@@ -95,6 +94,6 @@ def build_plugin(publish_task=None):
     basic_util.execute(command)
 
 
-def start_api_compose():
+def build_api_compose():
     output_compose_name = build_api_compose_file()
-    logger.info(basic_util.action_formatter(start_api_compose.__name__, ""))
+    logger.info(basic_util.action_formatter(build_api_compose.__name__, output_compose_name))
