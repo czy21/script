@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import shutil
 from pathlib import Path
 
 from script.utility import log, basic as basic_util
@@ -33,7 +34,9 @@ output_db_all_in_one_neo4j = path_util.pure_path_join(output_db_all_in_one, "neo
 output_tmp = path_util.pure_path_join(output, "tmp")
 
 
-def re_mkdir() -> None:
+def re_mkdir(rm_output=False) -> None:
+    if rm_output:
+        shutil.rmtree(output)
     dirs = [output_tmp, output_api_resource, output_web, output_app, output_db_bak, output_db_all_in_one]
     logger.info(basic_util.action_formatter(re_mkdir.__name__, dirs.__str__()))
     [Path(p).mkdir(parents=True, exist_ok=True) for p in dirs]
