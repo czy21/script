@@ -5,7 +5,7 @@ set -e
 sudo mkdir -p /data/volumes/jenkins/
 
 sudo tee /data/volumes/jenkins/hudson.model.UpdateCenter.xml <<-'EOF'
-<?xml version='1.1' encoding='UTF-8'?>
+<?xml version='1.0' encoding='UTF-8'?>
 <sites>
   <site>
     <id>default</id>

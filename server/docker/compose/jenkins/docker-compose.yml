@@ -3,7 +3,7 @@ version: '3.7'
 services:
 
   jenkins:
-    image: jenkins/jenkins:lts-centos
+    image: jenkins:2.19.2
     container_name: jenkins
     privileged: true
     ports:
