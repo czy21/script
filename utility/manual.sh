@@ -1,14 +1,6 @@
 # docker
-sudo docker run --rm -u gradle -v "$PWD"/code/api/:/home/gradle/project -v "$HOME"/init.gradle:/home/gradle/.gradle/init.gradle -w /home/gradle/project/ gradle:jdk11 gradle clean build -b portal/build.gradle
-
-sudo docker build --tag erp:1.0.0 --file script/domain/template/api/Dockerfile --build-arg jar=code/api/portal/build/libs/portal.jar .
-
-sudo docker run -d -p 8075:8075 --name=erp --net=host czy/erp
-
-sudo docker images | grep erp | awk '{print $3}' | xargs sudo docker rmi
 
 # mysql
-mysql --database=erp --host=localhost --port=3306 --user=root --password=sasa -vvv < D:\Developer\JavaProject\erp\_temp\db\all_in_one.sql > local_upgrade_db.py.log
 
 mysql --host=localhost --port=3306 --user=root --password=sasa -e "drop database if exists erp; create database if not exists erp default charset utf8 collate utf8_general_ci;" && mysqldump erp_bak --host=localhost --port=3306 --user=root --password=sasa | mysql --database=erp --host=localhost --port=3306 --user=root --password=sasa
 
