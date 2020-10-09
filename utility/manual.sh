@@ -14,3 +14,10 @@ neo4j-etl export --rdbms:url "jdbc:mysql://192.168.2.4:3306/cy_db?autoReconnect=
 jenkins_home_des=$(echo $WORKSPACE | awk -F "/workspace" '{print $1}') &&
 jenkins_home_source=$(sudo docker inspect --format '{{range $t :=.Mounts}}{{if eq $t.Destination "'${jenkins_home_des}'"}}{{$t.Source}}{{end}}{{end}}' jenkins) &&
 HOME=$(echo ${WORKSPACE/${jenkins_home_des}/${jenkins_home_source}})
+
+
+
+jenkins_home_des=$(echo $WORKSPACE | awk -F "/workspace" '{print $1}') &&
+jenkins_home_source=$(sudo docker inspect --format '{{range $t :=.Mounts}}{{if eq $t.Destination "'${jenkins_home_des}'"}}{{$t.Source}}{{end}}{{end}}' jenkins) &&
+HOME=$(echo ${WORKSPACE/${jenkins_home_des}/${jenkins_home_source}})&& mkdir $HOME &&
+sudo docker build --file $HOME/script/Dockerfile -t my-python-app .&& sudo docker run -it --rm --name my-running-script -v "$HOME":/usr/src/myapp python:3 python --version
