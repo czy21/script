@@ -11,6 +11,7 @@ services:
       - 50000:50000
     volumes:
       - /data/volumes/jenkins/:/var/jenkins_home/
+      - /data/volumes/jenkins/workspace/:/data/volumes/jenkins/workspace/
       - /var/run/docker.sock:/var/run/docker.sock
     user: root
     restart: always
