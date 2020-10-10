@@ -63,7 +63,7 @@ def build_api_image():
     param_injected = default_common.get_params()["param_injected"]
     command = list_util.arr_param_to_str(
         [
-            "cd $HOME && sudo docker build",
+            "sudo docker build",
             "--tag " + ":".join([param_injected["param_project_name"], param_injected["param_api_image_tag"]]),
             "--file",
             output_dockerfile__name,
