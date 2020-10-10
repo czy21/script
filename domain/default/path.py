@@ -9,8 +9,6 @@ from script.utility import path as path_util
 logger = log.Logger(__name__)
 
 root_path = path_util.pure_path_join("../../")
-if os.environ['PROJECT_HOME'] != '':
-    root_path = path_util.pure_path_join(os.environ['PROJECT_HOME'])
 output = path_util.pure_path_join(root_path, "___output")
 project_code = path_util.pure_path_join(root_path, "code")
 project_db = path_util.pure_path_join(root_path, "db")
