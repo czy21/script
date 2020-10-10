@@ -1,0 +1,13 @@
+
+
+curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
+
+mkdir ~.pyenv/cache
+
+https://www.python.org/ftp/python/3.9.0/Python-3.9.0.tar.xz
+手动下载 *.tar.xz 放至 ~.pyenv/cache
+
+安装
+pyenv install -vvvv [*.tar.xz]
+
+pyenv local 3.9.0

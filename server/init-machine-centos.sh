@@ -20,8 +20,7 @@ while [[ $# -ge 1 ]]; do
     shift 1
 
     # install tools
-    yum -y install wget vim git
-    dnf -y install python38
+    yum -y install wget
 
     # edit sshd_config
     sed -i -r "s/ll='ls\s+-l/\0va/" /etc/profile.d/colorls.sh
@@ -53,6 +52,8 @@ while [[ $# -ge 1 ]]; do
       systemctl disable firewalld
       sed -i -r "s/SELINUX=enforcing/SELINUX=disabled/" /etc/selinux/config
     fi
+
+    yum -y vim git gcc epel-release zlib-devel bzip2-devel readline-devel sqlite-devel openssl-devel
 
     shutdown -r now
 
