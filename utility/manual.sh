@@ -20,4 +20,4 @@ HOME=$(echo ${WORKSPACE/${jenkins_home_des}/${jenkins_home_source}})
 jenkins_home_des=$(echo $WORKSPACE | awk -F "/workspace" '{print $1}') &&
 jenkins_home_source=$(sudo docker inspect --format '{{range $t :=.Mounts}}{{if eq $t.Destination "'${jenkins_home_des}'"}}{{$t.Source}}{{end}}{{end}}' jenkins) &&
 HOME=$(echo ${WORKSPACE/${jenkins_home_des}/${jenkins_home_source}}) &&
-pip3 install -r script/requirements.txt && cd shell/play && python3 build_api_image.py --param param_api_image_tag=1.0.0 --home $HOME && cd
+pip3 install -r script/requirements.txt && cd shell/play && python3 build_api_image.py --param param_api_image_tag=1.0.0 && cd
