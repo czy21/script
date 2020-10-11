@@ -2,7 +2,6 @@
 import io
 import os
 from pathlib import Path
-from subprocess import Popen
 
 from script.domain.default import common as default_common, path as default_path
 from script.utility import basic as basic_util, collection as list_util, path as path_util, log
@@ -67,13 +66,13 @@ def rm_container(image_tag: str) -> None:
         "-q)"
     ])
     logger.info(basic_util.action_formatter(rm_container.__name__, command))
-    basic_util.execute(command)
+    basic_util.execute(cmd=command, ignore_error=True)
 
 
 def rm_image(image_tag: str) -> None:
     command = list_util.arr_param_to_str(["docker", "image", "rmi", image_tag])
     logger.info(basic_util.action_formatter(rm_image.__name__, command))
-    basic_util.execute(command)
+    basic_util.execute(cmd=command)
 
 
 def build_api_image():
