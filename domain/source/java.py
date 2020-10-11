@@ -89,7 +89,7 @@ def build_api_image():
                                            default_common.param_api_archive_file_name).replace(Path(default_path.root_path).parent.as_posix(), ""),
                 "JAR_RESOURCES=."
                 + path_util.pure_path_join(default_common.param_api_output_resource_path).replace(Path(default_path.root_path).parent.as_posix(), ""),
-            ], ","),
+            ], separator=","),
             "--tag " + image_tag,
             "--file", output_dockerfile__name,
             "."
