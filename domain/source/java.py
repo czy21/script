@@ -59,12 +59,6 @@ def build_api():
     build_override_yml()
 
 
-def any_container(msg_line, proc: Popen, func_param):
-    containers = [c.strip() for c in msg_line]
-    if containers:
-        basic_util.execute(list_util.arr_param_to_str(proc.args, "|", func_param["rm_command"]))
-
-
 def rm_container(image_tag: str) -> None:
     command = list_util.arr_param_to_str([
         "docker rm -f",

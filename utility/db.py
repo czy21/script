@@ -25,7 +25,7 @@ def assemble_ql(s_path, t_file_name, db_meta, file_suffix) -> None:
         t_file.write(u'{}'.format("\n\n".join(db_file_content)))
 
 
-def print_ql_msg(msg_lines) -> None:
+def print_ql_msg(msg_lines, proc, func_param) -> None:
     callback = list(filter(re.compile(r"^(executing:|executed:)").search, msg_lines))
     for m in callback[1::2]:
         logger.info(m.strip())
