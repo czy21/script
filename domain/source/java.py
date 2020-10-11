@@ -81,16 +81,15 @@ def build_api_image():
     image_tag = ":".join([param_injected["param_project_name"], param_injected["param_api_image_tag"]])
     command = list_util.arr_param_to_str(
         [
-            "cd && sudo docker build --force-rm",
+            "cd && sudo docker build",
             "--build-arg",
             "JAR_FILE=."
             + path_util.pure_path_join(default_common.param_api_output_path,
                                        default_common.param_api_archive_file_name).replace(Path(default_path.root_path).parent.as_posix(), ""),
-            "JAR_RESOURCE=."
+            "JAR_RESOURCES=."
             + path_util.pure_path_join(default_common.param_api_output_resource_path).replace(Path(default_path.root_path).parent.as_posix(), ""),
             "--tag " + image_tag,
-            "--file",
-            output_dockerfile__name,
+            "--file", output_dockerfile__name,
             "."
         ])
     rm_container(image_tag)
