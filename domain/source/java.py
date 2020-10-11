@@ -124,4 +124,4 @@ def start_api_compose():
             "up -d"
         ])
     logger.info(basic_util.action_formatter(start_api_compose.__name__, command))
-    # basic_util.execute(command)
+    basic_util.execute(command)
