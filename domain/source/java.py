@@ -63,7 +63,7 @@ def build_api_image():
     param_injected = default_common.get_params()["param_injected"]
     command = list_util.arr_param_to_str(
         [
-            "cd && sudo docker build",
+            "cd && sudo docker build --force-rm",
             "--build-arg JAR_FILE=."
             + path_util.pure_path_join(default_common.param_api_output_path,
                                        default_common.param_api_archive_file_name).replace(Path(default_path.root_path).parent.as_posix(), ""),
