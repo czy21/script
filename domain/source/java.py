@@ -2,6 +2,7 @@
 import io
 import os
 from pathlib import Path
+from subprocess import Popen
 
 from script.domain.default import common as default_common, path as default_path
 from script.utility import basic as basic_util, collection as list_util, path as path_util, log
@@ -58,20 +59,46 @@ def build_api():
     build_override_yml()
 
 
+def any_container(msg_line, proc: Popen, func_param):
+    containers = [c.strip() for c in msg_line]
+    if containers:
+        basic_util.execute(list_util.arr_param_to_str(proc.args, "|", func_param["rm_command"]))
+
+
+def rm_container(image_tag: str) -> None:
+    command = list_util.arr_param_to_str([
+        "docker rm -f",
+        "$(docker ps --filter",
+        "ancestor=" + image_tag,
+        "-q)"
+    ])
+    logger.info(basic_util.action_formatter(rm_container.__name__, command))
+    basic_util.execute(command)
+
+
+def rm_image(image_tag: str) -> None:
+    command = list_util.arr_param_to_str(["docker", "image", "rmi", image_tag])
+    logger.info(basic_util.action_formatter(rm_image.__name__, command))
+    basic_util.execute(command)
+
+
 def build_api_image():
     output_dockerfile__name = build_api_dockerfile()
     param_injected = default_common.get_params()["param_injected"]
+    image_tag = ":".join([param_injected["param_project_name"], param_injected["param_api_image_tag"]])
     command = list_util.arr_param_to_str(
         [
             "cd && sudo docker build --force-rm",
             "--build-arg JAR_FILE=."
             + path_util.pure_path_join(default_common.param_api_output_path,
                                        default_common.param_api_archive_file_name).replace(Path(default_path.root_path).parent.as_posix(), ""),
-            "--tag " + ":".join([param_injected["param_project_name"], param_injected["param_api_image_tag"]]),
+            "--tag " + image_tag,
             "--file",
             output_dockerfile__name,
             "."
         ])
+    rm_container(image_tag)
+    rm_image(image_tag)
     logger.info(basic_util.action_formatter(build_api_image.__name__, command))
     basic_util.execute(command)
 
