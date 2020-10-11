@@ -72,7 +72,7 @@ def rm_container(image_tag: str) -> None:
 def rm_image(image_tag: str) -> None:
     command = list_util.arr_param_to_str(["docker", "image", "rmi", image_tag])
     logger.info(basic_util.action_formatter(rm_image.__name__, command))
-    basic_util.execute(cmd=command)
+    basic_util.execute(cmd=command, ignore_error=True)
 
 
 def build_api_image():
