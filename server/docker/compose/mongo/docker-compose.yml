@@ -13,5 +13,5 @@ services:
       - /data/config/mongo/:/data/configdb/
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: Czy.190815
+      MONGO_INITDB_ROOT_PASSWORD: sasa
     restart: always
