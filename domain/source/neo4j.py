@@ -16,7 +16,7 @@ class Neo4j:
 
     @staticmethod
     def get_main_db_param_dict() -> list:
-        return Neo4j.get_basic_param(default_common.param_main_db_host,
+        return Neo4j.get_basic_param(default_common.param_main_db_neo4j_host,
                                      default_common.param_main_db_neo4j_port,
                                      default_common.param_main_db_neo4j_user,
                                      default_common.param_main_db_neo4j_pass,

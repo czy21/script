@@ -17,7 +17,7 @@ class Mysql:
 
     @staticmethod
     def recreate() -> None:
-        command = Mysql.recreate_command(default_common.param_main_db_host,
+        command = Mysql.recreate_command(default_common.param_main_db_mysql_host,
                                          default_common.param_main_db_mysql_port,
                                          default_common.param_main_db_mysql_user,
                                          default_common.param_main_db_mysql_pass,
@@ -39,7 +39,7 @@ class Mysql:
 
     @staticmethod
     def get_main_db_param_dict() -> str:
-        return Mysql.get_basic_param(default_common.param_main_db_host,
+        return Mysql.get_basic_param(default_common.param_main_db_mysql_host,
                                      default_common.param_main_db_mysql_port,
                                      default_common.param_main_db_mysql_user,
                                      default_common.param_main_db_mysql_pass,
@@ -68,19 +68,19 @@ class Mysql:
 
     @staticmethod
     def backup_mysql() -> None:
-        command = list_util.arr_param_to_str(Mysql.recreate_command(default_common.param_main_db_host,
+        command = list_util.arr_param_to_str(Mysql.recreate_command(default_common.param_main_db_mysql_host,
                                                                     default_common.param_main_db_mysql_port,
                                                                     default_common.param_main_db_mysql_user,
                                                                     default_common.param_main_db_mysql_pass,
                                                                     default_common.param_main_db_bak_name),
                                              "&&mysqldump",
-                                             Mysql.get_basic_param(default_common.param_main_db_host,
+                                             Mysql.get_basic_param(default_common.param_main_db_mysql_host,
                                                                    default_common.param_main_db_mysql_port,
                                                                    default_common.param_main_db_mysql_user,
                                                                    default_common.param_main_db_mysql_pass,
                                                                    default_common.param_main_db_name),
                                              "|mysql",
-                                             Mysql.get_basic_param(default_common.param_main_db_host,
+                                             Mysql.get_basic_param(default_common.param_main_db_mysql_host,
                                                                    default_common.param_main_db_mysql_port,
                                                                    default_common.param_main_db_mysql_user,
                                                                    default_common.param_main_db_mysql_pass,
