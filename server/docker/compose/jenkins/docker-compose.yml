@@ -3,7 +3,7 @@ version: '3.7'
 services:
 
   jenkins:
-    image: jenkinsci/blueocean
+    image: jenkins/jenkins:lts-centos
     container_name: jenkins
     privileged: true
     ports:
