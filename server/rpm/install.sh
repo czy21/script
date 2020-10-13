@@ -31,28 +31,28 @@ do
       fi
       host=$2
       shift 2
-      ssh $host 'rm -rf $HOME/'"${root_dir}"'/' && scp -r ../${root_dir}/ $host:
-      ssh $host '$HOME/'"${root_dir}"'/install.sh '$@';'
-      ssh $host 'rm -rf $HOME/'"${root_dir}"'/'
+      ssh ${host} 'rm -rf $HOME/'"${root_dir}"'/' && scp -r ../${root_dir}/ ${host}:
+      ssh ${host} '$HOME/'"${root_dir}"'/install.sh '$@';'
+      ssh ${host} 'rm -rf $HOME/'"${root_dir}"'/'
       break
 			;;
 		--install)
 		  if [[ ! $2 ]]; then
 
         # mysql
-        sudo rpm -ivh $dir/mysql/mysql-community-common-${mysql_version}.x86_64.rpm
-        sudo rpm -ivh $dir/mysql/mysql-community-libs-${mysql_version}.x86_64.rpm
-        sudo rpm -ivh $dir/mysql/mysql-community-client-${mysql_version}.x86_64.rpm
+        sudo rpm -ivh ${dir}/mysql/mysql-community-common-${mysql_version}.x86_64.rpm
+        sudo rpm -ivh ${dir}/mysql/mysql-community-libs-${mysql_version}.x86_64.rpm
+        sudo rpm -ivh ${dir}/mysql/mysql-community-client-${mysql_version}.x86_64.rpm
 
         # mssql
-        sudo yum localinstall $dir/mssql/msodbcsql17-${mssql_version}.x86_64.rpm
-        sudo yum localinstall $dir/mssql/mssql-tools-${mssql_version}.x86_64.rpm
+        sudo yum localinstall ${dir}/mssql/msodbcsql17-${mssql_version}.x86_64.rpm
+        sudo yum localinstall ${dir}/mssql/mssql-tools-${mssql_version}.x86_64.rpm
 
         # mongo
-        sudo tar -zxvf $dir/mongo/mongodb-linux-x86_64-${mongo_version}.tgz -C /opt/
+        sudo tar -zxvf ${dir}/mongo/mongodb-linux-x86_64-${mongo_version}.tgz -C /opt/
 
         # cypher
-        sudo rpm -ivh $dir/neo4j/cypher-shell-${neo4j_version}.noarch.rpm
+        sudo rpm -ivh ${dir}/neo4j/cypher-shell-${neo4j_version}.noarch.rpm
 
         # must use root login and exec
         # echo 'export PATH="$PATH:/opt/mssql-tools/bin:"' >> /etc/bashrc
@@ -71,9 +71,9 @@ do
             user=$2
             shift 2
         fi
-          sudo docker exec -i $container_name bash -c 'rm -rf $HOME/'"${root_dir}"'/'
-          sudo docker cp $HOME/rpm/ $container_name:$user
-          sudo docker exec -i $container_name bash -c 'sh $HOME/'"${root_dir}"'/install.sh --install'
+          sudo docker exec -i ${container_name} bash -c 'rm -rf $HOME/'"${root_dir}"'/'
+          sudo docker cp $HOME/${root_dir}/ ${container_name}:${user}
+          sudo docker exec -i ${container_name} bash -c 'sh $HOME/'"${root_dir}"'/install.sh --install'
       fi
 			;;
 		*)
