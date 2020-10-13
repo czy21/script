@@ -36,6 +36,9 @@ do
 		      sudo yum -y install gcc epel-release zlib-devel bzip2-devel readline-devel sqlite-devel openssl-devel make
           curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
           echo 'export PATH="'${HOME}'/.pyenv/bin:$PATH"' >> ~/.bashrc
+          echo 'eval "$(pyenv init -)"' >> ~/.bashrc
+          echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.bashrc
+
           source ${HOME}/.bashrc
           mkdir ${HOME}/.pyenv/cache
 
