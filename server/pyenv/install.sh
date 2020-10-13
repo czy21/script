@@ -24,7 +24,8 @@ do
       host=$2
       shift 2
       ssh ${host} 'rm -rf $HOME/'"${root_dir}"'/' && scp -r ../${root_dir}/ ${host}:
-      ssh ${host} '$HOME/'"${root_dir}"'/install.sh '$@';'
+      exec_sh='$HOME/'${root_dir}'/install.sh '$@''
+      ssh ${host} "${exec_sh}"
       ssh ${host} 'rm -rf $HOME/'"${root_dir}"'/'
       break
 			;;

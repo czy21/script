@@ -15,7 +15,8 @@ do
       host=$2
       shift 2
       ssh $host "rm -rf ./hadoop/" && scp -r ../hadoop/ $host:
-      ssh $host '$HOME/hadoop/builder.sh '$@';'
+      exec_sh='$HOME/hadoop/builder.sh '$@''
+      ssh ${host} "${exec_sh}"
       break
 			;;
 		--tag)
