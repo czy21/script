@@ -35,15 +35,15 @@ do
 		  if [[ ! $2 ]]; then
 		      sudo yum -y install gcc epel-release zlib-devel bzip2-devel readline-devel sqlite-devel openssl-devel make
           curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
-          echo 'export PATH="'${HOME}'/.pyenv/bin:$PATH"' >> ~/.bashrc
+          echo 'export PATH="~/.pyenv/bin:$PATH"' >> ~/.bashrc
           echo 'eval "$(pyenv init -)"' >> ~/.bashrc
           echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.bashrc
 
-          source ${HOME}/.bashrc
-          mkdir ${HOME}/.pyenv/cache
+          source ~/.bashrc
+          mkdir ~/.pyenv/cache
 
-          rm -rf ${HOME}/.pyenv/cache/*
-          cp -r ${dir}/* ${HOME}/.pyenv/cache/
+          rm -rf ~/.pyenv/cache/*
+          cp -r ${dir}/* ~/.pyenv/cache/
 
 		      rm -rf ${HOME}/${root_dir}/
 		      shift 1
