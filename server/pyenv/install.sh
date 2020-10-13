@@ -23,9 +23,9 @@ do
       fi
       host=$2
       shift 2
-      ssh $host 'rm -rf $HOME/'"${root_dir}"'/' && scp -r ../${root_dir}/ $host:
-      ssh $host '$HOME/'"${root_dir}"'/install.sh '$@';'
-      ssh $host 'rm -rf $HOME/'"${root_dir}"'/'
+      ssh ${host} 'rm -rf $HOME/'"${root_dir}"'/' && scp -r ../${root_dir}/ ${host}:
+      ssh ${host} '$HOME/'"${root_dir}"'/install.sh '$@';'
+      ssh ${host} 'rm -rf $HOME/'"${root_dir}"'/'
       break
 			;;
 		--install)
@@ -47,9 +47,9 @@ do
             user=$2
             shift 2
         fi
-          sudo docker exec -i $container_name bash -c 'rm -rf $HOME/'"${root_dir}"'/'
-          sudo docker cp $HOME/rpm/ $container_name:$user
-          sudo docker exec -i $container_name bash -c 'sh $HOME/'"${root_dir}"'/install.sh --install'
+          sudo docker exec -i ${container_name} bash -c 'rm -rf $HOME/'"${root_dir}"'/'
+          sudo docker cp $HOME/${root_dir}/ ${container_name}:${user}
+          sudo docker exec -i ${container_name} bash -c 'sh $HOME/'"${root_dir}"'/install.sh --install'
       fi
 			;;
 		*)
