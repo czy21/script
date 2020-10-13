@@ -21,7 +21,7 @@ while [[ $# -ge 1 ]]; do
 
     # install tools
     yum -y install wget
-
+    dnf -y install python38
     # edit sshd_config
     sed -i -r "s/ll='ls\s+-l/\0va/" /etc/profile.d/colorls.sh
     sed -i -r "s/\s*#\s*(%wheel\s+ALL=\(ALL\)\s+ALL)/\1/" /etc/sudoers

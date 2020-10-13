@@ -12,4 +12,5 @@ sed -i -e '/mirrors.cloud.aliyuncs.com/d' -e '/mirrors.aliyuncs.com/d' /etc/yum.
 yum clean all
 yum makecache
 yum -y install vim sudo
+dnf -y install python38
 "
