@@ -23,16 +23,18 @@ do
       fi
       host=$2
       shift 2
-      ssh ${host} 'rm -rf $HOME/'"${root_dir}"'/' && scp -r ../${root_dir}/ ${host}:
+      rm_sh='rm -rf $HOME/'"${root_dir}"'/'
       exec_sh='$HOME/'${root_dir}'/install.sh '$@''
+      ssh ${host} "${rm_sh}" && scp -r ../${root_dir}/ ${host}:
       ssh ${host} "${exec_sh}"
-      ssh ${host} 'rm -rf $HOME/'"${root_dir}"'/'
+      ssh ${host} "${rm_sh}"
       break
 			;;
 		--install)
 		  if [[ ! $2 ]]; then
+		      sudo yum -y install gcc epel-release zlib-devel bzip2-devel readline-devel sqlite-devel openssl-devel make
           curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
-          echo 'export PATH="$HOME/.pyenv/bin:$PATH"' >> ~/.bashrc
+          echo 'export PATH="'${HOME}'/.pyenv/bin:$PATH"' >> ~/.bashrc
           source ${HOME}/.bashrc
           mkdir ${HOME}/.pyenv/cache
 

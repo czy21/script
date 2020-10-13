@@ -53,7 +53,7 @@ while [[ $# -ge 1 ]]; do
       sed -i -r "s/SELINUX=enforcing/SELINUX=disabled/" /etc/selinux/config
     fi
 
-    yum -y install vim git gcc epel-release zlib-devel bzip2-devel readline-devel sqlite-devel openssl-devel make
+    yum -y install vim git
 
     shutdown -r now
 
