@@ -1,0 +1,82 @@
+#!/bin/bash
+
+# for machine version centos
+
+# install to host machine
+# sh install.sh --host user@host --install
+
+# install to container
+# sh install.sh --host user@host --install --container jenkins --user root
+
+set -e
+
+dir=$(cd "$(dirname "$0")"; pwd)/
+dir=${dir}___temp
+
+mysql_version="8.0.21-1.el8"
+mssql_version="17.6.1.1-1"
+mongo_version="rhel80-4.4.1"
+neo4j_version="4.1.2-1"
+
+while [[ $# -ge 1 ]];
+do
+	case $1 in
+		--host)
+			if [[ ! $2 ]] || [[ "$2" =~ ^"--".* ]]; then
+			  echo -e "\033[31m$1 host is null \033[0m"
+			  shift 1
+        continue
+      fi
+      host=$2
+      shift 2
+      ssh $host 'rm -rf $HOME/rpm/' && scp -r ../rpm/ $host:
+      ssh $host '$HOME/rpm/install.sh '$@';'
+      ssh $host 'rm -rf $HOME/rpm/'
+      break
+			;;
+		--install)
+		  if [[ ! $2 ]]; then
+
+		      # mysql
+          sudo rpm -ivh $dir/mysql/mysql-community-common-${mysql_version}.x86_64.rpm
+          sudo rpm -ivh $dir/mysql/mysql-community-libs-${mysql_version}.x86_64.rpm
+          sudo rpm -ivh $dir/mysql/mysql-community-client-${mysql_version}.x86_64.rpm
+
+          # mssql
+          sudo yum localinstall $dir/mssql/msodbcsql17-${mssql_version}.x86_64.rpm
+          sudo yum localinstall $dir/mssql/mssql-tools-${mssql_version}.x86_64.rpm
+
+          # mongo
+          sudo tar -zxvf $dir/mongo/mongodb-linux-x86_64-${mongo_version}.tgz -C /opt/
+
+          # cypher
+          sudo rpm -ivh $dir/neo4j/cypher-shell-${neo4j_version}.noarch.rpm
+
+          # must use root login and exec
+          # echo 'export PATH="$PATH:/opt/mssql-tools/bin:"' >> /etc/bashrc
+
+          # echo 'export PATH="$PATH:/opt/mongodb-linux-x86_64-rhel80-4.4.1/bin:"' >> /etc/bashrc
+
+		      rm -rf $HOME/rpm/
+		      shift 1
+		      continue
+		  fi
+      if [ $2 == "--container" ]; then
+        container_name=$3
+        shift 3
+        user=""
+        if [ $1 == "--user" ]; then
+            user=$2
+            shift 2
+        fi
+          sudo docker exec -i $container_name bash -c 'rm -rf $HOME/rpm/'
+          sudo docker cp $HOME/rpm/ $container_name:$user
+          sudo docker exec -i $container_name bash -c 'sh $HOME/rpm/install.sh --install'
+      fi
+			;;
+		*)
+		  echo -e "\033[31m$1 un_know input param \033[0m"
+			break
+			;;
+	esac
+done
