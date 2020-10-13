@@ -8,9 +8,10 @@
 # install to container
 # sh install.sh --host user@host --install --container [container_name] --user [container_user]
 
-set -e
-
 root_dir="pyenv"
+
+dir=$(cd "$(dirname "$0")"; pwd)
+dir=${dir}/___temp
 
 while [[ $# -ge 1 ]];
 do
@@ -37,6 +38,9 @@ do
           echo 'export PATH="'${HOME}'/.pyenv/bin:$PATH"' >> ~/.bashrc
           source ${HOME}/.bashrc
           mkdir ${HOME}/.pyenv/cache
+
+          rm -rf ${HOME}/.pyenv/cache/*
+          cp -r ${dir}/* ${HOME}/.pyenv/cache/
 
 		      rm -rf ${HOME}/${root_dir}/
 		      shift 1
