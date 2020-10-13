@@ -47,19 +47,19 @@ do
         # mssql
         # must use root login and exec
 #        curl https://packages.microsoft.com/config/rhel/8/prod.repo > /etc/yum.repos.d/msprod.repo
-        sudo yum remove mssql-tools unixODBC-utf16-devel
-        sudo yum -y install mssql-tools unixODBC-devel
+#        yum remove mssql-tools unixODBC-utf16-devel
+#        yum install mssql-tools unixODBC-devel
+#        echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> /etc/bashrc && source /etc/bashrc
 
         # mongo
+        # must use root login and exec
         sudo tar -zxvf ${dir}/mongo/mongodb-linux-x86_64-${mongo_version}.tgz -C /opt/
+#       echo 'export PATH="$PATH:/opt/mongodb-linux-x86_64-rhel80-4.4.1/bin:"' >> /etc/bashrc && source /etc/bashrc
 
         # cypher
         sudo rpm -ivh ${dir}/neo4j/cypher-shell-${neo4j_version}.noarch.rpm
 
-        # must use root login and exec
-        # echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> /etc/bashrc
 
-        # echo 'export PATH="$PATH:/opt/mongodb-linux-x86_64-rhel80-4.4.1/bin:"' >> /etc/bashrc
 
         rm -rf ${HOME}/${root_dir}/
         shift 1
