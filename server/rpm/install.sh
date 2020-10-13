@@ -8,8 +8,6 @@
 # install to container
 # sh install.sh --host user@host --install --container [container_name] --user [container_user]
 
-set -e
-
 root_dir="rpm"
 
 dir=$(cd "$(dirname "$0")"; pwd)
