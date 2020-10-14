@@ -14,7 +14,6 @@ dir=$(cd "$(dirname "$0")"; pwd)
 dir=${dir}/___temp
 
 mysql_version="8.0.21-1.el8"
-mssql_version="17.6.1.1-1"
 mongo_version="rhel80-4.4.1"
 neo4j_version="4.1.2-1"
 
