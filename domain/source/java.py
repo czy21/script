@@ -86,12 +86,12 @@ def build_plugin(publish_task=None):
 
 
 def start_api_compose():
-    output_compose_name = build_api_compose_file()
+    build_api_compose_file()
     command = list_util.arr_param_to_str(
         [
             "sudo docker-compose",
             "--file",
-            output_compose_name,
+            default_common.param_api_compose_output_file_path,
             "up -d"
         ])
     logger.info(basic_util.action_formatter(start_api_compose.__name__, command))
