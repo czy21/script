@@ -30,12 +30,18 @@ param_main_db_mongo_file_path = ""
 
 # api
 param_api_archive_file_name = ""
-param_api_extra_config_template_name = ""
-param_api_yml_override_template_name = ""
-param_api_dockerfile_template_name = ""
+param_api_extra_config_template_path = ""
+param_api_extra_config_output_file_path = ""
+
+param_api_yml_override_template_path = ""
+param_api_yml_output_file_path = ""
+
+param_api_dockerfile_template_path = ""
 param_api_dockerfile_output_file_path = ""
-param_api_compose_template_name = ""
+
+param_api_compose_template_path = ""
 param_api_compose_output_file_path = ""
+
 param_api_root_project_path = ""
 param_api_docker_gradle_command = ""
 param_api_gradle_init_script_file_path = ""
