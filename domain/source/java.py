@@ -107,8 +107,7 @@ def start_api_compose():
 
 
 def build_api_compose():
-    output_dockerfile_name = build_api_dockerfile()
-    output_compose_name = build_api_compose_file()
+    output_compose_name = path_util.pure_path_join(default_common.param_api_compose_output_file_path, os.path.basename(default_common.param_api_compose_template_name))
     command = list_util.arr_param_to_str(
         [
             "sudo docker-compose",
@@ -116,6 +115,6 @@ def build_api_compose():
             output_compose_name,
             "build"
         ])
-    logger.info(basic_util.action_formatter(build_api_dockerfile.__name__, output_dockerfile_name))
+    logger.info(basic_util.action_formatter(build_api_dockerfile.__name__, build_api_dockerfile()))
     logger.info(basic_util.action_formatter(build_api_compose.__name__, command))
     basic_util.execute(command)
