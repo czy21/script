@@ -102,7 +102,7 @@ def build_api_compose():
             default_common.param_api_compose_output_file_path
         ])
     down_container(compose_file_command)
-    rm_image(default_common.param_api_image_tag)
+    rm_image(default_common.param_api_image)
     build_command = list_util.arr_param_to_str(compose_file_command, "build --force-rm --no-cache")
     logger.info(basic_util.action_formatter(build_api_compose.__name__, build_command))
     basic_util.execute(build_command)
