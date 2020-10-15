@@ -57,4 +57,7 @@ param_injected = {}
 
 
 def get_params():
+    override_keys = [g for i in list(param_injected) for g in list(globals()) if i == g]
+    for o in override_keys:
+        globals()[o] = param_injected.pop(o)
     return dict({k: v for k, v in globals().items() if k.startswith("param")})
