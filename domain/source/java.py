@@ -101,10 +101,7 @@ def ensure_network():
     ])
     logger.info(basic_util.action_formatter(ensure_network.__name__, inspect_command))
 
-    proc = subprocess.Popen(inspect_command, stdout=subprocess.PIPE, shell=True, encoding="utf-8")
-    connected_containers = [x.strip() for x in proc.stdout.readline().split(",") if x.strip()]
-    proc.stdout.close()
-    proc.wait()
+    pre_connected_containers, proc = inspect_network(inspect_command)
     if proc.returncode == 1:
         create_network_command = list_util.arr_param_to_str(
             [
@@ -115,15 +112,25 @@ def ensure_network():
         logger.info(basic_util.action_formatter(ensure_network.__name__, create_network_command))
         basic_util.execute(create_network_command)
     connect_command = " && ".join([list_util.arr_param_to_str("sudo docker network connect", default_common.param_api_network_name, d)
-                                   for d in list(set(default_common.param_api_network_containers).difference(set(connected_containers)))])
+                                   for d in list(set(default_common.param_api_network_containers).difference(set(pre_connected_containers)))])
     disconnect_command = " && ".join([list_util.arr_param_to_str("sudo docker network disconnect", default_common.param_api_network_name, d)
-                                      for d in list(set(connected_containers).difference(set(default_common.param_api_network_containers)))])
+                                      for d in list(set(pre_connected_containers).difference(set(default_common.param_api_network_containers)))])
     if connect_command:
         logger.info(basic_util.action_formatter(ensure_network.__name__, connect_command))
         basic_util.execute(connect_command)
     if disconnect_command:
         logger.info(basic_util.action_formatter(ensure_network.__name__, disconnect_command))
         basic_util.execute(connect_command)
+    post_connected_containers = inspect_network(inspect_command)
+    logger.info(basic_util.action_formatter(ensure_network.__name__, post_connected_containers))
+
+
+def inspect_network(inspect_command):
+    proc = subprocess.Popen(inspect_command, stdout=subprocess.PIPE, shell=True, encoding="utf-8")
+    connected_containers = [x.strip() for x in proc.stdout.readline().split(",") if x.strip()]
+    proc.stdout.close()
+    proc.wait()
+    return connected_containers, proc
 
 
 def build_api_compose():
