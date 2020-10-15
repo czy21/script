@@ -86,7 +86,6 @@ def build_plugin(publish_task=None):
 
 
 def start_api_compose():
-    build_api_compose_file()
     command = list_util.arr_param_to_str(
         [
             "sudo docker-compose",
@@ -100,6 +99,7 @@ def start_api_compose():
 
 def build_api_compose():
     build_api_dockerfile()
+    build_api_compose_file()
     command = list_util.arr_param_to_str(
         [
             "sudo docker-compose",
