@@ -50,15 +50,10 @@ def build_api():
     build_override_yml()
 
 
-def rm_container(image_tag: str) -> None:
-    command = list_util.arr_param_to_str([
-        "docker rm -f",
-        "$(docker ps --filter",
-        "ancestor=" + image_tag,
-        "-q)"
-    ])
-    logger.info(basic_util.action_formatter(rm_container.__name__, command))
-    basic_util.execute(cmd=command, ignore_error=True)
+def down_container(compose_file_command: str) -> None:
+    command = list_util.arr_param_to_str(compose_file_command, "down")
+    logger.info(basic_util.action_formatter(down_container.__name__, command))
+    basic_util.execute(cmd=command)
 
 
 def rm_image(image_tag: str) -> None:
@@ -100,12 +95,14 @@ def start_api_compose():
 def build_api_compose():
     build_api_dockerfile()
     build_api_compose_file()
-    command = list_util.arr_param_to_str(
+    compose_file_command = list_util.arr_param_to_str(
         [
             "sudo docker-compose",
             "--file",
-            default_common.param_api_compose_output_file_path,
-            "build --force-rm --no-cache"
+            default_common.param_api_compose_output_file_path
         ])
-    logger.info(basic_util.action_formatter(build_api_compose.__name__, command))
-    basic_util.execute(command)
+    down_container(compose_file_command)
+    rm_image(default_common.param_api_image_tag)
+    build_command = list_util.arr_param_to_str(compose_file_command, "build --force-rm --no-cache")
+    logger.info(basic_util.action_formatter(build_api_compose.__name__, build_command))
+    basic_util.execute(build_command)
