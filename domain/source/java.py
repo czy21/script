@@ -60,7 +60,7 @@ def down_container(compose_file_command: str) -> None:
 def rm_image(image_tag: str) -> None:
     command = list_util.arr_param_to_str(["docker", "image", "rmi", image_tag])
     logger.info(basic_util.action_formatter(rm_image.__name__, command))
-    basic_util.execute(cmd=command, ignore_error=True)
+    basic_util.execute(cmd=command)
 
 
 def build_plugin(publish_task=None):
