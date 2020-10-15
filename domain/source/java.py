@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import io
+import subprocess
 
 from script.domain.default import common as default_common
 from script.utility import basic as basic_util, collection as list_util, path as path_util, log
@@ -90,6 +91,37 @@ def start_api_compose():
         ])
     logger.info(basic_util.action_formatter(start_api_compose.__name__, command))
     basic_util.execute(command)
+
+
+def ensure_network():
+    inspect_command = list_util.arr_param_to_str([
+        "sudo docker network inspect",
+        default_common.param_api_network_name,
+        "--format '{{range $t :=.Containers}}{{$t.Name}},{{end}}'"
+    ])
+    logger.info(basic_util.action_formatter(ensure_network.__name__, inspect_command))
+
+    proc = subprocess.Popen(inspect_command, stdout=subprocess.PIPE, shell=True, encoding="utf-8")
+    connected_containers = [x.strip() for x in proc.stdout.readline().split(",") if x.strip()]
+    proc.stdout.close()
+    proc.wait()
+    if proc.returncode == 1:
+        create_network_command = list_util.arr_param_to_str(
+            [
+                "sudo docker network create",
+                default_common.param_api_network_name
+            ]
+        )
+        logger.info(basic_util.action_formatter(ensure_network.__name__, create_network_command))
+        basic_util.execute(create_network_command)
+    connect_command = " && ".join(["sudo docker connect " + d for d in list(set(default_common.param_api_network_containers).difference(set(connected_containers)))])
+    disconnect_command = " && ".join(["sudo docker connect " + d for d in list(set(connected_containers).difference(set(default_common.param_api_network_containers)))])
+    if connect_command:
+        logger.info(basic_util.action_formatter(ensure_network.__name__), connect_command)
+        basic_util.execute(connect_command)
+    if disconnect_command:
+        logger.info(basic_util.action_formatter(ensure_network.__name__), disconnect_command)
+        basic_util.execute(connect_command)
 
 
 def build_api_compose():

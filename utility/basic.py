@@ -34,6 +34,7 @@ def execute(cmd, func=print_default, func_param=None, ignore_error=False):
         pass
     elif proc.returncode == 1:
         sys.exit(0)
+    return proc
 
 
 if __name__ == '__main__':
