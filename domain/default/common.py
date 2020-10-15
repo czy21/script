@@ -41,6 +41,8 @@ param_api_dockerfile_output_file_path = ""
 
 param_api_compose_template_path = ""
 param_api_compose_output_file_path = ""
+param_api_network_name = ""
+param_api_network_containers = []
 param_api_image = ""
 
 param_api_root_project_path = ""
