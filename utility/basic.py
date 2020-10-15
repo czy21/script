@@ -23,16 +23,14 @@ def print_default(msg_lines, proc, func_param) -> None:
             logger.info(line, is_sleep=False)
 
 
-def execute(cmd, func=print_default, func_param=None, ignore_error=False):
+def execute(cmd, func=print_default, func_param=None):
     if func_param is None:
         func_param = {}
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True, encoding="utf-8")
     func(iter(proc.stdout.readline, ''), proc, func_param)
     proc.stdout.close()
     proc.wait()
-    if ignore_error:
-        pass
-    elif proc.returncode == 1:
+    if proc.returncode != 0:
         sys.exit(0)
     return proc
 
