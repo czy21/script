@@ -147,3 +147,6 @@ def build_api_compose():
     build_command = list_util.arr_param_to_str(compose_file_command, "build --force-rm --no-cache")
     logger.info(basic_util.action_formatter(build_api_compose.__name__, build_command))
     basic_util.execute(build_command)
+
+if __name__ == '__main__':
+    print("ss")

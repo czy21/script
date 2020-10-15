@@ -16,11 +16,21 @@ log_colors_config = {
 log_sleep = 0.1
 
 
-class Logger:
-    def __init__(self, name=None):
+class Singleton(type):
+    _instances = {}
+
+    def __call__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            cls._instances[cls] = super(Singleton, cls).__call__(*args, **kwargs)
+        return cls._instances[cls]
+
+
+class Logger(metaclass=Singleton):
+
+    def __init__(self, name=None, *args):
         self.logger = logging.getLogger(name if name else __name__)
         self.logger.setLevel(logging.DEBUG)
-
+        print(args)
         ch = colorlog.StreamHandler()
         ch.setFormatter(colorlog.ColoredFormatter(
             '%(white)s%(asctime)s %(log_color)s%(levelname)s %(purple)s%(thread)d %(white)s[ %(threadName)s ] %(cyan)s%(name)s %(white)s- %(message)s',
