@@ -105,7 +105,7 @@ def build_api_compose():
             "sudo docker-compose",
             "--file",
             default_common.param_api_compose_output_file_path,
-            "build"
+            "build --force-rm --no-cache"
         ])
     logger.info(basic_util.action_formatter(build_api_compose.__name__, command))
     basic_util.execute(command)
