@@ -121,8 +121,8 @@ def ensure_network():
     if disconnect_command:
         logger.info(basic_util.action_formatter(ensure_network.__name__, disconnect_command))
         basic_util.execute(connect_command)
-    post_connected_containers = inspect_network(inspect_command)
-    logger.info(basic_util.action_formatter(ensure_network.__name__, post_connected_containers))
+    post_connected_containers, proc = inspect_network(inspect_command)
+    logger.info(basic_util.action_formatter(ensure_network.__name__, "connected_containers: " + ",".join(post_connected_containers)))
 
 
 def inspect_network(inspect_command):
