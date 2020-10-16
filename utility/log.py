@@ -46,7 +46,7 @@ class Logger(metaclass=Singleton):
         env_path = parse_argv(sys.argv, "--env")
         log_file = parse_argv(sys.argv, "--log-file")
         if log_file != "":
-            fh = logging.FileHandler(filename=Path(env_path).resolve().joinpath("../", log_file).as_posix(), encoding='utf-8')
+            fh = logging.FileHandler(filename=Path(env_path).resolve().joinpath("../", log_file).absolute().as_posix(), encoding='utf-8')
             fh.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(thread)d [ %(threadName)s ] %(name)s - %(message)s'))
             self.logger.addHandler(fh)
         self.logger.addHandler(ch)
