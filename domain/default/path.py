@@ -8,7 +8,7 @@ from script.utility import path as path_util
 
 logger = log.Logger(__name__)
 
-root_path = path_util.pure_path_join("../../")
+root_path = path_util.pure_path_join(__file__, "../../../../")
 output = path_util.pure_path_join(root_path, "___output")
 project_code = path_util.pure_path_join(root_path, "code")
 project_db = path_util.pure_path_join(root_path, "db")
