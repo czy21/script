@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+import sys
 
 flat = lambda L: sum(map(flat, L), []) if isinstance(L, list) else [L]
 
@@ -17,3 +17,4 @@ def flat_dict(src, target=None, prefix=""):
         else:
             target[prefix + k] = value
     return target
+

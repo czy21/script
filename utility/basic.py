@@ -35,6 +35,9 @@ def execute(cmd, func=print_default, func_param=None):
     return proc
 
 
+
+
+
 if __name__ == '__main__':
     cmd1 = "java --version"
     cmd2 = "mysql --version"
