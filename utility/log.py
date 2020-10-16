@@ -1,6 +1,7 @@
 # coding:utf-8
 import logging
 import sys
+from pathlib import Path
 from time import sleep
 
 import colorlog
@@ -25,6 +26,13 @@ class Singleton(type):
         return cls._instances[cls]
 
 
+def parse_argv(argv: list, key):
+    for a in argv:
+        if a == key:
+            return sys.argv[sys.argv.index(key) + 1]
+    return ""
+
+
 class Logger(metaclass=Singleton):
 
     def __init__(self, name=None):
@@ -35,9 +43,12 @@ class Logger(metaclass=Singleton):
             '%(white)s%(asctime)s %(log_color)s%(levelname)s %(purple)s%(thread)d %(white)s[ %(threadName)s ] %(cyan)s%(name)s %(white)s- %(message)s',
             log_colors=log_colors_config))
 
-        fh = logging.FileHandler(filename="".join([sys.argv[0], ".log"]), encoding='utf-8')
-        fh.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(thread)d [ %(threadName)s ] %(name)s - %(message)s'))
-        self.logger.addHandler(fh)
+        env_path = parse_argv(sys.argv, "--env")
+        log_file = parse_argv(sys.argv, "--log-file")
+        if log_file != "":
+            fh = logging.FileHandler(filename=Path(env_path).resolve().joinpath("../", log_file).as_posix(), encoding='utf-8')
+            fh.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(thread)d [ %(threadName)s ] %(name)s - %(message)s'))
+            self.logger.addHandler(fh)
         self.logger.addHandler(ch)
 
     def debug(self, message):
