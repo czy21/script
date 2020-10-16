@@ -27,10 +27,9 @@ class Singleton(type):
 
 class Logger(metaclass=Singleton):
 
-    def __init__(self, name=None, *args):
+    def __init__(self, name=None):
         self.logger = logging.getLogger(name if name else __name__)
         self.logger.setLevel(logging.DEBUG)
-        print(args)
         ch = colorlog.StreamHandler()
         ch.setFormatter(colorlog.ColoredFormatter(
             '%(white)s%(asctime)s %(log_color)s%(levelname)s %(purple)s%(thread)d %(white)s[ %(threadName)s ] %(cyan)s%(name)s %(white)s- %(message)s',

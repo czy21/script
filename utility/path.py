@@ -30,4 +30,4 @@ def pure_path_join(root, *elements) -> str:
     left_path = Path(root).resolve()
     for p in elements:
         left_path = left_path.joinpath(p)
-    return left_path.as_posix()
+    return left_path.absolute().resolve().as_posix()
