@@ -81,9 +81,12 @@ def build_plugin(publish_task=None):
     basic_util.execute(command)
 
 
-def start_api_compose():
+def build_api_compose():
     build_api_dockerfile()
     build_api_compose_file()
+
+
+def start_api_compose():
     rm_image(default_common.param_api_image)
     command = list_util.arr_param_to_str(
         [
@@ -134,6 +137,7 @@ def inspect_network(inspect_command):
     proc.stdout.close()
     proc.wait()
     return connected_containers, proc
+
 
 if __name__ == '__main__':
     print("ss")
