@@ -51,8 +51,13 @@ def build_api():
     build_override_yml()
 
 
-def down_container(compose_file_command: str) -> None:
-    command = list_util.arr_param_to_str(compose_file_command, "down")
+def down_container() -> None:
+    command = list_util.arr_param_to_str([
+            "sudo docker-compose",
+            "--file",
+            default_common.param_api_compose_output_file_path,
+            "down"
+        ])
     logger.info(basic_util.action_formatter(down_container.__name__, command))
     basic_util.execute(cmd=command)
 
