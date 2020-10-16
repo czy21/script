@@ -34,6 +34,7 @@ class Logger(metaclass=Singleton):
         ch.setFormatter(colorlog.ColoredFormatter(
             '%(white)s%(asctime)s %(log_color)s%(levelname)s %(purple)s%(thread)d %(white)s[ %(threadName)s ] %(cyan)s%(name)s %(white)s- %(message)s',
             log_colors=log_colors_config))
+
         fh = logging.FileHandler(filename="".join([sys.argv[0], ".log"]), encoding='utf-8')
         fh.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(thread)d [ %(threadName)s ] %(name)s - %(message)s'))
         self.logger.addHandler(fh)
