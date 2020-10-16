@@ -82,12 +82,15 @@ def build_plugin(publish_task=None):
 
 
 def start_api_compose():
+    build_api_dockerfile()
+    build_api_compose_file()
+    rm_image(default_common.param_api_image)
     command = list_util.arr_param_to_str(
         [
             "sudo docker-compose",
             "--file",
             default_common.param_api_compose_output_file_path,
-            "up -d"
+            "up -d --build"
         ])
     logger.info(basic_util.action_formatter(start_api_compose.__name__, command))
     basic_util.execute(command)
@@ -131,22 +134,6 @@ def inspect_network(inspect_command):
     proc.stdout.close()
     proc.wait()
     return connected_containers, proc
-
-
-def build_api_compose():
-    build_api_dockerfile()
-    build_api_compose_file()
-    compose_file_command = list_util.arr_param_to_str(
-        [
-            "sudo docker-compose",
-            "--file",
-            default_common.param_api_compose_output_file_path
-        ])
-    down_container(compose_file_command)
-    rm_image(default_common.param_api_image)
-    build_command = list_util.arr_param_to_str(compose_file_command, "build --force-rm --no-cache")
-    logger.info(basic_util.action_formatter(build_api_compose.__name__, build_command))
-    basic_util.execute(build_command)
 
 if __name__ == '__main__':
     print("ss")

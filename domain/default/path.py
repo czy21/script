@@ -40,8 +40,4 @@ def re_mkdir(rm_output=False) -> None:
         shutil.rmtree(path=output, ignore_errors=True)
     dirs = [output_tmp, output_api_resource, output_web, output_app, output_db_bak, output_db_all_in_one]
     logger.info(basic_util.action_formatter(re_mkdir.__name__, dirs.__str__()))
-    for p in dirs:
-        t = Path(p)
-        if t.exists().__bool__():
-            continue
-        t.mkdir(parents=True)
+    [Path(p).mkdir(parents=True, exist_ok=True) for p in dirs]
