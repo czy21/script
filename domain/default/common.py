@@ -54,6 +54,9 @@ param_api_plugin_file_path = ""
 param_api_output_path = default_path.output_api
 param_api_output_resource_path = default_path.output_api_resource
 
+# web
+param_web_output_path = default_path.output_web
+
 # injected
 param_injected = {}
 

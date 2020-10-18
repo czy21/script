@@ -14,4 +14,5 @@ services:
       - /data/config/nginx/conf.d/:/etc/nginx/conf.d/
       - /data/config/nginx/cert/:/etc/nginx/cert/
       - /data/config/nginx/log/:/var/log/nginx/
+      - /data/volumes/nginx/:/root/
     restart: always
