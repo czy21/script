@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import inspect
 import subprocess
 
 from script.domain.default import common as default_common
@@ -8,24 +9,28 @@ from script.utility import basic as basic_util, collection as list_util, path as
 logger = log.Logger(__name__)
 
 
+def __get_function_name():
+    return inspect.stack()[1][3]
+
+
 def build_extra_config():
     base_source.build_by_template(default_common.param_api_extra_config_template_path, default_common.param_api_extra_config_output_file_path)
-    logger.info(basic_util.action_formatter(basic_util.get_function_name(), default_common.param_api_extra_config_output_file_path))
+    logger.info(basic_util.action_formatter(__get_function_name(), default_common.param_api_extra_config_output_file_path))
 
 
 def build_override_yml():
     base_source.build_by_template(default_common.param_api_yml_override_template_path, default_common.param_api_yml_output_file_path)
-    logger.info(basic_util.action_formatter(basic_util.get_function_name(), default_common.param_api_yml_output_file_path))
+    logger.info(basic_util.action_formatter(__get_function_name(), default_common.param_api_yml_output_file_path))
 
 
 def build_api_dockerfile():
     base_source.build_by_template(default_common.param_api_dockerfile_template_path, default_common.param_api_dockerfile_output_file_path)
-    logger.info(basic_util.action_formatter(basic_util.get_function_name(), default_common.param_api_dockerfile_output_file_path))
+    logger.info(basic_util.action_formatter(__get_function_name(), default_common.param_api_dockerfile_output_file_path))
 
 
 def build_api_compose_file():
     base_source.build_by_template(default_common.param_api_compose_template_path, default_common.param_api_compose_output_file_path)
-    logger.info(basic_util.action_formatter(basic_util.get_function_name(), default_common.param_api_compose_output_file_path))
+    logger.info(basic_util.action_formatter(__get_function_name(), default_common.param_api_compose_output_file_path))
 
 
 def build_api():
@@ -39,7 +44,7 @@ def build_api():
             "--project-prop extraConfig=" + default_common.param_api_extra_config_output_file_path,
             "clean build -x test"
         ])
-    logger.info(basic_util.action_formatter(basic_util.get_function_name(), command))
+    logger.info(basic_util.action_formatter(__get_function_name(), command))
     basic_util.execute(command)
     build_override_yml()
 
@@ -51,13 +56,13 @@ def down_container() -> None:
         default_common.param_api_compose_output_file_path,
         "down"
     ])
-    logger.info(basic_util.action_formatter(basic_util.get_function_name(), command))
+    logger.info(basic_util.action_formatter(__get_function_name(), command))
     basic_util.execute(cmd=command)
 
 
 def rm_image(image_tag: str) -> None:
     command = list_util.arr_param_to_str(["docker", "image", "rmi", image_tag])
-    logger.info(basic_util.action_formatter(basic_util.get_function_name(), command))
+    logger.info(basic_util.action_formatter(__get_function_name(), command))
     basic_util.execute(cmd=command)
 
 
@@ -75,7 +80,7 @@ def build_plugin(publish_task=None):
         command = list_util.arr_param_to_str(command, publish_task)
     else:
         command = list_util.arr_param_to_str(command, "publishAllPublicationsToBuildRepository")
-    logger.info(basic_util.action_formatter(basic_util.get_function_name(), command))
+    logger.info(basic_util.action_formatter(__get_function_name(), command))
     basic_util.execute(command)
 
 
@@ -93,7 +98,7 @@ def start_api_compose():
             default_common.param_api_compose_output_file_path,
             "up -d --build"
         ])
-    logger.info(basic_util.action_formatter(basic_util.get_function_name(), command))
+    logger.info(basic_util.action_formatter(__get_function_name(), command))
     basic_util.execute(command)
 
 
@@ -103,7 +108,7 @@ def ensure_network():
         default_common.param_api_network_name,
         "--format '{{range $t :=.Containers}}{{$t.Name}},{{end}}'"
     ])
-    logger.info(basic_util.action_formatter(basic_util.get_function_name(), inspect_command))
+    logger.info(basic_util.action_formatter(__get_function_name(), inspect_command))
 
     pre_connected_containers, proc = inspect_network(inspect_command)
     if proc.returncode == 1:
@@ -113,20 +118,20 @@ def ensure_network():
                 default_common.param_api_network_name
             ]
         )
-        logger.info(basic_util.action_formatter(basic_util.get_function_name(), create_network_command))
+        logger.info(basic_util.action_formatter(__get_function_name(), create_network_command))
         basic_util.execute(create_network_command)
     connect_command = " && ".join([list_util.arr_param_to_str("sudo docker network connect", default_common.param_api_network_name, d)
                                    for d in list(set(default_common.param_api_network_containers).difference(set(pre_connected_containers)))])
     disconnect_command = " && ".join([list_util.arr_param_to_str("sudo docker network disconnect", default_common.param_api_network_name, d)
                                       for d in list(set(pre_connected_containers).difference(set(default_common.param_api_network_containers)))])
     if connect_command:
-        logger.info(basic_util.action_formatter(basic_util.get_function_name(), connect_command))
+        logger.info(basic_util.action_formatter(__get_function_name(), connect_command))
         basic_util.execute(connect_command)
     if disconnect_command:
-        logger.info(basic_util.action_formatter(basic_util.get_function_name(), disconnect_command))
+        logger.info(basic_util.action_formatter(__get_function_name(), disconnect_command))
         basic_util.execute(connect_command)
     post_connected_containers, proc = inspect_network(inspect_command)
-    logger.info(basic_util.action_formatter(basic_util.get_function_name(), "connected_containers: " + ",".join(post_connected_containers)))
+    logger.info(basic_util.action_formatter(__get_function_name(), "connected_containers: " + ",".join(post_connected_containers)))
 
 
 def inspect_network(inspect_command):
