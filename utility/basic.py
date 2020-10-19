@@ -17,7 +17,7 @@ def action_formatter(action_name, msg=None, action_color=Fore.YELLOW):
     return action_name_msg
 
 
-def print_default(msg_lines, proc, func_param) -> None:
+def print_default(msg_lines, proc: subprocess.Popen, func_param) -> None:
     for line in msg_lines:
         line = line.strip()
         if line:
@@ -34,10 +34,6 @@ def execute(cmd, func=print_default, func_param=None):
     if proc.returncode != 0:
         sys.exit(0)
     return proc
-
-
-def get_function_name():
-    return inspect.stack()[1][3]
 
 
 if __name__ == '__main__':

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import inspect
 
 from script.domain.db_meta import mysql as mysql_meta
 from script.domain.default import common as default_common
@@ -6,6 +7,10 @@ from script.domain.default import path as default_path
 from script.utility import db as db_util, collection as list_util, basic as basic_util, log
 
 logger = log.Logger(__name__)
+
+
+def __get_function_name():
+    return inspect.stack()[1][3]
 
 
 def assemble() -> None:
@@ -18,7 +23,7 @@ def recreate() -> None:
                                default_common.param_main_db_mysql_user,
                                default_common.param_main_db_mysql_pass,
                                default_common.param_main_db_name)
-    logger.info(basic_util.action_formatter(recreate.__name__, command))
+    logger.info(basic_util.action_formatter(__get_function_name(), command))
     basic_util.execute(command)
 
 
@@ -48,7 +53,7 @@ def exec() -> None:
         "< " + default_path.output_db_all_in_one_mysql
     ]
     command = list_util.arr_param_to_str("mysql", get_main_db_param_dict(), extra_param_dict)
-    logger.info(basic_util.action_formatter(exec.__name__, command))
+    logger.info(basic_util.action_formatter(__get_function_name(), command))
     basic_util.execute(command, db_util.print_ql_msg)
 
 
@@ -82,5 +87,5 @@ def backup_mysql() -> None:
                                                          default_common.param_main_db_mysql_pass,
                                                          default_common.param_main_db_bak_name)
                                          )
-    logger.info(basic_util.action_formatter(backup_mysql.__name__, command))
+    logger.info(basic_util.action_formatter(__get_function_name(), command))
     # os.system(command)

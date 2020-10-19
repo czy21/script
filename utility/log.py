@@ -17,15 +17,6 @@ log_colors_config = {
 log_sleep = 0.1
 
 
-class Singleton(type):
-    _instances = {}
-
-    def __call__(cls, *args, **kwargs):
-        if cls not in cls._instances:
-            cls._instances[cls] = super(Singleton, cls).__call__(*args, **kwargs)
-        return cls._instances[cls]
-
-
 def parse_argv(argv: list, key):
     for a in argv:
         if a == key:
@@ -33,7 +24,7 @@ def parse_argv(argv: list, key):
     return ""
 
 
-class Logger(metaclass=Singleton):
+class Logger:
 
     def __init__(self, name=None):
         self.logger = logging.getLogger(name if name else __name__)
@@ -51,20 +42,28 @@ class Logger(metaclass=Singleton):
             self.logger.addHandler(fh)
         self.logger.addHandler(ch)
 
-    def debug(self, message):
-        sleep(log_sleep)
+    def debug(self, message, name=None, is_sleep=True):
+        if is_sleep:
+            sleep(log_sleep)
         self.logger.debug(message)
 
-    def info(self, message, is_sleep=True):
+    def info(self, message, name=None, is_sleep=True):
         if is_sleep:
             sleep(log_sleep)
+        if name:
+            self.logger.name = name
         self.logger.info(message)
 
-    def warning(self, message):
-        sleep(log_sleep)
-        self.logger.warning(message)
-
-    def error(self, message, is_sleep=True):
+    def warning(self, message, name=None, is_sleep=True):
         if is_sleep:
             sleep(log_sleep)
+        if name:
+            self.logger.name = name
+        self.logger.warning(message)
+
+    def error(self, message, name=None, is_sleep=True):
+        if is_sleep:
+            sleep(log_sleep)
+        if name:
+            self.logger.name = name
         self.logger.error(message)
