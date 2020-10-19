@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import inspect
 import subprocess
 import sys
 
@@ -35,7 +36,8 @@ def execute(cmd, func=print_default, func_param=None):
     return proc
 
 
-
+def get_function_name():
+    return inspect.stack()[1][3]
 
 
 if __name__ == '__main__':
