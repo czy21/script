@@ -56,6 +56,7 @@ param_api_output_resource_path = default_path.output_api_resource
 
 # web
 param_web_output_path = default_path.output_web
+param_web_root_project_path = ""
 
 # injected
 param_injected = {}
