@@ -1,37 +1,30 @@
 #!/usr/bin/env python3
-import io
 import subprocess
 
 from script.domain.default import common as default_common
+from script.domain.source import base as base_source
 from script.utility import basic as basic_util, collection as list_util, path as path_util, log
-from script.utility.template import CustomTemplate
 
 logger = log.Logger(__name__)
 
 
-def build_by_template(template_name, output_path):
-    content = CustomTemplate(filename=template_name).render(**default_common.get_params())
-    with io.open(output_path, "w+", encoding="utf-8", newline="\n") as target_output:
-        target_output.write(content)
-
-
 def build_extra_config():
-    build_by_template(default_common.param_api_extra_config_template_path, default_common.param_api_extra_config_output_file_path)
+    base_source.build_by_template(default_common.param_api_extra_config_template_path, default_common.param_api_extra_config_output_file_path)
     logger.info(basic_util.action_formatter(build_extra_config.__name__, default_common.param_api_extra_config_output_file_path))
 
 
 def build_override_yml():
-    build_by_template(default_common.param_api_yml_override_template_path, default_common.param_api_yml_output_file_path)
+    base_source.build_by_template(default_common.param_api_yml_override_template_path, default_common.param_api_yml_output_file_path)
     logger.info(basic_util.action_formatter(build_override_yml.__name__, default_common.param_api_yml_output_file_path))
 
 
 def build_api_dockerfile():
-    build_by_template(default_common.param_api_dockerfile_template_path, default_common.param_api_dockerfile_output_file_path)
+    base_source.build_by_template(default_common.param_api_dockerfile_template_path, default_common.param_api_dockerfile_output_file_path)
     logger.info(basic_util.action_formatter(build_api_dockerfile.__name__, default_common.param_api_dockerfile_output_file_path))
 
 
 def build_api_compose_file():
-    build_by_template(default_common.param_api_compose_template_path, default_common.param_api_compose_output_file_path)
+    base_source.build_by_template(default_common.param_api_compose_template_path, default_common.param_api_compose_output_file_path)
     logger.info(basic_util.action_formatter(build_api_compose_file.__name__, default_common.param_api_compose_output_file_path))
 
 
@@ -53,11 +46,11 @@ def build_api():
 
 def down_container() -> None:
     command = list_util.arr_param_to_str([
-            "sudo docker-compose",
-            "--file",
-            default_common.param_api_compose_output_file_path,
-            "down"
-        ])
+        "sudo docker-compose",
+        "--file",
+        default_common.param_api_compose_output_file_path,
+        "down"
+    ])
     logger.info(basic_util.action_formatter(down_container.__name__, command))
     basic_util.execute(cmd=command)
 
