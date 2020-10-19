@@ -43,6 +43,16 @@ do
         sudo rpm -ivh ${dir}/mysql/mysql-community-libs-${mysql_version}.x86_64.rpm
         sudo rpm -ivh ${dir}/mysql/mysql-community-client-${mysql_version}.x86_64.rpm
 
+        # node
+#        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.36.0/install.sh | sudo bash
+#        source ~/.bashrc
+#        sudo nvm install v12.19.0
+#        sudo yarn global add nrm
+#        sudo nrm use taobao
+        # yarn
+#        curl --silent --location https://dl.yarnpkg.com/rpm/yarn.repo | sudo tee /etc/yum.repos.d/yarn.repo
+#        sudo yum install yarn
+
         # mssql
         # must use root login and exec
 #        curl https://packages.microsoft.com/config/rhel/8/prod.repo > /etc/yum.repos.d/msprod.repo
