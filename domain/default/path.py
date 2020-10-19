@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import shutil
-import os
 from pathlib import Path
 
 from script.utility import log, basic as basic_util
@@ -39,5 +38,5 @@ def re_mkdir(rm_output=False) -> None:
     if rm_output:
         shutil.rmtree(path=output, ignore_errors=True)
     dirs = [output_tmp, output_api_resource, output_web, output_app, output_db_bak, output_db_all_in_one]
-    logger.info(message=basic_util.action_formatter(re_mkdir.__name__, dirs.__str__()))
+    logger.info(basic_util.action_formatter(re_mkdir.__name__, dirs.__str__()))
     [Path(p).mkdir(parents=True, exist_ok=True) for p in dirs]
