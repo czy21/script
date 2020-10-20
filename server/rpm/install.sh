@@ -47,11 +47,10 @@ do
 #        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.36.0/install.sh | sudo bash
 #        source ~/.bashrc
 #        sudo nvm install v12.19.0
-#        sudo yarn global add nrm
-#        sudo nrm use taobao
         # yarn
 #        curl --silent --location https://dl.yarnpkg.com/rpm/yarn.repo | sudo tee /etc/yum.repos.d/yarn.repo
 #        sudo yum install yarn
+#        sudo yum global add nrm
 
         # mssql
         # must use root login and exec
