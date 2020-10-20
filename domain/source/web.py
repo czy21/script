@@ -13,11 +13,9 @@ def __get_function_name():
 
 def build_web():
     command = list_util.arr_param_to_str([
-        "cd",
+        "nrm use taobao && cd",
         default_common.param_web_root_project_path,
-        "&& yarn build",
-        "&&",
-        "cp -r dist",
+        "&& yarn && yarn build && cp -r dist",
         default_common.param_web_output_path
     ])
     logger.info(basic_util.action_formatter(__get_function_name(), command))
