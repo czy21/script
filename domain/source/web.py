@@ -2,6 +2,7 @@
 import inspect
 
 from script.domain.default import common as default_common
+from script.domain.source import base as base_source
 from script.utility import basic as basic_util, collection as list_util, log
 
 logger = log.Logger(__name__)
@@ -20,3 +21,8 @@ def build_web():
     ])
     logger.info(basic_util.action_formatter(__get_function_name(), command))
     basic_util.execute(command)
+
+
+def build_cp_shell():
+    base_source.build_by_template(default_common.param_web_cp_template_path, default_common.default_path.output_tmp)
+    logger.info(basic_util.action_formatter(__get_function_name(), default_common.default_path.output_tmp))
