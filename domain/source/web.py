@@ -26,3 +26,8 @@ def build_web():
 def build_cp_shell():
     base_source.build_by_template(default_common.param_web_cp_template_path, default_common.param_web_cp_output_file_path)
     logger.info(basic_util.action_formatter(__get_function_name(), default_common.param_web_cp_output_file_path))
+
+
+def build_nginx():
+    base_source.build_by_template(default_common.param_web_nginx_template_path, default_common.param_web_nginx_output_file_path)
+    logger.info(basic_util.action_formatter(__get_function_name(), default_common.param_web_nginx_output_file_path))
