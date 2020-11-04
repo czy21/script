@@ -64,6 +64,9 @@ param_web_cp_output_file_path = ""
 param_web_nginx_template_path = ""
 param_web_nginx_output_file_path = ""
 
+param_web_env_template_path = ""
+param_web_env_path = ""
+
 # injected
 param_injected = {}
 

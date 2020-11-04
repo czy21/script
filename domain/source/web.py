@@ -12,11 +12,20 @@ def __get_function_name():
     return inspect.stack()[1][3]
 
 
+def build_env():
+    base_source.build_by_template(default_common.param_web_env_template_path, default_common.param_web_env_path)
+    logger.info(basic_util.action_formatter(__get_function_name(), default_common.param_web_env_path))
+
+
 def build_web():
+    build_env()
     command = list_util.arr_param_to_str([
-        "nrm use taobao && cd",
+        "nrm use taobao",
+        "&& cd",
         default_common.param_web_root_project_path,
-        "&& yarn install && yarn build && cp -r build/*",
+        "&& yarn install && yarn build",
+        "&& rm -rf " + default_common.param_web_env_path,
+        "&& cp -r build/*",
         default_common.param_web_output_path
     ])
     logger.info(basic_util.action_formatter(__get_function_name(), command))
