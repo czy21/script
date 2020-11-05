@@ -132,6 +132,12 @@ def ensure_network():
         basic_util.execute(create_network_command)
     connect_command = " && ".join([list_util.arr_param_to_str("sudo docker network connect", default_common.param_api_network_name, d)
                                    for d in list(set(default_common.param_api_network_containers).difference(set(pre_connected_containers)))])
+    disconnect_command = " && ".join([list_util.arr_param_to_str("sudo docker network disconnect", default_common.param_api_network_name, d) for d in pre_connected_containers])
+
+    if disconnect_command:
+        logger.info(basic_util.action_formatter(__get_function_name(), disconnect_command))
+        basic_util.execute(connect_command)
+
     if connect_command:
         logger.info(basic_util.action_formatter(__get_function_name(), connect_command))
         basic_util.execute(connect_command)
