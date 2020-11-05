@@ -146,7 +146,7 @@ def ensure_network():
 
 def inspect_network(inspect_command):
     proc = subprocess.Popen(inspect_command, stdout=subprocess.PIPE, shell=True, encoding="utf-8")
-    connected_containers = json.loads("".join([x.strip() for x in proc.stdout.readlines() if x.strip()]))
+    connected_containers = [v["Name"] for v in json.loads("".join([x.strip() for x in proc.stdout.readlines() if x.strip()]))[0]["Containers"].values()]
     proc.stdout.close()
     proc.wait()
     return connected_containers, proc
