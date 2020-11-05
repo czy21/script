@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import inspect
+import json
 import subprocess
 
 from script.domain.default import common as default_common
@@ -116,7 +117,6 @@ def ensure_network():
     inspect_command = list_util.arr_param_to_str([
         "sudo docker network inspect",
         default_common.param_api_network_name,
-        "--format '{{range $t :=.Containers}}{{$t.Name}},{{end}}'"
     ])
     logger.info(basic_util.action_formatter(__get_function_name(), inspect_command))
 
@@ -146,7 +146,7 @@ def ensure_network():
 
 def inspect_network(inspect_command):
     proc = subprocess.Popen(inspect_command, stdout=subprocess.PIPE, shell=True, encoding="utf-8")
-    connected_containers = [x.strip() for x in proc.stdout.readline().split(",") if x.strip()]
+    connected_containers = json.loads("".join([x.strip() for x in proc.stdout.readlines() if x.strip()]))
     proc.stdout.close()
     proc.wait()
     return connected_containers, proc
