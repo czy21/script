@@ -39,9 +39,15 @@ do
 		  if [[ ! $2 ]]; then
 
         # mysql
-        sudo rpm -ivh ${dir}/mysql/mysql-community-common-${mysql_version}.x86_64.rpm
-        sudo rpm -ivh ${dir}/mysql/mysql-community-libs-${mysql_version}.x86_64.rpm
-        sudo rpm -ivh ${dir}/mysql/mysql-community-client-${mysql_version}.x86_64.rpm
+		    mysql_tmp=${dir}/mysql/ && mkdir -p ${mysql_tmp}
+
+        wget -P ${mysql_tmp} https://cdn.mysql.com//Downloads/MySQL-8.0/mysql-community-common-${mysql_version}.x86_64.rpm
+        wget -P ${mysql_tmp} https://cdn.mysql.com//Downloads/MySQL-8.0/mysql-community-libs-${mysql_version}.x86_64.rpm
+        wget -P ${mysql_tmp} https://cdn.mysql.com//Downloads/MySQL-8.0/mysql-community-client-${mysql_version}.x86_64.rpm
+
+        sudo rpm -ivh ${mysql_tmp}mysql-community-common-${mysql_version}.x86_64.rpm
+        sudo rpm -ivh ${mysql_tmp}mysql-community-libs-${mysql_version}.x86_64.rpm
+        sudo rpm -ivh ${mysql_tmp}mysql-community-client-${mysql_version}.x86_64.rpm
 
         # node
 #        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.36.0/install.sh | sudo bash
@@ -54,18 +60,23 @@ do
 
         # mssql
         # must use root login and exec
-#        curl https://packages.microsoft.com/config/rhel/8/prod.repo > /etc/yum.repos.d/msprod.repo
-#        yum remove mssql-tools unixODBC-utf16-devel
-#        yum install mssql-tools unixODBC-devel
-#        echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> /etc/bashrc && source /etc/bashrc
+        curl https://packages.microsoft.com/config/rhel/8/prod.repo > /etc/yum.repos.d/msprod.repo
+        # need manual exec yum install
+        # yum remove mssql-tools unixODBC-utf16-devel
+        # yum install mssql-tools unixODBC-devel
+        # echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> /etc/bashrc && source /etc/bashrc
 
         # mongo
+        mongo_tmp=${dir}/mongo/ && mkdir -p ${mongo_tmp}
+        mongo_opt=/opt/mongo/
+
         # must use root login and exec
-        sudo tar -zxvf ${dir}/mongo/mongodb-linux-x86_64-${mongo_version}.tgz -C /opt/
-#       echo 'export PATH="$PATH:/opt/mongodb-linux-x86_64-rhel80-4.4.1/bin:"' >> /etc/bashrc && source /etc/bashrc
+        wget -P ${mongo_tmp} https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-${mongo_version}.tgz
+        mkdir -p ${mongo_opt} && sudo tar -zxvf ${mongo_tmp}mongodb-linux-x86_64-${mongo_version}.tgz --strip-components 1 -C ${mongo_opt}
+        echo 'export PATH="$PATH:/opt/mongo/bin"' >> /etc/bashrc && source /etc/bashrc
 
         # cypher
-        sudo rpm -ivh ${dir}/neo4j/cypher-shell-${neo4j_version}.noarch.rpm
+#        sudo rpm -ivh ${dir}/neo4j/cypher-shell-${neo4j_version}.noarch.rpm
 
 
 
