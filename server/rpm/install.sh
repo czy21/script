@@ -51,9 +51,17 @@ do
 
         # node
         node_version=v12.19.0
-        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.36.0/install.sh | sudo bash
-        source ~/.bashrc
-        nvm install ${node_version} && nvm use ${node_version}
+
+        mkdir -p /opt/nvm && git clone https://github.com/nvm-sh/nvm.git /opt/nvm
+
+        source /opt/nvm/nvm.sh
+
+        nvm install ${node_version}
+        tee /etc/profile.d/nvm.sh <<-'EOF'
+source /opt/nvm/nvm.sh
+nvm use v12.19.0
+EOF
+
         # yarn
         curl --silent --location https://dl.yarnpkg.com/rpm/yarn.repo | sudo tee /etc/yum.repos.d/yarn.repo
         yum -y install yarn && yarn global add nrm
