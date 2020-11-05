@@ -73,7 +73,7 @@ def rm_image(image_tag: str) -> None:
     if image_tag in images:
         command = list_util.arr_param_to_str(["docker", "image", "rmi", image_tag])
         logger.info(basic_util.action_formatter(__get_function_name(), command))
-        basic_util.execute(cmd=command, ignore_error=True)
+        basic_util.execute(cmd=command)
 
 
 def build_plugin(publish_task=None):
