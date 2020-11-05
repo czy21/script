@@ -45,24 +45,24 @@ do
         wget -P ${mysql_tmp} https://cdn.mysql.com//Downloads/MySQL-8.0/mysql-community-libs-${mysql_version}.x86_64.rpm
         wget -P ${mysql_tmp} https://cdn.mysql.com//Downloads/MySQL-8.0/mysql-community-client-${mysql_version}.x86_64.rpm
 
-        sudo rpm -ivh ${mysql_tmp}mysql-community-common-${mysql_version}.x86_64.rpm
-        sudo rpm -ivh ${mysql_tmp}mysql-community-libs-${mysql_version}.x86_64.rpm
-        sudo rpm -ivh ${mysql_tmp}mysql-community-client-${mysql_version}.x86_64.rpm
+        rpm -ivh ${mysql_tmp}mysql-community-common-${mysql_version}.x86_64.rpm
+        rpm -ivh ${mysql_tmp}mysql-community-libs-${mysql_version}.x86_64.rpm
+        rpm -ivh ${mysql_tmp}mysql-community-client-${mysql_version}.x86_64.rpm
 
         # node
-#        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.36.0/install.sh | sudo bash
-#        source ~/.bashrc
-#        sudo nvm install v12.19.0
+        node_version=v12.19.0
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.36.0/install.sh | sudo bash
+        source ~/.bashrc
+        nvm install ${node_version} && nvm use ${node_version}
         # yarn
-#        curl --silent --location https://dl.yarnpkg.com/rpm/yarn.repo | sudo tee /etc/yum.repos.d/yarn.repo
-#        sudo yum install yarn
-#        sudo yum global add nrm
+        curl --silent --location https://dl.yarnpkg.com/rpm/yarn.repo | sudo tee /etc/yum.repos.d/yarn.repo
+        yum -y install yarn && yarn global add nrm
 
         # mssql
         # must use root login and exec
         curl https://packages.microsoft.com/config/rhel/8/prod.repo > /etc/yum.repos.d/msprod.repo
         # need manual exec yum install
-        # yum remove mssql-tools unixODBC-utf16-devel
+        yum remove mssql-tools unixODBC-utf16-devel
         # yum install mssql-tools unixODBC-devel
         # echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> /etc/bashrc && source /etc/bashrc
 
@@ -76,7 +76,7 @@ do
         echo 'export PATH="$PATH:/opt/mongo/bin"' >> /etc/bashrc && source /etc/bashrc
 
         # cypher
-#        sudo rpm -ivh ${dir}/neo4j/cypher-shell-${neo4j_version}.noarch.rpm
+#        rpm -ivh ${dir}/neo4j/cypher-shell-${neo4j_version}.noarch.rpm
 
 
 
