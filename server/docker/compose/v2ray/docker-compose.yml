@@ -8,5 +8,6 @@ services:
     privileged: true
     volumes:
       - /data/config/v2ray/:/etc/v2ray/
+      - /data/volumes/v2ray/log/:/var/log/v2ray/
     command: v2ray -config=/etc/v2ray/config.json
     restart: always
