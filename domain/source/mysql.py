@@ -88,4 +88,4 @@ def backup_mysql() -> None:
                                                          default_common.param_main_db_bak_name)
                                          )
     logger.info(basic_util.action_formatter(__get_function_name(), command))
-    # os.system(command)
+    basic_util.execute(command)
