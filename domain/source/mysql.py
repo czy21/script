@@ -82,6 +82,7 @@ def backup_mysql() -> None:
                                                              default_common.param_main_db_mysql_pass, None),
                                              "--opt",
                                              default_common.param_main_db_name,
+                                             "--max-allowed-packet=1024M"
                                          ]),
                                          "| mysql",
                                          list_util.arr_param_to_str([
@@ -92,6 +93,43 @@ def backup_mysql() -> None:
                                                              None),
                                              "--compress",
                                              default_common.param_main_db_bak_name,
+                                         ]))
+    logger.info(basic_util.action_formatter(__get_function_name(), command))
+    basic_util.execute(command)
+
+
+def backup_mysql_gz() -> None:
+    command = list_util.arr_param_to_str("mysqldump",
+                                         list_util.arr_param_to_str([
+                                             get_basic_param(default_common.param_main_db_mysql_host,
+                                                             default_common.param_main_db_mysql_port,
+                                                             default_common.param_main_db_mysql_user,
+                                                             default_common.param_main_db_mysql_pass, None),
+                                             "--opt",
+                                             default_common.param_main_db_name,
+                                         ]),
+                                         "| gzip > ",
+                                         default_path.output_db_bak_gz_mysql
+                                         )
+    logger.info(basic_util.action_formatter(__get_function_name(), command))
+    basic_util.execute(command)
+
+
+def recover_mysql_gz() -> None:
+    command = list_util.arr_param_to_str(recreate_command(default_common.param_main_db_mysql_host,
+                                                          default_common.param_main_db_mysql_port,
+                                                          default_common.param_main_db_mysql_user,
+                                                          default_common.param_main_db_mysql_pass,
+                                                          default_common.param_main_db_name),
+                                         "&& gzip -d < ",
+                                         default_path.output_db_bak_gz_mysql,
+                                         "| mysql",
+                                         list_util.arr_param_to_str([
+                                             get_basic_param(default_common.param_main_db_mysql_host,
+                                                             default_common.param_main_db_mysql_port,
+                                                             default_common.param_main_db_mysql_user,
+                                                             default_common.param_main_db_mysql_pass,
+                                                             default_common.param_main_db_name)
                                          ]))
     logger.info(basic_util.action_formatter(__get_function_name(), command))
     basic_util.execute(command)
