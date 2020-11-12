@@ -80,15 +80,18 @@ def backup_mysql() -> None:
                                                              default_common.param_main_db_mysql_port,
                                                              default_common.param_main_db_mysql_user,
                                                              default_common.param_main_db_mysql_pass, None),
-                                             "--databases",
-                                             default_common.param_main_db_name
+                                             "--opt",
+                                             default_common.param_main_db_name,
                                          ]),
-                                         "|mysql",
-                                         get_basic_param(default_common.param_main_db_mysql_host,
-                                                         default_common.param_main_db_mysql_port,
-                                                         default_common.param_main_db_mysql_user,
-                                                         default_common.param_main_db_mysql_pass,
-                                                         default_common.param_main_db_bak_name)
-                                         )
+                                         "| mysql",
+                                         list_util.arr_param_to_str([
+                                             get_basic_param(default_common.param_main_db_mysql_host,
+                                                             default_common.param_main_db_mysql_port,
+                                                             default_common.param_main_db_mysql_user,
+                                                             default_common.param_main_db_mysql_pass,
+                                                             None),
+                                             "--compress",
+                                             default_common.param_main_db_bak_name,
+                                         ]))
     logger.info(basic_util.action_formatter(__get_function_name(), command))
     basic_util.execute(command)
