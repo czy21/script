@@ -1,5 +1,5 @@
 FROM alpine:3.11
-ARG FRP_VERSION=0.32.0
+ARG FRP_VERSION=0.34.2
 WORKDIR /root/
 COPY ./___temp/ .
 
