@@ -6,7 +6,8 @@ services:
     image: frp:1.0.0
     container_name: frp
     privileged: true
-    network_mode: host
+    ports:
+      - 7000:7000
     volumes:
       - /data/config/frp/:/usr/local/frp/conf/
     restart: always
