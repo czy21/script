@@ -1,0 +1,49 @@
+version: '3.7'
+
+services:
+    zookeeper:
+        image: zookeeper
+        container_name: zookeeper
+        restart: always
+        ports:
+          - 2181:2181
+
+    nimbus:
+        image: storm
+        container_name: nimbus
+        command: storm nimbus
+        depends_on:
+            - zookeeper
+        links:
+            - zookeeper
+        volumes:
+            - /data/volume/storm/logs:/logs/
+            - /data/volume/storm/data:/data/
+        restart: always
+        ports:
+            - 6627:6627
+
+    supervisor:
+        image: storm
+        container_name: supervisor
+        command: storm supervisor
+        depends_on:
+            - nimbus
+            - zookeeper
+        links:
+            - nimbus
+            - zookeeper
+        restart: always
+    ui:
+        image: storm
+        container_name: stormui
+        command: storm ui
+        depends_on:
+          - nimbus
+          - zookeeper
+        links:
+          - nimbus
+          - zookeeper
+        restart: always
+        ports:
+          - 8089:8080
