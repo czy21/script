@@ -18,29 +18,29 @@ do
 			;;
 		-t)
 		  shift 1
-#		  sudo mkdir -p /data/config/ /data/volumes/
-#      if [ $1 == 'ali' ]; then
-#        sudo mkdir -p /etc/docker
-#        sudo tee /etc/docker/daemon.json <<-'EOF'
-#        {
-#          "registry-mirrors": ["https://idyylogn.mirror.aliyuncs.com","https://registry.docker-cn.com"]
-#        }
-#EOF
-#        sudo yum install -y yum-utils device-mapper-persistent-data lvm2
-#        sudo yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
-#        sudo yum makecache timer
-#        # centos8 local need --nobest
-#        sudo yum -y install docker-ce
-#        sudo systemctl daemon-reload
-#      fi
-#      if [ $1 == 'offical' ]; then
-#        sudo yum install -y yum-utils
-#        sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-#        sudo yum -y install docker-ce docker-ce-cli containerd.io
-#      fi
-#
-#      sudo systemctl restart docker
-#      sudo systemctl enable docker
+		  sudo mkdir -p /data/config/ /data/volumes/
+      if [ $1 == 'ali' ]; then
+        sudo mkdir -p /etc/docker
+        sudo tee /etc/docker/daemon.json <<-'EOF'
+        {
+          "registry-mirrors": ["https://idyylogn.mirror.aliyuncs.com","https://registry.docker-cn.com"]
+        }
+EOF
+        sudo yum install -y yum-utils device-mapper-persistent-data lvm2
+        sudo yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+        sudo yum makecache timer
+        # centos8 local need --nobest
+        sudo yum -y install docker-ce
+        sudo systemctl daemon-reload
+      fi
+      if [ $1 == 'offical' ]; then
+        sudo yum install -y yum-utils
+        sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+        sudo yum -y install docker-ce docker-ce-cli containerd.io
+      fi
+
+      sudo systemctl restart docker
+      sudo systemctl enable docker
 
       # docker compose
       sudo curl -L "https://github.com/docker/compose/releases/download/1.27.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
