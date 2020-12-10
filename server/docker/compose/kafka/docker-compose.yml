@@ -41,6 +41,18 @@ services:
       KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://kafka2:19092,LISTENER_DOCKER_EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER_INTERNAL
+
+  kafdrop:
+      image: obsidiandynamics/kafdrop
+      ports:
+        - "9000:9000"
+      networks:
+        - zookeeper_default
+      depends_on:
+        - kafka1
+        - kafka2
+      environment:
+        KAFKA_BROKERCONNECT: "kafka1:19091"
 networks:
   zookeeper_default:
     external: true
