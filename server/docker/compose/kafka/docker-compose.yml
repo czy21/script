@@ -1,21 +1,6 @@
 version: '3.7'
 
 services:
-  zookeeper:
-    image: zookeeper
-    container_name: zookeeper
-    hostname: zookeeper
-    user: root
-    ports:
-      - "2181:2181"
-    volumes:
-      - /data/volumes/zookeeper/data/:/data/
-      - /data/volumes/zookeeper/datalog/:/datalog/
-      - /data/volumes/zookeeper/logs/:/logs/
-    environment:
-      ZOO_MY_ID: 1
-      ZOO_PORT: 2181
-      ZOO_SERVERS: server.1=zookeeper:2888:3888
 
   kafka1:
     image: confluentinc/cp-kafka:6.0.1
@@ -25,13 +10,37 @@ services:
     ports:
       - "9091:9091"
     volumes:
+      - /data/volumes/kafka1/secrets/:/etc/kafka/secrets/
       - /data/volumes/kafka1/data/:/var/lib/kafka/data/
-    depends_on:
-      - zookeeper
+    networks:
+      - zookeeper_default
     environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper1:2181"
       KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://kafka1:19091,LISTENER_DOCKER_EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9091
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER_INTERNAL
-      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
-      KAFKA_BROKER_ID: 1
+
+  kafka2:
+    image: confluentinc/cp-kafka:6.0.1
+    container_name: kafka2
+    hostname: kafka2
+    user: root
+    ports:
+      - "9092:9092"
+    volumes:
+      - /data/volumes/kafka2/secrets/:/etc/kafka/secrets/
+      - /data/volumes/kafka2/data/:/var/lib/kafka/data/
+    networks:
+      - zookeeper_default
+    environment:
+      KAFKA_BROKER_ID: 2
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper1:2181"
+      KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://kafka2:19092,LISTENER_DOCKER_EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER_INTERNAL
+networks:
+  zookeeper_default:
+    external: true
