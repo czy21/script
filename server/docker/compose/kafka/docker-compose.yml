@@ -44,6 +44,7 @@ services:
 
   kafdrop:
       image: obsidiandynamics/kafdrop
+      container_name: kafdrop
       ports:
         - "9000:9000"
       networks:
