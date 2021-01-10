@@ -25,9 +25,7 @@ do
 			  shift 1
         continue
       fi
-      ls -al
       sudo docker-compose --file kafka/docker-compose.yml up -d
-#      sudo docker-compose up -d
       rm -rf kafka/
       shift 2
 			;;
