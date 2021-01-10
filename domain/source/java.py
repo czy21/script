@@ -55,7 +55,7 @@ def down_container() -> None:
         "sudo docker-compose",
         "--file",
         default_common.param_api_compose_output_file_path,
-        "--project-name"
+        "--project-name",
         "_".join([default_common.param_project_name, default_common.param_env_suffix]),
         "down"
     ])
