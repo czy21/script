@@ -109,6 +109,8 @@ def start_api_compose():
             "sudo docker-compose",
             "--file",
             default_common.param_api_compose_output_file_path,
+            "--project-name",
+            "_".join([default_common.param_project_name, default_common.param_env_suffix]),
             "up -d --build"
         ])
     logger.info(basic_util.action_formatter(__get_function_name(), command))
