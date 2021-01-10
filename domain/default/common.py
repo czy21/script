@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 from script.domain.default import path as default_path
 
+param_project_name = ""
+param_env_suffix = ""
+
 param_main_db_name = ""
 param_main_db_bak_name = ""
 
@@ -27,6 +30,9 @@ param_main_db_mongo_port = ""
 param_main_db_mongo_user = ""
 param_main_db_mongo_pass = ""
 param_main_db_mongo_file_path = ""
+
+param_main_redis_host = ""
+param_main_rabbit_host = ""
 
 # api
 param_api_archive_file_name = ""
@@ -72,7 +78,6 @@ param_injected = {}
 
 
 def get_params():
-    override_keys = [g for i in list(param_injected) for g in list(globals()) if i == g]
-    for o in override_keys:
+    for o in list(param_injected):
         globals()[o] = param_injected.pop(o)
     return dict({k: v for k, v in globals().items() if k.startswith("param")})
