@@ -4,6 +4,7 @@ set -e
 
 dir=$(cd "$(dirname "$0")"; pwd)
 
-sudo mkdir -p /data/volumes/kafka1/
+sudo rm -rf /data/config/zookeeper/
+sudo mkdir -p /data/config/zookeeper/conf/
 
-sudo chown -R 1000:1000 /data/volumes/kafka1/
+sudo cp -r $dir/zookeeper_conf/* /data/config/zookeeper/
