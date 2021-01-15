@@ -73,11 +73,6 @@ param_web_nginx_output_file_path = ""
 param_web_env_template_path = ""
 param_web_env_path = ""
 
-# injected
-param_injected = {}
-
 
 def get_params():
-    for o in list(param_injected):
-        globals()[o] = param_injected.pop(o)
     return dict({k: v for k, v in globals().items() if k.startswith("param")})
