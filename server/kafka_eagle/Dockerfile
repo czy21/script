@@ -1,4 +1,4 @@
-FROM java:8-alpine
+FROM java:11-alpine
 
 ARG KAFKA_EAGLE_VERSION=2.0.3
 WORKDIR /root/
