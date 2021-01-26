@@ -29,8 +29,8 @@ services:
     ports:
       - "8048:8048"
     volumes:
-      - /data/volumes/kafka_eagle/logs/:/usr/local/kafka-eagle-web-2.0.3/logs/
-      - /data/config/kafka_eagle/:/usr/local/kafka-eagle-web-2.0.3/conf/
+      - /data/volumes/kafka_eagle/logs/:/usr/local/kafka_eagle/logs/
+      - /data/config/kafka_eagle/:/usr/local/kafka_eagle/conf/
 
 
 
