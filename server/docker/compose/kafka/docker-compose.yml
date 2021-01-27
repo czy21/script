@@ -26,6 +26,7 @@ services:
   kafka-eagle:
     image: kafka_eagle:1.0.0
     container_name: kafka_eagle
+    tty: true
     ports:
       - "8048:8048"
     volumes:
