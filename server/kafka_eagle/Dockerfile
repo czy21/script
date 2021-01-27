@@ -16,8 +16,7 @@ RUN rm -rf kafka-eagle-web-${KAFKA_EAGLE_VERSION}-bin.tar.gz
 ENV JAVA_HOME=/usr/lib/jvm/default-jvm KE_HOME=/usr/local/kafka_eagle
 ENV PATH $JAVA_HOME/bin:$KE_HOME/bin:$PATH
 
-VOLUME $KE_HOME/conf/
-VOLUME $KE_HOME/logs/
+VOLUME ["$KE_HOME/conf/","$KE_HOME/logs/"]
 
 EXPOSE 8048
-#ENTRYPOINT sh $KE_HOME/bin/ke.sh start
+CMD ke.sh start
