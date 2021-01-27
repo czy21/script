@@ -1,7 +1,6 @@
 FROM alpine:3.10
 
 ARG KAFKA_EAGLE_VERSION=2.0.3
-ARG JDK_VERSION=11.0.9
 WORKDIR /root/
 COPY ./___temp/ .
 

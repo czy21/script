@@ -33,5 +33,3 @@ services:
       - /data/volumes/kafka_eagle/logs/:/usr/local/kafka_eagle/logs/
       - /data/config/kafka_eagle/:/usr/local/kafka_eagle/conf/
 
-
-
