@@ -7,7 +7,7 @@ services:
     container_name: v2ray
     privileged: true
     volumes:
-      - ${GLOBAL_CONF_DIR}/v2ray/:/etc/v2ray/
+      - ${GLOBAL_CONFIG_DIR}/v2ray/:/etc/v2ray/
       - ${GLOBAL_VOLUMES_DIR}/v2ray/log/:/var/log/v2ray/
     command: v2ray -config=/etc/v2ray/config.json
     restart: always

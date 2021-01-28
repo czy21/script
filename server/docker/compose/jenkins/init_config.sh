@@ -2,9 +2,12 @@
 
 set -e
 
-sudo mkdir -p /data/volumes/jenkins/
+dir=$(cd "$(dirname "$0")"; pwd)
+source ${dir}/../.env.global
 
-sudo tee /data/volumes/jenkins/hudson.model.UpdateCenter.xml <<-'EOF'
+sudo mkdir -p ${GLOBAL_VOLUMES_DIR}/jenkins/
+
+sudo tee ${GLOBAL_VOLUMES_DIR}/jenkins/hudson.model.UpdateCenter.xml <<-'EOF'
 <?xml version='1.0' encoding='UTF-8'?>
 <sites>
   <site>

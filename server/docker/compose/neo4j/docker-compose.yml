@@ -12,7 +12,7 @@ services:
     volumes:
       - ${GLOBAL_VOLUMES_DIR}/neo4j/data/:/data/
       - ${GLOBAL_VOLUMES_DIR}/neo4j/logs/:/logs/
-      - ${GLOBAL_CONF_DIR}/neo4j/:/conf/
+      - ${GLOBAL_CONFIG_DIR}/neo4j/:/conf/
     restart: always
     environment:
       NEO4J_AUTH: neo4j/***REMOVED***
