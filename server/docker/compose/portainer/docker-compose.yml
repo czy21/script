@@ -11,6 +11,6 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ${GLOBAL_VOLUMES_DIR}/portainer:/data
-      - ${GLOBAL_CONF_DIR}/portainer/portainer_password:/tmp/portainer_password
+      - ${GLOBAL_CONFIG_DIR}/portainer/portainer_password:/tmp/portainer_password
     command: --admin-password-file /tmp/portainer_password
     restart: always

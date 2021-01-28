@@ -9,5 +9,5 @@ services:
     ports:
       - 7000:7000
     volumes:
-      - ${GLOBAL_CONF_DIR}/frp/:/usr/local/frp/conf/
+      - ${GLOBAL_CONFIG_DIR}/frp/:/usr/local/frp/conf/
     restart: always

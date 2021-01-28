@@ -10,7 +10,7 @@ services:
       - 5672:5672
       - 15672:15672
     volumes:
-      - ${GLOBAL_CONF_DIR}/rabbitmq/:/etc/rabbitmq/
+      - ${GLOBAL_CONFIG_DIR}/rabbitmq/:/etc/rabbitmq/
       - ${GLOBAL_VOLUMES_DIR}/rabbitmq/:/var/lib/rabbitmq/
     environment:
       - RABBITMQ_DEFAULT_USER=root
