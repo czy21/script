@@ -9,7 +9,7 @@ services:
     ports:
       - 1433:1433
     volumes:
-      - /data/volumes/mssql/:/var/opt/mssql/
+      - ${GLOBAL_VOLUMES_DIR}/mssql/:/var/opt/mssql/
     user: root
     environment:
       - ACCEPT_EULA=Y

@@ -10,9 +10,9 @@ services:
       - 7474:7474
       - 7687:7687
     volumes:
-      - /data/volumes/neo4j/data/:/data/
-      - /data/volumes/neo4j/logs/:/logs/
-      - /data/config/neo4j/:/conf/
+      - ${GLOBAL_VOLUMES_DIR}/neo4j/data/:/data/
+      - ${GLOBAL_VOLUMES_DIR}/neo4j/logs/:/logs/
+      - ${GLOBAL_CONF_DIR}/neo4j/:/conf/
     restart: always
     environment:
       NEO4J_AUTH: neo4j/***REMOVED***

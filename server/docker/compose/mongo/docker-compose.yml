@@ -9,8 +9,8 @@ services:
     ports:
       - 27017:27017
     volumes:
-      - /data/volumes/mongo/:/data/db/
-      - /data/config/mongo/:/data/configdb/
+      - ${GLOBAL_VOLUMES_DIR}/mongo/:/data/db/
+      - ${GLOBAL_CONF_DIR}/mongo/:/data/configdb/
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: sasa

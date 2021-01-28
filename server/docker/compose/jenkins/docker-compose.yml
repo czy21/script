@@ -10,11 +10,11 @@ services:
       - 8090:8080
       - 50000:50000
     volumes:
-      - /data/volumes/jenkins/:/data/volumes/jenkins/
+      - ${GLOBAL_VOLUMES_DIR}/jenkins/:${GLOBAL_VOLUMES_DIR}/jenkins/
       - /var/run/docker.sock:/var/run/docker.sock
       - /bin/docker:/usr/bin/docker
       - /bin/docker-compose:/usr/bin/docker-compose
     user: root
     environment:
-      JENKINS_HOME: /data/volumes/jenkins/
+      JENKINS_HOME: ${GLOBAL_VOLUMES_DIR}/jenkins/
     restart: always
