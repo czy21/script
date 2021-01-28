@@ -29,6 +29,7 @@ services:
       dockerfile: /home/bruce/compose/kafka/kafka_eagle/Dockerfile
     image: kafka_eagle:latest
     container_name: kafka_eagle
+    restart: always
     tty: true
     ports:
       - "8048:8048"
