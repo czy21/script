@@ -10,9 +10,9 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - /data/config/nginx/nginx.conf:/etc/nginx/nginx.conf
-      - /data/config/nginx/conf.d/:/etc/nginx/conf.d/
-      - /data/config/nginx/cert/:/etc/nginx/cert/
-      - /data/config/nginx/log/:/var/log/nginx/
-      - /data/volumes/nginx/:/root/
+      - ${GLOBAL_CONF_DIR}/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ${GLOBAL_CONF_DIR}/nginx/conf.d/:/etc/nginx/conf.d/
+      - ${GLOBAL_CONF_DIR}/nginx/cert/:/etc/nginx/cert/
+      - ${GLOBAL_CONF_DIR}/nginx/log/:/var/log/nginx/
+      - ${GLOBAL_VOLUMES_DIR}/nginx/:/root/
     restart: always

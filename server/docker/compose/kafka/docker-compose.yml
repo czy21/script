@@ -7,8 +7,8 @@ services:
     ports:
       - "2181:2181"
     volumes:
-      - /data/config/zookeeper/:/opt/zookeeper-3.4.13/conf/
-      - /data/volumes/zookeeper/data/:/opt/zookeeper-3.4.13/data/
+      - ${GLOBAL_CONF_DIR}/zookeeper/:/opt/zookeeper-3.4.13/conf/
+      - ${GLOBAL_VOLUMES_DIR}/zookeeper/data/:/opt/zookeeper-3.4.13/data/
   kafka:
     image: wurstmeister/kafka:latest
     container_name: broker1
@@ -21,7 +21,7 @@ services:
       - zookeeper
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /data/volumes/kafka/:/kafka/
+      - ${GLOBAL_VOLUMES_DIR}/kafka/:/kafka/
 
   kafka_eagle:
     build:
@@ -33,6 +33,6 @@ services:
     ports:
       - "8048:8048"
     volumes:
-      - /data/volumes/kafka_eagle/logs/:/usr/local/kafka_eagle/logs/
-      - /data/config/kafka_eagle/:/usr/local/kafka_eagle/conf/
+      - ${GLOBAL_VOLUMES_DIR}/kafka_eagle/logs/:/usr/local/kafka_eagle/logs/
+      - ${GLOBAL_CONF_DIR}/kafka_eagle/:/usr/local/kafka_eagle/conf/
 

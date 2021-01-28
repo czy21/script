@@ -10,7 +10,7 @@ services:
       - 8000:8000
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /data/volumes/portainer:/data
-      - /data/config/portainer/portainer_password:/tmp/portainer_password
+      - ${GLOBAL_VOLUMES_DIR}/portainer:/data
+      - ${GLOBAL_CONF_DIR}/portainer/portainer_password:/tmp/portainer_password
     command: --admin-password-file /tmp/portainer_password
     restart: always

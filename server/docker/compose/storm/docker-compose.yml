@@ -5,9 +5,9 @@ services:
     image: zookeeper
     container_name: zookeeper
     volumes:
-      - /data/volumes/zookeeper/data/:/data/
-      - /data/volumes/zookeeper/datalog:/datalog/
-      - /data/volumes/zookeeper/logs:/logs/
+      - ${GLOBAL_VOLUMES_DIR}/zookeeper/data/:/data/
+      - ${GLOBAL_VOLUMES_DIR}/zookeeper/datalog:/datalog/
+      - ${GLOBAL_VOLUMES_DIR}/zookeeper/logs:/logs/
     restart: always
     ports:
       - 2181:2181
@@ -21,8 +21,8 @@ services:
     links:
       - zookeeper
     volumes:
-      - /data/volumes/storm/logs:/logs/
-      - /data/volumes/storm/data:/data/
+      - ${GLOBAL_VOLUMES_DIR}/storm/logs:/logs/
+      - ${GLOBAL_VOLUMES_DIR}/storm/data:/data/
     restart: always
     ports:
       - 6627:6627
