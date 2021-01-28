@@ -4,3 +4,5 @@ set -e
 
 dir=$(cd "$(dirname "$0")"; pwd)
 source ${dir}/../.env.global
+
+echo ${USER_DIR}
