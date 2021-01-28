@@ -12,4 +12,4 @@ sudo cp -r $dir/zookeeper_conf/* /data/config/zookeeper/
 sudo rm -rf /data/config/kafka_eagle/
 sudo mkdir -p /data/config/kafka_eagle/
 
-sudo cp -r $dir/kafka_eagle_conf/* /data/config/kafka_eagle/
+sudo cp -r $dir/kafka_eagle/conf/* /data/config/kafka_eagle/
