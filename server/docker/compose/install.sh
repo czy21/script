@@ -37,36 +37,34 @@ function start_compose() {
     compose_file=${target_path}/docker-compose.yml
     if [[ -f ${compose_file} ]];then
         echo -e "${number}.\033[32m start_compose => \033[0m ${compose_file}"
-        sudo docker-compose --file ${compose_file} --env-file $HOME/compose/.env.global up -d --build
+#        sudo docker-compose --file ${compose_file} --env-file $HOME/compose/.env.global up -d --build
     fi
 }
 
 function print_app_list() {
     all_map=
-    find_filter=(`find $HOME/compose/* -type d -maxdepth 0 | cat -n | awk '{print $1","$2}'`)
+    find_filter=(`find $HOME/compose/* -maxdepth 0 -type d | awk -F'/' '{print $0"|"$NF}' | cat -n | awk '{print $1"|"$2}'`)
     for (( i = 0; i < ${#find_filter[@]}; i++ )); do
-      t=(${find_filter[i]/","/" "})
-      id=${t[0]}
-      name=${t[1]##*/}
-      path=${t[1]}
-      all_map[i]="${id} ${name} ${path}"
+      t=(`echo ${find_filter[i]} | tr '|' ' '` )
+      num=${t[0]};path=${t[1]};name=${t[2]}
+      all_map[i]="${num} ${name} ${path}"
     done
     view_map=
     for (( i = 0; i < ${#all_map[@]}; i++ )); do
        internal_map=(${all_map[i]})
-       view_map[i]="${internal_map[0]}"."${internal_map[1]}"
-      if test `expr ${#view_map[@]} % 6` -eq 0; then
-           echo ${view_map[@]}
-           unset view_map
-      fi
+       view_map="$view_map ${internal_map[0]}.${internal_map[1]}"
+       if test `expr $[i+1] % 5` -eq 0; then
+           view_map=$view_map`echo "\n"`
+       fi
     done
-    echo ${view_map[@]}
+    echo -e ${view_map} | awk '{printf "%-16s%-16s%-16s%-16s%-16s\n",$1,$2,$3,$4,$5}'
+    unset view_map
 }
 
-while [[ $# -ge 1 ]];
+while getopts ":h:ic" opt
 do
-	case $1 in
-		-h)
+	case $opt in
+		h)
       source ../../../utility/share.sh
       host=$2
       sh_file='compose/install.sh'
@@ -76,7 +74,7 @@ do
       upload_exec $@
       break
 			;;
-		-i)
+		i)
 		  print_app_list
       echo -n "please select install app number(example:1 2 ... or all)"
       read arg
@@ -109,9 +107,8 @@ do
           done
         done
       fi
-      shift 1
 			;;
-	  -c)
+	  c)
 	    print_app_list
       echo -n "please select post_config app number(example:1 2 ... or all)"
       read arg
@@ -142,9 +139,8 @@ do
           done
         done
       fi
-	    shift 1
 			;;
-		*)
+		?)
 		  echo -e "\033[31m$1 un_know input param \033[0m"
 			break
 			;;
