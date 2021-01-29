@@ -17,7 +17,7 @@ services:
       - "1092:1092"
     environment:
       KAFKA_BROKER_ID: 0
-      HOSTNAME_COMMAND: "route -n | awk '/UG[ \t]/{print $$2}'"
+      KAFKA_ADVERTISED_HOST_NAME: ${GLOBAL_HOST_IP}
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_JMX_OPTS: "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=127.0.0.1 -Dcom.sun.management.jmxremote.rmi.port=1092"
       JMX_PORT: 1092
@@ -35,7 +35,7 @@ services:
       - "1093:1093"
     environment:
       KAFKA_BROKER_ID: 1
-      HOSTNAME_COMMAND: "route -n | awk '/UG[ \t]/{print $$2}'"
+      KAFKA_ADVERTISED_HOST_NAME: ${GLOBAL_HOST_IP}
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_JMX_OPTS: "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=127.0.0.1 -Dcom.sun.management.jmxremote.rmi.port=1093"
       JMX_PORT: 1093
@@ -51,15 +51,14 @@ services:
       dockerfile: ${GLOBAL_USER_HOME}/compose/kafka/kafka_eagle/Dockerfile
     image: kafka_eagle:latest
     container_name: kafka_eagle
-    ports:
-      - "8048:8048"
+    network_mode: host
     volumes:
       - ${GLOBAL_VOLUMES_DIR}/kafka_eagle/logs/:/usr/local/kafka_eagle/logs/
       - ${GLOBAL_CONFIG_DIR}/kafka_eagle/log4j.properties:/usr/local/kafka_eagle/conf/log4j.properties
     environment:
       SYS_KAFKA_EAGLE_ZK_CLUSTER_ALIAS: cluster1
       SYS_KAFKA_ZK_LIMIT_SIZE: 25
-      SYS_CLUSTER1_ZK_LIST: zookeeper:2181
+      SYS_CLUSTER1_ZK_LIST: ${GLOBAL_HOST_IP}:2181
       SYS_CLUSTER1_KAFKA_EAGLE_BROKER_SIZE: 20
       SYS_CLUSTER1_KAFKA_EAGLE_OFFSET_STORAGE: kafka
       SYS_CLUSTER1_KAFKA_EAGLE_JMX_ACL: "false"
@@ -70,9 +69,9 @@ services:
       SYS_KAFKA_EAGLE_SQL_TOPIC_RECORDS_MAX: 5000
       SYS_KAFKA_EAGLE_TOPIC_TOKEN: keadmin
       SYS_KAFKA_EAGLE_DRIVER: com.mysql.jdbc.Driver
-      SYS_KAFKA_EAGLE_URL: jdbc:mysql://mysql:3306/ke?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
+      SYS_KAFKA_EAGLE_URL: jdbc:mysql://${GLOBAL_HOST_IP}:3306/ke?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
       SYS_KAFKA_EAGLE_USERNAME: root
-      SYS_KAFKA_EAGLE_PASSWORD: sasa
+      SYS_KAFKA_EAGLE_PASSWORD: ${GLOBAL_DB_PASSWORD}
 
 
 
