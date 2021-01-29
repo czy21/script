@@ -34,3 +34,5 @@ do
 done
 
 $KE_HOME/bin/ke.sh start
+tail -f /dev/null
+#tail -f /usr/local/kafka_eagle/logs/log.log

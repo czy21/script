@@ -14,15 +14,36 @@ services:
     container_name: broker1
     ports:
       - "9092:9092"
+      - "1092:1092"
     environment:
       KAFKA_BROKER_ID: 0
-      KAFKA_ADVERTISED_HOST_NAME: ${GLOBAL_HOST_IP}
+      HOSTNAME_COMMAND: "route -n | awk '/UG[ \t]/{print $$2}'"
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_JMX_OPTS: "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=127.0.0.1 -Dcom.sun.management.jmxremote.rmi.port=1092"
+      JMX_PORT: 1092
     depends_on:
       - zookeeper
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ${GLOBAL_VOLUMES_DIR}/kafka1/:/kafka/
+
+  broker2:
+    image: wurstmeister/kafka:latest
+    container_name: broker2
+    ports:
+      - "9093:9092"
+      - "1093:1093"
+    environment:
+      KAFKA_BROKER_ID: 1
+      HOSTNAME_COMMAND: "route -n | awk '/UG[ \t]/{print $$2}'"
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_JMX_OPTS: "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=127.0.0.1 -Dcom.sun.management.jmxremote.rmi.port=1093"
+      JMX_PORT: 1093
+    depends_on:
+      - zookeeper
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${GLOBAL_VOLUMES_DIR}/kafka2/:/kafka/
 
   kafka_eagle:
     build:
@@ -41,6 +62,8 @@ services:
       SYS_CLUSTER1_ZK_LIST: zookeeper:2181
       SYS_CLUSTER1_KAFKA_EAGLE_BROKER_SIZE: 20
       SYS_CLUSTER1_KAFKA_EAGLE_OFFSET_STORAGE: kafka
+      SYS_CLUSTER1_KAFKA_EAGLE_JMX_ACL: "false"
+      SYS_CLUSTER1_KAFKA_EAGLE_JMX_SSL: "false"
       SYS_KAFKA_EAGLE_WEBUI_PORT: 8048
       SYS_KAFKA_EAGLE_METRICS_CHARTS: "true"
       SYS_KAFKA_EAGLE_METRICS_RETAIN: 15

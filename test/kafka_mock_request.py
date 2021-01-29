@@ -18,4 +18,4 @@ def publish(max):
 
 
 if __name__ == '__main__':
-    publish(1000)
+    publish(3000)
