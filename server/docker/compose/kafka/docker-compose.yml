@@ -26,8 +26,8 @@ services:
 
   kafka_eagle:
     build:
-      context: /home/bruce/compose/kafka/kafka_eagle/
-      dockerfile: /home/bruce/compose/kafka/kafka_eagle/Dockerfile
+      context: ${GLOBAL_USER_HOME}/compose/kafka/kafka_eagle/
+      dockerfile: ${GLOBAL_USER_HOME}/compose/kafka/kafka_eagle/Dockerfile
     image: kafka_eagle:latest
     restart: on-failure
     container_name: kafka_eagle

@@ -13,4 +13,4 @@ services:
     user: root
     environment:
       - ACCEPT_EULA=Y
-      - MSSQL_SA_PASSWORD=Czy.190815
+      - MSSQL_SA_PASSWORD=${GLOBAL_DB_PASSWORD}
