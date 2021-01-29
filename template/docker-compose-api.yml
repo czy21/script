@@ -1,0 +1,19 @@
+version: '3.7'
+
+services:
+
+  api:
+    build:
+      context: ${{{param_api_output_path}}}
+      dockerfile: ${{{param_api_dockerfile_output_file_path}}}
+    image: ${{{param_api_image}}}
+    container_name: ${{{param_project_name}}}_${{{param_env_suffix}}}
+    volumes:
+      - /data/volumes/${{{param_project_name}}}_${{{param_env_suffix}}}/api/log/:/home/${{{param_project_name}}}/log/
+    networks:
+      - ${{{param_api_network_name}}}
+    restart: always
+
+networks:
+  ${{{param_api_network_name}}}:
+    external: true
