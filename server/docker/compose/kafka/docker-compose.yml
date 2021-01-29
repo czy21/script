@@ -29,18 +29,30 @@ services:
       context: /home/bruce/compose/kafka/kafka_eagle/
       dockerfile: /home/bruce/compose/kafka/kafka_eagle/Dockerfile
     image: kafka_eagle:latest
+    restart: on-failure
     container_name: kafka_eagle
-    restart: always
-    tty: true
     ports:
       - "8048:8048"
     volumes:
       - ${GLOBAL_VOLUMES_DIR}/kafka_eagle/logs/:/usr/local/kafka_eagle/logs/
+      - ${GLOBAL_CONFIG_DIR}/kafka_eagle/log4j.properties:/usr/local/kafka_eagle/conf/log4j.properties
     environment:
       SYS_KAFKA_EAGLE_ZK_CLUSTER_ALIAS: cluster1
+      SYS_KAFKA_ZK_LIMIT_SIZE: 25
       SYS_CLUSTER1_ZK_LIST: zookeeper:2181
       SYS_CLUSTER1_KAFKA_EAGLE_BROKER_SIZE: 20
       SYS_CLUSTER1_KAFKA_EAGLE_OFFSET_STORAGE: kafka
+      SYS_KAFKA_EAGLE_WEBUI_PORT: 8048
+      SYS_KAFKA_EAGLE_METRICS_CHARTS: "true"
+      SYS_KAFKA_EAGLE_METRICS_RETAIN: 15
+      SYS_KAFKA_EAGLE_SQL_TOPIC_RECORDS_MAX: 5000
+      SYS_KAFKA_EAGLE_TOPIC_TOKEN: keadmin
+      SYS_KAFKA_EAGLE_DRIVER: com.mysql.jdbc.Driver
+      SYS_KAFKA_EAGLE_URL: jdbc:mysql://mysql:3306/ke?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
+      SYS_KAFKA_EAGLE_USERNAME: root
+      SYS_KAFKA_EAGLE_PASSWORD: sasa
+
+
 
 
 
