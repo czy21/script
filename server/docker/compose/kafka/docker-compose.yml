@@ -35,5 +35,15 @@ services:
       - "8048:8048"
     volumes:
       - ${GLOBAL_VOLUMES_DIR}/kafka_eagle/logs/:/usr/local/kafka_eagle/logs/
-      - ${GLOBAL_CONFIG_DIR}/kafka_eagle/:/usr/local/kafka_eagle/conf/
+    environment:
+      SYS_KAFKA_EAGLE_ZK_CLUSTER_ALIAS: cluster1
+      SYS_CLUSTER1_ZK_LIST: zookeeper:2181
+      SYS_CLUSTER1_KAFKA_EAGLE_BROKER_SIZE: 20
+      SYS_CLUSTER1_KAFKA_EAGLE_OFFSET_STORAGE: kafka
+
+
+
+
+
+
 
