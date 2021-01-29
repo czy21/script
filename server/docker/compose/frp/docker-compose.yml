@@ -3,6 +3,9 @@ version: '3.7'
 services:
 
   frp:
+    build:
+      context: ${GLOBAL_USER_HOME}/compose/frp/
+      dockerfile: ${GLOBAL_USER_HOME}/compose/frp/Dockerfile
     image: frp:1.0.0
     container_name: frp
     privileged: true
