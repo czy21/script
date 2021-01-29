@@ -12,6 +12,8 @@ output = path_util.pure_path_join(root_path, "___output")
 project_code = path_util.pure_path_join(root_path, "code")
 project_db = path_util.pure_path_join(root_path, "db")
 
+script_template = path_util.pure_path_join(root_path, "script/template")
+
 # child dir of code
 project_code_api = path_util.pure_path_join(project_code, "api")
 project_code_web = path_util.pure_path_join(project_code, "web")
