@@ -12,7 +12,7 @@ RUN tar -zxf kafka-eagle-web-${KAFKA_EAGLE_VERSION}-bin.tar.gz -C /usr/local/ \
 ENV KE_HOME=/usr/local/kafka_eagle
 ENV PATH $KE_HOME/bin:$PATH
 
-VOLUME ["$KE_HOME/conf/","$KE_HOME/logs/"]
+VOLUME ["$KE_HOME/logs/"]
 
 EXPOSE 8048
 
