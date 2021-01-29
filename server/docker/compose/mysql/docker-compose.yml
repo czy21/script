@@ -17,4 +17,4 @@ services:
     user: root
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: 0
-      MYSQL_ROOT_PASSWORD: sasa
+      MYSQL_ROOT_PASSWORD: ${GLOBAL_DB_PASSWORD}
