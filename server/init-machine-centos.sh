@@ -18,7 +18,7 @@ while [[ $# -ge 1 ]]; do
     ;;
   -t)
     shift 1
-
+    timedatectl set-timezone Asia/Shanghai
     # install tools
     yum -y install wget
 #    dnf -y install python38
