@@ -1,5 +1,5 @@
 FROM openjdk:11-jre-slim
-VOLUME ["/home/${{{param_project_name}}}/resources","/home/${{{param_project_name}}}/log"]
+VOLUME ["/home/${{{param_project_name}}}/log"]
 EXPOSE ${{{param_api_container_port}}}
 COPY ./api.jar /home/${{{param_project_name}}}/
 COPY ./resources/ /home/${{{param_project_name}}}/resources/

@@ -54,7 +54,7 @@ services:
     network_mode: host
     volumes:
       - ${GLOBAL_VOLUMES_DIR}/kafka_eagle/logs/:/usr/local/kafka_eagle/logs/
-      - ${GLOBAL_CONFIG_DIR}/kafka_eagle/log4j.properties:/usr/local/kafka_eagle/conf/log4j.properties
+      - ${GLOBAL_CONFIG_DIR}/kafka_eagle/:/usr/local/kafka_eagle/conf/
     environment:
       SYS_KAFKA_EAGLE_ZK_CLUSTER_ALIAS: cluster1
       SYS_KAFKA_ZK_LIMIT_SIZE: 25
