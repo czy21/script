@@ -14,6 +14,6 @@ def __get_function_name():
 
 
 def build_by_template(template_name, output_path):
-    content = CustomTemplate(filename=template_name).render(**default_common.get_params())
+    content = CustomTemplate(filename=template_name).render(dict({k: v for k, v in default_common.__dict__.items() if k.startswith("param")}))
     with io.open(output_path, "w+", encoding="utf-8", newline="\n") as target_output:
         target_output.write(content)
