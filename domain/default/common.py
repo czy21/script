@@ -8,6 +8,7 @@ param_main_db_name = ""
 param_main_db_bak_name = ""
 
 # mysql
+param_main_db_mysql_name = ""
 param_main_db_mysql_host = ""
 param_main_db_mysql_port = ""
 param_main_db_mysql_user = ""
@@ -18,6 +19,7 @@ param_main_db_mysql_file_path = ""
 param_main_db_mssql_file_path = ""
 
 # neo4j
+param_main_db_neo4j_name = ""
 param_main_db_neo4j_host = ""
 param_main_db_neo4j_port = ""
 param_main_db_neo4j_user = ""
@@ -25,6 +27,7 @@ param_main_db_neo4j_pass = ""
 param_main_db_neo4j_file_path = ""
 
 # mongo
+param_main_db_mongo_name = ""
 param_main_db_mongo_host = ""
 param_main_db_mongo_port = ""
 param_main_db_mongo_user = ""
@@ -72,7 +75,3 @@ param_web_nginx_output_file_path = ""
 
 param_web_env_template_path = ""
 param_web_env_path = ""
-
-
-def get_params():
-    return dict({k: v for k, v in globals().items() if k.startswith("param")})
