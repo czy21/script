@@ -1,0 +1,33 @@
+version: '3.7'
+
+services:
+
+  jobmanager:
+    image: flink:latest
+    container_name: flink_jobmanager
+    ports:
+      - "8081:8081"
+    command: jobmanager
+    volumes:
+      - ${GLOBAL_VOLUMES_DIR}/jobmanager/:/opt/flink/usrlib/
+    environment:
+      - |
+        FLINK_PROPERTIES=
+        jobmanager.rpc.address: jobmanager
+        parallelism.default: 2
+
+  taskmanager1:
+    image: flink:latest
+    container_name: flink_taskmanager_1
+    depends_on:
+      - jobmanager
+    command: taskmanager
+    scale: 1
+    volumes:
+      - ${GLOBAL_VOLUMES_DIR}/jobmanager/:/opt/flink/usrlib/
+    environment:
+      - |
+        FLINK_PROPERTIES=
+        jobmanager.rpc.address: jobmanager
+        taskmanager.numberOfTaskSlots: 2
+        parallelism.default: 2
