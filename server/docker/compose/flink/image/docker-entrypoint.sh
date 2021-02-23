@@ -113,25 +113,25 @@ elif [ "$1" = "jobmanager" ]; then
 
     echo "Starting Job Manager"
 
-    exec $(drop_privs_cmd) "$FLINK_HOME/bin/jobmanager.sh" start-foreground "${args[@]}"
+    $FLINK_HOME/bin/jobmanager.sh start "${args[@]}"
 elif [ "$1" = ${COMMAND_STANDALONE} ]; then
     args=("${args[@]:1}")
 
     echo "Starting Job Manager"
 
-    exec $(drop_privs_cmd) "$FLINK_HOME/bin/standalone-job.sh" start-foreground "${args[@]}"
+    exec $(drop_privs_cmd) "$FLINK_HOME/bin/standalone-job.sh" start "${args[@]}"
 elif [ "$1" = ${COMMAND_HISTORY_SERVER} ]; then
     args=("${args[@]:1}")
 
     echo "Starting History Server"
 
-    exec $(drop_privs_cmd) "$FLINK_HOME/bin/historyserver.sh" start-foreground "${args[@]}"
+    exec $(drop_privs_cmd) "$FLINK_HOME/bin/historyserver.sh" start "${args[@]}"
 elif [ "$1" = "taskmanager" ]; then
     args=("${args[@]:1}")
 
     echo "Starting Task Manager"
 
-    exec $(drop_privs_cmd) "$FLINK_HOME/bin/taskmanager.sh" start-foreground "${args[@]}"
+    $FLINK_HOME/bin/taskmanager.sh start "${args[@]}"
 elif [ "$1" = "$COMMAND_NATIVE_KUBERNETES" ]; then
     args=("${args[@]:1}")
 
@@ -150,5 +150,5 @@ export _FLINK_HOME_DETERMINED=true
 . $FLINK_HOME/bin/config.sh
 export FLINK_CLASSPATH="`constructFlinkClassPath`:$INTERNAL_HADOOP_CLASSPATHS"
 
-# Running command in pass-through mode
-exec $(drop_privs_cmd) "${args[@]}"
+sleep 3
+exec /bin/bash -c "tail -f $FLINK_HOME/log/*.log"
