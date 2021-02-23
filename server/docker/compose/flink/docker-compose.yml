@@ -3,7 +3,7 @@ version: '3.7'
 services:
 
   jobmanager:
-    image: flink:latest
+    image: flink:1.0.0
     container_name: flink_jobmanager
     ports:
       - "8081:8081"
@@ -17,7 +17,7 @@ services:
         parallelism.default: 2
 
   taskmanager1:
-    image: flink:latest
+    image: flink:1.0.0
     container_name: flink_taskmanager_1
     depends_on:
       - jobmanager
