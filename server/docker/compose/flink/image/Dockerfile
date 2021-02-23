@@ -43,12 +43,6 @@ RUN set -ex; \
   chmod +x /usr/local/bin/gosu; \
   gosu nobody true
 
-# Configure Flink version
-ENV FLINK_TGZ_URL=https://www.apache.org/dyn/closer.cgi?action=download&filename=flink/flink-1.12.1/flink-1.12.1-bin-scala_2.12.tgz \
-    FLINK_ASC_URL=https://www.apache.org/dist/flink/flink-1.12.1/flink-1.12.1-bin-scala_2.12.tgz.asc \
-    GPG_KEY=F8E419AA0B60C28879E876859DFF40967ABFC5A4 \
-    CHECK_GPG=true
-
 # Prepare environment
 ENV FLINK_HOME=/opt/flink
 ENV PATH=$FLINK_HOME/bin:$PATH
@@ -57,32 +51,16 @@ RUN groupadd --system --gid=9999 flink && \
 WORKDIR $FLINK_HOME
 
 # Install Flink
+COPY ___temp/flink-1.12.1-bin-scala_2.11.tgz .
 RUN set -ex; \
-  wget -nv -O flink.tgz "$FLINK_TGZ_URL"; \
-  \
-  if [ "$CHECK_GPG" = "true" ]; then \
-    wget -nv -O flink.tgz.asc "$FLINK_ASC_URL"; \
-    export GNUPGHOME="$(mktemp -d)"; \
-    for server in ha.pool.sks-keyservers.net $(shuf -e \
-                            hkp://p80.pool.sks-keyservers.net:80 \
-                            keyserver.ubuntu.com \
-                            hkp://keyserver.ubuntu.com:80 \
-                            pgp.mit.edu) ; do \
-        gpg --batch --keyserver "$server" --recv-keys "$GPG_KEY" && break || : ; \
-    done && \
-    gpg --batch --verify flink.tgz.asc flink.tgz; \
-    gpgconf --kill all; \
-    rm -rf "$GNUPGHOME" flink.tgz.asc; \
-  fi; \
-  \
-  tar -xf flink.tgz --strip-components=1; \
-  rm flink.tgz; \
+  tar -xf flink-1.12.1-bin-scala_2.11.tgz --strip-components=1; \
+  rm flink-1.12.1-bin-scala_2.11.tgz; \
   \
   chown -R flink:flink .;
 
 # Configure container
 COPY docker-entrypoint.sh /
-COPY ___temp/ $FLINK_HOME/lib/
+COPY ___temp/lib/ $FLINK_HOME/lib/
 ENTRYPOINT ["/docker-entrypoint.sh"]
 EXPOSE 6123 8081
 CMD ["help"]
