@@ -50,13 +50,11 @@ RUN groupadd --system --gid=9999 flink && \
     useradd --system --home-dir $FLINK_HOME --uid=9999 --gid=flink flink
 WORKDIR $FLINK_HOME
 
+ARG FLINK_GZ=flink-1.12.1-bin-scala_2.12.tgz
+
 # Install Flink
-COPY ___temp/flink-1.12.1-bin-scala_2.11.tgz .
-RUN set -ex; \
-  tar -xf flink-1.12.1-bin-scala_2.11.tgz --strip-components=1; \
-  rm flink-1.12.1-bin-scala_2.11.tgz; \
-  \
-  chown -R flink:flink .;
+COPY ___temp/$FLINK_GZ .
+RUN set -ex;tar -xf $FLINK_GZ --strip-components=1;rm $FLINK_GZ;chown -R flink:flink .;
 
 # Configure container
 COPY docker-entrypoint.sh /
