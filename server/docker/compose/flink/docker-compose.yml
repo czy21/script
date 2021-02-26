@@ -9,7 +9,8 @@ services:
       - "8081:8081"
     command: jobmanager
     volumes:
-      - ${GLOBAL_VOLUMES_DIR}/jobmanager/:/opt/flink/usrlib/
+      - ${GLOBAL_VOLUMES_DIR}/flink/usrlib/:/opt/flink/usrlib/
+      - ${GLOBAL_VOLUMES_DIR}/flink/ftp/:/home/ftp/
     environment:
       - |
         FLINK_PROPERTIES=
@@ -24,10 +25,11 @@ services:
     command: taskmanager
     scale: 1
     volumes:
-      - ${GLOBAL_VOLUMES_DIR}/jobmanager/:/opt/flink/usrlib/
+      - ${GLOBAL_VOLUMES_DIR}/flink/usrlib/:/opt/flink/usrlib/
+      - ${GLOBAL_VOLUMES_DIR}/flink/ftp/:/home/ftp/
     environment:
       - |
         FLINK_PROPERTIES=
         jobmanager.rpc.address: jobmanager
-        taskmanager.numberOfTaskSlots: 2
+        taskmanager.numberOfTaskSlots: 6
         parallelism.default: 2
