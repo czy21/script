@@ -1,10 +1,11 @@
 task copy(type: Copy) {
-    from "${{{param_api_root_project_path}}}/src/main/resources"
+    from "src/main/resources"
     into "${{{param_api_output_resource_path}}}"
 }
 bootJar {
     archiveFileName = "${{{param_api_archive_file_name}}}"
     destinationDirectory = project.file "${{{param_api_output_path}}}"
+
 }
 processResources.exclude({ "src/main/resources" })
 processResources.dependsOn copy
