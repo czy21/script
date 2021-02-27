@@ -39,7 +39,7 @@ def build_api():
     command = list_util.arr_param_to_str(
         default_common.param_api_docker_gradle_command,
         [
-            "gradle",
+            path_util.pure_path_join(default_common.param_api_root_project_path, "gradlew"),
             "--init-script " + default_common.param_api_gradle_init_script_file_path,
             "--build-file " + path_util.pure_path_join(default_common.param_api_root_project_path, "build.gradle"),
             "--project-prop extraConfig=" + default_common.param_api_extra_config_output_file_path,
