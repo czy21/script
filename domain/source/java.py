@@ -43,7 +43,7 @@ def build_api():
             "--init-script " + default_common.param_api_gradle_init_script_file_path,
             "--build-file " + path_util.pure_path_join(default_common.param_api_root_project_path, "build.gradle"),
             "--project-prop extraConfig=" + default_common.param_api_extra_config_output_file_path,
-            "clean build -x test"
+            "clean build -x test --debug"
         ])
     logger.info(basic_util.action_formatter(__get_function_name(), command))
     basic_util.execute(command)
