@@ -1,5 +1,5 @@
 task copy(type: Copy) {
-    from "/src/main/resources"
+    from "src/main/resources"
     into "${{{param_api_output_resource_path}}}"
 }
 bootJar {
