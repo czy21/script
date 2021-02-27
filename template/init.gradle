@@ -3,21 +3,24 @@ settingsEvaluated { settings ->
         resolutionStrategy {
         }
         repositories {
-            gradlePluginPortal()
-            maven {
-                name "czyPublic"
-                url "http://192.168.2.4:8081/repository/maven-public/"
-            }
+			gradlePluginPortal()
+			maven {
+				name "czyPublic"
+				url "http://192.168.2.4:8081/repository/maven-public/"
+				credentials {
+					username "admin"
+					password "Czy.20201120"
+				}
+			}
         }
     }
 }
-
 allprojects {
     apply plugin: 'maven-publish'
 	publishing {
 		repositories {
 			maven {
-				name "czyRelease"
+				name "czyPublishRelease"
 				url "http://192.168.2.4:8081/repository/maven-releases/"
 				credentials {
 					username "admin"
@@ -28,16 +31,20 @@ allprojects {
 	}
     repositories {
 		maven {
+			name "czyPublic"
+			url "http://192.168.2.4:8081/repository/maven-public/"
+			credentials {
+				username "admin"
+				password "Czy.20201120"
+			}
+		}
+		maven {
 			name "ali"
 			url "https://maven.aliyun.com/repository/public/"
 		}
 		maven {
 			name "jd"
 			url "https://jitpack.io"
-		}
-        maven {
-			name "czyPublic"
-			url "http://192.168.2.4:8081/repository/maven-public/"
 		}
     }
 }
