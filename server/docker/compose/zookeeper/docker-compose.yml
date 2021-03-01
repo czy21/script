@@ -14,7 +14,7 @@ services:
       - ${GLOBAL_VOLUMES_DIR}/zookeeper1/logs/:/logs/
     environment:
       ZOO_MY_ID: 1
-      ZOO_TICK_TIME: 20000
+      ZOO_TICK_TIME: 60000
       ZOO_SERVERS: server.1=0.0.0.0:2888:3888;2181 server.2=zookeeper2:2888:3888;2181 server.3=zookeeper3:2888:3888;2181
 
   zookeeper2:
@@ -30,7 +30,7 @@ services:
       - ${GLOBAL_VOLUMES_DIR}/zookeeper2/logs/:/logs/
     environment:
       ZOO_MY_ID: 2
-      ZOO_TICK_TIME: 20000
+      ZOO_TICK_TIME: 60000
       ZOO_SERVERS: server.1=zookeeper1:2888:3888;2181 server.2=0.0.0.0:2888:3888;2181 server.3=zookeeper3:2888:3888;2181
 
   zookeeper3:
@@ -46,5 +46,5 @@ services:
       - ${GLOBAL_VOLUMES_DIR}/zookeeper3/logs/:/logs/
     environment:
       ZOO_MY_ID: 3
-      ZOO_TICK_TIME: 20000
+      ZOO_TICK_TIME: 60000
       ZOO_SERVERS: server.1=zookeeper1:2888:3888;2181 server.2=zookeeper2:2888:3888;2181 server.3=0.0.0.0:2888:3888;2181
