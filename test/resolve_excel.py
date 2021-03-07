@@ -19,6 +19,7 @@ def read_original_excel(
     df["file_id"] = uuid.uuid4()
     df.to_sql(table_name, engine, if_exists="append")
 
+
 with pd.ExcelFile(path_or_buffer="demo.xlsx") as f:
     read_original_excel(df=f, sheet_name="man", column_mapping={"姓名": "name", "年龄": "age", "性别": "gender", "地址": "address"}, table_name="ent_sys_man")
     read_original_excel(df=f, sheet_name="woman", column_mapping={"姓名": "name", "年龄": "age", "性别": "gender", "地址": "address"}, table_name="ent_sys_woman")
