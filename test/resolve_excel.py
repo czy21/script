@@ -1,29 +1,25 @@
+import profile
+
 import pandas as pd
 import datetime, time, uuid
 from sqlalchemy import create_engine
 from pandas import DataFrame
+from pymongo import MongoClient
 
 engine = create_engine('mysql+pymysql://admin:***REMOVED***@192.168.2.4:3306/erp_local')
+mongoClient = MongoClient(host="mongodb://admin:***REMOVED***@192.168.2.4:27017/")
 
 startTime = datetime.datetime.now()
 
+with pd.ExcelFile(path_or_buffer="test_inspect.xlsx") as f:
+    table = mongoClient["erp"]["ent_file_column_mapping"]
+    sd_mapping_list = table.find_one({"businessType": "SD"})["fields"]
+    sd_mapping_dict = dict(map(lambda x: (x.get('header'), x.get('column')), sd_mapping_list))
 
-def read_original_excel(
-        df: DataFrame,
-        sheet_name: str,
-        column_mapping: dict,
-        table_name: str
-):
-    df = pd.read_excel(df, sheet_name)
-    df.rename(columns=column_mapping, inplace=True)
+    df = pd.read_excel(f, "SD")
+    df.rename(columns=sd_mapping_dict, inplace=True)
     df["file_id"] = uuid.uuid4()
-    df.to_sql(table_name, engine, if_exists="append")
-
-
-with pd.ExcelFile(path_or_buffer="demo.xlsx") as f:
-    read_original_excel(df=f, sheet_name="man", column_mapping={"姓名": "name", "年龄": "age", "性别": "gender", "地址": "address"}, table_name="ent_sys_man")
-    read_original_excel(df=f, sheet_name="woman", column_mapping={"姓名": "name", "年龄": "age", "性别": "gender", "地址": "address"}, table_name="ent_sys_woman")
-    print("读取指定行的数据：\n{0}".format(f))
+    df.to_sql("ent_sfl_inspect_sale", engine, if_exists="append")
 
 endtime = datetime.datetime.now()
 
