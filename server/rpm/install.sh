@@ -3,10 +3,10 @@
 # for machine version centos
 
 # install to host machine
-# sh install.sh --host user@host --install
+# bash install.sh --host user@host --install
 
 # install to container
-# sh install.sh --host user@host --install --container [container_name] --user [container_user]
+# bash install.sh --host user@host --install --container [container_name] --user [container_user]
 
 root_dir="rpm"
 
@@ -102,7 +102,7 @@ EOF
         fi
           sudo docker exec -i ${container_name} bash -c 'rm -rf $HOME/'"${root_dir}"'/'
           sudo docker cp $HOME/${root_dir}/ ${container_name}:${user}
-          sudo docker exec -i ${container_name} bash -c 'sh $HOME/'"${root_dir}"'/install.sh --install'
+          sudo docker exec -i ${container_name} bash -c 'bash $HOME/'"${root_dir}"'/install.sh --install'
       fi
 			;;
 		*)
