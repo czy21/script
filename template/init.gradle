@@ -6,10 +6,10 @@ settingsEvaluated { settings ->
 			gradlePluginPortal()
 			maven {
 				name "czyPublic"
-				url "http://192.168.2.4:8081/repository/maven-public/"
+				url "http://192.168.2.11:8081/repository/maven-public/"
 				credentials {
 					username "admin"
-					password "Czy.20201120"
+					password "Czy20210314."
 				}
 			}
         }
@@ -21,10 +21,10 @@ allprojects {
 		repositories {
 			maven {
 				name "czyPublishRelease"
-				url "http://192.168.2.4:8081/repository/maven-releases/"
+				url "http://192.168.2.11:8081/repository/maven-releases/"
 				credentials {
 					username "admin"
-					password "Czy.20201120"
+					password "Czy20210314."
 				}
 			}
 		}
@@ -32,10 +32,10 @@ allprojects {
     repositories {
 		maven {
 			name "czyPublic"
-			url "http://192.168.2.4:8081/repository/maven-public/"
+			url "http://192.168.2.11:8081/repository/maven-public/"
 			credentials {
 				username "admin"
-				password "Czy.20201120"
+				password "Czy20210314."
 			}
 		}
 		maven {
