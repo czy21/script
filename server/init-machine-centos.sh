@@ -1,5 +1,5 @@
 #!/bin/bash
-# sh init-machine-centos.sh -h user@host -t ali
+# bash init-machine-centos.sh -h user@host -t ali
 # -t ali | offical
 # must as root
 set -e

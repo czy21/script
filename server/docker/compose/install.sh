@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# sh install.sh -h user@host -i -c
-# sh install.sh -i -c
+# bash install.sh -h user@host -i -c
+# bash install.sh -i -c
 # -i exec init_config.sh and start compose
 # -c exec post_config.sh
 
@@ -17,7 +17,7 @@ function exec_init_config() {
     config_file=${target_path}/init_config.sh
     if [[ -f ${config_file} ]]; then
         echo -e "${number}.\033[32m init_config => \033[0m ${config_file}"
-        sudo sh ${config_file}
+        sudo bash ${config_file}
     else
         echo -e "${number}.\033[33m no such file \033[0m ${config_file}"
     fi
@@ -27,7 +27,7 @@ function exec_post_config() {
     config_file=${target_path}/post_config.sh
     if [[ -f ${config_file} ]]; then
         echo -e "${number}.\033[32m post_config => \033[0m ${config_file}"
-        sudo sh ${config_file}
+        sudo bash ${config_file}
     else
         echo -e "${number}.\033[33m no such file \033[0m ${config_file}"
     fi

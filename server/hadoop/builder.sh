@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# sh builder.sh --init user@host --tag <image_tag>
-# sh builder.sh --tag <image_tag>
+# bash builder.sh --init user@host --tag <image_tag>
+# bash builder.sh --tag <image_tag>
 
 while [[ $# -ge 1 ]];
 do

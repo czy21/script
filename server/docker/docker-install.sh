@@ -1,5 +1,5 @@
 #!/bin/bash
-# sh docker-install.sh -h user@host -t ali
+# bash docker-install.sh -h user@host -t ali
 # -t ali | offical
 set -e
 

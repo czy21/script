@@ -8,7 +8,7 @@ sudo docker run -i -d --name ubuntu -p 4022:22 ubuntu:18.04
 sudo docker exec -i ubuntu /bin/bash -c "
 apt-get update;
 apt-get install -y openssh-client openssh-server sudo;
-sed -i -r 's/^\s*UseDNS\s+\w+/#\0/; s/^\s*PermitRootLogin\s+\w+/#\0/; s/^\s*PasswordAuthentication\s+\w+/#\0/; s/^\s*ClientAliveInterval\s+\w+/#\0/' /etc/ssh/sshd_config;
+sed -i -r 's/^\s*UseDNS\s+\w+/#\0/; s/^\s*PasswordAuthentication\s+\w+/#\0/; s/^\s*ClientAliveInterval\s+\w+/#\0/' /etc/ssh/sshd_config;
 echo '
 UseDNS no
 PermitRootLogin yes

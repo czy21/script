@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# sh create-user.sh -h [user@host] -u [username] -i [identity_path]
+# bash create-user.sh -h [user@host] -u [username] -i [identity_path]
 # -i ./pubs/ | ./pubs/czy-rsa.pub
 # -a is_append to authorized_keys for exist user
 set -e

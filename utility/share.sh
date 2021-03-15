@@ -6,7 +6,7 @@ function upload_exec() {
   ssh $host 'rm -rf $HOME/'$rm_path';'
 
   scp -r $cp_path $host:
-  ssh $host 'sh $HOME/'$sh_file' '$@';'
+  ssh $host 'bash $HOME/'$sh_file' '$@';'
 
   ssh $host 'rm -rf $HOME/'$rm_path';'
 }
