@@ -5,14 +5,7 @@ set -e
 dir=$(cd "$(dirname "$0")"; pwd)
 source ${dir}/../.env.global
 
-sudo mkdir -p ${GLOBAL_VOLUMES_DIR}/jenkins/
-
-sudo tee ${GLOBAL_VOLUMES_DIR}/jenkins/hudson.model.UpdateCenter.xml <<-'EOF'
-<?xml version='1.0' encoding='UTF-8'?>
-<sites>
-  <site>
-    <id>default</id>
-    <url>https://mirrors.tuna.tsinghua.edu.cn/jenkins/updates/update-center.json</url>
-  </site>
-</sites>
-EOF
+sudo docker exec -i ${container_name} bash -c "
+sed -i 's/http:\/\/updates.jenkins-ci.org\/download/https:\/\/mirrors.tuna.tsinghua.edu.cn\/jenkins/g' default.json
+sed -i 's/http:\/\/www.google.com/https:\/\/www.baidu.com/g' default.json
+"
