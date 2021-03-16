@@ -131,7 +131,7 @@ def ensure_network():
     network_name = network["Name"]
     network_containers = network["Containers"]
     for c in network_containers.values():
-        c_name=c["Name"]
+        c_name = c["Name"]
         docker_client.api.disconnect_container_from_network(container=c_name, net_id=network_id)
         logger.info(basic_util.action_formatter(__get_function_name(), list_util.arr_param_to_str([c_name, "disconnected", "from", network_name])))
 
@@ -139,7 +139,14 @@ def ensure_network():
         docker_client.api.connect_container_to_network(container=t, net_id=network_id)
         logger.info(basic_util.action_formatter(__get_function_name(), list_util.arr_param_to_str([t, "connected", "to", network_name])))
 
-    logger.info(basic_util.action_formatter(__get_function_name(), list_util.arr_param_to_str([network_name, " connected containers:", ",".join([c["Name"] for c in network_containers.values()])])))
+    logger.info(basic_util.action_formatter(__get_function_name(),
+                                            list_util.arr_param_to_str([
+                                                "containers:",
+                                                ",".join([c["Name"] for c in network_containers.values()]),
+                                                "connected to",
+                                                "network:",
+                                                network_name
+                                            ])))
 
 
 if __name__ == '__main__':
