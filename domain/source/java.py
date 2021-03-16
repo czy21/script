@@ -139,7 +139,7 @@ def ensure_network():
         docker_client.api.connect_container_to_network(container=t, net_id=network_id)
         logger.info(basic_util.action_formatter(__get_function_name(), list_util.arr_param_to_str([t, "connected", "to", network_name])))
 
-    logger.info(basic_util.action_formatter(__get_function_name(), list_util.arr_param_to_str([network_name, " connected containers:", ",".join([c["Name"] for c in network_containers])])))
+    logger.info(basic_util.action_formatter(__get_function_name(), list_util.arr_param_to_str([network_name, " connected containers:", ",".join([c["Name"] for c in network_containers.values()])])))
 
 
 if __name__ == '__main__':
