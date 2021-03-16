@@ -2,10 +2,12 @@
 import inspect
 import json
 import subprocess
+import docker
 
 from script.domain.default import common as default_common
 from script.domain.source import base as base_source
 from script.utility import basic as basic_util, collection as list_util, path as path_util, log
+from docker import errors
 
 logger = log.Logger(__name__)
 
@@ -118,47 +120,25 @@ def start_api_compose():
 
 
 def ensure_network():
-    inspect_command = list_util.arr_param_to_str([
-        "sudo docker network inspect",
-        default_common.param_api_network_name,
-    ])
-    logger.info(basic_util.action_formatter(__get_function_name(), inspect_command))
+    docker_client = docker.from_env()
+    try:
+        docker_client.api.get(default_common.param_api_network_name)
+    except errors.NotFound:
+        docker_client.api.create_network(name=default_common.param_api_network_name, driver="bridge")
+        logger.info(basic_util.action_formatter(__get_function_name(), list_util.arr_param_to_str(["created network:", default_common.param_api_network_name])))
+    network = docker_client.api.inspect_network(default_common.param_api_network_name)
+    network_id = network["Id"]
+    network_name = network["Name"]
+    network_containers = network["Containers"]
+    for t in [c.name for c in network_containers]:
+        docker_client.api.disconnect_container_from_network(container=t, net_id=network_id)
+        logger.info(basic_util.action_formatter(__get_function_name(), list_util.arr_param_to_str([t, "disconnected", "from", network_name])))
 
-    pre_connected_containers, proc = inspect_network(inspect_command)
-    if proc.returncode == 1:
-        create_network_command = list_util.arr_param_to_str(
-            [
-                "sudo docker network create",
-                default_common.param_api_network_name
-            ]
-        )
-        logger.info(basic_util.action_formatter(__get_function_name(), create_network_command))
-        basic_util.execute(create_network_command)
-    disconnect_command = " && ".join([
-        list_util.arr_param_to_str("sudo docker network disconnect", default_common.param_api_network_name, d) for d in pre_connected_containers
-    ])
+    for t in default_common.param_api_network_containers:
+        docker_client.api.connect_container_to_network(container=t, net_id=network_id)
+        logger.info(basic_util.action_formatter(__get_function_name(), list_util.arr_param_to_str([t, "connected", "to", network_name])))
 
-    connect_command = " && ".join([
-        list_util.arr_param_to_str("sudo docker network connect", default_common.param_api_network_name, d) for d in default_common.param_api_network_containers
-    ])
-
-    if disconnect_command:
-        logger.info(basic_util.action_formatter(__get_function_name(), disconnect_command))
-        basic_util.execute(disconnect_command)
-
-    if connect_command:
-        logger.info(basic_util.action_formatter(__get_function_name(), connect_command))
-        basic_util.execute(connect_command)
-    post_connected_containers, proc = inspect_network(inspect_command)
-    logger.info(basic_util.action_formatter(__get_function_name(), "connected_containers: " + ",".join(post_connected_containers)))
-
-
-def inspect_network(inspect_command):
-    proc = subprocess.Popen(inspect_command, stdout=subprocess.PIPE, shell=True, encoding="utf-8")
-    connected_containers = [v["Name"] for v in json.loads("".join([x.strip() for x in proc.stdout.readlines() if x.strip()]))[0]["Containers"].values()]
-    proc.stdout.close()
-    proc.wait()
-    return connected_containers, proc
+    logger.info(basic_util.action_formatter(__get_function_name(), list_util.arr_param_to_str([network_name, " connected containers:", ",".join([c["Name"] for c in network_containers])])))
 
 
 if __name__ == '__main__':
