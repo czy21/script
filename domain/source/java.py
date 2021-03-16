@@ -141,8 +141,7 @@ def ensure_network():
 
     logger.info(basic_util.action_formatter(__get_function_name(),
                                             list_util.arr_param_to_str([
-                                                "network:", network_name,
-                                                "with"
+                                                "network:" + network_name,
                                                 "containers:", ",".join([c["Name"] for c in network_containers.values()])
                                             ])))
 
