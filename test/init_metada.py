@@ -1,6 +1,6 @@
 from pymongo import MongoClient
 
-client = MongoClient(host="mongodb://admin:***REMOVED***@192.168.2.4:27017/")
+client = MongoClient(host="mongodb://admin:***REMOVED***@192.168.2.11:27017/")
 
 table = client["erp"]["ent_file_column_mapping"]
 sd_metadata = {
@@ -189,4 +189,4 @@ sd_metadata = {
     ]
 }
 table.drop()
-table.save(sd_metadata)
+table.insert_one(sd_metadata)
