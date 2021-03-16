@@ -8,13 +8,13 @@ from script.domain.default import common as default_common
 from script.domain.source import base as base_source
 from script.utility import basic as basic_util, collection as list_util, path as path_util, log
 from docker import errors
+from compose import config
 
 logger = log.Logger(__name__)
 
 
 def __get_function_name():
     return inspect.stack()[1][3]
-
 
 def build_extra_config():
     base_source.build_by_template(default_common.param_api_extra_config_template_path, default_common.param_api_extra_config_output_file_path)
