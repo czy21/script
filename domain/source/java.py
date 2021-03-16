@@ -130,7 +130,7 @@ def ensure_network():
     network_id = network["Id"]
     network_name = network["Name"]
     network_containers = network["Containers"]
-    for t in [c.name for c in network_containers]:
+    for t in [c["Name"] for c in network_containers]:
         docker_client.api.disconnect_container_from_network(container=t, net_id=network_id)
         logger.info(basic_util.action_formatter(__get_function_name(), list_util.arr_param_to_str([t, "disconnected", "from", network_name])))
 
