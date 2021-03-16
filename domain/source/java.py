@@ -122,7 +122,7 @@ def start_api_compose():
 def ensure_network():
     docker_client = docker.from_env()
     try:
-        docker_client.api.get(default_common.param_api_network_name)
+        docker_client.networks.get(default_common.param_api_network_name)
     except errors.NotFound:
         docker_client.api.create_network(name=default_common.param_api_network_name, driver="bridge")
         logger.info(basic_util.action_formatter(__get_function_name(), list_util.arr_param_to_str(["created network:", default_common.param_api_network_name])))
