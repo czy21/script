@@ -3,11 +3,10 @@ import profile
 import pandas as pd
 import datetime, time, uuid
 from sqlalchemy import create_engine
-from pandas import DataFrame
 from pymongo import MongoClient
 
-engine = create_engine('mysql+pymysql://admin:Czy.190815@192.168.2.4:3306/erp_local')
-mongoClient = MongoClient(host="mongodb://admin:Czy.190815@192.168.2.4:27017/")
+engine = create_engine('mysql+pymysql://admin:Czy.190815@192.168.2.11:3306/erp_local')
+mongoClient = MongoClient(host="mongodb://admin:Czy.190815@192.168.2.11:27017/")
 
 startTime = datetime.datetime.now()
 
