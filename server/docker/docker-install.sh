@@ -19,6 +19,7 @@ do
 		-t)
 		  shift 1
 		  sudo mkdir -p /data/config/ /data/volumes/
+		  sudo mkdir -p /etc/docker
 		  sudo mkdir -p /etc/systemd/system/docker.service.d/
       sudo tee /etc/systemd/system/docker.service.d/docker.conf <<-'EOF'
 [Service]
@@ -26,7 +27,6 @@ ExecStart=
 ExecStart=/usr/bin/dockerd
 EOF
       if [ $1 == 'ali' ]; then
-        sudo mkdir -p /etc/docker
         sudo tee /etc/docker/daemon.json <<-'EOF'
 {
   "registry-mirrors": ["https://idyylogn.mirror.aliyuncs.com","https://registry.docker-cn.com"],
@@ -37,9 +37,14 @@ EOF
         sudo yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
         sudo yum makecache timer
         # centos8 local need --nobest
-        sudo yum -y install docker-ce
+        sudo yum -y install docker-ce --nobest
       fi
       if [ $1 == 'offical' ]; then
+        sudo tee /etc/docker/daemon.json <<-'EOF'
+{
+  "hosts": ["fd://","tcp://0.0.0.0:2375"]
+}
+EOF
         sudo yum install -y yum-utils
         sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
         sudo yum -y install docker-ce docker-ce-cli containerd.io
