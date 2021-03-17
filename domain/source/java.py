@@ -4,17 +4,18 @@ import json
 import subprocess
 import docker
 
-from script.domain.default import common as default_common
+from script.domain.default import common as default_common, path as default_path
 from script.domain.source import base as base_source
 from script.utility import basic as basic_util, collection as list_util, path as path_util, log
 from docker import errors
-from compose import config
+from compose import project, config
 
 logger = log.Logger(__name__)
 
 
 def __get_function_name():
     return inspect.stack()[1][3]
+
 
 def build_extra_config():
     base_source.build_by_template(default_common.param_api_extra_config_template_path, default_common.param_api_extra_config_output_file_path)
@@ -37,19 +38,25 @@ def build_api_compose_file():
 
 
 def build_api():
+    client = docker.from_env()
     build_extra_config()
-    command = list_util.arr_param_to_str(
-        default_common.param_api_docker_gradle_command,
-        [
-            path_util.pure_path_join(default_common.param_api_root_project_path, "gradlew"),
-            "--init-script " + default_common.param_api_gradle_init_script_file_path,
-            "--build-file " + path_util.pure_path_join(default_common.param_api_root_project_path, "build.gradle"),
-            "--project-prop extraConfig=" + default_common.param_api_extra_config_output_file_path,
-            "clean build -x test"
-        ])
-    logger.info(basic_util.action_formatter(__get_function_name(), command))
-    basic_util.execute(command)
-    build_override_yml()
+    gradle_container = client.containers.run(image="gradle:jdk11",
+                                             command=list_util.arr_param_to_str(
+                                                 [
+                                                     path_util.pure_path_join(default_common.param_api_root_project_path, "gradlew"),
+                                                     "--init-script " + default_common.param_api_gradle_init_script_file_path,
+                                                     "--build-file " + path_util.pure_path_join(default_common.param_api_root_project_path, "build.gradle"),
+                                                     "--project-prop extraConfig=" + default_common.param_api_extra_config_output_file_path,
+                                                     "clean build -x test"
+                                                 ]),
+                                             volumes=[
+                                                 ":".join([default_path.root_path, default_path.root_path]),
+                                                 ":".join([path_util.pure_path_join(default_path.root_path, ".gradle"), "/home/gradle/.gradle"])
+                                             ],
+                                             remove=True
+                                             )
+
+    logger.info(basic_util.action_formatter(__get_function_name(), gradle_container.logs()))
 
 
 def down_container() -> None:
@@ -105,7 +112,12 @@ def build_api_compose():
 
 
 def start_api_compose():
-    rm_image(default_common.param_api_image)
+    docker_client = docker.from_env()
+    try:
+        docker_client.api.remove_image(default_common.param_api_image)
+    except errors.ImageNotFound:
+        logger.info(basic_util.action_formatter(__get_function_name(), list_util.arr_param_to_str([default_common.param_api_image, " not found"])))
+
     command = list_util.arr_param_to_str(
         [
             "sudo docker-compose",
@@ -114,7 +126,8 @@ def start_api_compose():
             "--project-name",
             "_".join([default_common.param_project_name, default_common.param_env_suffix]),
             "up -d --build"
-        ])
+        ]
+    )
     logger.info(basic_util.action_formatter(__get_function_name(), command))
     basic_util.execute(command)
 
