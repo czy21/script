@@ -53,10 +53,11 @@ def build_api():
                                                  ":".join([default_path.root_path, default_path.root_path]),
                                                  ":".join([path_util.pure_path_join(default_path.root_path, ".gradle"), "/home/gradle/.gradle"])
                                              ],
-                                             remove=True
+                                             remove=True,
+                                             stream=True
                                              )
-
-    logger.info(basic_util.action_formatter(__get_function_name(), gradle_container.logs()))
+    for line in gradle_container:
+        logger.info(basic_util.action_formatter(__get_function_name(), line.decode("utf-8").strip()))
 
 
 def down_container() -> None:
