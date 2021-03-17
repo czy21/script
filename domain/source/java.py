@@ -72,23 +72,6 @@ def down_container() -> None:
     logger.info(basic_util.action_formatter(__get_function_name(), command))
     basic_util.execute(cmd=command)
 
-
-def docker_images():
-    proc = subprocess.Popen('sudo docker images --format "{{.Repository}}:{{.Tag}}"', stdout=subprocess.PIPE, shell=True, encoding="utf-8")
-    images = [x.strip() for x in proc.stdout.readlines() if x.strip()]
-    proc.stdout.close()
-    proc.wait()
-    return images, proc
-
-
-def rm_image(image_tag: str) -> None:
-    images, proc = docker_images()
-    if image_tag in images:
-        command = list_util.arr_param_to_str(["docker", "image", "rmi", image_tag])
-        logger.info(basic_util.action_formatter(__get_function_name(), command))
-        basic_util.execute(cmd=command)
-
-
 def build_plugin(publish_task=None):
     command = list_util.arr_param_to_str(
         default_common.param_api_docker_gradle_command,
