@@ -103,11 +103,15 @@ def build_api_compose():
 
 
 def start_api_compose():
-    docker_client = docker.from_env()
+    client = docker.from_env()
     try:
-        docker_client.api.remove_image(default_common.param_api_image)
+        client.api.remove_image(default_common.param_api_image)
     except errors.ImageNotFound:
-        logger.info(basic_util.action_formatter(__get_function_name(), list_util.arr_param_to_str([default_common.param_api_image, " not found"])))
+        logger.info(basic_util.action_formatter(__get_function_name(),
+                                                list_util.arr_param_to_str([
+                                                    "image:" + default_common.param_api_image, " not found"
+                                                ]))
+                    )
 
     command = list_util.arr_param_to_str(
         [
@@ -124,30 +128,31 @@ def start_api_compose():
 
 
 def ensure_network():
-    docker_client = docker.from_env()
+    client = docker.from_env()
     try:
-        docker_client.networks.get(default_common.param_api_network_name)
+        client.networks.get(default_common.param_api_network_name)
     except errors.NotFound:
-        docker_client.api.create_network(name=default_common.param_api_network_name, driver="bridge")
+        client.api.create_network(name=default_common.param_api_network_name, driver="bridge")
         logger.info(basic_util.action_formatter(__get_function_name(), list_util.arr_param_to_str(["created network:", default_common.param_api_network_name])))
-    network = docker_client.api.inspect_network(default_common.param_api_network_name)
+    network = client.api.inspect_network(default_common.param_api_network_name)
     network_id = network["Id"]
     network_name = network["Name"]
     network_containers = network["Containers"]
     for c in network_containers.values():
         c_name = c["Name"]
-        docker_client.api.disconnect_container_from_network(container=c_name, net_id=network_id)
+        client.api.disconnect_container_from_network(container=c_name, net_id=network_id)
         logger.info(basic_util.action_formatter(__get_function_name(), list_util.arr_param_to_str([c_name, "disconnected", "from", network_name])))
 
     for t in default_common.param_api_network_containers:
-        docker_client.api.connect_container_to_network(container=t, net_id=network_id)
+        client.api.connect_container_to_network(container=t, net_id=network_id)
         logger.info(basic_util.action_formatter(__get_function_name(), list_util.arr_param_to_str([t, "connected", "to", network_name])))
 
     logger.info(basic_util.action_formatter(__get_function_name(),
                                             list_util.arr_param_to_str([
                                                 "network:" + network_name,
                                                 "containers:", ",".join([c["Name"] for c in network_containers.values()])
-                                            ])))
+                                            ]))
+                )
 
 
 if __name__ == '__main__':
