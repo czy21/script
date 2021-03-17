@@ -8,6 +8,7 @@ from script.domain.default import common as default_common, path as default_path
 from script.domain.source import base as base_source
 from script.utility import basic as basic_util, collection as list_util, path as path_util, log
 from docker import errors
+from docker.models.configs import Config
 from compose import project, config
 
 logger = log.Logger(__name__)
@@ -67,16 +68,18 @@ def build_api():
 
 
 def down_container() -> None:
-    command = list_util.arr_param_to_str([
-        "sudo docker-compose",
-        "--file",
-        default_common.param_api_compose_output_file_path,
-        "--project-name",
-        "_".join([default_common.param_project_name, default_common.param_env_suffix]),
-        "down"
-    ])
-    logger.info(basic_util.action_formatter(__get_function_name(), command))
-    basic_util.execute(cmd=command)
+    ppp = config.find(base_dir=default_common.param_api_output_path, filenames=["docker-compose-api.yml"], environment={})
+    project.Project.from_config(name="_".join([default_common.param_project_name, default_common.param_env_suffix]), config_data=ppp, client=docker.from_env()).down()
+    # command = list_util.arr_param_to_str([
+    #     "sudo docker-compose",
+    #     "--file",
+    #     default_common.param_api_compose_output_file_path,
+    #     "--project-name",
+    #     "_".join([default_common.param_project_name, default_common.param_env_suffix]),
+    #     "down"
+    # ])
+    # logger.info(basic_util.action_formatter(__get_function_name(), command))
+    # basic_util.execute(cmd=command)
 
 
 def build_plugin(publish_task=None):
