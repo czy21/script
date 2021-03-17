@@ -55,7 +55,7 @@ param_api_network_containers = []
 param_api_image = ""
 
 param_api_root_project_path = ""
-param_api_docker_gradle_command = ""
+param_api_docker_gradle_command = True
 param_api_gradle_init_script_file_path = ""
 param_api_plugin_file_path = ""
 
