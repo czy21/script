@@ -68,8 +68,10 @@ def build_api():
 
 
 def down_container() -> None:
-    ppp = config.find(base_dir=default_common.param_api_output_path, filenames=["docker-compose-api.yml"], environment={})
+    ppp = config.config.ConfigFile.from_filename(default_common.param_api_compose_output_file_path)
+
     project.Project.from_config(name="_".join([default_common.param_project_name, default_common.param_env_suffix]), config_data=ppp, client=docker.from_env()).down()
+    print("sss")
     # command = list_util.arr_param_to_str([
     #     "sudo docker-compose",
     #     "--file",
