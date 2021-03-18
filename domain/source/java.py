@@ -1,15 +1,11 @@
 #!/usr/bin/env python3
 import inspect
-import json
-import subprocess
 import docker
 
 from script.domain.default import common as default_common, path as default_path
 from script.domain.source import base as base_source
 from script.utility import basic as basic_util, collection as list_util, path as path_util, log
 from docker import errors
-from docker.models.configs import Config
-from compose import project, config
 
 logger = log.Logger(__name__)
 
