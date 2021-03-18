@@ -16,4 +16,4 @@ services:
 
 networks:
   ${{{param_api_network_name}}}:
-    external: true
+    external: "true"
