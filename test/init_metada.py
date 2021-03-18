@@ -1,20 +1,16 @@
 from pymongo import MongoClient
 
-client = MongoClient(host="mongodb://admin:***REMOVED***@192.168.2.11:27017/")
+client = MongoClient(host="mongodb://admin:***REMOVED***@192.168.168.140:27017/")
 
-table = client["erp"]["ent_file_column_mapping"]
+table = client["spi_local"]["ent_file_column_mapping"]
 sd_metadata = {
     "businessType": "SD",
     "fields": [
-        # {
-        #     "key": "primaryKey",
-        #     "column": "",
-        #     "header": "销售表主键"
-        # },
         {
             "key": "date",
             "column": "date",
-            "header": "日期"
+            "header": "日期",
+            "required": True
         },
         {
             "key": "orderDate",
@@ -23,27 +19,29 @@ sd_metadata = {
         },
         {
             "key": "distributorCode",
-            "column": "distributor_code",
+            "column": "from_institution_code",
             "header": "经销商代码"
         },
         {
             "key": "distributorName",
             "column": "distributor_name",
-            "header": "经销商名称"
+            "header": "经销商名称",
+            "required": True
         },
         {
             "key": "customerCode",
-            "column": "customer_code",
+            "column": "to_institution_code",
             "header": "客户代码"
         },
         {
             "key": "customerName",
-            "column": "customer_name",
-            "header": "客户名称"
+            "column": "to_institution_name",
+            "header": "客户名称",
+            "required": True
         },
         {
             "key": "customerAddress",
-            "column": "customer_address",
+            "column": "to_institution_address",
             "header": "客户地址"
         },
         {
@@ -54,7 +52,8 @@ sd_metadata = {
         {
             "key": "productName",
             "column": "product_name",
-            "header": "产品名称"
+            "header": "产品名称",
+            "required": True
         },
         {
             "key": "productCommonName",
@@ -77,8 +76,8 @@ sd_metadata = {
             "header": "生产日期"
         },
         {
-            "key": "productIndate",
-            "column": "product_indate",
+            "key": "productInDate",
+            "column": "product_in_date",
             "header": "有效期"
         },
         {
@@ -94,12 +93,14 @@ sd_metadata = {
         {
             "key": "productQuantity",
             "column": "product_quantity",
-            "header": "数量"
+            "header": "数量",
+            "required": True
         },
         {
             "key": "productUnit",
             "column": "product_unit",
-            "header": "单位"
+            "header": "单位",
+            "required": True
         },
         {
             "key": "productPrice",
@@ -127,8 +128,8 @@ sd_metadata = {
             "header": "销售单号"
         },
         {
-            "key": "despatchOrder",
-            "column": "despatch_order",
+            "key": "invoice",
+            "column": "invoice",
             "header": "发运单"
         },
         {

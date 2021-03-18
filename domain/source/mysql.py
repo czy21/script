@@ -132,4 +132,4 @@ def recover_mysql_gz() -> None:
                                                              default_common.param_main_db_name)
                                          ]))
     logger.info(basic_util.action_formatter(__get_function_name(), command))
-    basic_util.execute(command)
+    # basic_util.execute(command)
