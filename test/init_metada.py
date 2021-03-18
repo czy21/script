@@ -1,6 +1,7 @@
 from pymongo import MongoClient
+import config
 
-client = MongoClient(host="mongodb://admin:***REMOVED***@192.168.168.140:27017/")
+client = MongoClient(host=config.MONGO_HOST)
 
 table = client["spi_local"]["ent_file_column_mapping"]
 sd_metadata = {
