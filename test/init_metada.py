@@ -6,6 +6,15 @@ client = MongoClient(host=config.MONGO_HOST)
 table = client["spi_local"]["ent_file_column_mapping"]
 sd_metadata = {
     "businessType": "SD",
+    # "metadata": {
+    #     "distributorName": {
+    #         'header': "经销商名称",
+    #         "column": "distributor_name",
+    #         "validators":[
+    #
+    #         ]
+    #     }
+    # },
     "fields": [
         {
             "key": "date",
