@@ -11,7 +11,12 @@ sd_metadata = {
             "key": "date",
             "column": "date",
             "header": "日期",
-            "required": True
+            "rules": {
+                {
+                    "required": True,
+                    "message": "日期不能为空"
+                }
+            }
         },
         {
             "key": "orderDate",
@@ -27,7 +32,12 @@ sd_metadata = {
             "key": "distributorName",
             "column": "distributor_name",
             "header": "经销商名称",
-            "required": True
+            "rules": {
+                {
+                    "required": True,
+                    "message": "经销商名称不能为空"
+                }
+            }
         },
         {
             "key": "customerCode",
@@ -38,7 +48,12 @@ sd_metadata = {
             "key": "customerName",
             "column": "to_institution_name",
             "header": "客户名称",
-            "required": True
+            "rules": {
+                {
+                    "required": True,
+                    "message": "客户名称不能为空"
+                }
+            }
         },
         {
             "key": "customerAddress",
@@ -54,7 +69,12 @@ sd_metadata = {
             "key": "productName",
             "column": "product_name",
             "header": "产品名称",
-            "required": True
+            "rules": {
+                {
+                    "required": True,
+                    "message": "产品名称不能为空"
+                }
+            }
         },
         {
             "key": "productCommonName",
@@ -95,13 +115,23 @@ sd_metadata = {
             "key": "productQuantity",
             "column": "product_quantity",
             "header": "数量",
-            "required": True
+            "rules": {
+                {
+                    "required": True,
+                    "message": "数量不能为空"
+                }
+            }
         },
         {
             "key": "productUnit",
             "column": "product_unit",
             "header": "单位",
-            "required": True
+            "rules": [
+                {
+                    "required": True,
+                    "message": "单位不能为空"
+                }
+            ]
         },
         {
             "key": "productPrice",

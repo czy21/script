@@ -15,7 +15,7 @@ def validate_null(cell):
     print(cell)
 
 
-def validate(series):
+def validate(series, sd_mapping_dict):
     error_msgs = []
     if pd.isna(series["to_institution_address"]):
         error_msgs.append("客户地址为空")
@@ -33,7 +33,7 @@ with pd.ExcelFile(path_or_buffer="demo.xlsx") as f:
     df = pd.read_excel(f, "SD", usecols=lambda x: x in sd_mapping_dict.keys())
     df.rename(columns=sd_mapping_dict, inplace=True)
     df["file_id"] = uuid.uuid4()
-    df["error"] = df.apply(validate, axis=1)
+    df["error"] = df.apply(lambda x: validate(x, sd_mapping_list), axis=1)
     df.to_sql("ent_sfl_inspect_sale", engine, if_exists="append")
 
 endtime = datetime.datetime.now()
