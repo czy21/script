@@ -11,12 +11,12 @@ sd_metadata = {
             "key": "date",
             "column": "date",
             "header": "日期",
-            "rules": {
+            "validators": [
                 {
                     "required": True,
                     "message": "日期不能为空"
                 }
-            }
+            ]
         },
         {
             "key": "orderDate",
@@ -32,12 +32,12 @@ sd_metadata = {
             "key": "distributorName",
             "column": "distributor_name",
             "header": "经销商名称",
-            "rules": {
+            "validators": [
                 {
                     "required": True,
                     "message": "经销商名称不能为空"
                 }
-            }
+            ]
         },
         {
             "key": "customerCode",
@@ -48,17 +48,23 @@ sd_metadata = {
             "key": "customerName",
             "column": "to_institution_name",
             "header": "客户名称",
-            "rules": {
+            "validators": [
                 {
                     "required": True,
                     "message": "客户名称不能为空"
                 }
-            }
+            ]
         },
         {
             "key": "customerAddress",
             "column": "to_institution_address",
-            "header": "客户地址"
+            "header": "客户地址",
+            "validators": [
+                {
+                    "required": True,
+                    "message": "客户地址不能为空"
+                }
+            ]
         },
         {
             "key": "productCode",
@@ -69,12 +75,12 @@ sd_metadata = {
             "key": "productName",
             "column": "product_name",
             "header": "产品名称",
-            "rules": {
+            "validators": [
                 {
                     "required": True,
                     "message": "产品名称不能为空"
                 }
-            }
+            ]
         },
         {
             "key": "productCommonName",
@@ -115,18 +121,18 @@ sd_metadata = {
             "key": "productQuantity",
             "column": "product_quantity",
             "header": "数量",
-            "rules": {
+            "validators": [
                 {
                     "required": True,
                     "message": "数量不能为空"
                 }
-            }
+            ]
         },
         {
             "key": "productUnit",
             "column": "product_unit",
             "header": "单位",
-            "rules": [
+            "validators": [
                 {
                     "required": True,
                     "message": "单位不能为空"
@@ -206,7 +212,13 @@ sd_metadata = {
         {
             "key": "remark",
             "column": "remark",
-            "header": "销售备注"
+            "header": "销售备注",
+            "validators": [
+                {
+                    "required": True,
+                    "message": "销售备注不能为空"
+                }
+            ]
         },
         {
             "key": "customerProvince",
