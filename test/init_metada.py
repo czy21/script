@@ -6,20 +6,11 @@ client = MongoClient(host=config.MONGO_HOST)
 table = client["spi_local"]["ent_file_column_mapping"]
 sd_metadata = {
     "businessType": "SD",
-    # "metadata": {
-    #     "distributorName": {
-    #         'header': "经销商名称",
-    #         "column": "distributor_name",
-    #         "validators":[
-    #
-    #         ]
-    #     }
-    # },
     "fields": [
         {
             "key": "date",
             "column": "date",
-            "header": "日期",
+            "header": "*日期",
             "validators": [
                 {
                     "required": True,
@@ -40,7 +31,7 @@ sd_metadata = {
         {
             "key": "distributorName",
             "column": "distributor_name",
-            "header": "经销商名称",
+            "header": "*经销商名称",
             "validators": [
                 {
                     "required": True,
@@ -56,7 +47,7 @@ sd_metadata = {
         {
             "key": "customerName",
             "column": "to_institution_name",
-            "header": "客户名称",
+            "header": "*客户名称",
             "validators": [
                 {
                     "required": True,
@@ -68,12 +59,6 @@ sd_metadata = {
             "key": "customerAddress",
             "column": "to_institution_address",
             "header": "客户地址",
-            "validators": [
-                {
-                    "required": True,
-                    "message": "客户地址不能为空"
-                }
-            ]
         },
         {
             "key": "productCode",
@@ -83,7 +68,7 @@ sd_metadata = {
         {
             "key": "productName",
             "column": "product_name",
-            "header": "产品名称",
+            "header": "*产品名称",
             "validators": [
                 {
                     "required": True,
@@ -99,7 +84,13 @@ sd_metadata = {
         {
             "key": "productSpecification",
             "column": "product_specification",
-            "header": "产品规格"
+            "header": "*产品规格",
+            "validators": [
+                {
+                    "required": True,
+                    "message": "产品规格不能为空"
+                }
+            ]
         },
         {
             "key": "productBatchNumber",
@@ -129,7 +120,7 @@ sd_metadata = {
         {
             "key": "productQuantity",
             "column": "product_quantity",
-            "header": "数量",
+            "header": "*数量",
             "validators": [
                 {
                     "required": True,
@@ -140,7 +131,7 @@ sd_metadata = {
         {
             "key": "productUnit",
             "column": "product_unit",
-            "header": "单位",
+            "header": "*单位",
             "validators": [
                 {
                     "required": True,
@@ -221,13 +212,7 @@ sd_metadata = {
         {
             "key": "remark",
             "column": "remark",
-            "header": "销售备注",
-            "validators": [
-                {
-                    "required": True,
-                    "message": "销售备注不能为空"
-                }
-            ]
+            "header": "销售备注"
         },
         {
             "key": "customerProvince",
