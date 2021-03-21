@@ -1,16 +1,15 @@
 from cerberus import Validator, errors
 
-
 from cerberus import Validator
 
-class MyValidator(Validator):
-    def _check_with_oddity(self, field, value):
-        if not value & 1:
-            self._error(field, "Must be an odd number")
+class CustomErrorHandler(errors.BasicErrorHandler):
+    messages = errors.BasicErrorHandler.messages.copy()
+    messages[errors.REQUIRED_FIELD.code] = '必填'
+    messages[errors.BAD_TYPE.code] = '类型错误'
 
-schema = {'amount': {'check_with': 'oddity', 'type': 'integer'}}
 
-v = MyValidator(schema)
-
-v.validate({'amount': 3})
+schema = {'name': {'type': 'string', 'required': True}}
+document = {}
+v = Validator(schema, error_handler=CustomErrorHandler)
+v.validate(document)
 print(v.errors)

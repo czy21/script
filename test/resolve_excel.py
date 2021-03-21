@@ -1,12 +1,11 @@
+import itertools
+
 import numpy as np
-from cerberus import errors, Validator
-from cerberus.errors import ErrorDefinition
-
-import config
-import uuid
-from datetime import datetime
-
 import pandas as pd
+import config, uuid
+from cerberus import errors, Validator
+
+from datetime import datetime
 from pymongo import MongoClient
 from sqlalchemy import create_engine
 
@@ -16,9 +15,8 @@ mongoClient = MongoClient(host=config.MONGO_HOST)
 startTime = datetime.now()
 print("start time:", startTime)
 
-class MyValidator(Validator):
-    def _validate_message(self, message, field, value):
-        self._error(field, value)
+flat = lambda L: sum(map(flat, L), []) if isinstance(L, list) else [L]
+
 
 def validate(series, mapping_list: list):
     error_msgs = []
@@ -27,16 +25,24 @@ def validate(series, mapping_list: list):
         for s in t.get("validators", []):
             header = t["header"]
             schema = {header: s.get("schema", {})}
+            message = s.get("message", "")
+            cell = None if pd.isna(series.get(header)) else series.get(header)
 
-            v = MyValidator(schema)
-            v.validate({header: series.get(header)}, schema)
-            print(v.errors)
+            class MessageErrorHandler(errors.BasicErrorHandler):
+                messages = errors.BasicErrorHandler.messages.copy()
+                messages[errors.REQUIRED_FIELD.code] = message
+                messages[errors.NOT_NULLABLE.code] = message
+                messages[errors.BAD_TYPE.code] = message
 
-    return ",".join(error_msgs) if error_msgs else None
+            v = Validator(schema, error_handler=MessageErrorHandler)
+            v.validate({header: cell})
+            error_msgs.append(list(v.errors.values()))
+
+    return ",".join(flat(list(error_msgs)))
 
 
 def map_schema(item):
-    item["validators"] = list(map(lambda v: {"schema": v}, item.get("validators", [])))
+    item["validators"] = list(map(lambda v: {"schema": v, "message": v.pop("message")}, item.get("validators", [])))
     return item
 
 
