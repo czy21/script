@@ -1,5 +1,6 @@
 import numpy as np
 from cerberus import errors, Validator
+from cerberus.errors import ErrorDefinition
 
 import config
 import uuid
@@ -15,65 +16,33 @@ mongoClient = MongoClient(host=config.MONGO_HOST)
 startTime = datetime.now()
 print("start time:", startTime)
 
-
-# class Cell():
-#
-#     def integer(self, value):
-#         return isinstance(value, int)
-#
-#     def float(self, value):
-#         return isinstance(value, float)
-#
-#     def date(self, value):
-#         return isinstance(value, datetime)
-
+class MyValidator(Validator):
+    def _validate_message(self, message, field, value):
+        self._error(field, value)
 
 def validate(series, mapping_list: list):
     error_msgs = []
 
     for t in mapping_list:
         for s in t.get("validators", []):
-            message = s.pop('message')
+            header = t["header"]
+            schema = {header: s.get("schema", {})}
 
-            class CustomErrorHandler(errors.BasicErrorHandler):
-                messages = errors.BasicErrorHandler.messages.copy()
-                messages[errors.REQUIRED_FIELD.code] = message
-                messages[errors.BAD_TYPE.code] = message
-
-            schema = {t["header"]: s}
-            v = Validator(schema, error_handler=CustomErrorHandler)
-            v.validate({t["header"]: series.get(t["header"])}, schema)
-
+            v = MyValidator(schema)
+            v.validate({header: series.get(header)}, schema)
             print(v.errors)
-        # arr = t.get("validators", [])
-        # required = list(filter(lambda c: c.get("required", False), arr))
-        # cell_value = series.get(t.get("header"))
-        # validate = required and pd.isna(cell_value)
-        # if :
-        #     error_msgs.append(",".join(list(map(lambda f: f["message"], required))))
-        #     break
-
-        # print("ss")
-        # for v in t.get("validators", []):
-        #     if v.get("required", False) and "*" + t.get("header") in series and pd.isna(series.get("*" + t.get("header"))):
-        #         error_msgs.append(v["message"])
-        #         break
-        #     if v.get("type") == "date" and not isinstance(series.get("*" + t["column"] if v.get("required", False) else t["column"]), datetime):
-        #         error_msgs.append(v["message"])
 
     return ",".join(error_msgs) if error_msgs else None
 
 
+def map_schema(item):
+    item["validators"] = list(map(lambda v: {"schema": v}, item.get("validators", [])))
+    return item
+
+
 with pd.ExcelFile(path_or_buffer="1K.xlsx") as f:
     table = mongoClient["spi_local"]["ent_file_column_mapping"]
-    sd_mapping_list = []
-    for m in table.find_one({"businessType": "SD"})["fields"]:
-        for v in m.get("validators", []):
-            message = v.pop("message")
-            schema = v
-            v.clear()
-            v = dict({"schema": schema, "message": message})
-        sd_mapping_list.append(m)
+    sd_mapping_list = list(map(map_schema, table.find_one({"businessType": "SD"})["fields"]))
     sd_mapping_dict = dict((t["header"], t["column"]) for t in sd_mapping_list)
     df = pd.read_excel(f, "SD")
     df["错误"] = df.apply(lambda x: validate(x, sd_mapping_list), axis=1)
