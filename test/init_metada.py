@@ -15,6 +15,10 @@ sd_metadata = {
                 {
                     "required": True,
                     "message": "日期不能为空"
+                },
+                {
+                    "type": "date",
+                    "message": "日期格式错误"
                 }
             ]
         },
@@ -125,6 +129,10 @@ sd_metadata = {
                 {
                     "required": True,
                     "message": "数量不能为空"
+                },
+                {
+                    "type": "float",
+                    "message": "数量必须是数值类型"
                 }
             ]
         },
