@@ -1,14 +1,15 @@
 import os
+import uuid
+from datetime import datetime
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
-import config, uuid
-
-from datetime import datetime
 from pymongo import MongoClient
 from sqlalchemy import create_engine
-from multiprocessing import Pool
+
+import config
+from script.utility import path as path_util
 
 engine = create_engine(config.MYSQL_HOST)
 mongoClient = MongoClient(host=config.MONGO_HOST)
@@ -36,41 +37,41 @@ def validate(series, mapping_list: list):
 
 
 table = mongoClient["spi_local"]["ent_file_column_mapping"]
-sd_fields = table.find_one({"businessType": "SD"})["fields"]
 
 
-def resolve(file_path: str):
+# sd_fields = table.find_one({"businessType": "SD"})["fields"]
+
+
+def resolve(file_path: str, file_definitions: list, error_output_path: str):
     print('子进程: {} - 任务{}'.format(os.getpid(), file_path))
+
     with pd.ExcelFile(path_or_buffer=file_path) as f:
-        resolve_start_time = datetime.now()
-        print(file_path, " 解析开始时间:", resolve_start_time)
+        exist_definition_dicts = dict((d["businessType"], d) for d in filter(lambda t: t["businessType"] in f.sheet_names, file_definitions))
+        df_dict = pd.read_excel(f, sheet_name=list(exist_definition_dicts.keys()))
+        error_path = path_util.pure_path_join(error_output_path, Path(file_path).name)
+        for d in df_dict.items():
+            resolve_sheet(d, exist_definition_dicts.get(d[0]), error_path)
 
-        mapping_list = sd_fields
-        mapping_dict = dict((t["header"], t["column"]) for t in mapping_list)
-        df = pd.read_excel(f, "SD")
-        df["错误"] = df.apply(lambda x: validate(x, mapping_list), axis=1)
 
-        resolve_ent_time = datetime.now()
-        print(file_path, " 解析结束时间:", resolve_ent_time)
-        print(file_path, " 解析消耗时间:", (resolve_ent_time - resolve_start_time).seconds)
-
-        if df["错误"].isnull().all():
-            except_columns = list(filter(lambda c: c not in mapping_dict.keys(), df.columns))
-            df.drop(columns=except_columns, inplace=True)
-            df.rename(columns=mapping_dict, inplace=True)
-            df["file_id"] = uuid.uuid4()
-            df["id"] = df.apply(lambda _: uuid.uuid4(), axis=1)
-            df["row_number"] = df.apply(lambda x: (x.name + 1), axis=1)
-            save_start_time = datetime.now()
-            print(file_path, " 入库开始时间:", save_start_time)
-            df.to_sql(name="ent_sfl_inspect_sale", con=engine, if_exists="append", index=False, chunksize=10000)
-            save_end_time = datetime.now()
-            print(file_path, " 入库结束时间:", save_end_time)
-            print(file_path, " 入库消耗时间:", (save_end_time - save_start_time).seconds)
-        else:
-            print("有错误")
-            df.to_excel("error.xlsx", index=False)
-        del df
+def resolve_sheet(dfd: dict, file_definition: dict, error_file_path):
+    sheet_name = dfd[0]
+    df = dfd[1]
+    table_name = file_definition["tableName"]
+    mapping_fields = file_definition["fields"]
+    mapping_dict = dict((t["header"], t["column"]) for t in mapping_fields)
+    df["错误"] = df.apply(lambda x: validate(x, mapping_fields), axis=1)
+    if df["错误"].isnull().all():
+        except_columns = list(filter(lambda c: c not in mapping_dict.keys(), df.columns))
+        df.drop(columns=except_columns, inplace=True)
+        df.rename(columns=mapping_dict, inplace=True)
+        df["file_id"] = uuid.uuid4()
+        df["id"] = df.apply(lambda _: uuid.uuid4(), axis=1)
+        df["row_number"] = df.apply(lambda x: (x.name + 1), axis=1)
+        df.to_sql(name=table_name, con=engine, if_exists="append", index=False, chunksize=10000)
+    else:
+        print("有错误")
+        df.to_excel(error_file_path, sheet_name=sheet_name, index=False)
+    del df
 
 
 if __name__ == '__main__':
@@ -79,11 +80,14 @@ if __name__ == '__main__':
     print("start time:", start_time)
 
     all_excel_list = list(map(lambda p: p.resolve().as_posix(), Path("./files").glob("*")))
-    p = Pool(2)
+    error_output_path = path_util.pure_path_join("./errors")
+    file_mapping_definition = list(table.find())
+    # p = Pool(2)
     for f in all_excel_list:
-        p.apply_async(resolve, args=(f,))
-    p.close()
-    p.join()
+        # p.apply_async(resolve, args=(f,))
+        resolve(f, file_mapping_definition, error_output_path)
+    # p.close()
+    # p.join()
     end_time = datetime.now()
     print("end time:", end_time)
 
