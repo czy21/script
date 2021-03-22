@@ -1,13 +1,8 @@
-import itertools
-import os
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 import config, uuid
-from cerberus import errors, Validator
-from script.utility import path as path_util
-import multiprocessing
 
 from datetime import datetime
 from pymongo import MongoClient
