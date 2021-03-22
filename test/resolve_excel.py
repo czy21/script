@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 import numpy as np
@@ -7,6 +8,7 @@ import config, uuid
 from datetime import datetime
 from pymongo import MongoClient
 from sqlalchemy import create_engine
+from multiprocessing import Pool
 
 engine = create_engine(config.MYSQL_HOST)
 mongoClient = MongoClient(host=config.MONGO_HOST)
@@ -38,6 +40,7 @@ sd_fields = table.find_one({"businessType": "SD"})["fields"]
 
 
 def resolve(file_path: str):
+    print('子进程: {} - 任务{}'.format(os.getpid(), file_path))
     with pd.ExcelFile(path_or_buffer=file_path) as f:
         resolve_start_time = datetime.now()
         print(file_path, " 解析开始时间:", resolve_start_time)
@@ -67,7 +70,7 @@ def resolve(file_path: str):
         else:
             print("有错误")
             df.to_excel("error.xlsx", index=False)
-
+        del df
 
 if __name__ == '__main__':
 
@@ -75,8 +78,11 @@ if __name__ == '__main__':
     print("start time:", start_time)
 
     all_excel_list = list(map(lambda p: p.resolve().as_posix(), Path("./files").glob("*")))
+    p = Pool(2)
     for f in all_excel_list:
-        resolve(f)
+        p.apply_async(resolve, args=(f,))
+    p.close()
+    p.join()
     end_time = datetime.now()
     print("end time:", end_time)
 
