@@ -63,7 +63,7 @@ def resolve(file_path: str):
             df["row_number"] = df.apply(lambda x: (x.name + 1), axis=1)
             save_start_time = datetime.now()
             print(file_path, " 入库开始时间:", save_start_time)
-            df.to_sql(name="ent_sfl_inspect_sale", con=engine, if_exists="append", index=False)
+            df.to_sql(name="ent_sfl_inspect_sale", con=engine, if_exists="append", index=False, chunksize=10000)
             save_end_time = datetime.now()
             print(file_path, " 入库结束时间:", save_end_time)
             print(file_path, " 入库消耗时间:", (save_end_time - save_start_time).seconds)
@@ -71,6 +71,7 @@ def resolve(file_path: str):
             print("有错误")
             df.to_excel("error.xlsx", index=False)
         del df
+
 
 if __name__ == '__main__':
 
