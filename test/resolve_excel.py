@@ -1,6 +1,7 @@
 import os
 import uuid
 from datetime import datetime
+from multiprocessing import Pool
 from pathlib import Path
 
 import numpy as np
@@ -39,10 +40,7 @@ def validate(series, mapping_list: list):
 table = mongoClient["spi_local"]["ent_file_column_mapping"]
 
 
-# sd_fields = table.find_one({"businessType": "SD"})["fields"]
-
-
-def resolve(file_path: str, file_definitions: list, error_output_path: str):
+def resolve_file(file_path: str, file_definitions: list, error_output_path: str):
     print('子进程: {} - 任务{}'.format(os.getpid(), file_path))
 
     with pd.ExcelFile(path_or_buffer=file_path) as f:
@@ -82,12 +80,11 @@ if __name__ == '__main__':
     all_excel_list = list(map(lambda p: p.resolve().as_posix(), Path("./files").glob("*")))
     error_output_path = path_util.pure_path_join("./errors")
     file_mapping_definition = list(table.find())
-    # p = Pool(2)
+    p = Pool(2)
     for f in all_excel_list:
-        # p.apply_async(resolve, args=(f,))
-        resolve(f, file_mapping_definition, error_output_path)
-    # p.close()
-    # p.join()
+        p.apply_async(resolve_file, args=(f, file_mapping_definition, error_output_path,))
+    p.close()
+    p.join()
     end_time = datetime.now()
     print("end time:", end_time)
 
