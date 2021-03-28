@@ -6,7 +6,7 @@ self = {
     "substitution": {
         "TrackedColumns": "`created_date` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,\n"
                           "\t`created_user` varchar(36) DEFAULT NULL,\n"
-                          "\t`modified_date` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,\n"
+                          "\t`modified_date` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,\n"
                           "\t`modified_user` varchar(36) DEFAULT NULL"
     }
 }
