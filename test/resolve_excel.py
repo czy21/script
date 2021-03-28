@@ -80,7 +80,7 @@ if __name__ == '__main__':
     all_excel_list = list(map(lambda p: p.resolve().as_posix(), Path("./files").glob("*")))
     error_output_path = path_util.pure_path_join("./errors")
     file_mapping_definition = list(table.find())
-    p = Pool(2)
+    p = Pool(4)
     for f in all_excel_list:
         p.apply_async(resolve_file, args=(f, file_mapping_definition, error_output_path,))
     p.close()
