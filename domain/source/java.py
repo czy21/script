@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 import inspect
+
 import docker
 
 from script.domain.default import common as default_common, path as default_path
 from script.domain.source import base as base_source
 from script.utility import basic as basic_util, collection as list_util, path as path_util, log
-from docker import errors
 
 logger = log.Logger(__name__)
 
@@ -17,21 +17,6 @@ def __get_function_name():
 def build_extra_config():
     base_source.build_by_template(default_common.param_api_extra_config_template_path, default_common.param_api_extra_config_output_file_path)
     logger.info(basic_util.action_formatter(__get_function_name(), default_common.param_api_extra_config_output_file_path))
-
-
-def build_override_yml():
-    base_source.build_by_template(default_common.param_api_yml_override_template_path, default_common.param_api_yml_output_file_path)
-    logger.info(basic_util.action_formatter(__get_function_name(), default_common.param_api_yml_output_file_path))
-
-
-def build_api_dockerfile():
-    base_source.build_by_template(default_common.param_api_dockerfile_template_path, default_common.param_api_dockerfile_output_file_path)
-    logger.info(basic_util.action_formatter(__get_function_name(), default_common.param_api_dockerfile_output_file_path))
-
-
-def build_api_compose_file():
-    base_source.build_by_template(default_common.param_api_compose_template_path, default_common.param_api_compose_output_file_path)
-    logger.info(basic_util.action_formatter(__get_function_name(), default_common.param_api_compose_output_file_path))
 
 
 def build_api():
@@ -60,20 +45,7 @@ def build_api():
     else:
         logger.info(basic_util.action_formatter(__get_function_name(), build_command))
         basic_util.execute(build_command)
-    build_override_yml()
-
-
-def down_container() -> None:
-    command = list_util.arr_param_to_str([
-        "sudo docker-compose",
-        "--file",
-        default_common.param_api_compose_output_file_path,
-        "--project-name",
-        "_".join([default_common.param_project_name, default_common.param_env_suffix]),
-        "down"
-    ])
-    logger.info(basic_util.action_formatter(__get_function_name(), command))
-    basic_util.execute(cmd=command)
+    base_source.build_override_config()
 
 
 def build_plugin(publish_task=None):
@@ -95,62 +67,5 @@ def build_plugin(publish_task=None):
 
 
 def build_api_compose():
-    build_api_dockerfile()
-    build_api_compose_file()
-
-
-def start_api_compose():
-    client = docker.from_env()
-    try:
-        client.api.remove_image(default_common.param_api_image)
-    except errors.ImageNotFound:
-        logger.info(basic_util.action_formatter(__get_function_name(),
-                                                list_util.arr_param_to_str([
-                                                    "image:" + default_common.param_api_image, " not found"
-                                                ]))
-                    )
-
-    command = list_util.arr_param_to_str(
-        [
-            "sudo docker-compose",
-            "--file",
-            default_common.param_api_compose_output_file_path,
-            "--project-name",
-            "_".join([default_common.param_project_name, default_common.param_env_suffix]),
-            "up -d --build"
-        ]
-    )
-    logger.info(basic_util.action_formatter(__get_function_name(), command))
-    basic_util.execute(command)
-
-
-def ensure_network():
-    client = docker.from_env()
-    try:
-        client.networks.get(default_common.param_api_network_name)
-    except errors.NotFound:
-        client.api.create_network(name=default_common.param_api_network_name, driver="bridge")
-        logger.info(basic_util.action_formatter(__get_function_name(), list_util.arr_param_to_str(["created network:", default_common.param_api_network_name])))
-    network = client.api.inspect_network(default_common.param_api_network_name)
-    network_id = network["Id"]
-    network_name = network["Name"]
-    network_containers = network["Containers"]
-    for c in network_containers.values():
-        c_name = c["Name"]
-        client.api.disconnect_container_from_network(container=c_name, net_id=network_id)
-        logger.info(basic_util.action_formatter(__get_function_name(), list_util.arr_param_to_str([c_name, "disconnected", "from", network_name])))
-
-    for t in default_common.param_api_network_containers:
-        client.api.connect_container_to_network(container=t, net_id=network_id)
-        logger.info(basic_util.action_formatter(__get_function_name(), list_util.arr_param_to_str([t, "connected", "to", network_name])))
-
-    logger.info(basic_util.action_formatter(__get_function_name(),
-                                            list_util.arr_param_to_str([
-                                                "network:" + network_name,
-                                                "containers:", ",".join([c["Name"] for c in network_containers.values()])
-                                            ]))
-                )
-
-
-if __name__ == '__main__':
-    print("ss")
+    base_source.build_api_dockerfile()
+    base_source.build_api_compose_file()
