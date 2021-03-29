@@ -42,8 +42,8 @@ param_api_archive_file_name = ""
 param_api_extra_config_template_path = ""
 param_api_extra_config_output_file_path = ""
 
-param_api_yml_override_template_path = ""
-param_api_yml_output_file_path = ""
+param_api_config_override_template_path = ""
+param_api_config_output_file_path = ""
 
 param_api_dockerfile_template_path = ""
 param_api_dockerfile_output_file_path = ""
