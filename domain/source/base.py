@@ -53,8 +53,7 @@ def ensure_network():
     network = client.api.inspect_network(default_common.param_api_network_name)
     network_id = network["Id"]
     network_name = network["Name"]
-    network_containers = network["Containers"]
-    for c in network_containers.values():
+    for c in network["Containers"].values():
         c_name = c["Name"]
         client.api.disconnect_container_from_network(container=c_name, net_id=network_id)
         logger.info(basic_util.action_formatter(__get_function_name(), list_util.arr_param_to_str([c_name, "disconnected", "from", network_name])))
@@ -63,10 +62,11 @@ def ensure_network():
         client.api.connect_container_to_network(container=t, net_id=network_id)
         logger.info(basic_util.action_formatter(__get_function_name(), list_util.arr_param_to_str([t, "connected", "to", network_name])))
 
+    post_network = client.api.inspect_network(default_common.param_api_network_name)
     logger.info(basic_util.action_formatter(__get_function_name(),
                                             list_util.arr_param_to_str([
                                                 "network:" + network_name,
-                                                "containers:", ",".join([c["Name"] for c in network_containers.values()])
+                                                "containers:", ",".join([c["Name"] for c in post_network["Containers"].values()])
                                             ]))
                 )
 
