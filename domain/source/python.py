@@ -22,7 +22,6 @@ def build_api():
     ])
     logger.info(basic_util.action_formatter(__get_function_name(), command))
     basic_util.execute(command)
-    base_source.build_override_config()
 
 
 def build_api_compose():
