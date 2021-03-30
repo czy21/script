@@ -39,8 +39,8 @@ output_tmp = path_util.pure_path_join(output, "tmp")
 
 
 def re_mkdir(rm_output=False) -> None:
+    dirs = [output_tmp, output_api, output_web, output_app, output_db_bak, output_db_all_in_one]
     if rm_output:
         shutil.rmtree(path=output, ignore_errors=True)
-    dirs = [output_tmp, output_api, output_web, output_app, output_db_bak, output_db_all_in_one]
-    logger.info(basic_util.action_formatter(re_mkdir.__name__, dirs.__str__()))
+        logger.info(basic_util.action_formatter(re_mkdir.__name__, dirs.__str__()))
     [Path(p).mkdir(parents=True, exist_ok=True) for p in dirs]
