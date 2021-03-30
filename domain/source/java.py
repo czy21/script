@@ -15,8 +15,8 @@ def __get_function_name():
 
 
 def build_extra_config():
-    base_source.build_by_template(default_common.param_api_template_extra_config_file_path, default_common.param_api_output_extra_config_file_path)
-    logger.info(basic_util.action_formatter(__get_function_name(), default_common.param_api_output_extra_config_file_path))
+    base_source.build_by_template(default_common.param_api_gradle_extra_config_template_path, default_common.param_api_gradle_extra_config_output_path)
+    logger.info(basic_util.action_formatter(__get_function_name(), default_common.param_api_gradle_extra_config_output_path))
 
 
 def build_api():
@@ -26,7 +26,7 @@ def build_api():
             path_util.pure_path_join(default_common.param_api_root_project_path, "gradlew"),
             "--init-script " + default_common.param_api_gradle_init_script_file_path,
             "--build-file " + path_util.pure_path_join(default_common.param_api_root_project_path, "build.gradle"),
-            "--project-prop extraConfig=" + default_common.param_api_output_extra_config_file_path,
+            "--project-prop extraConfig=" + default_common.param_api_gradle_extra_config_output_path,
             "clean build -x test"
         ])
     if default_common.param_api_docker_gradle_command:
