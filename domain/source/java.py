@@ -14,7 +14,13 @@ def __get_function_name():
     return inspect.stack()[1][3]
 
 
+def build_extra_config():
+    base_source.build_by_template(default_common.param_api_template_extra_config_file_path, default_common.param_api_output_extra_config_file_path)
+    logger.info(basic_util.action_formatter(__get_function_name(), default_common.param_api_output_extra_config_file_path))
+
+
 def build_api():
+    build_extra_config()
     build_command = list_util.arr_param_to_str(
         [
             path_util.pure_path_join(default_common.param_api_root_project_path, "gradlew"),
