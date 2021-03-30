@@ -15,8 +15,8 @@ def __get_function_name():
 
 
 def build_extra_config():
-    base_source.build_by_template(default_common.param_api_extra_config_template_path, default_common.param_api_extra_config_output_file_path)
-    logger.info(basic_util.action_formatter(__get_function_name(), default_common.param_api_extra_config_output_file_path))
+    base_source.build_by_template(default_common.param_api_template_extra_config_file_path, default_common.param_api_output_extra_config_file_path)
+    logger.info(basic_util.action_formatter(__get_function_name(), default_common.param_api_output_extra_config_file_path))
 
 
 def build_api():
@@ -26,7 +26,7 @@ def build_api():
             path_util.pure_path_join(default_common.param_api_root_project_path, "gradlew"),
             "--init-script " + default_common.param_api_gradle_init_script_file_path,
             "--build-file " + path_util.pure_path_join(default_common.param_api_root_project_path, "build.gradle"),
-            "--project-prop extraConfig=" + default_common.param_api_extra_config_output_file_path,
+            "--project-prop extraConfig=" + default_common.param_api_output_extra_config_file_path,
             "clean build -x test"
         ])
     if default_common.param_api_docker_gradle_command:
@@ -45,7 +45,6 @@ def build_api():
     else:
         logger.info(basic_util.action_formatter(__get_function_name(), build_command))
         basic_util.execute(build_command)
-    base_source.build_override_config()
 
 
 def build_plugin(publish_task=None):
@@ -64,8 +63,3 @@ def build_plugin(publish_task=None):
         command = list_util.arr_param_to_str(command, "publishAllPublicationsToBuildRepository")
     logger.info(basic_util.action_formatter(__get_function_name(), command))
     basic_util.execute(command)
-
-
-def build_api_compose():
-    base_source.build_api_dockerfile()
-    base_source.build_api_compose_file()

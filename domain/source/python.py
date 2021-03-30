@@ -1,11 +1,8 @@
 #!/usr/bin/env python3
 import inspect
 
-import docker
-
-from script.domain.default import common as default_common, path as default_path
-from script.domain.source import base as base_source
-from script.utility import basic as basic_util, collection as list_util, path as path_util, log
+from script.domain.default import common as default_common
+from script.utility import basic as basic_util, collection as list_util, log
 
 logger = log.Logger(__name__)
 
@@ -22,8 +19,3 @@ def build_api():
     ])
     logger.info(basic_util.action_formatter(__get_function_name(), command))
     basic_util.execute(command)
-
-
-def build_api_compose():
-    base_source.build_api_dockerfile()
-    base_source.build_api_compose_file()
