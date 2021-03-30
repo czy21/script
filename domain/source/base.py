@@ -21,18 +21,8 @@ def build_by_template(template_name, output_path):
         target_output.write(content)
 
 
-def build_api_dockerfile():
-    build_by_template(default_common.param_api_dockerfile_template_path, default_common.param_api_dockerfile_output_file_path)
-    logger.info(basic_util.action_formatter(__get_function_name(), default_common.param_api_dockerfile_output_file_path))
-
-
-def build_api_compose_file():
-    build_by_template(default_common.param_api_compose_template_path, default_common.param_api_compose_output_file_path)
-    logger.info(basic_util.action_formatter(__get_function_name(), default_common.param_api_compose_output_file_path))
-
-
-def build_override_dict():
-    for k, v in default_common.param_config_override_dict.items():
+def build_template_dict():
+    for k, v in default_common.param_template_output_dict.items():
         build_by_template(k, v)
         logger.info(basic_util.action_formatter(__get_function_name(), ":".join([k, v])))
 
@@ -41,7 +31,7 @@ def down_container() -> None:
     command = list_util.arr_param_to_str([
         "sudo docker-compose",
         "--file",
-        default_common.param_api_compose_output_file_path,
+        default_common.param_api_output_compose_file_path,
         "--project-name",
         "_".join([default_common.param_project_name, default_common.param_env_suffix]),
         "down"
@@ -93,7 +83,7 @@ def start_api_compose():
         [
             "sudo docker-compose",
             "--file",
-            default_common.param_api_compose_output_file_path,
+            default_common.param_api_output_compose_file_path,
             "--project-name",
             "_".join([default_common.param_project_name, default_common.param_env_suffix]),
             "up -d --build"

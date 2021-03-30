@@ -4,7 +4,7 @@ from script.domain.default import path as default_path
 param_project_name = ""
 param_env_suffix = ""
 
-param_config_override_dict = {}
+param_template_output_dict = {}
 
 param_main_db_name = ""
 param_main_db_bak_name = ""
@@ -41,25 +41,19 @@ param_main_rabbit_host = ""
 
 # api
 param_api_archive_file_name = ""
-param_api_extra_config_template_path = ""
-param_api_extra_config_output_file_path = ""
-
-param_api_config_override_template_path = ""
-param_api_config_output_file_path = ""
-
-param_api_dockerfile_template_path = ""
-param_api_dockerfile_output_file_path = ""
-
-param_api_compose_template_path = ""
-param_api_compose_output_file_path = ""
 param_api_network_name = ""
 param_api_network_containers = []
 param_api_image = ""
-
 param_api_root_project_path = ""
 param_api_docker_gradle_command = True
 param_api_gradle_init_script_file_path = ""
 param_api_plugin_file_path = ""
+
+param_api_template_extra_config_file_path = ""
+param_api_output_extra_config_file_path = ""
+param_api_output_config_file_path = ""
+param_api_output_dockerfile_file_path = ""
+param_api_output_compose_file_path = ""
 
 # api output
 param_api_output_path = default_path.output_api
