@@ -34,7 +34,7 @@ def down_container() -> None:
     command = list_util.arr_param_to_str([
         "sudo docker-compose",
         "--file",
-        default_common.param_api_compose_output_path,
+        default_common.param_api_compose_file_output_path,
         "--project-name",
         "_".join([default_common.param_project_name, default_common.param_env_suffix]),
         "down"
@@ -86,7 +86,7 @@ def start_api_compose():
         [
             "sudo docker-compose",
             "--file",
-            default_common.param_api_compose_output_path,
+            default_common.param_api_compose_file_output_path,
             "--project-name",
             "_".join([default_common.param_project_name, default_common.param_env_suffix]),
             "up -d --build"
