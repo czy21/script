@@ -22,7 +22,6 @@ project_plugin = path_util.pure_path_join(project_code, "gradle-plugin")
 
 # child dir of output
 output_api = path_util.pure_path_join(output, "api")
-output_api_resource = path_util.pure_path_join(output_api, "resources")
 output_web = path_util.pure_path_join(output, "web")
 output_app = path_util.pure_path_join(output, "app")
 output_db = path_util.pure_path_join(output, "db")

@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 import inspect
 import io
+from pathlib import Path
+
 from script.utility.template import CustomTemplate
 import docker
 
@@ -16,6 +18,7 @@ def __get_function_name():
 
 
 def build_by_template(template_name, output_path):
+    Path(output_path).parent.mkdir(exist_ok=True, parents=True)
     content = CustomTemplate(filename=template_name).render(**dict({k: v for k, v in default_common.__dict__.items() if k.startswith("param")}))
     with io.open(output_path, "w+", encoding="utf-8", newline="\n") as target_output:
         target_output.write(content)
@@ -31,7 +34,7 @@ def down_container() -> None:
     command = list_util.arr_param_to_str([
         "sudo docker-compose",
         "--file",
-        default_common.param_api_output_compose_file_path,
+        default_common.param_api_compose_output_path,
         "--project-name",
         "_".join([default_common.param_project_name, default_common.param_env_suffix]),
         "down"
@@ -83,7 +86,7 @@ def start_api_compose():
         [
             "sudo docker-compose",
             "--file",
-            default_common.param_api_output_compose_file_path,
+            default_common.param_api_compose_output_path,
             "--project-name",
             "_".join([default_common.param_project_name, default_common.param_env_suffix]),
             "up -d --build"
