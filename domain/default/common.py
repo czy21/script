@@ -4,6 +4,8 @@ from script.domain.default import path as default_path
 param_project_name = ""
 param_env_suffix = ""
 
+param_config_override_dict = {}
+
 param_main_db_name = ""
 param_main_db_bak_name = ""
 

@@ -21,11 +21,6 @@ def build_by_template(template_name, output_path):
         target_output.write(content)
 
 
-def build_override_config():
-    build_by_template(default_common.param_api_config_override_template_path, default_common.param_api_config_output_file_path)
-    logger.info(basic_util.action_formatter(__get_function_name(), default_common.param_api_config_output_file_path))
-
-
 def build_api_dockerfile():
     build_by_template(default_common.param_api_dockerfile_template_path, default_common.param_api_dockerfile_output_file_path)
     logger.info(basic_util.action_formatter(__get_function_name(), default_common.param_api_dockerfile_output_file_path))
@@ -34,6 +29,12 @@ def build_api_dockerfile():
 def build_api_compose_file():
     build_by_template(default_common.param_api_compose_template_path, default_common.param_api_compose_output_file_path)
     logger.info(basic_util.action_formatter(__get_function_name(), default_common.param_api_compose_output_file_path))
+
+
+def build_override_dict():
+    for k, v in default_common.param_config_override_dict.items():
+        build_by_template(k, v)
+        logger.info(basic_util.action_formatter(__get_function_name(), ":".join([k, v])))
 
 
 def down_container() -> None:
