@@ -51,9 +51,9 @@ param_api_plugin_file_path = ""
 
 param_api_gradle_extra_config_template_path = ""
 param_api_gradle_extra_config_output_path = ""
-param_api_config_output_path = ""
+param_api_config_file_output_path = ""
 param_api_dockerfile_output_path = ""
-param_api_compose_output_path = ""
+param_api_compose_file_output_path = ""
 
 # api output
 param_api_output_path = default_path.output_api
