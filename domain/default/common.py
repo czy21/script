@@ -49,7 +49,6 @@ param_api_docker_gradle_command = True
 param_api_gradle_init_script_file_path = ""
 param_api_plugin_file_path = ""
 
-param_api_template_extra_config_file_path = ""
 param_api_output_extra_config_file_path = ""
 param_api_output_config_file_path = ""
 param_api_output_dockerfile_file_path = ""
