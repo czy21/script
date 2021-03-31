@@ -89,7 +89,7 @@ def start_api_compose():
             default_common.param_api_compose_file_output_path,
             "--project-name",
             "_".join([default_common.param_project_name, default_common.param_env_suffix]),
-            "up -d --build",
+            "up -detach --build",
             default_common.param_api_compose_command_args
         ]
     )
