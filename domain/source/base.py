@@ -81,6 +81,7 @@ def start_api_compose():
                                                     "image:" + default_common.param_api_image, " not found"
                                                 ]))
                     )
+    scales = [k.split("_")[-1] + "=" + v for k, v in default_common.__dict__.items() if k.startswith("param_api_compose_scale_")]
 
     command = list_util.arr_param_to_str(
         [
@@ -89,9 +90,10 @@ def start_api_compose():
             default_common.param_api_compose_file_output_path,
             "--project-name",
             "_".join([default_common.param_project_name, default_common.param_env_suffix]),
-            "up -detach --build",
-            "--scale " + default_common.param_api_compose_scale if default_common.param_api_compose_scale else ""
+            "up --detach --build",
+            ["--scale", scales] if scales else []
         ]
     )
+
     logger.info(basic_util.action_formatter(__get_function_name(), command))
     basic_util.execute(command)
