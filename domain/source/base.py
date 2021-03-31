@@ -89,7 +89,8 @@ def start_api_compose():
             default_common.param_api_compose_file_output_path,
             "--project-name",
             "_".join([default_common.param_project_name, default_common.param_env_suffix]),
-            "up -d --build"
+            "up -d --build",
+            default_common.param_api_compose_command_args
         ]
     )
     logger.info(basic_util.action_formatter(__get_function_name(), command))
