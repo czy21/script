@@ -90,7 +90,7 @@ def start_api_compose():
             "--project-name",
             "_".join([default_common.param_project_name, default_common.param_env_suffix]),
             "up -detach --build",
-            default_common.param_api_compose_command_args
+            "--scale " + default_common.param_api_compose_scale if default_common.param_api_compose_scale else ""
         ]
     )
     logger.info(basic_util.action_formatter(__get_function_name(), command))
