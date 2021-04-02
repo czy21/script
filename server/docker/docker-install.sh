@@ -33,11 +33,6 @@ EOF
   "hosts": ["fd://","tcp://0.0.0.0:2375"]
 }
 EOF
-        sudo yum install -y yum-utils device-mapper-persistent-data lvm2
-        sudo yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
-        sudo yum makecache timer
-        # centos8 local need --nobest
-        sudo yum -y install docker-ce --nobest
       fi
       if [ $1 == 'offical' ]; then
         sudo tee /etc/docker/daemon.json <<-'EOF'
@@ -45,10 +40,10 @@ EOF
   "hosts": ["fd://","tcp://0.0.0.0:2375"]
 }
 EOF
-        sudo yum install -y yum-utils
-        sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-        sudo yum -y install docker-ce docker-ce-cli containerd.io
       fi
+      sudo yum install -y yum-utils
+      sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+      sudo yum -y install docker-ce docker-ce-cli containerd.io
       sudo systemctl daemon-reload
       sudo systemctl restart docker
       sudo systemctl enable docker
