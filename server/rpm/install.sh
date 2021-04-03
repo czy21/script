@@ -13,8 +13,8 @@ root_dir="rpm"
 dir=$(cd "$(dirname "$0")"; pwd)
 dir=${dir}/___temp
 
-mysql_version="8.0.21-1.el8"
-mongo_version="rhel80-4.4.1"
+mysql_version="8.0.23-1.el8"
+mongo_version="rhel80-4.4.4"
 neo4j_version="4.1.2-1"
 
 while [[ $# -ge 1 ]];
@@ -50,7 +50,7 @@ do
         rpm -ivh ${mysql_tmp}mysql-community-client-${mysql_version}.x86_64.rpm
 
         # node
-        node_version=v12.19.0
+        node_version=v14.16.0
 
         mkdir -p /opt/nvm && git clone https://github.com/nvm-sh/nvm.git /opt/nvm
 
