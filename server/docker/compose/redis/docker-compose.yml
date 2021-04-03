@@ -5,6 +5,7 @@ services:
   redis:
     image: redis:5.0.3
     container_name: redis
+    network_mode: bridge
     privileged: true
     ports:
       - 6379:6379

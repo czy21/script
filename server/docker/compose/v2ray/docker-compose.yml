@@ -5,6 +5,7 @@ services:
   v2ray:
     image: v2ray/official:latest
     container_name: v2ray
+    network_mode: bridge
     privileged: true
     volumes:
       - ${GLOBAL_CONFIG_DIR}/v2ray/:/etc/v2ray/

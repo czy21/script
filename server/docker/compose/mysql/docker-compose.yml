@@ -6,6 +6,7 @@ services:
     image: mysql:8.0
     container_name: mysql
     privileged: true
+    network_mode: bridge
     ports:
       - 3306:3306
     volumes:

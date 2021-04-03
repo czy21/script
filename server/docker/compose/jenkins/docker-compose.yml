@@ -5,6 +5,7 @@ services:
   jenkins:
     image: jenkins/jenkins:lts-centos
     container_name: jenkins
+    network_mode: bridge
     privileged: true
     ports:
       - 8090:8080

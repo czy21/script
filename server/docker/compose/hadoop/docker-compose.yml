@@ -5,6 +5,7 @@ services:
   hadoop:
     image: hadoop:1.0.0
     container_name: hadoop
+    network_mode: bridge
     privileged: true
     ports:
       - "6022:22"

@@ -5,6 +5,7 @@ services:
   mq:
     image: rabbitmq:3-management
     container_name: rabbitmq
+    network_mode: bridge
     privileged: true
     ports:
       - 5672:5672
