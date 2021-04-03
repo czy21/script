@@ -4,6 +4,7 @@ services:
   zookeeper:
     image: wurstmeister/zookeeper
     container_name: zookeeper
+    network_mode: bridge
     ports:
       - "2181:2181"
     volumes:

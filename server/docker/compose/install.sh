@@ -6,8 +6,9 @@
 # -c exec post_config.sh
 
 function exec_init_config() {
-    config_path=/data/config/${name}/
-    sudo mkdir -p ${config_path}
+    config_path=${GLOBAL_CONFIG_DIR}/${name}/
+    volume_path=${GLOBAL_VOLUMES_DIR}/${name}/
+    sudo mkdir -p ${config_path} ${volume_path}
     if [ -d ${target_path}/conf/ ]; then
       echo -e "${number}.\033[32m copy conf dir\033[0m"
       sudo cp -rv ${target_path}/conf/* ${config_path}
@@ -37,7 +38,7 @@ function start_compose() {
     compose_file=${target_path}/docker-compose.yml
     if [[ -f ${compose_file} ]];then
         echo -e "${number}.\033[32m start_compose => \033[0m ${compose_file}"
-        sudo docker-compose --file ${compose_file} --env-file $HOME/compose/.env.global up -d --build
+        /usr/local/bin/docker-compose --file ${compose_file} --env-file $HOME/compose/.env.global up -d --build
     fi
 }
 
@@ -75,6 +76,7 @@ do
       break
 			;;
 		i)
+		  source $HOME/compose/.env.global
 		  print_app_list
       echo -n "please select install app number(example:1 2 ... or all)"
       read arg
