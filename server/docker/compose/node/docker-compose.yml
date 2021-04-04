@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
 
-  node_exporter:
+  node_exportor:
     image: quay.io/prometheus/node-exporter
     container_name: node_exporter
     privileged: true
