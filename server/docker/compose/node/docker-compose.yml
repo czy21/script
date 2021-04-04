@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
 
-  node_exportor:
+  node_exporter:
     image: quay.io/prometheus/node-exporter
     container_name: node_exporter
     privileged: true
@@ -16,5 +16,16 @@ services:
     restart: always
     user: root
 
-
+  cadvisor:
+    image: google/cadvisor:latest
+    container_name: cadvisor
+    network_mode: bridge
+    ports:
+      - 8082:8080
+    restart: always
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
 
