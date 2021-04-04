@@ -20,9 +20,9 @@ services:
       MYSQL_ALLOW_EMPTY_PASSWORD: 0
       MYSQL_ROOT_PASSWORD: ${GLOBAL_DB_PASSWORD}
 
-  mysqld_exportor:
+  mysqld_exporter:
     image: prom/mysqld-exporter
-    container_name: mysqld_exportor
+    container_name: mysqld_exporter
     network_mode: bridge
     ports:
       - 9104:9104
