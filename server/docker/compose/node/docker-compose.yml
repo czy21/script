@@ -1,0 +1,20 @@
+version: '3.7'
+
+services:
+
+  node_exporter:
+    image: quay.io/prometheus/node-exporter
+    container_name: node_exporter
+    privileged: true
+    network_mode: bridge
+    ports:
+      - 9100:9100
+    volumes:
+      - '/:/host:ro,rslave'
+    command:
+      - '--path.rootfs=/host'
+    restart: always
+    user: root
+
+
+

@@ -1,0 +1,25 @@
+version: '3.7'
+
+services:
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    privileged: true
+    network_mode: bridge
+    ports:
+      - 9090:9090
+    volumes:
+      - ${GLOBAL_CONFIG_DIR}/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ${GLOBAL_VOLUMES_DIR}/prometheus/:/prometheus/
+    restart: always
+    user: root
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    network_mode: bridge
+    ports:
+      - 3000:3000
+    restart: always
+    user: root

@@ -38,7 +38,7 @@ function start_compose() {
     compose_file=${target_path}/docker-compose.yml
     if [[ -f ${compose_file} ]];then
         echo -e "${number}.\033[32m start_compose => \033[0m ${compose_file}"
-        /usr/local/bin/docker-compose --file ${compose_file} --env-file $HOME/compose/.env.global up -d --build
+        sudo /usr/local/bin/docker-compose --file ${compose_file} --env-file $HOME/compose/.env.global up -d --build
     fi
 }
 
