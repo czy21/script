@@ -19,3 +19,14 @@ services:
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: 0
       MYSQL_ROOT_PASSWORD: ${GLOBAL_DB_PASSWORD}
+
+  mysqld_exportor:
+    image: prom/mysqld-exporter
+    container_name: mysqld_exportor
+    network_mode: bridge
+    ports:
+      - 9104:9104
+    environment:
+      DATA_SOURCE_NAME: "root:${GLOBAL_DB_PASSWORD}@(${GLOBAL_HOST_IP}:3306)/"
+    restart: always
+    user: root
