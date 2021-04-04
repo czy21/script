@@ -25,7 +25,7 @@ services:
       - /:/rootfs:ro
       - /var/run:/var/run:rw
       - /sys:/sys:ro
-      - /var/lib/docker/:/var/lib/docker:ro
+      - ${GLOBAL_DOCKER_ROOT}/:/var/lib/docker:ro
     restart: always
     user: root
 networks:
