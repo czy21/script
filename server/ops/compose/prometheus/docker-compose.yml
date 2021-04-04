@@ -20,6 +20,8 @@ services:
     privileged: true
     ports:
       - 3000:3000
+    volumes:
+      - ${GLOBAL_VOLUMES_DIR}/grafana/:/var/lib/grafana/
     restart: always
     user: root
 networks:
