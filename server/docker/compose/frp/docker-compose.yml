@@ -8,10 +8,13 @@ services:
       dockerfile: ${GLOBAL_USER_HOME}/compose/frp/Dockerfile
     image: frp:1.0.0
     container_name: frp
-    network_mode: bridge
     privileged: true
     ports:
       - 7000:7000
     volumes:
       - ${GLOBAL_CONFIG_DIR}/frp/:/usr/local/frp/conf/
     restart: always
+networks:
+  default:
+    external:
+      name: local_default

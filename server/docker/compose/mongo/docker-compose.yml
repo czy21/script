@@ -5,7 +5,6 @@ services:
   mongo:
     image: mongo:4.2.1
     container_name: mongo
-    network_mode: bridge
     privileged: true
     ports:
       - 27017:27017
@@ -16,3 +15,7 @@ services:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: ${GLOBAL_DB_PASSWORD}
     restart: always
+networks:
+  default:
+    external:
+      name: local_default

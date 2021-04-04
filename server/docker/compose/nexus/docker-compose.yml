@@ -5,7 +5,6 @@ services:
   nexus:
     image: sonatype/nexus3
     container_name: nexus
-    network_mode: bridge
     privileged: true
     ports:
       - 8081:8081
@@ -15,4 +14,7 @@ services:
     environment:
       INSTALL4J_ADD_VM_PARAMS: -Xms500M -Xmx500M -XX:MaxDirectMemorySize=4g
     restart: always
-
+networks:
+  default:
+    external:
+      name: local_default

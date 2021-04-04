@@ -5,7 +5,6 @@ services:
   mq:
     image: rabbitmq:3-management
     container_name: rabbitmq
-    network_mode: bridge
     privileged: true
     ports:
       - 5672:5672
@@ -17,3 +16,7 @@ services:
       - RABBITMQ_DEFAULT_USER=root
       - RABBITMQ_DEFAULT_PASS=${GLOBAL_DB_PASSWORD}
     restart: always
+networks:
+  default:
+    external:
+      name: local_default

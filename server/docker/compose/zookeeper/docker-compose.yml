@@ -4,7 +4,6 @@ services:
   zookeeper1:
     image: zookeeper
     container_name: zookeeper1
-    network_mode: bridge
     restart: always
     hostname: zookeeper1
     ports:
@@ -21,7 +20,7 @@ services:
   zookeeper2:
     image: zookeeper
     container_name: zookeeper2
-    network_mode: bridge
+
     restart: always
     hostname: zookeeper2
     ports:
@@ -38,7 +37,6 @@ services:
   zookeeper3:
     image: zookeeper
     container_name: zookeeper3
-    network_mode: bridge
     restart: always
     hostname: zookeeper3
     ports:
@@ -51,3 +49,7 @@ services:
       ZOO_MY_ID: 3
       ZOO_TICK_TIME: 60000
       ZOO_SERVERS: server.1=zookeeper1:2888:3888;2181 server.2=zookeeper2:2888:3888;2181 server.3=0.0.0.0:2888:3888;2181
+networks:
+  default:
+    external:
+      name: local_default

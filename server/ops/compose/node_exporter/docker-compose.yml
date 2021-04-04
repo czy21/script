@@ -6,7 +6,6 @@ services:
     image: quay.io/prometheus/node-exporter
     container_name: node_exporter
     privileged: true
-    network_mode: bridge
     ports:
       - 9100:9100
     volumes:
@@ -20,7 +19,6 @@ services:
     image: google/cadvisor:latest
     container_name: cadvisor
     privileged: true
-    network_mode: bridge
     ports:
       - 8082:8080
     volumes:
