@@ -42,35 +42,6 @@ def down_container() -> None:
     logger.info(basic_util.action_formatter(__get_function_name(), command))
     basic_util.execute(cmd=command)
 
-
-def ensure_network():
-    client = docker.from_env()
-    try:
-        client.networks.get(default_common.param_api_network_name)
-    except errors.NotFound:
-        client.api.create_network(name=default_common.param_api_network_name, driver="bridge")
-        logger.info(basic_util.action_formatter(__get_function_name(), list_util.arr_param_to_str(["created network:", default_common.param_api_network_name])))
-    network = client.api.inspect_network(default_common.param_api_network_name)
-    network_id = network["Id"]
-    network_name = network["Name"]
-    for c in network["Containers"].values():
-        c_name = c["Name"]
-        client.api.disconnect_container_from_network(container=c_name, net_id=network_id)
-        logger.info(basic_util.action_formatter(__get_function_name(), list_util.arr_param_to_str([c_name, "disconnected", "from", network_name])))
-
-    for t in default_common.param_api_network_containers:
-        client.api.connect_container_to_network(container=t, net_id=network_id)
-        logger.info(basic_util.action_formatter(__get_function_name(), list_util.arr_param_to_str([t, "connected", "to", network_name])))
-
-    post_network = client.api.inspect_network(default_common.param_api_network_name)
-    logger.info(basic_util.action_formatter(__get_function_name(),
-                                            list_util.arr_param_to_str([
-                                                "network:" + network_name,
-                                                "containers:", ",".join([c["Name"] for c in post_network["Containers"].values()])
-                                            ]))
-                )
-
-
 def start_api_compose():
     client = docker.from_env()
     try:
