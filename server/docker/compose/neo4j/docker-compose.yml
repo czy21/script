@@ -5,7 +5,6 @@ services:
   db:
     image: neo4j:4.1.1
     container_name: neo4j
-    network_mode: bridge
     privileged: true
     ports:
       - 7474:7474
@@ -18,3 +17,7 @@ services:
     environment:
       NEO4J_AUTH: neo4j/${GLOBAL_DB_PASSWORD}
       NEO4J_dbms_memory_pagecache_size: 2g
+networks:
+  default:
+    external:
+      name: local_default

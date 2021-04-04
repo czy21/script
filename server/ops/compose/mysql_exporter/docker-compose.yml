@@ -5,7 +5,6 @@ services:
   mysqld_exporter:
     image: prom/mysqld-exporter
     container_name: mysqld_exporter
-    network_mode: bridge
     ports:
       - 9104:9104
     environment:

@@ -5,7 +5,6 @@ services:
   web:
     image: nginx:1.14
     container_name: nginx
-    network_mode: bridge
     privileged: true
     ports:
       - "80:80"
@@ -17,3 +16,7 @@ services:
       - ${GLOBAL_CONFIG_DIR}/nginx/log/:/var/log/nginx/
       - ${GLOBAL_VOLUMES_DIR}/nginx/:/root/
     restart: always
+networks:
+  default:
+    external:
+      name: local_default

@@ -4,7 +4,6 @@ services:
   zookeeper:
     image: zookeeper
     container_name: zookeeper
-    network_mode: bridge
     volumes:
       - ${GLOBAL_VOLUMES_DIR}/zookeeper/data/:/data/
       - ${GLOBAL_VOLUMES_DIR}/zookeeper/datalog:/datalog/
@@ -16,7 +15,6 @@ services:
   nimbus:
     image: storm
     container_name: nimbus
-    network_mode: bridge
     command: storm nimbus
     depends_on:
       - zookeeper
@@ -32,7 +30,6 @@ services:
   supervisor:
     image: storm
     container_name: supervisor
-    network_mode: bridge
     command: storm supervisor
     depends_on:
       - nimbus
@@ -44,7 +41,6 @@ services:
   ui:
     image: storm
     container_name: stormui
-    network_mode: bridge
     command: storm ui
     depends_on:
       - nimbus
@@ -55,3 +51,7 @@ services:
     restart: always
     ports:
       - 8089:8080
+networks:
+  default:
+    external:
+      name: local_default

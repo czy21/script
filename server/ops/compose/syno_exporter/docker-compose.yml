@@ -4,7 +4,6 @@ services:
   cadvisor:
     image: google/cadvisor:latest
     container_name: cadvisor
-    network_mode: bridge
     ports:
       - 8082:8080
     restart: always
@@ -18,7 +17,6 @@ services:
     privileged: true
     image: prom/node-exporter
     container_name: node_exporter
-    network_mode: bridge
     volumes:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro

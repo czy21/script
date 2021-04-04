@@ -4,7 +4,6 @@ services:
   portainer:
     image: portainer/portainer
     container_name: portainer
-    network_mode: bridge
     privileged: true
     ports:
       - 9000:9000
