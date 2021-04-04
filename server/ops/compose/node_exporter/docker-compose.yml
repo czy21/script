@@ -28,4 +28,7 @@ services:
       - /var/lib/docker/:/var/lib/docker:ro
     restart: always
     user: root
-
+networks:
+  default:
+    external:
+      name: local_default

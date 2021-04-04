@@ -14,3 +14,7 @@ services:
       - ${GLOBAL_CONFIG_DIR}/portainer/portainer_password:/tmp/portainer_password
     command: --admin-password-file /tmp/portainer_password
     restart: always
+networks:
+  default:
+    external:
+      name: local_default

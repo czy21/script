@@ -10,10 +10,7 @@ services:
     container_name: ${{{param_project_name}}}_${{{param_env_suffix}}}
     volumes:
       - /data/volumes/${{{param_project_name}}}_${{{param_env_suffix}}}/api/log/:/home/${{{param_project_name}}}/log/
-    networks:
-      - ${{{param_api_network_name}}}
     restart: always
-
 networks:
   default:
     external:

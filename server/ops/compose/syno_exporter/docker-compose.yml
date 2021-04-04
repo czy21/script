@@ -29,6 +29,7 @@ services:
       - "--path.sysfs=/host/sys"
       - "--collector.filesystem.ignored-mount-points"
       - "^/(rootfs/)?(dev|etc|host|proc|run|sys|volume1)($$|/)"
-
-
-
+networks:
+  default:
+    external:
+      name: local_default

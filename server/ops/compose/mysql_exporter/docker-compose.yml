@@ -11,3 +11,7 @@ services:
       DATA_SOURCE_NAME: "root:${GLOBAL_DB_PASSWORD}@(${GLOBAL_HOST_IP}:3306)/"
     restart: always
     user: root
+networks:
+  default:
+    external:
+      name: local_default
