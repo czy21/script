@@ -1,0 +1,14 @@
+version: '3.7'
+
+services:
+
+  mysqld_exporter:
+    image: prom/mysqld-exporter
+    container_name: mysqld_exporter
+    network_mode: bridge
+    ports:
+      - 9104:9104
+    environment:
+      DATA_SOURCE_NAME: "root:${GLOBAL_DB_PASSWORD}@(${GLOBAL_HOST_IP}:3306)/"
+    restart: always
+    user: root
