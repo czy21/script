@@ -15,5 +15,6 @@ services:
     restart: always
 
 networks:
-  ${{{param_api_network_name}}}:
-    external: "true"
+  default:
+    external:
+      name: local_default
