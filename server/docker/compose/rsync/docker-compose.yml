@@ -1,0 +1,20 @@
+version: '3.7'
+
+services:
+
+  rsync:
+    image: apnar/rsync-server
+    container_name: rsync-server
+    privileged: true
+    ports:
+      - "9022:22"
+    volumes:
+      - /root/.ssh/authorized_keys:/root/.ssh/authorized_keys
+      - ${GLOBAL_DOCKER_DATA}:${GLOBAL_DOCKER_DATA}
+    restart: always
+    user: root
+    environment:
+      USERNAME: rsync
+      PASSWORD: rsync
+      ALLOW: 192.168.2.0/24
+      VOLUME: ${GLOBAL_DOCKER_DATA}
