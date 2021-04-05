@@ -29,14 +29,16 @@ EOF
       if [ $1 == 'ali' ]; then
         sudo tee /etc/docker/daemon.json <<-'EOF'
 {
-  "registry-mirrors": ["https://idyylogn.mirror.aliyuncs.com","https://registry.docker-cn.com"],
-  "hosts": ["fd://","tcp://0.0.0.0:2375"]
+  "data-root": "/volume1/docker-root",
+  "hosts": ["fd://","tcp://0.0.0.0:2375"],
+  "registry-mirrors": ["https://idyylogn.mirror.aliyuncs.com","https://registry.docker-cn.com"]
 }
 EOF
       fi
       if [ $1 == 'offical' ]; then
         sudo tee /etc/docker/daemon.json <<-'EOF'
 {
+  "data-root": "/volume1/docker-root",
   "hosts": ["fd://","tcp://0.0.0.0:2375"]
 }
 EOF
