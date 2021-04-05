@@ -7,8 +7,7 @@
 
 function exec_init_config() {
     config_path=${GLOBAL_CONFIG_DIR}/${name}/
-    volume_path=${GLOBAL_VOLUMES_DIR}/${name}/
-    sudo mkdir -p ${config_path} ${volume_path}
+    sudo mkdir -p ${config_path}
     if [ -d ${target_path}/conf/ ]; then
       echo -e "${number}.\033[32m copy conf dir\033[0m"
       sudo cp -rv ${target_path}/conf/* ${config_path}
