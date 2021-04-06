@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 from script.domain.default import path as default_path
 
+# docker-data
+param_docker_data = "/volume1/docker-data"
+
 param_project_name = ""
 param_env_suffix = ""
 
