@@ -1,5 +1,5 @@
 #!/bin/bash
-# bash docker-install.sh -h user@host -t ali
+# bash init-machine-docker.sh -h user@host -t ali
 # -t ali | offical
 set -e
 
@@ -9,7 +9,7 @@ do
 		-h)
       source ../../utility/share.sh
       host=$2
-      sh_file='docker-install.sh'
+      sh_file='init-machine-docker.sh'
       cp_path=$sh_file
       rm_path=$sh_file
       shift 2
