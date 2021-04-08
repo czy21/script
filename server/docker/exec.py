@@ -36,6 +36,56 @@ def select_one_option():
     return list_dir[one_option - 1]
 
 
+def execute(app_tuples, func):
+    for t in app_tuples:
+        app_number = str(t[0])
+        source_path = t[1]
+        source_name = Path(source_path).name
+        source_conf_path = Path(source_path).joinpath("conf")
+        source_compose_file = Path(source_path).joinpath("docker-compose.yml")
+
+        source_init_config_sh = Path(source_path).joinpath("init_config.sh")
+        source_post_config_sh = Path(source_path).joinpath("post_config.sh")
+
+        target_conf_path = Path(global_env["GLOBAL_CONFIG_DIR"]).joinpath(source_name)
+        app_id = " ".join([app_number, source_name])
+        func(app_id,
+             source_compose_file,
+             source_conf_path,
+             source_init_config_sh,
+             target_conf_path,
+             source_post_config_sh
+             )
+
+
+def init_start(app_id, source_compose_file, source_conf_path, source_init_config_sh, target_conf_path, source_post_config_sh):
+    if source_conf_path.exists():
+        subprocess.call(args=" ".join(['echo -e "{}\033[32m conf dir copy \033[0m"'.format(app_id),
+                                       '&& sudo mkdir -p ' + target_conf_path.as_posix(),
+                                       '&& sudo cp -rv ', source_conf_path.as_posix() + "/*", target_conf_path.as_posix() + "/"
+                                       ]), shell=True)
+    else:
+        subprocess.call(args=" ".join(['echo -e "{}\033[32m conf dir no exist \033[0m"'.format(app_id)]), shell=True)
+    if source_init_config_sh.exists():
+        subprocess.call(args=" ".join(['echo -e "{}\033[32m init_config \033[0m => {}"'.format(app_id, source_init_config_sh.as_posix()),
+                                       '&& sudo bash', source_init_config_sh.as_posix()
+                                       ]), shell=True)
+    else:
+        subprocess.call(args=" ".join(['echo -e "{}\033[32m init_config not exist \033[0m"'.format(app_id)]), shell=True)
+    if source_compose_file.exists():
+        subprocess.call(args=" ".join(['echo -e "{}\033[32m start_compose => \033[0m ${}"'.format(app_id, source_compose_file.as_posix()),
+                                       # 'sudo /usr/local/bin/docker-compose --file {} --env-file {} up -d --build'.format(source_compose_file.as_posix(), global_env_file)
+                                       ]), shell=True)
+    subprocess.call(args=["echo \n"], shell=True)
+
+
+def post_config(app_id, source_compose_file, source_conf_path, source_init_config_sh, target_conf_path, source_post_config_sh):
+    if source_post_config_sh.exists():
+        subprocess.call(args=" ".join(['echo -e "{}\033[32m post_config \033[0m => {}"'.format(app_id, source_post_config_sh.as_posix()),
+                                       '&& sudo bash', source_post_config_sh.as_posix()
+                                       ]), shell=True)
+
+
 if __name__ == '__main__':
     global_env_file = Path(__file__).parent.joinpath(".env.global").as_posix()
     parser = argparse.ArgumentParser()
@@ -51,30 +101,12 @@ if __name__ == '__main__':
                 "source " + global_env_file,
                 "&& echo ${" + t + "}"
             ]))
-    option_name = select_one_option()
-    install_tuple = get_install_tuple(Path(option_name).name)
-    for t in install_tuple:
-        app_number = str(t[0])
-        source_path = t[1]
-        source_name = Path(source_path).name
-        source_conf_path = Path(source_path).joinpath("conf")
+    selected_init_option = select_one_option()
+    selected_init_install = get_install_tuple(Path(selected_init_option).name)
 
-        source_init_config_sh = Path(source_path).joinpath("init_config.sh")
-        source_post_config_sh = Path(source_path).joinpath("post_config.sh")
+    execute(selected_init_install, init_start)
 
-        target_conf_path = Path(global_env["GLOBAL_CONFIG_DIR"]).joinpath(source_name)
-        app_id = " ".join([app_number, source_name])
-        if source_conf_path.exists():
-            subprocess.call(args=" ".join(['echo -e "{}\033[32m conf dir copy \033[0m"'.format(app_id),
-                                           '&& sudo mkdir -p ' + target_conf_path.as_posix(),
-                                           '&& sudo cp -rv ', source_conf_path.as_posix() + "/*", target_conf_path.as_posix() + "/"
-                                           ]), shell=True)
-        else:
-            subprocess.call(args=" ".join(['echo -e "{}\033[32m conf dir no exist \033[0m"'.format(app_id)]), shell=True)
+    selected_post_option = select_one_option()
+    selected_post_install = get_install_tuple(Path(selected_post_option).name)
 
-        if source_init_config_sh.exists():
-            subprocess.call(args=" ".join(['echo -e "{}\033[32m init_config \033[0m => {}"'.format(app_id, source_init_config_sh.as_posix()),
-                                           '&& sudo bash', source_init_config_sh.as_posix()
-                                           ]), shell=True)
-        else:
-            subprocess.call(args=" ".join(['echo -e "{}\033[32m init_config not exist \033[0m"'.format(app_id)]), shell=True)
+    execute(selected_post_install, post_config)
