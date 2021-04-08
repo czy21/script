@@ -60,30 +60,42 @@ def execute(app_tuples, func):
 
 def init_start(app_id, source_compose_file, source_conf_path, source_init_config_sh, target_conf_path, source_post_config_sh):
     if source_conf_path.exists():
-        subprocess.call(args=" ".join(['echo -e "{}\033[32m conf dir copy \033[0m"'.format(app_id),
-                                       '&& sudo mkdir -p ' + target_conf_path.as_posix(),
-                                       '&& sudo cp -rv ', source_conf_path.as_posix() + "/*", target_conf_path.as_posix() + "/"
-                                       ]), shell=True)
+        run_command(" ".join(['echo -e "{}\033[32m conf dir copy \033[0m"'.format(app_id),
+                              '&& sudo mkdir -p ' + target_conf_path.as_posix(),
+                              '&& sudo cp -rv ', source_conf_path.as_posix() + "/*", target_conf_path.as_posix() + "/"
+                              ]))
     else:
-        subprocess.call(args=" ".join(['echo -e "{}\033[32m conf dir no exist \033[0m"'.format(app_id)]), shell=True)
+        run_command(" ".join(['echo -e "{}\033[32m conf dir no exist \033[0m"'.format(app_id)]))
     if source_init_config_sh.exists():
-        subprocess.call(args=" ".join(['echo -e "{}\033[32m init_config \033[0m => {}"'.format(app_id, source_init_config_sh.as_posix()),
-                                       '&& sudo bash', source_init_config_sh.as_posix()
-                                       ]), shell=True)
+        run_command(" ".join(['echo -e "{}\033[32m init_config \033[0m => {}"'.format(app_id, source_init_config_sh.as_posix()),
+                              '&& sudo bash', source_init_config_sh.as_posix()
+                              ]))
     else:
-        subprocess.call(args=" ".join(['echo -e "{}\033[32m init_config not exist \033[0m"'.format(app_id)]), shell=True)
+        run_command(" ".join(['echo -e "{}\033[32m init_config not exist \033[0m"'.format(app_id)]))
     if source_compose_file.exists():
-        subprocess.call(args=" ".join(['echo -e "{}\033[32m start_compose => \033[0m ${}"'.format(app_id, source_compose_file.as_posix()),
-                                       # 'sudo /usr/local/bin/docker-compose --file {} --env-file {} up -d --build'.format(source_compose_file.as_posix(), global_env_file)
-                                       ]), shell=True)
-    subprocess.call(args=["echo \n"], shell=True)
+        run_command(" ".join(['echo -e "{}\033[32m start_compose => \033[0m ${}"'.format(app_id, source_compose_file.as_posix()),
+                              '&& sudo /usr/local/bin/docker-compose --file {} --env-file {} up -d --build'.format(source_compose_file.as_posix(), global_env_file)
+                              ]))
+    run_command("echo \n")
 
 
 def post_config(app_id, source_compose_file, source_conf_path, source_init_config_sh, target_conf_path, source_post_config_sh):
     if source_post_config_sh.exists():
-        subprocess.call(args=" ".join(['echo -e "{}\033[32m post_config \033[0m => {}"'.format(app_id, source_post_config_sh.as_posix()),
-                                       '&& sudo bash', source_post_config_sh.as_posix()
-                                       ]), shell=True)
+        run_command(" ".join(['echo -e "{}\033[32m post_config \033[0m => {}"'.format(app_id, source_post_config_sh.as_posix()),
+                              '&& sudo bash', source_post_config_sh.as_posix()
+                              ]))
+
+
+def run_command(cmd: str):
+    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True, encoding="utf-8")
+    while True:
+        output = proc.stdout.readline()
+        if output == '' and proc.poll() is not None:
+            break
+        if output:
+            print(output.strip())
+    proc.stdout.close()
+    proc.wait()
 
 
 if __name__ == '__main__':
