@@ -11,8 +11,4 @@ RUN ls -al /home/${{{param_project_name}}}/
 
 RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 EXPOSE ${{{param_api_container_port}}}
-ENTRYPOINT ["java",
-"-jar",
-"/home/${{{param_project_name}}}/api.jar",
-"--spring.config.location=/home/${{{param_project_name}}}/resources/"
-]
+ENTRYPOINT ["java","-javaagent:/home/${{{param_project_name}}}/jmx_prometheus_javaagent-0.15.0.jar=3010:/home/${{{param_project_name}}}/resources/${{{param_api_jmv_config_name}}}","-jar","/home/${{{param_project_name}}}/api.jar","--spring.config.location=/home/${{{param_project_name}}}/resources/"]
