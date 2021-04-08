@@ -3,21 +3,18 @@
 # -t ali | offical
 set -e
 
-while [[ $# -ge 1 ]];
+while getopts ":h:t:" opt
 do
-	case $1 in
-		-h)
-      source ../../utility/share.sh
+	case $opt in
+  h)
+      source ../utility/share.sh
       host=$2
-      sh_file='init-machine-docker.sh'
-      cp_path=$sh_file
-      rm_path=$sh_file
+      sh_file=$0
       shift 2
-      upload_exec $@
+      upload_exec_sh $@
       break
 			;;
-		-t)
-		  shift 1
+	t)
 		  sudo mkdir -p /etc/docker
 		  sudo mkdir -p /etc/systemd/system/docker.service.d/
       sudo tee /etc/systemd/system/docker.service.d/docker.conf <<-'EOF'
@@ -59,11 +56,10 @@ EOF
       sudo curl -L "https://github.com/docker/machine/releases/download/v0.16.0/docker-machine-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-machine
       sudo chmod +x /usr/local/bin/docker-machine
       sudo ln -sf /usr/local/bin/docker-machine /usr/bin/docker-machine
-      shift 1
 			;;
-		*)
-		  echo -e "\033[31m$1 un_know input param \033[0m"
-			break
-			;;
+		?)
+		echo -e "\033[31m$1 un_know input param \033[0m"
+		break
+		;;
 	esac
 done
