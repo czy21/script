@@ -3,7 +3,7 @@
 set -e
 
 dir=$(cd "$(dirname "$0")"; pwd)
-source ${dir}/../.env.global
+source ${dir}/../../.env.global
 
 sudo rm -rf ${GLOBAL_CONFIG_DIR}/zookeeper/
 sudo mkdir -p ${GLOBAL_CONFIG_DIR}/zookeeper/
