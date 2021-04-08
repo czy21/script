@@ -12,7 +12,7 @@ do
       source ../../utility/share.sh
       host=$2
       shift 2
-      upload_exec $@
+      upload_exec_py $@
       break
 			;;
 	esac

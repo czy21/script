@@ -4,20 +4,18 @@
 # must as root
 set -e
 
-while [[ $# -ge 1 ]]; do
-  case $1 in
-  -h)
+while getopts ":h:t:" opt
+do
+	case $opt in
+  h)
     source ../utility/share.sh
     host=$2
-    sh_file='init-machine-centos.sh'
-    cp_path=$sh_file
-    rm_path=$sh_file
+    sh_file=$0
     shift 2
-    upload_exec $@
+    upload_exec_sh $@
     break
     ;;
-  -t)
-    shift 1
+  t)
     timedatectl set-timezone Asia/Shanghai
     # install tools
     yum -y install wget
@@ -55,12 +53,10 @@ while [[ $# -ge 1 ]]; do
     yum -y install vim git
 
     shutdown -r now
-
-    shift 2
-    ;;
-  *)
-    echo -e "\033[31m$1 un_know input param \033[0m"
-    break
-    ;;
-  esac
+		;;
+		?)
+		echo -e "\033[31m$1 un_know input param \033[0m"
+		break
+		;;
+	esac
 done
