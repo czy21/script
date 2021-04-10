@@ -32,7 +32,11 @@ def build_api():
     if default_common.param_api_docker_gradle_command:
         client = docker.from_env()
         gradle_container = client.containers.run(image="gradle:jdk11",
-                                                 command=build_command,
+                                                 command=list_util.arr_param_to_str(
+                                                     "chmod +x ",
+                                                     path_util.pure_path_join(default_common.param_api_root_project_path, "gradlew"),
+                                                     build_command
+                                                 ),
                                                  volumes=[
                                                      ":".join([default_path.root_path, default_path.root_path]),
                                                      ":".join([path_util.pure_path_join(default_path.root_path, ".gradle"), "/home/gradle/.gradle"])
