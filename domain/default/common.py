@@ -50,7 +50,7 @@ param_api_image = ""
 param_api_root_project_path = ""
 param_api_docker_gradle_command = True
 param_api_gradle_init_script_file_path = ""
-param_api_plugin_file_path = ""
+param_api_gradle_plugin_file_path = ""
 
 param_api_gradle_extra_config_template_path = ""
 param_api_gradle_extra_config_output_path = ""
