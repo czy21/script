@@ -35,6 +35,7 @@ def build_api():
                                                  command=list_util.arr_param_to_str(
                                                      "chmod +x ",
                                                      path_util.pure_path_join(default_common.param_api_root_project_path, "gradlew"),
+                                                     "&&",
                                                      build_command
                                                  ),
                                                  volumes=[
