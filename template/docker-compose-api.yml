@@ -8,7 +8,8 @@ services:
       dockerfile: ${{{param_api_dockerfile_output_path}}}
     image: ${{{param_api_image}}}
     volumes:
-      - ${{{param_docker_data}}}/volumes/${{{param_project_name}}}_${{{param_env_suffix}}}/api/log/:/home/${{{param_project_name}}}/log/
+      - ${{{param_docker_data}}}/volumes/${{{param_project_name}}}-${{{param_env_suffix}}}/log/:/home/${{{param_project_name}}}/log/
+      - ${{{param_docker_data}}}/volumes/${{{param_api_source_share_dir}}}/:/home/${{{param_project_name}}}/${{{param_api_dest_share_dir}}}/
     restart: always
 networks:
   default:
