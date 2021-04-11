@@ -60,7 +60,7 @@ def start_api_compose():
             "--file",
             default_common.param_api_compose_file_output_path,
             "--project-name",
-            "-".join([default_common.param_project_name, default_common.param_env_suffix]),
+            "_".join([default_common.param_project_name, default_common.param_env_suffix]),
             "up --detach --build",
             ["--scale", scales] if scales else []
         ]
