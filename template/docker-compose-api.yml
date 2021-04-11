@@ -2,14 +2,14 @@ version: '3.7'
 
 services:
 
-  api:
+  ${{{param_api_module_name}}}:
     build:
       context: ${{{param_api_output_path}}}
       dockerfile: ${{{param_api_dockerfile_output_path}}}
     image: ${{{param_api_image}}}
     volumes:
-      - ${{{param_docker_data}}}/volumes/${{{param_project_name}}}_${{{param_env_suffix}}}/log/:/home/${{{param_project_name}}}/log/
-      - ${{{param_docker_data}}}/volumes/${{{param_api_source_share_dir}}}/:/home/${{{param_project_name}}}/${{{param_api_dest_share_dir}}}/
+      - ${{{param_docker_data}}}/volumes/${{{param_project_name}}}_${{{param_env_suffix}}}_${{{param_api_module_name}}}/log/:/home/${{{param_project_name}}}_${{{param_api_module_name}}}/log/
+      - ${{{param_docker_data}}}/volumes/${{{param_project_name}}}_${{{param_env_suffix}}}_${{{param_api_source_share_dir}}}/:/home/${{{param_project_name}}}_${{{param_api_module_name}}}/${{{param_api_dest_share_dir}}}/
     restart: always
 networks:
   default:
