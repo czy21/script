@@ -9,7 +9,7 @@ services:
     image: ${{{param_api_image}}}
     volumes:
       - ${{{param_docker_data}}}/volumes/${{{param_project_name}}}_${{{param_env_suffix}}}_${{{param_api_module_name}}}/log/:/home/${{{param_project_name}}}_${{{param_api_module_name}}}/log/
-      - ${{{param_docker_data}}}/volumes/${{{param_project_name}}}_${{{param_env_suffix}}}_/:/home/${{{param_project_name}}}_${{{param_api_module_name}}}/${{{param_api_dest_share_dir}}}/
+      - ${{{param_docker_data}}}/volumes/${{{param_project_name}}}_${{{param_env_suffix}}}_${{{param_api_source_share_dir}}}/:/home/${{{param_project_name}}}_${{{param_api_module_name}}}/${{{param_api_dest_share_dir}}}/
     restart: always
 networks:
   default:
