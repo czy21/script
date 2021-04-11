@@ -38,4 +38,4 @@ scrape_configs:
 
   - job_name: 'java'
     static_configs:
-      - targets: [ 'erp_play:3010' ]
+      - targets: [ 'erp_play:3010','file_resolve_play:3010' ]
