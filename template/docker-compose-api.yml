@@ -7,7 +7,6 @@ services:
       context: ${{{param_api_output_path}}}
       dockerfile: ${{{param_api_dockerfile_output_path}}}
     image: ${{{param_api_image}}}
-    container_name: ${{{param_project_name}}}_${{{param_env_suffix}}}
     volumes:
       - ${{{param_docker_data}}}/volumes/${{{param_project_name}}}_${{{param_env_suffix}}}/api/log/:/home/${{{param_project_name}}}/log/
     restart: always
