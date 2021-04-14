@@ -18,6 +18,7 @@ services:
     user: root
     environment:
       JENKINS_HOME: ${GLOBAL_VOLUMES_DIR}/jenkins/
+      JENKINS_UC: https://mirrors.tuna.tsinghua.edu.cn/jenkins/updates/update-center.json
     restart: always
 networks:
   default:
