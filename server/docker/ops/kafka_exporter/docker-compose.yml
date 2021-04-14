@@ -1,0 +1,16 @@
+version: '3.7'
+
+services:
+
+  kafka_exporter:
+    image: danielqsj/kafka-exporter
+    container_name: kafka_exporter
+    ports:
+      - "9308:9308"
+    command: ["--kafka.server=${GLOBAL_HOST_IP}:9092","--kafka.server=${GLOBAL_HOST_IP}:9093"]
+    restart: always
+    user: root
+networks:
+  default:
+    external:
+      name: local_default

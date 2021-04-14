@@ -10,7 +10,7 @@ services:
     environment:
       KAFKA_BROKER_ID: 0
       KAFKA_ADVERTISED_HOST_NAME: ${GLOBAL_HOST_IP}
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper1:2181,zookeeper2:2182,zookeeper3:2183
+      KAFKA_ZOOKEEPER_CONNECT: ${GLOBAL_HOST_IP}:2181,${GLOBAL_HOST_IP}:2182,${GLOBAL_HOST_IP}:2183
       KAFKA_JMX_OPTS: "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=127.0.0.1 -Dcom.sun.management.jmxremote.rmi.port=1092"
       JMX_PORT: 1092
     volumes:
@@ -26,40 +26,12 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ADVERTISED_HOST_NAME: ${GLOBAL_HOST_IP}
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper1:2181,zookeeper2:2182,zookeeper3:2183
+      KAFKA_ZOOKEEPER_CONNECT: ${GLOBAL_HOST_IP}:2181,${GLOBAL_HOST_IP}:2182,${GLOBAL_HOST_IP}:2183
       KAFKA_JMX_OPTS: "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=127.0.0.1 -Dcom.sun.management.jmxremote.rmi.port=1093"
       JMX_PORT: 1093
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ${GLOBAL_VOLUMES_DIR}/kafka2/:/kafka/
-
-  kafka_eagle:
-    build:
-      context: ${GLOBAL_PWD_HOME}/compose/kafka/kafka_eagle/
-      dockerfile: ${GLOBAL_PWD_HOME}/compose/kafka/kafka_eagle/Dockerfile
-    container_name: kafka_eagle
-    ports:
-      - "8048:8048"
-    volumes:
-      - ${GLOBAL_VOLUMES_DIR}/kafka_eagle/logs/:/usr/local/kafka_eagle/logs/
-      - ${GLOBAL_CONFIG_DIR}/kafka_eagle/:/usr/local/kafka_eagle/conf/
-    environment:
-      SYS_KAFKA_EAGLE_ZK_CLUSTER_ALIAS: cluster1
-      SYS_KAFKA_ZK_LIMIT_SIZE: 25
-      SYS_CLUSTER1_ZK_LIST: ${GLOBAL_HOST_IP}:2181,${GLOBAL_HOST_IP}:2182,${GLOBAL_HOST_IP}:2183
-      SYS_CLUSTER1_KAFKA_EAGLE_BROKER_SIZE: 20
-      SYS_CLUSTER1_KAFKA_EAGLE_OFFSET_STORAGE: kafka
-      SYS_CLUSTER1_KAFKA_EAGLE_JMX_ACL: "false"
-      SYS_CLUSTER1_KAFKA_EAGLE_JMX_SSL: "false"
-      SYS_KAFKA_EAGLE_WEBUI_PORT: 8048
-      SYS_KAFKA_EAGLE_METRICS_CHARTS: "true"
-      SYS_KAFKA_EAGLE_METRICS_RETAIN: 15
-      SYS_KAFKA_EAGLE_SQL_TOPIC_RECORDS_MAX: 5000
-      SYS_KAFKA_EAGLE_TOPIC_TOKEN: keadmin
-      SYS_KAFKA_EAGLE_DRIVER: com.mysql.jdbc.Driver
-      SYS_KAFKA_EAGLE_URL: jdbc:mysql://${GLOBAL_HOST_IP}:3306/ke?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
-      SYS_KAFKA_EAGLE_USERNAME: root
-      SYS_KAFKA_EAGLE_PASSWORD: ${GLOBAL_DB_PASSWORD}
 networks:
   default:
     external:
