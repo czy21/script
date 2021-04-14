@@ -22,13 +22,17 @@ def build_extra_config():
 
 def build_api():
     build_extra_config()
+    build_method = ["clean", "build"]
+    if default_common.param_api_module_name:
+        build_method = [default_common.param_api_module_name + ":" + b for b in build_method]
     build_command = list_util.arr_param_to_str(
         [
             path_util.pure_path_join(default_common.param_api_root_project_path, "gradlew"),
             "--init-script " + default_common.param_api_gradle_init_script_file_path,
             "--build-file " + path_util.pure_path_join(default_common.param_api_root_project_path, "build.gradle"),
             "--project-prop extraConfig=" + default_common.param_api_gradle_extra_config_output_path,
-            "clean build -x test"
+            build_method,
+            "-x test"
         ])
     if default_common.param_api_docker_gradle_command:
         client = docker.from_env()

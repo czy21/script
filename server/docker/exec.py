@@ -24,7 +24,11 @@ def select_one_option():
         print(" ".join([str(i), p.name]))
 
     one_option = input("please select one option(example:1) ").strip()
-    if not one_option.isnumeric():
+
+    if one_option == '':
+        return []
+
+    elif not one_option.isnumeric():
         print("\ninvalid option")
         sys.exit()
 
@@ -74,7 +78,7 @@ def init_start(app_id, source_compose_file, source_conf_path, source_init_config
         execute_shell(" ".join(['echo -e "{}\033[32m init_config not exist \033[0m"'.format(app_id)]))
     if source_compose_file.exists():
         execute_shell(" ".join(['echo -e "{}\033[32m start_compose => \033[0m ${}"'.format(app_id, source_compose_file.as_posix()),
-                                '&& sudo /usr/local/bin/docker-compose --file {} --env-file {} up -d --build'.format(source_compose_file.as_posix(), global_env_file)
+                                '&& sudo /usr/local/bin/docker-compose --file {} --env-file {} up --detach --build'.format(source_compose_file.as_posix(), global_env_file)
                                 ]))
     execute_shell("echo \n")
 
@@ -114,11 +118,11 @@ if __name__ == '__main__':
                 "&& echo ${" + t + "}"
             ]))
     selected_init_option = select_one_option()
-    selected_init_install = get_install_tuple(Path(selected_init_option).name)
-
-    execute(selected_init_install, init_start)
+    if selected_init_option:
+        selected_init_install = get_install_tuple(Path(selected_init_option).name)
+        execute(selected_init_install, init_start)
 
     selected_post_option = select_one_option()
-    selected_post_install = get_install_tuple(Path(selected_post_option).name)
-
-    execute(selected_post_install, post_config)
+    if selected_post_option:
+        selected_post_install = get_install_tuple(Path(selected_post_option).name)
+        execute(selected_post_install, post_config)
