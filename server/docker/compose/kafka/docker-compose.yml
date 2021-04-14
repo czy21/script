@@ -1,14 +1,6 @@
 version: '3.7'
 
 services:
-  zookeeper:
-    image: wurstmeister/zookeeper
-    container_name: zookeeper
-    ports:
-      - "2181:2181"
-    volumes:
-      - ${GLOBAL_CONFIG_DIR}/zookeeper/:/opt/zookeeper-3.4.13/conf/
-      - ${GLOBAL_VOLUMES_DIR}/zookeeper/data/:/opt/zookeeper-3.4.13/data/
   broker1:
     image: wurstmeister/kafka:latest
     container_name: broker1
@@ -18,11 +10,9 @@ services:
     environment:
       KAFKA_BROKER_ID: 0
       KAFKA_ADVERTISED_HOST_NAME: ${GLOBAL_HOST_IP}
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper1:2181,zookeeper2:2182,zookeeper3:2183
       KAFKA_JMX_OPTS: "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=127.0.0.1 -Dcom.sun.management.jmxremote.rmi.port=1092"
       JMX_PORT: 1092
-    depends_on:
-      - zookeeper
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ${GLOBAL_VOLUMES_DIR}/kafka1/:/kafka/
@@ -36,11 +26,9 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ADVERTISED_HOST_NAME: ${GLOBAL_HOST_IP}
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper1:2181,zookeeper2:2182,zookeeper3:2183
       KAFKA_JMX_OPTS: "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=127.0.0.1 -Dcom.sun.management.jmxremote.rmi.port=1093"
       JMX_PORT: 1093
-    depends_on:
-      - zookeeper
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ${GLOBAL_VOLUMES_DIR}/kafka2/:/kafka/
@@ -49,16 +37,16 @@ services:
     build:
       context: ${GLOBAL_PWD_HOME}/compose/kafka/kafka_eagle/
       dockerfile: ${GLOBAL_PWD_HOME}/compose/kafka/kafka_eagle/Dockerfile
-    image: kafka_eagle:latest
     container_name: kafka_eagle
-    network_mode: host
+    ports:
+      - "8048:8048"
     volumes:
       - ${GLOBAL_VOLUMES_DIR}/kafka_eagle/logs/:/usr/local/kafka_eagle/logs/
       - ${GLOBAL_CONFIG_DIR}/kafka_eagle/:/usr/local/kafka_eagle/conf/
     environment:
       SYS_KAFKA_EAGLE_ZK_CLUSTER_ALIAS: cluster1
       SYS_KAFKA_ZK_LIMIT_SIZE: 25
-      SYS_CLUSTER1_ZK_LIST: ${GLOBAL_HOST_IP}:2181
+      SYS_CLUSTER1_ZK_LIST: ${GLOBAL_HOST_IP}:2181,${GLOBAL_HOST_IP}:2182,${GLOBAL_HOST_IP}:2183
       SYS_CLUSTER1_KAFKA_EAGLE_BROKER_SIZE: 20
       SYS_CLUSTER1_KAFKA_EAGLE_OFFSET_STORAGE: kafka
       SYS_CLUSTER1_KAFKA_EAGLE_JMX_ACL: "false"
