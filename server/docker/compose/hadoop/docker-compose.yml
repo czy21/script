@@ -6,6 +6,7 @@ services:
     image: hadoop:1.0.0
     container_name: hadoop
     privileged: true
+    user: root
     ports:
       - "6022:22"
       - "9870:9870"

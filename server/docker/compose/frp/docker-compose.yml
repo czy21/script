@@ -9,6 +9,7 @@ services:
     image: frp:1.0.0
     container_name: frp
     privileged: true
+    user: root
     ports:
       - 7000:7000
     volumes:

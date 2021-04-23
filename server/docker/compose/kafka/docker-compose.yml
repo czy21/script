@@ -4,6 +4,8 @@ services:
   broker1:
     image: wurstmeister/kafka:latest
     container_name: broker1
+    privileged: true
+    user: root
     ports:
       - "9092:9092"
       - "1092:1092"

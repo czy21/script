@@ -6,6 +6,7 @@ services:
     image: jenkins/jenkins:lts-centos
     container_name: jenkins
     privileged: true
+    user: root
     ports:
       - 8090:8080
       - 50000:50000
@@ -15,7 +16,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - /bin/docker:/usr/bin/docker
       - /bin/docker-compose:/usr/bin/docker-compose
-    user: root
+
     environment:
       JENKINS_HOME: ${GLOBAL_VOLUMES_DIR}/jenkins/
       JENKINS_UC: https://mirrors.tuna.tsinghua.edu.cn/jenkins/updates/update-center.json

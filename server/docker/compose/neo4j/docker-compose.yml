@@ -6,6 +6,7 @@ services:
     image: neo4j:4.1.1
     container_name: neo4j
     privileged: true
+    user: root
     ports:
       - 7474:7474
       - 7687:7687
@@ -13,10 +14,10 @@ services:
       - ${GLOBAL_VOLUMES_DIR}/neo4j/data/:/data/
       - ${GLOBAL_VOLUMES_DIR}/neo4j/logs/:/logs/
       - ${GLOBAL_CONFIG_DIR}/neo4j/:/conf/
-    restart: always
     environment:
       NEO4J_AUTH: neo4j/${GLOBAL_DB_PASSWORD}
       NEO4J_dbms_memory_pagecache_size: 2g
+    restart: always
 networks:
   default:
     external:

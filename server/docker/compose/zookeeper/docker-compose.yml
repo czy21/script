@@ -4,7 +4,6 @@ services:
   zookeeper1:
     image: zookeeper
     container_name: zookeeper1
-    restart: always
     hostname: zookeeper1
     ports:
       - 2181:2181
@@ -16,12 +15,11 @@ services:
       ZOO_MY_ID: 1
       ZOO_TICK_TIME: 60000
       ZOO_SERVERS: server.1=0.0.0.0:2888:3888;2181 server.2=zookeeper2:2888:3888;2181 server.3=zookeeper3:2888:3888;2181
+    restart: always
 
   zookeeper2:
     image: zookeeper
     container_name: zookeeper2
-
-    restart: always
     hostname: zookeeper2
     ports:
       - 2182:2181
@@ -33,11 +31,11 @@ services:
       ZOO_MY_ID: 2
       ZOO_TICK_TIME: 60000
       ZOO_SERVERS: server.1=zookeeper1:2888:3888;2181 server.2=0.0.0.0:2888:3888;2181 server.3=zookeeper3:2888:3888;2181
+    restart: always
 
   zookeeper3:
     image: zookeeper
     container_name: zookeeper3
-    restart: always
     hostname: zookeeper3
     ports:
       - 2183:2181
@@ -49,6 +47,7 @@ services:
       ZOO_MY_ID: 3
       ZOO_TICK_TIME: 60000
       ZOO_SERVERS: server.1=zookeeper1:2888:3888;2181 server.2=zookeeper2:2888:3888;2181 server.3=0.0.0.0:2888:3888;2181
+    restart: always
 networks:
   default:
     external:
