@@ -19,3 +19,5 @@ docker rm -f $(docker ps --filter ancestor=erp:play -q)
 docker rmi erp:play
 
 docker ps --filter ancestor=erp:play -q | xargs docker rm
+
+scp -r ubun_a:/home/bruce/lede/bin/targets/ .
