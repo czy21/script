@@ -6,6 +6,7 @@ services:
     image: v2ray/official:latest
     container_name: v2ray
     privileged: true
+    user: root
     volumes:
       - ${GLOBAL_CONFIG_DIR}/v2ray/:/etc/v2ray/
       - ${GLOBAL_VOLUMES_DIR}/v2ray/log/:/var/log/v2ray/
