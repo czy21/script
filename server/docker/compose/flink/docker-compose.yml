@@ -5,6 +5,8 @@ services:
   jobmanager:
     image: flink:1.0.0
     container_name: flink_jobmanager
+    privileged: true
+    user: root
     ports:
       - "8081:8081"
     command: jobmanager

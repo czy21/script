@@ -6,11 +6,11 @@ services:
     image: mcr.microsoft.com/mssql/server:2019-latest
     container_name: mssql
     privileged: true
+    user: root
     ports:
       - 1433:1433
     volumes:
       - ${GLOBAL_VOLUMES_DIR}/mssql/:/var/opt/mssql/
-    user: root
     environment:
       - ACCEPT_EULA=Y
       - MSSQL_SA_PASSWORD=${GLOBAL_DB_PASSWORD}
