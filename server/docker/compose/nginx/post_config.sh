@@ -6,10 +6,6 @@ dir=$(cd "$(dirname "$0")"; pwd)
 source ${dir}/../../.env.global
 container_name="nginx"
 
-#sudo cat $dir/nginx/ops.conf > ${GLOBAL_CONFIG_DIR}/nginx/conf.d/${container_name}.conf
+sudo cp -r $dir/post/conf.d/* ${GLOBAL_CONFIG_DIR}/nginx/conf.d/
 
-for f in $(ls ${dir}/post/*.conf); do
-  cat $f > ${GLOBAL_CONFIG_DIR}/nginx/conf.d/${container_name}.conf
-done
-
-#sudo docker exec -i nginx nginx -s reload
+sudo docker exec -i ${container_name} nginx -s reload
