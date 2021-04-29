@@ -3,32 +3,30 @@ version: '3.7'
 services:
 
   jobmanager:
-    image: flink:1.0.0
-    container_name: flink_jobmanager
+    image: flink:latest
     privileged: true
     user: root
     ports:
-      - "8081:8081"
+      - "8088:8081"
     command: jobmanager
     volumes:
       - ${GLOBAL_VOLUMES_DIR}/flink/usrlib/:/opt/flink/usrlib/
-      - ${GLOBAL_VOLUMES_DIR}/flink/ftp/:/home/ftp/
     environment:
       - |
         FLINK_PROPERTIES=
         jobmanager.rpc.address: jobmanager
         parallelism.default: 2
 
-  taskmanager1:
-    image: flink:1.0.0
-    container_name: flink_taskmanager_1
+  taskmanager:
+    image: flink:latest
+    privileged: true
+    user: root
     depends_on:
       - jobmanager
     command: taskmanager
     scale: 1
     volumes:
       - ${GLOBAL_VOLUMES_DIR}/flink/usrlib/:/opt/flink/usrlib/
-      - ${GLOBAL_VOLUMES_DIR}/flink/ftp/:/home/ftp/
     environment:
       - |
         FLINK_PROPERTIES=
