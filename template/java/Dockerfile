@@ -14,4 +14,4 @@ ENTRYPOINT ["java",\
 "-javaagent:/home/${{{param_project_name}}}_${{{param_api_module_name}}}/jmx_prometheus_javaagent-0.15.0.jar=${{{param_api_jmx_port}}}:/home/${{{param_project_name}}}_${{{param_api_module_name}}}/config/${{{param_api_jmv_config_name}}}",\
 "-jar",\
 "/home/${{{param_project_name}}}_${{{param_api_module_name}}}/api.jar",\
-"--spring.config.location=classpath,/home/${{{param_project_name}}}_${{{param_api_module_name}}}/config/"]
+"--spring.config.location=classpath:/,file:/home/${{{param_project_name}}}_${{{param_api_module_name}}}/config/"]
