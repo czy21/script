@@ -1,6 +1,6 @@
 FROM openjdk:11.0.10-jre
 WORKDIR /home/${{{param_project_name}}}_${{{param_api_module_name}}}
-VOLUME ["/home/${{{param_project_name}}}_${{{param_api_module_name}}}/log","/home/${{{param_project_name}}}_${{{param_api_module_name}}}/config/"]
+VOLUME ["/home/${{{param_project_name}}}_${{{param_api_module_name}}}/log"]
 
 COPY ./api.jar /home/${{{param_project_name}}}_${{{param_api_module_name}}}/
 
