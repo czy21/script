@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import inspect
 import os
+from pathlib import Path
 
 import docker
 
@@ -58,7 +59,7 @@ def copy_config():
         "mkdir -p",
         default_common.param_api_config_path,
         "&&"
-        "cp -r",
+        "cp -rv",
         default_common.param_api_config_output_path + "/*",
         default_common.param_api_config_path
     )
