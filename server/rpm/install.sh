@@ -59,7 +59,7 @@ do
         nvm install ${node_version}
         tee /etc/profile.d/nvm.sh <<-'EOF'
 source /opt/nvm/nvm.sh
-nvm use v12.19.0
+nvm use v14.16.0
 EOF
 
         # yarn
