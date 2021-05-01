@@ -53,6 +53,19 @@ def build_api():
         basic_util.execute(build_command)
 
 
+def copy_config():
+    cp_cmd = list_util.arr_param_to_str(
+        "mkdir -p",
+        default_common.param_api_config_path,
+        "&&"
+        "cp -r",
+        default_common.param_api_config_output_path + "/*",
+        default_common.param_api_config_path
+    )
+    logger.info(basic_util.action_formatter(__get_function_name(), cp_cmd))
+    basic_util.execute(cp_cmd)
+
+
 def build_plugin(publish_task=None):
     command = list_util.arr_param_to_str(
         default_common.param_api_docker_gradle_command,

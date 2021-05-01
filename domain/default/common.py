@@ -54,10 +54,12 @@ param_api_docker_gradle_command = True
 param_api_gradle_init_script_file_path = path_util.pure_path_join(default_path.script_template, "java/init.gradle")
 param_api_gradle_plugin_file_path = path_util.pure_path_join(default_path.project_plugin, "build.gradle")
 param_api_module_name = ""
+param_api_config_path = ""
 param_api_jmx_port = 3010
 
 param_api_gradle_extra_config_template_path = ""
 param_api_gradle_extra_config_output_path = ""
+param_api_config_output_path = ""
 param_api_config_file_output_path = ""
 param_api_dockerfile_output_path = ""
 param_api_compose_file_output_path = ""
