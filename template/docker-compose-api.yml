@@ -8,9 +8,9 @@ services:
       dockerfile: ${{{param_api_dockerfile_output_path}}}
     image: ${{{param_api_image}}}
     volumes:
-      - ${{{param_docker_data}}}/volumes/${{{param_project_name}}}_${{{param_env_suffix}}}_${{{param_api_module_name}}}/log/:/home/${{{param_project_name}}}_${{{param_api_module_name}}}/log/
-      - ${{{param_docker_data}}}/volumes/${{{param_project_name}}}_${{{param_env_suffix}}}_${{{param_api_module_name}}}/config/:/home/${{{param_project_name}}}_${{{param_api_module_name}}}/config/
-      - ${{{param_docker_data}}}/volumes/${{{param_project_name}}}_${{{param_env_suffix}}}_${{{param_api_source_share_dir}}}/:/home/${{{param_project_name}}}_${{{param_api_module_name}}}/${{{param_api_dest_share_dir}}}/
+      - ${{{param_docker_data}}}/volumes/${{{param_api_config_path}}}/:/home/${{{param_project_name}}}_${{{param_api_module_name}}}/config/
+      - ${{{param_docker_data}}}/volumes/${{{param_api_data_path}}}/:/home/${{{param_project_name}}}_${{{param_api_module_name}}}/data/
+      - ${{{param_docker_data}}}/volumes/${{{param_api_log_path}}}/:/home/${{{param_project_name}}}_${{{param_api_module_name}}}/log/
     restart: always
 networks:
   default:
