@@ -3,7 +3,9 @@ version: '3.7'
 services:
 
   jobmanager:
-    image: flink:latest
+    build:
+      context: ${GLOBAL_PWD_HOME}/compose/flink/
+      dockerfile: ${GLOBAL_PWD_HOME}/compose/flink/Dockerfile
     privileged: true
     user: root
     ports:
@@ -18,7 +20,9 @@ services:
         parallelism.default: 2
 
   taskmanager:
-    image: flink:latest
+    build:
+      context: ${GLOBAL_PWD_HOME}/compose/flink/
+      dockerfile: ${GLOBAL_PWD_HOME}/compose/flink/Dockerfile
     privileged: true
     user: root
     depends_on:
