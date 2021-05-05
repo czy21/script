@@ -11,7 +11,7 @@ services:
       - "1092:1092"
     environment:
       KAFKA_BROKER_ID: 0
-      KAFKA_ADVERTISED_HOST_NAME: ${GLOBAL_HOST_IP}
+      HOSTNAME_COMMAND: echo ${GLOBAL_HOST_IP}
       KAFKA_ZOOKEEPER_CONNECT: ${GLOBAL_HOST_IP}:2181,${GLOBAL_HOST_IP}:2182,${GLOBAL_HOST_IP}:2183
       KAFKA_JMX_OPTS: "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=127.0.0.1 -Dcom.sun.management.jmxremote.rmi.port=1092"
       JMX_PORT: 1092
@@ -27,7 +27,7 @@ services:
       - "1093:1093"
     environment:
       KAFKA_BROKER_ID: 1
-      KAFKA_ADVERTISED_HOST_NAME: ${GLOBAL_HOST_IP}
+      HOSTNAME_COMMAND: echo ${GLOBAL_HOST_IP}
       KAFKA_ZOOKEEPER_CONNECT: ${GLOBAL_HOST_IP}:2181,${GLOBAL_HOST_IP}:2182,${GLOBAL_HOST_IP}:2183
       KAFKA_JMX_OPTS: "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=127.0.0.1 -Dcom.sun.management.jmxremote.rmi.port=1093"
       JMX_PORT: 1093
