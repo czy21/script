@@ -15,7 +15,7 @@ uci commit network
 
 uci add_list dhcp.@dnsmasq[0].address="/internal-home.com/192.168.2.21"
 uci commit dhcp
-
+/etc/init.d/dnsmasq restart
 # dnsmasq end
 
 reboot
