@@ -2,38 +2,40 @@ version: '3.7'
 
 services:
   broker1:
-    image: wurstmeister/kafka:latest
+    build:
+      context: ${GLOBAL_PWD_HOME}/compose/kafka/image/
+      dockerfile: ${GLOBAL_PWD_HOME}/compose/kafka/image/Dockerfile
     container_name: broker1
     privileged: true
     user: root
     ports:
       - "9092:9092"
-      - "1092:1092"
-    environment:
-      KAFKA_BROKER_ID: 0
-      HOSTNAME_COMMAND: echo ${GLOBAL_HOST_IP}
-      KAFKA_ZOOKEEPER_CONNECT: ${GLOBAL_HOST_IP}:2181,${GLOBAL_HOST_IP}:2182,${GLOBAL_HOST_IP}:2183
-      KAFKA_JMX_OPTS: "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=127.0.0.1 -Dcom.sun.management.jmxremote.rmi.port=1092"
-      JMX_PORT: 1092
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ${GLOBAL_VOLUMES_DIR}/kafka1/:/kafka/
+      - ${GLOBAL_VOLUMES_DIR}/kafka/1/logs:/tmp/kafka-logs/
+    environment:
+      KAFKA_SERVER_BROKER_ID: 0
+      KAFKA_SERVER_ADVERTISED_HOST_NAME: ${GLOBAL_HOST_IP}
+      KAFKA_SERVER_ADVERTISED_PORT: 9092
+      KAFKA_SERVER_ZOOKEEPER_CONNECT: ${GLOBAL_HOST_IP}:2181,${GLOBAL_HOST_IP}:2182,${GLOBAL_HOST_IP}:2183
+    restart: always
 
   broker2:
-    image: wurstmeister/kafka:latest
+    build:
+      context: ${GLOBAL_PWD_HOME}/compose/kafka/image/
+      dockerfile: ${GLOBAL_PWD_HOME}/compose/kafka/image/Dockerfile
     container_name: broker2
+    privileged: true
+    user: root
     ports:
-      - "9093:9092"
-      - "1093:1093"
-    environment:
-      KAFKA_BROKER_ID: 1
-      HOSTNAME_COMMAND: echo ${GLOBAL_HOST_IP}
-      KAFKA_ZOOKEEPER_CONNECT: ${GLOBAL_HOST_IP}:2181,${GLOBAL_HOST_IP}:2182,${GLOBAL_HOST_IP}:2183
-      KAFKA_JMX_OPTS: "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=127.0.0.1 -Dcom.sun.management.jmxremote.rmi.port=1093"
-      JMX_PORT: 1093
+      - "9093:9093"
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ${GLOBAL_VOLUMES_DIR}/kafka2/:/kafka/
+      - ${GLOBAL_VOLUMES_DIR}/kafka/2/logs:/tmp/kafka-logs/
+    environment:
+      KAFKA_SERVER_BROKER_ID: 1
+      KAFKA_SERVER_ADVERTISED_HOST_NAME: ${GLOBAL_HOST_IP}
+      KAFKA_SERVER_ADVERTISED_PORT: 9093
+      KAFKA_SERVER_ZOOKEEPER_CONNECT: ${GLOBAL_HOST_IP}:2181,${GLOBAL_HOST_IP}:2182,${GLOBAL_HOST_IP}:2183
+    restart: always
 networks:
   default:
     external:
