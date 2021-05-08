@@ -8,9 +8,9 @@ services:
     ports:
       - 2181:2181
     volumes:
-      - ${GLOBAL_VOLUMES_DIR}/zookeeper1/data/:/data/
-      - ${GLOBAL_VOLUMES_DIR}/zookeeper1/datalog/:/datalog/
-      - ${GLOBAL_VOLUMES_DIR}/zookeeper1/logs/:/logs/
+      - ${GLOBAL_VOLUMES_DIR}/zookeeper/1/data/:/data/
+      - ${GLOBAL_VOLUMES_DIR}/zookeeper/1/datalog/:/datalog/
+      - ${GLOBAL_VOLUMES_DIR}/zookeeper/1/logs/:/logs/
     environment:
       ZOO_MY_ID: 1
       ZOO_TICK_TIME: 60000
@@ -24,9 +24,9 @@ services:
     ports:
       - 2182:2181
     volumes:
-      - ${GLOBAL_VOLUMES_DIR}/zookeeper2/data/:/data/
-      - ${GLOBAL_VOLUMES_DIR}/zookeeper2/datalog/:/datalog/
-      - ${GLOBAL_VOLUMES_DIR}/zookeeper2/logs/:/logs/
+      - ${GLOBAL_VOLUMES_DIR}/zookeeper/2/data/:/data/
+      - ${GLOBAL_VOLUMES_DIR}/zookeeper/2/datalog/:/datalog/
+      - ${GLOBAL_VOLUMES_DIR}/zookeeper/2/logs/:/logs/
     environment:
       ZOO_MY_ID: 2
       ZOO_TICK_TIME: 60000
@@ -40,9 +40,9 @@ services:
     ports:
       - 2183:2181
     volumes:
-      - ${GLOBAL_VOLUMES_DIR}/zookeeper3/data/:/data/
-      - ${GLOBAL_VOLUMES_DIR}/zookeeper3/datalog/:/datalog/
-      - ${GLOBAL_VOLUMES_DIR}/zookeeper3/logs/:/logs/
+      - ${GLOBAL_VOLUMES_DIR}/zookeeper/3/data/:/data/
+      - ${GLOBAL_VOLUMES_DIR}/zookeeper/3/datalog/:/datalog/
+      - ${GLOBAL_VOLUMES_DIR}/zookeeper/3/logs/:/logs/
     environment:
       ZOO_MY_ID: 3
       ZOO_TICK_TIME: 60000
