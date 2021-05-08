@@ -1,10 +1,9 @@
 #!/bin/bash
-# bash init-machine-centos.sh -h user@host -t ali
-# -t ali | offical
+# bash init-machine-centos.sh -h user@host -t
 # must as root
 set -e
 
-while getopts ":h:t:" opt
+while getopts ":h:t" opt
 do
 	case $opt in
   h)
@@ -16,7 +15,6 @@ do
     break
     ;;
   t)
-    shift 1
     timedatectl set-timezone Asia/Shanghai
     # install tools
     yum -y install wget
@@ -31,13 +29,7 @@ do
       PasswordAuthentication no
       ClientAliveInterval 30
       " >>/etc/ssh/sshd_config
-#    wget -O /etc/yum.repos.d/VirtualBox.repo https://download.virtualbox.org/virtualbox/rpm/el/virtualbox.repo
-    if [ $1 == 'ali' ]; then
-      # use ali yum.repo
-      sudo mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
-      wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-8.repo
-      sed -i -e '/mirrors.cloud.aliyuncs.com/d' -e '/mirrors.aliyuncs.com/d' /etc/yum.repos.d/CentOS-Base.repo
-    fi
+
     yum clean all
     yum makecache
 
