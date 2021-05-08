@@ -1,9 +1,9 @@
 #!/bin/bash
-# bash init-machine-docker.sh -h user@host -t ali
+# bash init-machine-docker.sh -h user@host -t
 # -t ali | offical
 set -e
 
-while getopts ":h:t:" opt
+while getopts ":h:t" opt
 do
 	case $opt in
   h)
@@ -15,7 +15,6 @@ do
       break
 			;;
 	t)
-	    shift 1
 		  sudo mkdir -p /etc/docker
 		  sudo mkdir -p /etc/systemd/system/docker.service.d/
       sudo tee /etc/systemd/system/docker.service.d/docker.conf <<-'EOF'
@@ -23,23 +22,12 @@ do
 ExecStart=
 ExecStart=/usr/bin/dockerd
 EOF
-      if [ $1 == 'ali' ]; then
-        sudo tee /etc/docker/daemon.json <<-'EOF'
-{
-  "data-root": "/volume1/docker-root",
-  "hosts": ["fd://","tcp://0.0.0.0:2375"],
-  "registry-mirrors": ["https://idyylogn.mirror.aliyuncs.com","https://registry.docker-cn.com"]
-}
-EOF
-      fi
-      if [ $1 == 'offical' ]; then
-        sudo tee /etc/docker/daemon.json <<-'EOF'
+      sudo tee /etc/docker/daemon.json <<-'EOF'
 {
   "data-root": "/volume1/docker-root",
   "hosts": ["fd://","tcp://0.0.0.0:2375"]
 }
 EOF
-      fi
       sudo yum install -y yum-utils
       sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
       sudo yum -y install docker-ce docker-ce-cli containerd.io
