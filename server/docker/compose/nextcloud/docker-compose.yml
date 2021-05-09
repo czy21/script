@@ -1,0 +1,23 @@
+version: '3.7'
+
+services:
+  app:
+    image: nextcloud
+    container_name: nextcloud
+    privileged: true
+    user: root
+    ports:
+      - 8080:80
+    volumes:
+      - ${GLOBAL_VOLUMES_DIR}/nextcloud:/var/www/html
+    environment:
+      - MYSQL_HOST=192.168.2.23
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=${GLOBAL_DB_PASSWORD}
+    restart: always
+
+networks:
+  default:
+    external:
+      name: local_default
