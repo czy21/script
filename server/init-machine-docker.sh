@@ -1,9 +1,9 @@
 #!/bin/bash
-# bash init-machine-docker.sh -h user@host -t
-# -t ali | offical
+# bash init-machine-docker.sh -h user@host -t centos
+# -t centos | ubuntu
 set -e
 
-while getopts ":h:t" opt
+while getopts ":h:t:" opt
 do
 	case $opt in
   h)
@@ -15,6 +15,7 @@ do
       break
 			;;
 	t)
+	    shift 1
 		  sudo mkdir -p /etc/docker
 		  sudo mkdir -p /etc/systemd/system/docker.service.d/
       sudo tee /etc/systemd/system/docker.service.d/docker.conf <<-'EOF'
@@ -28,13 +29,23 @@ EOF
   "hosts": ["fd://","tcp://0.0.0.0:2375"]
 }
 EOF
-      sudo yum install -y yum-utils
-      sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-      sudo yum -y install docker-ce docker-ce-cli containerd.io
-      sudo systemctl daemon-reload
-      sudo systemctl restart docker
-      sudo systemctl enable docker
-      sudo docker network create local_default
+      if [ $1 == 'centos' ]; then
+        echo "centos"
+        sudo yum install -y yum-utils
+        sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+        sudo yum -y install docker-ce docker-ce-cli containerd.io
+        sudo systemctl daemon-reload
+        sudo systemctl restart docker
+        sudo systemctl enable docker
+        sudo docker network create local_default
+
+      elif [ $1 == 'ubuntu' ]; then
+        sudo apt-get update
+        sudo apt-get install -y apt-transport-https ca-certificates curl gnupg lsb-release
+        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+        echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+        sudo apt-get install docker-ce docker-ce-cli containerd.io
+      fi
 
       # docker compose
       sudo curl -L "https://github.com/docker/compose/releases/download/1.29.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
