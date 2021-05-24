@@ -8,14 +8,43 @@ import requests
 
 def publish(max):
     for i in range(0, max):
-        r = requests.post(url="http://127.0.0.1:8080/user/publicMsg",
+        r = requests.post(url="http://localhost:8000/api/data-center/match/fromInstitutionMatch",
                           data=json.dumps({
-                              "topic": "my-topic",
-                              'msg': "国药控股云南有限公司,广西九州通医疗器械有限公司,上海软素经销商,哈尔滨凯德医院,哈尔滨仁圣医院,黑龙江省肿瘤医院,黑龙江大学医院,哈尔滨口岸医院,哈尔滨仁爱医院,黑龙江省第二医院,黑龙江省医院,哈尔滨建国医院,黑龙江公明医院,华润广西医药有限公司55583,华润广西医药有限公司55583,华润广西医药有限公司55583,华润广西医药有限公司55583,华润广西医药有限公司55583,华润广西医药有限公司55583,华润广西医药有限公司55583,华润广西医药有限公司55583,华润广西医药有限公司55583,华润广西医药有限公司55583,华润广西医药有限公司55583,华润广西医药有限公司55583,华润广西医药有限公司55583"
+                              "inspectSaleDTO": {
+                                  "id": "e2cfe615-bc64-11eb-aac7-00163e1e0729",
+                                  "fromInstitutionName": "全部紫阳县红椿大药房" + str(i + 1),
+                                  "fromInstitutionRinseStatus": "FAIL",
+                                  "createTime": "2020-12-31 11:13:19",
+                                  "updateTime": "2021-05-20 21:01:46",
+                                  "businessType": "SD",
+                                  "periodName": "2021财年-05",
+                                  "periodId": "8ac2749979651454017968aa75480008",
+                              },
+                              "institutionDTO": {
+                                  "score": 0.648,
+                                  "address": {
+                                      "0": "金盏乡黎各庄村128号"
+                                  },
+                                  "province": "北京市",
+                                  "city": "北京市",
+                                  "county": "朝阳区",
+                                  "name": "北京京勇安康大药房有限公司",
+                                  "standardCode": "",
+                                  "alias": "",
+                                  "uniqueId": "",
+                                  "category": "",
+                                  "state": "Active",
+                                  "code": "JXS782"
+                              },
+                              "tabName": "enterprise",
+                              "dataTypeDesc": "MONTH"
                           }),
-                          headers={'Content-Type': 'application/json'})
-        print(i, "次")
+                          headers={
+                              'Content-Type': 'application/json',
+                              'RS-Header-TenantId': '08dea516d0244bdaaa3a723bbe9cbd57'
+                          })
+        print(i + 1, "次")
 
 
 if __name__ == '__main__':
-    publish(3000)
+    publish(100)
