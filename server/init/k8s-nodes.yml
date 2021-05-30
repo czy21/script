@@ -3,5 +3,3 @@
   tasks:
     - name: install
       script: k8s.sh
-    - name: join cluster
-      shell: kubeadm join 192.168.2.22:6443 --token iho5m8.c2f26hnvsadkdztq --discovery-token-ca-cert-hash sha256:37d4b62414dabd7358135046355ec28503aff50c9273c88486693c4bdc54b90b
