@@ -1,4 +1,5 @@
 - hosts: all
+  remote_user: bruce
   tasks:
     - name: install
       script: docker.sh
