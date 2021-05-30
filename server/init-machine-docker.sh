@@ -25,8 +25,14 @@ ExecStart=/usr/bin/dockerd
 EOF
       sudo tee /etc/docker/daemon.json <<-'EOF'
 {
+  "hosts": ["fd://","tcp://0.0.0.0:2375"],
   "data-root": "/volume1/docker-root",
-  "hosts": ["fd://","tcp://0.0.0.0:2375"]
+  "exec-opts": ["native.cgroupdriver=systemd"],
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "100m"
+  },
+  "storage-driver": "overlay2"
 }
 EOF
       if [ $1 == 'centos' ]; then
