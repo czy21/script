@@ -12,7 +12,7 @@ UseDNS no
 PermitRootLogin yes
 PasswordAuthentication no
 ClientAliveInterval 30
-  " >>/etc/ssh/sshd_config
+" >>/etc/ssh/sshd_config
 
 yum clean all
 yum makecache

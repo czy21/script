@@ -2,3 +2,6 @@
   tasks:
     - name: init
       script: centos.sh
+
+    - name: reboot
+      shell: reboot
