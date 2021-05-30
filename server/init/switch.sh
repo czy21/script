@@ -21,12 +21,13 @@ do
       chmod 600 ${private_key_file}
     fi
     shift 1
+    ansible_cmd="ansible-playbook --inventory-file ${parent_path}/hosts ${parent_path}/$1.yml --verbose"
     if [ $1 == 'centos' ]; then
-      ansible-playbook --inventory-file ${parent_path}/hosts ${parent_path}/centos.yml --verbose --ask-pass
+      bash -c "${ansible_cmd} --ask-pass"
     elif [ $1 == 'ubuntu' ]; then
-      ansible-playbook --inventory-file ${parent_path}/hosts ${parent_path}/ubuntu.yml --verbose --private-key ${private_key_file}
+      bash -c "${ansible_cmd} --ask-pass"
     elif [ $1 == 'docker' ]; then
-      ansible-playbook --inventory-file ${parent_path}/hosts ${parent_path}/docker.yml --verbose --private-key ${private_key_file}
+      bash -c "${ansible_cmd} --private-key ${private_key_file}"
     fi
 		;;
 		?)
