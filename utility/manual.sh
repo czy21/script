@@ -21,3 +21,6 @@ docker rmi erp:play
 docker ps --filter ancestor=erp:play -q | xargs docker rm
 
 scp -r ubun_a:/home/bruce/lede/bin/targets/ .
+
+# get join cluster command
+kubeadm token create --print-join-command
