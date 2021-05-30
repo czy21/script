@@ -1,0 +1,4 @@
+- hosts: all
+  tasks:
+    - name: install
+      script: docker.sh
