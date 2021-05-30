@@ -4,4 +4,4 @@
       script: centos.sh
 
     - name: reboot
-      shell: reboot
+      shell: sudo reboot
