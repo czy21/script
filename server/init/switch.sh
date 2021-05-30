@@ -21,7 +21,7 @@ do
       chmod 600 ${private_key_file}
     fi
     shift 1
-    ansible_cmd="ansible-playbook --inventory-file ${parent_path}/hosts ${parent_path}/$1.yml --verbose"
+    ansible_cmd="ansible-playbook --inventory-file ${parent_path}/hosts ${parent_path}/$1.yml --step --verbose"
     if [ $1 == 'centos' ]; then
       bash -c "${ansible_cmd} --ask-pass"
     elif [ $1 == 'ubuntu' ]; then
