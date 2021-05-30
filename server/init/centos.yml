@@ -1,4 +1,5 @@
 - hosts: all
+  remote_user: root
   tasks:
     - name: init
       script: centos.sh

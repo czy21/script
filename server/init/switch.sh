@@ -1,6 +1,6 @@
 #!/bin/bash
 # bash switch.sh -h user@host -t
-# -t centos | ubuntu | docker | k8s
+# -t centos | ubuntu | docker | set-hosts | k8s-master | k8s-nodes
 set -e
 
 while getopts ":h:t:" opt
@@ -15,18 +15,18 @@ do
     break
     ;;
   t)
-    parent_path=$(cd "$(dirname "$0")";pwd)
-    private_key_file=${parent_path}/___temp/private-key
+    root_path=$(cd "$(dirname "$0")";pwd)
+    private_key_file=${root_path}/___temp/private-key
     if [ -f "${private_key_file}" ]; then
       chmod 600 ${private_key_file}
     fi
     shift 1
-    ansible_cmd="ansible-playbook --inventory-file ${parent_path}/hosts ${parent_path}/$1.yml --step --verbose"
+    ansible_cmd="ansible-playbook --extra-vars root_path=${root_path} --inventory-file ${root_path}/ansible_hosts ${root_path}/$1.yml --step --verbose"
     if [ $1 == 'centos' ]; then
       bash -c "${ansible_cmd} --ask-pass"
     elif [ $1 == 'ubuntu' ]; then
       bash -c "${ansible_cmd} --ask-pass"
-    elif [ $1 == 'docker' ]; then
+    else
       bash -c "${ansible_cmd} --private-key ${private_key_file}"
     fi
 		;;
