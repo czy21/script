@@ -1,7 +1,7 @@
-FROM cptactionhank/atlassian-jira-software:latest
+FROM cptactionhank/atlassian-confluence:latest
 
 USER root
 
-COPY ./___temp/atlassian-agent.jar /opt/atlassian/jira/
+COPY ./___temp/atlassian-agent.jar /opt/atlassian/confluence/
 
-RUN echo 'export CATALINA_OPTS="-javaagent:/opt/atlassian/jira/atlassian-agent.jar ${CATALINA_OPTS}"' >> /opt/atlassian/jira/bin/setenv.sh
+RUN echo 'export CATALINA_OPTS="-javaagent:/opt/atlassian/confluence/atlassian-agent.jar ${CATALINA_OPTS}"' >> /opt/atlassian/confluence/bin/setenv.sh
