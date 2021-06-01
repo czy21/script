@@ -1,0 +1,42 @@
+version: '3.7'
+
+services:
+  broker1:
+    build:
+      context: ${GLOBAL_PWD_HOME}/compose/kafka/image/
+      dockerfile: ${GLOBAL_PWD_HOME}/compose/kafka/image/Dockerfile
+    container_name: broker1
+    privileged: true
+    user: root
+    ports:
+      - "9092:9092"
+    volumes:
+      - ${GLOBAL_VOLUMES_DIR}/kafka/1/logs:/tmp/kafka-logs/
+    environment:
+      KAFKA_SERVER_BROKER_ID: 0
+      KAFKA_SERVER_LISTENERS: PLAINTEXT://:9092
+      KAFKA_SERVER_ADVERTISED_LISTENERS: PLAINTEXT://${GLOBAL_HOST_IP}:9092
+      KAFKA_SERVER_ZOOKEEPER_CONNECT: ${GLOBAL_HOST_IP}:2181,${GLOBAL_HOST_IP}:2182,${GLOBAL_HOST_IP}:2183
+    restart: always
+
+  broker2:
+    build:
+      context: ${GLOBAL_PWD_HOME}/compose/kafka/image/
+      dockerfile: ${GLOBAL_PWD_HOME}/compose/kafka/image/Dockerfile
+    container_name: broker2
+    privileged: true
+    user: root
+    ports:
+      - "9093:9093"
+    volumes:
+      - ${GLOBAL_VOLUMES_DIR}/kafka/2/logs:/tmp/kafka-logs/
+    environment:
+      KAFKA_SERVER_BROKER_ID: 1
+      KAFKA_SERVER_LISTENERS: PLAINTEXT://:9093
+      KAFKA_SERVER_ADVERTISED_LISTENERS: PLAINTEXT://${GLOBAL_HOST_IP}:9093
+      KAFKA_SERVER_ZOOKEEPER_CONNECT: ${GLOBAL_HOST_IP}:2181,${GLOBAL_HOST_IP}:2182,${GLOBAL_HOST_IP}:2183
+    restart: always
+networks:
+  default:
+    external:
+      name: local_default
