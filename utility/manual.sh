@@ -24,3 +24,7 @@ scp -r ubun_a:/home/bruce/lede/bin/targets/ .
 
 # get join cluster command
 kubeadm token create --print-join-command
+
+export KUBECONFIG=/etc/kubernetes/admin.conf
+
+kubectl -n kubernetes-dashboard get secret $(kubectl -n kubernetes-dashboard get sa/admin-user -o jsonpath="{.secrets[0].name}") -o go-template="{{.data.token | base64decode}}"
