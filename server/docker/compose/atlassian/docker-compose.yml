@@ -15,7 +15,9 @@ services:
       - ${GLOBAL_VOLUMES_DIR}/atlassian/jira/logs:/opt/atlassian/jira/logs
     environment:
       TZ: Asia/Shanghai
+      CATALINA_OPTS: "-Xmx2G"
     restart: always
+
 
   confluence:
     build:
@@ -26,6 +28,12 @@ services:
     user: root
     ports:
       - "8101:8090"
+    volumes:
+      - ${GLOBAL_VOLUMES_DIR}/atlassian/confluence/:/var/atlassian/confluence/
+      - ${GLOBAL_VOLUMES_DIR}/atlassian/confluence/logs:/opt/atlassian/confluence/logs
+    environment:
+      TZ: Asia/Shanghai
+      CATALINA_OPTS: "-Xmx2G"
     restart: always
 
 
