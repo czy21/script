@@ -1,0 +1,14 @@
+
+Install-Module -Name VMware.PowerCLI
+Set-ExecutionPolicy RemoteSigned
+
+$esxiOfflineBundle = "C:\Users\bruce\Desktop\esxi\VMware-ESXi-7.0U2-17630552-depot.zip"
+$intelNicOfflineBundle = "C:\Users\bruce\Desktop\esxi\Intel-NUC-ne1000_0.8.4-3vmw.670.0.0.8169922-offline_bundle-16654787.zip"
+$esxiImageProfileName = "ESXi-7.0.2-17630552-standard"
+$newImageProfileName = "ESXi-7.0.2"
+Add-EsxSoftwareDepot $esxiOfflineBundle
+Add-EsxSoftwareDepot $intelNicOfflineBundle
+$IntelNUCVib = Get-EsxSoftwarePackage | where {$_.name -eq "ne1000-intelnuc" -and $_.version -eq "0.8.4-3vmw.670.0.0.8169922"}
+New-EsxImageProfile -CloneProfile $esxiImageProfileName -Name $newImageProfileName -Vendor vGhetto
+Add-EsxSoftwarePackage -ImageProfile $newImageProfileName -SoftwarePackage $IntelNUCVib
+Export-EsxImageProfile -ImageProfile $newImageProfileName -ExportToIso -FilePath "C:\Users\bruce\Desktop\esxi\ESXi-7.0.2-custom.ISO"
