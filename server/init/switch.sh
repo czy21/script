@@ -1,5 +1,5 @@
 #!/bin/bash
-# bash switch.sh -h user@host -t
+# bash switch.sh -h user@host -t [target]
 # -t centos | ubuntu | docker | set-hosts | k8s-master | k8s-nodes
 set -e
 
