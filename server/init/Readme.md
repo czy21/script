@@ -12,3 +12,7 @@ sed -ir 's/^#\(host_key_checking\)/\1/' /etc/ansible/ansible.cfg
 ```Bash
 nmcli device delete br-xxx
 ```
+###主节点 删除calico pod
+```Bash
+kubectl delete pod calico-node-xxxxx -n kube-system
+```

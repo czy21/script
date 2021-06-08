@@ -7,8 +7,5 @@
     - name: init-master
       shell: kubeadm init --apiserver-advertise-address={{inventory_hostname}} --service-cidr=10.10.0.0/16 --pod-network-cidr=10.122.0.0/16
 
-    - name: config kubectl
-      shell: mkdir -p $HOME/.kube && cp -i /etc/kubernetes/admin.conf $HOME/.kube/config && chown $(id -u):$(id -g) $HOME/.kube/config
-
     - name: init network
       shell: kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
