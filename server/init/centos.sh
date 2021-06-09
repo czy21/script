@@ -2,7 +2,7 @@
 set -e
 
 timedatectl set-timezone Asia/Shanghai
-yum -y install wget vim git
+yum -y install wget vim git nfs-utils
 dnf -y install python38
 sed -i -r "s/ll='ls\s+-l/\0va/" /etc/profile.d/colorls.sh
 sed -i -r "s/\s*#\s*(%wheel\s+ALL=\(ALL\)\s+ALL)/\1/" /etc/sudoers
