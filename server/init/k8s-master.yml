@@ -4,8 +4,12 @@
     - name: install
       script: k8s.sh
 
-    - name: init-master
+    - name: init master
       shell: kubeadm init --apiserver-advertise-address={{inventory_hostname}} --service-cidr=10.10.0.0/16 --pod-network-cidr=10.122.0.0/16
+
+    - name: export admin.conf
+      shell: echo 'export KUBECONFIG=/etc/kubernetes/admin.conf' >> ~/.bashrc
+      when: "'KUBECONFIG' not in ansible_env"
 
     - name: init network
       shell: kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
