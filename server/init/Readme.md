@@ -38,3 +38,9 @@ kubectl get svc/ks-console -n kubesphere-system
 
 # /etc/kubernetes/manifests/kube-apiserver.yaml command 下添加 - --feature-gates=RemoveSelfLink=false
 ```
+
+### 加入集群
+```shell
+# 主节点 获取加入节点token
+kubeadm token create --print-join-command
+```
