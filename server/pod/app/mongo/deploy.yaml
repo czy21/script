@@ -1,0 +1,118 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo
+spec:
+  selector:
+    app: mongo
+  type: NodePort
+  ports:
+    - name: "27017"
+      port: 27017
+      targetPort: 27017
+      nodePort: 30217
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mongo
+  labels:
+    app: mongo
+data:
+  mongod.conf: |
+    # mongod.conf
+
+    # for documentation of all options, see:
+    #   http://docs.mongodb.org/manual/reference/configuration-options/
+
+    # Where and how to store data.
+    storage:
+      dbPath: /data/db
+      journal:
+        enabled: true
+    #  engine:
+    #  mmapv1:
+    #  wiredTiger:
+    # where to write logging data.
+    systemLog:
+      destination: file
+      logAppend: true
+      path: /data/db/mongod.log
+    # network interfaces
+    net:
+      port: 27017
+      bindIp: 0.0.0.0
+    # how the process runs
+    processManagement:
+      timeZoneInfo: /usr/share/zoneinfo
+    #security:
+    #  authorization: enabled
+    #operationProfiling:
+    #replication:
+    #sharding:
+    ## Enterprise-Only Options:
+    #auditLog:
+    #snmp:
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongo
+spec:
+  selector:
+    matchLabels:
+      app: mongo
+  serviceName: mongo
+  template:
+    metadata:
+      labels:
+        app: mongo
+    spec:
+      nodeSelector:
+        slave: "db"
+      volumes:
+        - name: conf
+          configMap:
+            name: mongo
+            items:
+              - key: "mongod.conf"
+                path: "mongod.conf"
+        - name: configdb
+          emptyDir: {}
+      containers:
+        - name: mongo
+          image: mongo:4.4.6
+          command: ['sh']
+          args:
+            - "-c"
+            - |
+              mongod --config /data/conf/mongod.conf
+          resources:
+            limits:
+              memory: "2048Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 27017
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              value: "admin"
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              value: "Czy.190815"
+          volumeMounts:
+            - name: configdb
+              mountPath: /data/configdb/
+            - name: conf
+              mountPath: /data/conf/
+            - name: data
+              mountPath: /data/db/
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes:
+          - ReadWriteMany
+        resources:
+          requests:
+            storage: 256Gi
+        storageClassName: "managed-nfs-storage"
+

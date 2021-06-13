@@ -1,0 +1,22 @@
+version: '3.7'
+
+services:
+
+  mongo:
+    image: mongo:4.2.1
+    container_name: mongo
+    privileged: true
+    user: root
+    ports:
+      - 27017:27017
+    volumes:
+      - ${GLOBAL_VOLUMES_DIR}/mongo/:/data/db/
+      - ${GLOBAL_CONFIG_DIR}/mongo/:/data/configdb/
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: ${GLOBAL_DB_PASSWORD}
+    restart: always
+networks:
+  default:
+    external:
+      name: local_default

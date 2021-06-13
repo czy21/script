@@ -1,0 +1,101 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+spec:
+  selector:
+    app: mysql
+  type: NodePort
+  ports:
+    - name: "3306"
+      port: 3306
+      targetPort: 3306
+      nodePort: 30306
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql
+  labels:
+    app: mysql
+data:
+  my.cnf: |
+    [mysqld]
+    pid-file        = /var/run/mysqld/mysqld.pid
+    socket          = /var/run/mysqld/mysqld.sock
+    datadir         = /var/lib/mysql
+    default-time-zone = '+8:00'
+    secure-file-priv= NULL
+    symbolic-links=0
+    character-set-server=utf8mb4
+    skip-log-bin
+    # Custom config should go here
+    !includedir /etc/mysql/conf.d/ 
+  mysql.cnf: |
+    [client]
+    default-character-set=utf8mb4
+    [mysql]
+    default-character-set=utf8mb4
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mysql
+spec:
+  selector:
+    matchLabels:
+      app: mysql
+  serviceName: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+        - name: mysql
+          image: mysql:8.0
+          resources:
+            limits:
+              memory: "2048Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 3306
+          args: [
+          --default-authentication-plugin=mysql_native_password
+          ]
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: "Czy.190815"
+          volumeMounts:
+            - name: my-cnf
+              mountPath: /etc/mysql/
+            - name: conf
+              mountPath: /etc/mysql/conf.d
+            - name: data
+              mountPath: /var/lib/mysql/
+      volumes:
+        - name: my-cnf
+          configMap:
+            name: mysql
+            items:
+              - key: "my.cnf"
+                path: "my.cnf"
+        - name: conf
+          configMap:
+            name: mysql
+            items:
+              - key: "mysql.cnf"
+                path: "mysql.cnf"
+      nodeSelector:
+        slave: "db"
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes:
+          - ReadWriteMany
+        resources:
+          requests:
+            storage: 256Gi
+        storageClassName: "managed-nfs-storage"
+

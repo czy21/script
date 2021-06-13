@@ -20,9 +20,7 @@ mkdir nfs-client && for file in class.yaml deployment.yaml rbac.yaml ; do wget -
 # 修改 deployment.yaml 中的两处 NFS 服务器 IP 和目录
 
 # 部署
-kubectl apply -f rbac.yaml
-kubectl apply -f class.yaml
-kubectl apply -f deployment.yaml
+kubectl apply -f rbac.yaml,class.yaml,deployment.yaml
 # 标记默认 StorageClass
 kubectl patch storageclass managed-nfs-storage -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
 ```
@@ -37,10 +35,16 @@ kubectl logs -n kubesphere-system $(kubectl get pod -n kubesphere-system -l app=
 kubectl get svc/ks-console -n kubesphere-system
 
 # /etc/kubernetes/manifests/kube-apiserver.yaml command 下添加 - --feature-gates=RemoveSelfLink=false
+# 卸载
+curl -L https://github.com/kubesphere/ks-installer/blob/release-3.1/scripts/kubesphere-delete.sh | bash
 ```
 
 ### 加入集群
 ```shell
 # 主节点 获取加入节点token
 kubeadm token create --print-join-command
+```
+### 非root用户使用kubectl
+```shell
+mkdir -p $HOME/.kube && sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config && sudo chown $(id -u):$(id -g) $HOME/.kube/config
 ```
