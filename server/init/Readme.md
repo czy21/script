@@ -35,6 +35,8 @@ kubectl logs -n kubesphere-system $(kubectl get pod -n kubesphere-system -l app=
 kubectl get svc/ks-console -n kubesphere-system
 
 # /etc/kubernetes/manifests/kube-apiserver.yaml command 下添加 - --feature-gates=RemoveSelfLink=false
+# 更改nodePort范围
+# /etc/kubernetes/manifests/kube-apiserver.yaml command 下添加 --service-node-port-range=1-65535
 # 卸载
 wget https://raw.githubusercontent.com/kubesphere/ks-installer/release-3.1/scripts/kubesphere-delete.sh
 ```
@@ -47,4 +49,13 @@ kubeadm token create --print-join-command
 ### 非root用户使用kubectl
 ```shell
 mkdir -p $HOME/.kube && sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config && sudo chown $(id -u):$(id -g) $HOME/.kube/config
+```
+
+### 节点添加标签
+```shell
+kubectl label nodes k8s-nodex slave=x
+```
+### 查看标签
+```shell
+kubectl get node --show-labels
 ```

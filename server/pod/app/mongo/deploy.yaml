@@ -18,41 +18,6 @@ metadata:
   name: mongo
   labels:
     app: mongo
-data:
-  mongod.conf: |
-    # mongod.conf
-
-    # for documentation of all options, see:
-    #   http://docs.mongodb.org/manual/reference/configuration-options/
-
-    # Where and how to store data.
-    storage:
-      dbPath: /data/db
-      journal:
-        enabled: true
-    #  engine:
-    #  mmapv1:
-    #  wiredTiger:
-    # where to write logging data.
-    systemLog:
-      destination: file
-      logAppend: true
-      path: /data/db/mongod.log
-    # network interfaces
-    net:
-      port: 27017
-      bindIp: 0.0.0.0
-    # how the process runs
-    processManagement:
-      timeZoneInfo: /usr/share/zoneinfo
-    #security:
-    #  authorization: enabled
-    #operationProfiling:
-    #replication:
-    #sharding:
-    ## Enterprise-Only Options:
-    #auditLog:
-    #snmp:
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -77,12 +42,9 @@ spec:
             items:
               - key: "mongod.conf"
                 path: "mongod.conf"
-        - name: configdb
-          emptyDir: {}
       containers:
         - name: mongo
           image: mongo:4.4.6
-          command: ["mongod", "--config", "/data/conf/mongod.conf"]
           ports:
             - containerPort: 27017
           env:
@@ -91,13 +53,12 @@ spec:
             - name: MONGO_INITDB_ROOT_PASSWORD
               value: "Czy.190815"
           volumeMounts:
-            - name: configdb
+            - name: data
               mountPath: /data/configdb/
-              readOnly: true
-            - name: conf
-              mountPath: /data/conf/
+              subPath: configdb
             - name: data
               mountPath: /data/db/
+              subPath: db
   volumeClaimTemplates:
     - metadata:
         name: data
