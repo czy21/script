@@ -1,7 +1,4 @@
 #!/usr/bin/env python3
-import argparse
-import os
-import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -70,10 +67,6 @@ def execute_shell(cmd: str):
 
 if __name__ == '__main__':
     global_env_file = Path(__file__).parent.joinpath(".env.global").as_posix()
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-i', action="store_true")
-    parser.add_argument('-c', action="store_true")
-    args = parser.parse_args()
 
     with open(global_env_file, "r") as e:
         global_env = dict((t.strip().split("=")[0], t.strip().split("=")[1]) for t in e)
