@@ -5,7 +5,7 @@
       script: k8s.sh
 
     - name: init master
-      shell: kubeadm init --apiserver-advertise-address={{inventory_hostname}} --service-cidr=10.10.0.0/16 --pod-network-cidr=10.122.0.0/16
+      shell: kubeadm init --apiserver-advertise-address={{inventory_hostname}} --service-cidr=10.10.0.0/16 --pod-network-cidr=10.122.0.0/16 --service-node-port-range=1-65535
 
     - name: export admin.conf
       shell: echo 'export KUBECONFIG=/etc/kubernetes/admin.conf' >> ~/.bashrc
