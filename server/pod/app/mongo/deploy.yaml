@@ -12,13 +12,6 @@ spec:
       targetPort: 27017
       nodePort: 27017
 ---
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: mongo
-  labels:
-    app: mongo
----
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -35,13 +28,6 @@ spec:
     spec:
       nodeSelector:
         slave: "db"
-      volumes:
-        - name: conf
-          configMap:
-            name: mongo
-            items:
-              - key: "mongod.conf"
-                path: "mongod.conf"
       containers:
         - name: mongo
           image: mongo:4.4.6
@@ -54,11 +40,7 @@ spec:
               value: "Czy.190815"
           volumeMounts:
             - name: data
-              mountPath: /data/configdb/
-              subPath: configdb
-            - name: data
-              mountPath: /data/db/
-              subPath: db
+              mountPath: /data/
   volumeClaimTemplates:
     - metadata:
         name: data
