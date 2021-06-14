@@ -43,36 +43,17 @@ def select_one_option():
 def execute(app_tuples, func):
     for t in app_tuples:
         app_number = str(t[0])
-        source_path = t[1]
-        source_name = Path(source_path).name
-        source_conf_path = Path(source_path).joinpath("conf")
-        source_compose_file = Path(source_path).joinpath("deploy.yaml")
-
-        source_init_config_sh = Path(source_path).joinpath("init_config.sh")
-        source_post_config_sh = Path(source_path).joinpath("post_config.sh")
+        source_path = Path(t[1])
+        source_name = source_path.name
         app_id = " ".join([app_number, source_name])
-        func(app_id,
-             source_name,
-             source_compose_file,
-             source_conf_path,
-             source_init_config_sh,
-             source_post_config_sh
-             )
+        func(app_id, source_name, source_path)
 
 
-def init_start(app_id, app_name, source_compose_file: Path, source_conf_path, source_init_config_sh, source_post_config_sh):
-    if source_compose_file.exists():
-        execute_shell(" ".join(['echo -e "{}\033[32m deploy => \033[0m {}"'.format(app_id, source_compose_file.as_posix()),
-                                '&& kubectl apply -f {} '.format(source_compose_file.as_posix())
-                                ]))
+def apply(app_id, app_name, source_path: Path):
+    for t in source_path.glob("*.yaml"):
+        yaml = source_path.joinpath(t.name).as_posix()
+        execute_shell(" ".join(['echo -e "{}\033[32m deploy => \033[0m {}"'.format(app_id, yaml), '&& kubectl apply -f {} '.format(yaml)]))
     execute_shell("echo \n")
-
-
-def post_config(app_id, app_name, source_compose_file, source_conf_path, source_init_config_sh, source_post_config_sh):
-    if source_post_config_sh.exists():
-        execute_shell(" ".join(['echo -e "{}\033[32m post_config \033[0m => {}"'.format(app_id, source_post_config_sh.as_posix()),
-                                '&& sudo bash', source_post_config_sh.as_posix()
-                                ]))
 
 
 def execute_shell(cmd: str):
@@ -96,18 +77,9 @@ if __name__ == '__main__':
 
     with open(global_env_file, "r") as e:
         global_env = dict((t.strip().split("=")[0], t.strip().split("=")[1]) for t in e)
-
         for t in global_env:
-            global_env[t] = subprocess.getoutput(" ".join([
-                "source " + global_env_file,
-                "&& echo ${" + t + "}"
-            ]))
+            global_env[t] = subprocess.getoutput(" ".join(["source " + global_env_file, "&& echo ${" + t + "}"]))
     selected_init_option = select_one_option()
     if selected_init_option:
         selected_init_install = get_install_tuple(Path(selected_init_option).name)
-        execute(selected_init_install, init_start)
-
-    selected_post_option = select_one_option()
-    if selected_post_option:
-        selected_post_install = get_install_tuple(Path(selected_post_option).name)
-        execute(selected_post_install, post_config)
+        execute(selected_init_install, apply)
