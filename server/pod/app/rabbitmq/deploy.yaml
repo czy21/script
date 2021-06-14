@@ -1,0 +1,79 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq
+spec:
+  selector:
+    app: rabbitmq
+  type: NodePort
+  ports:
+    - name: "5672"
+      port: 5672
+      targetPort: 5672
+      nodePort: 5672
+    - name: "15672"
+      port: 15672
+      targetPort: 15672
+      nodePort: 15672
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rabbitmq
+  labels:
+    app: rabbitmq
+data:
+  enabled_plugins: |
+    [rabbitmq_management,rabbitmq_prometheus].
+  rabbitmq.conf: |
+    loopback_users.guest = false
+    listeners.tcp.default = 5672
+    management.tcp.port = 15672
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: rabbitmq
+spec:
+  selector:
+    matchLabels:
+      app: rabbitmq
+  serviceName: rabbitmq
+  template:
+    metadata:
+      labels:
+        app: rabbitmq
+    spec:
+      volumes:
+        - name: conf
+          configMap:
+            name: rabbitmq
+      nodeSelector:
+        slave: "db"
+      containers:
+        - name: rabbitmq
+          image: rabbitmq:3-management
+          ports:
+            - containerPort: 5672
+            - containerPort: 15672
+          env:
+            - name: RABBITMQ_DEFAULT_USER
+              value: "root"
+            - name: RABBITMQ_DEFAULT_PASS
+              value: "***REMOVED***"
+          volumeMounts:
+            - name: conf
+              mountPath: /etc/rabbitmq/
+            - name: data
+              mountPath: /var/lib/rabbitmq/
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes:
+          - ReadWriteMany
+        resources:
+          requests:
+            storage: 256Gi
+        storageClassName: "managed-nfs-storage"
+

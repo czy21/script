@@ -10,7 +10,7 @@ spec:
     - name: "27017"
       port: 27017
       targetPort: 27017
-      nodePort: 30217
+      nodePort: 27017
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -82,15 +82,7 @@ spec:
       containers:
         - name: mongo
           image: mongo:4.4.6
-          command: ['sh']
-          args:
-            - "-c"
-            - |
-              mongod --config /data/conf/mongod.conf
-          resources:
-            limits:
-              memory: "2048Mi"
-              cpu: "500m"
+          command: ["mongod", "--config", "/data/conf/mongod.conf"]
           ports:
             - containerPort: 27017
           env:
@@ -101,6 +93,7 @@ spec:
           volumeMounts:
             - name: configdb
               mountPath: /data/configdb/
+              readOnly: true
             - name: conf
               mountPath: /data/conf/
             - name: data
@@ -115,4 +108,3 @@ spec:
           requests:
             storage: 256Gi
         storageClassName: "managed-nfs-storage"
-
