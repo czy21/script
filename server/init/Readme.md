@@ -36,7 +36,7 @@ kubectl get svc/ks-console -n kubesphere-system
 
 # /etc/kubernetes/manifests/kube-apiserver.yaml command 下添加 - --feature-gates=RemoveSelfLink=false
 # 卸载
-curl -L https://raw.githubusercontent.com/kubesphere/ks-installer/release-3.1/scripts/kubesphere-delete.sh | bash
+wget https://raw.githubusercontent.com/kubesphere/ks-installer/release-3.1/scripts/kubesphere-delete.sh
 ```
 
 ### 加入集群
