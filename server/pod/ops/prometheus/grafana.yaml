@@ -1,7 +1,9 @@
+---
 apiVersion: v1
 kind: Service
 metadata:
   name: grafana
+  namespace: monitoring
 spec:
   selector:
     app: grafana
@@ -16,6 +18,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: grafana
+  namespace: monitoring
 spec:
   selector:
     matchLabels:
@@ -44,6 +47,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: data-grafana
+  namespace: monitoring
 spec:
   accessModes:
     - ReadWriteMany

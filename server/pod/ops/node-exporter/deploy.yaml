@@ -1,0 +1,45 @@
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  name: node-exporter
+#spec:
+#  selector:
+#    app: node-exporter
+#  type: NodePort
+#  ports:
+#    - name: "9090"
+#      port: 9100
+#      targetPort: 9100
+#      nodePort: 9100
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: node-exporter
+  namespace: monitoring
+spec:
+  selector:
+    matchLabels:
+      app: node-exporter
+  template:
+    metadata:
+      labels:
+        app: node-exporter
+    spec:
+      tolerations:
+      - key: node-role.kubernetes.io/master
+        effect: NoSchedule
+      volumes:
+        - name: host
+          hostPath:
+            path: /
+      containers:
+        - name: node-exporter
+          image: quay.io/prometheus/node-exporter
+          ports:
+            - containerPort: 9100
+          volumeMounts:
+            - name: host
+              mountPath: /host
+              readOnly: true
+
