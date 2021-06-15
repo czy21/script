@@ -20,14 +20,13 @@ metadata:
     app: nexus
 ---
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: nexus
 spec:
   selector:
     matchLabels:
       app: nexus
-  serviceName: nexus
   template:
     metadata:
       labels:
@@ -35,6 +34,10 @@ spec:
     spec:
       nodeSelector:
         slave: "db"
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: data-nexus
       containers:
         - name: nexus
           image: sonatype/nexus3
@@ -49,14 +52,16 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /nexus-data/
-  volumeClaimTemplates:
-    - metadata:
-        name: data
-      spec:
-        accessModes:
-          - ReadWriteMany
-        resources:
-          requests:
-            storage: 256Gi
-        storageClassName: "managed-nfs-storage"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-nexus
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 256Gi
+  storageClassName: "managed-nfs-storage"
 

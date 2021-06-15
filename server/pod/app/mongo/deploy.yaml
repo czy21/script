@@ -28,6 +28,10 @@ spec:
     spec:
       nodeSelector:
         slave: "db"
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: data-mongo
       containers:
         - name: mongo
           image: mongo:4.4.6
@@ -41,13 +45,15 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /data/
-  volumeClaimTemplates:
-    - metadata:
-        name: data
-      spec:
-        accessModes:
-          - ReadWriteMany
-        resources:
-          requests:
-            storage: 256Gi
-        storageClassName: "managed-nfs-storage"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-mongo
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 256Gi
+  storageClassName: "managed-nfs-storage"

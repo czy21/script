@@ -1399,25 +1399,27 @@ data:
     # active-defrag-max-scan-fields 1000
 ---
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: redis
 spec:
   selector:
     matchLabels:
       app: redis
-  serviceName: redis
   template:
     metadata:
       labels:
         app: redis
     spec:
+      nodeSelector:
+        slave: "db"
       volumes:
         - name: conf
           configMap:
             name: redis
-      nodeSelector:
-        slave: "db"
+        - name: data
+          persistentVolumeClaim:
+            claimName: data-redis
       containers:
         - name: redis
           image: redis:5.0.3
@@ -1429,13 +1431,15 @@ spec:
               mountPath: /etc/redis/
             - name: data
               mountPath: /data/
-  volumeClaimTemplates:
-    - metadata:
-        name: data
-      spec:
-        accessModes:
-          - ReadWriteMany
-        resources:
-          requests:
-            storage: 256Gi
-        storageClassName: "managed-nfs-storage"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-redis
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 256Gi
+  storageClassName: "managed-nfs-storage"

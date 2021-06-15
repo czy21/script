@@ -20,14 +20,13 @@ metadata:
     app: postgres
 ---
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: postgres
 spec:
   selector:
     matchLabels:
       app: postgres
-  serviceName: postgres
   template:
     metadata:
       labels:
@@ -35,6 +34,10 @@ spec:
     spec:
       nodeSelector:
         slave: "db"
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: data-postgres
       containers:
         - name: postgres
           image: postgres
@@ -46,14 +49,15 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /var/lib/postgresql/data/
-  volumeClaimTemplates:
-    - metadata:
-        name: data
-      spec:
-        accessModes:
-          - ReadWriteMany
-        resources:
-          requests:
-            storage: 256Gi
-        storageClassName: "managed-nfs-storage"
-
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-postgres
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 256Gi
+  storageClassName: "managed-nfs-storage"
