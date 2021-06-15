@@ -31,25 +31,27 @@ data:
     management.tcp.port = 15672
 ---
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: rabbitmq
 spec:
   selector:
     matchLabels:
       app: rabbitmq
-  serviceName: rabbitmq
   template:
     metadata:
       labels:
         app: rabbitmq
     spec:
+      nodeSelector:
+        slave: "db"
       volumes:
         - name: conf
           configMap:
             name: rabbitmq
-      nodeSelector:
-        slave: "db"
+        - name: data
+          persistentVolumeClaim:
+            claimName: data-rabbitmq
       containers:
         - name: rabbitmq
           image: rabbitmq:3-management
@@ -66,14 +68,16 @@ spec:
               mountPath: /etc/rabbitmq/
             - name: data
               mountPath: /var/lib/rabbitmq/
-  volumeClaimTemplates:
-    - metadata:
-        name: data
-      spec:
-        accessModes:
-          - ReadWriteMany
-        resources:
-          requests:
-            storage: 256Gi
-        storageClassName: "managed-nfs-storage"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-rabbitmq
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 256Gi
+  storageClassName: "managed-nfs-storage"
 
