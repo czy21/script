@@ -3,3 +3,6 @@
   tasks:
     - name: install
       script: k8s.sh
+
+    - name: join cluser
+      shell: kubeadm join 192.168.2.21:6443 --token 1jc8ob.ggvham722xvus9rt --discovery-token-ca-cert-hash sha256:7bfea92b8392f8f11a8d858cdadb5ae67f07eac5f06b13a050bed640262be263
