@@ -6,13 +6,6 @@ yum -y install ansible
 sed -ir 's/^#\(host_key_checking\)/\1/' /etc/ansible/ansible.cfg
 ```
 
-### calico 启动 crashloopbackoff 异常解决
-```shell
-# 主节点 工作节点 均执行
-nmcli device delete br-xxx
-# 主节点 删除calico pod
-kubectl delete pod calico-node-xxxxx -n kube-system
-```
 ###创建NFS StorageClass
 ```shell
 # 下载所需文件
@@ -25,6 +18,13 @@ kubectl apply -f rbac.yaml,class.yaml,deployment.yaml
 kubectl patch storageclass managed-nfs-storage -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
 ```
 
+### 集群初始化后的手动执行
+```shell
+# /etc/kubernetes/manifests/kube-apiserver.yaml command 下添加 - --feature-gates=RemoveSelfLink=false
+# 更改nodePort范围
+# /etc/kubernetes/manifests/kube-apiserver.yaml command 下添加 - --service-node-port-range=1-65535
+```
+
 ###部署kubeSphere 默认帐户和密码 (admin/P@88w0rd)
 ```shell
 kubectl apply -f https://github.com/kubesphere/ks-installer/releases/download/v3.1.0/kubesphere-installer.yaml
@@ -34,9 +34,6 @@ kubectl logs -n kubesphere-system $(kubectl get pod -n kubesphere-system -l app=
 # 检查状态
 kubectl get svc/ks-console -n kubesphere-system
 
-# /etc/kubernetes/manifests/kube-apiserver.yaml command 下添加 - --feature-gates=RemoveSelfLink=false
-# 更改nodePort范围
-# /etc/kubernetes/manifests/kube-apiserver.yaml command 下添加 --service-node-port-range=1-65535
 # 卸载
 wget https://raw.githubusercontent.com/kubesphere/ks-installer/release-3.1/scripts/kubesphere-delete.sh
 ```
