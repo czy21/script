@@ -49,7 +49,7 @@ def execute(app_tuples, func):
 def apply(app_id, app_name, source_path: Path):
     for t in source_path.glob("*.yaml"):
         yaml = source_path.joinpath(t.name).as_posix()
-        execute_shell(" ".join(['echo -e "{}\033[32m deploy => \033[0m {}"'.format(app_id, yaml), '&& kubectl apply -f {} '.format(yaml)]))
+        execute_shell(" ".join(['echo -e "{}\033[32m deploy => \033[0m {}"'.format(app_id, yaml), '&& kubectl apply --filename={}'.format(yaml)]))
     execute_shell("echo \n")
 
 
