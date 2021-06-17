@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: promethrus
+  name: prometheus
   namespace: monitoring
 spec:
   selector:
-    app: promethrus
+    app: prometheus
   type: NodePort
   ports:
     - name: "9090"
@@ -16,45 +16,81 @@ spec:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: promethrus
+  name: prometheus
   namespace: monitoring
   labels:
-    app: promethrus
+    app: prometheus
 data:
   prometheus.yml: |
-    
+    global:
+      scrape_interval: 15s
+      scrape_timeout: 15s
+    scrape_configs:
+      
+    - job_name: 'kubernetes-nodes'
+      scheme: https
+      tls_config:
+        ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+      bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+      kubernetes_sd_configs:
+      - role: node
+      relabel_configs:
+      - action: labelmap
+        regex: __meta_kubernetes_node_label_(.+)
+      - target_label: __address__
+        replacement: kubernetes.default.svc:443
+      - source_labels: [__meta_kubernetes_node_name]
+        regex: (.+)
+        target_label: __metrics_path__
+        replacement: /api/v1/nodes/${1}/proxy/metrics
+
+    - job_name: "kubernetes-cadvisor"
+      scheme: https
+      tls_config:
+        ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+      bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+      kubernetes_sd_configs:
+      - role: node
+      relabel_configs:
+      - action: labelmap
+        regex: __meta_kubernetes_node_label_(.+)
+      - target_label: __address__
+        replacement: kubernetes.default.svc:443
+      - source_labels: [__meta_kubernetes_node_name]
+        regex: (.+)
+        target_label: __metrics_path__
+        replacement: /api/v1/nodes/${1}/proxy/metrics/cadvisor
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: promethrus
+  name: prometheus
   namespace: monitoring
 spec:
   selector:
     matchLabels:
-      app: promethrus
+      app: prometheus
   template:
     metadata:
       labels:
-        app: promethrus
+        app: prometheus
     spec:
-      nodeSelector:
-        slave: "db"
+      serviceAccountName: prometheus
       volumes:
         - name: conf
           configMap:
-            name: promethrus
+            name: prometheus
             items:
               - key: "prometheus.yml"
                 path: "prometheus.yml"
         - name: data
           persistentVolumeClaim:
-            claimName: data-promethrus
+            claimName: data-prometheus
       containers:
-        - name: promethrus
+        - name: prometheus
           image: prom/prometheus
           ports:
-            - containerPort: 3000
+            - containerPort: 9090
           volumeMounts:
             - name: conf
               mountPath: /etc/prometheus/
@@ -64,7 +100,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: data-promethrus
+  name: data-prometheus
   namespace: monitoring
 spec:
   accessModes:

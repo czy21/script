@@ -20,6 +20,7 @@ def select_one_option():
     for i, p in enumerate(list_dir, start=1):
         print(" ".join([str(i), p.name]))
 
+    print("\n==========")
     one_option = input("please select one option(example:1) ").strip()
 
     if one_option == '':
