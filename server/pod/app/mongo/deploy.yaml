@@ -26,8 +26,6 @@ spec:
       labels:
         app: mongo
     spec:
-      nodeSelector:
-        slave: "db"
       volumes:
         - name: data
           persistentVolumeClaim:
@@ -44,16 +42,14 @@ spec:
               value: "Czy.190815"
           volumeMounts:
             - name: data
-              mountPath: /data/
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: data-mongo
-spec:
-  accessModes:
-    - ReadWriteMany
-  resources:
-    requests:
-      storage: 256Gi
-  storageClassName: "managed-nfs-storage"
+              mountPath: /data/db/
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes:
+          - ReadWriteMany
+        resources:
+          requests:
+            storage: 256Gi
+        storageClassName: "managed-nfs-storage"

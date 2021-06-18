@@ -51,8 +51,6 @@ spec:
       labels:
         app: mysql
     spec:
-      nodeSelector:
-        slave: "db"
       volumes:
         - name: my-cnf
           configMap:
@@ -94,4 +92,3 @@ spec:
           requests:
             storage: 256Gi
         storageClassName: "managed-nfs-storage"
-

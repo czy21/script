@@ -16,20 +16,17 @@ spec:
     kind: ClusterConfiguration
     shortNames:
     - cc
-
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
   name: kubesphere-system
-
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: ks-installer
   namespace: kubesphere-system
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -228,7 +225,6 @@ rules:
   - '*'
   verbs:
   - '*'
-
 ---
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
@@ -242,7 +238,6 @@ roleRef:
   kind: ClusterRole
   name: ks-installer
   apiGroup: rbac.authorization.k8s.io
-
 ---
 apiVersion: apps/v1
 kind: Deployment

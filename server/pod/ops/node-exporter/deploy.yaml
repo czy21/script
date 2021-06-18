@@ -29,4 +29,3 @@ spec:
             - name: host
               mountPath: /host
               readOnly: true
-

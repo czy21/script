@@ -32,8 +32,6 @@ spec:
       labels:
         app: nexus
     spec:
-      nodeSelector:
-        slave: "db"
       volumes:
         - name: data
           persistentVolumeClaim:
@@ -64,4 +62,3 @@ spec:
     requests:
       storage: 256Gi
   storageClassName: "managed-nfs-storage"
-
