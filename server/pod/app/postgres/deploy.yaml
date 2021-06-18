@@ -32,8 +32,6 @@ spec:
       labels:
         app: postgres
     spec:
-      nodeSelector:
-        slave: "db"
       volumes:
         - name: data
           persistentVolumeClaim:

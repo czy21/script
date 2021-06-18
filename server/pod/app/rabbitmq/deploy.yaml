@@ -43,8 +43,6 @@ spec:
       labels:
         app: rabbitmq
     spec:
-      nodeSelector:
-        slave: "db"
       volumes:
         - name: conf
           configMap:
@@ -80,4 +78,3 @@ spec:
     requests:
       storage: 256Gi
   storageClassName: "managed-nfs-storage"
-
