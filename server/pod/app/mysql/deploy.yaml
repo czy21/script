@@ -82,6 +82,13 @@ spec:
               mountPath: /etc/mysql/conf.d/
             - name: data
               mountPath: /var/lib/mysql/
+        - name: mysqld-exporter
+          image: prom/mysqld-exporter
+          ports:
+            - containerPort: 9104
+          env:
+            - name: DATA_SOURCE_NAME
+              value: "root:***REMOVED***@(127.0.0.1:3306)/"
   volumeClaimTemplates:
     - metadata:
         name: data

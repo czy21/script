@@ -100,6 +100,20 @@ data:
       - source_labels: [__meta_kubernetes_service_name]
         action: replace
         target_label: k8s_sname
+    - job_name: mysql-exporter
+      kubernetes_sd_configs:
+      - role: pod
+      metrics_path: /metrics
+      relabel_configs:
+      - source_labels: [__meta_kubernetes_pod_container_name]
+        action: keep
+        regex: mysqld-exporter
+      - action: labelmap
+        regex: __meta_kubernetes_pod_label_(.+)
+      - source_labels: [__meta_kubernetes_namespace]
+        target_label: kubernetes_namespace
+      - source_labels: [__meta_kubernetes_pod_name]
+        target_label: kubernetes_name
 ---
 apiVersion: apps/v1
 kind: Deployment
