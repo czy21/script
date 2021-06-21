@@ -11,6 +11,10 @@ spec:
       port: 3306
       targetPort: 3306
       nodePort: 3306
+    - name: "mysqld-exporter"
+      port: 9104
+      targetPort: 9104
+      nodePort: 9104
 ---
 apiVersion: v1
 kind: ConfigMap
