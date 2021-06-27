@@ -8,8 +8,6 @@ script
 |    |
 ├    ├── web/react -- 前端工程
 |    |
-├── openwrt  lede软路由器系统构建(感兴趣的请自行百度)
-|    |
 ├── server
 |    |
 ├    ├── init    -- linux环境,k8s,docker,ansible初始化脚本
@@ -30,7 +28,6 @@ script
 |-   |    |-   ├── rabbitmq  -- 消息中间件
 |-   |    |-   ├── redis     -- key-value存储
 |-   |    |-   ├── storm     -- 大数据实时计算组件
-|-   |    |-   ├── v2ray     -- 流量伪装(具体百度)
 ├    ├── pod -- 集群
 |    |    ├── app 应用
 |-   |    |-   ├──
