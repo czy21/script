@@ -12,7 +12,7 @@ script
 |    |
 ├── server
 |    |
-├    ├── init-macine-centos  -- cent_os系统环境初始化脚本
+├    ├── init    -- linux环境,k8s,docker,ansible初始化脚本
 ├    ├── utility -- python共用工具方法
 ├    ├── docker -- 本地构建
 |    |    ├── compose
@@ -31,4 +31,8 @@ script
 |-   |    |-   ├── redis     -- key-value存储
 |-   |    |-   ├── storm     -- 大数据实时计算组件
 |-   |    |-   ├── v2ray     -- 流量伪装(具体百度)
+├    ├── pod -- 集群
+|    |    ├── app 应用
+|-   |    |-   ├──
+|    |    ├── ops k8s集群监控,NFS数据卷挂载
 ```
