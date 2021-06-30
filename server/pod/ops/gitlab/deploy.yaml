@@ -52,6 +52,9 @@ spec:
           - containerPort: 443
         volumeMounts:
         - name: data
+          subPath: config
+          mountPath: /etc/gitlab/
+        - name: data
           subPath: data
           mountPath: /var/opt/gitlab/
         - name: data
