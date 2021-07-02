@@ -29,7 +29,8 @@ metadata:
 data:
   init.sh: |
     wget -P /tmp/ https://services.gradle.org/distributions/gradle-7.1-all.zip
-    unzip -d /tmp/ /tmp/gradle-7.1-all.zip
+    unzip -o -d /tmp/ /tmp/gradle-7.1-all.zip
+    rm -rf /tmp/gradle-7.1-all.zip
 
 ---
 apiVersion: apps/v1
@@ -38,6 +39,8 @@ metadata:
   name: jenkins
   namespace: kube-ops
 spec:
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: jenkins
@@ -65,6 +68,7 @@ spec:
             - name: jenkins-init
               mountPath: /init/
             - name: jenkins-home
+              subPath: tools
               mountPath: /tmp/
       containers:
         - name: jenkins
