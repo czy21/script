@@ -10,4 +10,7 @@ checkout([$class: 'GitSCM', branches: [[name: 'dev-bruce']], extensions: [[$clas
         stage('build'){
             sh 'gradle -v'
         }
+        stage('build'){
+            sh 'shell/local/build_api.sh'
+        }
 }
