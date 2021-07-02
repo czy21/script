@@ -1,6 +1,7 @@
 node{
     GRADLE_HOME = '/var/jenkins_home/tools/gradle-7.1'
         env.PATH = "${GRADLE_HOME}/bin:${env.PATH}"
+        env.WORK_DIR = pwd()
 
         stage('clone'){
 				script {
@@ -8,9 +9,7 @@ checkout([$class: 'GitSCM', branches: [[name: 'dev-bruce']], extensions: [[$clas
 				}
         }
         stage('build'){
-            sh 'gradle -v'
+            sh '${WORK_DIR}/code/api/gradlew --init-script ${WORK_DIR}/script/template/java/init.gradle --build-file ${WORK_DIR}/code/api/build.gradle portal:clean portal:build -x test'
         }
-        stage('build'){
-            sh 'shell/local/build_api.sh'
-        }
+
 }
