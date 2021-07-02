@@ -121,6 +121,8 @@ metadata:
   name: prometheus
   namespace: monitoring
 spec:
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: prometheus

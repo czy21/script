@@ -35,6 +35,8 @@ kind: Deployment
 metadata:
   name: rabbitmq
 spec:
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: rabbitmq

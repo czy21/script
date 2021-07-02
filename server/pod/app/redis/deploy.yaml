@@ -1403,6 +1403,8 @@ kind: Deployment
 metadata:
   name: redis
 spec:
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: redis

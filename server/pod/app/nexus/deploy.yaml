@@ -24,6 +24,8 @@ kind: Deployment
 metadata:
   name: nexus
 spec:
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: nexus
