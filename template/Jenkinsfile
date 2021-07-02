@@ -1,0 +1,13 @@
+node{
+    GRADLE_HOME = '/var/jenkins_home/tools/gradle-7.1'
+        env.PATH = "${GRADLE_HOME}/bin:${env.PATH}"
+
+        stage('clone'){
+				script {
+checkout([$class: 'GitSCM', branches: [[name: 'dev-bruce']], extensions: [[$class: 'SubmoduleOption', disableSubmodules: false, parentCredentials: true, recursiveSubmodules: true, reference: '', trackingSubmodules: false]], userRemoteConfigs: [[credentialsId: 'bruce', url: 'git@gitee.com:czyhome/erp.git']]])
+				}
+        }
+        stage('build'){
+            sh 'gradle -v'
+        }
+}
