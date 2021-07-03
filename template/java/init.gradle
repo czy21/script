@@ -6,7 +6,7 @@ settingsEvaluated { settings ->
 			gradlePluginPortal()
 			maven {
 				name "czyPublic"
-				url "http://nexus.internal-home.com/repository/maven-public/"
+				url "http://192.168.2.21:8081/repository/maven-public/"
 				credentials {
 					username "admin"
 					password "***REMOVED***"
@@ -21,7 +21,7 @@ allprojects {
 		repositories {
 			maven {
 				name "czyPublishRelease"
-				url "http://nexus.internal-home.com/repository/maven-releases/"
+				url "http://192.168.2.21:8081/repository/maven-releases/"
 				credentials {
 					username "admin"
 					password "***REMOVED***"
@@ -32,7 +32,7 @@ allprojects {
     repositories {
 		maven {
 			name "czyPublic"
-			url "http://nexus.internal-home.com/repository/maven-public/"
+			url "http://192.168.2.21:8081/repository/maven-public/"
 			credentials {
 				username "admin"
 				password "***REMOVED***"
