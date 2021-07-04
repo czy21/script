@@ -1,0 +1,7 @@
+- hosts: all
+  remote_user: root
+  tasks:
+    - name: mkdir dir
+      shell: rm -rf /etc/docker/certs.d/* && mkdir -p /etc/docker/certs.d/registry/
+    - name: cp registry certs to docker
+      copy: src={{root_path}}/certs/registry.crt dest=/etc/docker/certs.d/registry/ca.crt owner=root group=root mode=0644
