@@ -9,6 +9,9 @@ node{
     }
     stage('build'){
         sh '${WORKSPACE}/code/api/gradlew --init-script ${WORKSPACE}/script/template/java/init.gradle --build-file ${WORKSPACE}/code/api/build.gradle portal:clean portal:build -x test'
-        customImage = docker.build("portal:${env.BUILD_ID}", "-f ${WORKSPACE}/code/api/portal/Dockerfile ${WORKSPACE}/code/api/portal/")
+        sh 'docker build -t registry:5000/portal:${BRANCH} -f ${WORKSPACE}/code/api/portal/Dockerfile ${WORKSPACE}/code/api/portal/'
+        sh 'docker login registry:5000 --username admin --password Czy20210314.'
+        sh 'docker push registry:5000/portal:${BRANCH}'
+        sh 'docker logout'
     }
 }

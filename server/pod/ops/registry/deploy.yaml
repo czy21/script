@@ -11,10 +11,6 @@ spec:
       port: 5000
       targetPort: 5000
       nodePort: 5000
-    - name: "443"
-      port: 443
-      targetPort: 443
-      nodePort: 5001
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -152,7 +148,6 @@ spec:
           image: registry:2
           ports:
             - containerPort: 5000
-            - containerPort: 443
           env:
             - name: REGISTRY_AUTH
               value: htpasswd
@@ -160,8 +155,6 @@ spec:
               value: Registry Realm
             - name: REGISTRY_AUTH_HTPASSWD_PATH
               value: /auth/htpasswd
-            - name: REGISTRY_HTTP_ADDR
-              value: 0.0.0.0:443
             - name: REGISTRY_HTTP_TLS_CERTIFICATE
               value: /certs/registry.crt
             - name: REGISTRY_HTTP_TLS_KEY
