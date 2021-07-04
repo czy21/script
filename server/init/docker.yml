@@ -3,7 +3,6 @@
   tasks:
     - name: install
       script: docker.sh
-
     - name: reboot
       shell: sudo reboot
 

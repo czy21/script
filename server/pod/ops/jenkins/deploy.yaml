@@ -57,6 +57,12 @@ spec:
               items:
                 - key: "init.sh"
                   path: "init.sh"
+        - name: docker-sock
+          hostPath:
+            path: /var/run/docker.sock
+        - name: docker-cmd
+          hostPath:
+            path: /usr/bin/docker
         - name: jenkins-home
           persistentVolumeClaim:
             claimName: data-jenkins
@@ -83,6 +89,10 @@ spec:
           securityContext:
             runAsUser: 0
           volumeMounts:
+            - name: docker-sock
+              mountPath: /var/run/docker.sock
+            - name: docker-cmd
+              mountPath: /usr/bin/docker
             - name: jenkins-home
               mountPath: /var/jenkins_home/
 ---

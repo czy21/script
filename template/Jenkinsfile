@@ -1,14 +1,14 @@
 node{
-    GRADLE_HOME = '/var/jenkins_home/tools/gradle-7.1'
-        env.PATH = "${GRADLE_HOME}/bin:${env.PATH}"
-
-        stage('clone'){
-				script {
-checkout([$class: 'GitSCM', branches: [[name: 'dev-bruce']], extensions: [[$class: 'SubmoduleOption', disableSubmodules: false, parentCredentials: true, recursiveSubmodules: true, reference: '', trackingSubmodules: false]], userRemoteConfigs: [[credentialsId: 'bruce', url: 'git@gitee.com:czyhome/erp.git']]])
-				}
+    GRADLE_HOME = "/var/jenkins_home/tools/gradle-7.1"
+    env.PATH = "${GRADLE_HOME}/bin:${env.PATH}"
+    env.BRANCH="dev-bruce"
+    stage('clone'){
+        script {
+            checkout([$class: 'GitSCM', branches: [[name: "${BRANCH}"]], extensions: [[$class: 'SubmoduleOption', disableSubmodules: false, parentCredentials: true, recursiveSubmodules: true, reference: '', trackingSubmodules: false]], userRemoteConfigs: [[credentialsId: 'bruce', url: 'git@gitee.com:czyhome/erp.git']]])
         }
-        stage('build'){
-            sh '${WORKSPACE}/code/api/gradlew --init-script ${WORKSPACE}/script/template/java/init.gradle --build-file ${WORKSPACE}/code/api/build.gradle portal:clean portal:build -x test'
-        }
-
+    }
+    stage('build'){
+        sh '${WORKSPACE}/code/api/gradlew --init-script ${WORKSPACE}/script/template/java/init.gradle --build-file ${WORKSPACE}/code/api/build.gradle portal:clean portal:build -x test'
+        customImage = docker.build("portal:${env.BUILD_ID}", "-f ${WORKSPACE}/code/api/portal/Dockerfile ${WORKSPACE}/code/api/portal/")
+    }
 }
