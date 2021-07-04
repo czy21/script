@@ -2,6 +2,6 @@
   remote_user: root
   tasks:
     - name: mkdir dir
-      shell: rm -rf /etc/docker/certs.d/* && mkdir -p /etc/docker/certs.d/registry/
+      shell: rm -rf /etc/docker/certs.d/* && mkdir -p /etc/docker/certs.d/registry:5000/
     - name: cp registry certs to docker
-      copy: src={{root_path}}/certs/registry.crt dest=/etc/docker/certs.d/registry/ca.crt owner=root group=root mode=0644
+      copy: src={{root_path}}/certs/registry.crt dest=/etc/docker/certs.d/registry:5000/ca.crt owner=root group=root mode=0644
