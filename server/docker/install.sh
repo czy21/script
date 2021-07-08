@@ -2,8 +2,9 @@
 
 # bash install.sh -h user@host -i -c
 # bash install.sh -i -c
-# -i exec init_config.sh and start compose
-# -c exec post_config.sh
+# -i exec init.sh and start compose.yaml
+# -b exec build.sh
+# -c exec post.sh
 
 while getopts ":h" opt
 do
