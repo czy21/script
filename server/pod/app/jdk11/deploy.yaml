@@ -20,7 +20,8 @@ metadata:
     app: jdk11-compile
 data:
   init.sh: |
-    cd && git clone https://github.com/openjdk/jdk11.git
+    cd /opt/jvm
+    git clone https://github.com/openjdk/jdk11.git
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -50,7 +51,7 @@ spec:
       containers:
         - name: jdk11-compile
           image: registry:5000/jdk11
-          args: [ "/bin/bash","-c","cd script && sh init.sh && trap : TERM INT; sleep infinity & wait" ]
+          args: [ "/bin/bash","-c","cd /script && sh init.sh && trap : TERM INT; sleep infinity & wait" ]
           imagePullPolicy: Always
           ports:
             - containerPort: 22
