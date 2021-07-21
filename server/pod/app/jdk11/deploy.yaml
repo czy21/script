@@ -21,7 +21,8 @@ metadata:
 data:
   init.sh: |
     cd /opt/jvm
-    git clone https://github.com/openjdk/jdk11.git
+    rm -rf *
+    git clone https://gitee.com/czyhome/jdk11.git
 ---
 apiVersion: apps/v1
 kind: Deployment
