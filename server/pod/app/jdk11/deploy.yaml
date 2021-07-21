@@ -1,0 +1,68 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: jdk11-compile
+spec:
+  selector:
+    app: jdk11-compile
+  type: NodePort
+  ports:
+    - name: "22"
+      port: 22
+      targetPort: 22
+      nodePort: 8122
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jdk11-compile
+  labels:
+    app: jdk11-compile
+data:
+  init.sh: |
+    cd && git clone https://github.com/openjdk/jdk11.git
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jdk11-compile
+spec:
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: jdk11-compile
+  template:
+    metadata:
+      labels:
+        app: jdk11-compile
+    spec:
+      volumes:
+        - name: script
+          configMap:
+              name: jdk11-compile
+              items:
+                - key: "init.sh"
+                  path: "init.sh"
+      containers:
+        - name: jdk11-compile
+          image: registry:5000/ubuntu:18.04
+          args: [ "/bin/bash","-c","cd script && sh init.sh && trap : TERM INT; sleep infinity & wait" ]
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 22
+          volumeMounts:
+            - name: script
+              mountPath: /script/
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-jdk11-compile
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 256Gi
+  storageClassName: "managed-nfs-storage"
