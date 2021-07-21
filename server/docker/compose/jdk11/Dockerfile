@@ -1,6 +1,7 @@
 FROM ubuntu:18.04
 WORKDIR /opt/jvm/
 COPY docker-entrypoint.sh /
+COPY compile.sh /
 RUN chmod +x /docker-entrypoint.sh
 RUN apt-get update;
 RUN apt-get install -y openssh-server sudo net-tools vim git openjdk-11-jdk;
