@@ -20,7 +20,7 @@ metadata:
     app: jdk11-compile
 data:
   init.sh: |
-    #cd && git clone https://github.com/openjdk/jdk11.git
+    cd && git clone https://github.com/openjdk/jdk11.git
 ---
 apiVersion: apps/v1
 kind: Deployment
