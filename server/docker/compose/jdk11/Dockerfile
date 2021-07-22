@@ -4,7 +4,7 @@ COPY docker-entrypoint.sh /
 COPY compile.sh /
 RUN chmod +x /docker-entrypoint.sh
 RUN apt-get update;
-RUN apt-get install -y openssh-server sudo net-tools vim git openjdk-11-jdk;
+RUN apt-get install -y openssh-server sudo net-tools vim git;
 RUN sed -i -r 's/^\s*UseDNS\s+\w+/#\0/; s/^\s*PasswordAuthentication\s+\w+/#\0/; s/^\s*ClientAliveInterval\s+\w+/#\0/' /etc/ssh/sshd_config;
 RUN echo 'UseDNS no \nPermitRootLogin yes \nPasswordAuthentication yes \nClientAliveInterval 30' >> /etc/ssh/sshd_config;
 RUN cat /etc/ssh/sshd_config
