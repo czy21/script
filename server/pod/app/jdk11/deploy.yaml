@@ -23,8 +23,17 @@ metadata:
   labels:
     app: jdk11-compile
 data:
-  init.sh: |
-    #bash /compile.sh
+  compile.sh: |
+    jvm_dir=/opt/jvm
+    jdk11_dir=${jvm_dir}/jdk11
+    if [ ! -d "${jdk11_dir}/build/" ];then
+      rm -rf ${jdk11_dir} && mkdir -p ${jdk11_dir}
+      git clone --branch jdk-11.0.11-ga https://gitee.com/czyhome/jdk11u.git ${jdk11_dir}
+      cd ${jdk11_dir}
+      echo echo -e "\033[32m start build"
+      bash configure
+      make images
+    fi
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -49,12 +58,12 @@ spec:
           configMap:
               name: jdk11-compile
               items:
-                - key: "init.sh"
-                  path: "init.sh"
+                - key: "compile.sh"
+                  path: "compile.sh"
       containers:
         - name: jdk11-compile
           image: registry:5000/jdk11
-          args: [ "/bin/bash","-c"," sh /compile.sh && trap : TERM INT; sleep infinity & wait" ]
+          args: [ "/bin/bash","-c"," sh /script/compile.sh && trap : TERM INT; sleep infinity & wait" ]
           imagePullPolicy: Always
           ports:
             - containerPort: 22
