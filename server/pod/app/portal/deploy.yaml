@@ -1,0 +1,138 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: portal
+spec:
+  selector:
+    app: portal
+  type: NodePort
+  ports:
+    - name: "8080"
+      port: 8080
+      targetPort: 8080
+      nodePort: 8075
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: portal
+  labels:
+    app: portal
+data:
+  application.yml: |
+    server:
+      port: 8080
+    spring:
+      profiles:
+        active: override
+      datasource:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        type: com.mysql.cj.jdbc.MysqlDataSource
+        url: jdbc:mysql://192.168.2.21:3306/erp_local?user=admin&password=Czy.190815&serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false&useUnicode=true
+      data:
+        mongodb:
+          uri: mongodb://admin:Czy.190815@192.168.2.21:27017/erp_local?authSource=admin
+      redis:
+        host: 192.168.2.21
+        port: 6379
+        timeout: 3600
+        password: Czy.190815
+      servlet:
+        multipart:
+          max-request-size: 100MB
+          max-file-size: 100MB
+      rabbitmq:
+        addresses: root:Czy.190815@192.168.2.21:5672
+      batch:
+        job:
+          enabled: false
+        initialize-schema: always
+      kafka:
+        bootstrap-servers: 127.0.0.1:9092,127.0.0.1:9093
+        producer:
+          key-serializer: org.apache.kafka.common.serialization.StringSerializer
+          value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+        consumer:
+          group-id: consumers
+          key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+          value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+
+    mybatis-plus:
+      mapper-locations: classpath*:mapper/**/**.xml
+      type-aliases-package: com.team.domain.entity
+      type-aliases-super-type: com.team.infrastructure.base.BaseEntity
+      global-config:
+        db-config:
+          id-type: uuid
+        banner: false
+
+    logging:
+      level:
+        com.team.domain.mapper: debug
+        org.springframework.web.filter.CommonsRequestLoggingFilter: debug
+        org.springframework.jdbc.core: debug
+        org.springframework.data.mongodb.core: debug
+
+    ali:
+      access-key:
+        id: 2222
+        secret: 12345679
+      pay:
+        public-key-file: ./alipay/ali-public
+        app-private-key-file: ./alipay/app-private
+        server-url: https://openapi.alipaydev.com/gateway.do
+        app:
+          sample1:
+            app-id: 2016102900777119
+            scene: bar_code
+      oss:
+        example1:
+          end-point: www.baidu.com
+      sms:
+        example1:
+          sign-name: 测试名称
+          template-code: SMS_12345678
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: portal
+spec:
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: portal
+  template:
+    metadata:
+      labels:
+        app: portal
+    spec:
+      volumes:
+        - name: conf
+          configMap:
+            name: portal
+            items:
+              - key: "application.yml"
+                path: "application.yml"
+      containers:
+        - name: portal
+          image: registry:5000/portal:dev-bruce
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: conf
+              mountPath: /home/app/config/
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-portal
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 256Gi
+  storageClassName: "managed-nfs-storage"
