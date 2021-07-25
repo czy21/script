@@ -23,8 +23,6 @@ data:
     server:
       port: 8080
     spring:
-      profiles:
-        active: override
       datasource:
         driver-class-name: com.mysql.cj.jdbc.Driver
         type: com.mysql.cj.jdbc.MysqlDataSource
@@ -119,6 +117,7 @@ spec:
       containers:
         - name: portal
           image: registry:5000/portal:dev-bruce
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
           volumeMounts:
