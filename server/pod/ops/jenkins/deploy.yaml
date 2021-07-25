@@ -30,7 +30,59 @@ data:
   init.sh: |
     wget https://services.gradle.org/distributions/gradle-7.1-all.zip -O /tmp/gradle-7.1-all.zip
     unzip -qo -d /tmp/ /tmp/gradle-7.1-all.zip
+    cp /init/init.gradle /tmp/gradle-7.1/init.d/
     rm -rf /tmp/gradle-7.1-all.zip
+  init.gradle: |
+    settingsEvaluated { settings ->
+        settings.pluginManagement {
+            resolutionStrategy {
+            }
+            repositories {
+                gradlePluginPortal()
+                maven {
+                    name "czyPublic"
+                    url "http://192.168.2.21:8081/repository/maven-public/"
+                    credentials {
+                        username "admin"
+                        password "***REMOVED***"
+                    }
+                }
+            }
+        }
+    }
+    allprojects {
+        apply plugin: 'maven-publish'
+        publishing {
+            repositories {
+                maven {
+                    name "czyPublishRelease"
+                    url "http://192.168.2.21:8081/repository/maven-releases/"
+                    credentials {
+                        username "admin"
+                        password "***REMOVED***"
+                    }
+                }
+            }
+        }
+        repositories {
+            maven {
+                name "czyPublic"
+                url "http://192.168.2.21:8081/repository/maven-public/"
+                credentials {
+                    username "admin"
+                    password "***REMOVED***"
+                }
+            }
+            maven {
+                name "ali"
+                url "https://maven.aliyun.com/repository/public/"
+            }
+            maven {
+                name "jd"
+                url "https://jitpack.io"
+            }
+        }
+    }
 
 ---
 apiVersion: apps/v1
@@ -57,6 +109,8 @@ spec:
               items:
                 - key: "init.sh"
                   path: "init.sh"
+                - key: "init.gradle"
+                  path: "init.gradle"
         - name: docker-sock
           hostPath:
             path: /var/run/docker.sock
