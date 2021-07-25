@@ -2,6 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: spring-mybatis
+  namespace: stable
 spec:
   selector:
     app: spring-mybatis
@@ -16,6 +17,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: spring-mybatis
+  namespace: stable
   labels:
     app: spring-mybatis
 data:
@@ -52,6 +54,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: spring-mybatis
+  namespace: stable
 spec:
   strategy:
     type: Recreate
@@ -84,6 +87,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: data-spring-mybatis
+  namespace: stable
 spec:
   accessModes:
     - ReadWriteMany
