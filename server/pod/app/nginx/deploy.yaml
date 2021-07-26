@@ -204,7 +204,7 @@ data:
         server_name  localhost;
 
         location /api/ {
-            proxy_pass http://spring-mybatis.stable.svc:8080/;
+            proxy_pass http://portal.stable.svc:8080/;
         }
         error_page   500 502 503 504  /50x.html;
         location = /50x.html {
