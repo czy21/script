@@ -35,7 +35,11 @@ data:
           max-lifetime: 1800000
           connection-test-query: select 1
           connection-timeout: 30000
-
+      redis:
+        host: 192.168.2.21
+        port: 6379
+        timeout: 3600
+        password: ***REMOVED***
       data:
         mongodb:
           uri: mongodb://admin:***REMOVED***@127.0.0.1:27017/erp_local?authSource=admin
