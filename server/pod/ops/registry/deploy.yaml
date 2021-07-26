@@ -126,12 +126,6 @@ spec:
         app: registry
     spec:
       volumes:
-        - name: auth
-          configMap:
-            name: registry
-            items:
-              - key: "htpasswd"
-                path: "htpasswd"
         - name: cert
           configMap:
             name: registry
@@ -149,12 +143,6 @@ spec:
           ports:
             - containerPort: 5000
           env:
-            - name: REGISTRY_AUTH
-              value: htpasswd
-            - name: REGISTRY_AUTH_HTPASSWD_REALM
-              value: Registry Realm
-            - name: REGISTRY_AUTH_HTPASSWD_PATH
-              value: /auth/htpasswd
             - name: REGISTRY_HTTP_TLS_CERTIFICATE
               value: /certs/registry.crt
             - name: REGISTRY_HTTP_TLS_KEY
@@ -162,8 +150,6 @@ spec:
           volumeMounts:
             - name: cert
               mountPath: /certs/
-            - name: auth
-              mountPath: /auth/
             - name: data
               mountPath: /var/lib/registry/
 ---
