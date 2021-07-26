@@ -47,15 +47,6 @@ data:
         job:
           enabled: false
         initialize-schema: always
-      kafka:
-        bootstrap-servers: 127.0.0.1:9092,127.0.0.1:9093
-        producer:
-          key-serializer: org.apache.kafka.common.serialization.StringSerializer
-          value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-        consumer:
-          group-id: consumers
-          key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-          value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
 
     mybatis-plus:
       mapper-locations: classpath*:mapper/**/**.xml
