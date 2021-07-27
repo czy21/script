@@ -21,13 +21,13 @@ metadata:
 data:
   nginx.conf: |
     user  nginx;
-    worker_processes  4;
+    worker_processes  auto;
 
-    error_log  /var/log/nginx/error.log warn;
+    error_log  /var/log/nginx/error.log notice;
     pid        /var/run/nginx.pid;
 
     events {
-        worker_connections  5000;
+        worker_connections  1024;
     }
 
     http {
@@ -214,7 +214,7 @@ spec:
             claimName: data-nginx
       containers:
         - name: nginx
-          image: nginx:1.14
+          image: nginx:1.20
           imagePullPolicy: Always
           ports:
             - containerPort: 80
