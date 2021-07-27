@@ -46,8 +46,8 @@ def execute(app_tuples, func, args):
         source_conf_path = Path(source_path).joinpath("conf")
         source_compose_file = Path(source_path).joinpath("docker-compose.yml")
 
-        source_init_config_sh = Path(source_path).joinpath("init_config.sh")
-        source_post_config_sh = Path(source_path).joinpath("post_config.sh")
+        source_init_config_sh = Path(source_path).joinpath("init.sh")
+        source_post_config_sh = Path(source_path).joinpath("post.sh")
 
         target_conf_path = Path(global_env["GLOBAL_CONFIG_DIR"]).joinpath(source_name)
 

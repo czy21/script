@@ -50,20 +50,20 @@ data:
         include /etc/nginx/conf.d/*.conf;
     }
   default.conf: |
-#    server {
-#        listen       80;
-#        server_name  localhost;
-#
-#        location / {
-#            root   /usr/share/nginx/html;
-#            index  index.html index.htm;
-#        }
-#
-#        error_page   500 502 503 504  /50x.html;
-#        location = /50x.html {
-#            root   /usr/share/nginx/html;
-#        }
-#    }
+    server {
+        listen       80;
+        server_name  localhost;
+
+        location / {
+            root   /usr/share/nginx/html;
+            index  index.html index.htm;
+        }
+
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   /usr/share/nginx/html;
+        }
+    }
   key.pem: |
     -----BEGIN RSA PRIVATE KEY-----
     MIIEpgIBAAKCAQEA2Crs1aqRxCpccPnBU8EzEGrpf5c6CpdYFD/ertb2EslYGZRK
@@ -155,28 +155,12 @@ data:
     -----END CERTIFICATE-----
 
   ops.conf: |
-
-#    upstream jenkins {
-#        server 192.168.2.21:8082;
-#    }
-#
-#    server {
-#        listen       80;
-#        server_name  ~^(?<subdomain>.+).internal-home.com$;
-#
-#        location / {
-#            proxy_pass http://$subdomain;
-#            proxy_set_header host $host;
-#            proxy_set_header X-Real-IP      $remote_addr;
-#            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-#        }
-#    }
   portal.conf: |
     server {
         listen       80;
-        server_name  localhost;
+        server_name  erp-portal.internal-home.com;
 
-        location /api/ {
+        location / {
             proxy_pass http://portal.stable.svc:8080/;
         }
         error_page   500 502 503 504  /50x.html;
