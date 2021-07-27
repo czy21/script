@@ -17,7 +17,3 @@ services:
       - ${GLOBAL_CONFIG_DIR}/nginx/log/:/var/log/nginx/
       - ${GLOBAL_VOLUMES_DIR}/nginx/:/root/
     restart: always
-networks:
-  default:
-    external:
-      name: local_default
