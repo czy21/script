@@ -1,7 +1,6 @@
 FROM ubuntu:18.04
 #ARG HADOOP_VERSION=3.2.1
 ARG SSH_PUB='ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC3nTRJ/aVb67l1xMaN36jmIbabU7Hiv/xpZ8bwLVvNO3Bj7kUzYTp7DIbPcHQg4d6EsPC6j91E8zW6CrV2fo2Ai8tDO/rCq9Se/64F3+8oEIiI6E/OfUZfXD1mPbG7M/kcA3VeQP6wxNPhWBbKRisqgUc6VTKhl+hK6LwRTZgeShxSNcey+HZst52wJxjQkNG+7CAEY5bbmBzAlHCSl4Z0RftYTHR3q8LcEg7YLNZasUogX68kBgRrb+jw1pRMNo7o7RI9xliDAGX+E4C3vVZL0IsccKgr90222axsADoEjC9O+Q6uwKjahemOVaau+9sHIwkelcOcCzW5SuAwkezv 805899926@qq.com'
-WORKDIR /root/
 COPY docker-entrypoint.sh /
 RUN chmod +x /docker-entrypoint.sh
 RUN apt-get update;
@@ -11,7 +10,7 @@ RUN echo 'UseDNS no \nPermitRootLogin yes \nPasswordAuthentication yes \nClientA
 RUN cat /etc/ssh/sshd_config
 RUN useradd -m hadoop -d /home/hadoop -s /bin/bash;passwd -d hadoop;
 RUN groupadd wheel
-RUN echo '%wheel ALL=(ALL:ALL)  NOPASSWD:ALL' >> /etc/sudoers
+RUN echo '%wheel ALL=(ALL:ALL) NOPASSWD:ALL' >> /etc/sudoers
 RUN usermod -aG wheel hadoop
 RUN su root bash -c 'cd;mkdir .ssh;chmod 700 .ssh;echo ${SSH_PUB} > .ssh/authorized_keys;chmod 644 .ssh/authorized_keys'
 RUN su hadoop bash -c 'cd;mkdir .ssh;chmod 700 .ssh;echo ${SSH_PUB} > .ssh/authorized_keys;chmod 644 .ssh/authorized_keys'
@@ -20,10 +19,13 @@ RUN su hadoop bash -c 'cd;mkdir .ssh;chmod 700 .ssh;echo ${SSH_PUB} > .ssh/autho
 RUN su hadoop bash -c 'cd;ssh-keygen -t rsa -f ~/.ssh/id_rsa; cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys'
 RUN wget https://mirrors.tuna.tsinghua.edu.cn/apache/hadoop/common/hadoop-3.3.1/hadoop-3.3.1.tar.gz
 RUN mkdir -p /usr/local/hadoop/ && tar -zxf hadoop-3.3.1.tar.gz --strip-components 1 -C /usr/local/hadoop/
-RUN echo 'JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 HADOOP_HOME=/usr/local/hadoop' >> /etc/profile
-RUN echo 'PATH $JAVA_HOME/bin:$HADOOP_HOME/bin:$PATH' >> /etc/profile
+RUN chown -R hadoop:hadoop /usr/local/hadoop/
+RUN echo 'export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 HADOOP_HOME=/usr/local/hadoop' >> /etc/bash.bashrc
+RUN echo 'export PATH=$JAVA_HOME/bin:$HADOOP_HOME/bin:$PATH' >> /etc/bash.bashrc
 RUN rm -rf hadoop-3.3.1.tar.gz
 # end hadoop
 
+WORKDIR /hadoop/
+USER hadoop
 EXPOSE 22
 ENTRYPOINT ["/docker-entrypoint.sh"]
