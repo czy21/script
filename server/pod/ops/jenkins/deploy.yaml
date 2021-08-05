@@ -9,12 +9,11 @@ metadata:
 spec:
   selector:
     app: jenkins
-  type: NodePort
+  type: ClusterIP
   ports:
     - name: "8080"
       port: 8080
       targetPort: 8080
-      nodePort: 8082
     - name: "5000"
       port: 5000
       targetPort: 5000
