@@ -14,10 +14,6 @@ spec:
       port: 16010
       targetPort: 16010
       nodePort: 16010
-    - name: "16020"
-      port: 16020
-      targetPort: 16020
-      nodePort: 16020
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -49,6 +45,12 @@ data:
         <value>false</value>
       </property>
     </configuration>
+  zoo.cfg: |
+    tickTime=2000
+    initLimit=10
+    syncLimit=5
+    dataDir=/tmp/zookeeper
+    clientPort=2181
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -78,6 +80,12 @@ spec:
             items:
               - key: hbase-site.xml
                 path: hbase-site.xml
+        - name: zoo-conf
+          configMap:
+            name: hbase
+            items:
+              - key: zoo.cfg
+                path: zoo.cfg
       containers:
         - name: hbase
           image: registry:5000/hbase
@@ -94,6 +102,9 @@ spec:
             - name: hbase-site
               mountPath: /opt/hbase/conf/hbase-site.xml
               subPath: hbase-site.xml
+            - name: zoo-conf
+              mountPath: /opt/zk/conf/zoo.cfg
+              subPath: zoo.cfg
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
