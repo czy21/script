@@ -45,12 +45,6 @@ data:
         <value>false</value>
       </property>
     </configuration>
-  zoo.cfg: |
-    tickTime=2000
-    initLimit=10
-    syncLimit=5
-    dataDir=/tmp/zookeeper
-    clientPort=2181
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -80,12 +74,6 @@ spec:
             items:
               - key: hbase-site.xml
                 path: hbase-site.xml
-        - name: zoo-conf
-          configMap:
-            name: hbase
-            items:
-              - key: zoo.cfg
-                path: zoo.cfg
       containers:
         - name: hbase
           image: registry:5000/hbase
@@ -102,9 +90,6 @@ spec:
             - name: hbase-site
               mountPath: /opt/hbase/conf/hbase-site.xml
               subPath: hbase-site.xml
-            - name: zoo-conf
-              mountPath: /opt/zk/conf/zoo.cfg
-              subPath: zoo.cfg
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
