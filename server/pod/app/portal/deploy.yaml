@@ -47,7 +47,9 @@ data:
         job:
           enabled: false
         initialize-schema: always
-
+    hbase:
+      zookeeper:
+        quorum: 192.168.2.21:2181
     mybatis-plus:
       mapper-locations: classpath*:mapper/**/**.xml
       type-aliases-package: com.team.domain.entity
@@ -110,7 +112,7 @@ spec:
                 path: "application.yml"
       containers:
         - name: portal
-          image: registry:5000/portal:dev-bruce
+          image: registry:5000/portal-dev:dev-bruce
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
