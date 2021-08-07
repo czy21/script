@@ -11,10 +11,18 @@ spec:
       port: 22
       targetPort: 22
       nodePort: 8322
-    - name: "8080"
-      port: 8080
-      targetPort: 8080
-      nodePort: 8380
+    - name: "9870"
+      port: 9870
+      targetPort: 9870
+      nodePort: 9870
+    - name: "2181"
+      port: 2181
+      targetPort: 2181
+      nodePort: 9181
+    - name: "16010"
+      port: 16010
+      targetPort: 16010
+      nodePort: 16010
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -23,7 +31,12 @@ metadata:
   labels:
     app: hadoop
 data:
-  compile.sh: |
+  hadoop-env.sh: |
+    export HDFS_DATANODE_USER=root
+    export HDFS_NAMENODE_USER=root
+    export HDFS_SECONDARYNAMENODE_USER=root
+    export JAVA_HOME=/usr/local/openjdk-8
+    export HADOOP_OS_TYPE=${HADOOP_OS_TYPE:-$(uname -s)}
   core-site.xml: |
     <?xml version="1.0" encoding="UTF-8"?>
     <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
@@ -32,10 +45,9 @@ data:
             <name>fs.defaultFS</name>
             <value>hdfs://localhost:9000</value>
         </property>
-
         <property>
             <name>hadoop.tmp.dir</name>
-            <value>/usr/local/hadoop/tmp</value>
+            <value>/opt/hadoop/tmp</value>
         </property>
     </configuration>
   hdfs-site.xml: |
@@ -46,6 +58,29 @@ data:
             <name>dfs.replication</name>
             <value>1</value>
         </property>
+    </configuration>
+  hbase-env.sh: |
+    export JAVA_HOME=/usr/local/openjdk-8
+  hbase-site.xml: |
+    <?xml version="1.0"?>
+    <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+    <configuration>
+      <property>
+        <name>hbase.cluster.distributed</name>
+        <value>false</value>
+      </property>
+      <property>
+        <name>hbase.rootdir</name>
+        <value>hdfs://localhost:9000/hbase</value>
+      </property>
+      <property>
+        <name>hbase.zookeeper.quorum</name>
+        <value>zk-cs.default.svc</value>
+      </property>
+      <property>
+        <name>hbase.unsafe.stream.capability.enforce</name>
+        <value>false</value>
+      </property>
     </configuration>
 ---
 apiVersion: apps/v1
@@ -64,42 +99,62 @@ spec:
         app: hadoop
     spec:
       volumes:
-        - name: script
+        - name: hadoop-env
           configMap:
-              name: hadoop
-              items:
-                - key: "compile.sh"
-                  path: "compile.sh"
+            name: hadoop
+            items:
+              - key: hadoop-env.sh
+                path: hadoop-env.sh
         - name: core-site
           configMap:
             name: hadoop
             items:
               - key: core-site.xml
                 path: core-site.xml
-              - key: hdfs-site.xml
-                path: hdfs-site.xml
         - name: hdfs-site
           configMap:
             name: hadoop
             items:
               - key: hdfs-site.xml
                 path: hdfs-site.xml
+        - name: hbase-env
+          configMap:
+            name: hadoop
+            items:
+              - key: hbase-env.sh
+                path: hbase-env.sh
+        - name: hbase-site
+          configMap:
+            name: hadoop
+            items:
+              - key: hbase-site.xml
+                path: hbase-site.xml
       containers:
         - name: hadoop
           image: registry:5000/hadoop
-          args: [ "/bin/bash","-c"," sh /script/compile.sh && trap : TERM INT; sleep infinity & wait" ]
+          args: [ "/bin/bash","-c","trap : TERM INT; sleep infinity & wait" ]
           imagePullPolicy: Always
           ports:
             - containerPort: 22
+            - containerPort: 9870
+            - containerPort: 2181
+            - containerPort: 16010
           volumeMounts:
+            - name: hadoop-env
+              mountPath: /opt/hadoop/etc/hadoop/hadoop-env.sh
+              subPath: hadoop-env.sh
             - name: core-site
-              mountPath: /usr/local/hadoop/etc/hadoop/core-site.xml
+              mountPath: /opt/hadoop/etc/hadoop/core-site.xml
               subPath: core-site.xml
             - name: hdfs-site
-              mountPath: /usr/local/hadoop/etc/hadoop/hdfs-site.xml
+              mountPath: /opt/hadoop/etc/hadoop/hdfs-site.xml
               subPath: hdfs-site.xml
-            - name: script
-              mountPath: /script/
+            - name: hbase-env
+              mountPath: /opt/hbase/conf/hbase-env.sh
+              subPath: hbase-env.sh
+            - name: hbase-site
+              mountPath: /opt/hbase/conf/hbase-site.xml
+              subPath: hbase-site.xml
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
