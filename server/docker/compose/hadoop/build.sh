@@ -9,4 +9,4 @@ docker build --tag registry:5000/hadoop --file ${dir}/Dockerfile ${dir}/
 
 docker push registry:5000/hadoop
 
-docker image prune --force
+docker image prune --force --all
