@@ -31,8 +31,6 @@ RUN set -ex; \
     rm $HBASE_HOME/src.tgz; \
     chown -R root:root $HBASE_HOME;
 
-ENV PATH=$JAVA_HOME/bin:$PATH
-
 COPY docker-entrypoint.sh /
 EXPOSE 22 9870 9000
 ENTRYPOINT ["/docker-entrypoint.sh"]

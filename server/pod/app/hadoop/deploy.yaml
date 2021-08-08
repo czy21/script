@@ -25,6 +25,10 @@ spec:
       port: 16020
       targetPort: 16020
       nodePort: 16020
+    - name: "16030"
+      port: 16030
+      targetPort: 16030
+      nodePort: 16030
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -140,6 +144,9 @@ spec:
             items:
               - key: hbase-site.xml
                 path: hbase-site.xml
+        - name: hadoop-data
+          persistentVolumeClaim:
+            claimName: data-hadoop
       containers:
         - name: hadoop
           image: registry:5000/hadoop
@@ -152,6 +159,7 @@ spec:
             - containerPort: 16000
             - containerPort: 16010
             - containerPort: 16020
+            - containerPort: 16030
           volumeMounts:
             - name: hadoop-env
               mountPath: /opt/hadoop/etc/hadoop/hadoop-env.sh
@@ -168,13 +176,15 @@ spec:
             - name: hbase-site
               mountPath: /opt/hbase/conf/hbase-site.xml
               subPath: hbase-site.xml
-          env:
-            - name: POD_NAMESPACE
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.namespace
-            - name: POD_NAME
-              value: hadoop
+            - name: hadoop-data
+              mountPath: /opt/hadoop/hdfs/
+              subPath: hdfs
+            - name: hadoop-data
+              mountPath: /opt/hadoop/logs/
+              subPath: logs
+            - name: hadoop-data
+              mountPath: /opt/hbase/logs/
+              subPath: hbase/logs
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
