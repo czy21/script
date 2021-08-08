@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import copy
 import io
 import math
 import re
