@@ -13,6 +13,18 @@ spec:
       port: 9870
       targetPort: 9870
       nodePort: 9870
+    - name: "16000"
+      port: 16000
+      targetPort: 16000
+      nodePort: 16000
+    - name: "16010"
+      port: 16010
+      targetPort: 16010
+      nodePort: 16010
+    - name: "16020"
+      port: 16020
+      targetPort: 16020
+      nodePort: 16020
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -27,6 +39,7 @@ data:
     export HDFS_SECONDARYNAMENODE_USER=root
     export JAVA_HOME=/usr/local/openjdk-8
     export HADOOP_OS_TYPE=${HADOOP_OS_TYPE:-$(uname -s)}
+    export HADOOP_OPTS="-Djava.library.path=${HADOOP_HOME}/lib/native"
   core-site.xml: |
     <?xml version="1.0" encoding="UTF-8"?>
     <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
@@ -53,6 +66,31 @@ data:
             <value>1</value>
         </property>
     </configuration>
+  hbase-env.sh: |
+    export JAVA_HOME=/usr/local/openjdk-8
+    export HBASE_DISABLE_HADOOP_CLASSPATH_LOOKUP="true"
+    export LD_LIBRARY_PATH=${HADOOP_HOME}/lib/native:$LD_LIBRARY_PATH
+  hbase-site.xml: |
+    <?xml version="1.0"?>
+    <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+    <configuration>
+      <property>
+        <name>hbase.cluster.distributed</name>
+        <value>false</value>
+      </property>
+      <property>
+        <name>hbase.rootdir</name>
+        <value>hdfs://0.0.0.0:9000/hbase</value>
+      </property>
+      <property>
+        <name>hbase.zookeeper.quorum</name>
+        <value>zk-cs.default.svc</value>
+      </property>
+      <property>
+        <name>hbase.unsafe.stream.capability.enforce</name>
+        <value>false</value>
+      </property>
+    </configuration>
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -69,6 +107,8 @@ spec:
       labels:
         app: hadoop
     spec:
+      hostname: master
+      subdomain: hadoop
       volumes:
         - name: hadoop-env
           configMap:
@@ -88,6 +128,18 @@ spec:
             items:
               - key: hdfs-site.xml
                 path: hdfs-site.xml
+        - name: hbase-env
+          configMap:
+            name: hadoop
+            items:
+              - key: hbase-env.sh
+                path: hbase-env.sh
+        - name: hbase-site
+          configMap:
+            name: hadoop
+            items:
+              - key: hbase-site.xml
+                path: hbase-site.xml
       containers:
         - name: hadoop
           image: registry:5000/hadoop
@@ -95,8 +147,11 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 22
-            - containerPort: 9870
             - containerPort: 9000
+            - containerPort: 9870
+            - containerPort: 16000
+            - containerPort: 16010
+            - containerPort: 16020
           volumeMounts:
             - name: hadoop-env
               mountPath: /opt/hadoop/etc/hadoop/hadoop-env.sh
@@ -107,6 +162,19 @@ spec:
             - name: hdfs-site
               mountPath: /opt/hadoop/etc/hadoop/hdfs-site.xml
               subPath: hdfs-site.xml
+            - name: hbase-env
+              mountPath: /opt/hbase/conf/hbase-env.sh
+              subPath: hbase-env.sh
+            - name: hbase-site
+              mountPath: /opt/hbase/conf/hbase-site.xml
+              subPath: hbase-site.xml
+          env:
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: POD_NAME
+              value: hadoop
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
