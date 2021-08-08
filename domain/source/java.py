@@ -35,23 +35,8 @@ def build_api():
             build_method,
             "-x test"
         ])
-    if default_common.param_api_docker_gradle_command:
-        client = docker.from_env()
-        os.system("chmod +x " + path_util.pure_path_join(default_common.param_api_root_project_path, "gradlew"))
-        gradle_container = client.containers.run(image="gradle:jdk11",
-                                                 command=list_util.arr_param_to_str(build_command),
-                                                 volumes=[
-                                                     ":".join([default_path.root_path, default_path.root_path]),
-                                                     ":".join([path_util.pure_path_join(default_path.root_path, ".gradle"), "/home/gradle/.gradle"])
-                                                 ],
-                                                 remove=True,
-                                                 stream=True
-                                                 )
-        for line in gradle_container:
-            logger.info(basic_util.action_formatter(__get_function_name(), line.decode("utf-8").strip()))
-    else:
-        logger.info(basic_util.action_formatter(__get_function_name(), build_command))
-        basic_util.execute(build_command)
+    logger.info(basic_util.action_formatter(__get_function_name(), build_command))
+    basic_util.execute(build_command)
 
 
 def copy_config():

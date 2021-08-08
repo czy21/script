@@ -112,7 +112,7 @@ def backup_mysql_gz() -> None:
                                          default_path.output_db_bak_gz_mysql
                                          )
     logger.info(basic_util.action_formatter(__get_function_name(), command))
-    # basic_util.execute(command)
+    basic_util.execute(command)
 
 
 def recover_mysql_gz() -> None:
