@@ -22,31 +22,52 @@ metadata:
     app: portal
 data:
   application.yml: |
+    db-host: 192.168.2.21
+    db-user: admin
+    db-pass: ***REMOVED***
+
     server:
       port: 8080
     spring:
       datasource:
-        driver-class-name: com.mysql.cj.jdbc.Driver
-        type: com.mysql.cj.jdbc.MysqlDataSource
-        url: jdbc:mysql://192.168.2.21:3306/erp_local?user=admin&password=***REMOVED***&serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false&useUnicode=true&rewriteBatchedStatements=true
+        primary:
+          type: com.zaxxer.hikari.HikariDataSource
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          jdbc-url: jdbc:mysql://${db-host}:3306/erp_local?user=${db-user}&password=${db-pass}&serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false&useUnicode=true&rewriteBatchedStatements=true
+          minimum-idle: 5
+          maximum-pool-size: 20
+          max-lifetime: 1800000
+          connection-test-query: select 1
+          connection-timeout: 30000
+        second:
+          type: com.zaxxer.hikari.HikariDataSource
+          driver-class-name: org.postgresql.Driver
+          jdbc-url: jdbc:postgresql://${db-host}:5432/erp_local
+          username: postgres
+          password: ${db-pass}
+          minimum-idle: 5
+          maximum-pool-size: 20
+          max-lifetime: 1800000
+          connection-test-query: select 1
+          connection-timeout: 30000
       data:
         mongodb:
-          uri: mongodb://admin:***REMOVED***@192.168.2.21:27017/erp_local?authSource=admin
+          uri: mongodb://${db-user}:${db-pass}@${db-host}:27017/erp_local?authSource=${db-user}
       redis:
-        host: 192.168.2.21
+        host: ${db-host}
         port: 6379
         timeout: 3600
-        password: ***REMOVED***
+        password: ${db-pass}
       servlet:
         multipart:
           max-request-size: 100MB
           max-file-size: 100MB
       rabbitmq:
-        addresses: root:***REMOVED***@192.168.2.21:5672
+        addresses: root:${db-pass}@${db-host}:5672
       batch:
         job:
           enabled: false
-        initialize-schema: always
+    migrate-batch-number: 100000
     hbase:
       zookeeper:
         quorum: 192.168.2.21:2181
@@ -85,6 +106,7 @@ data:
         example1:
           sign-name: 测试名称
           template-code: SMS_12345678
+
 
 ---
 apiVersion: apps/v1
