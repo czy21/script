@@ -28,7 +28,7 @@ data:
       datasource:
         driver-class-name: com.mysql.cj.jdbc.Driver
         type: com.mysql.cj.jdbc.MysqlDataSource
-        url: jdbc:mysql://192.168.2.21:3306/erp_local?user=admin&password=Czy.190815&serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false&useUnicode=true
+        url: jdbc:mysql://192.168.2.21:3306/erp_local?user=admin&password=Czy.190815&serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false&useUnicode=true&rewriteBatchedStatements=true
       data:
         mongodb:
           uri: mongodb://admin:Czy.190815@192.168.2.21:27017/erp_local?authSource=admin
