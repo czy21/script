@@ -20,6 +20,17 @@ RUN set -ex; \
     chown -R root:root $HADOOP_HOME;
 RUN mkdir -p $HADOOP_HOME/hdfs/name/ && mkdir -p $HADOOP_HOME/hdfs/data/
 
+# hbase
+ENV HBASE_TGZ_URL=https://mirrors.tuna.tsinghua.edu.cn/apache/hbase/stable/hbase-2.3.6-bin.tar.gz
+ENV HBASE_HOME=/opt/hbase
+ENV PATH=$HBASE_HOME/bin:$PATH
+RUN set -ex; \
+    mkdir -p $HBASE_HOME; \
+    wget -nv -O $HBASE_HOME/src.tgz $HBASE_TGZ_URL; \
+    tar -xf $HBASE_HOME/src.tgz --strip-components=1 -C $HBASE_HOME; \
+    rm $HBASE_HOME/src.tgz; \
+    chown -R root:root $HBASE_HOME;
+
 COPY docker-entrypoint.sh /
 EXPOSE 22 9870 9000
 ENTRYPOINT ["/docker-entrypoint.sh"]
