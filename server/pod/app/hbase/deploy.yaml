@@ -1,19 +1,34 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: hadoop-master
+  name: hadoop
 spec:
   selector:
-    app: hadoop-namenode
+    app: hadoop
   type: NodePort
   ports:
-    - name: rpc
+    - name: "9000"
       port: 9000
-      targetPort: 9000
-    - name: http
+    - name: "9870"
       port: 9870
       targetPort: 9870
       nodePort: 9870
+    - name: "16000"
+      port: 16000
+      targetPort: 16000
+      nodePort: 16000
+    - name: "16010"
+      port: 16010
+      targetPort: 16010
+      nodePort: 16010
+    - name: "16020"
+      port: 16020
+      targetPort: 16020
+      nodePort: 16020
+    - name: "16030"
+      port: 16030
+      targetPort: 16030
+      nodePort: 16030
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -35,11 +50,7 @@ data:
     <configuration>
         <property>
             <name>fs.defaultFS</name>
-            <value>hdfs://hadoop-master:9000</value>
-        </property>
-        <property>
-            <name>dfs.namenode.rpc-bind-host</name>
-            <value>0.0.0.0</value>
+            <value>hdfs://0.0.0.0:9000</value>
         </property>
     </configuration>
   hdfs-site.xml: |
@@ -55,30 +66,53 @@ data:
             <value>file:///opt/hadoop/hdfs/data</value>
         </property>
         <property>
-            <name>dfs.namenode.datanode.registration.ip-hostname-check</name>
-            <value>false</value>
-        </property>
-        <property>
             <name>dfs.replication</name>
             <value>1</value>
         </property>
+    </configuration>
+  hbase-env.sh: |
+    export JAVA_HOME=/usr/local/openjdk-8
+    export HBASE_DISABLE_HADOOP_CLASSPATH_LOOKUP="true"
+    export LD_LIBRARY_PATH=${HADOOP_HOME}/lib/native:$LD_LIBRARY_PATH
+  hbase-site.xml: |
+    <?xml version="1.0"?>
+    <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+    <configuration>
+      <property>
+        <name>hbase.cluster.distributed</name>
+        <value>false</value>
+      </property>
+      <property>
+        <name>hbase.rootdir</name>
+        <value>hdfs://0.0.0.0:9000/hbase</value>
+      </property>
+      <property>
+        <name>hbase.zookeeper.quorum</name>
+        <value>zk-cs.default.svc</value>
+      </property>
+      <property>
+        <name>hbase.unsafe.stream.capability.enforce</name>
+        <value>false</value>
+      </property>
     </configuration>
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: hadoop-namenode
+  name: hadoop
 spec:
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: hadoop-namenode
+      app: hadoop
   template:
     metadata:
       labels:
-        app: hadoop-namenode
+        app: hadoop
     spec:
+      hostname: master
+      subdomain: hadoop
       volumes:
         - name: hadoop-env
           configMap:
@@ -98,17 +132,34 @@ spec:
             items:
               - key: hdfs-site.xml
                 path: hdfs-site.xml
+        - name: hbase-env
+          configMap:
+            name: hadoop
+            items:
+              - key: hbase-env.sh
+                path: hbase-env.sh
+        - name: hbase-site
+          configMap:
+            name: hadoop
+            items:
+              - key: hbase-site.xml
+                path: hbase-site.xml
         - name: hadoop-data
           persistentVolumeClaim:
-            claimName: data-hadoop-namenode
+            claimName: data-hadoop
       containers:
         - name: hadoop
           image: registry:5000/hadoop
+          args: [ "/bin/bash","-c","trap : TERM INT; sleep infinity & wait" ]
           imagePullPolicy: Always
           ports:
             - containerPort: 22
             - containerPort: 9000
             - containerPort: 9870
+            - containerPort: 16000
+            - containerPort: 16010
+            - containerPort: 16020
+            - containerPort: 16030
           volumeMounts:
             - name: hadoop-env
               mountPath: /opt/hadoop/etc/hadoop/hadoop-env.sh
@@ -119,20 +170,26 @@ spec:
             - name: hdfs-site
               mountPath: /opt/hadoop/etc/hadoop/hdfs-site.xml
               subPath: hdfs-site.xml
+            - name: hbase-env
+              mountPath: /opt/hbase/conf/hbase-env.sh
+              subPath: hbase-env.sh
+            - name: hbase-site
+              mountPath: /opt/hbase/conf/hbase-site.xml
+              subPath: hbase-site.xml
             - name: hadoop-data
               mountPath: /opt/hadoop/hdfs/
               subPath: hdfs
             - name: hadoop-data
               mountPath: /opt/hadoop/logs/
               subPath: logs
-          env:
-            - name: HADOOP_NODE_TYPE
-              value: namenode
+            - name: hadoop-data
+              mountPath: /opt/hbase/logs/
+              subPath: hbase/logs
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: data-hadoop-namenode
+  name: data-hadoop
 spec:
   accessModes:
     - ReadWriteMany
@@ -140,75 +197,3 @@ spec:
     requests:
       storage: 256Gi
   storageClassName: "managed-nfs-storage"
----
-apiVersion: apps/v1
-kind: StatefulSet
-metadata:
-  name: hadoop-datanode
-spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: hadoop-datanode
-  serviceName: hadoop-datanode
-  template:
-    metadata:
-      labels:
-        app: hadoop-datanode
-    spec:
-      volumes:
-        - name: hadoop-env
-          configMap:
-            name: hadoop
-            items:
-              - key: hadoop-env.sh
-                path: hadoop-env.sh
-        - name: core-site
-          configMap:
-            name: hadoop
-            items:
-              - key: core-site.xml
-                path: core-site.xml
-        - name: hdfs-site
-          configMap:
-            name: hadoop
-            items:
-              - key: hdfs-site.xml
-                path: hdfs-site.xml
-      containers:
-        - name: hadoop
-          image: registry:5000/hadoop
-          imagePullPolicy: Always
-          ports:
-            - containerPort: 22
-            - containerPort: 9000
-            - containerPort: 9870
-          volumeMounts:
-            - name: hadoop-env
-              mountPath: /opt/hadoop/etc/hadoop/hadoop-env.sh
-              subPath: hadoop-env.sh
-            - name: core-site
-              mountPath: /opt/hadoop/etc/hadoop/core-site.xml
-              subPath: core-site.xml
-            - name: hdfs-site
-              mountPath: /opt/hadoop/etc/hadoop/hdfs-site.xml
-              subPath: hdfs-site.xml
-            - name: data
-              mountPath: /opt/hadoop/hdfs/
-              subPath: hdfs
-            - name: data
-              mountPath: /opt/hadoop/logs/
-              subPath: logs
-          env:
-            - name: HADOOP_NODE_TYPE
-              value: datanode
-  volumeClaimTemplates:
-    - metadata:
-        name: data
-      spec:
-        accessModes:
-          - ReadWriteMany
-        resources:
-          requests:
-            storage: 256Gi
-        storageClassName: "managed-nfs-storage"
