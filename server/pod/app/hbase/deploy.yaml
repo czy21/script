@@ -1,18 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: hadoop
+  name: hbase-master
 spec:
   selector:
-    app: hadoop
+    app: hbase-master
   type: NodePort
   ports:
-    - name: "9000"
-      port: 9000
-    - name: "9870"
-      port: 9870
-      targetPort: 9870
-      nodePort: 9870
     - name: "16000"
       port: 16000
       targetPort: 16000
@@ -21,74 +15,37 @@ spec:
       port: 16010
       targetPort: 16010
       nodePort: 16010
-    - name: "16020"
-      port: 16020
-      targetPort: 16020
-      nodePort: 16020
-    - name: "16030"
-      port: 16030
-      targetPort: 16030
-      nodePort: 16030
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: hadoop
+  name: hbase
   labels:
-    app: hadoop
+    app: hbase
 data:
-  hadoop-env.sh: |
-    export HDFS_DATANODE_USER=root
-    export HDFS_NAMENODE_USER=root
-    export HDFS_SECONDARYNAMENODE_USER=root
-    export JAVA_HOME=/usr/local/openjdk-8
-    export HADOOP_OS_TYPE=${HADOOP_OS_TYPE:-$(uname -s)}
-    export HADOOP_OPTS="-Djava.library.path=${HADOOP_HOME}/lib/native"
-  core-site.xml: |
-    <?xml version="1.0" encoding="UTF-8"?>
-    <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
-    <configuration>
-        <property>
-            <name>fs.defaultFS</name>
-            <value>hdfs://0.0.0.0:9000</value>
-        </property>
-    </configuration>
-  hdfs-site.xml: |
-    <?xml version="1.0" encoding="UTF-8"?>
-    <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
-    <configuration>
-        <property>
-            <name>dfs.namenode.name.dir</name>
-            <value>file:///opt/hadoop/hdfs/name</value>
-        </property>
-        <property>
-            <name>dfs.datanode.data.dir</name>
-            <value>file:///opt/hadoop/hdfs/data</value>
-        </property>
-        <property>
-            <name>dfs.replication</name>
-            <value>1</value>
-        </property>
-    </configuration>
   hbase-env.sh: |
     export JAVA_HOME=/usr/local/openjdk-8
-    export HBASE_DISABLE_HADOOP_CLASSPATH_LOOKUP="true"
-    export LD_LIBRARY_PATH=${HADOOP_HOME}/lib/native:$LD_LIBRARY_PATH
+    export HBASE_DISABLE_hbase_CLASSPATH_LOOKUP="true"
+    export LD_LIBRARY_PATH=${hbase_HOME}/lib/native:$LD_LIBRARY_PATH
   hbase-site.xml: |
     <?xml version="1.0"?>
     <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
     <configuration>
       <property>
         <name>hbase.cluster.distributed</name>
-        <value>false</value>
+        <value>true</value>
       </property>
       <property>
         <name>hbase.rootdir</name>
-        <value>hdfs://0.0.0.0:9000/hbase</value>
+        <value>hdfs://hadoop-master:9000/hbase</value>
       </property>
       <property>
         <name>hbase.zookeeper.quorum</name>
         <value>zk-cs.default.svc</value>
+      </property>
+      <property>
+          <name>hbase.regionserver.restart.on.zk.expire</name>
+          <value>true</value>
       </property>
       <property>
         <name>hbase.unsafe.stream.capability.enforce</name>
@@ -99,97 +56,61 @@ data:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: hadoop
+  name: hbase-master
 spec:
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: hadoop
+      app: hbase-master
   template:
     metadata:
       labels:
-        app: hadoop
+        app: hbase-master
     spec:
       hostname: master
-      subdomain: hadoop
+      subdomain: hbase-master
       volumes:
-        - name: hadoop-env
-          configMap:
-            name: hadoop
-            items:
-              - key: hadoop-env.sh
-                path: hadoop-env.sh
-        - name: core-site
-          configMap:
-            name: hadoop
-            items:
-              - key: core-site.xml
-                path: core-site.xml
-        - name: hdfs-site
-          configMap:
-            name: hadoop
-            items:
-              - key: hdfs-site.xml
-                path: hdfs-site.xml
         - name: hbase-env
           configMap:
-            name: hadoop
+            name: hbase
             items:
               - key: hbase-env.sh
                 path: hbase-env.sh
         - name: hbase-site
           configMap:
-            name: hadoop
+            name: hbase
             items:
               - key: hbase-site.xml
                 path: hbase-site.xml
-        - name: hadoop-data
+        - name: hbase-data
           persistentVolumeClaim:
-            claimName: data-hadoop
+            claimName: data-hbase-master
       containers:
-        - name: hadoop
-          image: registry:5000/hadoop
-          args: [ "/bin/bash","-c","trap : TERM INT; sleep infinity & wait" ]
+        - name: hbase-master
+          image: registry:5000/hbase
           imagePullPolicy: Always
           ports:
-            - containerPort: 22
-            - containerPort: 9000
-            - containerPort: 9870
             - containerPort: 16000
             - containerPort: 16010
-            - containerPort: 16020
-            - containerPort: 16030
           volumeMounts:
-            - name: hadoop-env
-              mountPath: /opt/hadoop/etc/hadoop/hadoop-env.sh
-              subPath: hadoop-env.sh
-            - name: core-site
-              mountPath: /opt/hadoop/etc/hadoop/core-site.xml
-              subPath: core-site.xml
-            - name: hdfs-site
-              mountPath: /opt/hadoop/etc/hadoop/hdfs-site.xml
-              subPath: hdfs-site.xml
             - name: hbase-env
               mountPath: /opt/hbase/conf/hbase-env.sh
               subPath: hbase-env.sh
             - name: hbase-site
               mountPath: /opt/hbase/conf/hbase-site.xml
               subPath: hbase-site.xml
-            - name: hadoop-data
-              mountPath: /opt/hadoop/hdfs/
-              subPath: hdfs
-            - name: hadoop-data
-              mountPath: /opt/hadoop/logs/
-              subPath: logs
-            - name: hadoop-data
+            - name: hbase-data
               mountPath: /opt/hbase/logs/
               subPath: hbase/logs
+          env:
+            - name: HBASE_NODE_TYPE
+              value: master
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: data-hadoop
+  name: data-hbase-master
 spec:
   accessModes:
     - ReadWriteMany
@@ -197,3 +118,61 @@ spec:
     requests:
       storage: 256Gi
   storageClassName: "managed-nfs-storage"
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: hbase-region
+spec:
+  selector:
+    matchLabels:
+      app: hbase-region
+  serviceName: hbase-region
+  template:
+    metadata:
+      labels:
+        app: hbase-region
+    spec:
+      volumes:
+        - name: hbase-env
+          configMap:
+            name: hbase
+            items:
+              - key: hbase-env.sh
+                path: hbase-env.sh
+        - name: hbase-site
+          configMap:
+            name: hbase
+            items:
+              - key: hbase-site.xml
+                path: hbase-site.xml
+      containers:
+        - name: hbase-region
+          image: registry:5000/hbase
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 16020
+            - containerPort: 16030
+          volumeMounts:
+            - name: hbase-env
+              mountPath: /opt/hbase/conf/hbase-env.sh
+              subPath: hbase-env.sh
+            - name: hbase-site
+              mountPath: /opt/hbase/conf/hbase-site.xml
+              subPath: hbase-site.xml
+            - name: data
+              mountPath: /opt/hbase/logs/
+              subPath: hbase/logs
+          env:
+            - name: HBASE_NODE_TYPE
+              value: region
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes:
+          - ReadWriteMany
+        resources:
+          requests:
+            storage: 256Gi
+        storageClassName: "managed-nfs-storage"
