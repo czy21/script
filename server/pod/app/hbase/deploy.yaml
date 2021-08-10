@@ -27,7 +27,7 @@ metadata:
 data:
   hbase-env.sh: |
     export JAVA_HOME=/usr/local/openjdk-8
-    export HBASE_DISABLE_hbase_CLASSPATH_LOOKUP="true"
+    export HBASE_DISABLE_HADOOP_CLASSPATH_LOOKUP="true"
     export LD_LIBRARY_PATH=${HADOOP_HOME}/lib/native:$LD_LIBRARY_PATH
   hbase-site.xml: |
     <?xml version="1.0"?>
@@ -45,18 +45,6 @@ data:
         <name>hbase.zookeeper.quorum</name>
         <value>zk-cs.default.svc</value>
       </property>
-      #<property>
-      #    <name>hbase.master.hostname</name>
-      #    <value>hbase-master.big-data</value>
-      #  </property>
-      #  <property>
-      #    <name>hbase.master.dns.nameserver</name>
-      #    <value>hbase-master.big-data</value>
-      #  </property>
-      #<property>
-      #  <name>hbase.regionserver.dns.nameserver</name>
-      #  <value>hbase-master.big-data</value>
-      #</property>
       <property>
           <name>hbase.regionserver.restart.on.zk.expire</name>
           <value>true</value>
@@ -134,6 +122,20 @@ spec:
     requests:
       storage: 256Gi
   storageClassName: "managed-nfs-storage"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hbase-region
+  namespace: big-data
+spec:
+  selector:
+    app: hbase-region
+  ports:
+    - name: "rpc"
+      port: 16020
+    - name: "http"
+      port: 16030
 ---
 apiVersion: apps/v1
 kind: StatefulSet
