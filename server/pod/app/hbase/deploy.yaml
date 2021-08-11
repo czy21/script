@@ -30,8 +30,6 @@ data:
     export HBASE_DISABLE_HADOOP_CLASSPATH_LOOKUP="true"
     export LD_LIBRARY_PATH=${HADOOP_HOME}/lib/native:$LD_LIBRARY_PATH
     export HBASE_HEAPSIZE=1G
-    export HBASE_MASTER_OPTS="$HBASE_MASTER_OPTS -XX:PermSize=128m -XX:MaxPermSize=128m"
-    export HBASE_REGIONSERVER_OPTS="$HBASE_REGIONSERVER_OPTS -XX:PermSize=1g -XX:MaxPermSize=1g"
   hbase-site.xml: |
     <?xml version="1.0"?>
     <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
@@ -116,6 +114,8 @@ spec:
           env:
             - name: HBASE_NODE_TYPE
               value: master
+#            - name: HBASE_MASTER_OPTS
+#              value: -XX:PermSize=128m -XX:MaxPermSize=128m
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -193,6 +193,8 @@ spec:
           env:
             - name: HBASE_NODE_TYPE
               value: region
+#            - name: HBASE_REGIONSERVER_OPTS
+#              value: -XX:PermSize=1g -XX:MaxPermSize=1g
   volumeClaimTemplates:
     - metadata:
         name: data
