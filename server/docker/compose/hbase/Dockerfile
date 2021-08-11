@@ -18,7 +18,9 @@ RUN set -ex; \
     tar -xf $HADOOP_HOME/src.tgz --strip-components=1 -C $HADOOP_HOME; \
     rm $HADOOP_HOME/src.tgz; \
     chown -R root:root $HADOOP_HOME;
-RUN mkdir -p $HADOOP_HOME/hdfs/name/ && mkdir -p $HADOOP_HOME/hdfs/data/
+
+# clean trash file or dir
+RUN find $HADOOP_HOME/ -maxdepth 1 -not -name 'lib' ! -path $HADOOP_HOME/ -exec rm -rf {} \;
 
 # hbase
 ENV HBASE_TGZ_URL=https://mirrors.tuna.tsinghua.edu.cn/apache/hbase/stable/hbase-2.3.6-bin.tar.gz
@@ -30,6 +32,8 @@ RUN set -ex; \
     tar -xf $HBASE_HOME/src.tgz --strip-components=1 -C $HBASE_HOME; \
     rm $HBASE_HOME/src.tgz; \
     chown -R root:root $HBASE_HOME;
+
+RUN rm -rf $HBASE_HOME/docs/;
 
 COPY docker-entrypoint.sh /
 EXPOSE 22 9870 9000
