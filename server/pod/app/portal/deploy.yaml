@@ -67,7 +67,9 @@ data:
       batch:
         job:
           enabled: false
-    migrate-batch-number: 100000
+    migrate:
+      is-count: false
+      batch-number: 100000
     hbase:
       zookeeper:
         quorum: 192.168.2.21:2181
