@@ -143,6 +143,7 @@ metadata:
   name: hbase-region
   namespace: big-data
 spec:
+  replicas: 2
   selector:
     matchLabels:
       app: hbase-region
