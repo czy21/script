@@ -17,7 +17,7 @@ RUN set -ex; \
     wget -nv -O $HADOOP_HOME/src.tgz $HADOOP_TGZ_URL; \
     tar -xf $HADOOP_HOME/src.tgz --strip-components=1 -C $HADOOP_HOME; \
     rm $HADOOP_HOME/src.tgz; \
-    chown -R root:root $HADOOP_HOME; \
+    chown -R root:root $HADOOP_HOME;
 RUN mkdir -p $HADOOP_HOME/hdfs/name/ && mkdir -p $HADOOP_HOME/hdfs/data/
 
 # clean trash file or dir
