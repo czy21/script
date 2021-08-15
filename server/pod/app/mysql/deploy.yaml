@@ -11,7 +11,7 @@ spec:
       port: 3306
       targetPort: 3306
       nodePort: 3306
-    - name: "mysqld-exporter"
+    - name: "9104"
       port: 9104
       targetPort: 9104
       nodePort: 9104
@@ -74,6 +74,10 @@ spec:
           image: mysql:8.0
           ports:
             - containerPort: 3306
+          resources:
+            limits:
+              cpu: "4"
+              memory: "4Gi"
           args: [
           --default-authentication-plugin=mysql_native_password
           ]
