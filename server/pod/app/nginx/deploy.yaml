@@ -47,9 +47,12 @@ data:
 
         #gzip  on;
 
-        include /etc/nginx/conf.d/*.conf;
+        include /etc/nginx/conf.d/*-http.conf;
     }
-  default.conf: |
+    stream {
+        include /etc/nginx/conf.d/*-stream.conf;
+    }
+  default-http.conf: |
     server {
         listen       80;
         server_name  localhost;
@@ -154,7 +157,7 @@ data:
     KOqkqm57TH2H3eDJAkSnh6/DNFu0Qg==
     -----END CERTIFICATE-----
 
-  ops.conf: |
+  ops-http.conf: |
     upstream nexus {
         server nexus.default.svc:8081;
     }
@@ -178,7 +181,7 @@ data:
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         }
     }
-  portal.conf: |
+  portal-http.conf: |
 #    server {
 #        listen       80;
 #        server_name  erp-portal.internal-home.com;
@@ -191,6 +194,8 @@ data:
 #            root   html;
 #        }
 #    }
+  db-stream.conf: |
+
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -226,12 +231,14 @@ spec:
           configMap:
             name: nginx
             items:
-              - key: default.conf
-                path: default.conf
-              - key: portal.conf
-                path: portal.conf
-              - key: ops.conf
-                path: ops.conf
+              - key: default-http.conf
+                path: default-http.conf
+              - key: portal-http.conf
+                path: portal-http.conf
+              - key: ops-http.conf
+                path: ops-http.conf
+              - key: db-stream.conf
+                path: db-stream.conf
         - name: log
           persistentVolumeClaim:
             claimName: data-nginx
