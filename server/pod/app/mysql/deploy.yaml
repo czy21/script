@@ -108,4 +108,3 @@ spec:
           requests:
             storage: 256Gi
         storageClassName: "managed-nfs-storage"
-        volumeName: pvc-15bee1a7-bdae-41e8-860d-4f6a08b367f0
