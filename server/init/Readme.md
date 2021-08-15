@@ -6,23 +6,12 @@ yum -y install ansible
 sed -ir 's/^#\(host_key_checking\)/\1/' /etc/ansible/ansible.cfg
 ```
 
-###创建NFS StorageClass
-```shell
-# 下载所需文件
-mkdir nfs-client && for file in class.yaml deployment.yaml rbac.yaml ; do wget -P nfs-client  https://raw.githubusercontent.com/kubernetes-incubator/external-storage/master/nfs-client/deploy/$file; done
-# 修改 deployment.yaml 中的两处 NFS 服务器 IP 和目录
-
-# 部署
-kubectl apply -f rbac.yaml,class.yaml,deployment.yaml
-# 标记默认 StorageClass
-kubectl patch storageclass managed-nfs-storage -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
-```
-
 ### 集群初始化后的手动执行
 ```shell
-# /etc/kubernetes/manifests/kube-apiserver.yaml command 下添加 - --feature-gates=RemoveSelfLink=false
+# 解决nfs挂载的unexpected error getting claim reference: selfLink was empty 异常
+/etc/kubernetes/manifests/kube-apiserver.yaml command 下添加 - --feature-gates=RemoveSelfLink=false
 # 更改nodePort范围
-# /etc/kubernetes/manifests/kube-apiserver.yaml command 下添加 - --service-node-port-range=1-65535
+/etc/kubernetes/manifests/kube-apiserver.yaml command 下添加 - --service-node-port-range=1-65535
 ```
 
 ###部署kubeSphere 默认帐户和密码 (admin/P@88w0rd)
