@@ -1,0 +1,8 @@
+- hosts: nodes
+  remote_user: root
+  tasks:
+    - name: install
+      script: k8s.sh
+
+    - name: join cluser
+      shell: kubeadm join 192.168.2.21:6443 --token qnb20v.1tu5dsdrld2docew --discovery-token-ca-cert-hash sha256:3683bd8a9d4973845908eee5ca36713251bca29e751440a4a97288976540399b
