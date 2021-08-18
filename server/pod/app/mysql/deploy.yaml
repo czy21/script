@@ -76,7 +76,6 @@ spec:
             - containerPort: 3306
           resources:
             limits:
-              cpu: "4"
               memory: "4Gi"
           args: [
           --default-authentication-plugin=mysql_native_password
