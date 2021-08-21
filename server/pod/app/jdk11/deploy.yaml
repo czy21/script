@@ -80,7 +80,7 @@ metadata:
   name: data-jdk11-compile
 spec:
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   resources:
     requests:
       storage: 256Gi

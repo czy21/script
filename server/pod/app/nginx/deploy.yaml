@@ -267,7 +267,7 @@ metadata:
   name: data-nginx
 spec:
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   resources:
     requests:
       storage: 256Gi

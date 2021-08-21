@@ -151,7 +151,7 @@ metadata:
   namespace: stable
 spec:
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   resources:
     requests:
       storage: 256Gi

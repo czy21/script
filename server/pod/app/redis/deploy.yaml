@@ -1439,7 +1439,7 @@ metadata:
   name: data-redis
 spec:
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   resources:
     requests:
       storage: 256Gi

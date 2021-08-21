@@ -1,57 +1,44 @@
-apiVersion: v1
-kind: Service
+apiVersion: elasticsearch.k8s.elastic.co/v1
+kind: Elasticsearch
 metadata:
-  name: elasticsearch
+  name: cluster
+  namespace: big-data
 spec:
-  selector:
-    app: elasticsearch
-  type: NodePort
-  ports:
-    - name: "22"
-      port: 22
-      targetPort: 22
-      nodePort: 8125
+  version: 7.14.0
+  nodeSets:
+  - name: default
+    count: 3
+    config:
+      node.master: true
+      node.data: true
+      node.ingest: true
+      node.store.allow_mmap: false
+    volumeClaimTemplates:
+    - metadata:
+        name: elasticsearch-data
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 50Gi
+        storageClassName: "managed-nfs-storage"
+  http:
+    service:
+      spec:
+        type: NodePort
 ---
-apiVersion: v1
-kind: ConfigMap
+apiVersion: kibana.k8s.elastic.co/v1
+kind: Kibana
 metadata:
-  name: elasticsearch
-  labels:
-    app: elasticsearch
-data:
-  compile.sh: |
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: elasticsearch
+  name: cluster
+  namespace: big-data
 spec:
-  strategy:
-    type: Recreate
-  selector:
-    matchLabels:
-      app: elasticsearch
-  template:
-    metadata:
-      labels:
-        app: elasticsearch
-    spec:
-      containers:
-        - name: elasticsearch
-          image: registry:5000/elasticsearch
-          args: [ "/bin/bash","-c"," trap : TERM INT; sleep infinity & wait" ]
-          imagePullPolicy: Always
-          ports:
-            - containerPort: 22
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: data-elasticsearch
-spec:
-  accessModes:
-    - ReadWriteMany
-  resources:
-    requests:
-      storage: 256Gi
-  storageClassName: "managed-nfs-storage"
+  version: 7.14.0
+  count: 1
+  elasticsearchRef:
+    name: "cluster"
+  http:
+    service:
+      spec:
+        type: NodePort

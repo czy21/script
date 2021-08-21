@@ -24,5 +24,6 @@ RUN mkdir -p $HADOOP_HOME/hdfs/name/ && mkdir -p $HADOOP_HOME/hdfs/data/
 RUN rm -rf $HADOOP_HOME/share/doc/;
 
 COPY docker-entrypoint.sh /
+RUN chmod +x /docker-entrypoint.sh
 EXPOSE 22 9870 9000
 ENTRYPOINT ["/docker-entrypoint.sh"]
