@@ -159,7 +159,7 @@ metadata:
   name: data-registry
 spec:
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   resources:
     requests:
       storage: 256Gi

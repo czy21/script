@@ -156,7 +156,7 @@ metadata:
   namespace: kube-ops
 spec:
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   resources:
     requests:
       storage: 256Gi

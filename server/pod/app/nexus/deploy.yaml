@@ -59,7 +59,7 @@ metadata:
   name: data-nexus
 spec:
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   resources:
     requests:
       storage: 256Gi

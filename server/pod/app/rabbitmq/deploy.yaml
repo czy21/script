@@ -75,7 +75,7 @@ metadata:
   name: data-rabbitmq
 spec:
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   resources:
     requests:
       storage: 256Gi

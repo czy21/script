@@ -139,7 +139,7 @@ metadata:
   namespace: big-data
 spec:
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   resources:
     requests:
       storage: 256Gi
@@ -213,7 +213,7 @@ spec:
         namespace: big-data
       spec:
         accessModes:
-          - ReadWriteMany
+          - ReadWriteOnce
         resources:
           requests:
             storage: 256Gi
