@@ -19,4 +19,5 @@ kubectl delete -f https://download.elastic.co/downloads/eck/1.7.0/crds.yaml
 ```shell
 # 获取elasticsearch https登录密码 账号为: elastic
 kubectl -n big-data get secret cluster-es-elastic-user -o=jsonpath='{.data.elastic}' | base64 --decode; echo
+# 9200 账号: admin 密码: elasticsearch
 ```

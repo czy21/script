@@ -1,3 +1,14 @@
+kind: Secret
+apiVersion: v1
+metadata:
+  name: es-filerealm-secret
+  namespace: big-data
+stringData:
+  users: |-
+    admin:$2a$10$l6t6TdL1DdqidcyqqATuvOnKT9D0.c7M1BMbd0pPVaazyn4.qZaAa
+  users_roles: |-
+    superuser:admin
+---
 apiVersion: elasticsearch.k8s.elastic.co/v1
 kind: Elasticsearch
 metadata:
@@ -5,13 +16,26 @@ metadata:
   namespace: big-data
 spec:
   version: 7.14.0
+  auth:
+    fileRealm:
+      - secretName: es-filerealm-secret
+  http:
+    service:
+      spec:
+        type: NodePort
+        ports:
+          - name: http
+            nodePort: 9200
+            port: 9200
+            protocol: TCP
+            targetPort: 9200
+    tls:
+      selfSignedCertificate:
+        disabled: true
   nodeSets:
   - name: default
-    count: 3
+    count: 2
     config:
-      node.master: true
-      node.data: true
-      node.ingest: true
       node.store.allow_mmap: false
     volumeClaimTemplates:
     - metadata:
@@ -23,10 +47,7 @@ spec:
           requests:
             storage: 50Gi
         storageClassName: "managed-nfs-storage"
-  http:
-    service:
-      spec:
-        type: NodePort
+---
 ---
 apiVersion: kibana.k8s.elastic.co/v1
 kind: Kibana
@@ -42,3 +63,12 @@ spec:
     service:
       spec:
         type: NodePort
+        ports:
+          - name: http
+            nodePort: 5601
+            port: 5601
+            protocol: TCP
+            targetPort: 5601
+    tls:
+      selfSignedCertificate:
+        disabled: true
