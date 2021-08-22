@@ -195,7 +195,6 @@ data:
         jdbc_user => "admin"
         jdbc_password => "***REMOVED***"
         jdbc_validate_connection => "true"
-        jdbc_default_timezone => "Asia/Shanghai"
         jdbc_paging_enabled => true
         jdbc_page_size => "10000"
         tracking_column => "unix_ts_in_secs"
