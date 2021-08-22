@@ -29,11 +29,12 @@ data:
     socket          = /var/run/mysqld/mysqld.sock
     datadir         = /var/lib/mysql
     default-time-zone = '+8:00'
-    transaction-isolation = READ-UNCOMMITTED
+    transaction-isolation = READ-COMMITTED
     secure-file-priv= NULL
     symbolic-links=0
     character-set-server=utf8mb4
-    skip-log-bin
+    log-bin=mysql-bin
+    binlog-format=ROW
     # Custom config should go here
     !includedir /etc/mysql/conf.d/ 
   mysql.cnf: |
