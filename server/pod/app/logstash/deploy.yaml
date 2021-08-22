@@ -191,7 +191,7 @@ data:
       jdbc {
         jdbc_driver_library => "/usr/share/logstash/ext/lib/mysql-connector-java-8.0.25.jar"
         jdbc_driver_class => "com.mysql.cj.jdbc.Driver"
-        jdbc_connection_string => "jdbc:mysql://192.168.2.21:3306/erp_local"
+        jdbc_connection_string => "jdbc:mysql://192.168.2.21:3306/erp_local?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai"
         jdbc_user => "admin"
         jdbc_password => "Czy.190815"
         jdbc_validate_connection => "true"
@@ -205,19 +205,9 @@ data:
       }
     }
     filter {
-      date {
-        match => ["message","UNIX_MS"]
-        target => "@timestamp"
-      }
-      ruby {
-        code => "event.set('timestamp', event.get('@timestamp').time.localtime + 8*60*60)"
-      }
-      ruby {
-        code => "event.set('@timestamp',event.get('timestamp'))"
-      }
       mutate {
         copy => { "id" => "[@metadata][_id]"}
-        remove_field => ["id", "@version", "unix_ts_in_secs","timestamp"]
+        remove_field => ["id", "@version", "unix_ts_in_secs"]
       }
     }
     output {
