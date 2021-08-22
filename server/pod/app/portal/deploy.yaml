@@ -67,6 +67,11 @@ data:
       batch:
         job:
           enabled: false
+      elasticsearch:
+        rest:
+          uris: http://cluster-es-default.big-data.svc:9200
+          username: admin
+          password: elasticsearch
     migrate:
       is-count: false
       batch-number: 100000
@@ -151,7 +156,7 @@ metadata:
   namespace: stable
 spec:
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
       storage: 256Gi
