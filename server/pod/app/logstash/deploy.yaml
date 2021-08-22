@@ -205,9 +205,19 @@ data:
       }
     }
     filter {
+      date {
+        match => ["message","UNIX_MS"]
+        target => "@timestamp"
+      }
+      ruby {
+        code => "event.set('timestamp', event.get('@timestamp').time.localtime + 8*60*60)"
+      }
+      ruby {
+        code => "event.set('@timestamp',event.get('timestamp'))"
+      }
       mutate {
         copy => { "id" => "[@metadata][_id]"}
-        remove_field => ["id", "@version", "unix_ts_in_secs"]
+        remove_field => ["id", "@version", "unix_ts_in_secs","timestamp"]
       }
     }
     output {
