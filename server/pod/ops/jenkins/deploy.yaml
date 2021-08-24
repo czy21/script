@@ -26,19 +26,6 @@ metadata:
   labels:
     app: jenkins
 data:
-  init.sh: |
-    gradle_home=/tmp/gradle
-    gradle_version=gradle-7.1
-    if [ ! -d "${gradle_home}/" ];then
-      mkdir -p ${gradle_home}
-      echo -e "\033[32m gradle unpacking \033[0m"
-      wget -qO- https://services.gradle.org/distributions/${gradle_version}-bin.zip | unzip -qo -d ${gradle_home} -
-      mv ${gradle_home}/${gradle_version}/* ${gradle_home} && rm -rf ${gradle_home}/${gradle_version}
-      echo -e "\033[32m gradle is installed \033[0m"
-    else
-      echo -e "\033[32m gradle is already installed \033[0m"
-    fi
-    cp /init/init.gradle ${gradle_home}/init.d/
   init.gradle: |
     settingsEvaluated { settings ->
         settings.pluginManagement {
@@ -110,14 +97,6 @@ spec:
     spec:
       serviceAccountName: jenkins
       volumes:
-        - name: jenkins-init
-          configMap:
-              name: jenkins
-              items:
-                - key: "init.sh"
-                  path: "init.sh"
-                - key: "init.gradle"
-                  path: "init.gradle"
         - name: docker-sock
           hostPath:
             path: /var/run/docker.sock
@@ -127,16 +106,12 @@ spec:
         - name: jenkins-home
           persistentVolumeClaim:
             claimName: data-jenkins
-      initContainers:
-        - name: init
-          image: busybox
-          command: ['sh','-x','/init/init.sh']
-          volumeMounts:
-            - name: jenkins-init
-              mountPath: /init/
-            - name: jenkins-home
-              subPath: tools
-              mountPath: /tmp/
+        - name: gradle-init
+          configMap:
+            name: jenkins
+            items:
+              - key: init.gradle
+                path: init.gradle
       containers:
         - name: jenkins
           image: jenkins/jenkins:lts-jdk11
@@ -156,6 +131,8 @@ spec:
               mountPath: /usr/bin/docker
             - name: jenkins-home
               mountPath: /var/jenkins_home/
+            - name: gradle-init
+              mountPath: /var/jenkins_home/tools/gradle/init.d/
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
