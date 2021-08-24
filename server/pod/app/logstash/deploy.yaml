@@ -25,8 +25,8 @@ data:
     # Xms represents the initial size of total heap space
     # Xmx represents the maximum size of total heap space
 
-    -Xms4g
-    -Xmx4g
+    -Xms2g
+    -Xmx2g
 
     ################################################################
     ## Expert settings
@@ -201,7 +201,7 @@ data:
         use_column_value => true
         tracking_column_type => "numeric"
         schedule => "* * * * * *"
-        statement => "SELECT *, UNIX_TIMESTAMP(modified_date) AS unix_ts_in_secs FROM ent_sale_1 WHERE (UNIX_TIMESTAMP(modified_date) > :sql_last_value AND modified_date < NOW()) ORDER BY modified_date ASC"
+        statement => "SELECT *, UNIX_TIMESTAMP(modified_date) AS unix_ts_in_secs FROM ent_sale_3 WHERE (UNIX_TIMESTAMP(modified_date) > :sql_last_value AND modified_date < NOW()) ORDER BY modified_date ASC"
       }
     }
     filter {
