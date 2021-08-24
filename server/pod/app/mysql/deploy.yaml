@@ -23,21 +23,14 @@ metadata:
   labels:
     app: mysql
 data:
-  my.cnf: |
+  mysql.cnf: |
     [mysqld]
-    pid-file        = /var/run/mysqld/mysqld.pid
-    socket          = /var/run/mysqld/mysqld.sock
-    datadir         = /var/lib/mysql
+    skip-host-cache
+    skip-name-resolve
     default-time-zone = '+8:00'
     transaction-isolation = READ-COMMITTED
-    secure-file-priv= NULL
-    symbolic-links=0
-    character-set-server=utf8mb4
     log-bin=mysql-bin
     binlog-format=ROW
-    # Custom config should go here
-    !includedir /etc/mysql/conf.d/ 
-  mysql.cnf: |
     [client]
     default-character-set=utf8mb4
     [mysql]
@@ -58,12 +51,6 @@ spec:
         app: mysql
     spec:
       volumes:
-        - name: my-cnf
-          configMap:
-            name: mysql
-            items:
-              - key: "my.cnf"
-                path: "my.cnf"
         - name: conf
           configMap:
             name: mysql
@@ -82,8 +69,6 @@ spec:
             - name: MYSQL_ROOT_PASSWORD
               value: "***REMOVED***"
           volumeMounts:
-            - name: my-cnf
-              mountPath: /etc/mysql/
             - name: conf
               mountPath: /etc/mysql/conf.d/
             - name: data
