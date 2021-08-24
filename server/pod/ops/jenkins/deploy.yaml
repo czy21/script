@@ -27,10 +27,18 @@ metadata:
     app: jenkins
 data:
   init.sh: |
-    wget https://services.gradle.org/distributions/gradle-7.1-all.zip -O /tmp/gradle-7.1-all.zip
-    unzip -qo -d /tmp/ /tmp/gradle-7.1-all.zip
-    cp /init/init.gradle /tmp/gradle-7.1/init.d/
-    rm -rf /tmp/gradle-7.1-all.zip
+    gradle_home=/tmp/gradle
+    gradle_version=gradle-7.1
+    if [ ! -d "${gradle_home}/" ];then
+      mkdir -p ${gradle_home}
+      echo -e "\033[32m gradle unpacking \033[0m"
+      wget -qO- https://services.gradle.org/distributions/${gradle_version}-bin.zip | unzip -qo -d ${gradle_home} -
+      mv ${gradle_home}/${gradle_version}/* ${gradle_home} && rm -rf ${gradle_home}/${gradle_version}
+      echo -e "\033[32m gradle is installed \033[0m"
+    else
+      echo -e "\033[32m gradle is already installed \033[0m"
+    fi
+    cp /init/init.gradle ${gradle_home}/init.d/
   init.gradle: |
     settingsEvaluated { settings ->
         settings.pluginManagement {
@@ -156,7 +164,7 @@ metadata:
   namespace: kube-ops
 spec:
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
       storage: 256Gi
