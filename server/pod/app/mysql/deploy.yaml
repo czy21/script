@@ -35,6 +35,7 @@ data:
     character-set-server=utf8mb4
     log-bin=mysql-bin
     binlog-format=ROW
+    expire_logs_days=7
     # Custom config should go here
     !includedir /etc/mysql/conf.d/ 
   mysql.cnf: |
