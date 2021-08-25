@@ -169,7 +169,12 @@ data:
     upstream grafana {
         server grafana.monitoring.svc:3000;
     }
-
+    upstream jira {
+        server jira.default.svc:8080;
+    }
+    upstream kibina {
+        server cluster-kb-http.big-data.svc:5601;
+    }
     server {
         listen       80;
         server_name  ~^(?<subdomain>.+).internal-home.com$;
@@ -267,7 +272,7 @@ metadata:
   name: data-nginx
 spec:
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
       storage: 256Gi
