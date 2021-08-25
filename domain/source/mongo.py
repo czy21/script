@@ -18,11 +18,11 @@ def assemble() -> None:
 
 
 def recreate() -> None:
-    command = recreate_command(default_common.param_main_db_mongo_host,
-                               default_common.param_main_db_mongo_port,
-                               default_common.param_main_db_mongo_user,
-                               default_common.param_main_db_mongo_pass,
-                               default_common.param_main_db_name)
+    command = get_recreate_command(default_common.param_main_db_mongo_host,
+                                   default_common.param_main_db_mongo_port,
+                                   default_common.param_main_db_mongo_user,
+                                   default_common.param_main_db_mongo_pass,
+                                   default_common.param_main_db_name)
     logger.info(basic_util.action_formatter(__get_function_name(), command))
     basic_util.execute(command)
 
@@ -53,10 +53,10 @@ def exec() -> None:
     ]
     command = list_util.arr_param_to_str("mongo", get_main_db_param_dict(), extra_param_dict)
     logger.info(basic_util.action_formatter(__get_function_name(), command))
-    # basic_util.execute(command, db_util.print_ql_msg)
+    basic_util.execute(command, db_util.print_ql_msg)
 
 
-def recreate_command(host, port, user, password, db_name) -> str:
+def get_recreate_command(host, port, user, password, db_name) -> str:
     extra_param_dict = [
         "--execute",
         "\"",
@@ -68,11 +68,11 @@ def recreate_command(host, port, user, password, db_name) -> str:
 
 
 def backup_db() -> None:
-    command = list_util.arr_param_to_str(recreate_command(default_common.param_main_db_mongo_host,
-                                                          default_common.param_main_db_mongo_port,
-                                                          default_common.param_main_db_mongo_user,
-                                                          default_common.param_main_db_mongo_pass,
-                                                          default_common.param_main_db_bak_name),
+    command = list_util.arr_param_to_str(get_recreate_command(default_common.param_main_db_mongo_host,
+                                                              default_common.param_main_db_mongo_port,
+                                                              default_common.param_main_db_mongo_user,
+                                                              default_common.param_main_db_mongo_pass,
+                                                              default_common.param_main_db_bak_name),
                                          "&&mysqldump",
                                          list_util.arr_param_to_str([
                                              get_basic_param(default_common.param_main_db_mongo_host,
@@ -112,11 +112,12 @@ def backup_gz() -> None:
 
 
 def restore_gz() -> None:
-    command = list_util.arr_param_to_str(recreate_command(default_common.param_main_db_mongo_host,
-                                                          default_common.param_main_db_mongo_port,
-                                                          default_common.param_main_db_mongo_user,
-                                                          default_common.param_main_db_mongo_pass,
-                                                          default_common.param_main_db_name),
+    recreate_command = get_recreate_command(default_common.param_main_db_mongo_host,
+                                            default_common.param_main_db_mongo_port,
+                                            default_common.param_main_db_mongo_user,
+                                            default_common.param_main_db_mongo_pass,
+                                            default_common.param_main_db_name)
+    command = list_util.arr_param_to_str(recreate_command,
                                          "&& gzip -d < ",
                                          default_path.output_db_bak_gz_mongo,
                                          "| mysql",
@@ -128,4 +129,4 @@ def restore_gz() -> None:
                                                              default_common.param_main_db_name)
                                          ]))
     logger.info(basic_util.action_formatter(__get_function_name(), command))
-    # basic_util.execute(command)
+    basic_util.execute(command)
