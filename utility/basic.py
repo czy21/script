@@ -23,13 +23,10 @@ def print_default(msg_lines, proc: subprocess.Popen, func_param) -> None:
             logger.info(line, is_sleep=False)
 
 
-is_exec = ""
-
-
 def execute(cmd, func=print_default, func_param=None):
     input_exec = str(input("Are you sure you want to execute (y/n)?").strip())
     if input_exec != "y":
-        sys.exit(0)
+        return
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True, encoding="utf-8")
     func(iter(proc.stdout.readline, ''), proc, func_param)
     proc.stdout.close()
