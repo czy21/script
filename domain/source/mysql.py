@@ -18,11 +18,11 @@ def assemble() -> None:
 
 
 def recreate() -> None:
-    command = recreate_command(default_common.param_main_db_mysql_host,
-                               default_common.param_main_db_mysql_port,
-                               default_common.param_main_db_mysql_user,
-                               default_common.param_main_db_mysql_pass,
-                               default_common.param_main_db_name)
+    command = get_recreate_command(default_common.param_main_db_mysql_host,
+                                   default_common.param_main_db_mysql_port,
+                                   default_common.param_main_db_mysql_user,
+                                   default_common.param_main_db_mysql_pass,
+                                   default_common.param_main_db_name)
     logger.info(basic_util.action_formatter(__get_function_name(), command))
     basic_util.execute(command)
 
@@ -47,7 +47,7 @@ def get_main_db_param_dict() -> str:
                            default_common.param_main_db_name)
 
 
-def exec() -> None:
+def execute() -> None:
     extra_param_dict = [
         "--skip-column-names",
         "< " + default_path.output_db_all_in_one_mysql
@@ -57,7 +57,7 @@ def exec() -> None:
     basic_util.execute(command, db_util.print_ql_msg)
 
 
-def recreate_command(host, port, user, password, db_name) -> str:
+def get_recreate_command(host, port, user, password, db_name) -> str:
     extra_param_dict = [
         "--execute",
         "\"",
@@ -69,11 +69,12 @@ def recreate_command(host, port, user, password, db_name) -> str:
 
 
 def backup_db() -> None:
-    command = list_util.arr_param_to_str(recreate_command(default_common.param_main_db_mysql_host,
-                                                          default_common.param_main_db_mysql_port,
-                                                          default_common.param_main_db_mysql_user,
-                                                          default_common.param_main_db_mysql_pass,
-                                                          default_common.param_main_db_bak_name),
+    recreate_command = get_recreate_command(default_common.param_main_db_mysql_host,
+                                            default_common.param_main_db_mysql_port,
+                                            default_common.param_main_db_mysql_user,
+                                            default_common.param_main_db_mysql_pass,
+                                            default_common.param_main_db_bak_name)
+    command = list_util.arr_param_to_str(recreate_command,
                                          "&&mysqldump",
                                          list_util.arr_param_to_str([
                                              get_basic_param(default_common.param_main_db_mysql_host,
@@ -116,11 +117,12 @@ def backup_gz() -> None:
 
 
 def restore_gz() -> None:
-    command = list_util.arr_param_to_str(recreate_command(default_common.param_main_db_mysql_host,
-                                                          default_common.param_main_db_mysql_port,
-                                                          default_common.param_main_db_mysql_user,
-                                                          default_common.param_main_db_mysql_pass,
-                                                          default_common.param_main_db_name),
+    recreate_command = get_recreate_command(default_common.param_main_db_mysql_host,
+                                            default_common.param_main_db_mysql_port,
+                                            default_common.param_main_db_mysql_user,
+                                            default_common.param_main_db_mysql_pass,
+                                            default_common.param_main_db_name)
+    command = list_util.arr_param_to_str(recreate_command,
                                          "&& gzip -d < ",
                                          default_path.output_db_bak_gz_mysql,
                                          "| mysql",

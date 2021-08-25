@@ -27,44 +27,33 @@ def recreate() -> None:
     basic_util.execute(command)
 
 
-def get_basic_param(host, port, user, password, db_name) -> str:
-    param = ["--host " + host,
-             "--port " + port,
-             "--username " + user,
-             "--password " + password,
-             ]
-    if db_name:
-        param.append(db_name)
-    param.append("--authenticationDatabase admin")
-    return list_util.arr_param_to_str(param)
+def get_basic_uri(host, port, user, password, db_name) -> str:
+    return "mongodb://{}:{}@{}:{}/{}?authSource=admin".format(user, password, host, port, db_name if db_name is not None else "")
 
 
-def get_main_db_param_dict() -> str:
-    return get_basic_param(default_common.param_main_db_mongo_host,
-                           default_common.param_main_db_mongo_port,
-                           default_common.param_main_db_mongo_user,
-                           default_common.param_main_db_mongo_pass,
-                           default_common.param_main_db_name)
+def get_main_db_uri() -> str:
+    return get_basic_uri(default_common.param_main_db_mongo_host,
+                         default_common.param_main_db_mongo_port,
+                         default_common.param_main_db_mongo_user,
+                         default_common.param_main_db_mongo_pass,
+                         default_common.param_main_db_name)
 
 
-def exec() -> None:
-    extra_param_dict = [
+def execute() -> None:
+    extra_param = [
         default_path.output_db_all_in_one_mongo
     ]
-    command = list_util.arr_param_to_str("mongo", get_main_db_param_dict(), extra_param_dict)
+    command = list_util.arr_param_to_str("mongo", get_main_db_uri(), extra_param)
     logger.info(basic_util.action_formatter(__get_function_name(), command))
     basic_util.execute(command, db_util.print_ql_msg)
 
 
 def get_recreate_command(host, port, user, password, db_name) -> str:
-    extra_param_dict = [
-        "--execute",
-        "\"",
-        "drop database if exists {0};".format(db_name),
-        "create database if not exists {0} default charset utf8mb4 collate utf8mb4_0900_ai_ci;".format(db_name),
-        "\""
+    extra_param = [
+        "--eval",
+        "\"" + "db = db.getSiblingDB('{}');db.dropDatabase();".format(db_name) + "\""
     ]
-    return list_util.arr_param_to_str("mysql", get_basic_param(host, port, user, password, None), extra_param_dict)
+    return list_util.arr_param_to_str("mongo", get_basic_uri(host, port, user, password, None), extra_param)
 
 
 def backup_db() -> None:
@@ -75,21 +64,21 @@ def backup_db() -> None:
                                                               default_common.param_main_db_bak_name),
                                          "&&mysqldump",
                                          list_util.arr_param_to_str([
-                                             get_basic_param(default_common.param_main_db_mongo_host,
-                                                             default_common.param_main_db_mongo_port,
-                                                             default_common.param_main_db_mongo_user,
-                                                             default_common.param_main_db_mongo_pass, None),
+                                             get_basic_uri(default_common.param_main_db_mongo_host,
+                                                           default_common.param_main_db_mongo_port,
+                                                           default_common.param_main_db_mongo_user,
+                                                           default_common.param_main_db_mongo_pass, None),
                                              "--opt",
                                              default_common.param_main_db_name,
                                              "--max-allowed-packet=1024M"
                                          ]),
                                          "| mysql",
                                          list_util.arr_param_to_str([
-                                             get_basic_param(default_common.param_main_db_mongo_host,
-                                                             default_common.param_main_db_mongo_port,
-                                                             default_common.param_main_db_mongo_user,
-                                                             default_common.param_main_db_mongo_pass,
-                                                             None),
+                                             get_basic_uri(default_common.param_main_db_mongo_host,
+                                                           default_common.param_main_db_mongo_port,
+                                                           default_common.param_main_db_mongo_user,
+                                                           default_common.param_main_db_mongo_pass,
+                                                           None),
                                              "--compress",
                                              default_common.param_main_db_bak_name,
                                          ]))
@@ -99,11 +88,7 @@ def backup_db() -> None:
 
 def backup_gz() -> None:
     command = list_util.arr_param_to_str("mongodump",
-                                         "--uri=" + "mongodb://{}:{}@{}:{}/{}?authSource=admin".format(default_common.param_main_db_mongo_user,
-                                                                                                       default_common.param_main_db_mongo_pass,
-                                                                                                       default_common.param_main_db_mongo_host,
-                                                                                                       default_common.param_main_db_mongo_port,
-                                                                                                       default_common.param_main_db_name),
+                                         "--uri=" + get_main_db_uri(),
                                          "--archive=" + default_path.output_db_bak_gz_mongo,
                                          "--gzip"
                                          )
@@ -122,11 +107,11 @@ def restore_gz() -> None:
                                          default_path.output_db_bak_gz_mongo,
                                          "| mysql",
                                          list_util.arr_param_to_str([
-                                             get_basic_param(default_common.param_main_db_mongo_host,
-                                                             default_common.param_main_db_mongo_port,
-                                                             default_common.param_main_db_mongo_user,
-                                                             default_common.param_main_db_mongo_pass,
-                                                             default_common.param_main_db_name)
+                                             get_basic_uri(default_common.param_main_db_mongo_host,
+                                                           default_common.param_main_db_mongo_port,
+                                                           default_common.param_main_db_mongo_user,
+                                                           default_common.param_main_db_mongo_pass,
+                                                           default_common.param_main_db_name)
                                          ]))
     logger.info(basic_util.action_formatter(__get_function_name(), command))
     basic_util.execute(command)
