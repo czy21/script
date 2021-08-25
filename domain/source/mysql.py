@@ -68,7 +68,7 @@ def recreate_command(host, port, user, password, db_name) -> str:
     return list_util.arr_param_to_str("mysql", get_basic_param(host, port, user, password, None), extra_param_dict)
 
 
-def backup_mysql() -> None:
+def backup_db() -> None:
     command = list_util.arr_param_to_str(recreate_command(default_common.param_main_db_mysql_host,
                                                           default_common.param_main_db_mysql_port,
                                                           default_common.param_main_db_mysql_user,
@@ -98,7 +98,7 @@ def backup_mysql() -> None:
     basic_util.execute(command)
 
 
-def backup_mysql_gz() -> None:
+def backup_gz() -> None:
     command = list_util.arr_param_to_str("mysqldump",
                                          list_util.arr_param_to_str([
                                              get_basic_param(default_common.param_main_db_mysql_host,
@@ -115,7 +115,7 @@ def backup_mysql_gz() -> None:
     basic_util.execute(command)
 
 
-def recover_mysql_gz() -> None:
+def restore_gz() -> None:
     command = list_util.arr_param_to_str(recreate_command(default_common.param_main_db_mysql_host,
                                                           default_common.param_main_db_mysql_port,
                                                           default_common.param_main_db_mysql_user,
