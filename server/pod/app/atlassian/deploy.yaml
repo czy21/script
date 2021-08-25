@@ -7,11 +7,11 @@ spec:
     app: atlassian
   type: NodePort
   ports:
-    - name: "jira-8080"
+    - name: "http-jira"
       port: 8080
       targetPort: 8080
       nodePort: 8100
-    - name: "confluence-8080"
+    - name: "http-confluence"
       port: 8090
       targetPort: 8090
       nodePort: 8101
@@ -49,7 +49,7 @@ spec:
             limits:
               memory: "2Gi"
           ports:
-            - name: "jira-8080"
+            - name: "http-jira"
               containerPort: 8080
           env:
             - name: TZ
@@ -67,7 +67,7 @@ spec:
             limits:
               memory: "2Gi"
           ports:
-            - name: "confluence-8090"
+            - name: "http-confluence"
               containerPort: 8090
           env:
             - name: TZ
