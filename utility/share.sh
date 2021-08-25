@@ -8,7 +8,7 @@ function upload_exec_py() {
   scp -r ${pwd_path} $host:
   ssh $host 'python3 $HOME/'${name_path}/'exec.py '$@';'
 
-  # ssh $host 'rm -rf $HOME/'${name_path}';'
+  ssh $host 'rm -rf $HOME/'${name_path}';'
 }
 
 
