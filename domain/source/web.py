@@ -14,8 +14,8 @@ def __get_function_name():
 def build_web():
     command = list_util.arr_param_to_str([
         "nrm use taobao",
-        "&& yarn --cwd " + default_common.param_web_root_project_path, "install",
-        "&& yarn --cwd " + default_common.param_web_root_project_path, "build",
+        "&& yarn --cwd " + default_common.param_web_root_project_path, "--verbose install",
+        "&& yarn --cwd " + default_common.param_web_root_project_path, "--verbose build",
         "&& cp -r",
         path_util.pure_path_join(default_common.param_web_root_project_path, "build") + "/*",
         default_common.param_web_output_path
