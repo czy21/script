@@ -3,9 +3,6 @@ from script.domain.default import path as default_path
 from script.utility import collection as list_util
 from script.utility import path as path_util
 
-# docker-data
-param_docker_data = "/volume1/docker-data"
-
 param_project_name = ""
 param_env_suffix = ""
 
@@ -46,23 +43,10 @@ param_main_rabbit_host = ""
 
 # api
 param_api_archive_file_name = "api.jar"
-param_api_network_name = ""
-param_api_network_containers = []
-param_api_image = ""
 param_api_root_project_path = ""
-param_api_docker_gradle_command = True
 param_api_gradle_init_script_file_path = path_util.pure_path_join(default_path.script_template, "java/init.gradle")
-param_api_gradle_plugin_file_path = path_util.pure_path_join(default_path.project_plugin, "build.gradle")
+param_api_gradle_plugin_root_project_path = default_path.project_plugin
 param_api_module_name = ""
-param_api_config_path = ""
-param_api_jmx_port = 3010
-
-param_api_gradle_extra_config_template_path = ""
-param_api_gradle_extra_config_output_path = ""
-param_api_config_output_path = ""
-param_api_config_file_output_path = ""
-param_api_dockerfile_output_path = ""
-param_api_compose_file_output_path = ""
 
 # api output
 param_api_output_path = default_path.output_api
@@ -70,12 +54,3 @@ param_api_output_path = default_path.output_api
 # web
 param_web_output_path = default_path.output_web
 param_web_root_project_path = ""
-
-param_web_cp_template_path = ""
-param_web_cp_output_file_path = ""
-
-param_web_nginx_template_path = ""
-param_web_nginx_output_file_path = ""
-
-param_web_env_template_path = ""
-param_web_env_path = ""
