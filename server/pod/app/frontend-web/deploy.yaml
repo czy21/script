@@ -1,11 +1,24 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-operation
+  namespace: stable
+spec:
+  selector:
+    app: frontend-operation
+  type: ClusterIP
+  ports:
+    - name: "http"
+      port: 80
+      targetPort: 80
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: frontend-web
+  name: frontend-operation
   namespace: stable
   labels:
-    app: frontend-web
+    app: frontend-operation
 data:
   nginx.conf: |
     user  nginx;
@@ -40,55 +53,88 @@ data:
     stream {
         include /etc/nginx/conf.d/*-stream.conf;
     }
-  app.conf: |
-#    server {
-#        listen       80;
-#        server_name  erp-portal.internal-home.com;
-#
-#        location / {
-#            proxy_pass http://portal.stable.svc:8080/;
-#        }
-#        error_page   500 502 503 504  /50x.html;
-#        location = /50x.html {
-#            root   html;
-#        }
-#    }
+  app-http.conf: |
+    server {
+        listen       80;
+        server_name  localhost;
+
+        set $real_proto $http_x_forwarded_proto;
+        if ($real_proto ~ "^$") {
+            set $real_proto $scheme;
+        }
+        set $real_ip $http_x_real_ip;
+        if ($real_ip ~ "^$") {
+            set $real_ip $remote_addr;
+        }
+        set $real_host $http_x_forwarded_host;
+        if ($real_host ~ "^$") {
+            set $real_host $host;
+        }
+        set $real_port $http_x_forwarded_port;
+        if ($real_port ~ "^$") {
+            set $real_port $server_port;
+        }
+
+        location / {
+            root /usr/share/nginx/web/;
+            index index.html;
+            try_files $uri $uri/ /index.html;
+        }
+
+        location /api/ {
+            proxy_http_version 1.1;
+            proxy_set_header X-Forwarded-Proto $real_proto;
+            proxy_set_header X-Forwarded-Host $real_host;
+            proxy_set_header X-Forwarded-Port $real_port;
+            proxy_set_header X-Forwarded-Server $host;
+            proxy_set_header X-Real-IP $real_ip;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection $http_connection;
+            proxy_cache_bypass $http_upgrade;
+            proxy_pass http://portal.stable.svc:8080/;
+        }
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   html;
+        }
+    }
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: frontend-web
+  name: frontend-operation
   namespace: stable
 spec:
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: frontend-web
+      app: frontend-operation
   template:
     metadata:
       labels:
-        app: frontend-web
+        app: frontend-operation
     spec:
       volumes:
         - name: nginx-conf
           configMap:
-            name: frontend-web
+            name: frontend-operation
             items:
               - key: nginx.conf
                 path: nginx.conf
         - name: conf
           configMap:
-            name: frontend-web
+            name: frontend-operation
             items:
-              - key: app.conf
-                path: app.conf
+              - key: app-http.conf
+                path: app-http.conf
         - name: log
           persistentVolumeClaim:
-            claimName: data-frontend-web
+            claimName: data-frontend-operation
       containers:
-        - name: nginx
-          image: nginx:1.20
+        - name: frontend-operation
+          image: registry:5000/frontend-operation-dev:dev-bruce
           imagePullPolicy: Always
           ports:
             - containerPort: 80
@@ -102,13 +148,12 @@ spec:
             - name: log
               mountPath: /var/log/nginx/
               subPath: log
-            - name: cert
-              mountPath: /etc/nginx/cert/
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: data-frontend-web
+  name: data-frontend-operation
+  namespace: stable
 spec:
   accessModes:
     - ReadWriteMany
