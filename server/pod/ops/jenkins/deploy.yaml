@@ -95,7 +95,6 @@ spec:
       labels:
         app: jenkins
     spec:
-      serviceAccountName: jenkins
       volumes:
         - name: docker-sock
           hostPath:
