@@ -1,0 +1,118 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-web
+  namespace: stable
+  labels:
+    app: frontend-web
+data:
+  nginx.conf: |
+    user  nginx;
+    worker_processes  auto;
+
+    error_log  /var/log/nginx/error.log notice;
+    pid        /var/run/nginx.pid;
+
+    events {
+        worker_connections  1024;
+    }
+
+    http {
+        include       /etc/nginx/mime.types;
+        default_type  application/octet-stream;
+
+        log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                          '$status $body_bytes_sent "$http_referer" '
+                          '"$http_user_agent" "$http_x_forwarded_for"';
+
+        access_log  /var/log/nginx/access.log  main;
+
+        sendfile        on;
+        #tcp_nopush     on;
+
+        keepalive_timeout  65;
+
+        #gzip  on;
+
+        include /etc/nginx/conf.d/*-http.conf;
+    }
+    stream {
+        include /etc/nginx/conf.d/*-stream.conf;
+    }
+  app.conf: |
+#    server {
+#        listen       80;
+#        server_name  erp-portal.internal-home.com;
+#
+#        location / {
+#            proxy_pass http://portal.stable.svc:8080/;
+#        }
+#        error_page   500 502 503 504  /50x.html;
+#        location = /50x.html {
+#            root   html;
+#        }
+#    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-web
+  namespace: stable
+spec:
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: frontend-web
+  template:
+    metadata:
+      labels:
+        app: frontend-web
+    spec:
+      volumes:
+        - name: nginx-conf
+          configMap:
+            name: frontend-web
+            items:
+              - key: nginx.conf
+                path: nginx.conf
+        - name: conf
+          configMap:
+            name: frontend-web
+            items:
+              - key: app.conf
+                path: app.conf
+        - name: log
+          persistentVolumeClaim:
+            claimName: data-frontend-web
+      containers:
+        - name: nginx
+          image: nginx:1.20
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+            - containerPort: 443
+          volumeMounts:
+            - name: nginx-conf
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+            - name: conf
+              mountPath: /etc/nginx/conf.d/
+            - name: log
+              mountPath: /var/log/nginx/
+              subPath: log
+            - name: cert
+              mountPath: /etc/nginx/cert/
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-frontend-web
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 256Gi
+  storageClassName: "managed-nfs-storage"
