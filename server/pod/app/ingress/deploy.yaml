@@ -1,0 +1,105 @@
+---
+# kube-ops
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+  name: ingress
+  namespace: kube-ops
+spec:
+  rules:
+    - host: jenkins.internal-home.com
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: jenkins
+                port:
+                  number: 8080
+---
+# default
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+  name: ingress
+  namespace: default
+spec:
+  rules:
+    - host: nexus.internal-home.com
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: nexus
+                port:
+                  number: 8081
+---
+# monitoring
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+  name: ingress
+  namespace: monitoring
+spec:
+  rules:
+    - host: grafana.internal-home.com
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: grafana
+                port:
+                  number: 3000
+---
+# big-data
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+  name: ingress
+  namespace: big-data
+spec:
+  rules:
+    - host: kibina.internal-home.com
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: cluster-kb-http
+                port:
+                  number: 5601
+---
+# stable
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+  name: ingress
+  namespace: stable
+spec:
+  rules:
+    - host: erp-dev.internal-home.com
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: frontend-operation
+                port:
+                  number: 80
