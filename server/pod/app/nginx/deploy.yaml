@@ -222,16 +222,6 @@ spec:
                 path: key.pem
               - key: cert.pem
                 path: cert.pem
-        - name: conf
-          configMap:
-            name: nginx
-            items:
-              - key: default-http.conf
-                path: default-http.conf
-              - key: ops-http.conf
-                path: ops-http.conf
-              - key: db-stream.conf
-                path: db-stream.conf
         - name: log
           persistentVolumeClaim:
             claimName: data-nginx
@@ -246,13 +236,9 @@ spec:
             - name: nginx-conf
               mountPath: /etc/nginx/nginx.conf
               subPath: nginx.conf
-            - name: conf
-              mountPath: /etc/nginx/conf.d/
             - name: log
               mountPath: /var/log/nginx/
               subPath: log
-            - name: cert
-              mountPath: /etc/nginx/cert/
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
