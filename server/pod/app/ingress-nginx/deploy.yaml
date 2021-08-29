@@ -36,6 +36,8 @@ metadata:
   name: ingress-nginx-controller
   namespace: ingress-nginx
 data:
+  ssl-redirect: "false"
+  hsts: "false"
 
 ---
 # Source: ingress-nginx/templates/clusterrole.yaml
