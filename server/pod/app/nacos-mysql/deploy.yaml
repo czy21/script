@@ -3,7 +3,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: nacos-mysql
-
+  namespace: stable
 spec:
   selector:
     app: nacos-mysql
@@ -17,7 +17,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nacos-mysql
-
+  namespace: stable
 spec:
   selector:
     matchLabels:
@@ -54,7 +54,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: data-nacos-mysql
-
+  namespace: stable
 spec:
   accessModes:
     - ReadWriteMany
