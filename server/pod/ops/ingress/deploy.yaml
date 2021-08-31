@@ -96,7 +96,7 @@ spec:
       http:
         paths:
           - pathType: Prefix
-            path: /
+            path: /nacos
             backend:
               service:
                 name: nexus
