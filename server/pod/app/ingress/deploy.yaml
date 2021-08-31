@@ -165,3 +165,13 @@ spec:
                 name: frontend-operation
                 port:
                   number: 80
+    - host: nacos.internal-home.com
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: nacos-headless
+                port:
+                  number: 8848

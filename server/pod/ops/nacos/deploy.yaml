@@ -16,12 +16,6 @@ spec:
     - port: 8848
       name: server
       targetPort: 8848
-    - port: 9848
-      name: client-rpc
-      targetPort: 9848
-    - port: 9849
-      name: raft-rpc
-      targetPort: 9849
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -29,10 +23,11 @@ metadata:
   name: nacos
   namespace: stable
 data:
-  mysql.db.name: "nacos"
+  mysql.db.name: "nacos_devtest"
   mysql.port: "3306"
   mysql.user: "nacos"
   mysql.password: "***REMOVED***"
+  mysql.db.host: "nacos-mysql.stable.svc"
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -44,7 +39,7 @@ spec:
     matchLabels:
       app: nacos
   serviceName: nacos-headless
-  replicas: 2
+  replicas: 3
   template:
     metadata:
       labels:
@@ -60,34 +55,29 @@ spec:
                   - key: "app"
                     operator: In
                     values:
-                      - nacos
+                      - nacos-headless
               topologyKey: "kubernetes.io/hostname"
       initContainers:
         - name: peer-finder-plugin-install
           image: nacos/nacos-peer-finder-plugin:1.1
           imagePullPolicy: Always
           volumeMounts:
-            - name: data-nacos
-              mountPath: "/home/nacos/plugins/peer-finder"
+            - mountPath: /home/nacos/plugins/peer-finder
+              name: data-nacos
               subPath: peer-finder
       containers:
         - name: nacos
           imagePullPolicy: Always
-          image: nacos/nacos-server:latest
+          image: nacos/nacos-server:2.0.3
           resources:
             requests:
               memory: "2Gi"
               cpu: "500m"
           ports:
             - containerPort: 8848
-              name: client-port
-            - containerPort: 9848
-              name: client-rpc
-            - containerPort: 9849
-              name: raft-rpc
           env:
             - name: NACOS_REPLICAS
-              value: "2"
+              value: "3"
             - name: SERVICE_NAME
               value: "nacos-headless"
             - name: DOMAIN_NAME
@@ -97,6 +87,11 @@ spec:
                 fieldRef:
                   apiVersion: v1
                   fieldPath: metadata.namespace
+            - name: MYSQL_SERVICE_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: nacos
+                  key: mysql.db.host
             - name: MYSQL_SERVICE_DB_NAME
               valueFrom:
                 configMapKeyRef:
@@ -123,16 +118,6 @@ spec:
               value: "8848"
             - name: PREFER_HOST_MODE
               value: "hostname"
-          volumeMounts:
-            - name: data-nacos
-              mountPath: /home/nacos/plugins/peer-finder
-              subPath: peer-finder
-            - name: data-nacos
-              mountPath: /home/nacos/data
-              subPath: data
-            - name: data-nacos
-              mountPath: /home/nacos/logs
-              subPath: logs
   volumeClaimTemplates:
     - metadata:
         name: data-nacos
