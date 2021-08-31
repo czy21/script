@@ -29,7 +29,7 @@ metadata:
   name: nacos
   namespace: stable
 data:
-  mysql.db.name: "nacos_devtest"
+  mysql.db.name: "nacos"
   mysql.port: "3306"
   mysql.user: "nacos"
   mysql.password: "Czy.190815"
