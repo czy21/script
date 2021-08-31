@@ -7,10 +7,12 @@ metadata:
 spec:
   selector:
     app: nacos-mysql
+  type: NodePort
   ports:
     - name: "tcp"
       port: 3306
       targetPort: 3306
+      nodePort: 8306
       
 ---
 apiVersion: apps/v1
@@ -38,9 +40,9 @@ spec:
           - containerPort: 3306
         env:
           - name: MYSQL_ROOT_PASSWORD
-            value: "root"
+            value: "Czy.190815"
           - name: MYSQL_DATABASE
-            value: "nacos_devtest"
+            value: "nacos"
           - name: MYSQL_USER
             value: "nacos"
           - name: MYSQL_PASSWORD
