@@ -186,3 +186,13 @@ spec:
                 name: frontend-operation
                 port:
                   number: 80
+    - host: consul.internal-home.com
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: consul
+                port:
+                  number: 8500
