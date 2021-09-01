@@ -59,6 +59,27 @@ data:
     VmxRcnYreWFBWW5Id0s3QldkM3pQOXdTYWRHNjg3Q3FOdzdqYVFWUnhtaHhRQlhSCmlzajBOMzhl
     VzVoWGVOYms0WEFWQkpKdm55cThabXNzOGV6UnlRUHpnNDhQREd3dXFDRU1mZ3kzbmdmQzBIbkEK
     K1JKa0tKUngvYmJZUGVYcHQrWE93WWs9Ci0tLS0tRU5EIFBSSVZBVEUgS0VZLS0tLS0K
+# ops
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+  name: ingress
+  namespace: ops
+spec:
+  rules:
+    - host: nacos.internal-home.com
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: nacos-headless
+                port:
+                  number: 8848
 ---
 # kube-ops
 apiVersion: networking.k8s.io/v1
@@ -165,13 +186,3 @@ spec:
                 name: frontend-operation
                 port:
                   number: 80
-    - host: nacos.internal-home.com
-      http:
-        paths:
-          - pathType: Prefix
-            path: /
-            backend:
-              service:
-                name: nacos-headless
-                port:
-                  number: 8848
