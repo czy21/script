@@ -33,13 +33,13 @@ data:
         consul:
           host: consul.internal-home.com
           port: 80
+          discovery:
+            health-check-critical-timeout: 10s
           config:
             format: yaml
             prefixes: dev
             default-context: ${spring.application.name}
             enabled: true
-
-
 
 ---
 apiVersion: apps/v1
@@ -71,6 +71,11 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
+          env:
+            - name: POD_UID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.uid
           volumeMounts:
             - name: conf
               mountPath: /home/app/config/
