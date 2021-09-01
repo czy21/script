@@ -31,6 +31,10 @@ data:
     spring:
       application:
         name: portal
+      cloud:
+        nacos:
+          discovery:
+            server-addr: nacos-headless.ops.svc:8848
       datasource:
         primary:
           type: com.zaxxer.hikari.HikariDataSource
@@ -115,10 +119,6 @@ data:
         example1:
           sign-name: 测试名称
           template-code: SMS_12345678
-    eureka:
-      client:
-        service-url:
-          defaultZone: http://eureka.stable.svc:8761/eureka/
 
 
 ---
