@@ -22,103 +22,23 @@ metadata:
     app: portal
 data:
   application.yml: |
-    db-host: 192.168.2.21
-    db-user: admin
-    db-pass: ***REMOVED***
-
     server:
       port: 8080
     spring:
       application:
         name: portal
+      config:
+        import: consul:consul.internal-home.com:80
       cloud:
-        nacos:
-          discovery:
-            server-addr: nacos-headless.ops.svc:8848
-      datasource:
-        primary:
-          type: com.zaxxer.hikari.HikariDataSource
-          driver-class-name: com.mysql.cj.jdbc.Driver
-          jdbc-url: jdbc:mysql://${db-host}:3306/erp_local?user=${db-user}&password=${db-pass}&serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false&useUnicode=true&rewriteBatchedStatements=true
-          minimum-idle: 5
-          maximum-pool-size: 20
-          max-lifetime: 1800000
-          connection-test-query: select 1
-          connection-timeout: 30000
-        second:
-          type: com.zaxxer.hikari.HikariDataSource
-          driver-class-name: org.postgresql.Driver
-          jdbc-url: jdbc:postgresql://${db-host}:5432/erp_local
-          username: postgres
-          password: ${db-pass}
-          minimum-idle: 5
-          maximum-pool-size: 20
-          max-lifetime: 1800000
-          connection-test-query: select 1
-          connection-timeout: 30000
-      data:
-        mongodb:
-          uri: mongodb://${db-user}:${db-pass}@${db-host}:27017/erp_local?authSource=${db-user}
-      redis:
-        host: ${db-host}
-        port: 6379
-        timeout: 3600
-        password: ${db-pass}
-      servlet:
-        multipart:
-          max-request-size: 100MB
-          max-file-size: 100MB
-      rabbitmq:
-        addresses: root:${db-pass}@${db-host}:5672
-      batch:
-        job:
-          enabled: false
-      elasticsearch:
-        rest:
-          uris: http://cluster-es-default.big-data.svc:9200
-          username: admin
-          password: elasticsearch
-    migrate:
-      is-count: false
-      batch-number: 100000
-    hbase:
-      zookeeper:
-        quorum: 192.168.2.21:2181
-    mybatis-plus:
-      mapper-locations: classpath*:mapper/**/**.xml
-      type-aliases-package: com.team.domain.entity
-      type-aliases-super-type: com.team.infrastructure.base.BaseEntity
-      global-config:
-        db-config:
-          id-type: uuid
-        banner: false
+        consul:
+          host: consul.internal-home.com
+          port: 80
+          config:
+            format: yaml
+            prefixes: dev
+            default-context: ${spring.application.name}
+            enabled: true
 
-    logging:
-      level:
-        com.team.domain.mapper: debug
-        org.springframework.web.filter.CommonsRequestLoggingFilter: debug
-        org.springframework.jdbc.core: debug
-        org.springframework.data.mongodb.core: debug
-
-    ali:
-      access-key:
-        id: 2222
-        secret: 12345679
-      pay:
-        public-key-file: ./alipay/ali-public
-        app-private-key-file: ./alipay/app-private
-        server-url: https://openapi.alipaydev.com/gateway.do
-        app:
-          sample1:
-            app-id: 2016102900777119
-            scene: bar_code
-      oss:
-        example1:
-          end-point: www.baidu.com
-      sms:
-        example1:
-          sign-name: 测试名称
-          template-code: SMS_12345678
 
 
 ---
