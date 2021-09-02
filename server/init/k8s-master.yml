@@ -11,5 +11,5 @@
       shell: echo 'export KUBECONFIG=/etc/kubernetes/admin.conf' >> ~/.bashrc
       when: "'KUBECONFIG' not in ansible_env"
 
-    - name: init network
-      shell: kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+    # - name: init network
+    #   shell: kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
