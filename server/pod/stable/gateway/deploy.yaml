@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: portal
+  name: gateway
   namespace: stable
 spec:
   selector:
-    app: portal
+    app: gateway
   type: ClusterIP
   ports:
     - name: "8080"
@@ -15,62 +15,50 @@ spec:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: portal
+  name: gateway
   namespace: stable
   labels:
-    app: portal
+    app: gateway
 data:
   application.yml: |
     server:
       port: 8080
     spring:
-      application:
-        name: portal
-      config:
-        import: consul:consul.internal-home.com:80
       cloud:
-        consul:
-          host: consul.internal-home.com
-          port: 80
-          discovery:
-            serviceName: ${ENV_NAME}-${spring.application.name}
-            instance-id: ${POD_NAME}
-            prefer-ip-address: true
-            health-check-critical-timeout: 30s
-            enabled: false
-          config:
-            format: yaml
-            prefixes: ${ENV_NAME}
-            default-context: ${spring.application.name}
-            enabled: true
+        gateway:
+          routes:
+            - id: portal
+              uri: http://localhost:8080
+              predicates:
+                - Path=/portal/**
 
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: portal
+  name: gateway
   namespace: stable
 spec:
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: portal
+      app: gateway
   template:
     metadata:
       labels:
-        app: portal
+        app: gateway
     spec:
       volumes:
         - name: conf
           configMap:
-            name: portal
+            name: gateway
             items:
               - key: "application.yml"
                 path: "application.yml"
       containers:
-        - name: portal
-          image: registry:5000/portal-dev:dev-bruce
+        - name: gateway
+          image: registry:5000/gateway-dev:dev-bruce
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
@@ -88,7 +76,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: data-portal
+  name: data-gateway
   namespace: stable
 spec:
   accessModes:

@@ -69,8 +69,8 @@ spec:
       terminationGracePeriodSeconds: 10
       volumes:
         - name: data
-          hostPath:
-            path: /home/data
+          persistentVolumeClaim:
+            claimName: data-consul
       containers:
         - name: consul
           image: consul:latest
@@ -118,6 +118,7 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /consul/data
+              subPath: data
   volumeClaimTemplates:
     - metadata:
         name: data
