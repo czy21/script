@@ -30,14 +30,6 @@ data:
         import: consul:consul.internal-home.com:80
       cloud:
         consul:
-          host: consul.internal-home.com
-          port: 80
-          discovery:
-            serviceName: ${ENV_NAME}-${spring.application.name}
-            instance-id: ${POD_NAME}
-            prefer-ip-address: true
-            health-check-critical-timeout: 30s
-            enabled: true
           config:
             format: yaml
             prefixes: ${ENV_NAME}
