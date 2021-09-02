@@ -24,13 +24,29 @@ data:
     server:
       port: 8080
     spring:
+      application:
+        name: gateway
+      config:
+        import: consul:consul.internal-home.com:80
       cloud:
-        gateway:
-          routes:
-            - id: portal
-              uri: http://localhost:8080
-              predicates:
-                - Path=/portal/**
+        consul:
+          host: consul.internal-home.com
+          port: 80
+          discovery:
+            serviceName: ${ENV_NAME}-${spring.application.name}
+            instance-id: ${POD_NAME}
+            prefer-ip-address: true
+            health-check-critical-timeout: 30s
+            enabled: false
+          config:
+            format: yaml
+            prefixes: ${ENV_NAME}
+            default-context: ${spring.application.name}
+            enabled: true
+          enabled: true
+      profiles:
+        active: local
+
 
 ---
 apiVersion: apps/v1
