@@ -37,7 +37,7 @@ data:
             instance-id: ${POD_NAME}
             prefer-ip-address: true
             health-check-critical-timeout: 30s
-            enabled: false
+            enabled: true
           config:
             format: yaml
             prefixes: ${ENV_NAME}
