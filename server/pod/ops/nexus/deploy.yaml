@@ -2,6 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: nexus
+  namespace: ops
 spec:
   selector:
     app: nexus
@@ -16,28 +17,25 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: nexus
+  namespace: ops
   labels:
     app: nexus
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: nexus
+  namespace: ops
 spec:
-  strategy:
-    type: Recreate
   selector:
     matchLabels:
       app: nexus
+  serviceName: nexus
   template:
     metadata:
       labels:
         app: nexus
     spec:
-      volumes:
-        - name: data
-          persistentVolumeClaim:
-            claimName: data-nexus
       containers:
         - name: nexus
           image: sonatype/nexus3
@@ -52,15 +50,13 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /nexus-data/
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: data-nexus
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 256Gi
-  storageClassName: "managed-nfs-storage"
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 256Gi
+        storageClassName: "managed-nfs-storage"
