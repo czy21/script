@@ -13,5 +13,6 @@ fi
 
 echo "
 192.168.2.25 k8s-node-21
+192.168.2.26 k8s-node-22
 " >>/etc/hosts
 nmcli d reapply ens192
