@@ -1,13 +1,14 @@
 - hosts: all
   remote_user: bruce
   vars:
-    major_name: "docker"
+    remote_script: "/home/{{ansible_user_id}}/{{script_name}}"
   tasks:
     - name: copy script
       copy:
         src: "{{item.src}}"
         dest: "{{item.dest}}"
       with_items:
-        - { src: "{{root_path}}/{{major_name}}", dest: "{{root_path}}" }
+        - { src: "{{script_path}}/{{option_name}}", dest: "{{remote_script}}" }
     - name: install
-      shell: bash {{root_path}}/{{major_name}}/{{major_name}}.sh
+      shell: bash {{remote_script}}/{{option_name}}/{{option_name}}.sh
+

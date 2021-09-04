@@ -15,13 +15,18 @@ do
     break
     ;;
   t)
-    root_path=$(cd "$(dirname "$0")";pwd)
-    private_key_file=${root_path}/___temp/private-key
+    script_path=$(cd "$(dirname "$0")";pwd)
+    script_name=$(basename ${script_path})
+    private_key_file=${script_path}/___temp/private-key
     if [ -f "${private_key_file}" ]; then
       chmod 600 ${private_key_file}
     fi
     shift 1
-    ansible_cmd="ansible-playbook --extra-vars root_path=${root_path} --inventory ${root_path}/ansible_hosts ${root_path}/$1.yml --step --verbose"
+    ansible_cmd="ansible-playbook \
+    --extra-vars \"script_path=${script_path} script_name=${script_name} option_name=$1\" \
+    --inventory ${script_path}/ansible_hosts ${script_path}/$1.yml \
+    --step \
+    --verbose"
     if [ $1 == 'os' ]; then
       bash -c "${ansible_cmd} --ask-pass"
     else
