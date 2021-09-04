@@ -80,16 +80,15 @@ data:
 
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: jenkins
   namespace: ops
 spec:
-  strategy:
-    type: Recreate
   selector:
     matchLabels:
       app: jenkins
+  serviceName: jenkins
   template:
     metadata:
       labels:
@@ -102,9 +101,6 @@ spec:
         - name: docker-cmd
           hostPath:
             path: /usr/bin/docker
-        - name: jenkins-home
-          persistentVolumeClaim:
-            claimName: data-jenkins
         - name: gradle-init
           configMap:
             name: jenkins
@@ -128,20 +124,18 @@ spec:
               mountPath: /var/run/docker.sock
             - name: docker-cmd
               mountPath: /usr/bin/docker
-            - name: jenkins-home
+            - name: data
               mountPath: /var/jenkins_home/
             - name: gradle-init
-              mountPath: /var/jenkins_home/tools/gradle/init.d/
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: data-jenkins
-  namespace: ops
-spec:
-  accessModes:
-    - ReadWriteMany
-  resources:
-    requests:
-      storage: 256Gi
-  storageClassName: "managed-nfs-storage"
+              mountPath: /var/jenkins_home/tools/gradle/init.d/init.gradle
+              subPath: init.gradle
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 256Gi
+        storageClassName: "managed-nfs-storage"

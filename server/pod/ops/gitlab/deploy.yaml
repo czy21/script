@@ -3,7 +3,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: gitlab
-  namespace: kube-ops
+  namespace: ops
   labels:
     app: gitlab
 spec:
@@ -28,7 +28,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: gitlab
-  namespace: kube-ops
+  namespace: ops
 spec: 
   selector:
     matchLabels:
@@ -65,7 +65,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: data-gitlab
-  namespace: kube-ops
+  namespace: ops
 spec:
   accessModes:
     - ReadWriteOnce
