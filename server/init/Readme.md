@@ -27,7 +27,8 @@ sed -i -r "s/^\s*PermitRootLogin\s+\w+/PermitRootLogin yes/;" /etc/ssh/sshd_conf
 /etc/kubernetes/manifests/kube-apiserver.yaml command 下添加 - --service-node-port-range=1-65535
 ```
 
-###部署kubeSphere 默认帐户和密码 (admin/P@88w0rd)
+###
+部署kubeSphere 默认帐户和密码 (admin/P@88w0rd)
 ```shell
 kubectl apply -f https://github.com/kubesphere/ks-installer/releases/download/v3.1.0/kubesphere-installer.yaml
 kubectl apply -f https://github.com/kubesphere/ks-installer/releases/download/v3.1.0/cluster-configuration.yaml

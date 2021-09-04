@@ -2,6 +2,7 @@
   remote_user: bruce
   vars:
     remote_script: "/home/{{ansible_user_id}}/{{script_name}}"
+    option_name: "docker"
   tasks:
     - name: copy script
       copy:
