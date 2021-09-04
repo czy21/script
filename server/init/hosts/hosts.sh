@@ -12,5 +12,6 @@ elif [ ${os_type} == 'ubuntu' ]; then
 fi
 
 echo "
-192.168.2.25 k8s-node-1
+192.168.2.25 k8s-node-21
 " >>/etc/hosts
+nmcli d reapply ens192

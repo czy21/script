@@ -23,7 +23,7 @@ do
     fi
     shift 1
     ansible_cmd="ansible-playbook \
-    --extra-vars \"script_path=${script_path} script_name=${script_name} option_name=$1\" \
+    --extra-vars \"script_path=${script_path} script_name=${script_name}\" \
     --inventory ${script_path}/ansible_hosts ${script_path}/$1.yml \
     --step \
     --verbose"
