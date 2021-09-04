@@ -1,16 +1,16 @@
 - hosts: master
   remote_user: root
   vars:
-    major_name: "k8s"
+    remote_script: "/{{ansible_user_id}}/{{script_name}}"
   tasks:
     - name: copy script
       copy:
         src: "{{item.src}}"
         dest: "{{item.dest}}"
       with_items:
-        - { src: "{{root_path}}/{{major_name}}", dest: "{{root_path}}" }
+        - { src: "{{script_path}}/{{option_name}}", dest: "{{remote_script}}" }
     - name: install
-      shell: bash {{root_path}}/{{major_name}}/{{major_name}}.sh
+      shell: bash {{remote_script}}/{{option_name}}/{{option_name}}.sh
 
     - name: init
       shell: kubeadm init --apiserver-advertise-address={{inventory_hostname}} --service-cidr=10.10.0.0/16 --pod-network-cidr=10.122.0.0/16
