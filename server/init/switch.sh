@@ -1,6 +1,6 @@
 #!/bin/bash
 # bash switch.sh -h user@host -t [target]
-# -t os | docker | hosts | k8s-master | k8s-nodes | cp-certs | reboot | prune
+# -t os | docker | hosts | reboot | k8s-master | k8s-nodes | cp-certs | reboot | prune
 set -e
 
 while getopts ":h:t:" opt

@@ -48,7 +48,7 @@ kubeadm token create --print-join-command
 ```
 ### 非root用户使用kubectl
 ```shell
-mkdir -p $HOME/.kube && sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config && sudo chown $(id -u):$(id -g) $HOME/.kube/config
+mkdir -p $HOME/.kube && sudo cp --force /etc/kubernetes/admin.conf $HOME/.kube/config && sudo chown $(id -u):$(id -g) $HOME/.kube/config
 ```
 
 ### 节点添加标签

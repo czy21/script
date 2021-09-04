@@ -14,4 +14,4 @@
       shell: bash {{remote_script}}/{{option_name}}/{{option_name}}.sh
 
     - name: join cluser
-      shell: kubeadm join 192.168.2.25:6443 --token 11slnj.i2evoy6005cvhnc0 --discovery-token-ca-cert-hash sha256:c57984ecf8f6c7bde09e6e05fe62544e55dd4cd29b268ca840d76d103358811d
+      shell: kubeadm join 192.168.2.25:6443 --token 08cdfn.aj4jbq5k6iqg5ux5 --discovery-token-ca-cert-hash sha256:6f045961de9ef815e7f6cf2a27b56f181d38851f8026aec2832d341b7f66c263

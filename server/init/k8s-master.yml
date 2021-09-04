@@ -3,6 +3,9 @@
   vars:
     remote_script: "/{{ansible_user_id}}/{{script_name}}"
     option_name: "k8s"
+    init_config_name: "k8s-init-config.yml"
+    svc_network_cidr: "10.10.0.0/16"
+    pod_network_cidr: "10.20.0.0/16"
   tasks:
     - name: copy script
       copy:
@@ -10,11 +13,15 @@
         dest: "{{item.dest}}"
       with_items:
         - { src: "{{script_path}}/{{option_name}}", dest: "{{remote_script}}" }
+
     - name: install
       shell: bash {{remote_script}}/{{option_name}}/{{option_name}}.sh
 
-    - name: init
-      shell: kubeadm init --apiserver-advertise-address={{inventory_hostname}} --service-cidr=10.10.0.0/16 --pod-network-cidr=10.122.0.0/16
+    - name: create config
+      template: src={{script_path}}/{{option_name}}/{{init_config_name}} dest=/tmp/{{init_config_name}}
+
+    - name: init by config
+      shell: kubeadm init --config /tmp/{{init_config_name}}
 
     - name: export admin.conf
       shell: echo 'export KUBECONFIG=/etc/kubernetes/admin.conf' >> ~/.bashrc
