@@ -1,6 +1,6 @@
 #!/bin/bash
 # bash switch.sh -h user@host -t [target]
-# -t centos | ubuntu | docker | hosts | k8s-master | k8s-nodes | cp-certs | reboot | prune
+# -t os | docker | hosts | k8s-master | k8s-nodes | cp-certs | reboot | prune
 set -e
 
 while getopts ":h:t:" opt
@@ -21,7 +21,7 @@ do
       chmod 600 ${private_key_file}
     fi
     shift 1
-    ansible_cmd="ansible-playbook --extra-vars root_path=${root_path} --inventory-file ${root_path}/ansible_hosts ${root_path}/$1.yml --step --verbose"
+    ansible_cmd="ansible-playbook --extra-vars root_path=${root_path} --inventory ${root_path}/ansible_hosts ${root_path}/$1.yml --step --verbose"
     if [ $1 == 'os' ]; then
       bash -c "${ansible_cmd} --ask-pass"
     else

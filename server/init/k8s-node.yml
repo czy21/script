@@ -1,8 +1,17 @@
 - hosts: nodes
   remote_user: root
+  vars:
+    major_name: "os"
   tasks:
+    - name: copy script
+      copy:
+        src: "{{item.src}}"
+        dest: "{{item.dest}}"
+      with_items:
+        - { src: "{{root_path}}/{{major_name}}", dest: "{{root_path}}" }
+        
     - name: install
-      shell: bash {{playbook_dir}}/k8s.sh
+      shell: bash {{root_path}}/{{major_name}}/{{major_name}}.sh
 
     - name: join cluser
       shell: kubeadm join 192.168.2.21:6443 --token qnb20v.1tu5dsdrld2docew --discovery-token-ca-cert-hash sha256:3683bd8a9d4973845908eee5ca36713251bca29e751440a4a97288976540399b
