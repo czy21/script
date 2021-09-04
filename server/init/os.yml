@@ -1,0 +1,5 @@
+- hosts: all
+  remote_user: root
+  tasks:
+    - name: init os
+      shell: bash {{playbook_dir}}/os.sh

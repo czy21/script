@@ -1,7 +1,0 @@
-- hosts: all
-  remote_user: root
-  tasks:
-    - name: copy hosts to remote
-      copy: src={{root_path}}/hosts dest=/etc/ owner=root group=root mode=0644
-    - name: reload network
-      shell: nmcli d reapply ens192

@@ -3847,7 +3847,7 @@ spec:
               value: "k8s,bgp"
             # Auto-detect the BGP IP address.
             - name: IP_AUTODETECTION_METHOD 
-              value: "can-reach=www.google.com"
+              value: "interface=ens.*"
             - name: IP
               value: "autodetect"
             # Enable IPIP

@@ -1,8 +1,12 @@
 - hosts: all
   remote_user: root
   tasks:
+    - name: calico prune
+      shell: nmcli d status | grep "^cali\|^tun" | awk '{print $1}' | xargs nmcli device delete -
     - name: docker container prune
       shell: docker container prune --force
-    - name: docker image prune
-      shell: docker image prune --force --all
+    - name: docker volume prune
+      shell: docker volume prune --force
+    - name: docker network prune
+      shell: docker network prune --force
 

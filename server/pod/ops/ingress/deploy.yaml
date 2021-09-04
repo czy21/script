@@ -122,6 +122,16 @@ spec:
                 name: nexus
                 port:
                   number: 8081
+    - host: jira.internal-home.com
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: nexus
+                port:
+                  number: 8080
 ---
 # monitoring
 apiVersion: networking.k8s.io/v1
