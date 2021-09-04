@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-yum -y install wget vim git nfs-utils
+yum -y install wget vim git nfs-utils bash-completion
 dnf -y install python38
 sed -i -r "s/ll='ls\s+-l/\0va/" /etc/profile.d/colorls.sh
 sed -i -r "s/\s*#\s*(%wheel\s+ALL=\(ALL\)\s+ALL)/\1/" /etc/sudoers
