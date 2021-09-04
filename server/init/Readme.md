@@ -1,9 +1,22 @@
-#ansible install and config on server
-must be use root !!!
+# ansible install and config on server
+## centos
 ```shell
-yum -y install epel-release
-yum -y install ansible
-sed -ir 's/^#\(host_key_checking\)/\1/' /etc/ansible/ansible.cfg
+sudo yum -y install epel-release
+sudo yum -y install ansible
+sudo sed -ir 's/^#\(host_key_checking\)/\1/' /etc/ansible/ansible.cfg
+```
+## ubuntu
+```shell
+sudo apt install software-properties-common
+sudo add-apt-repository --yes --update ppa:ansible/ansible
+sudo apt install ansible
+sudo sed -ir 's/^#\(host_key_checking\)/\1/' /etc/ansible/ansible.cfg
+```
+
+# ubuntu install finished prepare
+```shell
+passwd
+sed -i -r "s/^\s*PermitRootLogin\s+\w+/PermitRootLogin yes/;" /etc/ssh/sshd_config
 ```
 
 ### 集群初始化后的手动执行

@@ -2,7 +2,4 @@
   remote_user: bruce
   tasks:
     - name: install
-      script: docker.sh
-    - name: reboot
-      shell: sudo reboot
-
+      shell: bash {{playbook_dir}}/docker.sh

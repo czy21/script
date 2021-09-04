@@ -1,7 +1,0 @@
-- hosts: all
-  remote_user: root
-  tasks:
-    - name: calico prune
-      shell: nmcli d status | grep "unmanaged\|disconnected" | awk '{print $1}' | xargs nmcli device delete -
-    - name: reboot
-      shell: reboot
