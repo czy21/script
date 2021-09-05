@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: frontend-operation
-  namespace: stable
+  namespace: erp
 spec:
   selector:
     app: frontend-operation
@@ -16,7 +16,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: frontend-operation
-  namespace: stable
+  namespace: erp
   labels:
     app: frontend-operation
 data:
@@ -104,7 +104,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend-operation
-  namespace: stable
+  namespace: erp
 spec:
   strategy:
     type: Recreate
@@ -153,7 +153,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: data-frontend-operation
-  namespace: stable
+  namespace: erp
 spec:
   accessModes:
     - ReadWriteMany

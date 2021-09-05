@@ -35,7 +35,7 @@ data:
                 gradlePluginPortal()
                 maven {
                     name "czyPublic"
-                    url "http://192.168.2.21:8081/repository/maven-public/"
+                    url "http://nexus.cluster2.com/repository/maven-public/"
                     credentials {
                         username "admin"
                         password "***REMOVED***"
@@ -50,7 +50,7 @@ data:
             repositories {
                 maven {
                     name "czyPublishRelease"
-                    url "http://192.168.2.21:8081/repository/maven-releases/"
+                    url "http://nexus.cluster2.com/repository/maven-releases/"
                     credentials {
                         username "admin"
                         password "***REMOVED***"
@@ -61,19 +61,11 @@ data:
         repositories {
             maven {
                 name "czyPublic"
-                url "http://192.168.2.21:8081/repository/maven-public/"
+                url "http://nexus.cluster2.com/repository/maven-public/"
                 credentials {
                     username "admin"
                     password "***REMOVED***"
                 }
-            }
-            maven {
-                name "ali"
-                url "https://maven.aliyun.com/repository/public/"
-            }
-            maven {
-                name "jd"
-                url "https://jitpack.io"
             }
         }
     }
