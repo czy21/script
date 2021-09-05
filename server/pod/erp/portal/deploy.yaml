@@ -62,7 +62,7 @@ spec:
                 path: "application.yml"
       containers:
         - name: backend-portal
-          image: registry.cluster2.com/backend-portal:dev-bruce
+          image: registry.cluster2.com/erp-backend-portal:dev-bruce
           imagePullPolicy: Always
           ports:
             - containerPort: 8080

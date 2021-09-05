@@ -1,0 +1,29 @@
+pipeline{
+    agent any
+    environment {
+        GRADLE_INIT_FILE = "/var/jenkins_home/tools/gradle/init.d/init.gradle"
+        PROJECT_ROOT="${WORKSPACE}/code/web/react"
+        PROJECT_NAME="erp"
+        PROJECT_MODULE="operation"
+        IMAGE_NAME="${PROJECT_NAME}-frontend-${PROJECT_MODULE}"
+        NODEJS_HOME = "${tool 'node-v14.17.5'}"
+        PATH="${NODEJS_HOME}/bin:${PATH}"
+    }
+    parameters {
+        gitParameter branchFilter: 'origin/(.*)', name: 'BRANCH', type: 'PT_BRANCH'
+    }
+    stages {
+        stage('clone'){
+            steps{
+                checkout([$class: 'GitSCM', branches: [[name: "${BRANCH}"]], extensions: [[$class: 'SubmoduleOption', disableSubmodules: false, parentCredentials: true, recursiveSubmodules: true, reference: '', trackingSubmodules: false]], userRemoteConfigs: [[credentialsId: 'bruce', url: 'git@gitee.com:czyhome/erp.git']]])
+            }
+        }
+        stage('build'){
+            steps{
+                sh 'nrm use taobao && yarn --cwd ${PROJECT_ROOT}/${PROJECT_MODULE} install && yarn --cwd ${PROJECT_ROOT}/${PROJECT_MODULE} --ignore-engines build'
+                sh 'docker build --tag registry.cluster2.com/${IMAGE_NAME}:${BRANCH} --file ${PROJECT_ROOT}/${PROJECT_MODULE}/Dockerfile ${PROJECT_ROOT}/${PROJECT_MODULE}/ --no-cache --force-rm'
+                sh 'docker push registry.cluster2.com/${IMAGE_NAME}:${BRANCH}'
+            }
+        }
+    }
+}

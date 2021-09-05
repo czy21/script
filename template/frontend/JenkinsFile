@@ -2,14 +2,15 @@ pipeline{
     agent any
     environment {
         GRADLE_INIT_FILE = "/var/jenkins_home/tools/gradle/init.d/init.gradle"
-        PROJECT_ROOT="${WORKSPACE}/code/api"
+        PROJECT_ROOT="${WORKSPACE}/code/web/react"
         PROJECT_NAME="erp"
-        PROJECT_MODULE="gateway"
-        IMAGE_NAME="backend-${PROJECT_NAME}-${PROJECT_MODULE}"
+        PROJECT_MODULE="operation"
+        IMAGE_NAME="${PROJECT_NAME}-frontend-${PROJECT_MODULE}"
+        NODEJS_HOME = "${tool 'node-v14.17.5'}"
+        PATH="${NODEJS_HOME}/bin:${PATH}"
     }
     parameters {
     gitParameter branchFilter: 'origin/(.*)', name: 'BRANCH', type: 'PT_BRANCH'
-    string defaultValue: 'dev', name: 'DEPLOY_ENV'
   }
     stages {
         stage('clone'){
@@ -19,9 +20,9 @@ pipeline{
         }
         stage('build'){
             steps{
-                sh 'chmod +x ${PROJECT_ROOT}/gradlew && ${PROJECT_ROOT}/gradlew --init-script ${GRADLE_INIT_FILE} --build-file ${PROJECT_ROOT}/build.gradle ${PROJECT_MODULE}:clean ${PROJECT_MODULE}:build -x test'
-                sh 'docker build --tag registry.cluster2.com/${PROJECT_JOIN}:${BRANCH} --file ${PROJECT_ROOT}/${PROJECT_MODULE}/Dockerfile ${PROJECT_ROOT}/${PROJECT_MODULE}/ --no-cache --force-rm'
-                sh 'docker push registry.cluster2.com/${PROJECT_JOIN}:${BRANCH}'
+                sh 'nrm use taobao && yarn --cwd ${PROJECT_ROOT}/${PROJECT_MODULE} install && yarn --cwd ${PROJECT_ROOT}/${PROJECT_MODULE} --ignore-engines build'
+                sh 'docker build --tag registry.cluster2.com/${IMAGE_NAME}:${BRANCH} --file ${PROJECT_ROOT}/${PROJECT_MODULE}/Dockerfile ${PROJECT_ROOT}/${PROJECT_MODULE}/ --no-cache --force-rm'
+                sh 'docker push registry.cluster2.com/${IMAGE_NAME}:${BRANCH}'
             }
         }
     }
