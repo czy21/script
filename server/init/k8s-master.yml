@@ -4,8 +4,8 @@
     remote_script: "/{{ansible_user_id}}/{{script_name}}"
     option_name: "k8s"
     init_config_name: "k8s-init-config.yml"
-    svc_network_cidr: "10.2.0.0/16"
-    pod_network_cidr: "10.4.0.0/16"
+    svc_network_cidr: "10.1.0.0/16"
+    pod_network_cidr: "10.2.0.0/16"
   tasks:
     - name: copy script
       copy:
