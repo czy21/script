@@ -9,7 +9,7 @@ metadata:
   namespace: erp
 spec:
   rules:
-    - host: erp-dev.cluster2.com
+    - host: erp-dev.cluster1.com
       http:
         paths:
           - pathType: Prefix
