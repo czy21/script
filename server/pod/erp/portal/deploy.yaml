@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: portal
-  namespace: stable
+  namespace: erp
 spec:
   selector:
     app: portal
@@ -16,7 +16,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: portal
-  namespace: stable
+  namespace: erp
   labels:
     app: portal
 data:
@@ -41,7 +41,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: portal
-  namespace: stable
+  namespace: erp
 spec:
   strategy:
     type: Recreate
@@ -81,7 +81,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: data-portal
-  namespace: stable
+  namespace: erp
 spec:
   accessModes:
     - ReadWriteMany
