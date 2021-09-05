@@ -84,6 +84,7 @@ if __name__ == '__main__':
     parser.add_argument('-i', action="store_true")
     parser.add_argument('-c', action="store_true")
     parser.add_argument('-b', action="store_true")
+    parser.add_argument('-p', action="store_true")
     args = parser.parse_args()
 
     with open(global_env_file, "r") as e:
@@ -109,3 +110,6 @@ if __name__ == '__main__':
         if selected_option:
             selected_tuple = share.get_install_tuple(Path(selected_option).name)
             execute(selected_tuple, post, args)
+    if args.p:
+        execute_shell("docker image prune --force --all")
+
