@@ -7,8 +7,7 @@ dir_name="$(basename ${dir})"
 
 source ${dir}/../../.env.global
 
-docker build --tag registry:5000/${dir_name} --file ${dir}/Dockerfile ${dir}/
+docker build --tag ${GLOBAL_REGISTRY_URL}/${dir_name} --file ${dir}/Dockerfile ${dir}/
 
-docker push registry:5000/${dir_name}
+docker push ${GLOBAL_REGISTRY_URL}/${dir_name}
 
-docker image prune --force --all
