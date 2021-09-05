@@ -34,7 +34,7 @@ data:
             repositories {
                 gradlePluginPortal()
                 maven {
-                    name "czyPublic"
+                    name "home"
                     url "http://nexus.cluster2.com/repository/maven-public/"
                     credentials {
                         username "admin"
@@ -49,7 +49,7 @@ data:
         publishing {
             repositories {
                 maven {
-                    name "czyPublishRelease"
+                    name "home"
                     url "http://nexus.cluster2.com/repository/maven-releases/"
                     credentials {
                         username "admin"
@@ -60,7 +60,7 @@ data:
         }
         repositories {
             maven {
-                name "czyPublic"
+                name "home"
                 url "http://nexus.cluster2.com/repository/maven-public/"
                 credentials {
                     username "admin"
