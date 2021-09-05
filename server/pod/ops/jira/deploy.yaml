@@ -2,6 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: jira
+  namespace: ops
 spec:
   selector:
     app: jira
@@ -16,6 +17,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: jira
+  namespace: ops
   labels:
     app: jira
 ---
@@ -23,6 +25,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: jira
+  namespace: ops
 spec:
   strategy:
     type: Recreate
@@ -58,6 +61,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: data-jira
+  namespace: ops
 spec:
   accessModes:
     - ReadWriteOnce
