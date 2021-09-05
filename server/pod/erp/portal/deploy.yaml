@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: portal
+  name: backend-portal
   namespace: erp
 spec:
   selector:
-    app: portal
+    app: backend-portal
   type: ClusterIP
   ports:
     - name: "8080"
@@ -15,10 +15,10 @@ spec:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: portal
+  name: backend-portal
   namespace: erp
   labels:
-    app: portal
+    app: backend-portal
 data:
   application.yml: |
     server:
@@ -40,29 +40,29 @@ data:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: portal
+  name: backend-portal
   namespace: erp
 spec:
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: portal
+      app: backend-portal
   template:
     metadata:
       labels:
-        app: portal
+        app: backend-portal
     spec:
       volumes:
         - name: conf
           configMap:
-            name: portal
+            name: backend-portal
             items:
               - key: "application.yml"
                 path: "application.yml"
       containers:
-        - name: portal
-          image: registry.cluster2.com/portal-dev:dev-bruce
+        - name: backend-portal
+          image: registry.cluster2.com/backend-portal:dev-bruce
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
@@ -80,7 +80,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: data-portal
+  name: data-backend-portal
   namespace: erp
 spec:
   accessModes:
