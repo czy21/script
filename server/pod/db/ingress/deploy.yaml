@@ -1,0 +1,23 @@
+# db
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+  name: ingress
+  namespace: db
+spec:
+  rules:
+    - host: kibina.cluster2.com
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: cluster-kb-http
+                port:
+                  number: 5601
+---
