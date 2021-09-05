@@ -2,6 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: redis
+  namespace: db
 spec:
   selector:
     app: redis
@@ -16,6 +17,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: redis
+  namespace: db
   labels:
     app: redis
 data:
@@ -1399,28 +1401,24 @@ data:
     # active-defrag-max-scan-fields 1000
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: redis
+  namespace: db
 spec:
-  strategy:
-    type: Recreate
   selector:
     matchLabels:
       app: redis
+  serviceName: redis
   template:
     metadata:
       labels:
         app: redis
     spec:
-
       volumes:
         - name: conf
           configMap:
             name: redis
-        - name: data
-          persistentVolumeClaim:
-            claimName: data-redis
       containers:
         - name: redis
           image: redis:5.0.3
@@ -1432,15 +1430,13 @@ spec:
               mountPath: /etc/redis/
             - name: data
               mountPath: /data/
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: data-redis
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 256Gi
-  storageClassName: "managed-nfs-storage"
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 256Gi
+        storageClassName: "managed-nfs-storage"
