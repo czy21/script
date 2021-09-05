@@ -3,6 +3,8 @@
   vars:
     remote_script: "/home/{{ansible_user_id}}/{{script_name}}"
     option_name: "docker"
+    daemon_name: "daemon.json"
+    insecure_registries: "[ \"registry.cluster2.com\" ]"
   tasks:
     - name: copy script
       copy:
@@ -10,6 +12,12 @@
         dest: "{{item.dest}}"
       with_items:
         - { src: "{{script_path}}/{{option_name}}", dest: "{{remote_script}}" }
+    - name: create daemon
+      template: src={{script_path}}/{{option_name}}/{{daemon_name}} dest=/tmp/docker_{{daemon_name}}
+
+    - name: override daemon
+      shell: sudo cp -r /tmp/docker_{{daemon_name}} /etc/docker/{{daemon_name}}
+
     - name: install
       shell: bash {{remote_script}}/{{option_name}}/{{option_name}}.sh
 
