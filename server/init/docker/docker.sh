@@ -11,18 +11,6 @@ sudo tee /etc/systemd/system/docker.service.d/docker.conf <<-'EOF'
 ExecStart=
 ExecStart=/usr/bin/dockerd
 EOF
-sudo tee /etc/docker/daemon.json <<-'EOF'
-{
-  "hosts": ["fd://","tcp://0.0.0.0:2375"],
-  "data-root": "/volume1/docker-root",
-  "exec-opts": ["native.cgroupdriver=systemd"],
-  "log-driver": "json-file",
-  "log-opts": {
-    "max-size": "100m"
-  },
-  "storage-driver": "overlay2"
-}
-EOF
 
 os_type=$(awk -F= '/^ID=/{gsub("\"","",$2);print $2}' /etc/os-release)
 if [ ${os_type} == 'centos' ]; then

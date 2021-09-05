@@ -1,64 +1,3 @@
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: internal-tls
-type: kubernetes.io/tls
-data:
-  tls.crt: |
-    LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURVVENDQWptZ0F3SUJBZ0lVVlBxZHlDSjhy
-    REsza2orZUtCUm5QT3preVNJd0RRWUpLb1pJaHZjTkFRRUwKQlFBd09ERWFNQmdHQTFVRUF3d1Jh
-    VzUwWlhKdVlXd3RhRzl0WlM1amIyMHhHakFZQmdOVkJBb01FV2x1ZEdWeQpibUZzTFdodmJXVXVZ
-    Mjl0TUI0WERUSXhNRGd5T1RFeE5UQXdNVm9YRFRJeU1EZ3lPVEV4TlRBd01Wb3dPREVhCk1CZ0dB
-    MVVFQXd3UmFXNTBaWEp1WVd3dGFHOXRaUzVqYjIweEdqQVlCZ05WQkFvTUVXbHVkR1Z5Ym1Gc0xX
-    aHYKYldVdVkyOXRNSUlCSWpBTkJna3Foa2lHOXcwQkFRRUZBQU9DQVE4QU1JSUJDZ0tDQVFFQXp6
-    YzVHb29XZkhZUwppKzZ1b0lrc29kZkM0UVhxRWs1L1FNSU9xYk52MFdYQjZqcXlCUTFBWGIwWFJn
-    M1VqWDRtUjFPeXVxUVkxekVDCnB1VVF1elRudFFIRWxwYWVCdjlGaHdZQm1Ed0xWMEZmbzVMdmpK
-    MFMwTEZKYytKRW1yZVErRjZVbkVXR3I5Y2cKbzZSWDA3cy9uODhWeng4NDdpNExtdmtDRE0xbVRh
-    bFJleEYzUUpucUNqaTJBZnBtcmFBSk4xZTE4YVpYMVFSVwpnc3NQbXI3T3lvUi9sRG1Za1N4UkF4
-    cU9aRENwaHVYT0ZSUUdCbnN3dWpnSTBCMERLMVAva1J5OU5VWnpMeFRKCmxDV0ZHRWFLNlJrSjBD
-    MjJLS0IwMEZxV3FzYmdRcXJnYmUxY2l6K0JlbG1SM0k0NHRsVGZzbHVQVHhuOHdVNkkKZVNvSHNy
-    WUlod0lEQVFBQm8xTXdVVEFkQmdOVkhRNEVGZ1FVNFRvU3FJcFdGR2ZFelQ5em5rbDIzTkNuSXpB
-    dwpId1lEVlIwakJCZ3dGb0FVNFRvU3FJcFdGR2ZFelQ5em5rbDIzTkNuSXpBd0R3WURWUjBUQVFI
-    L0JBVXdBd0VCCi96QU5CZ2txaGtpRzl3MEJBUXNGQUFPQ0FRRUFCemlqZzZrVDNzajVvckh5QXFF
-    TC9wbGxyLzlXT04xd3pQeEMKR0VnRG5Sb3FMVUxOVEV1Q2ZLaGVtR3lycUVVc21MOVNJTE9WVVZB
-    VTRxY0l6STY3STRBa3AxNnhSM1AyOWcxWApFUU1Qc1M3cm1aUzNYQnZmSkg5VCtMNmFtRlgySmdL
-    MWJkWS9mdCt3UjlaM1pQRW1vVDI5TUx2cStYS3M1c2ZLCi9qMzRTcE81a0NEK21KT0szZC9YSkND
-    VW5SeWQ5MmRUUTVMR3pZWExTM08ybnZtOSs4SjUzK1lLOWJkVituci8KZG8yNC9RT2ZDdDdSMGRF
-    VWRhakkwbk5yYWdQSklkeFJPOTJMWURtSzRnM3RJdFo5Z1BMV2VFOGVvdmlDWmY4dgpIRDFaMEYv
-    b0FKeGtoaEw4eVlTZ2dCKzg4WkRvRWgxZkRSRU9xVHE3UEVjVlpaQzlrUT09Ci0tLS0tRU5EIENF
-    UlRJRklDQVRFLS0tLS0K
-  tls.key: |
-    LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JSUV2UUlCQURBTkJna3Foa2lHOXcwQkFRRUZB
-    QVNDQktjd2dnU2pBZ0VBQW9JQkFRRFBOemthaWhaOGRoS0wKN3E2Z2lTeWgxOExoQmVvU1RuOUF3
-    ZzZwczIvUlpjSHFPcklGRFVCZHZSZEdEZFNOZmlaSFU3SzZwQmpYTVFLbQo1UkM3Tk9lMUFjU1ds
-    cDRHLzBXSEJnR1lQQXRYUVYramt1K01uUkxRc1VsejRrU2F0NUQ0WHBTY1JZYXYxeUNqCnBGZlR1
-    eitmenhYUEh6anVMZ3VhK1FJTXpXWk5xVkY3RVhkQW1lb0tPTFlCK21hdG9BazNWN1h4cGxmVkJG
-    YUMKeXcrYXZzN0toSCtVT1ppUkxGRURHbzVrTUttRzVjNFZGQVlHZXpDNk9BalFIUU1yVS8rUkhM
-    MDFSbk12Rk1tVQpKWVVZUm9ycEdRblFMYllvb0hUUVdwYXF4dUJDcXVCdDdWeUxQNEY2V1pIY2pq
-    aTJWTit5VzQ5UEdmekJUb2g1CktnZXl0Z2lIQWdNQkFBRUNnZ0VCQUxNbmxiR0Nia3FSY3h1VTgx
-    cE0vMCsyVWdGbnNhYStRM3RqekhXZ2RDN2gKQWJWWHBnNkVGSUIzT2lZUlV4STZYVElTQlZjbEJX
-    MFlMS2pMSjVvVDlia2puQ3B1Y3BhdUloakpjcHVDWG5QRQpTOElMQ2gzU3VDL0MrRFMvRG4yTjlF
-    TW8wdWdCbko5dktnTVIxZlZ6MFdDRUZPRU1wNVlXTFdhQm4rb2R0RE96CmYzUmUrVUNLM0t5ejNO
-    OW42b20wSkViblJSRHg2VzcxYytqWUMzRFZwT2RlV1Q4MFlmM0xiTXVvYnpsWkpwVzMKUS9nd2hT
-    Z3A4djlCazhDcHl4Wm5yM1hKOXZkcUxyTWpLV0RxTlZrOXhpdnY5U2wrUHY4dEtmU1d2OGJGVGdp
-    SQpRK0hzVjlucmIyWUxsS2pTaS9neSswTTBSRHJyM3kxeXBkZ0RVMmxkbDZFQ2dZRUE5V0hJRW9W
-    RFNseXFzZzBVCnZwckhNTGxFaGlnZER4c2k0MjNWc3lSd3BTbzJNQ2hRSDQwZlNMeFZXcUZSbVU4
-    L2V6cmd4N3lOQWoxNUlDL1IKQnRhOHNPMUowUFBGbVNpMXUwZzlvZWRyeWVtR3RuUHc4RkdSNHVD
-    SlpVK0cwVXlHdlBwSGhuWFJPdjdJRC8vQwpydUxqR0E2bkc3a3Q2Y1ZtWkxrZ1dMOUhOSWtDZ1lF
-    QTJDNm5yVjJiWm91SUdVajByd2g0ZWZZMkREOWU3akw2ClJ0SnZjaUJuWWlSY3FCeTlhcWdoUXVn
-    S084bEVaTThST0sxcVZIZ2J6Sjhkd1dQK0NydWt3T0E3Z0toVUNFcmYKeCtvYUFsbCtXRkV2TzBF
-    dnFNaGtCTTNVVmUrK1hFMDZxZGdKZzRuUElyME1VbW1VZzYyV2s3ZXgyZ2ZtL0lZRApyMGdiTXFY
-    bU1JOENnWUJPOXZLTmt6aitXeWZMT0k1dWNCeWR2MkVmMHhUVzRhS3VrWS90b0ZKbnRGZlAwNGxG
-    ClBnTE5RMTRzVmpHT0pvU0ZRWU5JZzVMVkg3YzA5bTVMeHhyZHpONnVVV1JMVDJCOExsazNHdVFE
-    REJWLzdYdWgKdW40NkJvdndnRkVnVllJZW1tUWVEeGdQNWlHM2xGU3dOdTlodElWdVZIOUQ5WFJv
-    QVhNNVhBU3NFUUtCZ0NrbwpNTG9iMFNNanUyUjg5RUNDajFWQTM2ZFRSVUo2S0JYbHFGd0UrVW5B
-    L0hieENjck5lWStnVjVwc1JmNGZRZnNWCllPSDEvK3pqK2lsQVhUUXo1empsTjg3VnZUSGE5Mkc3
-    R3ZxSmlUbE5NMzNIZWtoYTVsZlh5KzRVZDV4aEE2TWsKUXlOczBDZWY4RUdjWWk3emxIQkpENjRm
-    eFFVY2lvVUxhRW9yTlhqWEFvR0FLYVIvYzk0MnR1eVVqSVgxSW5PZwprZ3RNTnkzZG5vVEl4bE0y
-    VmxRcnYreWFBWW5Id0s3QldkM3pQOXdTYWRHNjg3Q3FOdzdqYVFWUnhtaHhRQlhSCmlzajBOMzhl
-    VzVoWGVOYms0WEFWQkpKdm55cThabXNzOGV6UnlRUHpnNDhQREd3dXFDRU1mZ3kzbmdmQzBIbkEK
-    K1JKa0tKUngvYmJZUGVYcHQrWE93WWs9Ci0tLS0tRU5EIFBSSVZBVEUgS0VZLS0tLS0K
 # ops
 ---
 apiVersion: networking.k8s.io/v1
@@ -70,28 +9,17 @@ metadata:
   namespace: ops
 spec:
   rules:
-    - host: consul.internal-home.com
+    - host: registry.cluster2.com
       http:
         paths:
           - pathType: Prefix
             path: /
             backend:
               service:
-                name: consul
+                name: registry
                 port:
-                  number: 8500
----
-# kube-ops
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  annotations:
-    kubernetes.io/ingress.class: "nginx"
-  name: ingress
-  namespace: ops
-spec:
-  rules:
-    - host: jenkins.internal-home.com
+                  number: 5000
+    - host: jenkins.cluster2.com
       http:
         paths:
           - pathType: Prefix
@@ -101,97 +29,14 @@ spec:
                 name: jenkins
                 port:
                   number: 8080
----
-# default
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  annotations:
-    kubernetes.io/ingress.class: "nginx"
-  name: ingress
-  namespace: default
-spec:
-  rules:
-    - host: nexus.internal-home.com
+    - host: nexus.cluster2.com
       http:
         paths:
           - pathType: Prefix
-            path: /nacos
+            path: /
             backend:
               service:
                 name: nexus
                 port:
                   number: 8081
-    - host: jira.internal-home.com
-      http:
-        paths:
-          - pathType: Prefix
-            path: /
-            backend:
-              service:
-                name: nexus
-                port:
-                  number: 8080
 ---
-# monitoring
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  annotations:
-    kubernetes.io/ingress.class: "nginx"
-  name: ingress
-  namespace: ops
-spec:
-  rules:
-    - host: grafana.internal-home.com
-      http:
-        paths:
-          - pathType: Prefix
-            path: /
-            backend:
-              service:
-                name: grafana
-                port:
-                  number: 3000
----
-# big-data
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  annotations:
-    kubernetes.io/ingress.class: "nginx"
-  name: ingress
-  namespace: big-data
-spec:
-  rules:
-    - host: kibina.internal-home.com
-      http:
-        paths:
-          - pathType: Prefix
-            path: /
-            backend:
-              service:
-                name: cluster-kb-http
-                port:
-                  number: 5601
----
-# stable
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  annotations:
-    kubernetes.io/ingress.class: "nginx"
-  name: ingress
-  namespace: stable
-spec:
-  rules:
-    - host: erp-dev.internal-home.com
-      http:
-        paths:
-          - pathType: Prefix
-            path: /
-            backend:
-              service:
-                name: frontend-operation
-                port:
-                  number: 80
