@@ -29,7 +29,7 @@ data:
     - name: Prometheus
       type: prometheus
       access: proxy
-      url: http://prometheus.monitoring.svc:9090
+      url: http://prometheus.ops.svc:9090
   dashboard.yaml: |
     apiVersion: 1
     providers:

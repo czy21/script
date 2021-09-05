@@ -40,4 +40,14 @@ spec:
                 name: nexus
                 port:
                   number: 8081
+    - host: grafana.cluster2.com
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: grafana
+                port:
+                  number: 3000
 ---
