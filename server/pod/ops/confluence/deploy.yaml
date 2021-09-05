@@ -43,7 +43,7 @@ spec:
             claimName: data-confluence
       containers:
         - name: confluence
-          image: registry:5000/confluence:1.0
+          image: registry.cluster2.com/confluence:1.0
           resources:
             limits:
               memory: "2Gi"

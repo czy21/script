@@ -106,7 +106,7 @@ spec:
             claimName: data-canal
       containers:
         - name: canal
-          image: registry:5000/canal
+          image: registry.cluster2.com/canal
           imagePullPolicy: Always
           args: [ "/bin/bash","-c"," trap : TERM INT; sleep infinity & wait" ]
           volumeMounts:

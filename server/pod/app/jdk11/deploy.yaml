@@ -62,7 +62,7 @@ spec:
                   path: "compile.sh"
       containers:
         - name: jdk11-compile
-          image: registry:5000/jdk11
+          image: registry.cluster2.com/jdk11
           args: [ "/bin/bash","-c"," sh /script/compile.sh && trap : TERM INT; sleep infinity & wait" ]
           imagePullPolicy: Always
           ports:
