@@ -50,4 +50,14 @@ spec:
                 name: grafana
                 port:
                   number: 3000
+    - host: consul.cluster2.com
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: consul
+                port:
+                  number: 8500
 ---
