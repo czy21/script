@@ -31,9 +31,9 @@ spec:
             - name: NFS_SERVER
               value: 192.168.2.19
             - name: NFS_PATH
-              value: /volume1/storage2
+              value: /volume1/storage1
       volumes:
         - name: nfs-client-root
           nfs:
             server: 192.168.2.19
-            path: /volume1/storage2
+            path: /volume1/storage1
