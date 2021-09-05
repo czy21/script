@@ -259,7 +259,7 @@ spec:
                 path: logstash.conf
       containers:
         - name: logstash
-          image: registry:5000/logstash
+          image: registry.cluster2.com/logstash
           imagePullPolicy: Always
           ports:
             - containerPort: 8080

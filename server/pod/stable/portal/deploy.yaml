@@ -62,7 +62,7 @@ spec:
                 path: "application.yml"
       containers:
         - name: portal
-          image: registry:5000/portal-dev:dev-bruce
+          image: registry.cluster2.com/portal-dev:dev-bruce
           imagePullPolicy: Always
           ports:
             - containerPort: 8080

@@ -96,7 +96,7 @@ spec:
             claimName: data-hbase-master
       containers:
         - name: hbase-master
-          image: registry:5000/hbase
+          image: registry.cluster2.com/hbase
           imagePullPolicy: Always
           ports:
             - containerPort: 16000
@@ -175,7 +175,7 @@ spec:
                 path: hbase-site.xml
       containers:
         - name: hbase-region
-          image: registry:5000/hbase
+          image: registry.cluster2.com/hbase
           imagePullPolicy: Always
           ports:
             - containerPort: 16020

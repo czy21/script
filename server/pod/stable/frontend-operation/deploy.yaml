@@ -134,7 +134,7 @@ spec:
             claimName: data-frontend-operation
       containers:
         - name: frontend-operation
-          image: registry:5000/frontend-operation-dev:dev-bruce
+          image: registry.cluster2.com/frontend-operation-dev:dev-bruce
           imagePullPolicy: Always
           ports:
             - containerPort: 80

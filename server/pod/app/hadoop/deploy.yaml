@@ -106,7 +106,7 @@ spec:
             claimName: data-hadoop-namenode
       containers:
         - name: hadoop
-          image: registry:5000/hadoop
+          image: registry.cluster2.com/hadoop
           imagePullPolicy: Always
           ports:
             - containerPort: 22
@@ -182,7 +182,7 @@ spec:
                 path: hdfs-site.xml
       containers:
         - name: hadoop
-          image: registry:5000/hadoop
+          image: registry.cluster2.com/hadoop
           imagePullPolicy: Always
           ports:
             - containerPort: 22

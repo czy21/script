@@ -43,7 +43,7 @@ spec:
             claimName: data-jira
       containers:
         - name: jira
-          image: registry:5000/jira:1.0
+          image: registry.cluster2.com/jira:1.0
           resources:
             limits:
               memory: "2Gi"
