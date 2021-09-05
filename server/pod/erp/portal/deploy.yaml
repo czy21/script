@@ -27,7 +27,7 @@ data:
       application:
         name: portal
       config:
-        import: consul:consul.internal-home.com:80
+        import: consul:consul.cluster2.com:80
       cloud:
         consul:
           config:
