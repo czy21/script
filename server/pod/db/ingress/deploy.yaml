@@ -20,4 +20,14 @@ spec:
                 name: cluster-kb-http
                 port:
                   number: 5601
+    - host: es.cluster2.com
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: cluster-es-http
+                port:
+                  number: 9200
 ---
