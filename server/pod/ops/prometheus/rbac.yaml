@@ -8,6 +8,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: prometheus
+  namespace: ops
 rules:
 - apiGroups: [""]
   resources:
@@ -35,6 +36,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: prometheus
+  namespace: ops
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
