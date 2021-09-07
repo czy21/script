@@ -25,7 +25,7 @@ spec:
         type: NodePort
         ports:
           - name: http
-            nodePort: 9200
+            nodePort: 9210
             port: 9200
             protocol: TCP
             targetPort: 9200
