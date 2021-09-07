@@ -28,3 +28,6 @@ kubeadm token create --print-join-command
 nmcli dev wifi connect XXXX password ****
 
 mount -t nfs 192.168.1.3:/nfs_test /mnt/test1
+
+# vmware RDM硬盘直通{0} 硬盘挂载地址, {1} 生成目标映射地址
+vmkfstools -r /vmfs/devices/disks/t10.ATA_____ST4000NM000A2D2HZ100_________________________________WS213MF7 /vmfs/volumes/3a4fd09b-e51337f7-678b-7c10c91f7003/4T_1.vmdk
