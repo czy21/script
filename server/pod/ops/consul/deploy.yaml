@@ -56,10 +56,6 @@ spec:
       labels:
         app: consul
     spec:
-      volumes:
-        - name: data
-          persistentVolumeClaim:
-            claimName: data-consul
       containers:
         - name: consul
           image: consul:latest
@@ -71,7 +67,7 @@ spec:
             - "-data-dir=/consul/data"
             - "-bind=0.0.0.0"
             - "-client=0.0.0.0"
-            - "-advertise=$(PODIP)"
+            - "-advertise=$(POD_IP)"
             - "-retry-join=consul-0.consul.$(NAMESPACE).svc.cluster.local"
             - "-retry-join=consul-1.consul.$(NAMESPACE).svc.cluster.local"
             - "-domain=cluster.local"
@@ -96,7 +92,7 @@ spec:
             - containerPort: 8300
               name: server
           env:
-            - name: PODIP
+            - name: POD_IP
               valueFrom:
                 fieldRef:
                   fieldPath: status.podIP
