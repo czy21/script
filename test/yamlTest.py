@@ -1,8 +1,9 @@
 import io
+import os
 import shutil
 from pathlib import Path
 
-import yaml
+from ruamel import yaml
 
 
 def split(root_path: str):
@@ -23,21 +24,23 @@ def split(root_path: str):
                 "namespace": rp.name
             }
             with io.open(values_path, "w+", encoding="utf-8") as v_file:
-                yaml.dump(values_content, v_file, default_flow_style=False, sort_keys=False)
+                yaml.dump(values_content, v_file, default_flow_style=False)
             with io.open(chart_path, "w+", encoding="utf-8") as c_file:
-                yaml.dump(chart_content, c_file, default_flow_style=False, sort_keys=False)
+                yaml.dump(chart_content, c_file, default_flow_style=False)
             templates_path = d.joinpath("templates")
             shutil.rmtree(path=templates_path, ignore_errors=True)
             templates_path.mkdir(parents=True, exist_ok=True)
-            y = yaml.unsafe_load_all(open(f))
+            fo = open(f, "r", encoding="utf-8")
+            y = yaml.load_all(fo, Loader=yaml.UnsafeLoader)
             for content in y:
                 if content and content["kind"]:
                     kind_path = f.joinpath(templates_path).joinpath(str(content["kind"]).lower() + ".yaml")
                     with io.open(kind_path, "w+", encoding="utf-8") as y_file:
-                        yaml.dump(content, y_file, default_flow_style=False, sort_keys=False)
-            
-            shutil.rmtree(path=f)
+                        yaml.dump(content, y_file, default_flow_style=False)
+            fo.close()
+            os.remove(f)
+
 
 if __name__ == '__main__':
-    root_path = Path(__file__).joinpath("../../server/pod/ops").resolve().as_posix()
+    root_path = Path(__file__).joinpath("../../server/pod/db").resolve().as_posix()
     split(root_path)
