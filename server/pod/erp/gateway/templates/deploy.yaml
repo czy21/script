@@ -9,11 +9,11 @@ spec:
     type: Recreate
   selector:
     matchLabels:
-      app: gateway
+      {{ .Chart.Name }}
   template:
     metadata:
       labels:
-        app: gateway
+        {{ .Chart.Name }}
     spec:
       volumes:
         - name: conf

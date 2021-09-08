@@ -14,11 +14,16 @@ def execute(app_tuples, env_path, func):
 
 
 def apply(app_id, app_name, source_path: Path, env_path: Path):
-    temp_all_in_one_path = source_path.joinpath("___temp/all_in_one.yaml")
+    temp_all_in_one_path = source_path.joinpath("___temp/deploy.yaml")
     temp_all_in_one_path.parent.mkdir(parents=True, exist_ok=True)
     temp_all_in_one_path.touch()
-    execute_shell(".".join(['echo -e "{}\033[32m deploy => \033[0m {}"'.format(app_id, app_name), '&& helm install {} -f {} {} --debug --dry-run > {} '.format(app_name, env_path.as_posix(), source_path.as_posix(), temp_all_in_one_path.as_posix())]))
-    execute_shell("echo \n")
+    echo_cmd = 'echo -e "{}\033[32m deploy \033[0m"'.format(app_id)
+    helm_cmd = 'helm template --values {} {} > {}'.format(env_path.as_posix(), source_path.as_posix(), temp_all_in_one_path.as_posix())
+    execute_shell("&&".join([
+        echo_cmd,
+        helm_cmd,
+        "echo \n"
+    ]))
 
 
 def execute_shell(cmd: str):
