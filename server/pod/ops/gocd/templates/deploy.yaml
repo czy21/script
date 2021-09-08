@@ -1,0 +1,59 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gocd
+  namespace: '{{ .Values.namespace }}'
+  labels:
+    app: gocd
+spec:
+  selector:
+    app: gocd
+  type: NodePort
+  ports:
+  - name: '8153'
+    port: 8153
+    targetPort: 8153
+    nodePort: 8153
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gocd
+  namespace: '{{ .Values.namespace }}'
+spec:
+  selector:
+    matchLabels:
+      app: gocd
+  template:
+    metadata:
+      labels:
+        app: gocd
+    spec:
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: data-gocd
+      containers:
+      - name: gocd
+        image: gocd/gocd-server:v21.2.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8153
+        volumeMounts:
+        - name: data
+          subPath: data
+          mountPath: /godata/
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-gocd
+  namespace: '{{ .Values.namespace }}'
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 256Gi
+  storageClassName: managed-nfs-storage

@@ -1,0 +1,63 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nexus
+  namespace: '{{ .Values.namespace }}'
+spec:
+  selector:
+    app: nexus
+  type: NodePort
+  ports:
+  - name: '8081'
+    port: 8081
+    targetPort: 8081
+    nodePort: 8081
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nexus
+  namespace: '{{ .Values.namespace }}'
+  labels:
+    app: nexus
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: nexus
+  namespace: '{{ .Values.namespace }}'
+spec:
+  selector:
+    matchLabels:
+      app: nexus
+  serviceName: nexus
+  template:
+    metadata:
+      labels:
+        app: nexus
+    spec:
+      containers:
+      - name: nexus
+        image: sonatype/nexus3
+        resources:
+          limits:
+            memory: 2Gi
+        ports:
+        - containerPort: 8081
+        env:
+        - name: INSTALL4J_ADD_VM_PARAMS
+          value: -Xms500M -Xmx500M -XX:MaxDirectMemorySize=2g
+        volumeMounts:
+        - name: data
+          mountPath: /nexus-data/
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 256Gi
+      storageClassName: managed-nfs-storage
