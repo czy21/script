@@ -26,6 +26,6 @@ EOF
 sudo yum install -y kubelet-${k8s_version} kubeadm-1.21.1${k8s_version} kubectl-1.21.1${k8s_version} --disableexcludes=kubernetes
 sudo systemctl enable --now kubelet
 
-#sudo wget -O - https://get.helm.sh/helm-v3.6.0-linux-amd64.tar.gz | sudo tar -zxf - --strip-components 1 -C /usr/local/bin/ linux-amd64/helm
-#sudo chmod +x /usr/local/bin/helm
-#sudo ln -s /usr/local/bin/helm /usr/bin/helm
+sudo wget -O - https://get.helm.sh/helm-v3.6.3-linux-amd64.tar.gz | sudo tar -zxf - --strip-components 1 -C /usr/local/bin/ linux-amd64/helm
+sudo chmod +x /usr/local/bin/helm
+sudo ln -s /usr/local/bin/helm /usr/bin/helm
