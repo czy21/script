@@ -1,22 +1,23 @@
+---
 apiVersion: v1
 kind: Service
 metadata:
   name: backend-portal
-  namespace: erp
+  namespace: '{{ .Values.namespace }}'
 spec:
   selector:
     app: backend-portal
   type: ClusterIP
   ports:
-    - name: "8080"
-      port: 8080
-      targetPort: 8080
+  - name: '8080'
+    port: 8080
+    targetPort: 8080
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: backend-portal
-  namespace: erp
+  namespace: '{{ .Values.namespace }}'
   labels:
     app: backend-portal
 data:
@@ -35,13 +36,12 @@ data:
             prefixes: ${ENV_NAME}
             default-context: ${spring.application.name}
             enabled: true
-
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: backend-portal
-  namespace: erp
+  namespace: '{{ .Values.namespace }}'
 spec:
   strategy:
     type: Recreate
@@ -54,38 +54,38 @@ spec:
         app: backend-portal
     spec:
       volumes:
-        - name: conf
-          configMap:
-            name: backend-portal
-            items:
-              - key: "application.yml"
-                path: "application.yml"
+      - name: conf
+        configMap:
+          name: backend-portal
+          items:
+          - key: application.yml
+            path: application.yml
       containers:
-        - name: backend-portal
-          image: registry.cluster2.com/erp-backend-portal:dev-bruce
-          imagePullPolicy: Always
-          ports:
-            - containerPort: 8080
-          env:
-            - name: ENV_NAME
-              value: dev
-            - name: POD_NAME
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.name
-          volumeMounts:
-            - name: conf
-              mountPath: /home/app/config/
+      - name: backend-portal
+        image: registry.cluster2.com/erp-backend-portal:dev-bruce
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+        env:
+        - name: ENV_NAME
+          value: dev
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        volumeMounts:
+        - name: conf
+          mountPath: /home/app/config/
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: data-backend-portal
-  namespace: erp
+  namespace: '{{ .Values.namespace }}'
 spec:
   accessModes:
-    - ReadWriteMany
+  - ReadWriteMany
   resources:
     requests:
       storage: 256Gi
-  storageClassName: "managed-nfs-storage"
+  storageClassName: managed-nfs-storage

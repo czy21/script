@@ -529,7 +529,7 @@ data:
     # 150k passwords per second against a good box. This means that you should
     # use a very strong password otherwise it will be very easy to break.
     #
-    requirepass Czy.190815
+    requirepass {{ .Values.db.password }}
 
     # Command renaming.
     #

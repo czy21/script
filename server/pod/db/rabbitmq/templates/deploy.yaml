@@ -65,7 +65,7 @@ spec:
         - name: RABBITMQ_DEFAULT_USER
           value: root
         - name: RABBITMQ_DEFAULT_PASS
-          value: Czy.190815
+          value: '{{ .Values.db.password }}'
         volumeMounts:
         - name: conf
           mountPath: /etc/rabbitmq/

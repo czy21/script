@@ -39,13 +39,13 @@ spec:
         - containerPort: 3306
         env:
         - name: MYSQL_ROOT_PASSWORD
-          value: Czy.190815
+          value: {{ .Values.db.password }}
         - name: MYSQL_DATABASE
           value: nacos
         - name: MYSQL_USER
           value: nacos
         - name: MYSQL_PASSWORD
-          value: Czy.190815
+          value: {{ .Values.db.password }}
         volumeMounts:
         - name: data
           mountPath: /var/lib/mysql

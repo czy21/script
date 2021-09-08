@@ -79,7 +79,7 @@ spec:
         - containerPort: 7687
         env:
         - name: NEO4J_AUTH
-          value: neo4j/Czy.190815
+          value: neo4j/{{ .Values.db.password }}
         - name: NEO4J_dbms_memory_pagecache_size
           value: 2g
         volumeMounts:

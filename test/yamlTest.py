@@ -57,7 +57,8 @@ def split(root_path: str):
 
 
 if __name__ == '__main__':
-    split(Path(__file__).joinpath("../../server/pod/app").resolve().as_posix())
-    split(Path(__file__).joinpath("../../server/pod/db").resolve().as_posix())
-    split(Path(__file__).joinpath("../../server/pod/init").resolve().as_posix())
-    split(Path(__file__).joinpath("../../server/pod/ops").resolve().as_posix())
+    # split(Path(__file__).joinpath("../../server/pod/app").resolve().as_posix())
+    # split(Path(__file__).joinpath("../../server/pod/db").resolve().as_posix())
+    # split(Path(__file__).joinpath("../../server/pod/init").resolve().as_posix())
+    # split(Path(__file__).joinpath("../../server/pod/ops").resolve().as_posix())
+    split(Path(__file__).joinpath("../../server/pod/erp").resolve().as_posix())

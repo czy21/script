@@ -44,7 +44,7 @@ spec:
         - containerPort: 5432
         env:
         - name: POSTGRES_PASSWORD
-          value: Czy.190815
+          value: '{{ .Values.db.password }}'
         volumeMounts:
         - name: data
           mountPath: /var/lib/postgresql/data/
