@@ -1,27 +1,67 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+  namespace: db
+spec:
+  selector:
+    app: mysql
+  type: NodePort
+  ports:
+    - name: "3306"
+      port: 3306
+      targetPort: 3306
+      nodePort: 3306
+    - name: "9104"
+      port: 9104
+      targetPort: 9104
+      nodePort: 9104
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql
+  namespace: db
+  labels:
+    app: mysql
+data:
+  mysql.cnf: |
+    [mysqld]
+    skip-host-cache
+    skip-name-resolve
+    default-time-zone = '+8:00'
+    transaction-isolation = READ-COMMITTED
+    log-bin=mysql-bin
+    binlog-format=ROW
+    [client]
+    default-character-set=utf8mb4
+    [mysql]
+    default-character-set=utf8mb4
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ .Chart.Name }}
-  namespace: {{ .Values.namespace }}
+  name: mysql
+  namespace: db
 spec:
   selector:
     matchLabels:
-      app: {{ .Chart.Name }}
-  serviceName: {{ .Values.appName }}
+      app: mysql
+  serviceName: mysql
   template:
     metadata:
       labels:
-        app: {{ .Chart.Name }}
+        app: mysql
     spec:
       volumes:
         - name: conf
           configMap:
-            name: {{ .Chart.Name }}
+            name: mysql
             items:
               - key: "mysql.cnf"
                 path: "mysql.cnf"
       containers:
-        - name: {{ .Chart.Name }}
+        - name: mysql
           image: mysql:8.0
           ports:
             - containerPort: 3306
@@ -30,7 +70,7 @@ spec:
           ]
           env:
             - name: MYSQL_ROOT_PASSWORD
-              value: "{{ .Values.db.password }}"
+              value: "***REMOVED***"
           volumeMounts:
             - name: conf
               mountPath: /etc/mysql/conf.d/
@@ -42,7 +82,7 @@ spec:
             - containerPort: 9104
           env:
             - name: DATA_SOURCE_NAME
-              value: "root:{{ .Values.db.password }}@(127.0.0.1:3306)/"
+              value: "root:***REMOVED***@(127.0.0.1:3306)/"
   volumeClaimTemplates:
     - metadata:
         name: data
