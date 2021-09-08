@@ -14,16 +14,22 @@ def execute(app_tuples, env_path, func):
 
 
 def apply(app_id, app_name, source_path: Path, env_path: Path):
+    chart_path = source_path.joinpath("Chart.yaml")
     temp_all_in_one_path = source_path.joinpath("___temp/deploy.yaml")
     temp_all_in_one_path.parent.mkdir(parents=True, exist_ok=True)
     temp_all_in_one_path.touch()
     echo_cmd = 'echo -e "{}\033[32m deploy \033[0m"'.format(app_id)
-    helm_cmd = 'helm template --values {} {} --debug > {}'.format(env_path.as_posix(), source_path.as_posix(), temp_all_in_one_path.as_posix())
-    execute_shell("&&".join([
-        echo_cmd,
-        helm_cmd,
-        "echo \n"
-    ]))
+    if chart_path.exists():
+        helm_cmd = 'helm template --values {} {} --debug > {}'.format(env_path.as_posix(), source_path.as_posix(), temp_all_in_one_path.as_posix())
+        execute_shell("&&".join([
+            echo_cmd,
+            helm_cmd,
+            "echo \n"
+        ]))
+    else:
+        for t in source_path.glob("*.yaml"):
+            yaml = source_path.joinpath(t.name).as_posix()
+            execute_shell(".".join(['echo -e "{}\033[32m deploy => \033[0m {}"'.format(app_id, yaml), '&& kubectl apply --filename={}'.format(yaml)]))
 
 
 def execute_shell(cmd: str):
