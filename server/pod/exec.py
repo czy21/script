@@ -21,9 +21,11 @@ def apply(app_id, app_name, source_path: Path, env_path: Path):
     echo_cmd = 'echo -e "{}\033[32m deploy \033[0m"'.format(app_id)
     if chart_path.exists():
         helm_cmd = 'helm template --values {} {} --debug > {}'.format(env_path.as_posix(), source_path.as_posix(), temp_all_in_one_path.as_posix())
+        kube_cmd = '&& kubectl apply --filename={}'.format(temp_all_in_one_path)
         execute_shell("&&".join([
             echo_cmd,
             helm_cmd,
+            kube_cmd,
             "echo \n"
         ]))
     else:
