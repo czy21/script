@@ -1,47 +1,8 @@
-apiVersion: v1
-kind: Service
-metadata:
-  name: backend-gateway
-  namespace: erp
-spec:
-  selector:
-    app: gateway
-  type: ClusterIP
-  ports:
-    - name: "8080"
-      port: 8080
-      targetPort: 8080
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: backend-gateway
-  namespace: erp
-  labels:
-    app: gateway
-data:
-  application.yml: |
-    server:
-      port: 8080
-    spring:
-      application:
-        name: gateway
-      config:
-        import: consul:consul.cluster2.com:80
-      cloud:
-        consul:
-          config:
-            format: yaml
-            prefixes: ${ENV_NAME}
-            default-context: ${spring.application.name}
-            enabled: true
-
-
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: backend-gateway
+  name: {{ .Chart.Name }}
   namespace: erp
 spec:
   strategy:
@@ -57,13 +18,13 @@ spec:
       volumes:
         - name: conf
           configMap:
-            name: backend-gateway
+            name: {{ .Chart.Name }}
             items:
               - key: "application.yml"
                 path: "application.yml"
       containers:
-        - name: backend-gateway
-          image: registry.cluster2.com/erp-backend-gateway:dev-bruce
+        - name: {{ .Chart.Name }}
+          image: registry.cluster2.com/erp-{{ .Chart.Name }}:dev-bruce
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
@@ -81,7 +42,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: data-backend-gateway
+  name: data-{{ .Chart.Name }}
   namespace: erp
 spec:
   accessModes:

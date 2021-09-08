@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Chart.Name }}
+  namespace: erp
+  labels:
+    app: gateway
+data:
+  application.yml: |
+    server:
+      port: 8080
+    spring:
+      application:
+        name: gateway
+      config:
+        import: consul:consul.cluster2.com:80
+      cloud:
+        consul:
+          config:
+            format: yaml
+            prefixes: ${ENV_NAME}
+            default-context: ${spring.application.name}
+            enabled: true
