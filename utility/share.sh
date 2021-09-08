@@ -11,7 +11,7 @@ function upload_exec_py() {
   scp -r "${utility_dir}/share.py" $host:${name_path}
 
   ssh $host 'python3 -B $HOME/'${name_path}/'exec.py '$@';'
-  ssh $host 'rm -rf $HOME/'${name_path}';'
+  # ssh $host 'rm -rf $HOME/'${name_path}';'
 }
 
 function upload_exec_sh() {
