@@ -1,0 +1,132 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jenkins
+  namespace: '{{ .Values.namespace }}'
+  labels:
+    app: jenkins
+spec:
+  selector:
+    app: jenkins
+  type: NodePort
+  ports:
+  - name: '8080'
+    port: 8080
+    targetPort: 8080
+  - name: '5000'
+    port: 5000
+    targetPort: 5000
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jenkins
+  namespace: '{{ .Values.namespace }}'
+  labels:
+    app: jenkins
+data:
+  init.gradle: |
+    settingsEvaluated { settings ->
+        settings.pluginManagement {
+            resolutionStrategy {
+            }
+            repositories {
+                gradlePluginPortal()
+                maven {
+                    name "home"
+                    url "http://nexus.cluster2.com/repository/maven-public/"
+                    credentials {
+                        username "admin"
+                        password "***REMOVED***"
+                    }
+                }
+            }
+        }
+    }
+    allprojects {
+        apply plugin: 'maven-publish'
+        publishing {
+            repositories {
+                maven {
+                    name "home"
+                    url "http://nexus.cluster2.com/repository/maven-releases/"
+                    credentials {
+                        username "admin"
+                        password "***REMOVED***"
+                    }
+                }
+            }
+        }
+        repositories {
+            maven {
+                name "home"
+                url "http://nexus.cluster2.com/repository/maven-public/"
+                credentials {
+                    username "admin"
+                    password "***REMOVED***"
+                }
+            }
+        }
+    }
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: jenkins
+  namespace: '{{ .Values.namespace }}'
+spec:
+  selector:
+    matchLabels:
+      app: jenkins
+  serviceName: jenkins
+  template:
+    metadata:
+      labels:
+        app: jenkins
+    spec:
+      volumes:
+      - name: docker-sock
+        hostPath:
+          path: /var/run/docker.sock
+      - name: docker-cmd
+        hostPath:
+          path: /usr/bin/docker
+      - name: gradle-init
+        configMap:
+          name: jenkins
+          items:
+          - key: init.gradle
+            path: init.gradle
+      containers:
+      - name: jenkins
+        image: jenkins/jenkins:lts-jdk11
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+        - containerPort: 5000
+        resources:
+          limits:
+            memory: 2Gi
+        securityContext:
+          runAsUser: 0
+        volumeMounts:
+        - name: docker-sock
+          mountPath: /var/run/docker.sock
+        - name: docker-cmd
+          mountPath: /usr/bin/docker
+        - name: data
+          mountPath: /var/jenkins_home/
+        - name: gradle-init
+          mountPath: /var/jenkins_home/tools/gradle/init.d/init.gradle
+          subPath: init.gradle
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 256Gi
+      storageClassName: managed-nfs-storage

@@ -1,0 +1,36 @@
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: node-exporter
+  namespace: '{{ .Values.namespace }}'
+spec:
+  selector:
+    matchLabels:
+      app: node-exporter
+  template:
+    metadata:
+      labels:
+        app: node-exporter
+    spec:
+      tolerations:
+      - key: node-role.kubernetes.io/master
+        effect: NoSchedule
+      volumes:
+      - name: host
+        hostPath:
+          path: /
+      containers:
+      - name: node-exporter
+        image: quay.io/prometheus/node-exporter
+        args:
+        - --web.listen-address=0.0.0.0:9200
+        ports:
+        - containerPort: 9200
+          hostPort: 9200
+        volumeMounts:
+        - name: host
+          mountPath: /host
+          readOnly: true
+      hostNetwork: true
+      hostPID: true

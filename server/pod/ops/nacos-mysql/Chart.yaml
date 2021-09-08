@@ -1,0 +1,3 @@
+apiVersion: v2
+name: nacos-mysql
+version: 0.1.0

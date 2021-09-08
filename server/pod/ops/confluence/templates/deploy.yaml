@@ -1,0 +1,72 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: confluence
+  namespace: '{{ .Values.namespace }}'
+spec:
+  selector:
+    app: confluence
+  type: NodePort
+  ports:
+  - name: http
+    port: 8090
+    targetPort: 8090
+    nodePort: 8101
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: confluence
+  namespace: '{{ .Values.namespace }}'
+  labels:
+    app: confluence
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: confluence
+  namespace: '{{ .Values.namespace }}'
+spec:
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: confluence
+  template:
+    metadata:
+      labels:
+        app: confluence
+    spec:
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: data-confluence
+      containers:
+      - name: confluence
+        image: registry.cluster2.com/confluence:1.0
+        resources:
+          limits:
+            memory: 2Gi
+        ports:
+        - name: http
+          containerPort: 8090
+        env:
+        - name: TZ
+          value: Asia/Shanghai
+        volumeMounts:
+        - name: data
+          mountPath: /var/atlassian/confluence/
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-confluence
+  namespace: '{{ .Values.namespace }}'
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 256Gi
+  storageClassName: managed-nfs-storage
