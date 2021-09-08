@@ -5,7 +5,7 @@ metadata:
   namespace: {{ .Values.namespace }}
 spec:
   selector:
-    app: {{ .Values.appName }}
+    app: {{ .Chart.Name }}
   type: NodePort
   ports:
     - name: "3306"

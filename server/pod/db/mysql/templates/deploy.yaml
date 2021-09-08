@@ -6,12 +6,12 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: {{ .Values.appName }}
+      app: {{ .Chart.Name }}
   serviceName: {{ .Values.appName }}
   template:
     metadata:
       labels:
-        app: {{ .Values.appName }}
+        app: {{ .Chart.Name }}
     spec:
       volumes:
         - name: conf
