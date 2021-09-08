@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Chart.Name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.appName }}
+data:
+  mysql.cnf: |
+    [mysqld]
+    skip-host-cache
+    skip-name-resolve
+    default-time-zone = '+8:00'
+    transaction-isolation = READ-COMMITTED
+    log-bin=mysql-bin
+    binlog-format=ROW
+    [client]
+    default-character-set=utf8mb4
+    [mysql]
+    default-character-set=utf8mb4

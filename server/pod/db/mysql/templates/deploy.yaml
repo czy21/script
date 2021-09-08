@@ -1,67 +1,27 @@
-apiVersion: v1
-kind: Service
-metadata:
-  name: mysql
-  namespace: db
-spec:
-  selector:
-    app: mysql
-  type: NodePort
-  ports:
-    - name: "3306"
-      port: 3306
-      targetPort: 3306
-      nodePort: 3306
-    - name: "9104"
-      port: 9104
-      targetPort: 9104
-      nodePort: 9104
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: mysql
-  namespace: db
-  labels:
-    app: mysql
-data:
-  mysql.cnf: |
-    [mysqld]
-    skip-host-cache
-    skip-name-resolve
-    default-time-zone = '+8:00'
-    transaction-isolation = READ-COMMITTED
-    log-bin=mysql-bin
-    binlog-format=ROW
-    [client]
-    default-character-set=utf8mb4
-    [mysql]
-    default-character-set=utf8mb4
----
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: mysql
-  namespace: db
+  name: {{ .Chart.Name }}
+  namespace: {{ .Values.namespace }}
 spec:
   selector:
     matchLabels:
-      app: mysql
-  serviceName: mysql
+      app: {{ .Values.appName }}
+  serviceName: {{ .Values.appName }}
   template:
     metadata:
       labels:
-        app: mysql
+        app: {{ .Values.appName }}
     spec:
       volumes:
         - name: conf
           configMap:
-            name: mysql
+            name: {{ .Chart.Name }}
             items:
               - key: "mysql.cnf"
                 path: "mysql.cnf"
       containers:
-        - name: mysql
+        - name: {{ .Chart.Name }}
           image: mysql:8.0
           ports:
             - containerPort: 3306
@@ -70,7 +30,7 @@ spec:
           ]
           env:
             - name: MYSQL_ROOT_PASSWORD
-              value: "Czy.190815"
+              value: "{{ .Values.db.password }}"
           volumeMounts:
             - name: conf
               mountPath: /etc/mysql/conf.d/
@@ -82,7 +42,7 @@ spec:
             - containerPort: 9104
           env:
             - name: DATA_SOURCE_NAME
-              value: "root:Czy.190815@(127.0.0.1:3306)/"
+              value: "root:{{ .Values.db.password }}@(127.0.0.1:3306)/"
   volumeClaimTemplates:
     - metadata:
         name: data

@@ -4,7 +4,7 @@ metadata:
   name: {{ .Chart.Name }}
   namespace: erp
   labels:
-    app: gateway
+    {{ .Chart.Name }}
 data:
   application.yml: |
     server:

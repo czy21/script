@@ -5,7 +5,7 @@ metadata:
   namespace: erp
 spec:
   selector:
-    app: gateway
+    {{ .Chart.Name }}
   type: ClusterIP
   ports:
     - name: "8080"
