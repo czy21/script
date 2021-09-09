@@ -1,19 +1,32 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Chart.Name }}
+  namespace: '{{ .Values.namespace }}'
+spec:
+  selector:
+    app: {{ .Chart.Name }}
+  type: ClusterIP
+  ports:
+    - name: "8080"
+      port: 8080
+      targetPort: 8080
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Chart.Name }}
-  namespace: erp
+  namespace: '{{ .Values.namespace }}'
 spec:
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      {{ .Chart.Name }}
+       app: {{ .Chart.Name }}
   template:
     metadata:
-      labels:
-        {{ .Chart.Name }}
+     labels:
+       app: {{ .Chart.Name }}
     spec:
       volumes:
         - name: conf
@@ -24,7 +37,7 @@ spec:
                 path: "application.yml"
       containers:
         - name: {{ .Chart.Name }}
-          image: registry.cluster2.com/erp-{{ .Chart.Name }}:dev-bruce
+          image: 'registry.cluster2.com/{{ .Values.namspace }}-{{ .Chart.Name }}:{{ .Values.imageTag }}'
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
@@ -42,8 +55,8 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: data-{{ .Chart.Name }}
-  namespace: erp
+  name: 'data-{{ .Chart.Name }}'
+  namespace: '{{ .Values.namespace }}'
 spec:
   accessModes:
     - ReadWriteMany

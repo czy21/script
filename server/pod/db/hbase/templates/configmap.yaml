@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hbase
+  namespace: '{{ .Values.namespace }}'
+  labels:
+    app: hbase
+data:
+  hbase-env.sh: |
+    export JAVA_HOME=/usr/local/openjdk-8
+    export HBASE_DISABLE_HADOOP_CLASSPATH_LOOKUP="true"
+    export LD_LIBRARY_PATH=${HADOOP_HOME}/lib/native:$LD_LIBRARY_PATH
+    export HBASE_HEAPSIZE=1G
+  hbase-site.xml: |
+    <?xml version="1.0"?>
+    <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+    <configuration>
+      <property>
+        <name>hbase.cluster.distributed</name>
+        <value>true</value>
+      </property>
+      <property>
+        <name>hbase.rootdir</name>
+        <value>hdfs://hadoop-master.big-data:9000/hbase</value>
+      </property>
+      <property>
+        <name>hbase.tmp.dir</name>
+        <value>/opt/hbase/tmp/</value>
+      </property>
+      <property>
+        <name>hbase.zookeeper.quorum</name>
+        <value>zk-cs.default.svc</value>
+      </property>
+      <property>
+          <name>hbase.regionserver.restart.on.zk.expire</name>
+          <value>true</value>
+      </property>
+      <property>
+        <name>hbase.unsafe.stream.capability.enforce</name>
+        <value>false</value>
+      </property>
+    </configuration>

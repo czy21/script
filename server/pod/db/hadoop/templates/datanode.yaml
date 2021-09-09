@@ -1,0 +1,73 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: hadoop-datanode
+  namespace: '{{ .Values.namespace }}'
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: hadoop-datanode
+  serviceName: hadoop-datanode
+  template:
+    metadata:
+      labels:
+        app: hadoop-datanode
+    spec:
+      volumes:
+      - name: hadoop-env
+        configMap:
+          name: hadoop
+          items:
+          - key: hadoop-env.sh
+            path: hadoop-env.sh
+      - name: core-site
+        configMap:
+          name: hadoop
+          items:
+          - key: core-site.xml
+            path: core-site.xml
+      - name: hdfs-site
+        configMap:
+          name: hadoop
+          items:
+          - key: hdfs-site.xml
+            path: hdfs-site.xml
+      containers:
+      - name: hadoop
+        image: registry.cluster2.com/hadoop
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 22
+        - containerPort: 9000
+        - containerPort: 9870
+        volumeMounts:
+        - name: hadoop-env
+          mountPath: /opt/hadoop/etc/hadoop/hadoop-env.sh
+          subPath: hadoop-env.sh
+        - name: core-site
+          mountPath: /opt/hadoop/etc/hadoop/core-site.xml
+          subPath: core-site.xml
+        - name: hdfs-site
+          mountPath: /opt/hadoop/etc/hadoop/hdfs-site.xml
+          subPath: hdfs-site.xml
+        - name: data
+          mountPath: /opt/hadoop/hdfs/
+          subPath: hdfs
+        - name: data
+          mountPath: /opt/hadoop/logs/
+          subPath: logs
+        env:
+        - name: HADOOP_NODE_TYPE
+          value: datanode
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 256Gi
+      storageClassName: managed-nfs-storage
