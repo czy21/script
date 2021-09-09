@@ -1,0 +1,87 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hbase-master
+  namespace: '{{ .Values.namespace }}'
+spec:
+  selector:
+    app: hbase-master
+  type: NodePort
+  ports:
+  - name: '16000'
+    port: 16000
+    targetPort: 16000
+    nodePort: 16000
+  - name: '16010'
+    port: 16010
+    targetPort: 16010
+    nodePort: 16010
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hbase-master
+  namespace: '{{ .Values.namespace }}'
+spec:
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: hbase-master
+  template:
+    metadata:
+      labels:
+        app: hbase-master
+    spec:
+      hostname: master
+      subdomain: hbase-master
+      volumes:
+      - name: hbase-env
+        configMap:
+          name: hbase
+          items:
+          - key: hbase-env.sh
+            path: hbase-env.sh
+      - name: hbase-site
+        configMap:
+          name: hbase
+          items:
+          - key: hbase-site.xml
+            path: hbase-site.xml
+      - name: hbase-data
+        persistentVolumeClaim:
+          claimName: data-hbase-master
+      containers:
+      - name: hbase-master
+        image: registry.cluster2.com/hbase
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 16000
+        - containerPort: 16010
+        volumeMounts:
+        - name: hbase-env
+          mountPath: /opt/hbase/conf/hbase-env.sh
+          subPath: hbase-env.sh
+        - name: hbase-site
+          mountPath: /opt/hbase/conf/hbase-site.xml
+          subPath: hbase-site.xml
+        - name: hbase-data
+          mountPath: /opt/hbase/logs/
+          subPath: logs
+        env:
+        - name: HBASE_NODE_TYPE
+          value: master
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-hbase-master
+  namespace: '{{ .Values.namespace }}'
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 256Gi
+  storageClassName: managed-nfs-storage

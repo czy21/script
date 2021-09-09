@@ -1,0 +1,97 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hadoop-namenode
+  namespace: '{{ .Values.namespace }}'
+spec:
+  selector:
+    app: hadoop-namenode
+  type: NodePort
+  ports:
+  - name: rpc
+    port: 9000
+    targetPort: 9000
+  - name: http
+    port: 9870
+    targetPort: 9870
+    nodePort: 9870
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hadoop-namenode
+  namespace: '{{ .Values.namespace }}'
+spec:
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: hadoop-namenode
+  template:
+    metadata:
+      labels:
+        app: hadoop-namenode
+    spec:
+      volumes:
+      - name: hadoop-env
+        configMap:
+          name: hadoop
+          items:
+          - key: hadoop-env.sh
+            path: hadoop-env.sh
+      - name: core-site
+        configMap:
+          name: hadoop
+          items:
+          - key: core-site.xml
+            path: core-site.xml
+      - name: hdfs-site
+        configMap:
+          name: hadoop
+          items:
+          - key: hdfs-site.xml
+            path: hdfs-site.xml
+      - name: hadoop-data
+        persistentVolumeClaim:
+          claimName: data-hadoop-namenode
+      containers:
+      - name: hadoop
+        image: registry.cluster2.com/hadoop
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 22
+        - containerPort: 9000
+        - containerPort: 9870
+        volumeMounts:
+        - name: hadoop-env
+          mountPath: /opt/hadoop/etc/hadoop/hadoop-env.sh
+          subPath: hadoop-env.sh
+        - name: core-site
+          mountPath: /opt/hadoop/etc/hadoop/core-site.xml
+          subPath: core-site.xml
+        - name: hdfs-site
+          mountPath: /opt/hadoop/etc/hadoop/hdfs-site.xml
+          subPath: hdfs-site.xml
+        - name: hadoop-data
+          mountPath: /opt/hadoop/hdfs/
+          subPath: hdfs
+        - name: hadoop-data
+          mountPath: /opt/hadoop/logs/
+          subPath: logs
+        env:
+        - name: HADOOP_NODE_TYPE
+          value: namenode
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-hadoop-namenode
+  namespace: '{{ .Values.namespace }}'
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 256Gi
+  storageClassName: managed-nfs-storage

@@ -2,11 +2,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: mysql
+  name: '{{ .Chart.Name }}'
   namespace: '{{ .Values.namespace }}'
 spec:
   selector:
-    app: mysql
+    app: '{{ .Chart.Name }}'
   type: NodePort
   ports:
   - name: '3306'
@@ -18,51 +18,30 @@ spec:
     targetPort: 9104
     nodePort: 9104
 ---
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: mysql
-  namespace: '{{ .Values.namespace }}'
-  labels:
-    app: mysql
-data:
-  mysql.cnf: |
-    [mysqld]
-    skip-host-cache
-    skip-name-resolve
-    default-time-zone = '+8:00'
-    transaction-isolation = READ-COMMITTED
-    log-bin=mysql-bin
-    binlog-format=ROW
-    [client]
-    default-character-set=utf8mb4
-    [mysql]
-    default-character-set=utf8mb4
----
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: mysql
+  name: '{{ .Chart.Name }}'
   namespace: '{{ .Values.namespace }}'
 spec:
   selector:
     matchLabels:
-      app: mysql
-  serviceName: mysql
+      app: '{{ .Chart.Name }}'
+  serviceName: '{{ .Chart.Name }}'
   template:
     metadata:
       labels:
-        app: mysql
+        app: '{{ .Chart.Name }}'
     spec:
       volumes:
       - name: conf
         configMap:
-          name: mysql
+          name: '{{ .Chart.Name }}'
           items:
           - key: mysql.cnf
             path: mysql.cnf
       containers:
-      - name: mysql
+      - name: '{{ .Chart.Name }}'
         image: mysql:8.0
         ports:
         - containerPort: 3306

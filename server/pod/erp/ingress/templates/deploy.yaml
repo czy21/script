@@ -5,7 +5,7 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/proxy-body-size: '0'
-  name: ingress
+  name: '{{ .Chart.Name }}'
   namespace: '{{ .Values.namespace }}'
 spec:
   rules:
@@ -20,4 +20,3 @@ spec:
             port:
               number: 80
 ---
-...
