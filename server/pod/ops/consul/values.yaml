@@ -1,1 +1,4 @@
-namespace: ops
+global:
+  name: consul-demo
+server:
+  replicas: 1
