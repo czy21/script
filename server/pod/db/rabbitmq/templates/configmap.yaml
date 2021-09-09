@@ -1,14 +1,32 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: '{{ .Chart.Name }}'
-  namespace: '{{ .Values.namespace }}'
-  labels:
-    app: rabbitmq
+  name: {{ .Chart.Name }}
+  namespace: {{ .Values.namespace }}
 data:
-  enabled_plugins: |
-    [rabbitmq_management,rabbitmq_prometheus].
-  rabbitmq.conf: |
-    loopback_users.guest = false
-    listeners.tcp.default = 5672
-    management.tcp.port = 15672
+  definitions.json: |-
+    {
+      "users": [
+        {
+          "name": "admin",
+          "password_hash": "Vq0YWqM3ZwlrDAjnArH/PjSVRGI5s++NcLIijpvwC/RR/wJW",
+          "hashing_algorithm": "rabbit_password_hashing_sha256",
+          "tags": "administrator",
+          "limits": {}
+        }
+      ],
+      "vhosts": [
+        {
+          "name": "/"
+        }
+      ],
+      "permissions": [
+        {
+          "user": "admin",
+          "vhost": "/",
+          "configure": ".*",
+          "write": ".*",
+          "read": ".*"
+        }
+      ]
+    }
