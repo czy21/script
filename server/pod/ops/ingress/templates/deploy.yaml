@@ -56,6 +56,6 @@ spec:
         path: /
         backend:
           service:
-            name: consul
+            name: consul-ui
             port:
-              number: 8500
+              number: 80

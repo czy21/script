@@ -1,4 +1,5 @@
 global:
-  name: consul-demo
+  name: consul
 server:
-  replicas: 1
+  affinity: null
+  replicas: 2
