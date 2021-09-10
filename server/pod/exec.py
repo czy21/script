@@ -31,13 +31,9 @@ def apply(app_id: str, app_name: str, source_path: Path, **kwargs):
     cmd_func = lambda x: 'bash -xc \'{}\''.format(x)
 
     cmd = [echo_cmd]
-    if chart_path.exists():
-        helm_cmd = 'helm template {} --values {} --debug > {}'.format(source_path.as_posix(), env_path.as_posix(), temp_all_in_one_path.as_posix())
-        cmd.append(helm_cmd)
-        cmd.append(kube_cmd)
-    elif manual_path.exists():
-        cmd.append(manual_path.as_posix())
-        cmd.append(kube_cmd)
+    helm_cmd = 'helm template {} --values {} --debug > {}'.format(source_path.as_posix(), env_path.as_posix(), temp_all_in_one_path.as_posix())
+    cmd.append(helm_cmd)
+    # cmd.append(kube_cmd)
     execute_shell(cmd_func("&&".join(cmd)))
 
 
