@@ -4,10 +4,15 @@ kind: Service
 metadata:
   name: {{ .Chart.Name }}
   namespace: '{{ .Release.Namespace }}'
+  labels:
+    app: {{ .Chart.Name }}
 spec:
   selector:
     app: {{ .Chart.Name }}
   ports:
+  - name: '8080'
+    port: 8080
+    targetPort: 8080
   - name: '5000'
     port: 5000
     targetPort: 5000
