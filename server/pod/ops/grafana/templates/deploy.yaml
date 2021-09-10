@@ -1,65 +1,23 @@
 ---
-apiVersion: v1
-kind: Service
-metadata:
-  name: grafana
-  namespace: '{{ .Release.Namespace }}'
-spec:
-  selector:
-    app: grafana
-  type: ClusterIP
-  ports:
-  - name: '3000'
-    port: 3000
-    targetPort: 3000
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: grafana
-  namespace: '{{ .Release.Namespace }}'
-  labels:
-    app: grafana
-data:
-  grafana.ini: ''
-  datasource.yaml: |
-    apiVersion: 1
-    datasources:
-    - name: Prometheus
-      type: prometheus
-      access: proxy
-      url: http://prometheus.ops.svc:9090
-  dashboard.yaml: |
-    apiVersion: 1
-    providers:
-    - name: '0'
-      orgId: 1
-      folder: ''
-      type: file
-      editable: true
-      updateIntervalSeconds: 10
-      allowUiUpdates: false
-      options:
-        path: /etc/grafana/provisioning/dashboards/definition/
----
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
-  name: grafana
+  name: {{ .Chart.Name }}
   namespace: '{{ .Release.Namespace }}'
 spec:
   selector:
     matchLabels:
-      app: grafana
+      app: {{ .Chart.Name }}
+  serviceName: {{ .Chart.Name }}
   template:
     metadata:
       labels:
-        app: grafana
+        app: {{ .Chart.Name }}
     spec:
       volumes:
       - name: conf
         configMap:
-          name: grafana
+          name: {{ .Chart.Name }}
           items:
           - key: grafana.ini
             path: grafana.ini
@@ -67,11 +25,8 @@ spec:
             path: provisioning/datasources/datasource.yaml
           - key: dashboard.yaml
             path: provisioning/dashboards/dashboard.yaml
-      - name: data
-        persistentVolumeClaim:
-          claimName: data-grafana
       containers:
-      - name: grafana
+      - name: {{ .Chart.Name }}
         image: grafana/grafana
         ports:
         - containerPort: 3000
@@ -80,16 +35,13 @@ spec:
           mountPath: /etc/grafana/
         - name: data
           mountPath: /var/lib/grafana/
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: data-grafana
-  namespace: '{{ .Release.Namespace }}'
-spec:
-  accessModes:
-  - ReadWriteOnce
-  resources:
-    requests:
-      storage: 256Gi
-  storageClassName: managed-nfs-storage
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 256Gi
+      storageClassName: managed-nfs-storage
