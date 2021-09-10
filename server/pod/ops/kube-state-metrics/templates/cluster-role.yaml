@@ -2,9 +2,9 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   labels:
-    app.kubernetes.io/name: kube-state-metrics
+    app.kubernetes.io/name: {{ .Chart.Name }}
     app.kubernetes.io/version: 2.1.0
-  name: kube-state-metrics
+  name: {{ .Chart.Name }}
   namespace: {{ .Release.Namespace }}
 rules:
 - apiGroups:

@@ -21,7 +21,6 @@ def get_kube_cmd(action: str, yaml_path: str):
 def apply(app_id: str, app_name: str, source_path: Path, **kwargs):
     args = kwargs["args"]
     kubectl_action = 'delete' if args.d else 'apply'
-    values_yaml = ",".join([source_path.joinpath("values.yaml").as_posix(), env_path.as_posix()])
 
     temp_all_in_one_path = source_path.joinpath("___temp/deploy.yaml")
     temp_all_in_one_path.parent.mkdir(parents=True, exist_ok=True)
@@ -34,7 +33,7 @@ def apply(app_id: str, app_name: str, source_path: Path, **kwargs):
     helm_dep_update_cmd = 'helm dep up {}'.format(source_path.as_posix())
     helm_template_cmd = 'helm template {} --namespace {} --values {} --debug > {}'.format(source_path.as_posix(),
                                                                                           args.n,
-                                                                                          values_yaml,
+                                                                                          env_path.as_posix(),
                                                                                           temp_all_in_one_path.as_posix())
     cmd.append(helm_dep_update_cmd)
     cmd.append(helm_template_cmd)
