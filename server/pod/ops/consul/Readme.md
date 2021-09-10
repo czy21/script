@@ -1,5 +1,7 @@
 #
 ```shell
-helm repo add hashicorp https://helm.releases.hashicorp.com
-helm install consul hashicorp/consul -f values.yaml
+# backup
+consul kv export > bak.json
+# restore
+cat bak.json | consul kv import -
 ```
