@@ -5,4 +5,4 @@ version: 0.1.0
 dependencies:
   - name: consul
     version: 0.33.0
-    repository: "@hashicorp"
+    repository: "https://helm.releases.hashicorp.com"
