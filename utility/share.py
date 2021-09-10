@@ -27,15 +27,15 @@ def select_one_option():
     one_option = input("please select one option(example:1) ").strip()
 
     if one_option == '':
-        return []
+        sys.exit()
 
-    elif not one_option.isnumeric():
+    if not one_option.isnumeric():
         print("\ninvalid option")
         sys.exit()
 
     one_option = int(one_option)
 
-    if not one_option in [i for i, p in enumerate(list_dir, start=1)]:
+    if one_option not in [i for i, p in enumerate(list_dir, start=1)]:
         print(" ".join(["\n", one_option, "not exist"]))
         sys.exit()
     return list_dir[one_option - 1]

@@ -3,7 +3,7 @@ kind: Service
 metadata:
   labels:
     app.kubernetes.io/name: {{ .Chart.Name }}
-    app.kubernetes.io/version: 2.1.0
+    app.kubernetes.io/version: {{ .Values.version }}
   name: {{ .Chart.Name }}
   namespace: {{ .Release.Namespace }}
 spec:
@@ -17,3 +17,12 @@ spec:
     targetPort: telemetry
   selector:
     app.kubernetes.io/name: {{ .Chart.Name }}
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/name: {{ .Chart.Name }}
+    app.kubernetes.io/version: {{ .Values.version }}
+  name: {{ .Chart.Name }}
+  namespace: {{ .Release.Namespace }}
