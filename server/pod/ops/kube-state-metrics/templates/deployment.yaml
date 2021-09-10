@@ -4,7 +4,7 @@ metadata:
   labels:
     app.kubernetes.io/name: kube-state-metrics
     app.kubernetes.io/version: 2.1.0
-  name: kube-state-metrics
+  name: {{ .Chart.Name }}
   namespace: {{ .Release.Namespace }}
 spec:
   replicas: 1
@@ -25,7 +25,7 @@ spec:
             port: 8080
           initialDelaySeconds: 5
           timeoutSeconds: 5
-        name: kube-state-metrics
+        name: {{ .Chart.Name }}
         ports:
         - containerPort: 8080
           name: http-metrics
