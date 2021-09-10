@@ -3,7 +3,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: prometheus
-  namespace: '{{ .Values.namespace }}'
+  namespace: '{{ .Release.Namespace }}'
 spec:
   selector:
     app: prometheus
@@ -18,7 +18,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: prometheus
-  namespace: '{{ .Values.namespace }}'
+  namespace: '{{ .Release.Namespace }}'
   labels:
     app: prometheus
 data:
@@ -120,7 +120,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: prometheus
-  namespace: '{{ .Values.namespace }}'
+  namespace: '{{ .Release.Namespace }}'
 spec:
   strategy:
     type: Recreate
@@ -164,7 +164,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: data-prometheus
-  namespace: '{{ .Values.namespace }}'
+  namespace: '{{ .Release.Namespace }}'
 spec:
   accessModes:
   - ReadWriteOnce

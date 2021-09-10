@@ -1,5 +1,8 @@
-global:
-  name: consul
-server:
-  affinity: null
-  replicas: 2
+
+consul:
+  global:
+    name: consul
+  server:
+    affinity: null
+    replicas: 2
+

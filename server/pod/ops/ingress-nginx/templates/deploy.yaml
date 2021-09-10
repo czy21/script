@@ -18,7 +18,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/component: controller
   name: ingress-nginx
-  namespace: '{{ .Values.namespace }}'
+  namespace: '{{ .Release.Namespace }}'
 automountServiceAccountToken: true
 ---
 apiVersion: v1
@@ -32,7 +32,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/component: controller
   name: ingress-nginx-controller
-  namespace: '{{ .Values.namespace }}'
+  namespace: '{{ .Release.Namespace }}'
 data:
   ssl-redirect: 'false'
   hsts: 'false'
@@ -135,7 +135,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/component: controller
   name: ingress-nginx
-  namespace: '{{ .Values.namespace }}'
+  namespace: '{{ .Release.Namespace }}'
 rules:
 - apiGroups:
   - ''
@@ -220,7 +220,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/component: controller
   name: ingress-nginx
-  namespace: '{{ .Values.namespace }}'
+  namespace: '{{ .Release.Namespace }}'
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -241,7 +241,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/component: controller
   name: ingress-nginx-controller-admission
-  namespace: '{{ .Values.namespace }}'
+  namespace: '{{ .Release.Namespace }}'
 spec:
   type: ClusterIP
   ports:
@@ -265,7 +265,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/component: controller
   name: ingress-nginx-controller
-  namespace: '{{ .Values.namespace }}'
+  namespace: '{{ .Release.Namespace }}'
 spec:
   type: NodePort
   ports:
@@ -295,7 +295,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/component: controller
   name: ingress-nginx-controller
-  namespace: '{{ .Values.namespace }}'
+  namespace: '{{ .Release.Namespace }}'
 spec:
   selector:
     matchLabels:
@@ -434,7 +434,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: ingress-nginx-admission
-  namespace: '{{ .Values.namespace }}'
+  namespace: '{{ .Release.Namespace }}'
   annotations:
     helm.sh/hook: pre-install,pre-upgrade,post-install,post-upgrade
     helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
@@ -496,7 +496,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: ingress-nginx-admission
-  namespace: '{{ .Values.namespace }}'
+  namespace: '{{ .Release.Namespace }}'
   annotations:
     helm.sh/hook: pre-install,pre-upgrade,post-install,post-upgrade
     helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
@@ -520,7 +520,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: ingress-nginx-admission
-  namespace: '{{ .Values.namespace }}'
+  namespace: '{{ .Release.Namespace }}'
   annotations:
     helm.sh/hook: pre-install,pre-upgrade,post-install,post-upgrade
     helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
@@ -544,7 +544,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: ingress-nginx-admission-create
-  namespace: '{{ .Values.namespace }}'
+  namespace: '{{ .Release.Namespace }}'
   annotations:
     helm.sh/hook: pre-install,pre-upgrade
     helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
@@ -593,7 +593,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: ingress-nginx-admission-patch
-  namespace: '{{ .Values.namespace }}'
+  namespace: '{{ .Release.Namespace }}'
   annotations:
     helm.sh/hook: post-install,post-upgrade
     helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded

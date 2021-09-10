@@ -3,6 +3,6 @@ name: consul
 version: 0.1.0
 
 dependencies:
-  - name: hashicorp/consul
+  - name: consul
     version: 0.33.0
-    repository: https://helm.releases.hashicorp.com
+    repository: "@hashicorp"

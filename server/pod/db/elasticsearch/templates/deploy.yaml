@@ -3,7 +3,7 @@ kind: Secret
 apiVersion: v1
 metadata:
   name: es-filerealm-secret
-  namespace: '{{ .Values.namespace }}'
+  namespace: '{{ .Release.Namespace }}'
 stringData:
   users: admin:$2a$10$l6t6TdL1DdqidcyqqATuvOnKT9D0.c7M1BMbd0pPVaazyn4.qZaAa
   users_roles: superuser:admin
@@ -12,7 +12,7 @@ apiVersion: elasticsearch.k8s.elastic.co/v1
 kind: Elasticsearch
 metadata:
   name: cluster
-  namespace: '{{ .Values.namespace }}'
+  namespace: '{{ .Release.Namespace }}'
 spec:
   version: 7.14.0
   auth:
@@ -51,7 +51,7 @@ apiVersion: kibana.k8s.elastic.co/v1
 kind: Kibana
 metadata:
   name: cluster
-  namespace: '{{ .Values.namespace }}'
+  namespace: '{{ .Release.Namespace }}'
 spec:
   version: 7.14.0
   count: 1
