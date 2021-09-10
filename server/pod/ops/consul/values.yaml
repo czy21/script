@@ -1,8 +1,6 @@
-
 consul:
   global:
     name: consul
   server:
     affinity: null
     replicas: 2
-
