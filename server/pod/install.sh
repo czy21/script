@@ -1,6 +1,8 @@
 #!/bin/bash
 
 # bash install.sh -h user@host
+# -n string namespace scope for this request
+# -d        kubectl delete
 
 while getopts ":h" opt
 do
