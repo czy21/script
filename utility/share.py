@@ -5,7 +5,7 @@ from pathlib import Path
 
 
 def get_install_tuple(join_path):
-    app_paths = [p for p in Path(__file__).parent.joinpath(join_path).iterdir() if p.is_dir()]
+    app_paths = [p for p in sorted(Path(__file__).parent.joinpath(join_path).iterdir()) if p.is_dir()]
     # group by
     list_str = [list(t) for t in zip_longest(*[iter([".".join([str(i), p.name]) for i, p in enumerate(app_paths, start=1)])] * 8, fillvalue='')]
     # get every column max length
@@ -17,7 +17,7 @@ def get_install_tuple(join_path):
 
 
 def select_one_option():
-    list_dir = [p for p in Path(__file__).parent.iterdir() if p.is_dir()]
+    list_dir = [p for p in sorted(Path(__file__).parent.iterdir()) if p.is_dir()]
 
     print("\n==========")
 
