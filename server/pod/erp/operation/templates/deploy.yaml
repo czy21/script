@@ -3,7 +3,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: '{{ .Chart.Name }}'
-  namespace: '{{ .Values.namespace }}'
+  namespace: '{{ .Release.Namespace }}'
 spec:
   selector:
     app: {{ .Chart.Name }}
@@ -17,7 +17,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: '{{ .Chart.Name }}'
-  namespace: '{{ .Values.namespace }}'
+  namespace: '{{ .Release.Namespace }}'
   labels:
     app: {{ .Chart.Name }}
 data:
@@ -105,7 +105,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: '{{ .Chart.Name }}'
-  namespace: '{{ .Values.namespace }}'
+  namespace: '{{ .Release.Namespace }}'
 spec:
   strategy:
     type: Recreate
@@ -135,7 +135,7 @@ spec:
           claimName: data-{{ .Chart.Name }}
       containers:
       - name: '{{ .Chart.Name }}'
-        image: 'registry.cluster2.com/{{ .Values.namspace }}-{{ .Chart.Name }}:{{ .Values.imageTag }}'
+        image: 'registry.cluster2.com/{{ .Release.Namespace }}-{{ .Chart.Name }}:{{ .Values.imageTag }}'
         imagePullPolicy: Always
         ports:
         - containerPort: 80
@@ -154,7 +154,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: data-{{ .Chart.Name }}
-  namespace: '{{ .Values.namespace }}'
+  namespace: '{{ .Release.Namespace }}'
 spec:
   accessModes:
   - ReadWriteMany

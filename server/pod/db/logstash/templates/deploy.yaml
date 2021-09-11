@@ -224,7 +224,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: logstash
-  namespace: '{{ .Values.namespace }}'
+  namespace: '{{ .Release.Namespace }}'
 spec:
   strategy:
     type: Recreate

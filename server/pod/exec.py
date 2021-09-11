@@ -37,7 +37,7 @@ def apply(app_id: str, app_name: str, source_path: Path, **kwargs):
                                                                                           temp_all_in_one_path.as_posix())
     cmd.append(helm_dep_update_cmd)
     cmd.append(helm_template_cmd)
-    # cmd.append(kube_cmd)
+    cmd.append(kube_cmd)
     execute_shell(cmd_func("&&".join(cmd)))
 
 
