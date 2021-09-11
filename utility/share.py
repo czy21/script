@@ -6,7 +6,7 @@ from itertools import zip_longest
 from pathlib import Path
 
 
-def dfs_dir(target_path: Path, deep=1) -> list:
+def dfs_dir(target_path: Path, deep) -> list:
     ret = []
     for p in sorted(target_path.iterdir()):
         if p.is_dir():
@@ -15,8 +15,8 @@ def dfs_dir(target_path: Path, deep=1) -> list:
     return ret
 
 
-def get_install_tuple(join_path):
-    app_paths = [p for p in sorted(Path(__file__).parent.joinpath(join_path).iterdir()) if p.is_dir()]
+def get_install_tuple(root_path: Path):
+    app_paths = [p for p in sorted(root_path.iterdir()) if p.is_dir()]
     # group by
     list_str = [list(t) for t in zip_longest(*[iter([".".join([str(i), p.name]) for i, p in enumerate(app_paths, start=1)])] * 8, fillvalue='')]
     # get every column max length
@@ -27,30 +27,32 @@ def get_install_tuple(join_path):
     return [(int(t), app_paths.__getitem__(int(t) - 1)) for t in app_options if t in [str(i) for i, p in enumerate(app_paths, start=1)]]
 
 
-def select_one_option():
-    p = dfs_dir(Path(__file__).parent)
-    for l in p:
-        print(l)
-    # print(p)
-    # list_dir = [p for p in sorted(Path(__file__).parent.iterdir()) if p.is_dir()]
+def select_one_option(deep):
+    deep_index = 1
+    flat_dirs = dfs_dir(Path(__file__).parent, deep_index)
 
-    # print("\n==========")
-    #
-    # for i, p in enumerate(list_dir, start=1):
-    #     print(" ".join([str(i), p.name]))
-    #
-    # one_option = input("please select one option(example:1) ").strip()
-    #
-    # if one_option == '':
-    #     sys.exit()
-    #
-    # if not one_option.isnumeric():
-    #     print("\ninvalid option")
-    #     sys.exit()
-    #
-    # one_option = int(one_option)
-    #
-    # if one_option not in [i for i, p in enumerate(list_dir, start=1)]:
-    #     print(" ".join(["\n", one_option, "not exist"]))
-    #     sys.exit()
-    return ""
+    path = None
+
+    while deep > deep_index:
+        o = []
+        for t in flat_dirs:
+            if deep_index == t["deep"]:
+                if path is None:
+                    o.append(t["path"])
+                else:
+                    if str(t["path"].as_posix()).startswith(path.as_posix()):
+                        o.append(t["path"])
+        for i, p in enumerate(o, start=1):
+            print(" ".join([str(i), p.name]))
+        one_option = input("please select one option(example:1) ").strip()
+        if one_option == '':
+            sys.exit()
+        if not one_option.isnumeric():
+            print("\ninvalid option")
+            sys.exit()
+        path = o[int(one_option) - 1]
+        deep_index = deep_index + 1
+    return {
+        "namespace": path.name,
+        "list": get_install_tuple(path)
+    }
