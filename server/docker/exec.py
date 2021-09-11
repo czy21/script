@@ -18,6 +18,7 @@ def execute(app_tuples, func, **kwargs):
 def apply(app_id: str, app_name: str, source_path: Path, **kwargs):
     args = kwargs["args"]
     env = kwargs["env"]
+    env_file = kwargs["env_file"]
     source_conf_path = Path(source_path).joinpath("conf")
     source_compose_file = Path(source_path).joinpath("docker-compose.yml")
 
@@ -91,6 +92,6 @@ if __name__ == '__main__':
     selected_option = share.select_option(int(args.t))
     parser.add_argument('-n', default=selected_option["namespace"])
     args = parser.parse_args()
-    execute(selected_option["list"], apply, env=env, args=args)
+    execute(selected_option["list"], apply, env=env, env_file=env_file, args=args)
     if args.p:
         execute_shell("docker image prune --force --all")

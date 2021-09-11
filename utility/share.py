@@ -48,10 +48,11 @@ def select_option(deep):
         if not one_option.isnumeric():
             print("\ninvalid option")
             sys.exit()
+        one_option = int(one_option)
         if one_option not in [i for i, p in enumerate(o, start=1)]:
             print(" ".join(["\n", one_option, "not exist"]))
             sys.exit()
-        path = o[int(one_option) - 1]
+        path = o[one_option - 1]
         deep_index = deep_index + 1
     return {
         "namespace": path.name,
