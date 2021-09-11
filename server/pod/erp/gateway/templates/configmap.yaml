@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ .Chart.Name }}
-  namespace: {{ .Values.namspace }}
+  namespace: {{ .Release.Namespace }}
   labels:
     app: {{ .Chart.Name }}
 data:
