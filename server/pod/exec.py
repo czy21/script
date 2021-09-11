@@ -37,7 +37,7 @@ def apply(app_id: str, app_name: str, source_path: Path, **kwargs):
                                                                                           temp_all_in_one_path.as_posix())
     cmd.append(helm_dep_update_cmd)
     cmd.append(helm_template_cmd)
-    cmd.append(kube_cmd)
+    # cmd.append(kube_cmd)
     execute_shell(cmd_func("&&".join(cmd)))
 
 
@@ -55,11 +55,11 @@ def execute_shell(cmd: str):
 
 if __name__ == '__main__':
     env_path = Path(__file__).parent.joinpath("env.yaml")
-    selected_init_option = share.select_one_option()
     parser = argparse.ArgumentParser()
     parser.add_argument('-d', action="store_true")
-    parser.add_argument('-n', default=Path(selected_init_option).name)
+    parser.add_argument("-t", default=2)
     args = parser.parse_args()
-    if selected_init_option:
-        selected_init_install = share.get_install_tuple(Path(selected_init_option).name)
-        execute(selected_init_install, apply, env_path=env_path, args=args)
+    selected_init_option = share.select_one_option(int(args.t))
+    parser.add_argument('-n', default=selected_init_option["namespace"])
+    args = parser.parse_args()
+    execute(selected_init_option["list"], apply, env_path=env_path, args=args)
