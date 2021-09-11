@@ -3670,7 +3670,3 @@ spec:
   selector:
     matchLabels:
       k8s-app: calico-kube-controllers
----
----
----
-...
