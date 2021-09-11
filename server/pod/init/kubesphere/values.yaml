@@ -1,0 +1,12 @@
+es:
+  usename: admin
+  password: elasticsearch
+  url: es.cluster2.com
+  port: 80
+  elkPrefix: logstash-ops
+
+authentication:
+  jwtSecret: ""
+
+multicluster:
+  clusterRole: none # host | member | none
