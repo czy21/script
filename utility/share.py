@@ -1,6 +1,4 @@
 #!/usr/bin/env python3
-import os
-import re
 import sys
 from itertools import zip_longest
 from pathlib import Path
@@ -27,7 +25,7 @@ def get_install_tuple(root_path: Path):
     return [(int(t), app_paths.__getitem__(int(t) - 1)) for t in app_options if t in [str(i) for i, p in enumerate(app_paths, start=1)]]
 
 
-def select_one_option(deep):
+def select_option(deep):
     deep_index = 1
     flat_dirs = dfs_dir(Path(__file__).parent, deep_index)
 
@@ -49,6 +47,9 @@ def select_one_option(deep):
             sys.exit()
         if not one_option.isnumeric():
             print("\ninvalid option")
+            sys.exit()
+        if one_option not in [i for i, p in enumerate(o, start=1)]:
+            print(" ".join(["\n", one_option, "not exist"]))
             sys.exit()
         path = o[int(one_option) - 1]
         deep_index = deep_index + 1
