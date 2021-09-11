@@ -44,7 +44,7 @@ def apply(app_id: str, app_name: str, source_path: Path, **kwargs):
 
         if source_compose_file.exists():
             execute_shell(" ".join(['echo -e "{}\033[32m start_compose => \033[0m ${}"'.format(app_id, source_compose_file.as_posix()),
-                                    '&& sudo /usr/local/bin/docker-compose --file {} --env-file {} up --detach --build'.format(source_compose_file.as_posix(), global_env_file)
+                                    '&& sudo /usr/local/bin/docker-compose --file {} --env-file {} up --detach --build'.format(source_compose_file.as_posix(), env_file)
                                     ]))
         else:
             execute_shell(" ".join(['echo -e "{}\033[32m build.sh not exist \033[0m"'.format(app_id)]))
@@ -73,25 +73,24 @@ def execute_shell(cmd: str):
 
 
 if __name__ == '__main__':
-    global_env_file = Path(__file__).parent.joinpath(".env.global").as_posix()
+    env_file = Path(__file__).parent.joinpath(".env.global").as_posix()
     parser = argparse.ArgumentParser()
     parser.add_argument('-i', action="store_true")
     parser.add_argument('-c', action="store_true")
     parser.add_argument('-b', action="store_true")
     parser.add_argument('-p', action="store_true")
     parser.add_argument("-t", default=2)
-    args = parser.parse_args()
-
-    with open(global_env_file, "r") as e:
-        global_env = dict((t.strip().split("=")[0], t.strip().split("=")[1]) for t in e)
-
-        for t in global_env:
-            global_env[t] = subprocess.getoutput(" ".join([
-                "source " + global_env_file,
+    with open(env_file, "r") as e:
+        env = dict((t.strip().split("=")[0], t.strip().split("=")[1]) for t in e)
+        for t in env:
+            env[t] = subprocess.getoutput(" ".join([
+                "source " + env_file,
                 "&& echo ${" + t + "}"
             ]))
+    args = parser.parse_args()
     selected_option = share.select_option(int(args.t))
-    execute(selected_option, apply, env=global_env, args=args)
-    action_func = lambda a: execute(selected_option, a, args=args)
+    parser.add_argument('-n', default=selected_option["namespace"])
+    args = parser.parse_args()
+    execute(selected_option["list"], apply, env=env, args=args)
     if args.p:
         execute_shell("docker image prune --force --all")
