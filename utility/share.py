@@ -1,7 +1,18 @@
 #!/usr/bin/env python3
+import os
+import re
 import sys
 from itertools import zip_longest
 from pathlib import Path
+
+
+def dfs_dir(target_path: Path, deep=1) -> list:
+    ret = []
+    for p in sorted(target_path.iterdir()):
+        if p.is_dir():
+            ret.append({"path": p, "deep": deep})
+            ret += dfs_dir(p, deep + 1)
+    return ret
 
 
 def get_install_tuple(join_path):
@@ -17,25 +28,29 @@ def get_install_tuple(join_path):
 
 
 def select_one_option():
-    list_dir = [p for p in sorted(Path(__file__).parent.iterdir()) if p.is_dir()]
+    p = dfs_dir(Path(__file__).parent)
+    for l in p:
+        print(l)
+    # print(p)
+    # list_dir = [p for p in sorted(Path(__file__).parent.iterdir()) if p.is_dir()]
 
-    print("\n==========")
-
-    for i, p in enumerate(list_dir, start=1):
-        print(" ".join([str(i), p.name]))
-
-    one_option = input("please select one option(example:1) ").strip()
-
-    if one_option == '':
-        sys.exit()
-
-    if not one_option.isnumeric():
-        print("\ninvalid option")
-        sys.exit()
-
-    one_option = int(one_option)
-
-    if one_option not in [i for i, p in enumerate(list_dir, start=1)]:
-        print(" ".join(["\n", one_option, "not exist"]))
-        sys.exit()
-    return list_dir[one_option - 1]
+    # print("\n==========")
+    #
+    # for i, p in enumerate(list_dir, start=1):
+    #     print(" ".join([str(i), p.name]))
+    #
+    # one_option = input("please select one option(example:1) ").strip()
+    #
+    # if one_option == '':
+    #     sys.exit()
+    #
+    # if not one_option.isnumeric():
+    #     print("\ninvalid option")
+    #     sys.exit()
+    #
+    # one_option = int(one_option)
+    #
+    # if one_option not in [i for i, p in enumerate(list_dir, start=1)]:
+    #     print(" ".join(["\n", one_option, "not exist"]))
+    #     sys.exit()
+    return ""
