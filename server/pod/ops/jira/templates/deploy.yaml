@@ -2,49 +2,42 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: jira
+  name: {{ .Chart.Name }}
   namespace: '{{ .Release.Namespace }}'
 spec:
   selector:
-    app: jira
-  type: NodePort
+    app: {{ .Chart.Name }}
   ports:
   - name: http
     port: 8080
     targetPort: 8080
-    nodePort: 8100
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: jira
+  name: {{ .Chart.Name }}
   namespace: '{{ .Release.Namespace }}'
   labels:
-    app: jira
+    app: {{ .Chart.Name }}
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
-  name: jira
+  name: {{ .Chart.Name }}
   namespace: '{{ .Release.Namespace }}'
 spec:
-  strategy:
-    type: Recreate
   selector:
     matchLabels:
-      app: jira
+      app: {{ .Chart.Name }}
+  serviceName: {{ .Chart.Name }}
   template:
     metadata:
       labels:
-        app: jira
+        app: {{ .Chart.Name }}
     spec:
-      volumes:
-      - name: data
-        persistentVolumeClaim:
-          claimName: data-jira
       containers:
-      - name: jira
-        image: registry.cluster2.com/jira:1.0
+      - name: {{ .Chart.Name }}
+        image: registry.cluster2.com/jira
         resources:
           limits:
             memory: 2Gi
@@ -57,16 +50,13 @@ spec:
         volumeMounts:
         - name: data
           mountPath: /var/atlassian/jira/
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: data-jira
-  namespace: '{{ .Release.Namespace }}'
-spec:
-  accessModes:
-  - ReadWriteOnce
-  resources:
-    requests:
-      storage: 256Gi
-  storageClassName: managed-nfs-storage
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 256Gi
+      storageClassName: managed-nfs-storage
