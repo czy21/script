@@ -1,0 +1,34 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Chart.Name }}
+  namespace: '{{ .Release.Namespace }}'
+  labels:
+    app: {{ .Chart.Name }}
+data:
+  dbconfig.xml: |
+    <jira-database-config>
+      <name>defaultDS</name>
+      <delegator-name>default</delegator-name>
+      <database-type>mysql8</database-type>
+      <jdbc-datasource>
+        <url>jdbc:mysql://mysql.db.svc:3306/jira?useUnicode=true&amp;characterEncoding=UTF8</url>
+        <driver-class>com.mysql.cj.jdbc.Driver</driver-class>
+        <username>root</username>
+        <password>{{ .Values.db.password }}</password>
+        <pool-min-size>20</pool-min-size>
+        <pool-max-size>20</pool-max-size>
+        <pool-max-wait>30000</pool-max-wait>
+        <pool-max-idle>20</pool-max-idle>
+        <pool-remove-abandoned>true</pool-remove-abandoned>
+        <pool-remove-abandoned-timeout>300</pool-remove-abandoned-timeout>
+
+        <validation-query>select 1</validation-query>
+        <min-evictable-idle-time-millis>60000</min-evictable-idle-time-millis>
+        <time-between-eviction-runs-millis>300000</time-between-eviction-runs-millis>
+
+        <pool-test-while-idle>true</pool-test-while-idle>
+        <pool-test-on-borrow>false</pool-test-on-borrow>
+        <validation-query-timeout>3</validation-query-timeout>
+      </jdbc-datasource>
+    </jira-database-config>
