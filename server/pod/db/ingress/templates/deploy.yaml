@@ -30,4 +30,3 @@ spec:
             port:
               number: 9200
 ---
-...
