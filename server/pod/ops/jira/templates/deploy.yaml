@@ -23,7 +23,7 @@ spec:
                 path: dbconfig.xml
       containers:
       - name: {{ .Chart.Name }}
-        image: registry.cluster2.com/jira
+        image: {{ .Values.registry.url }}/{{ .Values.registry.dir }}/jira
         imagePullPolicy: Always
         resources:
           limits:

@@ -135,7 +135,7 @@ spec:
           claimName: data-{{ .Chart.Name }}
       containers:
       - name: '{{ .Chart.Name }}'
-        image: 'registry.cluster2.com/{{ .Release.Namespace }}-{{ .Chart.Name }}:{{ .Values.imageTag }}'
+        image: {{ .Values.registry.url }}/{{ .Values.registry.dir }}/{{ .Release.Namespace }}-{{ .Chart.Name }}:{{ .Values.imageTag }}
         imagePullPolicy: Always
         ports:
         - containerPort: 80
