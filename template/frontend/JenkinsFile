@@ -5,7 +5,10 @@ pipeline{
         PROJECT_ROOT="${WORKSPACE}/code/web/react"
         PROJECT_NAME="erp"
         PROJECT_MODULE="operation"
-        IMAGE_NAME="${PROJECT_NAME}-frontend-${PROJECT_MODULE}"
+        IMAGE_REPO_URL="harbor.cluster2.com"
+        IMAGE_REPO_USERNAME="admin"
+        IMAGE_REPO_PASSWORD="Czy20210314."
+        IMAGE_NAME="${IMAGE_REPO_URL}/library/${PROJECT_NAME}-frontend-${PROJECT_MODULE}"
         NODEJS_HOME = "${tool 'node-v14.17.5'}"
         PATH="${NODEJS_HOME}/bin:${PATH}"
     }
@@ -21,8 +24,10 @@ pipeline{
         stage('build'){
             steps{
                 sh 'nrm use taobao && yarn --cwd ${PROJECT_ROOT}/${PROJECT_MODULE} install && yarn --cwd ${PROJECT_ROOT}/${PROJECT_MODULE} --ignore-engines build'
-                sh 'docker build --tag registry.cluster2.com/${IMAGE_NAME}:${BRANCH} --file ${PROJECT_ROOT}/${PROJECT_MODULE}/Dockerfile ${PROJECT_ROOT}/${PROJECT_MODULE}/ --no-cache --force-rm'
-                sh 'docker push registry.cluster2.com/${IMAGE_NAME}:${BRANCH}'
+                sh 'docker login ${IMAGE_REPO_URL} --username ${IMAGE_REPO_USERNAME} --password ${IMAGE_REPO_PASSWORD}'
+                sh 'docker build --tag ${IMAGE_NAME}:${BRANCH} --file ${PROJECT_ROOT}/${PROJECT_MODULE}/Dockerfile ${PROJECT_ROOT}/${PROJECT_MODULE}/ --no-cache --force-rm'
+                sh 'docker push ${IMAGE_NAME}:${BRANCH}'
+                sh 'docker logout ${IMAGE_REPO_URL}'
             }
         }
     }
