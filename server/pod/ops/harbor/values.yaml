@@ -1,0 +1,10 @@
+harbor:
+  expose:
+    tls: 
+      enabled: true
+    ingress: 
+      hosts: 
+        core: harbor.cluster2.com
+        notary: notary.cluster2.com
+  externalURL: https://harbor.cluster2.com
+  harborAdminPassword: ***REMOVED***
