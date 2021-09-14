@@ -12,4 +12,4 @@ docker login ${GLOBAL_REGISTRY_URL} --username ${GLOBAL_REGISTRY_USERNAME} --pas
 docker build --tag ${GLOBAL_REGISTRY_URL}/${GLOBAL_REGISTRY_DIR}/${dir_name} --file ${dir}/Dockerfile ${dir}/
 docker push ${GLOBAL_REGISTRY_URL}/${GLOBAL_REGISTRY_DIR}/${dir_name}
 
-docker logout ${GLOBAL_REGISTRY_URL}
+

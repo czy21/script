@@ -28,7 +28,6 @@ pipeline{
                 sh 'docker login ${REGISTRY_URL} --username ${REGISTRY_USERNAME} --password ${REGISTRY_PASSWORD}'
                 sh 'docker build --tag ${IMAGE_NAME}:${BRANCH} --file ${PROJECT_ROOT}/${PROJECT_MODULE}/Dockerfile ${PROJECT_ROOT}/${PROJECT_MODULE}/ --no-cache --force-rm'
                 sh 'docker push ${IMAGE_NAME}:${BRANCH}'
-                sh 'docker logout ${REGISTRY_URL}'
             }
         }
     }
