@@ -2,6 +2,7 @@
 import argparse
 import subprocess
 from pathlib import Path
+from ruamel import yaml
 import share
 
 
@@ -36,9 +37,13 @@ def apply(app_id: str, app_name: str, source_path: Path, **kwargs):
                                                                                              args.n,
                                                                                              env_path.as_posix(),
                                                                                              temp_all_in_one_path.as_posix())
+    deploy_yaml = open(temp_all_in_one_path, "r", encoding="utf-8", newline="\n")
+    y = yaml.load_all(deploy_yaml, Loader=yaml.UnsafeLoader)
+    print(y)
+
     cmd.append(helm_dep_update_cmd)
     cmd.append(helm_template_cmd)
-    cmd.append(kube_cmd)
+    # cmd.append(kube_cmd)
     execute_shell(cmd_func("&&".join(cmd)))
 
 
