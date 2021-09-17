@@ -1,18 +1,9 @@
 harbor:
   expose:
-    type: ingress
+    type: clusterIP
     tls: 
       enabled: false
-    ingress: 
-      hosts: 
-        core: harbor.cluster2.com
-        notary: notary.cluster2.com
-      controller: default
-      annotations:
-        ingress.kubernetes.io/ssl-redirect: "false"
-        ingress.kubernetes.io/proxy-body-size: "0"
-        nginx.ingress.kubernetes.io/ssl-redirect: "false"
-        nginx.ingress.kubernetes.io/proxy-body-size: "0"
-        nginx.ingress.kubernetes.io/whitelist-source-range: 0.0.0.0/0
-  externalURL: http://harbor.cluster2.com
+    clusterIP:
+      name: harbor
+  externalURL: http://harbor
   harborAdminPassword: ***REMOVED***

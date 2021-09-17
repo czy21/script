@@ -1,12 +1,18 @@
 #!/usr/bin/env python3
-import argparse
-import subprocess
+import argparse,io,subprocess
 from pathlib import Path
 from ruamel import yaml
 import share
 
 
+def _str_representer(dumper: yaml.Dumper, data):
+    style = ''
+    if '\n' in data:
+        style = '|'
+    return dumper.represent_scalar('tag:yaml.org,2002:str', data, style)
+
 def execute(app_tuples, func, **kwargs):
+    yaml.RoundTripRepresenter.add_representer(str, _str_representer)
     for t in app_tuples:
         app_number = str(t[0])
         source_path = Path(t[1])
@@ -16,7 +22,7 @@ def execute(app_tuples, func, **kwargs):
 
 
 def get_kube_cmd(action: str, yaml_path: str):
-    return 'kubectl {} --filename={}'.format(action, yaml_path)
+    return 'kubectl {} --filename={} '.format(action, yaml_path)
 
 
 def apply(app_id: str, app_name: str, source_path: Path, **kwargs):
@@ -37,15 +43,20 @@ def apply(app_id: str, app_name: str, source_path: Path, **kwargs):
                                                                                              args.n,
                                                                                              env_path.as_posix(),
                                                                                              temp_all_in_one_path.as_posix())
-    deploy_yaml = open(temp_all_in_one_path, "r", encoding="utf-8", newline="\n")
-    y = yaml.load_all(deploy_yaml, Loader=yaml.UnsafeLoader)
-    print(y)
 
     cmd.append(helm_dep_update_cmd)
     cmd.append(helm_template_cmd)
-    # cmd.append(kube_cmd)
     execute_shell(cmd_func("&&".join(cmd)))
-
+    with io.open(temp_all_in_one_path, "r", encoding="utf-8", newline="\n") as o_file:
+        y = yaml.load_all(o_file.read(), Loader=yaml.UnsafeLoader)
+    with io.open(temp_all_in_one_path, "w+", encoding="utf-8", newline="\n") as y_file:
+        all_doc=[]
+        for content in y:
+            if content and content["metadata"] and "namespace" not in content["metadata"].keys():
+                content["metadata"]["namespace"] = args.n
+            all_doc.append(content)
+        yaml.dump_all(all_doc, y_file, Dumper=yaml.RoundTripDumper,default_flow_style=False, explicit_start=True)
+    execute_shell(kube_cmd)
 
 def execute_shell(cmd: str):
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True, encoding="utf-8")
