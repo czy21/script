@@ -9,16 +9,6 @@ metadata:
   namespace: '{{ .Release.Namespace }}'
 spec:
   rules:
-  - host: registry.cluster2.com
-    http:
-      paths:
-      - pathType: Prefix
-        path: /
-        backend:
-          service:
-            name: nexus
-            port:
-              number: 5000
   - host: jenkins.cluster2.com
     http:
       paths:

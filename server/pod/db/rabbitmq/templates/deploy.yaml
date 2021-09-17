@@ -1,7 +1,7 @@
 apiVersion: rabbitmq.com/v1beta1
 kind: RabbitmqCluster
 metadata:
-  name: {{ .Chart.Name }}
+  name: {{ .Release.Name }}
   namespace: {{ .Release.Namespace }}
 spec:
   replicas: 2
@@ -38,7 +38,7 @@ spec:
             volumes:
             - name: definitions
               configMap:
-                name: {{ .Chart.Name }}
+                name: {{ .Release.Name }}
                 items:
                 - key: definitions.json
                   path: definitions.json

@@ -2,28 +2,28 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ .Chart.Name }}
+  name: {{ .Release.Name }}
   namespace: '{{ .Release.Namespace }}'
 spec:
   selector:
     matchLabels:
-      app: {{ .Chart.Name }}
-  serviceName: {{ .Chart.Name }}
+      app: {{ .Release.Name }}
+  serviceName: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ .Chart.Name }}
+        app: {{ .Release.Name }}
     spec:
-      serviceAccountName: {{ .Chart.Name }}
+      serviceAccountName: {{ .Release.Name }}
       volumes:
       - name: conf
         configMap:
-          name: {{ .Chart.Name }}
+          name: {{ .Release.Name }}
           items:
           - key: prometheus.yml
             path: prometheus.yml
       containers:
-      - name: {{ .Chart.Name }}
+      - name: {{ .Release.Name }}
         image: prom/prometheus
         args:
         - --config.file=/etc/prometheus/prometheus.yml

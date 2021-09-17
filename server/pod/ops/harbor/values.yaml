@@ -3,8 +3,8 @@ harbor:
     type: ingress
     tls: 
       enabled: false
-    ingress: 
-      hosts: 
+    ingress:
+      hosts:
         core: harbor.cluster2.com
         notary: notary.cluster2.com
       annotations:
@@ -12,5 +12,5 @@ harbor:
         ingress.kubernetes.io/proxy-body-size: "0"
         nginx.ingress.kubernetes.io/ssl-redirect: "false"
         nginx.ingress.kubernetes.io/proxy-body-size: "0"
-  externalURL: http://harbor.cluster2.com
+  externalURL: http://harbor
   harborAdminPassword: Czy20210314.

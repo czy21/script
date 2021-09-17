@@ -2,17 +2,17 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ .Chart.Name }}
+  name: {{ .Release.Name }}
   namespace: '{{ .Release.Namespace }}'
 spec:
   selector:
     matchLabels:
-      app: {{ .Chart.Name }}
-  serviceName: {{ .Chart.Name }}
+      app: {{ .Release.Name }}
+  serviceName: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ .Chart.Name }}
+        app: {{ .Release.Name }}
     spec:
       volumes:
       - name: docker-sock
@@ -23,12 +23,12 @@ spec:
           path: /usr/bin/docker
       - name: gradle-init
         configMap:
-          name: {{ .Chart.Name }}
+          name: {{ .Release.Name }}
           items:
           - key: init.gradle
             path: init.gradle
       containers:
-      - name: {{ .Chart.Name }}
+      - name: {{ .Release.Name }}
         image: jenkins/jenkins:lts-jdk11
         imagePullPolicy: IfNotPresent
         ports:

@@ -2,11 +2,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: '{{ .Chart.Name }}'
+  name: '{{ .Release.Name }}'
   namespace: '{{ .Release.Namespace }}'
 spec:
   selector:
-    app: '{{ .Chart.Name }}'
+    app: '{{ .Release.Name }}'
   type: NodePort
   ports:
   - name: '6379'
@@ -17,24 +17,24 @@ spec:
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: '{{ .Chart.Name }}'
+  name: '{{ .Release.Name }}'
   namespace: '{{ .Release.Namespace }}'
 spec:
   selector:
     matchLabels:
-      app: '{{ .Chart.Name }}'
-  serviceName: '{{ .Chart.Name }}'
+      app: '{{ .Release.Name }}'
+  serviceName: '{{ .Release.Name }}'
   template:
     metadata:
       labels:
-        app: '{{ .Chart.Name }}'
+        app: '{{ .Release.Name }}'
     spec:
       volumes:
       - name: conf
         configMap:
-          name: '{{ .Chart.Name }}'
+          name: '{{ .Release.Name }}'
       containers:
-      - name: '{{ .Chart.Name }}'
+      - name: '{{ .Release.Name }}'
         image: redis:5.0.3
         command:
         - redis-server
