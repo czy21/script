@@ -2,11 +2,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: '{{ .Chart.Name }}'
+  name: '{{ .Release.Name }}'
   namespace: '{{ .Release.Namespace }}'
 spec:
   selector:
-    app: {{ .Chart.Name }}
+    app: {{ .Release.Name }}
   type: ClusterIP
   ports:
   - name: '8080'
@@ -16,10 +16,10 @@ spec:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: '{{ .Chart.Name }}'
+  name: '{{ .Release.Name }}'
   namespace: '{{ .Release.Namespace }}'
   labels:
-    app: {{ .Chart.Name }}
+    app: {{ .Release.Name }}
 data:
   application.yml: |
     server:
@@ -40,29 +40,29 @@ data:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: '{{ .Chart.Name }}'
+  name: '{{ .Release.Name }}'
   namespace: '{{ .Release.Namespace }}'
 spec:
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: {{ .Chart.Name }}
+      app: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ .Chart.Name }}
+        app: {{ .Release.Name }}
     spec:
       volumes:
       - name: conf
         configMap:
-          name: '{{ .Chart.Name }}'
+          name: '{{ .Release.Name }}'
           items:
           - key: application.yml
             path: application.yml
       containers:
-      - name: '{{ .Chart.Name }}'
-        image: {{ .Values.registry.url }}/{{ .Values.registry.dir }}/{{ .Release.Namespace }}-{{ .Chart.Name }}:{{ .Values.imageTag }}
+      - name: '{{ .Release.Name }}'
+        image: {{ .Values.registry.url }}/{{ .Values.registry.dir }}/{{ .Release.Namespace }}-{{ .Release.Name }}:{{ .Values.imageTag }}
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
@@ -80,7 +80,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: data-{{ .Chart.Name }}
+  name: data-{{ .Release.Name }}
   namespace: '{{ .Release.Namespace }}'
 spec:
   accessModes:
