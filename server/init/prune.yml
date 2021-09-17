@@ -3,6 +3,8 @@
   tasks:
     - name: calico prune
       shell: nmcli d status | grep "^cali\|^tun" | awk '{print $1}' | xargs nmcli device delete -
+    - name: docker login prune
+      shell: rm -rf $HOME/.docker --force
     - name: docker container prune
       shell: docker container prune --force
     - name: docker volume prune
