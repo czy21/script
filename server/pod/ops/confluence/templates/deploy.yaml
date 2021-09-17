@@ -39,7 +39,7 @@ spec:
     spec:
       containers:
       - name: {{ .Chart.Name }}
-        image: registry.cluster2.com/confluence
+        image: {{ .Values.registry.url }}/{{ .Values.registry.dir }}/confluence
         imagePullPolicy: Always
         resources:
           limits:

@@ -44,7 +44,7 @@ spec:
             path: hbase-site.xml
       containers:
       - name: hbase-region
-        image: registry.cluster2.com/hbase
+        image: {{ .Values.registry.url }}/{{ .Values.registry.dir }}/hbase
         imagePullPolicy: Always
         ports:
         - containerPort: 16020
