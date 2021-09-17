@@ -59,13 +59,3 @@ spec:
             name: jira
             port:
               number: 8080
-  - host: harbor.cluster2.com
-    http:
-      paths:
-      - pathType: Prefix
-        path: /
-        backend:
-          service:
-            name: harbor
-            port:
-              number: 80
