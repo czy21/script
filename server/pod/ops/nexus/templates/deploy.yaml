@@ -21,7 +21,8 @@ spec:
           limits:
             memory: 2Gi
         ports:
-        - containerPort: 8081
+          - containerPort: 8081
+          - containerPort: 5000
         env:
         - name: INSTALL4J_ADD_VM_PARAMS
           value: -Xms500M -Xmx500M -XX:MaxDirectMemorySize=2g
