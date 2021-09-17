@@ -16,7 +16,7 @@ spec:
         path: /
         backend:
           service:
-            name: registry
+            name: nexus
             port:
               number: 5000
   - host: jenkins.cluster2.com
