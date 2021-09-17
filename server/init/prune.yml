@@ -10,7 +10,7 @@
     - name: docker volume prune
       shell: docker volume prune --force
     - name: docker image prune
-      shell: docker image prune --force
+      shell: docker image prune --all --force
     - name: docker network prune
       shell: docker network prune --force
 
