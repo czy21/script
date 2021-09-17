@@ -63,7 +63,7 @@ spec:
             path: compile.sh
       containers:
       - name: jdk11-compile
-        image: registry.cluster2.com/jdk11
+        image: {{ .Values.registry.url }}/{{ .Values.registry.dir }}/jdk11
         args:
         - /bin/bash
         - -c

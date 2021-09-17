@@ -2,16 +2,18 @@ pipeline{
     agent any
     environment {
         GRADLE_INIT_FILE = "/var/jenkins_home/tools/gradle/init.d/init.gradle"
-        PROJECT_ROOT="${WORKSPACE}/code/web/react"
+        PROJECT_ROOT="${WORKSPACE}/code/api"
         PROJECT_NAME="erp"
-        PROJECT_MODULE="operation"
-        IMAGE_NAME="${PROJECT_NAME}-frontend-${PROJECT_MODULE}"
-        NODEJS_HOME = "${tool 'node-v14.17.5'}"
-        PATH="${NODEJS_HOME}/bin:${PATH}"
+        PROJECT_MODULE="portal"
+        REGISTRY_URL="harbor.cluster2.com"
+        REGISTRY_DIR="library"
+        REGISTRY_USERNAME="admin"
+        REGISTRY_PASSWORD="***REMOVED***"
+        IMAGE_NAME="${REGISTRY_URL}/${REGISTRY_DIR}/${PROJECT_NAME}-backend-${PROJECT_MODULE}"
     }
     parameters {
-        gitParameter branchFilter: 'origin/(.*)', name: 'BRANCH', type: 'PT_BRANCH'
-    }
+    gitParameter branchFilter: 'origin/(.*)', name: 'BRANCH', type: 'PT_BRANCH'
+  }
     stages {
         stage('clone'){
             steps{
@@ -20,9 +22,10 @@ pipeline{
         }
         stage('build'){
             steps{
-                sh 'nrm use taobao && yarn --cwd ${PROJECT_ROOT}/${PROJECT_MODULE} install && yarn --cwd ${PROJECT_ROOT}/${PROJECT_MODULE} --ignore-engines build'
-                sh 'docker build --tag registry.cluster2.com/${IMAGE_NAME}:${BRANCH} --file ${PROJECT_ROOT}/${PROJECT_MODULE}/Dockerfile ${PROJECT_ROOT}/${PROJECT_MODULE}/ --no-cache --force-rm'
-                sh 'docker push registry.cluster2.com/${IMAGE_NAME}:${BRANCH}'
+                sh 'chmod +x ${PROJECT_ROOT}/gradlew && ${PROJECT_ROOT}/gradlew --init-script ${GRADLE_INIT_FILE} --build-file ${PROJECT_ROOT}/build.gradle ${PROJECT_MODULE}:clean ${PROJECT_MODULE}:build -x test'
+                sh 'docker login ${REGISTRY_URL} --username ${REGISTRY_USERNAME} --password ${REGISTRY_PASSWORD}'
+                sh 'docker build --tag ${IMAGE_NAME}:${BRANCH} --file ${PROJECT_ROOT}/${PROJECT_MODULE}/Dockerfile ${PROJECT_ROOT}/${PROJECT_MODULE}/ --no-cache --force-rm'
+                sh 'docker push ${IMAGE_NAME}:${BRANCH}'
             }
         }
     }

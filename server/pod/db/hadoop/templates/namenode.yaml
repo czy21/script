@@ -57,7 +57,7 @@ spec:
           claimName: data-hadoop-namenode
       containers:
       - name: hadoop
-        image: registry.cluster2.com/hadoop
+        image: {{ .Values.registry.url }}/{{ .Values.registry.dir }}/hadoop
         imagePullPolicy: Always
         ports:
         - containerPort: 22
