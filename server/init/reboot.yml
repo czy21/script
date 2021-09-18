@@ -3,4 +3,7 @@
   tasks:
     - name: reboot
       shell: reboot
+    - name: shutdown
+      shell: shutdown now
+    
 
