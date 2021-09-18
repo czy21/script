@@ -29,6 +29,16 @@ spec:
             name: nexus
             port:
               number: 8081
+  - host: registry.cluster2.com
+    http:
+      paths:
+      - pathType: Prefix
+        path: /
+        backend:
+          service:
+            name: nexus
+            port:
+              number: 5000
   - host: grafana.cluster2.com
     http:
       paths:

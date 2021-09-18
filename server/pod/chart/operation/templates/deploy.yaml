@@ -2,11 +2,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: '{{ .Release.Name }}'
+  name: '{{ .Chart.Name }}'
   namespace: '{{ .Release.Namespace }}'
 spec:
   selector:
-    app: {{ .Release.Name }}
+    app: {{ .Chart.Name }}
   type: ClusterIP
   ports:
   - name: http
@@ -16,10 +16,10 @@ spec:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: '{{ .Release.Name }}'
+  name: '{{ .Chart.Name }}'
   namespace: '{{ .Release.Namespace }}'
   labels:
-    app: {{ .Release.Name }}
+    app: {{ .Chart.Name }}
 data:
   nginx.conf: |
     user  nginx;
@@ -104,38 +104,38 @@ data:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: '{{ .Release.Name }}'
+  name: '{{ .Chart.Name }}'
   namespace: '{{ .Release.Namespace }}'
 spec:
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: {{ .Release.Name }}
+      app: {{ .Chart.Name }}
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}
+        app: {{ .Chart.Name }}
     spec:
       volumes:
       - name: nginx-conf
         configMap:
-          name: '{{ .Release.Name }}'
+          name: '{{ .Chart.Name }}'
           items:
           - key: nginx.conf
             path: nginx.conf
       - name: conf
         configMap:
-          name: '{{ .Release.Name }}'
+          name: '{{ .Chart.Name }}'
           items:
           - key: app-http.conf
             path: app-http.conf
       - name: log
         persistentVolumeClaim:
-          claimName: data-{{ .Release.Name }}
+          claimName: data-{{ .Chart.Name }}
       containers:
-      - name: '{{ .Release.Name }}'
-        image: {{ .Values.registry.url }}/{{ .Values.registry.dir }}/{{ .Release.Namespace }}-{{ .Release.Name }}:{{ .Values.imageTag }}
+      - name: '{{ .Chart.Name }}'
+        image: {{ .Values.registry.url }}/{{ .Values.registry.dir }}/{{ .Release.Namespace }}-{{ .Chart.Name }}:{{ .Values.imageTag }}
         imagePullPolicy: Always
         ports:
         - containerPort: 80
@@ -153,7 +153,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: data-{{ .Release.Name }}
+  name: data-{{ .Chart.Name }}
   namespace: '{{ .Release.Namespace }}'
 spec:
   accessModes:

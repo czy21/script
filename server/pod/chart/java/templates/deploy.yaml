@@ -26,7 +26,7 @@ data:
       port: 8080
     spring:
       application:
-        name: portal
+        name: gateway
       config:
         import: consul:consul.cluster2.com:80
       cloud:
@@ -62,7 +62,7 @@ spec:
             path: application.yml
       containers:
       - name: '{{ .Release.Name }}'
-        image: {{ .Values.registry.url }}/{{ .Values.registry.dir }}/{{ .Release.Namespace }}-{{ .Release.Name }}:{{ .Values.imageTag }}
+        image: {{ .Values.registry.url }}/{{ .Values.registry.dir }}/{{ .Release.Namespace }}-{{ .Release.Name }}:{{ .Values.appVersion }}
         imagePullPolicy: Always
         ports:
         - containerPort: 8080

@@ -1,0 +1,4 @@
+appVersion: ""
+registry:
+  url: harbor.cluster2.com
+  dir: library
