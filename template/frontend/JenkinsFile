@@ -5,7 +5,7 @@ pipeline{
         PROJECT_ROOT="${WORKSPACE}/code/web/react"
         PROJECT_NAME="erp"
         PROJECT_MODULE="operation"
-        REGISTRY_URL="harbor.cluster2.com"
+        REGISTRY_URL="registry.cluster2.com"
         REGISTRY_DIR="library"
         REGISTRY_USERNAME="admin"
         REGISTRY_PASSWORD="Czy20210314."
