@@ -1,0 +1,1 @@
+FROM jenkins/inbound-agent
