@@ -1,25 +1,10 @@
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: '{{ .Chart.Name }}'
-  namespace: '{{ .Release.Namespace }}'
-spec:
-  selector:
-    app: {{ .Chart.Name }}
-  type: ClusterIP
-  ports:
-  - name: http
-    port: 80
-    targetPort: 80
----
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: '{{ .Chart.Name }}'
+  name: '{{ .Release.Name }}'
   namespace: '{{ .Release.Namespace }}'
   labels:
-    app: {{ .Chart.Name }}
+    app: {{ .Release.Name }}
 data:
   nginx.conf: |
     user  nginx;
@@ -93,72 +78,10 @@ data:
             proxy_set_header Upgrade $http_upgrade;
             proxy_set_header Connection $http_connection;
             proxy_cache_bypass $http_upgrade;
-            proxy_pass http://backend-gateway.erp.svc:8080/;
+            proxy_pass {{ .Values.BACKEND_URL}}/;
         }
         error_page   500 502 503 504  /50x.html;
         location = /50x.html {
             root   html;
         }
     }
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: '{{ .Chart.Name }}'
-  namespace: '{{ .Release.Namespace }}'
-spec:
-  strategy:
-    type: Recreate
-  selector:
-    matchLabels:
-      app: {{ .Chart.Name }}
-  template:
-    metadata:
-      labels:
-        app: {{ .Chart.Name }}
-    spec:
-      volumes:
-      - name: nginx-conf
-        configMap:
-          name: '{{ .Chart.Name }}'
-          items:
-          - key: nginx.conf
-            path: nginx.conf
-      - name: conf
-        configMap:
-          name: '{{ .Chart.Name }}'
-          items:
-          - key: app-http.conf
-            path: app-http.conf
-      - name: log
-        persistentVolumeClaim:
-          claimName: data-{{ .Chart.Name }}
-      containers:
-      - name: '{{ .Chart.Name }}'
-        image: {{ .Values.registry.url }}/{{ .Values.registry.dir }}/{{ .Release.Namespace }}-{{ .Chart.Name }}:{{ .Values.imageTag }}
-        imagePullPolicy: Always
-        ports:
-        - containerPort: 80
-        - containerPort: 443
-        volumeMounts:
-        - name: nginx-conf
-          mountPath: /etc/nginx/nginx.conf
-          subPath: nginx.conf
-        - name: conf
-          mountPath: /etc/nginx/conf.d/
-        - name: log
-          mountPath: /var/log/nginx/
-          subPath: log
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: data-{{ .Chart.Name }}
-  namespace: '{{ .Release.Namespace }}'
-spec:
-  accessModes:
-  - ReadWriteMany
-  resources:
-    requests:
-      storage: 256Gi
-  storageClassName: managed-nfs-storage
