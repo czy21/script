@@ -1,17 +1,17 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Chart.Name }}
-  namespace: {{ .Release.Namespace }}
+  name: '{{ .Release.Name }}'
+  namespace: '{{ .Release.Namespace }}'
   labels:
-    app: {{ .Chart.Name }}
+    app: {{ .Release.Name }}
 data:
   application.yml: |
     server:
       port: 8080
     spring:
       application:
-        name: gateway
+        name: ${MOD_NAME}
       config:
         import: consul:consul.cluster2.com:80
       cloud:
