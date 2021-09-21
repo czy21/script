@@ -1,5 +1,5 @@
 appVersion: ""
-BACKEND_URL: "http://portal.erp.svc:8080"
+BACKEND_URL: "http://gateway.erp.svc:8080"
 registry:
   url: registry.cluster2.com
   dir: library
