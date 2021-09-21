@@ -1,7 +1,7 @@
 def build(){
-    sh 'helm template ${RELEASE_NAME} ${RELEASE_TEMPLATE} --namespace ${RELEASE_NAMESPACE} --set appVersion="dev-bruce" --repo ${HELM_REPO} 2>&1 | tee deploy.yaml'
+    env.HELM_REPO = env.HELM_REPO?: 'http://nexus.cluster2.com/repository/helm/'
+    sh 'helm template ${RELEASE_NAME} ${RELEASE_TEMPLATE} --namespace ${RELEASE_NAMESPACE} --set appVersion=${RELEASE_VERSION} --repo ${HELM_REPO}  2>&1 | tee deploy.yaml'
 }
-
 
 
 return this;
