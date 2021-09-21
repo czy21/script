@@ -47,16 +47,16 @@ def apply(app_id: str, app_name: str, source_path: Path, **kwargs):
     cmd.append(helm_dep_update_cmd)
     cmd.append(helm_template_cmd)
     execute_shell(cmd_func("&&".join(cmd)))
-    with io.open(temp_all_in_one_path, "r", encoding="utf-8", newline="\n") as o_file:
-        y = yaml.load_all(o_file.read(), Loader=yaml.UnsafeLoader)
-    with io.open(temp_all_in_one_path, "w+", encoding="utf-8", newline="\n") as y_file:
-        all_doc=[]
-        for content in y:
-            if content and content["metadata"] and "namespace" not in content["metadata"].keys():
-                content["metadata"]["namespace"] = args.n
-            all_doc.append(content)
-        yaml.dump_all(all_doc, y_file, Dumper=yaml.RoundTripDumper,default_flow_style=False, explicit_start=True)
-    execute_shell(kube_cmd)
+    # with io.open(temp_all_in_one_path, "r", encoding="utf-8", newline="\n") as o_file:
+    #     y = yaml.load_all(o_file.read(), Loader=yaml.UnsafeLoader)
+    # with io.open(temp_all_in_one_path, "w+", encoding="utf-8", newline="\n") as y_file:
+    #     all_doc=[]
+    #     for content in y:
+    #         if content and content["metadata"] and "namespace" not in content["metadata"].keys():
+    #             content["metadata"]["namespace"] = args.n
+    #         all_doc.append(content)
+    #     yaml.dump_all(all_doc, y_file, Dumper=yaml.RoundTripDumper,default_flow_style=False, explicit_start=True)
+    # execute_shell(kube_cmd)
 
 def execute_shell(cmd: str):
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True, encoding="utf-8")

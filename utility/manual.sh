@@ -31,3 +31,10 @@ mount -t nfs 192.168.1.3:/nfs_test /mnt/test1
 
 # vmware RDM硬盘直通{0} 硬盘挂载地址, {1} 生成目标映射地址
 vmkfstools -r /vmfs/devices/disks/t10.ATA_____ST4000NM000A2D2HZ100_________________________________WS213MF7 /vmfs/volumes/3a4fd09b-e51337f7-678b-7c10c91f7003/4T_1.vmdk
+
+
+# nexus helm 插件
+helm plugin install --version master https://github.com/sonatype-nexus-community/helm-nexus-push.git
+
+# 推送chart至nexus的helm仓库
+helm nexus-push myrepo java-template-0.1.0.tgz -u admin -p ***REMOVED***

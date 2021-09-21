@@ -9,33 +9,9 @@ spec:
     app: {{ .Release.Name }}
   type: ClusterIP
   ports:
-  - name: '8080'
+  - name: "8080"
     port: 8080
     targetPort: 8080
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: '{{ .Release.Name }}'
-  namespace: '{{ .Release.Namespace }}'
-  labels:
-    app: {{ .Release.Name }}
-data:
-  application.yml: |
-    server:
-      port: 8080
-    spring:
-      application:
-        name: gateway
-      config:
-        import: consul:consul.cluster2.com:80
-      cloud:
-        consul:
-          config:
-            format: yaml
-            prefixes: ${ENV_NAME}
-            default-context: ${spring.application.name}
-            enabled: true
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -69,6 +45,8 @@ spec:
         env:
         - name: ENV_NAME
           value: dev
+        - name: MOD_NAME
+          value: {{ .Release.Name }}
         - name: POD_NAME
           valueFrom:
             fieldRef:
