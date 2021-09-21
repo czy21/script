@@ -1,7 +1,19 @@
+def helm, k8s
+fileLoader.withGit('git@gitee.com:czyhome/script.git', 'master', 'bruce', '') {
+    helm = fileLoader.load('groovy/helm.groovy');
+    k8s = fileLoader.load('groovy/k8s.groovy');
+}
+
+def ENV_FILE_ID='dev.env'
+def ENV_NAME='dev'
+def RELEASE_NAMESPACE = 'erp'
+def RELEASE_NAME = 'gateway'
+def RELEASE_VERSION = 'dev-bruce'
+
 pipeline{
   agent {
     kubernetes {
-        cloud 'dev'
+        cloud ENV_NAME
         yaml '''
           apiVersion: v1
           kind: Pod
@@ -31,28 +43,21 @@ pipeline{
     '''
     }
   }
-  environment {
-    KUBE_CONFIG = 'kube-config-dev'
-    KUBE_SERVER = 'https://192.168.2.21:6443'
-    HELM_REPO   = 'http://nexus.cluster2.com/repository/helm/'
-    RELEASE_TEMPLATE = 'java-template'
-    RELEASE_NAMESPACE = 'erp'
-    RELEASE_NAME = 'portal'
-    RELEASE_VERSION = 'dev-bruce'
-  }
   stages{
     stage('deploy') {
       steps {
         script {
-            script {
-                def helm, k8s
-                fileLoader.withGit('git@gitee.com:czyhome/script.git', 'master', 'bruce', '') {
-                    helm = fileLoader.load('groovy/helm.groovy');
-                    k8s = fileLoader.load('groovy/k8s.groovy');
-                }
-                helm.templateRender();
-                k8s.apply();
+            configFileProvider([configFile(fileId: ENV_FILE_ID, targetLocation: 'env.groovy', variable: 'ENV_CONFIG')]) {
+                load "env.groovy";
             }
+            env.ENV_NAME = ENV_NAME
+            env.RELEASE_NAMESPACE = RELEASE_NAMESPACE
+            env.RELEASE_NAME = RELEASE_NAME
+            env.RELEASE_VERSION = RELEASE_VERSION
+            env.RELEASE_CHART_NAME    = env.HELM_JAVA_CHART_NAME
+            env.RELEASE_CHART_VERSION = env.HELM_JAVA_CHART_VERSION
+            helm.build()
+            k8s.apply()
         }
       }
     }
