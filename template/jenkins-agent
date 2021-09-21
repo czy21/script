@@ -37,15 +37,22 @@ pipeline{
     HELM_REPO   = 'http://nexus.cluster2.com/repository/helm/'
     RELEASE_TEMPLATE = 'java-template'
     RELEASE_NAMESPACE = 'erp'
-    RELEASE_NAME = 'gateway'
+    RELEASE_NAME = 'portal'
     RELEASE_VERSION = 'dev-bruce'
   }
   stages{
     stage('deploy') {
       steps {
-        sh 'helm template ${RELEASE_NAME} ${RELEASE_TEMPLATE} --namespace ${RELEASE_NAMESPACE} --set appVersion="${RELEASE_VERSION}" --repo ${HELM_REPO} 2>&1 | tee deploy.yaml'
-        withKubeConfig([credentialsId: "${KUBE_CONFIG}", serverUrl: "${KUBE_SERVER}"]) {
-          sh 'kubectl delete -f deploy.yaml --ignore-not-found=true && kubectl apply -f deploy.yaml'
+        script {
+            script {
+                def helm, k8s
+                fileLoader.withGit('git@gitee.com:czyhome/script.git', 'master', 'bruce', '') {
+                    helm = fileLoader.load('groovy/helm.groovy');
+                    k8s = fileLoader.load('groovy/k8s.groovy');
+                }
+                helm.templateRender();
+                k8s.apply();
+            }
         }
       }
     }
