@@ -47,7 +47,7 @@ spec:
         - containerPort: 8080
         env:
         - name: ENV_NAME
-          value: dev
+          value: {{ .Values.envName }}
         - name: MOD_NAME
           value: {{ .Release.Name }}
         - name: POD_NAME
