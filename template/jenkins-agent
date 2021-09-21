@@ -35,18 +35,15 @@ pipeline{
     KUBE_CONFIG = 'kube-config-dev'
     KUBE_SERVER = 'https://192.168.2.21:6443'
     HELM_REPO   = 'http://nexus.cluster2.com/repository/helm/'
-    RELEASE_NAME = 'portal'
     RELEASE_TEMPLATE = 'java-template'
     RELEASE_NAMESPACE = 'erp'
+    RELEASE_NAME = 'gateway'
+    RELEASE_VERSION = 'dev-bruce'
   }
   stages{
-    stage('build chart') {
+    stage('deploy') {
       steps {
-        sh 'helm template ${RELEASE_NAME} ${RELEASE_TEMPLATE} --namespace ${RELEASE_NAMESPACE} --set appVersion="dev-bruce" --repo ${HELM_REPO} 2>&1 | tee deploy.yaml'
-      }
-    }
-    stage('apply') {
-      steps {
+        sh 'helm template ${RELEASE_NAME} ${RELEASE_TEMPLATE} --namespace ${RELEASE_NAMESPACE} --set appVersion="${RELEASE_VERSION}" --repo ${HELM_REPO} 2>&1 | tee deploy.yaml'
         withKubeConfig([credentialsId: "${KUBE_CONFIG}", serverUrl: "${KUBE_SERVER}"]) {
           sh 'kubectl delete -f deploy.yaml --ignore-not-found=true && kubectl apply -f deploy.yaml'
         }
