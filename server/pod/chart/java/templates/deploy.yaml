@@ -36,6 +36,9 @@ spec:
           items:
           - key: application.yml
             path: application.yml
+      - name: data
+        persistentVolumeClaim:
+          claimName: data-{{ .Release.Name }}
       containers:
       - name: '{{ .Release.Name }}'
         image: {{ .Values.registry.url }}/{{ .Values.registry.dir }}/{{ .Release.Namespace }}-{{ .Release.Name }}:{{ .Values.appVersion }}
@@ -54,6 +57,8 @@ spec:
         volumeMounts:
         - name: conf
           mountPath: /home/app/config/
+        - name: data
+          mountPath: /home/app/data/
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
