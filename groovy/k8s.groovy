@@ -3,3 +3,5 @@ def apply(){
         sh 'kubectl delete -f deploy.yaml --ignore-not-found=true && kubectl apply -f deploy.yaml'
     }
 }
+
+return this;
