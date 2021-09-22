@@ -1,3 +1,6 @@
+def ENV_FILE_ID='dev.env'
+def ENV_NAME='dev'
+
 pipeline{
     agent any
     environment {
@@ -5,15 +8,10 @@ pipeline{
         PROJECT_ROOT="${WORKSPACE}/code/api"
         PROJECT_NAME="erp"
         PROJECT_MODULE="portal"
-        REGISTRY_URL="registry.cluster2.com"
-        REGISTRY_DIR="library"
-        REGISTRY_USERNAME="admin"
-        REGISTRY_PASSWORD="Czy20210314."
-        IMAGE_NAME="${REGISTRY_URL}/${REGISTRY_DIR}/${PROJECT_NAME}-backend-${PROJECT_MODULE}"
     }
     parameters {
-    gitParameter branchFilter: 'origin/(.*)', name: 'BRANCH', type: 'PT_BRANCH'
-  }
+      gitParameter branchFilter: 'origin/(.*)', name: 'BRANCH', type: 'PT_BRANCH',defaultValue: 'master'
+    }
     stages {
         stage('clone'){
             steps{
@@ -21,11 +19,27 @@ pipeline{
             }
         }
         stage('build'){
+            when{
+                expression { BRANCH != 'master' }
+            }
             steps{
-                sh 'chmod +x ${PROJECT_ROOT}/gradlew && ${PROJECT_ROOT}/gradlew --init-script ${GRADLE_INIT_FILE} --build-file ${PROJECT_ROOT}/build.gradle ${PROJECT_MODULE}:clean ${PROJECT_MODULE}:build -x test'
-                sh 'docker login ${REGISTRY_URL} --username ${REGISTRY_USERNAME} --password ${REGISTRY_PASSWORD}'
-                sh 'docker build --tag ${IMAGE_NAME}:${BRANCH} --file ${PROJECT_ROOT}/${PROJECT_MODULE}/Dockerfile ${PROJECT_ROOT}/${PROJECT_MODULE}/ --no-cache --force-rm'
-                sh 'docker push ${IMAGE_NAME}:${BRANCH}'
+                script{
+                    configFileProvider([configFile(fileId: "dev.env", targetLocation: 'env.groovy', variable: 'ENV_CONFIG')]) {
+                        load "env.groovy";
+                    }
+                    env.RELEASE_VERSION = params.BRANCH
+                    env.IMAGE_NAME="${REGISTRY_REPO}/${REGISTRY_DIR}/${PROJECT_NAME}-${PROJECT_MODULE}"
+                    env.DOCKER_FILE = "${PROJECT_ROOT}/${PROJECT_MODULE}/Dockerfile"
+                    env.DOCKER_FILE_CONTEXT = "${PROJECT_ROOT}/${PROJECT_MODULE}/"
+
+                    def docker,java
+                    fileLoader.withGit('git@gitee.com:czyhome/script.git', 'master', 'bruce', '') {
+                        docker = fileLoader.load('groovy/docker.groovy');
+                        java = fileLoader.load('groovy/java.groovy');
+                    }
+                    java.gradlew()
+                    docker.build()
+                }
             }
         }
     }
