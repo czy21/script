@@ -50,14 +50,14 @@ pipeline{
             configFileProvider([configFile(fileId: ENV_FILE_ID, targetLocation: 'env.groovy', variable: 'ENV_CONFIG')]) {
                 load "env.groovy";
             }
-            env.ENV_NAME = ENV_NAME
-            env.RELEASE_NAMESPACE = RELEASE_NAMESPACE
-            env.RELEASE_NAME = RELEASE_NAME
-            env.RELEASE_VERSION = RELEASE_VERSION
-            env.RELEASE_CHART_NAME    = env.HELM_JAVA_CHART_NAME
-            env.RELEASE_CHART_VERSION = env.HELM_JAVA_CHART_VERSION
-            helm.build()
-            k8s.apply()
+        env.ENV_NAME = ENV_NAME
+        env.RELEASE_NAMESPACE = RELEASE_NAMESPACE
+        env.RELEASE_NAME = RELEASE_NAME
+        env.RELEASE_VERSION = RELEASE_VERSION
+        env.RELEASE_CHART_NAME    = env.HELM_JAVA_CHART_NAME
+        env.RELEASE_CHART_VERSION = env.HELM_JAVA_CHART_VERSION
+        helm.build()
+        k8s.apply()
         }
       }
     }
