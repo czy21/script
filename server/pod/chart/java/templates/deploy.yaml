@@ -9,7 +9,7 @@ spec:
     app: {{ .Release.Name }}
   type: ClusterIP
   ports:
-  - name: "8080"
+  - name: "http"
     port: 8080
     targetPort: 8080
 ---
@@ -41,15 +41,13 @@ spec:
           claimName: data-{{ .Release.Name }}
       containers:
       - name: '{{ .Release.Name }}'
-        image: {{ .Values.registry.url }}/{{ .Values.registry.dir }}/{{ .Release.Namespace }}-{{ .Release.Name }}:{{ .Values.appVersion }}
+        image: {{ .Values.registry.url }}/{{ .Values.registry.dir }}/{{ .Release.Name }}:{{ .Values.appVersion }}
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
         env:
         - name: ENV_NAME
           value: {{ .Values.envName }}
-        - name: MOD_NAME
-          value: {{ .Release.Name }}
         - name: POD_NAME
           valueFrom:
             fieldRef:
