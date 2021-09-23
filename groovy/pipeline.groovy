@@ -1,5 +1,5 @@
 
-def call(Map map){
+def docker_build(Map map){
     pipeline{
         agent any
         environment {
@@ -9,12 +9,15 @@ def call(Map map){
             PROJECT_MODULE="${map.PROJECT_MODULE}"
         }
         parameters {
-          gitParameter branchFilter: 'origin/(.*)', name: 'BRANCH', type: 'PT_BRANCH',defaultValue: 'master',useRepository: 'git@gitee.com:czyhome/erp.git'
+          gitParameter branchFilter: 'origin/(.*)', name: 'BRANCH', type: 'PT_BRANCH',defaultValue: 'master',useRepository: "${map.REPOSITORY_URL}"
         }
         stages {
             stage('clone'){
                 steps{
-                    checkout([$class: 'GitSCM', branches: [[name: "${BRANCH}"]], extensions: [[$class: 'SubmoduleOption', disableSubmodules: false, parentCredentials: true, recursiveSubmodules: true, reference: '', trackingSubmodules: false]], userRemoteConfigs: [[credentialsId: 'bruce', url: 'git@gitee.com:czyhome/erp.git']]])
+                    checkout([$class: 'GitSCM',
+                    branches: [[name: "${BRANCH}"]],
+                    extensions: [[$class: 'SubmoduleOption', disableSubmodules: false, parentCredentials: true, recursiveSubmodules: true, reference: '', trackingSubmodules: false]],
+                    userRemoteConfigs: [[credentialsId: "${map.REPOSITORY_CREDENTIAL_ID}", url: "${map.REPOSITORY_URL}"]]])
                 }
             }
             stage('build'){
@@ -23,21 +26,17 @@ def call(Map map){
                 }
                 steps{
                     script{
-                        configFileProvider([configFile(fileId: "dev.env", targetLocation: 'env.groovy', variable: 'ENV_CONFIG')]) {
+                        configFileProvider([configFile(fileId: "${map.GLOBAL_ENV_FILE_ID}", targetLocation: 'env.groovy', variable: 'ENV_CONFIG')]) {
                             load "env.groovy";
                         }
                         env.RELEASE_VERSION = params.BRANCH
-                        env.IMAGE_NAME="${REGISTRY_REPO}/${REGISTRY_DIR}/${PROJECT_NAME}-${PROJECT_MODULE}"
+                        env.IMAGE_NAME = "${REGISTRY_REPO}/${REGISTRY_DIR}/${PROJECT_NAME}-${PROJECT_MODULE}"
                         env.DOCKER_FILE = "${PROJECT_ROOT}/${PROJECT_MODULE}/Dockerfile"
                         env.DOCKER_FILE_CONTEXT = "${PROJECT_ROOT}/${PROJECT_MODULE}/"
 
-                        def docker,java
-                        fileLoader.withGit('git@gitee.com:czyhome/script.git', 'master', 'bruce', '') {
-                            docker = fileLoader.load('groovy/docker.groovy');
-                            java = fileLoader.load('groovy/java.groovy');
-                        }
-                        java.gradlew()
-                        docker.build()
+                        sh 'docker login ${REGISTRY_REPO} --username ${REGISTRY_USERNAME} --password ${REGISTRY_PASSWORD}'
+                        sh 'docker build --tag ${IMAGE_NAME}:${RELEASE_VERSION} --file ${DOCKER_FILE} ${DOCKER_FILE_CONTEXT} --no-cache --force-rm'
+                        sh 'docker push ${IMAGE_NAME}:${RELEASE_VERSION}'
                     }
                 }
             }
