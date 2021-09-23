@@ -21,7 +21,6 @@ def call(Map map) {
             stage('clone'){
                 steps{
                     script {
-                        if (env.BRANCH == null){ env.BRANCH = 'master' }
                         def g = new org.ops.Git()
                         g.checkout()
                     }
