@@ -1,5 +1,5 @@
 
-def docker_build(Map map){
+def docker_build(){
     pipeline{
         agent any
 //         environment {
