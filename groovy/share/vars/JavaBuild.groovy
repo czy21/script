@@ -2,10 +2,7 @@
 
 def call(Map map) {
     print map
-    checkout([$class: 'GitSCM', branches: [[name: "master"]],
-    extensions: [[$class: 'SubmoduleOption', disableSubmodules: false, parentCredentials: true, recursiveSubmodules: true, reference: '', trackingSubmodules: false]],
-    userRemoteConfigs: [[credentialsId: "${map.GIT_CREDENTIAL_ID}", url: "${map.GIT_REPOSITORY_URL}"]]]
-    )
+    git credentialsId: "${map.GIT_CREDENTIAL_ID}", url: "${map.GIT_REPOSITORY_URL}"
     pipeline{
         agent any
         environment {
