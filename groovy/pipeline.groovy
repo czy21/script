@@ -3,7 +3,7 @@ def docker_build(Map map){
     pipeline{
         agent any
         parameters {
-          gitParameter branchFilter: 'origin/(.*)', name: 'BRANCH', type: 'PT_BRANCH',defaultValue: 'master',useRepository: "${map.REPOSITORY_URL}"
+          gitParameter branchFilter: 'origin/(.*)', name: 'BRANCH', type: 'PT_BRANCH',defaultValue: 'master',useRepository: "${map.GIT_REPOSITORY_URL}"
         }
         stages {
             stage('clone'){
