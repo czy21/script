@@ -1,7 +1,7 @@
 #!/usr/bin/env groovy
 
 def call(Map map) {
-
+    print map
     pipeline{
         agent any
         environment {
