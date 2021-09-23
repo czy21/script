@@ -41,13 +41,13 @@ spec:
           claimName: data-{{ .Release.Name }}
       containers:
       - name: '{{ .Release.Name }}'
-        image: {{ .Values.REGISTRY_REPO }}/{{ .Values.REGISTRY_DIR }}/{{ .Release.Name }}:{{ .Values.RELEASE_VERSION }}
+        image: {{ .Values.PARAM_REGISTRY_REPO }}/{{ .Values.PARAM_REGISTRY_DIR }}/{{ .Release.Name }}:{{ .Values.PARAM_RELEASE_VERSION }}
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
         env:
         - name: ENV_NAME
-          value: {{ .Values.envName }}
+          value: {{ .Values.PARAM_ENV_NAME }}
         - name: POD_NAME
           valueFrom:
             fieldRef:
