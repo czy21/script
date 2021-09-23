@@ -13,7 +13,7 @@ def call(Map map) {
             GIT_CREDENTIAL_ID  = "${map.GIT_CREDENTIAL_ID}"
         }
         parameters {
-          gitParameter branchFilter: 'origin/(.*)', name: 'BRANCH', type: 'PT_BRANCH',defaultValue: 'master',useRepository: "${map.GIT_REPOSITORY_URL}"
+          gitParameter branchFilter: 'origin/(.*)', name: 'BRANCH', type: 'PT_BRANCH',defaultValue: 'master'
         }
         stages {
             stage('clone'){
