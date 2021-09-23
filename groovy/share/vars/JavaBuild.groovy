@@ -2,7 +2,10 @@
 
 def call(Map map) {
     print map
-    git credentialsId: "${map.GIT_CREDENTIAL_ID}", url: "${map.GIT_REPOSITORY_URL}"
+
+    node {
+        git credentialsId: "${map.GIT_CREDENTIAL_ID}", url: "${map.GIT_REPOSITORY_URL}"
+    }
     pipeline{
         agent any
         environment {
