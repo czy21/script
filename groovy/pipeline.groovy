@@ -4,9 +4,9 @@ def docker_build(Map map){
         agent any
         environment {
             GRADLE_INIT_FILE = "/var/jenkins_home/tools/gradle/init.d/init.gradle"
-            PROJECT_ROOT="${map.PROJECT_ROOT}"
-            PROJECT_NAME="${map.PROJECT_NAME}"
-            PROJECT_MODULE="${map.PROJECT_MODULE}"
+            PROJECT_ROOT = "${map.PROJECT_ROOT}"
+            PROJECT_NAME = "${map.PROJECT_NAME}"
+            PROJECT_MODULE = "${map.PROJECT_MODULE}"
         }
         parameters {
           gitParameter branchFilter: 'origin/(.*)', name: 'BRANCH', type: 'PT_BRANCH',defaultValue: 'master',useRepository: "${map.REPOSITORY_URL}"
@@ -17,7 +17,7 @@ def docker_build(Map map){
                     checkout([$class: 'GitSCM',
                     branches: [[name: "${BRANCH}"]],
                     extensions: [[$class: 'SubmoduleOption', disableSubmodules: false, parentCredentials: true, recursiveSubmodules: true, reference: '', trackingSubmodules: false]],
-                    userRemoteConfigs: [[credentialsId: "${map.REPOSITORY_CREDENTIAL_ID}", url: "${map.REPOSITORY_URL}"]]])
+                    userRemoteConfigs: [[credentialsId: "${map.GIT_REPOSITORY_CREDENTIAL_ID}", url: "${map.GIT_REPOSITORY_URL}"]]])
                 }
             }
             stage('build'){
