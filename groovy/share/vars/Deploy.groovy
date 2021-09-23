@@ -43,14 +43,25 @@ def call(Map map) {
                 configFileProvider([configFile(fileId: "${GLOBAL_ENV_FILE_ID}", targetLocation: 'env.groovy', variable: 'ENV_CONFIG')]) {
                     load "env.groovy";
                 }
-            env.ENV_NAME = "${map.ENV_NAME}"
-            env.RELEASE_NAMESPACE = "${map.RELEASE_NAMESPACE}"
-            env.RELEASE_NAME = "${map.RELEASE_NAME}"
-            env.RELEASE_VERSION = "${map.RELEASE_VERSION}"
-            env.RELEASE_CHART_NAME    = env.HELM_JAVA_CHART_NAME
-            env.RELEASE_CHART_VERSION = env.HELM_JAVA_CHART_VERSION
-            helm.build()
-            k8s.apply()
+                env.ENV_NAME = "${map.ENV_NAME}"
+                env.RELEASE_NAMESPACE = "${map.RELEASE_NAMESPACE}"
+                env.RELEASE_NAME = "${map.RELEASE_NAME}"
+                env.RELEASE_VERSION = "${map.RELEASE_VERSION}"
+                switch(map.TYPE) {
+                 case "java":
+                    env.RELEASE_CHART_NAME    = env.HELM_JAVA_CHART_NAME
+                    env.RELEASE_CHART_VERSION = env.HELM_JAVA_CHART_VERSION
+                    break;
+                 case "web":
+                    env.RELEASE_CHART_NAME    = env.HELM_WEB_CHART_NAME
+                    env.RELEASE_CHART_VERSION = env.HELM_WEB_CHART_VERSION
+                    break;
+                 default:
+                    println("The value is unknown");
+                    break;
+                }
+                helm.build()
+                k8s.apply()
             }
           }
         }
