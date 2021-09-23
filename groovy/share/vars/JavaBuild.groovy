@@ -6,8 +6,6 @@ def call(Map map) {
        stages{
          stage('build'){
             steps{
-                script{
-                }
                 sh 'echo hello docker'
             }
          }
