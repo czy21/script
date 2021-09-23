@@ -2,16 +2,7 @@
 package org.ops
 
 def buildJava(){
-    pipeline {
-       agent any
-       stages{
-         stage('build'){
-            steps{
-                sh 'echo hello docker'
-            }
-         }
-       }
-    }
+    sh 'echo hello'
 }
 
 return this
