@@ -1,4 +1,3 @@
-appVersion: ""
-registry:
-  url: registry.cluster2.com
-  dir: library
+RELEASE_VERSION: ""
+REGISTRY_REPO: registry.cluster2.com
+REGISTRY_DIR: library
