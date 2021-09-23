@@ -1,7 +1,6 @@
 #!/usr/bin/env groovy
-package org.ops
 
-def buildJava(){
+def call(Map map) {
     pipeline {
        agent any
        stages{
@@ -16,4 +15,3 @@ def buildJava(){
     }
 }
 
-return this
