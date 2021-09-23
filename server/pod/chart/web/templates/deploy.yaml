@@ -47,7 +47,7 @@ spec:
           claimName: data-{{ .Release.Name }}
       containers:
       - name: '{{ .Release.Name }}'
-        image: {{ .Values.registry.url }}/{{ .Values.registry.dir }}/{{ .Release.Name }}:{{ .Values.appVersion }}
+        image: {{ .Values.REGISTRY_REPO }}/{{ .Values.REGISTRY_DIR }}/{{ .Release.Name }}:{{ .Values.RELEASE_VERSION }}
         imagePullPolicy: Always
         ports:
         - containerPort: 80

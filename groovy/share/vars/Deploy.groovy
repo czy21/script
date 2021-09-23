@@ -53,6 +53,7 @@ def call(Map map) {
                     env.RELEASE_CHART_VERSION = env.HELM_JAVA_CHART_VERSION
                     break;
                  case "web":
+                    env.BACKEND_URL = "${map.BACKEND_URL}"
                     env.RELEASE_CHART_NAME    = env.HELM_WEB_CHART_NAME
                     env.RELEASE_CHART_VERSION = env.HELM_WEB_CHART_VERSION
                     break;

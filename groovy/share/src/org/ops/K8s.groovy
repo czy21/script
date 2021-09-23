@@ -3,7 +3,7 @@ package org.ops
 
 def build(){
     sh 'env > values.yaml'
-    sh 'helm template ${RELEASE_NAME} ${RELEASE_CHART_NAME} --version ${RELEASE_CHART_VERSION} --namespace ${RELEASE_NAMESPACE} --repo ${HELM_REPO} --set appVersion=${RELEASE_VERSION},envName=${ENV_NAME} 2>&1 | tee deploy.yaml'
+    sh 'helm template ${RELEASE_NAME} ${RELEASE_CHART_NAME} --version ${RELEASE_CHART_VERSION} --namespace ${RELEASE_NAMESPACE} --repo ${HELM_REPO} --values values.yaml 2>&1 | tee deploy.yaml'
 }
 
 
