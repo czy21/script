@@ -40,7 +40,7 @@ def call(Map map) {
         stage('deploy') {
           steps {
             script {
-                configFileProvider([configFile(fileId: "${GLOBAL_ENV_FILE_ID}", targetLocation: 'env.groovy', variable: 'ENV_CONFIG')]) {
+                configFileProvider([configFile(fileId: "${map.GLOBAL_ENV_FILE_ID}", targetLocation: 'env.groovy', variable: 'ENV_CONFIG')]) {
                     load "env.groovy";
                 }
                 env.ENV_NAME = "${map.ENV_NAME}"
