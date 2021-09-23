@@ -1,5 +1,6 @@
 
 def docker_build(Map map){
+    print map
     pipeline{
         agent any
 //         parameters {
