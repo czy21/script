@@ -3,9 +3,9 @@ package org.ops
 
 def checkout(){
     if (env.BRANCH == null){ env.BRANCH = 'master' }
-    checkout([$class: 'GitSCM', branches: [[name: "${BRANCH}"]],
+    checkout([$class: 'GitSCM', branches: [[name: "${PARAM_BRANCH}"]],
     extensions: [[$class: 'SubmoduleOption', disableSubmodules: false, parentCredentials: true, recursiveSubmodules: true, reference: '', trackingSubmodules: false]],
-    userRemoteConfigs: [[credentialsId: "${GIT_CREDENTIAL_ID}", url: "${GIT_REPOSITORY_URL}"]]
+    userRemoteConfigs: [[credentialsId: "${PARAM_GIT_CREDENTIAL_ID}", url: "${PARAM_GIT_REPOSITORY_URL}"]]
     ])
 }
 

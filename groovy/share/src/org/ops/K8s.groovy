@@ -3,7 +3,7 @@ package org.ops
 
 def build(){
     sh 'env > env.conf'
-    sh 'cat env.conf | paste -d "," -s | xargs helm template ${RELEASE_NAME} ${RELEASE_CHART_NAME} --version ${RELEASE_CHART_VERSION} --namespace ${RELEASE_NAMESPACE} --repo ${HELM_REPO} --set  2>&1 | tee deploy.yaml'
+    sh 'cat env.conf | grep \'^PARAM_\' | paste -d "," -s | xargs helm template ${PARAM_RELEASE_NAME} ${PARAM_RELEASE_CHART_NAME} --version ${PARAM_RELEASE_CHART_VERSION} --namespace ${PARAM_RELEASE_NAMESPACE} --repo ${PARAM_HELM_REPO} --set-string  2>&1 | tee deploy.yaml'
 }
 
 

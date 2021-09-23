@@ -6,16 +6,16 @@ def call(Map map) {
     pipeline{
         agent any
         environment {
-            GRADLE_INIT_FILE = "/var/jenkins_home/tools/gradle/init.d/init.gradle"
-            PROJECT_ROOT    = "${WORKSPACE}/${map.PROJECT_ROOT}"
-            PROJECT_NAME    = "${map.PROJECT_NAME}"
-            PROJECT_MODULE  = "${map.PROJECT_MODULE}"
-            GIT_REPOSITORY_URL = "${map.GIT_REPOSITORY_URL}"
-            GIT_CREDENTIAL_ID  = "${map.GIT_CREDENTIAL_ID}"
-            GLOBAL_ENV_FILE_ID = "${map.GLOBAL_ENV_FILE_ID}"
+            PARAM_GRADLE_INIT_FILE = "/var/jenkins_home/tools/gradle/init.d/init.gradle"
+            PARAM_PROJECT_ROOT    = "${WORKSPACE}/${map.PARAM_PROJECT_ROOT}"
+            PARAM_PROJECT_NAME    = "${map.PARAM_PROJECT_NAME}"
+            PARAM_PROJECT_MODULE  = "${map.PARAM_PROJECT_MODULE}"
+            PARAM_GIT_REPOSITORY_URL = "${map.PARAM_GIT_REPOSITORY_URL}"
+            PARAM_GIT_CREDENTIAL_ID  = "${map.PARAM_GIT_CREDENTIAL_ID}"
+            PARAM_GLOBAL_ENV_FILE_ID = "${map.PARAM_GLOBAL_ENV_FILE_ID}"
         }
         parameters {
-          gitParameter branchFilter: 'origin/(.*)', name: 'BRANCH', type: 'PT_BRANCH',defaultValue: 'master',useRepository: "${map.GIT_REPOSITORY_URL}"
+          gitParameter branchFilter: 'origin/(.*)', name: 'BRANCH', type: 'PT_BRANCH',defaultValue: 'master',useRepository: "${map.PARAM_GIT_REPOSITORY_URL}"
         }
         stages {
             stage('clone'){
@@ -34,7 +34,7 @@ def call(Map map) {
                     script{
                         def d = new org.ops.Docker()
                         d.prepare()
-                        sh 'chmod +x ${PROJECT_ROOT}/gradlew && ${PROJECT_ROOT}/gradlew --init-script ${GRADLE_INIT_FILE} --build-file ${PROJECT_ROOT}/build.gradle ${PROJECT_MODULE}:clean ${PROJECT_MODULE}:build -x test'
+                        sh 'chmod +x ${PARAM_PROJECT_ROOT}/gradlew && ${PARAM_PROJECT_ROOT}/gradlew --init-script ${PARAM_GRADLE_INIT_FILE} --build-file ${PARAM_PROJECT_ROOT}/build.gradle ${PARAM_PROJECT_MODULE}:clean ${PARAM_PROJECT_MODULE}:build -x test'
                         d.build()
                     }
                 }

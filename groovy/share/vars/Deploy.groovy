@@ -43,19 +43,19 @@ def call(Map map) {
                 configFileProvider([configFile(fileId: "${map.GLOBAL_ENV_FILE_ID}", targetLocation: 'env.groovy', variable: 'ENV_CONFIG')]) {
                     load "env.groovy";
                 }
-                env.ENV_NAME = "${map.ENV_NAME}"
-                env.RELEASE_NAMESPACE = "${map.RELEASE_NAMESPACE}"
-                env.RELEASE_NAME = "${map.RELEASE_NAME}"
-                env.RELEASE_VERSION = "${map.RELEASE_VERSION}"
+                env.PARAM_ENV_NAME = "${map.ENV_NAME}"
+                env.PARAM_RELEASE_NAMESPACE = "${map.RELEASE_NAMESPACE}"
+                env.PARAM_RELEASE_NAME = "${map.RELEASE_NAME}"
+                env.PARAM_RELEASE_VERSION = "${map.RELEASE_VERSION}"
                 switch(map.TYPE) {
                  case "java":
-                    env.RELEASE_CHART_NAME    = env.HELM_JAVA_CHART_NAME
-                    env.RELEASE_CHART_VERSION = env.HELM_JAVA_CHART_VERSION
+                    env.PARAM_RELEASE_CHART_NAME    = env.PARAM_HELM_JAVA_CHART_NAME
+                    env.PARAM_RELEASE_CHART_VERSION = env.PARAM_HELM_JAVA_CHART_VERSION
                     break;
                  case "web":
-                    env.BACKEND_URL = "${map.BACKEND_URL}"
-                    env.RELEASE_CHART_NAME    = env.HELM_WEB_CHART_NAME
-                    env.RELEASE_CHART_VERSION = env.HELM_WEB_CHART_VERSION
+                    env.PARAM_BACKEND_URL = "${map.BACKEND_URL}"
+                    env.PARAM_RELEASE_CHART_NAME    = env.HELM_WEB_CHART_NAME
+                    env.PARAM_RELEASE_CHART_VERSION = env.HELM_WEB_CHART_VERSION
                     break;
                  default:
                     println("The value is unknown");
