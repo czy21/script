@@ -12,6 +12,8 @@ def call(Map map) {
             GIT_REPOSITORY_URL = "${map.GIT_REPOSITORY_URL}"
             GIT_CREDENTIAL_ID  = "${map.GIT_CREDENTIAL_ID}"
             GLOBAL_ENV_FILE_ID = "${map.GLOBAL_ENV_FILE_ID}"
+            NODEJS_HOME = "${tool 'node-v14.17.5'}"
+            PATH="${NODEJS_HOME}/bin:${PATH}"
         }
         parameters {
           gitParameter branchFilter: 'origin/(.*)', name: 'BRANCH', type: 'PT_BRANCH',defaultValue: 'master',useRepository: "${map.GIT_REPOSITORY_URL}"
