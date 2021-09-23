@@ -2,6 +2,8 @@
 
 def call(Map map) {
     print map
+    def d = new org.ops.Docker()
+    def g = new org.ops.Git()
     pipeline{
         agent any
         environment {
@@ -22,10 +24,7 @@ def call(Map map) {
                     script {
                         if (env.BRANCH == null){ env.BRANCH = 'master' }
                     }
-                    checkout([$class: 'GitSCM', branches: [[name: "${BRANCH}"]],
-                    extensions: [[$class: 'SubmoduleOption', disableSubmodules: false, parentCredentials: true, recursiveSubmodules: true, reference: '', trackingSubmodules: false]],
-                    userRemoteConfigs: [[credentialsId: "${GIT_CREDENTIAL_ID}", url: "${GIT_REPOSITORY_URL}"]]
-                    ])
+                    g.checkout()
                 }
             }
             stage('build'){
@@ -43,7 +42,6 @@ def call(Map map) {
                         env.DOCKER_FILE_CONTEXT = "${PROJECT_ROOT}/${PROJECT_MODULE}/"
 
                         sh 'chmod +x ${PROJECT_ROOT}/gradlew && ${PROJECT_ROOT}/gradlew --init-script ${GRADLE_INIT_FILE} --build-file ${PROJECT_ROOT}/build.gradle ${PROJECT_MODULE}:clean ${PROJECT_MODULE}:build -x test'
-                        def d = new org.ops.Docker()
                         d.build()
                     }
                 }
