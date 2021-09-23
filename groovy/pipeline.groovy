@@ -4,12 +4,12 @@ def docker_build(Map map){
         agent any
         environment {
             GRADLE_INIT_FILE = "/var/jenkins_home/tools/gradle/init.d/init.gradle"
-            GLOBAL_ENV_FILE_ID = "${map.GLOBAL_ENV_FILE_ID}"
-            GIT_REPOSITORY_CREDENTIAL_ID = "${map.GIT_REPOSITORY_CREDENTIAL_ID}"
-            GIT_REPOSITORY_URL = "${map.GIT_REPOSITORY_URL}"
-            PROJECT_ROOT = "${map.PROJECT_ROOT}"
-            PROJECT_NAME = "${map.PROJECT_NAME}"
-            PROJECT_MODULE = "${map.PROJECT_MODULE}"
+            GLOBAL_ENV_FILE_ID = "dev.env"
+            GIT_REPOSITORY_CREDENTIAL_ID = "bruce"
+            GIT_REPOSITORY_URL = "git@gitee.com:czyhome/erp.git"
+            PROJECT_ROOT = "${WORKSPACE}/code/api"
+            PROJECT_NAME = "erp"
+            PROJECT_MODULE = "gateway"
         }
         parameters {
           gitParameter branchFilter: 'origin/(.*)', name: 'BRANCH', type: 'PT_BRANCH',defaultValue: 'master',useRepository: "${GIT_REPOSITORY_URL}"
