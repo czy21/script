@@ -14,7 +14,7 @@ def call(Map map) {
             GLOBAL_ENV_FILE_ID = "${map.GLOBAL_ENV_FILE_ID}"
         }
         parameters {
-          gitParameter branchFilter: 'origin/(.*)', name: 'BRANCH', type: 'PT_BRANCH',defaultValue: 'master',useRepository: "${map.GIT_REPOSITORY_URL}"
+          gitParameter branchFilter: 'origin/(.*)', name: 'BRANCH', type: 'PT_BRANCH',defaultValue: 'master',useRepository: "${env.GIT_REPOSITORY_URL}"
         }
         stages {
             stage('clone'){
