@@ -2,6 +2,7 @@
 
 def call(Map map) {
     print map
+    resolveScm source: [$class: 'GitSCMSource', credentialsId: "${map.GIT_CREDENTIAL_ID}", id: '_', remote: "${map.GIT_REPOSITORY_URL}", traits: [gitBranchDiscovery()]], targets: ['']
     pipeline{
         agent any
         environment {
