@@ -7,8 +7,6 @@ def buildJava(){
        stages{
          stage('build'){
             steps{
-                script{
-                }
                 sh 'echo hello docker'
             }
          }
