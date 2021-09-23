@@ -16,7 +16,7 @@ spec:
         path: /
         backend:
           service:
-            name: operation
+            name: erp-operation
             port:
               number: 80
 ---
