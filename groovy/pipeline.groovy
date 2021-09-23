@@ -9,7 +9,7 @@ def call(Map map){
             PROJECT_MODULE="${map.PROJECT_MODULE}"
         }
         parameters {
-          gitParameter branchFilter: 'origin/(.*)', name: 'BRANCH', type: 'PT_BRANCH',defaultValue: 'master'
+          gitParameter branchFilter: 'origin/(.*)', name: 'BRANCH', type: 'PT_BRANCH',defaultValue: 'master',useRepository: 'git@gitee.com:czyhome/erp.git'
         }
         stages {
             stage('clone'){
