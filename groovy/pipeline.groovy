@@ -8,10 +8,7 @@ def docker_build(Map map){
         stages {
             stage('clone'){
                 steps{
-                    checkout([$class: 'GitSCM',
-                    branches: [[name: "${BRANCH}"]],
-                    extensions: [[$class: 'SubmoduleOption', disableSubmodules: false, parentCredentials: true, recursiveSubmodules: true, reference: '', trackingSubmodules: false]],
-                    userRemoteConfigs: [[credentialsId: "${map.GIT_REPOSITORY_CREDENTIAL_ID}", url: "${map.GIT_REPOSITORY_URL}"]]])
+                    checkout([$class: 'GitSCM',branches: [[name: "${BRANCH}"]],extensions: [[$class: 'SubmoduleOption', disableSubmodules: false, parentCredentials: true, recursiveSubmodules: true, reference: '', trackingSubmodules: false]],userRemoteConfigs: [[credentialsId: "${map.GIT_REPOSITORY_CREDENTIAL_ID}", url: "${map.GIT_REPOSITORY_URL}"]]])
                 }
             }
 //             stage('build'){
