@@ -45,9 +45,8 @@ def call(Map map) {
                         env.DOCKER_FILE_CONTEXT = "${PROJECT_ROOT}/${PROJECT_MODULE}/"
 
                         sh 'nrm use taobao && yarn --cwd ${PROJECT_ROOT}/${PROJECT_MODULE} install && yarn --cwd ${PROJECT_ROOT}/${PROJECT_MODULE} --ignore-engines build'
-                        sh 'docker login ${REGISTRY_REPO} --username ${REGISTRY_USERNAME} --password ${REGISTRY_PASSWORD}'
-                        sh 'docker build --tag ${IMAGE_NAME}:${RELEASE_VERSION} --file ${DOCKER_FILE} ${DOCKER_FILE_CONTEXT} --no-cache --force-rm'
-                        sh 'docker push ${IMAGE_NAME}:${RELEASE_VERSION}'
+                        def d = new org.ops.Docker()
+                        d.build()
                     }
                 }
             }
