@@ -37,6 +37,8 @@ def call(Map map) {
                         configFileProvider([configFile(fileId: "${GLOBAL_ENV_FILE_ID}", targetLocation: 'env.groovy', variable: 'ENV_CONFIG')]) {
                             load "env.groovy";
                         }
+                        def d = new org.ops.Docker()
+                        d.buildJava()
                         env.RELEASE_VERSION = params.BRANCH
                         env.IMAGE_NAME="${REGISTRY_REPO}/${REGISTRY_DIR}/${PROJECT_NAME}-${PROJECT_MODULE}"
                         env.DOCKER_FILE = "${PROJECT_ROOT}/${PROJECT_MODULE}/Dockerfile"
