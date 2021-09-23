@@ -20,12 +20,12 @@ def call(Map map) {
             stage('clone'){
                 steps{
                     script {
-                        if (env.BRANCH ==null){env.BRANCH = 'master'}
+                        if (env.BRANCH == null){ env.BRANCH = 'master' }
                     }
                     checkout([$class: 'GitSCM', branches: [[name: "${BRANCH}"]],
                     extensions: [[$class: 'SubmoduleOption', disableSubmodules: false, parentCredentials: true, recursiveSubmodules: true, reference: '', trackingSubmodules: false]],
-                    userRemoteConfigs: [[credentialsId: "${GIT_CREDENTIAL_ID}", url: "${GIT_REPOSITORY_URL}"]]]
-                    )
+                    userRemoteConfigs: [[credentialsId: "${GIT_CREDENTIAL_ID}", url: "${GIT_REPOSITORY_URL}"]]
+                    ])
                 }
             }
             stage('build'){
