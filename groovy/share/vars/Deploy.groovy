@@ -60,7 +60,7 @@ def call(Map map) {
                     println("The value is unknown");
                     break;
                 }
-                def k = new org.ops.k8s()
+                def k = new org.ops.K8s()
                 k.build()
                 k.apply()
             }
