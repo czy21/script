@@ -44,3 +44,5 @@ def call(Map map){
         }
     }
 }
+
+return this
