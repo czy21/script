@@ -2,7 +2,10 @@
 
 def call(Map map) {
     print map
-    resolveScm source: [$class: 'GitSCMSource', credentialsId: "${map.GIT_CREDENTIAL_ID}", id: '_', remote: "${map.GIT_REPOSITORY_URL}", traits: [gitBranchDiscovery()]], targets: ['']
+    checkout([$class: 'GitSCM', branches: [[name: "master"]],
+    extensions: [[$class: 'SubmoduleOption', disableSubmodules: false, parentCredentials: true, recursiveSubmodules: true, reference: '', trackingSubmodules: false]],
+    userRemoteConfigs: [[credentialsId: "${map.GIT_CREDENTIAL_ID}", url: "${map.GIT_REPOSITORY_URL}"]]]
+    )
     pipeline{
         agent any
         environment {
