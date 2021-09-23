@@ -2,8 +2,8 @@
 package org.ops
 
 def build(){
-    sh 'env > values.yaml'
-    sh 'helm template ${RELEASE_NAME} ${RELEASE_CHART_NAME} --version ${RELEASE_CHART_VERSION} --namespace ${RELEASE_NAMESPACE} --repo ${HELM_REPO} --values values.yaml 2>&1 | tee deploy.yaml'
+    sh 'env > env.conf'
+    sh 'cat env.conf | paste -d "," -s | xargs helm template ${RELEASE_NAME} ${RELEASE_CHART_NAME} --version ${RELEASE_CHART_VERSION} --namespace ${RELEASE_NAMESPACE} --repo ${HELM_REPO} --set  2>&1 | tee deploy.yaml'
 }
 
 
