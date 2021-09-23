@@ -23,11 +23,9 @@ def call(Map map) {
                 steps{
                     script {
                         if (env.BRANCH == null){ env.BRANCH = 'master' }
+                        def g = new org.ops.Git()
+                        g.checkout()
                     }
-                    checkout([$class: 'GitSCM', branches: [[name: "${BRANCH}"]],
-                    extensions: [[$class: 'SubmoduleOption', disableSubmodules: false, parentCredentials: true, recursiveSubmodules: true, reference: '', trackingSubmodules: false]],
-                    userRemoteConfigs: [[credentialsId: "${GIT_CREDENTIAL_ID}", url: "${GIT_REPOSITORY_URL}"]]]
-                    )
                 }
             }
             stage('build'){
@@ -36,16 +34,9 @@ def call(Map map) {
                 }
                 steps{
                     script{
-                        configFileProvider([configFile(fileId: "${GLOBAL_ENV_FILE_ID}", targetLocation: 'env.groovy', variable: 'ENV_CONFIG')]) {
-                            load "env.groovy";
-                        }
-                        env.RELEASE_VERSION = params.BRANCH
-                        env.IMAGE_NAME="${REGISTRY_REPO}/${REGISTRY_DIR}/${PROJECT_NAME}-${PROJECT_MODULE}"
-                        env.DOCKER_FILE = "${PROJECT_ROOT}/${PROJECT_MODULE}/Dockerfile"
-                        env.DOCKER_FILE_CONTEXT = "${PROJECT_ROOT}/${PROJECT_MODULE}/"
-
-                        sh 'nrm use taobao && yarn --cwd ${PROJECT_ROOT}/${PROJECT_MODULE} install && yarn --cwd ${PROJECT_ROOT}/${PROJECT_MODULE} --ignore-engines build'
                         def d = new org.ops.Docker()
+                        d.prepare()
+                        sh 'nrm use taobao && yarn --cwd ${PROJECT_ROOT}/${PROJECT_MODULE} install && yarn --cwd ${PROJECT_ROOT}/${PROJECT_MODULE} --ignore-engines build'
                         d.build()
                     }
                 }

@@ -33,16 +33,9 @@ def call(Map map) {
                 }
                 steps{
                     script{
-                        configFileProvider([configFile(fileId: "${GLOBAL_ENV_FILE_ID}", targetLocation: 'env.groovy', variable: 'ENV_CONFIG')]) {
-                            load "env.groovy";
-                        }
-                        env.RELEASE_VERSION = params.BRANCH
-                        env.IMAGE_NAME="${REGISTRY_REPO}/${REGISTRY_DIR}/${PROJECT_NAME}-${PROJECT_MODULE}"
-                        env.DOCKER_FILE = "${PROJECT_ROOT}/${PROJECT_MODULE}/Dockerfile"
-                        env.DOCKER_FILE_CONTEXT = "${PROJECT_ROOT}/${PROJECT_MODULE}/"
-
-                        sh 'chmod +x ${PROJECT_ROOT}/gradlew && ${PROJECT_ROOT}/gradlew --init-script ${GRADLE_INIT_FILE} --build-file ${PROJECT_ROOT}/build.gradle ${PROJECT_MODULE}:clean ${PROJECT_MODULE}:build -x test'
                         def d = new org.ops.Docker()
+                        d.prepare()
+                        sh 'chmod +x ${PROJECT_ROOT}/gradlew && ${PROJECT_ROOT}/gradlew --init-script ${GRADLE_INIT_FILE} --build-file ${PROJECT_ROOT}/build.gradle ${PROJECT_MODULE}:clean ${PROJECT_MODULE}:build -x test'
                         d.build()
                     }
                 }
