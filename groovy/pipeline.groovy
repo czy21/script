@@ -23,7 +23,7 @@ def docker_build(Map map){
                         configFileProvider([configFile(fileId: "${map.GLOBAL_ENV_FILE_ID}", targetLocation: 'env.groovy', variable: 'ENV_CONFIG')]) {
                             load "env.groovy";
                         }
-                        env.PROJECT_ROOT = "${map.PROJECT_ROOT}"
+                        env.PROJECT_ROOT = "${WORKSPACE}/${map.PROJECT_ROOT}"
                         env.PROJECT_NAME = "${map.PROJECT_NAME}"
                         env.PROJECT_MODULE = "${map.PROJECT_MODULE}"
 
