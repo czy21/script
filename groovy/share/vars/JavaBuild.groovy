@@ -18,6 +18,10 @@ def call(Map map) {
         }
         stages {
             stage('clone'){
+                when{
+                    BRANCH null
+                    environment name: 'BRANCH', value: 'master'
+                }
                 steps{
                     checkout([$class: 'GitSCM', branches: [[name: "${BRANCH}"]],
                     extensions: [[$class: 'SubmoduleOption', disableSubmodules: false, parentCredentials: true, recursiveSubmodules: true, reference: '', trackingSubmodules: false]],
