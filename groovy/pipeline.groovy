@@ -2,18 +2,18 @@
 def docker_build(Map map){
     pipeline{
         agent any
-        environment {
-            GRADLE_INIT_FILE = "/var/jenkins_home/tools/gradle/init.d/init.gradle"
-            GLOBAL_ENV_FILE_ID = "dev.env"
-            GIT_REPOSITORY_CREDENTIAL_ID = "bruce"
-            GIT_REPOSITORY_URL = "git@gitee.com:czyhome/erp.git"
-            PROJECT_ROOT = "${WORKSPACE}/code/api"
-            PROJECT_NAME = "erp"
-            PROJECT_MODULE = "gateway"
-        }
-        parameters {
-          gitParameter branchFilter: 'origin/(.*)', name: 'BRANCH', type: 'PT_BRANCH',defaultValue: 'master',useRepository: "${GIT_REPOSITORY_URL}"
-        }
+//         environment {
+//             GRADLE_INIT_FILE = "/var/jenkins_home/tools/gradle/init.d/init.gradle"
+//             GLOBAL_ENV_FILE_ID = "dev.env"
+//             GIT_REPOSITORY_CREDENTIAL_ID = "bruce"
+//             GIT_REPOSITORY_URL = "git@gitee.com:czyhome/erp.git"
+//             PROJECT_ROOT = "${WORKSPACE}/code/api"
+//             PROJECT_NAME = "erp"
+//             PROJECT_MODULE = "gateway"
+//         }
+//         parameters {
+//           gitParameter branchFilter: 'origin/(.*)', name: 'BRANCH', type: 'PT_BRANCH',defaultValue: 'master',useRepository: "${GIT_REPOSITORY_URL}"
+//         }
         stages{
             stage('bbb'){
                 steps{
