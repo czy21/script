@@ -6,18 +6,19 @@ def call(Map map) {
         agent any
         environment {
             GRADLE_INIT_FILE = "/var/jenkins_home/tools/gradle/init.d/init.gradle"
-            PROJECT_ROOT="${WORKSPACE}/${map.PROJECT_ROOT}"
-            PROJECT_NAME="${map.PROJECT_NAME}"
-            PROJECT_MODULE="${map.PROJECT_MODULE}"
+            PROJECT_ROOT    = "${WORKSPACE}/${map.PROJECT_ROOT}"
+            PROJECT_NAME    = "${map.PROJECT_NAME}"
+            PROJECT_MODULE  = "${map.PROJECT_MODULE}"
+            GIT_REPOSITORY_URL = "${map.GIT_REPOSITORY_URL}"
+            GIT_CREDENTIAL_ID  = "${map.GIT_CREDENTIAL_ID}"
         }
         parameters {
-          gitParameter branchFilter: 'origin/(.*)', name: 'BRANCH', type: 'PT_BRANCH',defaultValue: 'master'
+          gitParameter branchFilter: 'origin/(.*)', name: 'BRANCH', type: 'PT_BRANCH',defaultValue: 'master',useRepository: "${GIT_REPOSITORY_URL}"
         }
         stages {
             stage('clone'){
                 steps{
-//                     checkout([$class: 'GitSCM', branches: [[name: "${BRANCH}"]], extensions: [[$class: 'SubmoduleOption', disableSubmodules: false, parentCredentials: true, recursiveSubmodules: true, reference: '', trackingSubmodules: false]], userRemoteConfigs: [[credentialsId: 'bruce', url: 'git@gitee.com:czyhome/erp.git']]])
-                    sh 'env'
+                    checkout([$class: 'GitSCM', branches: [[name: "${BRANCH}"]], extensions: [[$class: 'SubmoduleOption', disableSubmodules: false, parentCredentials: true, recursiveSubmodules: true, reference: '', trackingSubmodules: false]], userRemoteConfigs: [[credentialsId: "${GIT_CREDENTIAL_ID}", url: "${GIT_REPOSITORY_URL}"]]])
                 }
             }
 //             stage('build'){
