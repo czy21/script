@@ -60,8 +60,9 @@ def call(Map map) {
                     println("The value is unknown");
                     break;
                 }
-                helm.build()
-                k8s.apply()
+                def k = new org.ops.k8s()
+                k.build()
+                k.apply()
             }
           }
         }
