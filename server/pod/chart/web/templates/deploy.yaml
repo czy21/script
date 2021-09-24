@@ -47,7 +47,7 @@ spec:
           claimName: data-{{ .Release.Name }}
       containers:
       - name: '{{ .Release.Name }}'
-        image: {{ .Values.PARAM_REGISTRY_REPO }}/{{ .Values.PARAM_REGISTRY_DIR }}/{{ .Release.Name }}:{{ .Values.PARAM_RELEASE_VERSION }}
+        image: {{ .Values.registry_repo }}/{{ .Values.registry_dir }}/{{ .Release.Name }}:{{ .Values.release_version }}
         imagePullPolicy: Always
         ports:
         - containerPort: 80
