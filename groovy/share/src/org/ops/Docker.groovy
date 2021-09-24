@@ -11,10 +11,10 @@ def prepare(){
     configFileProvider([configFile(fileId: "${param_global_env_file_id}", targetLocation: 'env.groovy', variable: 'ENV_CONFIG')]) {
         load "env.groovy";
     }
-    env.RELEASE_VERSION = params.BRANCH
-    env.IMAGE_NAME="${param_registry_repo}/${param_registry_dir}/${param_project_name}-${param_project_module}"
-    env.DOCKER_FILE = "${param_project_root}/${param_project_module}/Dockerfile"
-    env.DOCKER_FILE_CONTEXT = "${param_project_root}/${param_project_module}/"
+    env.param_release_version = params.param_branch
+    env.param_image_name="${param_registry_repo}/${param_registry_dir}/${param_project_name}-${param_project_module}"
+    env.param_docker_file = "${param_project_root}/${param_project_module}/Dockerfile"
+    env.param_docker_file_context = "${param_project_root}/${param_project_module}/"
 }
 
 return this
