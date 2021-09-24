@@ -14,4 +14,30 @@ def apply(){
     }
 }
 
+
+def prepare(){
+    configFileProvider([configFile(fileId: "${map.param_global_env_file_id}", targetLocation: 'env.groovy', variable: 'ENV_CONFIG')]) {
+        load "env.groovy";
+    }
+    env.param_env_name="${map.param_env_name}"
+    env.param_release_namespace="${map.param_release_namespace}"
+    env.param_release_name="${map.param_release_name}"
+    env.param_release_version="${map.param_release_version}"
+
+    switch(map.param_code_type) {
+     case "java":
+        env.param_release_chart_name= env.param_helm_java_chart_name
+        env.param_release_chart_version= env.param_helm_java_chart_version
+        break;
+     case "web":
+        env.param_backend_url="${map.param_backend_url}"
+        env.param_release_chart_name= env.helm_web_chart_name
+        env.param_release_chart_version=env.helm_web_chart_version
+        break;
+     default:
+        println("The value is unknown");
+        break;
+    }
+}
+
 return this;
