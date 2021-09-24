@@ -47,7 +47,7 @@ def call(Map map) {
                 env.param_release_namespace="${map.param_release_namespace}"
                 env.param_release_name="${map.param_release_name}"
                 env.param_release_version="${map.param_release_version}"
-                switch(map.PARAM_TYPE) {
+                switch(map.param_type) {
                  case "java":
                     env.param_release_chart_name= env.param_helm_java_chart_name
                     env.param_release_chart_version= env.param_helm_java_chart_version
