@@ -34,8 +34,7 @@ def call(Map map) {
                     script{
                         def d = new org.ops.Docker()
                         d.prepare()
-                        sh 'chmod +x ${param_project_root}/gradlew && ${param_project_root}/gradlew --init-script ${param_gradle_init_file} --build-file ${param_project_root}/build.gradle ${param_project_module}:clean ${param_project_module}:build -x test'
-                        d.build()
+                        d.build(map.param_type)
                     }
                 }
             }
