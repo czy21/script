@@ -34,7 +34,7 @@ def call(Map map) {
                     script{
                         def d = new org.ops.Docker()
                         d.prepare()
-                        d.build(map.param_type)
+                        d.build(map.param_code_type)
                     }
                 }
             }
