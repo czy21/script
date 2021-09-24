@@ -16,14 +16,9 @@ def apply(){
 
 
 def prepare(){
-    configFileProvider([configFile(fileId: "${map.param_global_env_file_id}", targetLocation: 'global_env.groovy', variable: 'ENV_CONFIG')]) {
+    configFileProvider([configFile(fileId: "${param_global_env_file_id}", targetLocation: 'global_env.groovy', variable: 'ENV_CONFIG')]) {
         load "global_env.groovy";
     }
-    env.param_env_name="${map.param_env_name}"
-    env.param_release_namespace="${map.param_release_namespace}"
-    env.param_release_name="${map.param_release_name}"
-    env.param_release_version="${map.param_release_version}"
-    env.param_code_type = "${map.param_code_type}"
 
     switch(env.param_code_type) {
      case "java":
