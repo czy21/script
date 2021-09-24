@@ -78,7 +78,7 @@ data:
             proxy_set_header Upgrade $http_upgrade;
             proxy_set_header Connection $http_connection;
             proxy_cache_bypass $http_upgrade;
-            proxy_pass {{ .Values.PARAM_BACKEND_URL }}/;
+            proxy_pass {{ .Values.backend_url }}/;
         }
         error_page   500 502 503 504  /50x.html;
         location = /50x.html {

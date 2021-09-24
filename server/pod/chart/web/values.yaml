@@ -1,4 +1,4 @@
-PARAM_RELEASE_VERSION: ""
-PARAM_BACKEND_URL: ""
-PARAM_REGISTRY_REPO: registry.cluster2.com
-PARAM_REGISTRY_DIR: library
+release_version: ""
+backend_url: ""
+registry_repo: registry.cluster2.com
+registry_dir: library
