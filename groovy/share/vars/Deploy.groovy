@@ -47,7 +47,7 @@ def call(Map map) {
           steps {
             script {
                 def k = new org.ops.K8s()
-                k.prepare()
+                k.prepare(map)
                 k.build()
                 k.apply()
             }

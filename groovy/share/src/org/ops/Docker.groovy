@@ -21,7 +21,7 @@ def build(){
 }
 
 
-def prepare(){
+def prepare(Map map){
     configFileProvider([configFile(fileId: "${param_global_env_file_id}", targetLocation: 'global_env.groovy', variable: 'ENV_CONFIG')]) {
         load "global_env.groovy";
     }
