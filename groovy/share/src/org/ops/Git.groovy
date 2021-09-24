@@ -2,10 +2,10 @@
 package org.ops
 
 def checkout(){
-    if (env.BRANCH == null){ env.BRANCH = 'master' }
-    checkout([$class: 'GitSCM', branches: [[name: "${PARAM_BRANCH}"]],
-    extensions: [[$class: 'SubmoduleOption', disableSubmodules: false, parentCredentials: true, recursiveSubmodules: true, reference: '', trackingSubmodules: false]],
-    userRemoteConfigs: [[credentialsId: "${PARAM_GIT_CREDENTIAL_ID}", url: "${PARAM_GIT_REPOSITORY_URL}"]]
+    if (env.PARAM_BRANCH == null){ env.PARAM_BRANCH = 'master' }
+    checkout([$class: 'GitSCM', branches: [[name: "${param_branch}"]],
+            extensions: [[$class: 'SubmoduleOption', disableSubmodules: false, parentCredentials: true, recursiveSubmodules: true, reference: '', trackingSubmodules: false]],
+            userRemoteConfigs: [[credentialsId: "${param_git_credential_id}", url: "${param_git_repository_url}"]]
     ])
 }
 
