@@ -1,8 +1,6 @@
 #!/usr/bin/env groovy
 
 def call(Map map) {
-    print map
-
     pipeline{
         agent any
         environment {
@@ -34,7 +32,7 @@ def call(Map map) {
                     script{
                         def d = new org.ops.Docker()
                         d.prepare()
-                        d.build(map.param_code_type)
+                        d.build()
                     }
                 }
             }

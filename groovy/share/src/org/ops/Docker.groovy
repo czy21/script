@@ -1,8 +1,8 @@
 #!/usr/bin/env groovy
 package org.ops
 
-def build(String code_type){
-    switch(code_type) {
+def build(){
+    switch(map.param_code_type) {
      case "java":
         sh 'chmod +x ${param_project_root}/gradlew && ${param_project_root}/gradlew --init-script ${param_gradle_init_file} --build-file ${param_project_root}/build.gradle ${param_project_module}:clean ${param_project_module}:build -x test'
         break;
