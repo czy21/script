@@ -2,7 +2,7 @@
 package org.ops
 
 def build(){
-    switch(${map.param_code_type}) {
+    switch(env.param_code_type) {
      case "java":
         sh 'chmod +x ${param_project_root}/gradlew && ${param_project_root}/gradlew --init-script ${param_gradle_init_file} --build-file ${param_project_root}/build.gradle ${param_project_module}:clean ${param_project_module}:build -x test'
         break;
@@ -25,6 +25,7 @@ def prepare(){
     configFileProvider([configFile(fileId: "${param_global_env_file_id}", targetLocation: 'global_env.groovy', variable: 'ENV_CONFIG')]) {
         load "global_env.groovy";
     }
+    env.param_code_type = "${map.param_code_type}"
     env.param_release_version = params.param_branch
     env.param_image_name="${param_registry_repo}/${param_registry_dir}/${param_project_name}-${param_project_module}"
     env.param_docker_file = "${param_project_root}/${param_project_module}/Dockerfile"
