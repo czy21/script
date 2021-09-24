@@ -9,8 +9,7 @@ def build(){
 
 def apply(){
     withKubeConfig([credentialsId: env.param_kube_credential, serverUrl: env.param_kube_server]) {
-        sh 'sleep 9999'
-        // sh 'kubectl delete -f deploy.yaml --ignore-not-found=true && kubectl apply -f deploy.yaml'
+        sh 'kubectl delete -f deploy.yaml --ignore-not-found=true && kubectl apply -f deploy.yaml'
     }
 }
 
