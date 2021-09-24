@@ -27,8 +27,8 @@ def prepare(Map map){
         break;
      case "web":
         env.param_backend_url="${map.param_backend_url}"
-        env.param_release_chart_name= env.helm_web_chart_name
-        env.param_release_chart_version=env.helm_web_chart_version
+        env.param_release_chart_name= env.param_helm_web_chart_name
+        env.param_release_chart_version=env.param_helm_web_chart_version
         break;
      default:
         println("The value is unknown");
