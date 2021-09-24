@@ -32,7 +32,7 @@ def call(Map map) {
                 steps{
                     script{
                         def d = new org.ops.Docker()
-                        d.prepare()
+                        d.prepare(map)
                         d.build()
                     }
                 }
