@@ -5,18 +5,18 @@ def call(Map map) {
     pipeline{
         agent any
         environment {
-            PARAM_GRADLE_INIT_FILE = "/var/jenkins_home/tools/gradle/init.d/init.gradle"
-            PARAM_PROJECT_ROOT    = "${WORKSPACE}/${map.PARAM_PROJECT_ROOT}"
-            PARAM_PROJECT_NAME    = "${map.PARAM_PROJECT_NAME}"
-            PARAM_PROJECT_MODULE  = "${map.PARAM_PROJECT_MODULE}"
-            PARAM_GIT_REPOSITORY_URL = "${map.PARAM_GIT_REPOSITORY_URL}"
-            PARAM_GIT_CREDENTIAL_ID  = "${map.PARAM_GIT_CREDENTIAL_ID}"
-            PARAM_GLOBAL_ENV_FILE_ID = "${map.PARAM_GLOBAL_ENV_FILE_ID}"
-            PARAM_NODEJS_HOME = "${tool 'node-v14.17.5'}"
-            PARAM_PATH="${NODEJS_HOME}/bin:${PATH}"
+            param_gradle_init_file = "/var/jenkins_home/tools/gradle/init.d/init.gradle"
+            param_project_root    = "${WORKSPACE}/${map.param_project_root}"
+            param_project_name    = "${map.param_project_name}"
+            param_project_module  = "${map.param_project_module}"
+            param_git_repository_url = "${map.param_git_repository_url}"
+            param_git_credential_id  = "${map.param_git_credential_id}"
+            param_global_env_file_id = "${map.param_global_env_file_id}"
+            NODEJS_HOME = "${tool 'node-v14.17.5'}"
+            PATH="${NODEJS_HOME}/bin:${PATH}"
         }
         parameters {
-          gitParameter branchFilter: 'origin/(.*)', name: 'BRANCH', type: 'PT_BRANCH',defaultValue: 'master',useRepository: "${map.PARAM_GIT_REPOSITORY_URL}"
+          gitParameter branchFilter: 'origin/(.*)', name: 'param_branch', type: 'PT_BRANCH',defaultValue: 'master',useRepository: "${map.param_git_repository_url}"
         }
         stages {
             stage('clone'){
@@ -29,13 +29,13 @@ def call(Map map) {
             }
             stage('build'){
                 when{
-                    expression { BRANCH != 'master' }
+                    expression { param_branch != 'master' }
                 }
                 steps{
                     script{
                         def d = new org.ops.Docker()
                         d.prepare()
-                        sh 'nrm use taobao && yarn --cwd ${PARAM_PROJECT_ROOT}/${PARAM_PROJECT_MODULE} install && yarn --cwd ${PARAM_PROJECT_ROOT}/${PARAM_PROJECT_MODULE} --ignore-engines build'
+                        sh 'nrm use taobao && yarn --cwd ${param_project_root}/${param_project_module} install && yarn --cwd ${param_project_root}/${param_project_module} --ignore-engines build'
                         d.build()
                     }
                 }

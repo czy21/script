@@ -6,7 +6,7 @@ def call(Map map) {
     pipeline{
       agent {
         kubernetes {
-            cloud map.ENV_NAME
+            cloud map.param_env_name
             yaml '''
               apiVersion: v1
               kind: Pod
@@ -40,22 +40,22 @@ def call(Map map) {
         stage('deploy') {
           steps {
             script {
-                configFileProvider([configFile(fileId: "${map.GLOBAL_ENV_FILE_ID}", targetLocation: 'env.groovy', variable: 'ENV_CONFIG')]) {
+                configFileProvider([configFile(fileId: "${map.param_global_env_file_id}", targetLocation: 'env.groovy', variable: 'ENV_CONFIG')]) {
                     load "env.groovy";
                 }
-                env.PARAM_ENV_NAME = "${map.ENV_NAME}"
-                env.PARAM_RELEASE_NAMESPACE = "${map.RELEASE_NAMESPACE}"
-                env.PARAM_RELEASE_NAME = "${map.RELEASE_NAME}"
-                env.PARAM_RELEASE_VERSION = "${map.RELEASE_VERSION}"
-                switch(map.TYPE) {
+                env.param_env_name="${map.param_env_name}"
+                env.param_release_namespace="${map.param_release_namespace}"
+                env.param_release_name="${map.param_release_name}"
+                env.param_release_version="${map.param_release_version}"
+                switch(map.PARAM_TYPE) {
                  case "java":
-                    env.PARAM_RELEASE_CHART_NAME    = env.PARAM_HELM_JAVA_CHART_NAME
-                    env.PARAM_RELEASE_CHART_VERSION = env.PARAM_HELM_JAVA_CHART_VERSION
+                    env.param_release_chart_name= env.param_helm_java_chart_name
+                    env.param_release_chart_version= env.param_helm_java_chart_version
                     break;
                  case "web":
-                    env.PARAM_BACKEND_URL = "${map.BACKEND_URL}"
-                    env.PARAM_RELEASE_CHART_NAME    = env.HELM_WEB_CHART_NAME
-                    env.PARAM_RELEASE_CHART_VERSION = env.HELM_WEB_CHART_VERSION
+                    env.param_backend_url="${map.param_backend_url}"
+                    env.param_release_chart_name= env.helm_web_chart_name
+                    env.param_release_chart_version=env.helm_web_chart_version
                     break;
                  default:
                     println("The value is unknown");
