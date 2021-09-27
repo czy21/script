@@ -21,6 +21,7 @@ data:
                         username "admin"
                         password "Czy20210314."
                     }
+                    allowInsecureProtocol = true
                 }
             }
         }
@@ -36,6 +37,7 @@ data:
                         username "admin"
                         password "Czy20210314."
                     }
+                    allowInsecureProtocol = true
                 }
             }
         }
@@ -47,6 +49,7 @@ data:
                     username "admin"
                     password "Czy20210314."
                 }
+                allowInsecureProtocol = true
             }
         }
     }
