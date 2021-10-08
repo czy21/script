@@ -9,7 +9,7 @@ def build(){
      case "web":
         env.NODEJS_HOME = "${tool 'node-v14.18.0'}"
         env.PATH="${NODEJS_HOME}/bin:${PATH}"
-        sh 'nrm use taobao && yarn --cwd ${param_project_root}/${param_project_module} install && yarn --cwd ${param_project_root}/${param_project_module} --ignore-engines build'
+        sh 'yarn --cwd ${param_project_root}/${param_project_module} install && yarn --cwd ${param_project_root}/${param_project_module} --ignore-engines build'
         break;
      default:
         println("The value is unknown");
