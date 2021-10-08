@@ -20,4 +20,3 @@ data:
             format: yaml
             prefixes: ${ENV_NAME}
             default-context: ${spring.application.name}
-            enabled: true
