@@ -36,7 +36,7 @@ spec:
         - containerPort: 50000
         resources:
           limits:
-            memory: 2Gi
+            memory: 4Gi
         securityContext:
           runAsUser: 0
         volumeMounts:
