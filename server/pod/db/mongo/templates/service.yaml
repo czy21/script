@@ -1,0 +1,15 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: '{{ .Release.Name }}'
+  namespace: '{{ .Release.Namespace }}'
+spec:
+  selector:
+    app: '{{ .Release.Name }}'
+  type: NodePort
+  ports:
+  - name: '27017'
+    port: 27017
+    targetPort: 27017
+    nodePort: 27017
