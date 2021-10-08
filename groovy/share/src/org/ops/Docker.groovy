@@ -10,8 +10,9 @@ def build(){
         env.NODEJS_HOME = "${tool 'node-v14.17.5'}"
         env.PATH="${env.NODEJS_HOME}/bin:${PATH}"
         print(env)
-        print(${NODEJS_HOME})
-        print(${PATH})
+        print("${Path}")
+        print("${NODEJS_HOME}")
+        print("${PATH}"")
         sh 'nrm use taobao && yarn --cwd ${param_project_root}/${param_project_module} install && yarn --cwd ${param_project_root}/${param_project_module} --ignore-engines build'
         break;
      default:
