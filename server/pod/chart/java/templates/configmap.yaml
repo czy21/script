@@ -17,6 +17,6 @@ data:
       cloud:
         consul:
           config:
-            format: yaml
-            prefixes: ${ENV_NAME}
-            default-context: ${spring.application.name}
+            format: YAML
+            prefixes:
+              - "${ENV_NAME}-${spring.application.name}"
