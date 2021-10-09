@@ -1,6 +1,7 @@
 consul:
   global:
     name: consul
+    datacenter: ops
     acls:
       manageSystemACLs: true
   server:
