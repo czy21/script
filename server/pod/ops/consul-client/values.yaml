@@ -1,17 +1,33 @@
 consul:
   global:
+    logLevel: debug
+    enabled: false
     name: consul
     datacenter: dev
     acls:
       manageSystemACLs: true
-  server:
+      bootstrapToken:
+        secretName: ops-consul-bootstrap-acl-token
+        secretKey: token
+  externalServers:
+    enabled: true
+    # This should be any node IP of the first k8s cluster
+    hosts: ["192.168.2.25"]
+    # The node port of the UI's NodePort service
+    httpsPort: 8500
+    # The address of the kube API server of this Kubernetes cluster
+    k8sAuthMethodHost: https://192.168.2.25:443
+  client:
     affinity: |-
-     
-    replicas: 2
+      
+    enabled: true
+    join: ["provider=k8s kubeconfig=/consul/userconfig/ops-kubeconfig/kubeconfig label_selector=\"app=consul,component=server\""]
+    extraVolumes:
+      - type: secret
+        name: ops-kubeconfig
+        load: false
     securityContext:
       runAsNonRoot: false
       runAsUser: 0
   connectInject:
-    enabled: true
-  controller:
     enabled: true

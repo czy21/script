@@ -15,3 +15,8 @@ consul:
     enabled: true
   controller:
     enabled: true
+  ui:
+    service:
+      type: NodePort
+      nodePort:
+        http: 8500
