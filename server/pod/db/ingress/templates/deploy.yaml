@@ -29,4 +29,14 @@ spec:
             name: cluster-es-http
             port:
               number: 9200
+  - host: rabbitmq.cluster2.com
+    http:
+      paths:
+      - pathType: Prefix
+        path: /
+        backend:
+          service:
+            name: rabbitmq
+            port:
+              number: 15672
 ---
