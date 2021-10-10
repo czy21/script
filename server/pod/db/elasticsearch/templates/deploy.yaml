@@ -14,7 +14,7 @@ metadata:
   name: cluster
   namespace: '{{ .Release.Namespace }}'
 spec:
-  version: 7.14.0
+  version: 7.15.0
   auth:
     fileRealm:
     - secretName: es-filerealm-secret
@@ -53,7 +53,7 @@ metadata:
   name: cluster
   namespace: '{{ .Release.Namespace }}'
 spec:
-  version: 7.14.0
+  version: 7.15.0
   count: 1
   elasticsearchRef:
     name: cluster
