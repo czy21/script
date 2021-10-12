@@ -1,0 +1,46 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: ubuntu
+  namespace: '{{ .Release.Namespace }}'
+spec:
+  selector:
+    matchLabels:
+      app: ubuntu
+  serviceName: ubuntu
+  template:
+    metadata:
+      labels:
+        app: ubuntu
+    spec:
+      initContainers:
+        - name: init-ubuntu
+          image: busybox:1.28
+          command: ["sh", "-c", "chown -R 1000:1000 /home/bruce/data/"]
+          volumeMounts:
+            - name: data
+              mountPath: /home/bruce/data/
+      containers:
+      - name: ubuntu
+        image: {{ .Values.registry.url }}/{{ .Values.registry.dir }}/ubuntu
+        args:
+        - /bin/bash
+        - -c
+        - ' trap : TERM INT; sleep infinity & wait'
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 22
+        volumeMounts:
+        - name: data
+          mountPath: /home/bruce/data/
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 256Gi
+      storageClassName: managed-nfs-storage
