@@ -15,7 +15,7 @@ spec:
         app: ubuntu
     spec:
       initContainers:
-        - name: init-ubuntu
+        - name: init
           image: busybox:1.28
           command: ["sh", "-c", "chown -R 1000:1000 /home/bruce/data/"]
           volumeMounts:
