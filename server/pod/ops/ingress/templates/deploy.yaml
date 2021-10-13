@@ -9,7 +9,7 @@ metadata:
   namespace: '{{ .Release.Namespace }}'
 spec:
   rules:
-  - host: jenkins.cluster2.com
+  - host: jenkins.cluster.com
     http:
       paths:
       - pathType: Prefix
@@ -19,7 +19,7 @@ spec:
             name: jenkins
             port:
               number: 8080
-  - host: nexus.cluster2.com
+  - host: nexus.cluster.com
     http:
       paths:
       - pathType: Prefix
@@ -29,7 +29,7 @@ spec:
             name: nexus
             port:
               number: 8081
-  - host: registry.cluster2.com
+  - host: registry.cluster.com
     http:
       paths:
       - pathType: Prefix
@@ -39,7 +39,7 @@ spec:
             name: nexus
             port:
               number: 5000
-  - host: grafana.cluster2.com
+  - host: grafana.cluster.com
     http:
       paths:
       - pathType: Prefix
@@ -49,7 +49,7 @@ spec:
             name: grafana
             port:
               number: 3000
-  - host: consul.cluster2.com
+  - host: consul.cluster.com
     http:
       paths:
       - pathType: Prefix
@@ -59,7 +59,7 @@ spec:
             name: consul-ui
             port:
               number: 80
-  - host: jira.cluster2.com
+  - host: jira.cluster.com
     http:
       paths:
       - pathType: Prefix

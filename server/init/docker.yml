@@ -4,7 +4,7 @@
     remote_script: "/home/{{ansible_user_id}}/{{script_name}}"
     option_name: "docker"
     daemon_name: "daemon.json"
-    insecure_registries: "[ \"registry.cluster2.com\" ]"
+    insecure_registries: "[ \"registry.cluster.com\" ]"
   tasks:
     - name: copy script
       copy:
