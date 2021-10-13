@@ -16,7 +16,7 @@ data:
                 gradlePluginPortal()
                 maven {
                     name "home"
-                    url "http://nexus.cluster2.com/repository/maven-public/"
+                    url "http://nexus.cluster.com/repository/maven-public/"
                     credentials {
                         username "admin"
                         password "Czy20210314."
@@ -32,7 +32,7 @@ data:
             repositories {
                 maven {
                     name "home"
-                    url "http://nexus.cluster2.com/repository/maven-releases/"
+                    url "http://nexus.cluster.com/repository/maven-releases/"
                     credentials {
                         username "admin"
                         password "Czy20210314."
@@ -44,7 +44,7 @@ data:
         repositories {
             maven {
                 name "home"
-                url "http://nexus.cluster2.com/repository/maven-public/"
+                url "http://nexus.cluster.com/repository/maven-public/"
                 credentials {
                     username "admin"
                     password "Czy20210314."
