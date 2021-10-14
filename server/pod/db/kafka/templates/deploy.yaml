@@ -1,0 +1,50 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: '{{ .Release.Name }}'
+  namespace: '{{ .Release.Namespace }}'
+spec:
+  selector:
+    matchLabels:
+      app: '{{ .Release.Name }}'
+  serviceName: '{{ .Release.Name }}'
+  template:
+    metadata:
+      labels:
+        app: '{{ .Release.Name }}'
+    spec:
+      volumes:
+        - name: server-config
+          configMap:
+            name: {{ .Release.Name }}
+            items:
+              - key: server.properties
+                path: server.properties
+      containers:
+        - name: '{{ .Release.Name }}'
+          image: {{ .Values.registry.url }}/{{ .Values.registry.dir }}/kafka
+          imagePullPolicy: Always
+          args:
+            - "--override broker.id=${HOSTNAME##*-}"
+          ports:
+            - containerPort: 9092
+          env:
+            # KAFKA_SERVER_BROKER_ID: 1
+            # KAFKA_SERVER_LISTENERS: PLAINTEXT://:9093
+            # KAFKA_SERVER_ADVERTISED_LISTENERS: PLAINTEXT://${GLOBAL_HOST_IP}:9093
+            # KAFKA_SERVER_ZOOKEEPER_CONNECT: ${GLOBAL_HOST_IP}:2181,${GLOBAL_HOST_IP}:2182,${GLOBAL_HOST_IP}:2183
+          volumeMounts:
+            - name: server-config
+              mountPath: /opt/kafka/config/server.properties
+              subPath: server.properties
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 256Gi
+      storageClassName: managed-nfs-storage
