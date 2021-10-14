@@ -20,9 +20,16 @@ spec:
           imagePullPolicy: Always
           args:
             - "--override broker.id=${HOSTNAME##*-} \
-               --override zookeeper.connect={{.Values.zk.connect}}"
+               --override zookeeper.connect={{.Values.zk.connect}} \
+               --override listeners=PLAINTEXT://:9092 \
+               --override advertised.listeners=PLAINTEXT://$(POD_NAME).{{ .Release.Name }}.{{ .Release.Namespace }}.svc.cluster.local:9092"
           ports:
             - containerPort: 9092
+          env: 
+           - name: POD_NAME
+             valueFrom:
+               fieldRef:
+                 fieldPath: metadata.name
   volumeClaimTemplates:
   - metadata:
       name: data
