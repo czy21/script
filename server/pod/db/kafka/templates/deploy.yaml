@@ -30,6 +30,10 @@ spec:
              valueFrom:
                fieldRef:
                  fieldPath: metadata.name
+          volumeMounts:
+            - name: data
+              mountPath: /opt/kafka/logs/
+              subPath: logs
   volumeClaimTemplates:
   - metadata:
       name: data
