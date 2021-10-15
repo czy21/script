@@ -1,0 +1,24 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: '{{ .Release.Name }}-web'
+  namespace: '{{ .Release.Namespace }}'
+spec:
+  selector:
+    matchLabels:
+      app: '{{ .Release.Name }}'
+  template:
+    metadata:
+      labels:
+        app: '{{ .Release.Name }}'
+    spec:
+      containers:
+        - name: '{{ .Release.Name }}-web'
+          image: obsidiandynamics/kafdrop:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9000
+          env:
+           - name: KAFKA_BROKERCONNECT
+             value: "192.168.2.25:9092"
