@@ -26,11 +26,14 @@ spec:
                --override advertised.listeners=PLAINTEXT://$(POD_NAME).{{ .Release.Name }}.{{ .Release.Namespace }}.svc.cluster.local:9092"
           ports:
             - containerPort: 9092
+            - containerPort: 1099
           env: 
            - name: POD_NAME
              valueFrom:
                fieldRef:
                  fieldPath: metadata.name
+           - name: JMX_PORT
+             value: "1099"
           volumeMounts:
             - name: data
               mountPath: /opt/kafka/logs/
