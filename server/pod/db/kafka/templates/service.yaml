@@ -19,3 +19,18 @@ spec:
     port: 9093
     targetPort: 9093
     nodePort: 9093
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-web
+  namespace: '{{ .Release.Namespace }}'
+  labels:
+    app: {{ .Release.Name }}
+spec:
+  selector:
+    app: {{ .Release.Name }}
+  ports:
+  - name: '9000'
+    port: 9000
+    targetPort: 9000
