@@ -4,6 +4,6 @@
     - name: reboot
       shell: reboot
     - name: shutdown
-      shell: shutdown now
+      shell: shutdown -h now
     
 
