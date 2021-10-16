@@ -1,1 +1,4 @@
-replicas: 2
+replicas: 1
+
+zk:
+  connect: zk-0.zk-hs.db.svc.cluster.local:2181,zk-1.zk-hs.db.svc.cluster.local:2181
