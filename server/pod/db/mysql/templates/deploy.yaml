@@ -42,7 +42,7 @@ spec:
         - containerPort: 9104
         env:
         - name: DATA_SOURCE_NAME
-          value: 'root:{{ .Values.db.password }}@(127.0.0.1:3306)/'
+          value: 'root:{{ .Values.db.password }}@({{ .Values.db.mysql.host }}:{{ .Values.db.mysql.port }})/'
   volumeClaimTemplates:
   - metadata:
       name: data

@@ -48,5 +48,5 @@ spec:
           service:
             name: kafka-web
             port:
-              number: 8048
+              number: 8080
 ---

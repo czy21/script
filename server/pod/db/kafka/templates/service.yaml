@@ -11,7 +11,7 @@ spec:
     app: {{ .Release.Name }}
   clusterIP: None
   ports:
-  - name: '9092'
+  - name: 'tcp'
     port: 9092
 {{- range $i, $e := until (.Values.replicas | int) }}
 ---
@@ -27,7 +27,7 @@ spec:
     statefulset.kubernetes.io/pod-name: {{ $.Release.Name }}-{{$i}}
   type: NodePort
   ports:
-  - name: '9092'
+  - name: 'tcp'
     port: 9092
     targetPort: 9092
     nodePort: 909{{add 2 $i}}
@@ -44,6 +44,6 @@ spec:
   selector:
     app: {{ .Release.Name }}-web
   ports:
-  - name: '8048'
-    port: 8048
-    targetPort: 8048
+  - name: '8080'
+    port: 8080
+    targetPort: 8080
