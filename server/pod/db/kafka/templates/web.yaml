@@ -26,7 +26,7 @@ spec:
           args:
           - /bin/bash
           - -c
-          - 'ke.sh start && trap : TERM INT; sleep infinity & wait'
+          - 'ke.sh start; tail -f $KE_HOME/logs/ke_console.out'
           imagePullPolicy: Always
           ports:
             - containerPort: 8048
