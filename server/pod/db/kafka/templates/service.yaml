@@ -1,17 +1,19 @@
+{{- range $i, $e := until (.Values.replicas | int) }}
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}
-  namespace: '{{ .Release.Namespace }}'
+  name: {{ $.Release.Name }}-{{$i}}
+  namespace: '{{ $.Release.Namespace }}'
   labels:
-    app: {{ .Release.Name }}
+    app: {{ $.Release.Name }}
 spec:
   selector:
-    app: {{ .Release.Name }}
+    statefulset.kubernetes.io/pod-name: {{ $.Release.Name }}-{{$i}}
   type: NodePort
   ports:
   - name: '9092'
     port: 9092
     targetPort: 9092
-    nodePort: 9092
+    nodePort: 909{{add 1 $i}}
+{{end}}
