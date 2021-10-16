@@ -9,10 +9,12 @@ metadata:
 spec:
   selector:
     app: {{ .Release.Name }}
+  type: NodePort
   ports:
   - name: '9092'
     port: 9092
     targetPort: 9092
+    nodePort: 9092
   - name: '1099'
     port: 1099
     targetPort: 1099

@@ -22,6 +22,7 @@ spec:
           args:
             - "--override broker.id=${HOSTNAME##*-} \
                --override zookeeper.connect={{ .Values.zk.connect }} \
+               --override host.name=$(POD_NAME).{{ .Release.Name }}.{{ .Release.Namespace }}.svc.cluster.local \
                --override listeners=PLAINTEXT://:9092 \
                --override advertised.listeners=PLAINTEXT://$(POD_NAME).{{ .Release.Name }}.{{ .Release.Namespace }}.svc.cluster.local:9092"
           ports:
