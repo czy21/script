@@ -32,3 +32,18 @@ spec:
     targetPort: 9092
     nodePort: 909{{add 2 $i}}
 {{end}}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-web
+  namespace: '{{ .Release.Namespace }}'
+  labels:
+    app: {{ .Release.Name }}-web
+spec:
+  selector:
+    app: {{ .Release.Name }}-web
+  ports:
+  - name: '8048'
+    port: 8048
+    targetPort: 8048
