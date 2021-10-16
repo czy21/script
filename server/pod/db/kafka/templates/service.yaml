@@ -1,9 +1,24 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-hs
+  namespace: '{{ .Release.Namespace }}'
+  labels:
+    app: {{ .Release.Name }}
+spec:
+  selector:
+    app: {{ .Release.Name }}
+  clusterIP: None
+  ports:
+  - name: '9092'
+    port: 9092
 {{- range $i, $e := until (.Values.replicas | int) }}
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ $.Release.Name }}-{{$i}}
+  name: {{ $.Release.Name }}-cs-{{$i}}
   namespace: '{{ $.Release.Namespace }}'
   labels:
     app: {{ $.Release.Name }}
@@ -15,5 +30,5 @@ spec:
   - name: '9092'
     port: 9092
     targetPort: 9092
-    nodePort: 909{{add 1 $i}}
+    nodePort: 909{{add 2 $i}}
 {{end}}

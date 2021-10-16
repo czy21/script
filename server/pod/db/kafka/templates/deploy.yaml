@@ -7,7 +7,7 @@ metadata:
     app: '{{ .Release.Name }}'
   namespace: '{{ .Release.Namespace }}'
 spec:
-  serviceName: {{ .Release.Name }}
+  serviceName: {{ .Release.Name }}-hs
   replicas: {{ .Values.replicas }}
   selector:
     matchLabels:
@@ -31,7 +31,7 @@ spec:
             - name: REPLICAS
               value: '{{ .Values.replicas }}'
             - name: SERVICE
-              value: {{ .Release.Name }}
+              value: {{ .Release.Name }}-hs
             - name: NAMESPACE
               valueFrom:
                 fieldRef:
