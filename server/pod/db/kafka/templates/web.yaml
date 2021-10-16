@@ -47,8 +47,9 @@ data:
     # multi zookeeper & kafka cluster list
     # Settings prefixed with 'kafka.eagle.' will be deprecated, use 'efak.' instead
     ######################################
-    efak.zk.cluster.alias=cluster1
+    efak.zk.cluster.alias=cluster1,cluster2
     cluster1.zk.list={{ .Values.zk.connect }}
+    cluster2.zk.list={{ .Values.zk.connect }}
 
     ######################################
     # zookeeper enable acl
@@ -71,7 +72,7 @@ data:
     ######################################
     # EFAK webui port
     ######################################
-    efak.webui.port=8048
+    efak.webui.port=8080
 
     ######################################
     # kafka jmx acl and ssl authenticate
@@ -87,6 +88,7 @@ data:
     # kafka offset storage
     ######################################
     cluster1.efak.offset.storage=kafka
+    cluster2.efak.offset.storage=zk
 
     ######################################
     # kafka jmx uri
@@ -111,31 +113,10 @@ data:
     efak.topic.token=keadmin
 
     ######################################
-    # kafka sasl authenticate
-    ######################################
-    cluster1.efak.sasl.enable=false
-    cluster1.efak.sasl.protocol=SASL_PLAINTEXT
-    cluster1.efak.sasl.mechanism=SCRAM-SHA-256
-    cluster1.efak.sasl.jaas.config=org.apache.kafka.common.security.scram.ScramLoginModule required username="kafka" password="kafka-eagle";
-    cluster1.efak.sasl.client.id=
-    cluster1.efak.blacklist.topics=
-    cluster1.efak.sasl.cgroup.enable=false
-    cluster1.efak.sasl.cgroup.topics=
-
-
-    ######################################
-    # kafka sqlite jdbc driver address
-    ######################################
-    efak.driver=org.sqlite.JDBC
-    efak.url=jdbc:sqlite:/opt/kafka-eagle/db/ke.db
-    efak.username=root
-    efak.password=www.kafka-eagle.org
-
-    ######################################
     # kafka mysql jdbc driver address
     ######################################
-    #efak.driver=com.mysql.cj.jdbc.Driver
-    #efak.url=jdbc:mysql://127.0.0.1:3306/ke?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
-    #efak.username=root
-    #efak.password=123456
+    efak.driver=com.mysql.cj.jdbc.Driver
+    efak.url=jdbc:mysql://{{ .Values.db.mysql.host }}:{{ .Values.db.mysql.port }}/ke?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
+    efak.username={{ .Values.db.username }}
+    efak.password={{ .Values.db.password }}
 
