@@ -2,50 +2,55 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: '{{ .Release.Name }}'
+  name: {{ .Release.Name }}
+  labels:
+    app: '{{ .Release.Name }}'
   namespace: '{{ .Release.Namespace }}'
 spec:
+  serviceName: {{ .Release.Name }}
   replicas: {{ .Values.replicas }}
   selector:
     matchLabels:
       app: '{{ .Release.Name }}'
-  serviceName: '{{ .Release.Name }}'
   template:
     metadata:
       labels:
         app: '{{ .Release.Name }}'
     spec:
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: data-{{ .Release.Name }}
       containers:
-        - name: '{{ .Release.Name }}'
+        - name: {{ .Release.Name }}
           image: {{ .Values.registry.url }}/{{ .Values.registry.dir }}/kafka
           imagePullPolicy: Always
-          args:
-            - "--override broker.id=${HOSTNAME##*-} \
-               --override zookeeper.connect={{ .Values.zk.connect }} \
-               --override host.name=$(POD_NAME).{{ .Release.Name }}.{{ .Release.Namespace }}.svc.cluster.local \
-               --override listeners=PLAINTEXT://:9092 \
-               --override advertised.listeners=PLAINTEXT://$(POD_NAME).{{ .Release.Name }}.{{ .Release.Namespace }}.svc.cluster.local:9092"
           ports:
             - containerPort: 9092
-            - containerPort: 1099
-          env: 
-           - name: POD_NAME
-             valueFrom:
-               fieldRef:
-                 fieldPath: metadata.name
-           - name: JMX_PORT
-             value: "1099"
+          env:
+            - name: REPLICAS
+              value: '{{ .Values.replicas }}'
+            - name: SERVICE
+              value: {{ .Release.Name }}
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: SHARE_DIR
+              value: /mnt/kafka
           volumeMounts:
             - name: data
-              mountPath: /opt/kafka/logs/
-              subPath: logs
-  volumeClaimTemplates:
-  - metadata:
-      name: data
-    spec:
-      accessModes:
-      - ReadWriteOnce
-      resources:
-        requests:
-          storage: 256Gi
-      storageClassName: managed-nfs-storage
+              mountPath: /mnt/kafka
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-{{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 256Gi
+  storageClassName: managed-nfs-storage
