@@ -22,11 +22,16 @@ spec:
           args:
             - "--override broker.id=${HOSTNAME##*-} \
                --override zookeeper.connect={{ .Values.zk.connect }} \
-               --override listeners=PLAINTEXT://:9092 \
-               --override advertised.listeners=PLAINTEXT://$(POD_NAME).{{ .Release.Name }}-hs.{{ .Release.Namespace }}.svc.cluster.local:9092"
+               --override host.name=$(POD_NAME).{{ .Release.Name }}-hs.{{ .Release.Namespace }}.svc.cluster.local \
+               --override listeners=INTERNAL://:9093,CLIENT://:9092 \
+               --override advertised.listeners=INTERNAL://$(POD_NAME).{{ .Release.Name }}-hs.{{ .Release.Namespace }}.svc.cluster.local:9093,CLIENT://$(POD_NAME).{{ .Release.Name }}-hs.{{ .Release.Namespace }}.svc.cluster.local:9092 \
+               --override listener.security.protocol.map=INTERNAL:PLAINTEXT,CLIENT:PLAINTEXT \
+               --override inter.broker.listener.name=INTERNAL"
           ports:
-            - containerPort: 9092
-#            - containerPort: 1099
+          - name: tcp-client
+            containerPort: 9092
+          - name: tcp-internal
+            containerPort: 9093
           env: 
            - name: POD_NAME
              valueFrom:
