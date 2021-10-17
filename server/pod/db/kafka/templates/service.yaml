@@ -11,29 +11,28 @@ spec:
     app: {{ .Release.Name }}
   clusterIP: None
   ports:
-  - name: 'tcp-client'
+  - name: '9092'
     port: 9092
-    targetPort: tcp-client
-  - name: 'tcp-internal'
-    port: 9093
-    targetPort: tcp-internal
+    targetPort: 9092
+{{- range $i, $e := until (.Values.replicas | int) }}
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ $.Release.Name }}-cs
+  name: {{ $.Release.Name }}-cs-{{$i}}
   namespace: '{{ $.Release.Namespace }}'
   labels:
     app: {{ $.Release.Name }}
 spec:
   selector:
-    app: {{ .Release.Name }}
+    statefulset.kubernetes.io/pod-name: {{ $.Release.Name }}-{{$i}}
   type: NodePort
   ports:
-  - name: 'tcp-client'
+  - name: '9092'
     port: 9092
-    targetPort: tcp-client
-    nodePort: 9092
+    targetPort: 9092
+    nodePort: 909{{add 2 $i}}
+{{end}}
 ---
 apiVersion: v1
 kind: Service
