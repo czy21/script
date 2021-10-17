@@ -29,7 +29,7 @@ spec:
           - 'ke.sh start;tail -f $KE_HOME/logs/ke_console.out'
           imagePullPolicy: Always
           ports:
-            - containerPort: 8048
+            - containerPort: 8080
           volumeMounts:
           - name: conf
             mountPath: /opt/kafka-eagle/conf/
