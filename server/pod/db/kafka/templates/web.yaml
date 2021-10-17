@@ -110,7 +110,7 @@ data:
     ######################################
     # delete kafka topic token
     ######################################
-    efak.topic.token=keadmin
+    efak.topic.token=54d41d54-7c84-43cd-a768-44d217c0cd4c
 
     ######################################
     # kafka mysql jdbc driver address
