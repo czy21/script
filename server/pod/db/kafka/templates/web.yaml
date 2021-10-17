@@ -119,4 +119,3 @@ data:
     efak.url=jdbc:mysql://{{ .Values.db.mysql.host }}:{{ .Values.db.mysql.port }}/ke?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
     efak.username={{ .Values.db.username }}
     efak.password={{ .Values.db.password }}
-
