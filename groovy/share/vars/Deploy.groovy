@@ -21,7 +21,7 @@ def call(Map map) {
                     path: /bin/kubectl
                 containers:
                 - name: jnlp
-                  image: 'registry.cluster2.com/library/jenkins-agent'
+                  image: 'registry.cluster.com/library/jenkins-agent'
                   securityContext:
                     runAsUser: 0
                   volumeMounts:
