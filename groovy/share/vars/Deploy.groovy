@@ -34,18 +34,11 @@ def call(Map map) {
         '''
         }
       }
-      environment {
-        param_global_env_file_id = "${map.param_global_env_file_id}"
-        param_env_name="${map.param_env_name}"
-        param_code_type = "${map.param_code_type}"
-        param_release_namespace="${map.param_release_namespace}"
-        param_release_name="${map.param_release_name}"
-        param_release_version="${map.param_release_version}"
-      }
       stages{
         stage('deploy') {
           steps {
             script {
+                map.each{ k, v -> env[k]=v }
                 def k = new org.ops.K8s()
                 k.prepare(map)
                 k.build()
