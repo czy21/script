@@ -47,16 +47,3 @@ spec:
               mountPath: /home/app/config/
             - name: data
               mountPath: /home/app/data/
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: data-{{ .Release.Name }}
-  namespace: {{ .Release.Namespace }}
-spec:
-  accessModes:
-    - ReadWriteMany
-  resources:
-    requests:
-      storage: 256Gi
-  storageClassName: managed-nfs-storage
