@@ -3,6 +3,7 @@ package org.ops
 
 def build(){
     sh 'env | grep \'^param_\' > env.conf'
+    sh 'cat env.conf'
     sh 'cat env.conf | grep -oP \'^param_\\K\\S+\' | paste -d "," -s | xargs helm template ${param_release_name} ${param_release_chart_name} --version ${param_release_chart_version} --namespace ${param_release_namespace} --repo ${param_helm_repo} --set-string  2>&1 | tee deploy.yaml'
 }
 
