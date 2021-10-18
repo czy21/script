@@ -47,3 +47,4 @@ spec:
               mountPath: /home/app/config/
             - name: data
               mountPath: /home/app/data/
+              subPath: data
