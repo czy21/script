@@ -19,6 +19,14 @@ param_main_db_mysql_user = ""
 param_main_db_mysql_pass = ""
 param_main_db_mysql_file_path = ""
 
+# pgsql
+param_main_db_pgsql_name = ""
+param_main_db_pgsql_host = ""
+param_main_db_pgsql_port = ""
+param_main_db_pgsql_user = ""
+param_main_db_pgsql_pass = ""
+param_main_db_pgsql_file_path = ""
+
 # mssql
 param_main_db_mssql_file_path = ""
 
