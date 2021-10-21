@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import platform
 import subprocess
 import sys
 
@@ -27,10 +28,11 @@ def execute(cmd, func=print_default, func_param=None):
     input_exec = str(input("Are you sure you want to execute (y/n)?").strip())
     if input_exec != "y":
         return
+    os_type = platform.system().lower()
     proc = subprocess.Popen(cmd,
                             stdout=subprocess.PIPE,
                             shell=True,
-                            encoding="utf-8")
+                            encoding="gbk" if os_type == "windows" else "utf-8")
     func(iter(proc.stdout.readline, ''), proc, func_param)
     proc.stdout.close()
     proc.wait()
