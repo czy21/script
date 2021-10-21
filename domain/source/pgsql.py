@@ -16,8 +16,7 @@ def __get_function_name():
 
 
 def assemble() -> None:
-    prep = ["set CLIENT_ENCODING=UTF8;"]
-    db_util.assemble_ql(default_common.param_main_db_pgsql_file_path, default_path.output_db_all_in_one_pgsql, pgsql_meta, "sql", prep=prep)
+    db_util.assemble_ql(default_common.param_main_db_pgsql_file_path, default_path.output_db_all_in_one_pgsql, pgsql_meta, "sql")
 
 
 def recreate() -> None:
@@ -47,8 +46,7 @@ def get_main_db_param_dict() -> str:
 
 def execute() -> None:
     extra_param_dict = [
-        "< " + default_path.output_db_all_in_one_pgsql,
-        "-A"
+        "< " + default_path.output_db_all_in_one_pgsql
     ]
     command = list_util.arr_param_to_str(pgsql_cmd, get_main_db_param_dict(), extra_param_dict)
     logger.info(basic_util.action_formatter(__get_function_name(), command))
