@@ -34,7 +34,7 @@ def assemble_ql(s_path, t_file_name, db_meta, file_suffix, **kwargs) -> None:
 
 
 def print_ql_msg(msg_lines, *proc, **func_param) -> None:
-    callback = list(filter(re.compile(r"^(executing:|executed:)").search, msg_lines))
+    callback = list(map(lambda t: t.strip(), filter(re.compile(r"^\s*(executing:|executed:)").search, msg_lines)))
     for m in callback[1::2]:
         logger.info(m.strip())
     if math.modf(len(callback) / 2)[0] > 0:
