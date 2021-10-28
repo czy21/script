@@ -15,34 +15,36 @@ spec:
         app: '{{ .Release.Name }}'
     spec:
       volumes:
-        - name: conf
+        - name: users
           configMap:
             name: '{{ .Release.Name }}'
             items:
-            - key: mysql.cnf
-              path: mysql.cnf
+              - key: users.xml
+                path: users.xml
+        - name: config
+          configMap:
+            name: '{{ .Release.Name }}'
+            items:
+              - key: config.xml
+                path: config.xml
       containers:
         - name: '{{ .Release.Name }}'
-          image: mysql:8.0
+          image: clickhouse/clickhouse-server:21.10
           ports:
-            - containerPort: 3306
-          args:
-            - --default-authentication-plugin=mysql_native_password
-          env:
-            - name: MYSQL_ROOT_PASSWORD
-              value: '{{ .Values.db.password }}'
+            - containerPort: 8123
+            - containerPort: 9000
+            - containerPort: 9009
           volumeMounts:
-            - name: conf
-              mountPath: /etc/mysql/conf.d/
             - name: data
-              mountPath: /var/lib/mysql/
-        - name: mysqld-exporter
-          image: prom/mysqld-exporter
-          ports:
-            - containerPort: 9104
-          env:
-            - name: DATA_SOURCE_NAME
-              value: 'root:{{ .Values.db.password }}@({{ .Values.db.mysql.host }}:{{ .Values.db.mysql.port }})/'
+              mountPath: /var/lib/clickhouse
+              subPath: data
+            - name: data
+              mountPath: /var/log
+              subPath: log
+            - name: users
+              mountPath: /etc/clickhouse-server/users.d/
+            - name: config
+              mountPath: /etc/clickhouse-server/config.d/
   volumeClaimTemplates:
     - metadata:
         name: data
