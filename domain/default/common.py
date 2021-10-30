@@ -27,6 +27,14 @@ param_main_db_pgsql_user = ""
 param_main_db_pgsql_pass = ""
 param_main_db_pgsql_file_path = ""
 
+# cksql
+param_main_db_cksql_name = ""
+param_main_db_cksql_host = ""
+param_main_db_cksql_port = ""
+param_main_db_cksql_user = ""
+param_main_db_cksql_pass = ""
+param_main_db_cksql_file_path = ""
+
 # mssql
 param_main_db_mssql_file_path = ""
 
