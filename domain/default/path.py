@@ -31,6 +31,7 @@ output_db_all_in_one = path_util.pure_path_join(output_db, "all_in_one")
 output_db_all_in_one_mysql = path_util.pure_path_join(output_db_all_in_one, "mysql.sql")
 output_db_all_in_one_pgsql = path_util.pure_path_join(output_db_all_in_one, "pgsql.sql")
 output_db_all_in_one_mssql = path_util.pure_path_join(output_db_all_in_one, "mssql.sql")
+output_db_all_in_one_cksql = path_util.pure_path_join(output_db_all_in_one, "cksql.sql")
 output_db_all_in_one_mongo = path_util.pure_path_join(output_db_all_in_one, "mongo.mongo")
 output_db_all_in_one_neo4j = path_util.pure_path_join(output_db_all_in_one, "neo4j.neo4j")
 
