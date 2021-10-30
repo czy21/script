@@ -64,7 +64,7 @@ def get_recreate_command(host, port, user, password, db_name) -> str:
         "--execute",
         "\"",
         "drop database if exists {0};".format(db_name),
-        "create database if not exists {0};".format(db_name),
+        "create database if not exists {0} ENGINE = Atomic;".format(db_name),
         "\""
     ]
     return list_util.arr_param_to_str(cksql_cmd, get_basic_param(host, port, user, password, None), extra_param_dict)
