@@ -34,6 +34,7 @@ spec:
             - containerPort: 8123
             - containerPort: 9000
             - containerPort: 9009
+            - containerPort: 9004
           volumeMounts:
             - name: data
               mountPath: /var/lib/clickhouse

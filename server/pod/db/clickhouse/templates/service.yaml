@@ -21,3 +21,7 @@ spec:
     port: 9009
     targetPort: 9009
     nodePort: 9009
+  - name: '9004'
+    port: 9004
+    targetPort: 9004
+    nodePort: 9004
