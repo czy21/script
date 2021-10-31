@@ -49,4 +49,14 @@ spec:
             name: kafka-web
             port:
               number: 8080
+  - host: tabix.cluster.com
+    http:
+      paths:
+      - pathType: Prefix
+        path: /
+        backend:
+          service:
+            name: clickhouse-web
+            port:
+              number: 80
 ---
