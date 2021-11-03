@@ -65,3 +65,6 @@ def get_recreate_command(host, port, user, password, db_name) -> str:
         get_basic_param(host, port, user, password, None)
     ]
     return list_util.arr_param_to_str(cmd)
+
+def backup_gz() -> None:
+    basic_util.execute("PGPASSWORD=Czy.190815 pg_dump --dbname=erp_local --host=192.168.2.25 --port=5432 --username=postgres --column-inserts --file duml.sql")
