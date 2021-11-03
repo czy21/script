@@ -1,0 +1,3 @@
+apiVersion: v2
+name: xxl-job
+version: 0.1.0

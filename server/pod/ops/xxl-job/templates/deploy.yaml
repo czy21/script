@@ -1,0 +1,44 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}
+  namespace: '{{ .Release.Namespace }}'
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  serviceName: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+    spec:
+      volumes:
+        - name: conf
+          configMap:
+            name: {{ .Release.Name }}
+      containers:
+      - name: {{ .Release.Name }}
+        image: xuxueli/xxl-job-admin:2.3.0
+        ports:
+          - containerPort: 8080
+        env:
+        - name: PARAMS
+          value: --spring.config.location=file:/config/
+        volumeMounts:
+          - name: conf
+            mountPath: /config/
+          - name: data
+            mountPath: /data/applogs/
+            subPath: logs
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 256Gi
+      storageClassName: managed-nfs-storage
