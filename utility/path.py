@@ -31,10 +31,3 @@ def pure_path_join(root, *elements) -> str:
     for p in elements:
         left_path = left_path.joinpath(p)
     return left_path.absolute().resolve().as_posix()
-
-
-def to_unix(path: str) -> str:
-    p_tuple = os.path.splitdrive(path)
-    if p_tuple[0]:
-        return "/" + str.lower(p_tuple[0]).replace(":", "") + p_tuple[1]
-    return path
