@@ -4,7 +4,7 @@ import inspect
 from script.domain.db_meta import mysql as mysql_meta
 from script.domain.default import common as default_common
 from script.domain.default import path as default_path
-from script.utility import db as db_util, collection as list_util, basic as basic_util, log
+from script.utility import db as db_util, collection as list_util, basic as basic_util, path as path_util, log
 
 logger = log.Logger(__name__)
 
