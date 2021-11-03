@@ -36,6 +36,7 @@ output_db_all_in_one_mongo = path_util.pure_path_join(output_db_all_in_one, "mon
 output_db_all_in_one_neo4j = path_util.pure_path_join(output_db_all_in_one, "neo4j.neo4j")
 
 output_db_bak_gz_mysql = path_util.pure_path_join(output_db_bak, "mysql.gz")
+output_db_bak_gz_pgsql = path_util.pure_path_join(output_db_bak, "pgsql.gz")
 output_db_bak_gz_mongo = path_util.pure_path_join(output_db_bak, "mongo.gz")
 
 output_tmp = path_util.pure_path_join(output, "tmp")
