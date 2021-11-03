@@ -69,3 +69,13 @@ spec:
             name: jira
             port:
               number: 8080
+  - host: xxl-job.cluster.com
+    http:
+      paths:
+      - pathType: Prefix
+        path: /
+        backend:
+          service:
+            name: xxl-job
+            port:
+              number: 8080
