@@ -39,6 +39,10 @@ output_db_bak_gz_mysql = path_util.pure_path_join(output_db_bak, "mysql.gz")
 output_db_bak_gz_pgsql = path_util.pure_path_join(output_db_bak, "pgsql.gz")
 output_db_bak_gz_mongo = path_util.pure_path_join(output_db_bak, "mongo.gz")
 
+output_db_bak_sql_mysql = path_util.pure_path_join(output_db_bak, "mysql.sql")
+output_db_bak_sql_pgsql = path_util.pure_path_join(output_db_bak, "pgsql.sql")
+output_db_bak_sql_mongo = path_util.pure_path_join(output_db_bak, "mongo.sql")
+
 output_tmp = path_util.pure_path_join(output, "tmp")
 
 
