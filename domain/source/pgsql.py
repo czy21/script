@@ -95,8 +95,7 @@ def backup_sql() -> None:
         pg_dump_cmd,
         get_main_db_param_dict(),
         "--column-inserts",
-        "--file=",
-        default_path.output_db_bak_sql_pgsql
+        "--file=" + default_path.output_db_bak_sql_pgsql
     ])
     logger.info(basic_util.action_formatter(__get_function_name(), cmd))
     basic_util.execute(cmd)
