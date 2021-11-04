@@ -30,10 +30,7 @@ def execute(cmd, func=print_default, func_param=None):
         return
     os_type = platform.system().lower()
     is_windows = os_type == "windows"
-    proc = subprocess.Popen("sh -c \'{}\'".format(cmd),
-                            stdout=subprocess.PIPE,
-                            shell=False if is_windows else True,
-                            encoding="gbk" if is_windows else "utf-8")
+    proc = subprocess.Popen(["sh", "-c", cmd], stdout=subprocess.PIPE, encoding="gbk" if is_windows else "utf-8")
     func(iter(proc.stdout.readline, ''), proc, func_param)
     proc.stdout.close()
     proc.wait()
