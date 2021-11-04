@@ -87,3 +87,16 @@ def backup_gz() -> None:
     ])
     logger.info(basic_util.action_formatter(__get_function_name(), cmd))
     basic_util.execute(cmd)
+
+
+def backup_sql() -> None:
+    cmd = list_util.arr_param_to_str([
+        "PGPASSWORD=" + default_common.param_main_db_pgsql_pass,
+        pg_dump_cmd,
+        get_main_db_param_dict(),
+        "--column-inserts",
+        "--file=",
+        default_path.output_db_bak_sql_pgsql
+    ])
+    logger.info(basic_util.action_formatter(__get_function_name(), cmd))
+    basic_util.execute(cmd)
