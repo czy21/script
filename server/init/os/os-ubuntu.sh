@@ -2,7 +2,8 @@
 set -e
 
 apt -y update
-apt -y install wget vim git network-manager
+apt -y install wget vim git network-manager nfs-common python3-pip mysql-client
+# apt -y install mysql-client postgresql-client
 sed -i -r "s/^\s*%sudo.*/%sudo   ALL=(ALL:ALL) NOPASSWD:ALL/;" /etc/sudoers
 
 sed -i -r "s/^\s*UseDNS\s+\w+/#\0/; s/^\s*PermitRootLogin\s+\w+/#\0/; s/^\s*PasswordAuthentication\s+\w+/#\0/; s/^\s*ClientAliveInterval\s+\w+/#\0/" /etc/ssh/sshd_config

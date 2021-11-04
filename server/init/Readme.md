@@ -13,10 +13,17 @@ sudo apt install ansible
 sudo sed -ir 's/^#\(host_key_checking\)/\1/' /etc/ansible/ansible.cfg
 ```
 
-# ubuntu install finished prepare
+## ubuntu install finished prepare
 ```shell
 passwd
 sed -i -r "s/^\s*PermitRootLogin\s+\w+/PermitRootLogin yes/;" /etc/ssh/sshd_config
+```
+
+## mount
+```shell
+showmount -e [host]
+# vim fstab append
+[host]:/volume1/ubuntu /volume1 nfs defaults 0 0
 ```
 
 ### 集群初始化后的手动执行
