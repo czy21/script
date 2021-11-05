@@ -1,18 +1,7 @@
 - name: os
   hosts: all
   remote_user: root
-  roles: 
+  vars_files:
+    - "vars/main.yml"
+  roles:
     - os
-
-  # vars:
-  #   remote_script: "/{{ansible_user_id}}/{{script_name}}"
-  #   option_name: "os"
-  # tasks:
-  #   - name: copy script
-  #     copy:
-  #       src: "{{item.src}}"
-  #       dest: "{{item.dest}}"
-  #     with_items:
-  #       - { src: "{{script_path}}/{{option_name}}", dest: "{{remote_script}}" }
-  #   - name: init
-  #     shell: bash {{remote_script}}/{{option_name}}/{{option_name}}.sh

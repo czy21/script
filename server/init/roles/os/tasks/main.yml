@@ -1,12 +1,12 @@
 - name: copy script
   copy:
-    src: "{{item.src}}"
-    dest: "{{item.dest}}"
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
   with_items:
-    - { src: "{{role_path}}", dest: "{{param_remote_roles_path}}" }
+    - src: "{{ role_path }}/files/"
+      dest: "{{ param_remote_role_path }}"
 
 - name: init
   shell: |-
     timedatectl set-timezone Asia/Shanghai
-    os_type=$(awk -F= '/^ID=/{gsub("\"","",$2);print $2}' /etc/os-release)
-    bash {{param_remote_role_path}}/${os_type}.sh
+    bash {{param_remote_role_path}}/{{ ansible_distribution | lower}}.sh
