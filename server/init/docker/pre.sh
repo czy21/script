@@ -11,10 +11,3 @@ sudo tee /etc/systemd/system/docker.service.d/docker.conf <<-'EOF'
 ExecStart=
 ExecStart=/usr/bin/dockerd
 EOF
-
-os_type=$(awk -F= '/^ID=/{gsub("\"","",$2);print $2}' /etc/os-release)
-if [ ${os_type} == 'centos' ]; then
-    bash ${dir}/docker-centos.sh
-elif [ ${os_type} == 'ubuntu' ]; then
-    bash ${dir}/docker-ubuntu.sh
-fi
