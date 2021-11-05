@@ -15,16 +15,13 @@ do
     break
     ;;
   t)
-    script_path=$(cd "$(dirname "$0")";pwd)
-    script_name=$(basename ${script_path})
+    script_path=$(dirname "$0")
     private_key_file=${script_path}/___temp/private-key
     if [ -f "${private_key_file}" ]; then
       chmod 600 ${private_key_file}
     fi
     shift 1
-    echo ${script_path}
     ansible_cmd="ansible-playbook \
-    --extra-vars \"script_path=${script_path} script_name=${script_name}\" \
     --inventory ${script_path}/ansible_hosts ${script_path}/$1.yml \
     --step \
     --verbose"

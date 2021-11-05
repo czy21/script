@@ -1,3 +1,1 @@
 ---
-param_remote_roles_path: "/{{ansible_user_id}}/{{script_name}}/roles"
-param_remote_role_path: "{{param_remote_roles}}/{{role_path|basename}}"

@@ -18,5 +18,5 @@ function upload_exec_sh() {
   name_path=`basename ${pwd_path}`
   ssh $host 'rm -rf $HOME/'${name_path}';'
   scp -rqC ${pwd_path} $host:
-  ssh $host 'bash $HOME/'${name_path}/${sh_file}' '$@';'
+  ssh $host 'sh $HOME/'${name_path}/${sh_file}' '$@';'
 }
