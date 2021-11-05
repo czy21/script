@@ -1,0 +1,3 @@
+---
+remote_script: "/{{ansible_user_id}}/{{script_name}}"
+option_name: "os"
