@@ -12,6 +12,10 @@
         dest: "{{item.dest}}"
       with_items:
         - { src: "{{script_path}}/{{option_name}}", dest: "{{remote_script}}" }
+
+    - name: pre
+      shell: bash {{remote_script}}/{{option_name}}/pre.sh
+
     - name: create daemon
       template: src={{script_path}}/{{option_name}}/{{daemon_name}} dest=/tmp/docker_{{daemon_name}}
 
@@ -19,5 +23,5 @@
       shell: sudo cp -r /tmp/docker_{{daemon_name}} /etc/docker/{{daemon_name}}
 
     - name: install
-      shell: bash {{remote_script}}/{{option_name}}/{{option_name}}.sh
+      shell: bash {{remote_script}}/{{option_name}}/post.sh
 

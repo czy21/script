@@ -24,6 +24,9 @@ spec:
       containers:
         - name: '{{ .Release.Name }}'
           image: mysql:8.0
+          resources:
+            limits:
+              memory: 4Gi
           ports:
             - containerPort: 3306
           args:
