@@ -1,12 +1,6 @@
-- name: create role dir
-  file: path={{ param_remote_role_path }} state=directory
+- include_tasks: roles/common/tasks/copy-template.yml
 
-- name: copy files
-  template: src={{ item }} dest={{ param_remote_role_path }}
-  with_fileglob:
-    - templates/*
-
-- name: init
+- name: init os
   shell: |-
     timedatectl set-timezone Asia/Shanghai
     bash {{param_remote_role_path}}/{{ ansible_distribution | lower}}.sh

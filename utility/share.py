@@ -1,7 +1,14 @@
 #!/usr/bin/env python3
+import subprocess
 import sys
 from itertools import zip_longest
 from pathlib import Path
+
+flat = lambda L: sum(map(flat, L), []) if isinstance(L, list) else [L]
+
+
+def arr_param_to_str(*items, separator=" ") -> str:
+    return separator.join(flat(list(items)))
 
 
 def dfs_dir(target_path: Path, deep) -> list:
@@ -58,3 +65,8 @@ def select_option(deep):
         "namespace": path.name,
         "list": get_install_tuple(path)
     }
+
+
+def execute_cmd(cmd: str):
+    proc = subprocess.Popen(cmd, shell=True, encoding="utf-8")
+    proc.wait()

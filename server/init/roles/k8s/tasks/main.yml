@@ -1,10 +1,4 @@
-- name: create role dir
-  file: path={{ param_remote_role_path }} state=directory
-
-- name: copy files
-  template: src={{ item }} dest={{ param_remote_role_path }}
-  with_fileglob:
-    - templates/*
+- include_tasks: roles/common/tasks/copy-template.yml
 
 - name: init iptables
   become: yes

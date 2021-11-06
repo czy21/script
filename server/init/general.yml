@@ -1,5 +1,7 @@
-- hosts: all
-  remote_user: root
+- name: prune
+  hosts: all
+  remote_user: bruce
+  become: yes
   tasks:
     - name: calico prune
       shell: nmcli d status | grep "^cali\|^tun" | awk '{print $1}' | xargs nmcli device delete -
@@ -13,4 +15,21 @@
       shell: docker image prune --all --force
     - name: docker network prune
       shell: docker network prune --force
+    - name: k8s reset
+      shell: kubeadm reset --force
+    - name: machine reboot
+      shell: reboot
+    - name: machine shutdown
+      shell: shutdown -h now
+  tags:
+    - prune
 
+- name: k8s-reset
+  hosts: all
+  remote_user: bruce
+  become: yes
+  tasks:
+    - name: k8s reset
+      shell: kubeadm reset --force
+  tags:
+    - k8s-reset

@@ -1,11 +1,5 @@
-- name: create role dir
-  file: path={{ param_remote_role_path }} state=directory
-
-- name: copy files
-  template: src={{ item }} dest={{ param_remote_role_path }}
-  with_fileglob:
-    - templates/*
+- include_tasks: roles/common/tasks/copy-template.yml
 
 - name: copy hosts
   become: yes
-  copy: src={{ param_remote_role_path }}/{{ ansible_distribution | lower}} dest=/etc/hosts remote_src=yes
+  template: src={{ ansible_distribution | lower}} dest=/etc/hosts

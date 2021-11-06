@@ -1,0 +1,53 @@
+- name: os
+  hosts: all
+  remote_user: root
+  vars_files:
+    - "vars/main.yml"
+  roles:
+    - os
+  tags:
+    - os
+
+- name: docker
+  hosts: all
+  remote_user: bruce
+  vars_files:
+    - "vars/main.yml"
+  roles:
+    - docker
+  tags:
+    - docker
+
+- name: hosts
+  hosts: all
+  remote_user: bruce
+  vars_files:
+    - "vars/main.yml"
+  roles:
+    - hosts
+  tags:
+    - hosts
+
+- name: k8s-master
+  hosts: master
+  remote_user: bruce
+  vars_files:
+    - "vars/main.yml"
+  vars:
+    param_k8s_role: master
+  roles:
+    - k8s
+  tags:
+    - k8s-{{param_k8s_role}}
+
+- name: k8s-node
+  hosts: node
+  remote_user: bruce
+  vars_files:
+    - "vars/main.yml"
+  vars:
+    param_k8s_role: node
+  roles:
+    - k8s
+  tags:
+    - k8s-{{param_k8s_role}}

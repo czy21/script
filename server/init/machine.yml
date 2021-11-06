@@ -1,9 +1,0 @@
-- hosts: all
-  remote_user: root
-  tasks:
-    - name: reboot
-      shell: reboot
-    - name: shutdown
-      shell: shutdown -h now
-    
-
