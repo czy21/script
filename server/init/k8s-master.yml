@@ -1,28 +1,38 @@
-- hosts: master
-  remote_user: root
+- name: k8s-master
+  hosts: master
+  remote_user: bruce
+  vars_files:
+    - "vars/main.yml"
   vars:
-    remote_script: "/{{ansible_user_id}}/{{script_name}}"
-    option_name: "k8s"
-    init_config_name: "k8s-init-config.yml"
-    svc_network_cidr: "10.1.0.0/16"
-    pod_network_cidr: "10.2.0.0/16"
-  tasks:
-    - name: copy script
-      copy:
-        src: "{{item.src}}"
-        dest: "{{item.dest}}"
-      with_items:
-        - { src: "{{script_path}}/{{option_name}}", dest: "{{remote_script}}" }
+    param_k8s_role: master
+  roles:
+    - k8s
 
-    - name: install
-      shell: bash {{remote_script}}/{{option_name}}/{{option_name}}.sh
-
-    - name: create config
-      template: src={{script_path}}/{{option_name}}/{{init_config_name}} dest=/tmp/{{init_config_name}}
-
-    - name: init by config
-      shell: kubeadm init --config /tmp/{{init_config_name}}
-
-    - name: export admin.conf
-      shell: echo 'export KUBECONFIG=/etc/kubernetes/admin.conf' >> ~/.bashrc
-      when: "'KUBECONFIG' not in ansible_env"
+#- hosts: master
+#  remote_user: root
+#  vars:
+#    remote_script: "/{{ansible_user_id}}/{{script_name}}"
+#    option_name: "k8s"
+#    init_config_name: "k8s-init-config.yml"
+#    svc_network_cidr: "10.1.0.0/16"
+#    pod_network_cidr: "10.2.0.0/16"
+#  tasks:
+#    - name: copy script
+#      copy:
+#        src: "{{item.src}}"
+#        dest: "{{item.dest}}"
+#      with_items:
+#        - { src: "{{script_path}}/{{option_name}}", dest: "{{remote_script}}" }
+#
+#    - name: install
+#      shell: bash {{remote_script}}/{{option_name}}/{{option_name}}.sh
+#
+#    - name: create config
+#      template: src={{script_path}}/{{option_name}}/{{init_config_name}} dest=/tmp/{{init_config_name}}
+#
+#    - name: init by config
+#      shell: kubeadm init --config /tmp/{{init_config_name}}
+#
+#    - name: export admin.conf
+#      shell: echo 'export KUBECONFIG=/etc/kubernetes/admin.conf' >> ~/.bashrc
+#      when: "'KUBECONFIG' not in ansible_env"
