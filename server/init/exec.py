@@ -20,6 +20,7 @@ if __name__ == '__main__':
         "--inventory", ansible_hosts, ansible_file,
         "--tags", args.t,
         "--ask-pass" if args.p else ["--private-key", private_key],
+        "--flush-cache",
         "--step",
         "--verbose"
     ])

@@ -1,5 +1,3 @@
-- include_tasks: roles/common/tasks/copy-template.yml
-
 - name: create dir
   shell: |-
     sudo mkdir -p /volume1/
@@ -16,4 +14,4 @@
 
 - name: install
   shell: |-
-    bash {{param_remote_role_path}}/{{ ansible_distribution | lower}}.sh
+    bash {{ param_remote_role_path }} /{{ ansible_distribution | lower}}.sh

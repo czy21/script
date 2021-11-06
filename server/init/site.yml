@@ -3,30 +3,48 @@
   remote_user: root
   vars_files:
     - "vars/main.yml"
+  vars:
+    param_role_name: os
+  pre_tasks:
+    - include_tasks: roles/common/tasks/copy-template.yml
   roles:
-    - os
+    - {{ param_role_name }}
+  post_tasks:
+    - include_tasks: roles/common/tasks/cleanup.yml
   tags:
-    - os
+    - {{ param_role_name }}
 
 - name: docker
   hosts: all
   remote_user: bruce
   vars_files:
     - "vars/main.yml"
+  vars:
+    param_role_name: docker
+  pre_tasks:
+    - include_tasks: roles/common/tasks/copy-template.yml
   roles:
-    - docker
+    - {{ param_role_name }}
+  post_tasks:
+    - include_tasks: roles/common/tasks/cleanup.yml
   tags:
-    - docker
+    - {{ param_role_name }}
 
 - name: hosts
   hosts: all
   remote_user: bruce
   vars_files:
     - "vars/main.yml"
+  vars:
+    param_role_name: hosts
+  pre_tasks:
+    - include_tasks: roles/common/tasks/copy-template.yml
   roles:
-    - hosts
+    - {{ param_role_name }}
+  post_tasks:
+    - include_tasks: roles/common/tasks/cleanup.yml
   tags:
-    - hosts
+    - {{ param_role_name }}
 
 - name: k8s-master
   hosts: master
@@ -35,10 +53,15 @@
     - "vars/main.yml"
   vars:
     param_k8s_role: master
+    param_role_name: k8s
+  pre_tasks:
+    - include_tasks: roles/common/tasks/copy-template.yml
   roles:
-    - k8s
+    - {{ param_role_name }}
+  post_tasks:
+    - include_tasks: roles/common/tasks/cleanup.yml
   tags:
-    - k8s-{{param_k8s_role}}
+    - {{ param_role_name }}-{{ param_k8s_role }}
 
 - name: k8s-node
   hosts: node
@@ -47,7 +70,12 @@
     - "vars/main.yml"
   vars:
     param_k8s_role: node
+    param_role_name: k8s
+  pre_tasks:
+    - include_tasks: roles/common/tasks/copy-template.yml
   roles:
-    - k8s
+    - {{ param_role_name }}
+  post_tasks:
+    - include_tasks: roles/common/tasks/cleanup.yml
   tags:
-    - k8s-{{param_k8s_role}}
+    - {{ param_role_name }}-{{ param_k8s_role }}
