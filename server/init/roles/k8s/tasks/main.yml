@@ -1,6 +1,4 @@
-- include_tasks: roles/common/tasks/copy-template.yml
-
-- name: init iptables
+- name: create iptables
   become: yes
   shell: |-
     cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
@@ -14,6 +12,6 @@
     sudo sysctl --system
 
 - name: install
-  shell: bash {{param_remote_role_path}}/{{ ansible_distribution | lower}}.sh
+  shell: bash {{ param_remote_role_path }} /{{ ansible_distribution | lower}}.sh
 
-- include_tasks: "{{param_k8s_role}}.yml"
+- include_tasks: "{{ param_k8s_role }}.yml"
