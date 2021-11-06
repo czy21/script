@@ -1,6 +1,0 @@
-- hosts: all
-  remote_user: root
-  tasks:
-    - name: k8s reset
-      shell: kubeadm reset --force
-

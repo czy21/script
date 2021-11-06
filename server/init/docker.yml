@@ -1,7 +1,0 @@
-- name: docker
-  hosts: all
-  remote_user: bruce
-  vars_files:
-    - "vars/main.yml"
-  roles:
-    - docker

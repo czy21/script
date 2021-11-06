@@ -1,7 +1,0 @@
-- name: os
-  hosts: all
-  remote_user: root
-  vars_files:
-    - "vars/main.yml"
-  roles:
-    - os
