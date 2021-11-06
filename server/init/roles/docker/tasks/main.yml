@@ -1,10 +1,11 @@
-- name: copy script
-  copy:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
-  with_items:
-    - src: "{{ role_path }}/files/"
-      dest: "{{ param_remote_role_path }}"
+- name: create role dir
+  file: path={{ param_remote_role_path }} state=directory
+
+- name: copy files
+  template: src={{ item }} dest={{ param_remote_role_path }}
+  with_fileglob:
+    - templates/*
+
 - name: create dir
   shell: |-
     sudo mkdir -p /volume1/

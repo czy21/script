@@ -1,0 +1,4 @@
+---
+param_k8s_version: 1.21.1
+param_svc_network_cidr: "10.1.0.0/16"
+param_pod_network_cidr: "10.2.0.0/16"

@@ -6,7 +6,6 @@
   with_fileglob:
     - templates/*
 
-- name: init
-  shell: |-
-    timedatectl set-timezone Asia/Shanghai
-    bash {{param_remote_role_path}}/{{ ansible_distribution | lower}}.sh
+- name: copy hosts
+  become: yes
+  copy: src={{ param_remote_role_path }}/{{ ansible_distribution | lower}} dest=/etc/hosts remote_src=yes

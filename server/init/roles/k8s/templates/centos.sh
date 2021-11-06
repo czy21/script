@@ -1,18 +1,6 @@
 #!/bin/bash
 set -e
 
-k8s_version=1.21.1
-
-cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
-br_netfilter
-EOF
-
-cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
-net.bridge.bridge-nf-call-ip6tables = 1
-net.bridge.bridge-nf-call-iptables = 1
-EOF
-sudo sysctl --system
-
 sudo cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
 name=Kubernetes
@@ -23,7 +11,7 @@ repo_gpgcheck=1
 gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
 exclude=kubelet kubeadm kubectl
 EOF
-sudo yum install -y kubelet-${k8s_version} kubeadm-1.21.1${k8s_version} kubectl-1.21.1${k8s_version} --disableexcludes=kubernetes
+sudo yum install -y kubelet-{{param_k8s_version}} kubeadm-{{param_k8s_version}} kubectl-{{param_k8s_version}} --disableexcludes=kubernetes
 sudo systemctl enable --now kubelet
 
 sudo wget -O - https://get.helm.sh/helm-v3.6.3-linux-amd64.tar.gz | sudo tar -zxf - --strip-components 1 -C /usr/local/bin/ linux-amd64/helm
