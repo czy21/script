@@ -1,4 +1,5 @@
 - name: create dir
+  become: yes
   shell: |-
     sudo mkdir -p /volume1/
     sudo mkdir -p /etc/systemd/system/docker.service.d/
@@ -14,4 +15,4 @@
 
 - name: install
   shell: |-
-    bash {{ param_remote_role_path }} /{{ ansible_distribution | lower}}.sh
+    bash {{ param_remote_role_path }}/{{ ansible_distribution | lower}}.sh
