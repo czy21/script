@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import argparse
 import subprocess
-import sys
 import share
 from pathlib import Path
 
@@ -30,47 +29,42 @@ def apply(app_id: str, app_name: str, source_path: Path, **kwargs):
 
     if args.i:
         if source_conf_path.exists():
-            execute_shell(" ".join(['echo -e "{}\033[32m conf dir copy \033[0m"'.format(app_id),
+            share.execute_cmd(" ".join(['echo -e "{}\033[32m conf dir copy \033[0m"'.format(app_id),
                                     '&& sudo mkdir -p ' + target_conf_path.as_posix(),
                                     '&& sudo cp -rv ', source_conf_path.as_posix() + "/*", target_conf_path.as_posix() + "/"
                                     ]))
         else:
-            execute_shell(" ".join(['echo -e "{}\033[32m conf dir no exist \033[0m"'.format(app_id)]))
+            share.execute_cmd(" ".join(['echo -e "{}\033[32m conf dir no exist \033[0m"'.format(app_id)]))
         if source_init_sh.exists():
-            execute_shell(" ".join(['echo -e "{}\033[32m init.sh \033[0m => {}"'.format(app_id, source_init_sh.as_posix()),
+            share.execute_cmd(" ".join(['echo -e "{}\033[32m init.sh \033[0m => {}"'.format(app_id, source_init_sh.as_posix()),
                                     '&& sudo bash', source_init_sh.as_posix()
                                     ]))
         else:
-            execute_shell(" ".join(['echo -e "{}\033[32m init.sh not exist \033[0m"'.format(app_id)]))
+            share.execute_cmd(" ".join(['echo -e "{}\033[32m init.sh not exist \033[0m"'.format(app_id)]))
 
         if source_compose_file.exists():
-            execute_shell(" ".join(['echo -e "{}\033[32m start_compose => \033[0m ${}"'.format(app_id, source_compose_file.as_posix()),
+            share.execute_cmd(" ".join(['echo -e "{}\033[32m start_compose => \033[0m ${}"'.format(app_id, source_compose_file.as_posix()),
                                     '&& sudo /usr/local/bin/docker-compose --file {} --env-file {} up --detach --build'.format(source_compose_file.as_posix(), env_file)
                                     ]))
         else:
-            execute_shell(" ".join(['echo -e "{}\033[32m build.sh not exist \033[0m"'.format(app_id)]))
-        execute_shell("echo \n")
+            share.execute_cmd(" ".join(['echo -e "{}\033[32m build.sh not exist \033[0m"'.format(app_id)]))
+        share.execute_cmd("echo \n")
 
     if args.b:
         if source_build_sh.exists():
-            execute_shell(" ".join(['echo -e "{}\033[32m build.sh \033[0m => {}"'.format(app_id, source_build_sh.as_posix()),
+            share.execute_cmd(" ".join(['echo -e "{}\033[32m build.sh \033[0m => {}"'.format(app_id, source_build_sh.as_posix()),
                                     '&& sudo bash', source_build_sh.as_posix()
                                     ]))
         else:
-            execute_shell(" ".join(['echo -e "{}\033[32m build.sh not exist \033[0m"'.format(app_id)]))
-        execute_shell("echo \n")
+            share.execute_cmd(" ".join(['echo -e "{}\033[32m build.sh not exist \033[0m"'.format(app_id)]))
+        share.execute_cmd("echo \n")
 
     if args.c:
         if source_post_sh.exists():
-            execute_shell(" ".join(['echo -e "{}\033[32m post_config \033[0m => {}"'.format(app_id, source_post_sh.as_posix()),
+            share.execute_cmd(" ".join(['echo -e "{}\033[32m post_config \033[0m => {}"'.format(app_id, source_post_sh.as_posix()),
                                     '&& sudo bash', source_post_sh.as_posix()
                                     ]))
-        execute_shell("echo \n")
-
-
-def execute_shell(cmd: str):
-    cmd = subprocess.Popen(cmd, shell=True, stdin=subprocess.PIPE, stderr=sys.stderr, stdout=sys.stdout, encoding="utf-8")
-    cmd.communicate()
+        share.execute_cmd("echo \n")
 
 
 if __name__ == '__main__':
@@ -94,4 +88,4 @@ if __name__ == '__main__':
     args = parser.parse_args()
     execute(selected_option["list"], apply, env=env, env_file=env_file, args=args)
     if args.p:
-        execute_shell("docker image prune --force --all")
+        share.execute_cmd("docker image prune --force --all")

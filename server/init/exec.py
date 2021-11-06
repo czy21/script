@@ -16,6 +16,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
     ansible_file = Path(__file__).parent.joinpath(args.i + ".yml").as_posix()
     ansible_cmd = share.arr_param_to_str([
+        "ANSIBLE_HOST_KEY_CHECKING=0",
+        "ANSIBLE_FORCE_COLOR=1",
         "ansible-playbook",
         "--inventory", ansible_hosts, ansible_file,
         "--tags", args.t,

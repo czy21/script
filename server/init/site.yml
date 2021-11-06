@@ -8,11 +8,11 @@
   pre_tasks:
     - include_tasks: roles/common/tasks/copy-template.yml
   roles:
-    - {{ param_role_name }}
+    - '{{ param_role_name }}'
   post_tasks:
     - include_tasks: roles/common/tasks/cleanup.yml
   tags:
-    - {{ param_role_name }}
+    - '{{ param_role_name }}'
 
 - name: docker
   hosts: all
@@ -24,11 +24,11 @@
   pre_tasks:
     - include_tasks: roles/common/tasks/copy-template.yml
   roles:
-    - {{ param_role_name }}
+    - '{{ param_role_name }}'
   post_tasks:
     - include_tasks: roles/common/tasks/cleanup.yml
   tags:
-    - {{ param_role_name }}
+    - '{{ param_role_name }}'
 
 - name: hosts
   hosts: all
@@ -40,11 +40,11 @@
   pre_tasks:
     - include_tasks: roles/common/tasks/copy-template.yml
   roles:
-    - {{ param_role_name }}
+    - '{{ param_role_name }}'
   post_tasks:
     - include_tasks: roles/common/tasks/cleanup.yml
   tags:
-    - {{ param_role_name }}
+    - '{{ param_role_name }}'
 
 - name: k8s-master
   hosts: master
@@ -57,11 +57,11 @@
   pre_tasks:
     - include_tasks: roles/common/tasks/copy-template.yml
   roles:
-    - {{ param_role_name }}
+    - '{{ param_role_name }}'
   post_tasks:
     - include_tasks: roles/common/tasks/cleanup.yml
   tags:
-    - {{ param_role_name }}-{{ param_k8s_role }}
+    - '{{ param_role_name }}-{{ param_k8s_role }}'
 
 - name: k8s-node
   hosts: node
@@ -74,8 +74,8 @@
   pre_tasks:
     - include_tasks: roles/common/tasks/copy-template.yml
   roles:
-    - {{ param_role_name }}
+    - '{{ param_role_name }}'
   post_tasks:
     - include_tasks: roles/common/tasks/cleanup.yml
   tags:
-    - {{ param_role_name }}-{{ param_k8s_role }}
+    - '{{ param_role_name }}-{{ param_k8s_role }}'

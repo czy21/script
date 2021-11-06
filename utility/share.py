@@ -67,6 +67,5 @@ def select_option(deep):
     }
 
 
-def execute_cmd(cmd: str):
-    proc = subprocess.Popen(cmd, shell=True, encoding="utf-8")
-    proc.wait()
+def execute_cmd(cmd):
+    subprocess.Popen(cmd, shell=True).wait()

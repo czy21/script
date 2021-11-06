@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-import argparse, io, subprocess
+import argparse
+import io
+import share
 from pathlib import Path
 from ruamel import yaml
-import share
 
 
 def _str_representer(dumper: yaml.Dumper, data):
@@ -47,7 +48,7 @@ def apply(app_id: str, app_name: str, source_path: Path, **kwargs):
 
     cmd.append(helm_dep_update_cmd)
     cmd.append(helm_template_cmd)
-    execute_shell(cmd_func("&&".join(cmd)))
+    share.execute_cmd(cmd_func("&&".join(cmd)))
     with io.open(temp_all_in_one_path, "r", encoding="utf-8", newline="\n") as o_file:
         y = yaml.load_all(o_file.read(), Loader=yaml.UnsafeLoader)
     with io.open(temp_all_in_one_path, "w+", encoding="utf-8", newline="\n") as y_file:
@@ -57,19 +58,7 @@ def apply(app_id: str, app_name: str, source_path: Path, **kwargs):
                 content["metadata"]["namespace"] = args.n
             all_doc.append(content)
         yaml.dump_all(all_doc, y_file, Dumper=yaml.RoundTripDumper, default_flow_style=False, explicit_start=True)
-    execute_shell(kube_cmd)
-
-
-def execute_shell(cmd: str):
-    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True, encoding="utf-8")
-    while True:
-        output = proc.stdout.readline()
-        if output == '' and proc.poll() is not None:
-            break
-        if output:
-            print(output.strip())
-    proc.stdout.close()
-    proc.wait()
+    share.execute_cmd(kube_cmd)
 
 
 if __name__ == '__main__':
