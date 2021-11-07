@@ -7,7 +7,7 @@ map.put("param_git_credential_id","bruce")
 
 map.put("param_project_root","code/api")
 map.put("param_project_name","erp")
-map.put("param_project_module","gateway")
+map.put("param_project_module","portal")
 map.put("param_code_type","java")
 
 Build(map)

@@ -1,13 +1,16 @@
 @Library('ops-library@master') _
 
 def map = [:]
+map.put("param_env_name","dev")
 map.put("param_global_env_file_id","dev.env")
-map.put("param_git_repository_url","git@gitee.com:czyhome/erp.git")
-map.put("param_git_credential_id","bruce")
 
-map.put("param_project_root","code/web/react")
-map.put("param_project_name","erp")
-map.put("param_project_module","operation")
+map.put("param_release_namespace","stable")
+map.put("param_release_name","erp-operation")
+map.put("param_data_claim_name","data-erp")
+
+map.put("param_release_version","dev-bruce")
+map.put("param_backend_url","http://erp-gateway.stable.svc")
 map.put("param_code_type","web")
 
-Build(map)
+
+Deploy(map)
