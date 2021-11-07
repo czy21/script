@@ -5,10 +5,11 @@ map.put("param_env_name","dev")
 map.put("param_global_env_file_id","dev.env")
 
 map.put("param_release_namespace","stable")
-map.put("param_release_name","erp-gateway")
+map.put("param_release_name","erp-portal")
+map.put("param_data_claim_name","data-erp")
 
 map.put("param_release_version","dev-bruce")
 map.put("param_code_type","java")
 
-Deploy(map)
 
+Deploy(map)
