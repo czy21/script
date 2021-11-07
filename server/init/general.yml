@@ -17,19 +17,26 @@
       shell: docker network prune --force
     - name: k8s reset
       shell: kubeadm reset --force
-    - name: machine reboot
-      shell: reboot
-    - name: machine shutdown
-      shell: shutdown -h now
   tags:
     - prune
 
-- name: k8s-reset
+- name: machine
   hosts: all
   remote_user: bruce
   become: yes
+  vars:
+    param_users: 
+      - root
+      - bruce
   tasks:
-    - name: k8s reset
-      shell: kubeadm reset --force
+    - name: passwd -d
+      shell: passwd -d {{item}}
+      with_items: '{{param_users}}'
+
+    - name: machine reboot
+      shell: reboot
+
+    - name: machine shutdown
+      shell: shutdown -h now
   tags:
-    - k8s-reset
+    - machine
