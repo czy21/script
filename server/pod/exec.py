@@ -66,8 +66,9 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-d', action="store_true")
     parser.add_argument("-t", default=2)
+    parser.add_argument('-n')
     args = parser.parse_args()
     selected_option = share.select_option(int(args.t))
-    parser.add_argument('-n', default=selected_option["namespace"])
-    args = parser.parse_args()
+    if args.n is None:
+        args.n = selected_option["namespace"]
     execute(selected_option["list"], apply, env_path=env_path, args=args)

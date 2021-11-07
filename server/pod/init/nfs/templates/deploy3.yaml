@@ -29,11 +29,11 @@ spec:
             - name: PROVISIONER_NAME
               value: fuseim.pri/ifs
             - name: NFS_SERVER
-              value: 192.168.2.19
+              value: {{ .Values.nfs.host }}
             - name: NFS_PATH
-              value: /volume1/storage1
+              value: {{ .Values.nfs.path}}
       volumes:
         - name: nfs-client-root
           nfs:
-            server: 192.168.2.19
-            path: /volume1/storage1
+            server: {{ .Values.nfs.host }}
+            path: {{ .Values.nfs.path }}

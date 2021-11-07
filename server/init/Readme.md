@@ -1,9 +1,9 @@
 # ansible install and config on server
 ## centos
 ```shell
-sudo yum -y install epel-release
+sudo yum -y install epel-release 
+sudo yum update
 sudo yum -y install ansible
-sudo sed -ir 's/^#\(host_key_checking\)/\1/' /etc/ansible/ansible.cfg
 ```
 ## ubuntu
 ```shell
@@ -24,14 +24,6 @@ sed -i -r "s/^\s*PermitRootLogin\s+\w+/PermitRootLogin yes/;" /etc/ssh/sshd_conf
 showmount -e [host]
 # vim fstab append
 [host]:/volume1/ubuntu /volume1 nfs defaults 0 0
-```
-
-### 集群初始化后的手动执行
-```shell
-# 解决nfs挂载的unexpected error getting claim reference: selfLink was empty 异常
-/etc/kubernetes/manifests/kube-apiserver.yaml command 下添加 - --feature-gates=RemoveSelfLink=false
-# 更改nodePort范围
-/etc/kubernetes/manifests/kube-apiserver.yaml command 下添加 - --service-node-port-range=1-65535
 ```
 
 ###

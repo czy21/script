@@ -13,6 +13,10 @@
   become: yes
   template: src=daemon.json dest=/etc/docker/
 
+- name: become test
+  become: yes
+  shell: echo bbecome aaaa
+
 - name: install
   shell: |-
     bash {{ param_remote_role_path }}/{{ ansible_distribution | lower}}.sh
