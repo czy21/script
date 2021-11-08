@@ -1,8 +1,8 @@
 log:
-  elkPrefix: logstash-dev
+  elkPrefix: logstash-ops
 
 authentication:
   jwtSecret: "gfIwilcc0WjNGKJ5DLeksf2JKfcLgTZU"
 
 multicluster:
-  clusterRole: member
+  clusterRole: host
