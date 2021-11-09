@@ -33,6 +33,9 @@
       shell: passwd -d {{item}}
       with_items: '{{param_users}}'
 
+    - name: restart docker
+      shell: systemctl daemon-reload;system restart docker
+
     - name: machine reboot
       shell: reboot
 
