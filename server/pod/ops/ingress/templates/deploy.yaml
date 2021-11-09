@@ -39,6 +39,16 @@ spec:
             name: nexus
             port:
               number: 5000
+  - host: registry-proxy.cluster.com
+    http:
+      paths:
+      - pathType: Prefix
+        path: /
+        backend:
+          service:
+            name: nexus
+            port:
+              number: 5005
   - host: grafana.cluster.com
     http:
       paths:
