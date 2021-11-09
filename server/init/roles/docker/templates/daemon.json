@@ -7,5 +7,6 @@
     "max-size": "100m"
   },
   "storage-driver": "overlay2",
-  "insecure-registries": {{insecure_registries}}
+  "registry-mirrors": {{param_registry_mirrors | to_json}},
+  "insecure-registries": {{param_insecure_registries | to_json}}
 }
