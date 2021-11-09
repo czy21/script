@@ -1,5 +1,5 @@
 ---
 param_registry_mirrors: 
-  - http://registry.cluster.com
+  - http://registry-proxy.cluster.com
 param_insecure_registries:
   - registry.cluster.com
