@@ -8,12 +8,14 @@ services:
     privileged: true
     user: root
     ports:
-      - "80:80"
-      - "443:443"
+      - "8010:80"
     volumes:
-      - ${GLOBAL_CONFIG_DIR}/nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ${GLOBAL_CONFIG_DIR}/nginx/conf.d/:/etc/nginx/conf.d/
-      - ${GLOBAL_CONFIG_DIR}/nginx/cert/:/etc/nginx/cert/
-      - ${GLOBAL_CONFIG_DIR}/nginx/log/:/var/log/nginx/
-      - ${GLOBAL_VOLUMES_DIR}/nginx/:/root/
+      - ${GLOBAL_DOCKER_DATA}/nginx/conf/nginx.conf:/etc/nginx/nginx.conf
+      - ${GLOBAL_DOCKER_DATA}/nginx/conf/conf.d/:/etc/nginx/conf.d/
+      - ${GLOBAL_DOCKER_DATA}/nginx/conf/cert/:/etc/nginx/cert/
+      - ${GLOBAL_DOCKER_DATA}/nginx/data/log/:/var/log/nginx/
     restart: always
+networks:
+  default:
+    external:
+      name: local_default

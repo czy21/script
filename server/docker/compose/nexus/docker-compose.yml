@@ -8,7 +8,9 @@ services:
     privileged: true
     user: root
     ports:
-      - 8081:8081
+      - "8081:8081"
+      - "5004:5000"
+      - "5005:5005"
     volumes:
       - ${GLOBAL_DOCKER_DATA}/nexus/data/:/nexus-data/
     environment:
