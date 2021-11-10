@@ -2,21 +2,28 @@ version: '3.7'
 
 services:
   app:
-    image: nextcloud
+    image: nextcloud:22-fpm-alpine
     container_name: nextcloud
     privileged: true
     user: root
-    ports:
-      - 8080:80
     volumes:
-      - ${GLOBAL_VOLUMES_DIR}/nextcloud:/var/www/html
+      - ${GLOBAL_DOCKER_DATA}/nextcloud/data/:/var/www/html
     environment:
-      - MYSQL_HOST=192.168.2.23
+      - MYSQL_HOST=192.168.2.19
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=admin
       - MYSQL_PASSWORD=${GLOBAL_DB_PASSWORD}
     restart: always
-
+  web:
+      image: nginx
+      container_name: nextcloud_web
+      restart: always
+      ports:
+        - 8010:80
+      volumes:
+        - ${GLOBAL_DOCKER_DATA}/nextcloud/conf/nginx.conf:/etc/nginx/nginx.conf:ro
+      volumes_from:
+        - app
 networks:
   default:
     external:
