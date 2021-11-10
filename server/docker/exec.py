@@ -25,12 +25,17 @@ def apply(app_id: str, app_name: str, source_path: Path, **kwargs):
     source_post_sh = Path(source_path).joinpath("post.sh")
     source_build_sh = Path(source_path).joinpath("build.sh")
 
-    target_conf_path = Path(env["GLOBAL_CONFIG_DIR"]).joinpath(app_name)
+    target_app_path = Path(env["GLOBAL_DOCKER_DATA"]).joinpath(app_name)
+    target_conf_path = target_app_path.joinpath("conf")
+    target_data_path = target_app_path.joinpath("data")
 
+    share.execute_cmd(" ".join([
+        'echo -e "{}\033[32m create app dir \033[0m"'.format(app_id),
+        '&& sudo mkdir -p ' + " ".join([target_app_path.as_posix(),target_conf_path.as_posix(),target_data_path.as_posix()])
+    ]))
     if args.i:
         if source_conf_path.exists():
             share.execute_cmd(" ".join(['echo -e "{}\033[32m conf dir copy \033[0m"'.format(app_id),
-                                    '&& sudo mkdir -p ' + target_conf_path.as_posix(),
                                     '&& sudo cp -rv ', source_conf_path.as_posix() + "/*", target_conf_path.as_posix() + "/"
                                     ]))
         else:
@@ -43,7 +48,7 @@ def apply(app_id: str, app_name: str, source_path: Path, **kwargs):
             share.execute_cmd(" ".join(['echo -e "{}\033[32m init.sh not exist \033[0m"'.format(app_id)]))
 
         if source_compose_file.exists():
-            share.execute_cmd(" ".join(['echo -e "{}\033[32m start_compose => \033[0m ${}"'.format(app_id, source_compose_file.as_posix()),
+            share.execute_cmd(" ".join(['echo -e "{}\033[32m start_compose => \033[0m {}"'.format(app_id, source_compose_file.as_posix()),
                                     '&& sudo /usr/local/bin/docker-compose --file {} --env-file {} up --detach --build'.format(source_compose_file.as_posix(), env_file)
                                     ]))
         else:
