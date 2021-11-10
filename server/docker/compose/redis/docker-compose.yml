@@ -10,8 +10,8 @@ services:
     ports:
       - 6379:6379
     volumes:
-      - ${GLOBAL_VOLUMES_DIR}/redis/:/data/
-      - ${GLOBAL_CONFIG_DIR}/redis/redis.conf:/etc/redis/redis.conf
+      - ${GLOBAL_DOCKER_DATA}/redis/data/:/data/
+      - ${GLOBAL_CONFIG_DIR}/redis/conf/redis.conf:/etc/redis/redis.conf
     command: redis-server /etc/redis/redis.conf --appendonly yes
     restart: always
 networks:

@@ -7,8 +7,8 @@ function upload_exec_py() {
   utility_dir=$(cd ${pwd_path}/../../utility; pwd)
   ssh $host 'rm -rf $HOME/'${name_path}';'
 
-  scp -r ${pwd_path} $host:
-  scp -r ${pwd_path}/../requirements.txt ${utility_dir}/share.py $host:${name_path}
+  scp -rqC ${pwd_path} $host:
+  scp -rqC ${pwd_path}/../requirements.txt ${utility_dir}/share.py $host:${name_path}
 
   ssh $host '/usr/local/bin/python3 -B $HOME/'${name_path}/'exec.py '$@';'
 
