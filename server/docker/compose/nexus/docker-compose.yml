@@ -7,10 +7,13 @@ services:
     container_name: nexus
     privileged: true
     user: root
+    ports:
+      - "5004:5000"
+      - "5005:5005"
     volumes:
       - ${GLOBAL_DOCKER_DATA}/nexus/data/:/nexus-data/
     environment:
-      INSTALL4J_ADD_VM_PARAMS: -Xms500M -Xmx500M -XX:MaxDirectMemorySize=4g
+      INSTALL4J_ADD_VM_PARAMS: -Xms1G -Xmx1G -XX:MaxDirectMemorySize=4g
     restart: always
 networks:
   default:
