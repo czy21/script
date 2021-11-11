@@ -7,9 +7,6 @@ services:
     container_name: nexus
     privileged: true
     user: root
-    ports:
-      - "5004:5000"
-      - "5005:5005"
     volumes:
       - ${GLOBAL_DOCKER_DATA}/nexus/data/:/nexus-data/
     environment:

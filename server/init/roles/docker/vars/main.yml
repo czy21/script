@@ -1,5 +1,5 @@
 ---
 param_registry_mirrors: 
-  - http://192.168.2.19:5005
+  - http://registry-proxy.cluster.com:8080
 param_insecure_registries:
-  - 192.168.2.19:5004
+  - registry.cluster.com:8080
