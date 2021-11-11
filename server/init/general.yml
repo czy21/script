@@ -32,7 +32,7 @@
       with_items: '{{param_users}}'
 
     - name: restart docker
-      shell: systemctl daemon-reload;system restart docker
+      shell: systemctl daemon-reload;systemctl restart docker
 
     - name: machine reboot
       shell: reboot

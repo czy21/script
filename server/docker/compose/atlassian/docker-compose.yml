@@ -3,8 +3,8 @@ version: '3.7'
 services:
   jira:
     build:
-      context: ${GLOBAL_PWD_HOME}/compose/atlassian/image/
-      dockerfile: ${GLOBAL_PWD_HOME}/compose/atlassian/image/jira-dockerfile
+      context: ${GLOBAL_PWD_HOME}/compose/atlassian/
+      dockerfile: ${GLOBAL_PWD_HOME}/compose/atlassian/Dockerfile-Jira
     container_name: jira
     privileged: true
     user: root
@@ -18,11 +18,10 @@ services:
       CATALINA_OPTS: "-Xmx2G"
     restart: always
 
-
   confluence:
     build:
-      context: ${GLOBAL_PWD_HOME}/compose/atlassian/image/
-      dockerfile: ${GLOBAL_PWD_HOME}/compose/atlassian/image/confluence-dockerfile
+      context: ${GLOBAL_PWD_HOME}/compose/atlassian/
+      dockerfile: ${GLOBAL_PWD_HOME}/compose/atlassian/Dockerfile-Confluence
     container_name: confluence
     privileged: true
     user: root
