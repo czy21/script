@@ -9,8 +9,8 @@ function upload_exec_py() {
 
   scp -rqC ${pwd_path} $host:
   scp -rqC ${pwd_path}/../requirements.txt ${utility_dir}/share.py $host:${name_path}
-
-  ssh $host '/usr/local/bin/python3 -B $HOME/'${name_path}/'exec.py '$@';'
+  
+  ssh $host 'python3 -B $HOME/'${name_path}/'exec.py '$@';'
 
   ssh $host 'rm -rf $HOME/'${name_path}';'
 }
