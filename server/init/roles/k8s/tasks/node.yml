@@ -1,2 +1,3 @@
 - name: join cluser
-  shell: kubeadm join 192.168.2.21:6443 --token 3qan8a.7ovy3iufer9a04g0 --discovery-token-ca-cert-hash sha256:8316bcb163f902477fc8d3d18458f8e994d711c4fd895169817bc16da0061964
+  become: yes
+  shell: kubeadm join 192.168.2.21:6443 --token btrdb6.52uxoher76jycpgf --discovery-token-ca-cert-hash sha256:fbc85da4e660e19db8785b76fbb5baa8fa4abc07bcc45144d330d53e7c660ce8

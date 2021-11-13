@@ -2,7 +2,7 @@
 ## centos
 ```shell
 sudo yum -y install epel-release 
-sudo yum update
+sudo yum -y update
 sudo yum -y install ansible
 ```
 ## ubuntu

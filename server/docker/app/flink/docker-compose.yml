@@ -40,4 +40,4 @@ services:
 networks:
   default:
     external:
-      name: local_default
+      name: local
