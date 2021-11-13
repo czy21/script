@@ -1,4 +1,4 @@
 
 nfs:
   host: 192.168.2.19
-  path: /volume1/storage1
+  path: /volume1/storage
