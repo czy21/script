@@ -1,12 +1,12 @@
 {
   "hosts": ["fd://","tcp://0.0.0.0:2375"],
-  "data-root": "/volume1/docker-root",
+  "data-root": "{{ param_docker_data }}",
   "exec-opts": ["native.cgroupdriver=systemd"],
   "log-driver": "json-file",
   "log-opts": {
     "max-size": "100m"
   },
   "storage-driver": "overlay2",
-  "registry-mirrors": {{param_registry_mirrors | to_json}},
-  "insecure-registries": {{param_insecure_registries | to_json}}
+  "registry-mirrors": {{ param_registry_mirrors | to_json }},
+  "insecure-registries": {{ param_insecure_registries | to_json }}
 }
