@@ -9,7 +9,7 @@ map.put("param_release_name","erp-operation")
 map.put("param_data_claim_name","data-erp")
 
 map.put("param_release_version","dev-bruce")
-map.put("param_backend_url","http://erp-gateway.stable.svc")
+map.put("param_backend_url","http://erp-gateway.stable.svc:8080")
 map.put("param_code_type","web")
 
 
