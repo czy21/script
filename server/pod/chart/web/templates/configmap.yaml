@@ -44,23 +44,6 @@ data:
         listen       80;
         server_name  localhost;
 
-        set $real_proto $http_x_forwarded_proto;
-        if ($real_proto ~ "^$") {
-            set $real_proto $scheme;
-        }
-        set $real_ip $http_x_real_ip;
-        if ($real_ip ~ "^$") {
-            set $real_ip $remote_addr;
-        }
-        set $real_host $http_x_forwarded_host;
-        if ($real_host ~ "^$") {
-            set $real_host $host;
-        }
-        set $real_port $http_x_forwarded_port;
-        if ($real_port ~ "^$") {
-            set $real_port $server_port;
-        }
-
         location / {
             root /usr/share/nginx/web/;
             index index.html;
@@ -68,17 +51,12 @@ data:
         }
 
         location /api/ {
-            proxy_http_version 1.1;
-            proxy_set_header X-Forwarded-Proto $real_proto;
-            proxy_set_header X-Forwarded-Host $real_host;
-            proxy_set_header X-Forwarded-Port $real_port;
-            proxy_set_header X-Forwarded-Server $host;
-            proxy_set_header X-Real-IP $real_ip;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header Upgrade $http_upgrade;
-            proxy_set_header Connection $http_connection;
-            proxy_cache_bypass $http_upgrade;
             proxy_pass {{ .Values.backend_url }}/;
+            proxy_set_header   Host             $host;
+            proxy_set_header   X-Real-IP        $remote_addr;
+            proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for;
+            #proxy_set_header  Upgrade          $http_upgrade;
+            #proxy_set_header  Connection       $http_connection;
         }
         error_page   500 502 503 504  /50x.html;
         location = /50x.html {
