@@ -37,4 +37,4 @@ vmkfstools -z /vmfs/devices/disks/t10.ATA_____ST4000NM000A2D2HZ100______________
 helm plugin install --version master https://github.com/sonatype-nexus-community/helm-nexus-push.git
 
 # 推送chart至nexus的helm仓库
-helm nexus-push myrepo java-template-0.1.0.tgz -u admin -p ***REMOVED***
+helm nexus-push nexus java-template-0.1.0.tgz -u admin -p ***REMOVED***
