@@ -11,9 +11,9 @@ services:
       - 7474:7474
       - 7687:7687
     volumes:
-      - ${GLOBAL_VOLUMES_DIR}/neo4j/data/:/data/
-      - ${GLOBAL_VOLUMES_DIR}/neo4j/logs/:/logs/
-      - ${GLOBAL_CONFIG_DIR}/neo4j/:/conf/
+      - ${GLOBAL_DOCKER_DATA}/neo4j/data/:/data/
+      - ${GLOBAL_DOCKER_DATA}/neo4j/data/logs/:/logs/
+      - ${GLOBAL_DOCKER_DATA}/neo4j/conf/:/conf/
     environment:
       NEO4J_AUTH: neo4j/${GLOBAL_DB_PASSWORD}
       NEO4J_dbms_memory_pagecache_size: 2g

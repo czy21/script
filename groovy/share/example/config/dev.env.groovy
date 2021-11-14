@@ -1,7 +1,7 @@
 env.param_kube_credential = 'kube-config-dev'
 env.param_kube_server = 'https://192.168.2.21:6443'
 
-env.param_helm_repo = 'http://nexus.cluster.com/repository/helm/'
+env.param_helm_repo = 'http://nexus.cluster.com/repository/helm-hosted/'
 env.param_helm_java_chart_name = "java-template"
 env.param_helm_java_chart_version = "0.1.0"
 

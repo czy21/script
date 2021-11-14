@@ -7,7 +7,7 @@ def build(){
         sh 'chmod +x ${param_project_root}/gradlew && ${param_project_root}/gradlew --init-script ${param_gradle_init_file} --build-file ${param_project_root}/build.gradle ${param_project_module}:clean ${param_project_module}:build -x test --parallel'
         break;
      case "web":
-        env.NODEJS_HOME = "${tool 'node-v14.18.0'}"
+        env.NODEJS_HOME = "${tool 'node-v16.13.0'}"
         env.PATH="${NODEJS_HOME}/bin:${PATH}"
         sh 'yarn --cwd ${param_project_root}/${param_project_module} install && yarn --cwd ${param_project_root}/${param_project_module} --ignore-engines build'
         break;
