@@ -1,5 +1,3 @@
-- include_tasks: roles/common/tasks/copy-template.yml
-
 - name: init os
   shell: |-
     timedatectl set-timezone Asia/Shanghai
