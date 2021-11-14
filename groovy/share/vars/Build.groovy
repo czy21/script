@@ -4,7 +4,8 @@ def call(Map map) {
     pipeline{
         agent any
         environment {
-            param_gradle_init_file = "/var/jenkins_home/tools/gradle/init.d/init.gradle"
+            param_gradle_user_home = "/var/jenkins_home/tools/gradle"
+            param_gradle_init_file = "${param_gradle_user_home}/init.d/init.gradle"
             param_project_root    = "${WORKSPACE}/${map.param_project_root}"
             param_project_name    = "${map.param_project_name}"
             param_project_module  = "${map.param_project_module}"
