@@ -44,7 +44,7 @@ spec:
         - name: data
           mountPath: /var/jenkins_home/
         - name: gradle-init
-          mountPath: /var/jenkins_home/tools/gradle/init.d/init.gradle
+          mountPath: /var/jenkins_home/tools/gradle/init.gradle
           subPath: init.gradle
   volumeClaimTemplates:
   - metadata:
