@@ -1,4 +1,4 @@
 
 nfs:
   host: 192.168.2.18
-  path: /export/k8s
+  path: /export/kube-data
