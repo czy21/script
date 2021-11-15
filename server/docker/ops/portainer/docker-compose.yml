@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   portainer:
-    image: portainer/portainer
+    image: portainer/portainer-ce:linux-amd64-2.9.2-alpine
     container_name: portainer
     privileged: true
     ports:
@@ -10,8 +10,8 @@ services:
       - 8000:8000
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ${GLOBAL_VOLUMES_DIR}/portainer:/data
-      - ${GLOBAL_CONFIG_DIR}/portainer/portainer_password:/tmp/portainer_password
+      - ${GLOBAL_DOCKER_DATA}/portainer/data:/data/
+      - ${GLOBAL_DOCKER_DATA}/portainer/conf/portainer_password:/tmp/portainer_password
     command: --admin-password-file /tmp/portainer_password
     restart: always
 networks:
