@@ -3,4 +3,4 @@ param_docker_data: /volume1/docker-root
 param_registry_mirrors: 
   - http://registry-proxy.cluster.com
 param_insecure_registries:
-  - registry.cluster.com:8080
+  - registry.cluster.com
