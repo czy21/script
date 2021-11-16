@@ -5,7 +5,7 @@ env.param_helm_repo = 'http://nexus.cluster.com/repository/helm-hosted/'
 env.param_helm_java_chart_name = "java-template"
 env.param_helm_java_chart_version = "0.1.0"
 
-env.param_registry_repo= 'registry.cluster.com:8080'
+env.param_registry_repo= 'registry.cluster.com'
 env.param_registry_dir= 'library'
 env.param_registry_username = 'admin'
 env.param_registry_password = 'Czy20210314.'
