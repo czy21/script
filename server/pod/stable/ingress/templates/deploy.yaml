@@ -5,11 +5,11 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/proxy-body-size: '0'
-  name: '{{ .Release.Name }}'
+  name: ingress
   namespace: '{{ .Release.Namespace }}'
 spec:
   rules:
-  - host: erp-dev.cluster1.com
+  - host: erp-dev.cluster.com
     http:
       paths:
       - pathType: Prefix
@@ -19,4 +19,3 @@ spec:
             name: erp-operation
             port:
               number: 80
----
