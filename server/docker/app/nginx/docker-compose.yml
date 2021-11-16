@@ -9,9 +9,11 @@ services:
     user: root
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - ${GLOBAL_DOCKER_DATA}/nginx/conf/nginx.conf:/etc/nginx/nginx.conf
       - ${GLOBAL_DOCKER_DATA}/nginx/conf/conf.d/:/etc/nginx/conf.d/
+      - ${GLOBAL_DOCKER_DATA}/nginx/conf/cert/:/etc/nginx/cert/
       - ${GLOBAL_DOCKER_DATA}/nginx/data/log/:/var/log/nginx/
     restart: always
 networks:

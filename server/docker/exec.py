@@ -18,26 +18,29 @@ def apply(app_id: str, app_name: str, source_path: Path, **kwargs):
     args = kwargs["args"]
     env = kwargs["env"]
     env_file = kwargs["env_file"]
+    source_env_file = Path(source_path).joinpath(".env")
     source_conf_path = Path(source_path).joinpath("conf")
     source_compose_file = Path(source_path).joinpath("docker-compose.yml")
 
+    if source_env_file.exists():
+        print("hello")
+
     source_init_sh = Path(source_path).joinpath("init.sh")
-    source_post_sh = Path(source_path).joinpath("post.sh")
     source_build_sh = Path(source_path).joinpath("build.sh")
 
     target_app_path = Path(env["GLOBAL_DOCKER_DATA"]).joinpath(app_name)
     target_conf_path = target_app_path.joinpath("conf")
-    target_data_path = target_app_path.joinpath("data")
 
     share.execute_cmd(" ".join([
         'echo -e "{}\033[32m create app dir \033[0m"'.format(app_id),
-        '&& sudo mkdir -p ' + " ".join([target_app_path.as_posix(), target_conf_path.as_posix(), target_data_path.as_posix()])
+        '&& sudo mkdir -p ' + " ".join([target_app_path.as_posix()])
     ]))
+
     if args.i:
         if source_conf_path.exists():
             share.execute_cmd(" ".join([
                 'echo -e "{}\033[32m conf dir copy \033[0m"'.format(app_id),
-                '&& sudo cp -rv ', source_conf_path.as_posix() + "/*", target_conf_path.as_posix() + "/"
+                '&& sudo cp -rv ', source_conf_path.as_posix(), target_app_path.as_posix()
             ]))
         else:
             share.execute_cmd(" ".join([
@@ -54,7 +57,7 @@ def apply(app_id: str, app_name: str, source_path: Path, **kwargs):
         if source_compose_file.exists():
             share.execute_cmd(" ".join([
                 'echo -e "{}\033[32m docker-compose file => \033[0m {}"'.format(app_id, source_compose_file.as_posix()),
-                '&& sudo docker-compose --file {} --env-file {} up --detach --build'.format(source_compose_file.as_posix(), env_file)
+                '&& sudo docker-compose --file {} --env-file {} config'.format(source_compose_file.as_posix(), env_file)
             ]))
         else:
             share.execute_cmd(" ".join(['echo -e "{}\033[32m docker-compose file not exist \033[0m"'.format(app_id)]))
