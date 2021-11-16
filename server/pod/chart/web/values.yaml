@@ -1,4 +1,4 @@
 release_version: ""
 backend_url: ""
-registry_repo: registry.cluster.com:8080
+registry_repo: registry.cluster.com
 registry_dir: library
