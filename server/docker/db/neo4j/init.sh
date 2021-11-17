@@ -5,4 +5,4 @@ set -e
 dir=$(cd "$(dirname "$0")"; pwd)
 source ${dir}/../../.env.global
 
-sudo mkdir -p ${GLOBAL_DOCKER_DATA}/neo4j/data/logs/
+sudo mkdir -p ${param_docker_data}/${param_role_name}/data/logs/

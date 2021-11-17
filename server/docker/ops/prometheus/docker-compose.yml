@@ -9,8 +9,8 @@ services:
     ports:
       - 9090:9090
     volumes:
-      - ${GLOBAL_CONFIG_DIR}/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-      - ${GLOBAL_VOLUMES_DIR}/prometheus/:/prometheus/
+      - ${param_config_dir}/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ${param_volumes_dir}/prometheus/:/prometheus/
     restart: always
     user: root
 
@@ -21,7 +21,7 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - ${GLOBAL_VOLUMES_DIR}/grafana/:/var/lib/grafana/
+      - ${param_volumes_dir}/grafana/:/var/lib/grafana/
     restart: always
     user: root
 networks:

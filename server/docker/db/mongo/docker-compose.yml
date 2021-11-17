@@ -10,11 +10,11 @@ services:
     ports:
       - 27017:27017
     volumes:
-      - ${GLOBAL_DOCKER_DATA}/mongo/data/:/data/db/
-      - ${GLOBAL_DOCKER_DATA}/mongo/conf/:/data/configdb/
+      - ${param_docker_data}/${param_role_name}data/:/data/db/
+      - ${param_docker_data}/${param_role_name}/conf/:/data/configdb/
     environment:
-      MONGO_INITDB_ROOT_USERNAME: ${GLOBAL_DB_USERNAME}
-      MONGO_INITDB_ROOT_PASSWORD: ${GLOBAL_DB_PASSWORD}
+      MONGO_INITDB_ROOT_USERNAME: ${param_db_username}
+      MONGO_INITDB_ROOT_PASSWORD: ${param_db_password}
     restart: always
 networks:
   default:

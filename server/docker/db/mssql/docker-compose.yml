@@ -10,10 +10,10 @@ services:
     ports:
       - 1433:1433
     volumes:
-      - ${GLOBAL_DOCKER_DATA}/mssql/data/:/var/opt/mssql/
+      - ${param_docker_data}/${param_role_name}/data/:/var/opt/mssql/
     environment:
       - ACCEPT_EULA=Y
-      - MSSQL_SA_PASSWORD=${GLOBAL_DB_PASSWORD}
+      - MSSQL_SA_PASSWORD=${param_db_password}
 networks:
   default:
     external:

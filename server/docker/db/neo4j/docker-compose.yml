@@ -11,11 +11,11 @@ services:
       - 7474:7474
       - 7687:7687
     volumes:
-      - ${GLOBAL_DOCKER_DATA}/neo4j/data/:/data/
-      - ${GLOBAL_DOCKER_DATA}/neo4j/data/logs/:/logs/
-      - ${GLOBAL_DOCKER_DATA}/neo4j/conf/:/conf/
+      - ${param_docker_data}/${param_role_name}/data/:/data/
+      - ${param_docker_data}/${param_role_name}/data/logs/:/logs/
+      - ${param_docker_data}/${param_role_name}/conf/:/conf/
     environment:
-      NEO4J_AUTH: neo4j/${GLOBAL_DB_PASSWORD}
+      NEO4J_AUTH: neo4j/${param_db_password}
       NEO4J_dbms_memory_pagecache_size: 2g
     restart: always
 networks:

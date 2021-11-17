@@ -7,7 +7,7 @@ services:
     container_name: kafka_exporter
     ports:
       - "9308:9308"
-    command: ["--kafka.server=${GLOBAL_HOST_IP}:9092","--kafka.server=${GLOBAL_HOST_IP}:9093"]
+    command: ["--kafka.server=${param_host_ip}:9092","--kafka.server=${param_host_ip}:9093"]
     restart: always
     user: root
 networks:

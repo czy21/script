@@ -1,0 +1,19 @@
+version: '3.7'
+
+services:
+  piwigo:
+    image: lscr.io/linuxserver/piwigo
+    container_name: piwigo
+    privileged: true
+    user: root
+    environment:
+      - TZ=Asia/Shanghai
+    volumes:
+      - ${param_docker_data}/${param_role_name}/conf/:/config/
+      - ${param_docker_data}/${param_role_name}/data/:/gallery/
+    restart: always
+
+networks:
+  default:
+    external:
+      name: local
