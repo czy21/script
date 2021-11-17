@@ -2,34 +2,30 @@ version: '3.7'
 
 services:
   jira:
-    build:
-      context: ${param_pwd_home}/compose/atlassian/
-      dockerfile: ${param_pwd_home}/compose/atlassian/Dockerfile-Jira
+    image: ${param_registry_url}/${param_registry_dir}/jira
     container_name: jira
     privileged: true
     user: root
     ports:
       - "8100:8080"
     volumes:
-      - ${param_volumes_dir}/atlassian/jira/:/var/atlassian/jira/
-      - ${param_volumes_dir}/atlassian/jira/logs:/opt/atlassian/jira/logs
+      - ${param_docker_data}/${param_role_name}/jira/:/var/atlassian/jira/
+      - ${param_docker_data}/${param_role_name}/jira/logs/:/opt/atlassian/jira/logs/
     environment:
       TZ: Asia/Shanghai
       CATALINA_OPTS: "-Xmx2G"
     restart: always
 
   confluence:
-    build:
-      context: ${param_pwd_home}/compose/atlassian/
-      dockerfile: ${param_pwd_home}/compose/atlassian/Dockerfile-Confluence
+    image: ${param_registry_url}/${param_registry_dir}/confluence
     container_name: confluence
     privileged: true
     user: root
     ports:
       - "8101:8090"
     volumes:
-      - ${param_volumes_dir}/atlassian/confluence/:/var/atlassian/confluence/
-      - ${param_volumes_dir}/atlassian/confluence/logs:/opt/atlassian/confluence/logs
+      - ${param_docker_data}/${param_role_name}/confluence/:/var/atlassian/confluence/
+      - ${param_docker_data}/${param_role_name}/confluence/logs/:/opt/atlassian/confluence/logs/
     environment:
       TZ: Asia/Shanghai
       CATALINA_OPTS: "-Xmx2G"

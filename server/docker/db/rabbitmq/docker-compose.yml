@@ -1,15 +1,14 @@
 version: '3.7'
 
 services:
-
-  mq:
+  rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq
     privileged: true
     user: root
     ports:
-      - 5672:5672
-      - 15672:15672
+      - "5672:5672"
+      - "15672:15672"
     volumes:
       - ${param_docker_data}/${param_role_name}/conf/:/etc/rabbitmq/
       - ${param_docker_data}/${param_role_name}/data/:/var/lib/rabbitmq/

@@ -8,7 +8,7 @@ services:
     privileged: true
     user: root
     ports:
-      - 1433:1433
+      - "1433:1433"
     volumes:
       - ${param_docker_data}/${param_role_name}/data/:/var/opt/mssql/
     environment:
