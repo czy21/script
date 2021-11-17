@@ -10,13 +10,13 @@ services:
     ports:
       - 3306:3306
     volumes:
-      - ${GLOBAL_DOCKER_DATA}/mysql/data/:/var/lib/mysql/
-      - ${GLOBAL_DOCKER_DATA}/mysql/conf/my.cnf:/etc/mysql/my.cnf
+      - ${param_docker_data}/${param_role_name}/data/:/var/lib/mysql/
+      - ${param_docker_data}/${param_role_name}/conf/my.cnf:/etc/mysql/my.cnf
     command: --default-authentication-plugin=mysql_native_password
     restart: always
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: 0
-      MYSQL_ROOT_PASSWORD: ${GLOBAL_DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${param_db_password}
 networks:
   default:
     external:

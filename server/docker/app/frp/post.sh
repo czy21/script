@@ -7,6 +7,6 @@ source ${dir}/../../.env.global
 
 sudo docker network connect nginx_default frp
 
-sudo cp -r $dir/nginx/frp.conf ${GLOBAL_CONFIG_DIR}/nginx/conf.d/
+sudo cp -r $dir/nginx/frp.conf ${param_config_dir}/nginx/conf.d/
 
 sudo docker restart nginx

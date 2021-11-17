@@ -8,7 +8,7 @@ services:
     ports:
       - 9104:9104
     environment:
-      DATA_SOURCE_NAME: "root:${GLOBAL_DB_PASSWORD}@(${GLOBAL_HOST_IP}:3306)/"
+      DATA_SOURCE_NAME: "root:${param_db_password}@(${param_host_ip}:3306)/"
     restart: always
     user: root
 networks:

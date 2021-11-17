@@ -9,10 +9,10 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - ${GLOBAL_DOCKER_DATA}/postgres/data/:/var/lib/postgresql/data/
+      - ${param_docker_data}/${param_role_name}/data/:/var/lib/postgresql/data/
     restart: always
     environment:
-      POSTGRES_PASSWORD: ${GLOBAL_DB_PASSWORD}
+      POSTGRES_PASSWORD: ${param_db_password}
 networks:
   default:
     external:

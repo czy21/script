@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 import argparse
-import subprocess
 import share
 from pathlib import Path
+from dotenv import dotenv_values
 
 
 def execute(app_tuples, func, **kwargs):
@@ -16,67 +16,58 @@ def execute(app_tuples, func, **kwargs):
 
 def apply(app_id: str, app_name: str, source_path: Path, **kwargs):
     args = kwargs["args"]
-    env = kwargs["env"]
     env_file = kwargs["env_file"]
     source_env_file = Path(source_path).joinpath(".env")
     source_conf_path = Path(source_path).joinpath("conf")
     source_compose_file = Path(source_path).joinpath("docker-compose.yml")
-
-    if source_env_file.exists():
-        print("hello")
+    env_values = {
+        **dotenv_values(env_file),
+        **{
+            "param_role_name": app_name
+        }
+    }
+    with open(source_env_file, "w+", encoding="utf-8") as f:
+        f.write(u'{}'.format("\n".join(["=".join([k, v]) for (k, v) in env_values.items()])))
 
     source_init_sh = Path(source_path).joinpath("init.sh")
     source_build_sh = Path(source_path).joinpath("build.sh")
 
-    target_app_path = Path(env["GLOBAL_DOCKER_DATA"]).joinpath(app_name)
+    target_app_path = Path(env_values["param_docker_data"]).joinpath(app_name)
     target_conf_path = target_app_path.joinpath("conf")
-
-    share.execute_cmd(" ".join([
-        'echo -e "{}\033[32m create app dir \033[0m"'.format(app_id),
-        '&& sudo mkdir -p ' + " ".join([target_app_path.as_posix()])
-    ]))
 
     if args.i:
         if source_conf_path.exists():
-            share.execute_cmd(" ".join([
+            share.execute_cmd("&&".join([
                 'echo -e "{}\033[32m conf dir copy \033[0m"'.format(app_id),
-                '&& sudo cp -rv ', source_conf_path.as_posix(), target_app_path.as_posix()
-            ]))
-        else:
-            share.execute_cmd(" ".join([
-                'echo -e "{}\033[32m conf dir no exist \033[0m"'.format(app_id)
+                'sudo mkdir -p {}'.format(target_app_path),
+                'sudo cp -rv {} {}'.format(source_conf_path.as_posix(), target_app_path.as_posix())
             ]))
         if source_init_sh.exists():
-            share.execute_cmd(" ".join([
+            share.execute_cmd("&&".join([
                 'echo -e "{}\033[32m init.sh \033[0m => {}"'.format(app_id, source_init_sh.as_posix()),
-                '&& sudo bash', source_init_sh.as_posix()
+                'sudo bash {}'.format(source_init_sh.as_posix())
             ]))
-        else:
-            share.execute_cmd(" ".join(['echo -e "{}\033[32m init.sh not exist \033[0m"'.format(app_id)]))
-
         if source_compose_file.exists():
-            share.execute_cmd(" ".join([
+            action = lambda a: 'sudo docker-compose --file {} --env-file {} {}'.format(source_compose_file.as_posix(), source_env_file, a)
+            share.execute_cmd("&&".join([
                 'echo -e "{}\033[32m docker-compose file => \033[0m {}"'.format(app_id, source_compose_file.as_posix()),
-                '&& sudo docker-compose --file {} --env-file {} config'.format(source_compose_file.as_posix(), env_file)
+                action("config"),
+                action("up --detach --build")
             ]))
-        else:
-            share.execute_cmd(" ".join(['echo -e "{}\033[32m docker-compose file not exist \033[0m"'.format(app_id)]))
-        share.execute_cmd("echo \n")
+    share.execute_cmd("echo \n")
 
     if args.b:
         if source_build_sh.exists():
-            share.execute_cmd(" ".join([
+            share.execute_cmd("&&".join([
                 'echo -e "{}\033[32m build.sh \033[0m => {}"'.format(app_id, source_build_sh.as_posix()),
-                '&& sudo docker login {} --username {} --password {}'.format(env['GLOBAL_REGISTRY_URL'], env['GLOBAL_REGISTRY_USERNAME'], env['GLOBAL_REGISTRY_PASSWORD']),
-                '&& sudo bash', source_build_sh.as_posix()
+                'sudo docker login {} --username {} --password {}'.format(env_values['param_registry_url'], env_values['param_registry_username'], env_values['param_registry_password']),
+                'sudo bash {}'.format(source_build_sh.as_posix())
             ]))
-        else:
-            share.execute_cmd(" ".join(['echo -e "{}\033[32m build.sh not exist \033[0m"'.format(app_id)]))
-        share.execute_cmd("echo \n")
+    share.execute_cmd("echo \n")
 
 
 if __name__ == '__main__':
-    env_file = Path(__file__).parent.joinpath(".env.global").as_posix()
+    env_file = Path(__file__).parent.joinpath(".env").as_posix()
     parser = argparse.ArgumentParser()
     parser.add_argument('-i', action="store_true")
     parser.add_argument('-b', action="store_true")
@@ -84,17 +75,11 @@ if __name__ == '__main__':
 
     parser.add_argument("-t", default=2)
     parser.add_argument('-n')
-    with open(env_file, "r") as e:
-        env = dict((t.strip().split("=")[0], t.strip().split("=")[1]) for t in e)
-        for t in env:
-            env[t] = subprocess.getoutput(" ".join([
-                "source " + env_file,
-                "&& echo ${" + t + "}"
-            ]))
+
     args = parser.parse_args()
     selected_option = share.select_option(int(args.t))
     if args.n is None:
         args.n = selected_option["namespace"]
-    execute(selected_option["list"], apply, env=env, env_file=env_file, args=args)
+    execute(selected_option["list"], apply, env_file=env_file, args=args)
     if args.p:
         share.execute_cmd("docker image prune --force --all")
