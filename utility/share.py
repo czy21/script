@@ -20,6 +20,13 @@ def dfs_dir(target_path: Path, deep) -> list:
     return ret
 
 
+def role_print(role, content, exec_file=None):
+    c = "{}\033[32m {} \033[0m".format(role, content)
+    if exec_file:
+        c += "=> {}".format(exec_file)
+    return 'echo -e "' + c + '"'
+
+
 def get_install_tuple(root_path: Path):
     app_paths = [p for p in sorted(root_path.iterdir()) if p.is_dir()]
     # group by

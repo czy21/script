@@ -34,21 +34,20 @@ def apply(app_id: str, app_name: str, source_path: Path, **kwargs):
     temp_all_in_one_path = source_path.joinpath("___temp/deploy.yaml")
     temp_all_in_one_path.parent.mkdir(parents=True, exist_ok=True)
     temp_all_in_one_path.touch()
-    echo_cmd = 'echo -e "{}\033[32m deploy\033[0m"'.format(app_id)
     kube_cmd = get_kube_cmd(kubectl_action, temp_all_in_one_path.as_posix())
     cmd_func = lambda x: 'bash -xc \'{}\''.format(x)
-    cmd = [echo_cmd]
 
-    helm_dep_update_cmd = 'helm dep up {}'.format(source_path.as_posix())
-    helm_template_cmd = 'helm template {} {} --namespace {} --values {} --debug > {}'.format(app_name,
-                                                                                             source_path.as_posix(),
-                                                                                             args.n,
-                                                                                             env_path.as_posix(),
-                                                                                             temp_all_in_one_path.as_posix())
-
-    cmd.append(helm_dep_update_cmd)
-    cmd.append(helm_template_cmd)
-    share.execute_cmd(cmd_func("&&".join(cmd)))
+    pre_cmd = share.arr_param_to_str(
+        [
+            share.role_print(app_id, "deploy", temp_all_in_one_path.as_posix()),
+            'helm dep up {}'.format(source_path.as_posix()),
+            'helm template {} {} --namespace {} --values {} --debug > {}'.format(app_name,
+                                                                                 source_path.as_posix(),
+                                                                                 args.n,
+                                                                                 env_path.as_posix(),
+                                                                                 temp_all_in_one_path.as_posix())
+        ], separator=" && ")
+    share.execute_cmd(pre_cmd)
     with io.open(temp_all_in_one_path, "r", encoding="utf-8", newline="\n") as o_file:
         y = yaml.load_all(o_file.read(), Loader=yaml.UnsafeLoader)
     with io.open(temp_all_in_one_path, "w+", encoding="utf-8", newline="\n") as y_file:
