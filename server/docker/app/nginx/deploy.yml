@@ -1,4 +1,4 @@
-version: '3.7'
+version: '3.9'
 
 services:
 
@@ -16,6 +16,7 @@ services:
       - ${param_docker_data}/${param_role_name}/conf/cert/:/etc/nginx/cert/
       - ${param_docker_data}/${param_role_name}/data/log/:/var/log/nginx/
     restart: always
+
 networks:
   default:
     external:
