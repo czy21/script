@@ -20,7 +20,7 @@ def apply(app_id: str, app_name: str, source_path: Path, **kwargs):
     env_file = kwargs["env_file"]
     source_env_file = Path(source_path).joinpath(".env")
     source_conf_path = Path(source_path).joinpath("conf")
-    source_compose_file = Path(source_path).joinpath("docker-compose.yml")
+    source_compose_file = Path(source_path).joinpath("deploy.yml")
     env_values = {
         **dotenv_values(env_file),
         **{
