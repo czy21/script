@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 import argparse
-import share
 from pathlib import Path
+
+import share
 from dotenv import dotenv_values
 
 
@@ -23,7 +24,8 @@ def apply(app_id: str, app_name: str, source_path: Path, **kwargs):
     env_values = {
         **dotenv_values(env_file),
         **{
-            "param_role_name": app_name
+            "param_role_name": app_name,
+            "param_role_path": Path(source_path).as_posix(),
         }
     }
     with open(source_env_file, "w+", encoding="utf-8") as f:
@@ -37,32 +39,44 @@ def apply(app_id: str, app_name: str, source_path: Path, **kwargs):
 
     if args.i:
         if source_conf_path.exists():
-            share.execute_cmd("&&".join([
-                'echo -e "{}\033[32m conf dir copy \033[0m"'.format(app_id),
-                'sudo mkdir -p {}'.format(target_app_path),
-                'sudo cp -rv {} {}'.format(source_conf_path.as_posix(), target_app_path.as_posix())
-            ]))
+            share.execute_cmd(share.arr_param_to_str(
+                [
+                    'echo -e "{}\033[32m conf dir copy \033[0m"'.format(app_id),
+                    'sudo mkdir -p {}'.format(target_app_path),
+                    'sudo cp -rv {} {}'.format(source_conf_path.as_posix(), target_app_path.as_posix())
+                ],
+                separator=" && "
+            ))
         if source_init_sh.exists():
-            share.execute_cmd("&&".join([
-                'echo -e "{}\033[32m init.sh \033[0m => {}"'.format(app_id, source_init_sh.as_posix()),
-                'sudo bash {}'.format(source_init_sh.as_posix())
-            ]))
+            share.execute_cmd(share.arr_param_to_str(
+                [
+                    'echo -e "{}\033[32m init.sh \033[0m => {}"'.format(app_id, source_init_sh.as_posix()),
+                    ["source {}".format(t) for t in [source_env_file, source_init_sh.as_posix()]],
+                ],
+                separator=" && "
+            ))
         if source_compose_file.exists():
             action = lambda a: 'sudo docker-compose --file {} --env-file {} {}'.format(source_compose_file.as_posix(), source_env_file, a)
-            share.execute_cmd("&&".join([
-                'echo -e "{}\033[32m docker-compose file => \033[0m {}"'.format(app_id, source_compose_file.as_posix()),
-                action("config"),
-                action("up --detach --build")
-            ]))
+            share.execute_cmd(share.arr_param_to_str(
+                [
+                    'echo -e "{}\033[32m docker-compose file => \033[0m {}"'.format(app_id, source_compose_file.as_posix()),
+                    action("config"),
+                    action("up --detach --build")
+                ],
+                separator=" && "
+            ))
     share.execute_cmd("echo \n")
 
     if args.b:
         if source_build_sh.exists():
-            share.execute_cmd("&&".join([
-                'echo -e "{}\033[32m build.sh \033[0m => {}"'.format(app_id, source_build_sh.as_posix()),
-                'sudo docker login {} --username {} --password {}'.format(env_values['param_registry_url'], env_values['param_registry_username'], env_values['param_registry_password']),
-                'sudo bash {}'.format(source_build_sh.as_posix())
-            ]))
+            share.execute_cmd(share.arr_param_to_str(
+                [
+                    'echo -e "{}\033[32m build.sh \033[0m => {}"'.format(app_id, source_build_sh.as_posix()),
+                    'sudo docker login {} --username {} --password {}'.format(env_values['param_registry_url'], env_values['param_registry_username'], env_values['param_registry_password']),
+                    ["source {}".format(t) for t in [source_env_file, source_build_sh.as_posix()]]
+                ],
+                separator=" && "
+            ))
     share.execute_cmd("echo \n")
 
 

@@ -8,8 +8,8 @@ services:
     privileged: true
     user: root
     ports:
-      - 7474:7474
-      - 7687:7687
+      - "7474:7474"
+      - "7687:7687"
     volumes:
       - ${param_docker_data}/${param_role_name}/data/:/data/
       - ${param_docker_data}/${param_role_name}/data/logs/:/logs/

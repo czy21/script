@@ -7,10 +7,10 @@ services:
     container_name: prometheus
     privileged: true
     ports:
-      - 9090:9090
+      - "9090:9090"
     volumes:
-      - ${param_config_dir}/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-      - ${param_volumes_dir}/prometheus/:/prometheus/
+      - ${param_docker_data}/${param_role_name}/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ${param_docker_data}/${param_role_name}/:/prometheus/
     restart: always
     user: root
 
@@ -19,9 +19,9 @@ services:
     container_name: grafana
     privileged: true
     ports:
-      - 3000:3000
+      - "3000:3000"
     volumes:
-      - ${param_volumes_dir}/grafana/:/var/lib/grafana/
+      - ${param_docker_data}/grafana/:/var/lib/grafana/
     restart: always
     user: root
 networks:

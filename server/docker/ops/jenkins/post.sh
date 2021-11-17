@@ -2,8 +2,8 @@
 
 set -e
 
-dir=$(cd "$(dirname "$0")"; pwd)
-source ${dir}/../../.env.global
+
+
 container_name="jenkins"
 
 sudo docker exec -i ${container_name} bash -c "
