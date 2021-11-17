@@ -13,7 +13,7 @@ sudo apt install ansible
 sudo sed -ir 's/^#\(host_key_checking\)/\1/' /etc/ansible/ansible.cfg
 ```
 
-## ubuntu install finished prepare
+## ubuntu pre-installed 
 ```shell
 passwd
 sed -i -r "s/^\s*PermitRootLogin\s+\w+/PermitRootLogin yes/;" /etc/ssh/sshd_config
@@ -27,34 +27,35 @@ showmount -e [host]
 ```
 
 ###
-部署kubeSphere 默认帐户和密码 (admin/P@88w0rd)
+kubeSphere default user/password (admin/P@88w0rd)
 ```shell
 kubectl apply -f https://github.com/kubesphere/ks-installer/releases/download/v3.1.0/kubesphere-installer.yaml
 kubectl apply -f https://github.com/kubesphere/ks-installer/releases/download/v3.1.0/cluster-configuration.yaml
-# 检查安装日志
+# check log
 kubectl logs -n kubesphere-system $(kubectl get pod -n kubesphere-system -l app=ks-install -o jsonpath='{.items[0].metadata.name}') -f
-# 检查状态
+
+# check status
 kubectl get svc/ks-console -n kubesphere-system
 
-# 卸载
+# uninstall
 wget https://raw.githubusercontent.com/kubesphere/ks-installer/release-3.1/scripts/kubesphere-delete.sh
 ```
 
-### 加入集群
+### join cluster
 ```shell
-# 主节点 获取加入节点token
+# get join command on master node
 kubeadm token create --print-join-command
 ```
-### 非root用户使用kubectl
+### kubectl for non-root user
 ```shell
 mkdir -p $HOME/.kube && sudo cp --force /etc/kubernetes/admin.conf $HOME/.kube/config && sudo chown $(id -u):$(id -g) $HOME/.kube/config
 ```
 
-### 节点添加标签
+### add label to node
 ```shell
-kubectl label nodes k8s-nodex slave=x
+kubectl label nodes k8s-nodeX slave=X
 ```
-### 查看标签
+### show label
 ```shell
 kubectl get node --show-labels
 ```
