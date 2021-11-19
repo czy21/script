@@ -13,7 +13,7 @@ services:
       - ${param_docker_data}/${param_role_name}/data/:/var/opt/mssql/
     environment:
       - ACCEPT_EULA=Y
-      - MSSQL_SA_PASSWORD=${param_db_password}
+      - MSSQL_SA_PASSWORD=${param_db_mssql_password}
 networks:
   default:
     external:

@@ -88,17 +88,26 @@ data:
       - source_labels: [__meta_kubernetes_service_name]
         action: replace
         target_label: k8s_sname
+
+    # - job_name: mysql-exporter
+    #   kubernetes_sd_configs:
+    #   - role: service
+    #   metrics_path: /metrics
+    #   relabel_configs:
+    #   - source_labels: [__meta_kubernetes_service_port_name]
+    #     action: keep
+    #     regex: "mysqld-exporter"
+    #   - action: labelmap
+    #     regex: __meta_kubernetes_service_label_(.+)
+    #   - source_labels: [__meta_kubernetes_namespace]
+    #     target_label: kubernetes_namespace
+    #   - source_labels: [__meta_kubernetes_service_name]
+    #     target_label: kubernetes_name
+    
     - job_name: mysql-exporter
-      kubernetes_sd_configs:
-      - role: service
-      metrics_path: /metrics
-      relabel_configs:
-      - source_labels: [__meta_kubernetes_service_port_name]
-        action: keep
-        regex: "mysqld-exporter"
-      - action: labelmap
-        regex: __meta_kubernetes_service_label_(.+)
-      - source_labels: [__meta_kubernetes_namespace]
-        target_label: kubernetes_namespace
-      - source_labels: [__meta_kubernetes_service_name]
-        target_label: kubernetes_name
+      static_configs:
+        - targets: [ '192.168.2.18:9104' ]
+
+    - job_name: pgsql-exporter
+      static_configs:
+        - targets: [ '192.168.2.18:9187' ]

@@ -16,7 +16,7 @@ services:
     restart: always
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: 0
-      MYSQL_ROOT_PASSWORD: ${param_db_password}
+      MYSQL_ROOT_PASSWORD: ${param_db_mysql_password}
 networks:
   default:
     external:

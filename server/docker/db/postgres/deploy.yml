@@ -12,7 +12,7 @@ services:
       - ${param_docker_data}/${param_role_name}/data/:/var/lib/postgresql/data/
     restart: always
     environment:
-      POSTGRES_PASSWORD: ${param_db_password}
+      POSTGRES_PASSWORD: ${param_db_pgsql_password}
 networks:
   default:
     external:
