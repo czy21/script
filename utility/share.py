@@ -30,7 +30,7 @@ def role_print(role, content, exec_file=None):
 def get_install_tuple(root_path: Path):
     app_paths = [p for p in sorted(root_path.iterdir()) if p.is_dir()]
     # group by
-    list_str = [list(t) for t in zip_longest(*[iter([".".join([str(i), p.name]) for i, p in enumerate(app_paths, start=1)])] * 8, fillvalue='')]
+    list_str = [list(t) for t in zip_longest(*[iter([".".join([str(i), p.name]) for i, p in enumerate(app_paths, start=1)])] * 5, fillvalue='')]
     # get every column max length
     column_widths = [len(max([t[p] for t in list_str for p in range(len(t)) if p == i], key=len, default='')) for i in range(len(list_str[0]))]
     for t in list_str:

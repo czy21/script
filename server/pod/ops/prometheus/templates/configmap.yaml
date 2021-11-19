@@ -13,7 +13,7 @@ data:
       scrape_timeout: 15s
     scrape_configs:
 
-    - job_name: 'k8s-nodes'
+    - job_name: 'k8s-node'
       kubernetes_sd_configs:
       - role: node
       relabel_configs:
@@ -103,7 +103,11 @@ data:
     #     target_label: kubernetes_namespace
     #   - source_labels: [__meta_kubernetes_service_name]
     #     target_label: kubernetes_name
-    
+
+    - job_name: nas-node
+      static_configs:
+        - targets: [ '192.168.2.18:9100' ]
+
     - job_name: mysql-exporter
       static_configs:
         - targets: [ '192.168.2.18:9104' ]
@@ -111,3 +115,7 @@ data:
     - job_name: pgsql-exporter
       static_configs:
         - targets: [ '192.168.2.18:9187' ]
+
+    - job_name: mssql-exporter
+      static_configs:
+        - targets: [ '192.168.2.18:4000' ]

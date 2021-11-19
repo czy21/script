@@ -15,19 +15,6 @@ services:
     restart: always
     user: root
 
-  cadvisor:
-    image: google/cadvisor:latest
-    container_name: cadvisor
-    privileged: true
-    ports:
-      - 8082:8080
-    volumes:
-      - /:/rootfs:ro
-      - /var/run:/var/run:rw
-      - /sys:/sys:ro
-      - ${param_docker_root}/:/var/lib/docker:ro
-    restart: always
-    user: root
 networks:
   default:
     external:
