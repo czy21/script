@@ -3,23 +3,15 @@ version: '3.9'
 services:
 
   jenkins:
-    image: jenkins/jenkins:lts-centos
+    image: jenkins/jenkins:lts-jdk11
     container_name: jenkins
     privileged: true
     user: root
-    ports:
-      - 8090:8080
-      - 50000:50000
     volumes:
-      - ${param_volumes_dir}/jenkins/jenkins_home/:/var/jenkins_home/
-      - ${param_docker_data}/:${param_docker_data}/
+      - ${param_docker_data}/${param_role_name}/data/:/var/jenkins_home/
+      - ${param_docker_data}/${param_role_name}/conf/init.gradle:/var/jenkins_home/tools/gradle/init.gradle
       - /var/run/docker.sock:/var/run/docker.sock
-      - /bin/docker:/usr/bin/docker
-      - /bin/docker-compose:/usr/bin/docker-compose
-
-    environment:
-      JENKINS_HOME: ${param_volumes_dir}/jenkins/
-      JENKINS_UC: https://mirrors.tuna.tsinghua.edu.cn/jenkins/updates/update-center.json
+      - /usr/bin/docker:/usr/bin/docker
     restart: always
 networks:
   default:

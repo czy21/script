@@ -1,0 +1,45 @@
+settingsEvaluated { settings ->
+    settings.pluginManagement {
+        resolutionStrategy {
+        }
+        repositories {
+            gradlePluginPortal()
+            maven {
+                name "home"
+                url "http://nexus.cluster.com/repository/maven-public/"
+                credentials {
+                    username "admin"
+                    password "Czy20210314."
+                }
+                allowInsecureProtocol = true
+            }
+        }
+    }
+}
+allprojects {
+    apply plugin: 'maven-publish'
+    publishing {
+        repositories {
+            maven {
+                name "home"
+                url "http://nexus.cluster.com/repository/maven-releases/"
+                credentials {
+                    username "admin"
+                    password "Czy20210314."
+                }
+                allowInsecureProtocol = true
+            }
+        }
+    }
+    repositories {
+        maven {
+            name "home"
+            url "http://nexus.cluster.com/repository/maven-public/"
+            credentials {
+                username "admin"
+                password "Czy20210314."
+            }
+            allowInsecureProtocol = true
+        }
+    }
+}
