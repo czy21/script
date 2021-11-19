@@ -2,13 +2,13 @@ version: '3.9'
 
 services:
 
-  mysqld_exporter:
+  mysql_exporter:
     image: prom/mysqld-exporter
-    container_name: mysqld_exporter
+    container_name: mysql_exporter
     ports:
-      - 9104:9104
+      - "9104:9104"
     environment:
-      DATA_SOURCE_NAME: "root:${param_db_password}@(${param_host_ip}:3306)/"
+      DATA_SOURCE_NAME: "${param_db_mysql_username}:${param_db_mysql_password}@(${param_db_mysql_host}:${param_db_mysql_port})/"
     restart: always
     user: root
 networks:

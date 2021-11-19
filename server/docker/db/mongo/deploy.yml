@@ -13,8 +13,8 @@ services:
       - ${param_docker_data}/${param_role_name}data/:/data/db/
       - ${param_docker_data}/${param_role_name}/conf/:/data/configdb/
     environment:
-      MONGO_INITDB_ROOT_USERNAME: ${param_db_username}
-      MONGO_INITDB_ROOT_PASSWORD: ${param_db_password}
+      MONGO_INITDB_ROOT_USERNAME: ${param_db_mongo_username}
+      MONGO_INITDB_ROOT_PASSWORD: ${param_db_mongo_password}
     restart: always
 networks:
   default:
