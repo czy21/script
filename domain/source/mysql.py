@@ -100,6 +100,23 @@ def backup_db() -> None:
     logger.info(basic_util.action_formatter(__get_function_name(), command))
     basic_util.execute(command)
 
+def backup_sql() -> None:
+    command = list_util.arr_param_to_str("mysqldump",
+                                         list_util.arr_param_to_str([
+                                             get_basic_param(default_common.param_main_db_mysql_host,
+                                                             default_common.param_main_db_mysql_port,
+                                                             default_common.param_main_db_mysql_user,
+                                                             default_common.param_main_db_mysql_pass, None),
+                                             "--opt",
+                                             default_common.param_main_db_name,
+                                         ]),
+                                         "--skip-opt",
+                                         "--complete-insert",
+                                         " > ",
+                                         default_path.output_db_bak_sql_mysql
+                                         )
+    logger.info(basic_util.action_formatter(__get_function_name(), command))
+    basic_util.execute(command)
 
 def backup_gz() -> None:
     command = list_util.arr_param_to_str("mysqldump",
