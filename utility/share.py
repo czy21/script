@@ -3,6 +3,7 @@ import subprocess
 import sys
 from itertools import zip_longest
 from pathlib import Path
+from typing import List
 
 flat = lambda L: sum(map(flat, L), []) if isinstance(L, list) else [L]
 
@@ -20,14 +21,14 @@ def dfs_dir(target_path: Path, deep) -> list:
     return ret
 
 
-def role_print(role, content, exec_file=None):
+def role_print(role, content, exec_file=None) -> str:
     c = "{}\033[32m {} \033[0m".format(role, content)
     if exec_file:
         c += "=> {}".format(exec_file)
     return 'echo -e "' + c + '"'
 
 
-def get_install_tuple(root_path: Path):
+def get_install_tuple(root_path: Path) -> list:
     app_paths = [p for p in sorted(root_path.iterdir()) if p.is_dir()]
     # group by
     list_str = [list(t) for t in zip_longest(*[iter([".".join([str(i), p.name]) for i, p in enumerate(app_paths, start=1)])] * 5, fillvalue='')]
@@ -39,7 +40,7 @@ def get_install_tuple(root_path: Path):
     return [(int(t), app_paths.__getitem__(int(t) - 1)) for t in app_options if t in [str(i) for i, p in enumerate(app_paths, start=1)]]
 
 
-def select_option(deep):
+def select_option(deep) -> dict:
     deep_index = 1
     flat_dirs = dfs_dir(Path(__file__).parent, deep_index)
 
