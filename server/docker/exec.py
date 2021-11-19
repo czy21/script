@@ -23,6 +23,10 @@ def apply(role_title: str, role_path: Path, **kwargs):
     role_env_file = role_path.joinpath(".env")
     role_conf_path = role_path.joinpath("conf")
     role_compose_file = role_path.joinpath("deploy.yml")
+    role_docker_file = role_path.joinpath("Dockerfile")
+    role_init_sh = role_path.joinpath("init.sh")
+    role_build_sh = role_path.joinpath("build.sh")
+
     env_values = {
         **dotenv_values(env_file),
         **{
@@ -33,9 +37,6 @@ def apply(role_title: str, role_path: Path, **kwargs):
 
     with open(role_env_file, "w+", encoding="utf-8") as f:
         f.write(u'{}'.format("\n".join(["=".join([k, v]) for (k, v) in env_values.items()])))
-
-    source_init_sh = role_path.joinpath("init.sh")
-    role_build_sh = role_path.joinpath("build.sh")
 
     target_app_path = Path(env_values["param_docker_data"]).joinpath(role_name)
 
@@ -48,16 +49,15 @@ def apply(role_title: str, role_path: Path, **kwargs):
                     'sudo cp -rv {} {}'.format(role_conf_path.as_posix(), target_app_path.as_posix())
                 ], separator=" && "
             ))
-        if source_init_sh.exists():
+        if role_init_sh.exists():
             share.execute_cmd(share.arr_param_to_str(
                 [
-                    share.role_print(role_title, "init", source_init_sh.as_posix()),
-                    ["source {}".format(t) for t in [role_env_file, source_init_sh.as_posix()]],
+                    share.role_print(role_title, "init", role_init_sh.as_posix()),
+                    ["source {}".format(t) for t in [role_env_file, role_init_sh.as_posix()]],
                 ], separator=" && "
             ))
         if role_compose_file.exists():
             def docker_compose_cmd(a): return 'sudo docker-compose --file {} --env-file {} {}'.format(role_compose_file.as_posix(), role_env_file, a)
-
             share.execute_cmd(share.arr_param_to_str(
                 [
                     share.role_print(role_title, "deploy", role_compose_file.as_posix()),
@@ -76,18 +76,18 @@ def apply(role_title: str, role_path: Path, **kwargs):
             share.role_print(role_title, "build", role_build_sh.as_posix()),
             'sudo docker login {} --username {} --password {}'.format(registry_url, registry_username, registry_password)
         ]
-        dockerfile = role_path.joinpath("Dockerfile")
-        if dockerfile.exists():
+
+        if role_docker_file.exists():
             docker_tag = "/".join([str(p).strip("/") for p in [registry_url, registry_dir, role_name]])
             build_cmd.append([
-                "docker build --tag {} --file {} {}".format(docker_tag, dockerfile.as_posix(), role_path.as_posix()),
+                "docker build --tag {} --file {} {}".format(docker_tag, role_docker_file.as_posix(), role_path.as_posix()),
                 "docker push {}".format(docker_tag)
             ])
         if role_build_sh.exists():
             build_cmd.append(
                 ["source {}".format(t) for t in [role_env_file.as_posix(), role_build_sh.as_posix()]]
             )
-        if dockerfile.exists() or role_build_sh.exists():
+        if role_docker_file.exists() or role_build_sh.exists():
             share.execute_cmd(share.arr_param_to_str(build_cmd, separator=" && "))
     share.execute_cmd("echo \n")
 
