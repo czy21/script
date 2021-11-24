@@ -4,12 +4,9 @@ import io
 from pathlib import Path
 
 from script.utility.template import CustomTemplate
-import docker
 
 from script.domain.default import common as default_common
 from script.utility import basic as basic_util, collection as list_util, log
-from docker import errors
-
 logger = log.Logger(__name__)
 
 
