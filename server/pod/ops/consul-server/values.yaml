@@ -4,18 +4,24 @@ consul:
     datacenter: ops
     acls:
       manageSystemACLs: true
+    gossipEncryption:
+      secretName: consul-gossip-encryption-key
+      secretKey: key
   server:
     affinity: |-
-     
+
     replicas: 2
     securityContext:
       runAsNonRoot: false
+      runAsGroup: 0
       runAsUser: 0
+      fsGroup: 0
   connectInject:
     enabled: true
   controller:
     enabled: true
   ui:
+    enabled: true
     service:
       type: NodePort
       nodePort:

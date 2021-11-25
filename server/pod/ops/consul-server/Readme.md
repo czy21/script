@@ -1,5 +1,11 @@
 #
 ```shell
+
+# install on centos/rhel
+sudo yum install -y yum-utils
+sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
+sudo yum -y install consul
+
 # backup
 consul kv export -token [token_value] > bak.json
 # restore
