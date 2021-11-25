@@ -1,33 +1,36 @@
 consul:
   global:
-    logLevel: debug
     enabled: false
-    name: consul
-    datacenter: dev
+    datacenter: ops
+    tls:
+      enabled: true
+      enableAutoEncrypt: true
+      caCert:
+        secretName: consul-ca-cert
+        secretKey: tls.crt
     acls:
       manageSystemACLs: true
       bootstrapToken:
-        secretName: ops-consul-bootstrap-acl-token
+        secretName: consul-bootstrap-acl-token
         secretKey: token
+    gossipEncryption:
+      secretName: consul-gossip-encryption-key
+      secretKey: key
   externalServers:
     enabled: true
     # This should be any node IP of the first k8s cluster
     hosts: ["192.168.2.25"]
     # The node port of the UI's NodePort service
-    httpsPort: 8500
+    httpsPort: 8501
+    tlsServerName: server.ops.consul
     # The address of the kube API server of this Kubernetes cluster
-    k8sAuthMethodHost: https://192.168.2.25:443
+    k8sAuthMethodHost: https://192.168.2.25:6443
   client:
-    affinity: |-
-      
     enabled: true
-    join: ["provider=k8s kubeconfig=/consul/userconfig/ops-kubeconfig/kubeconfig label_selector=\"app=consul,component=server\""]
+    join: ["provider=k8s kubeconfig=/consul/userconfig/consul-kubeconfig/kubeconfig label_selector=\"app=consul,component=server\""]
     extraVolumes:
       - type: secret
-        name: ops-kubeconfig
+        name: consul-kubeconfig
         load: false
-    securityContext:
-      runAsNonRoot: false
-      runAsUser: 0
   connectInject:
     enabled: true
