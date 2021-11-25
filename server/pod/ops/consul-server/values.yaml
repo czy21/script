@@ -1,5 +1,7 @@
 consul:
   global:
+    enabled: true
+    logLevel: "info"
     name: consul
     datacenter: ops
     acls:
