@@ -5,7 +5,7 @@ metadata:
   name: es-filerealm-secret
   namespace: '{{ .Release.Namespace }}'
 stringData:
-  users: admin:$2a$10$l6t6TdL1DdqidcyqqATuvOnKT9D0.c7M1BMbd0pPVaazyn4.qZaAa
+  users: '{{ htpasswd .Values.db.username .Values.db.password }}'
   users_roles: superuser:admin
 ---
 apiVersion: elasticsearch.k8s.elastic.co/v1
@@ -17,35 +17,35 @@ spec:
   version: 7.15.0
   auth:
     fileRealm:
-    - secretName: es-filerealm-secret
+      - secretName: es-filerealm-secret
   http:
     service:
       spec:
         type: NodePort
         ports:
-        - name: http
-          nodePort: 9210
-          port: 9200
-          protocol: TCP
-          targetPort: 9200
+          - name: http
+            nodePort: 9210
+            port: 9200
+            protocol: TCP
+            targetPort: 9200
     tls:
       selfSignedCertificate:
         disabled: true
   nodeSets:
-  - name: default
-    count: 2
-    config:
-      node.store.allow_mmap: false
-    volumeClaimTemplates:
-    - metadata:
-        name: elasticsearch-data
-      spec:
-        accessModes:
-        - ReadWriteOnce
-        resources:
-          requests:
-            storage: 50Gi
-        storageClassName: managed-nfs-storage
+    - name: default
+      count: 2
+      config:
+        node.store.allow_mmap: false
+      volumeClaimTemplates:
+        - metadata:
+            name: elasticsearch-data
+          spec:
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: 50Gi
+            storageClassName: managed-nfs-storage
 ---
 apiVersion: kibana.k8s.elastic.co/v1
 kind: Kibana
@@ -62,11 +62,11 @@ spec:
       spec:
         type: NodePort
         ports:
-        - name: http
-          nodePort: 5601
-          port: 5601
-          protocol: TCP
-          targetPort: 5601
+          - name: http
+            nodePort: 5601
+            port: 5601
+            protocol: TCP
+            targetPort: 5601
     tls:
       selfSignedCertificate:
         disabled: true

@@ -9,46 +9,6 @@ metadata:
   namespace: '{{ .Release.Namespace }}'
 spec:
   rules:
-  - host: jenkins.cluster.com
-    http:
-      paths:
-      - pathType: Prefix
-        path: /
-        backend:
-          service:
-            name: jenkins
-            port:
-              number: 8080
-  - host: nexus.cluster.com
-    http:
-      paths:
-      - pathType: Prefix
-        path: /
-        backend:
-          service:
-            name: nexus
-            port:
-              number: 8081
-  - host: registry.cluster.com
-    http:
-      paths:
-      - pathType: Prefix
-        path: /
-        backend:
-          service:
-            name: nexus
-            port:
-              number: 5000
-  - host: registry-proxy.cluster.com
-    http:
-      paths:
-      - pathType: Prefix
-        path: /
-        backend:
-          service:
-            name: nexus
-            port:
-              number: 5005
   - host: grafana.cluster.com
     http:
       paths:
@@ -59,33 +19,13 @@ spec:
             name: grafana
             port:
               number: 3000
-  - host: consul.cluster.com
+  - host: prometheus.cluster.com
     http:
       paths:
       - pathType: Prefix
         path: /
         backend:
           service:
-            name: consul-ui
+            name: prometheus
             port:
-              number: 80
-  - host: jira.cluster.com
-    http:
-      paths:
-      - pathType: Prefix
-        path: /
-        backend:
-          service:
-            name: jira
-            port:
-              number: 8080
-  - host: xxl-job.cluster.com
-    http:
-      paths:
-      - pathType: Prefix
-        path: /
-        backend:
-          service:
-            name: xxl-job
-            port:
-              number: 8080
+              number: 9090

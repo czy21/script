@@ -35,10 +35,10 @@ spec:
       elkPrefix: {{ .Values.log.elkPrefix }}  # The string making up index names. The index name will be formatted as ks-<elk_prefix>-log.
       basicAuth:
         enabled: true
-        username: {{ .Values.es.username }}
-        password: {{ .Values.es.password }}
-      externalElasticsearchUrl: {{ .Values.es.url }}
-      externalElasticsearchPort: {{ .Values.es.port }}
+        username: {{ .Values.db.username }}
+        password: {{ .Values.db.password }}
+      externalElasticsearchUrl: {{ .Values.db.es.host }}
+      externalElasticsearchPort: {{ .Values.db.es.port }}
   console:
     enableMultiLogin: true  # Enable or disable simultaneous logins. It allows different users to log in with the same account at the same time.
     port: 30880
