@@ -11,10 +11,10 @@ data:
   datasource.yaml: |
     apiVersion: 1
     datasources:
-    - name: Prometheus
+    - name: ops
       type: prometheus
       access: proxy
-      url: http://prometheus.ops.svc:9090
+      url: http://prometheus-ops.cluster.com
   dashboard.yaml: |
     apiVersion: 1
     providers:

@@ -11,7 +11,12 @@ data:
     global:
       scrape_interval: 15s
       scrape_timeout: 15s
+
     scrape_configs:
+
+    - job_name: 'prometheus'
+      static_configs:
+        - targets: [ 'prometheus-ops.cluster.com', 'prometheus-dev.cluster.com']
 
     - job_name: 'k8s-node'
       kubernetes_sd_configs:
