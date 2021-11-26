@@ -39,24 +39,4 @@ spec:
             name: rabbitmq
             port:
               number: 15672
-  - host: kafka.cluster.com
-    http:
-      paths:
-      - pathType: Prefix
-        path: /
-        backend:
-          service:
-            name: kafka-web
-            port:
-              number: 8080
-  - host: tabix.cluster.com
-    http:
-      paths:
-      - pathType: Prefix
-        path: /
-        backend:
-          service:
-            name: clickhouse-web
-            port:
-              number: 80
 ---
