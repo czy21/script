@@ -1,0 +1,18 @@
+version: '3.9'
+
+services:
+
+  consul:
+    image: consul
+    container_name: consul
+    privileged: true
+    user: root
+    volumes:
+      - ${param_docker_data}/${param_role_name}/data/:/consul/data/
+      - ${param_docker_data}/${param_role_name}/conf/:/consul/config/
+    command: 'agent -server -ui -node=server-1 -bootstrap-expect=1 -client=0.0.0.0 -datacenter=nas'
+    restart: always
+networks:
+  default:
+    external:
+      name: local
