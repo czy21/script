@@ -30,8 +30,7 @@ scrape_configs:
     params:
       'match[]':
         - '{job="prometheus"}'
-        - '{__name__=~"job:.*"}'
-        - '{__name__=~"node.*"}'
+        - '{job=~"k8s-.*"}'
     static_configs:
       - targets: ['prom-ops.cluster.com']
         labels:
