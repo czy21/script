@@ -35,7 +35,7 @@ data:
             replacement: $1
             action: replace
 
-      - job_name: "kubernetes-cadvisor"
+      - job_name: "k8s-cadvisor"
         scheme: https
         tls_config:
           ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
@@ -73,7 +73,7 @@ data:
             replacement: $1
             action: replace
 
-      - job_name: kube-state-metrics
+      - job_name: k8s-state
         kubernetes_sd_configs:
           - role: endpoints
             namespaces:
