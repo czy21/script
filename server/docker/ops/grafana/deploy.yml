@@ -6,7 +6,8 @@ services:
     container_name: grafana
     privileged: true
     volumes:
-      # - ${param_docker_data}/${param_role_name}/conf/:/etc/grafana/
+      - ${param_docker_data}/${param_role_name}/conf/grafana.ini:/etc/grafana/grafana.ini
+      - ${param_docker_data}/${param_role_name}/conf/provisioning/datasources/:/etc/grafana/provisioning/datasources/
       - ${param_docker_data}/${param_role_name}/data/:/var/lib/grafana/
     restart: always
     user: root

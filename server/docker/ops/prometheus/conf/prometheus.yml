@@ -33,9 +33,6 @@ scrape_configs:
         - '{__name__=~"job:.*"}'
         - '{__name__=~"node.*"}'
     static_configs:
-      - targets: ['prom-nas.cluster.com']
-        labels:
-          origin_prometheus: nas
       - targets: ['prom-ops.cluster.com']
         labels:
           origin_prometheus: ops
@@ -46,6 +43,8 @@ scrape_configs:
   - job_name: node
     static_configs:
       - targets: ['192.168.2.18:9100']
+        labels:
+          origin_prometheus: nas
 
   - job_name: mysql
     static_configs:
