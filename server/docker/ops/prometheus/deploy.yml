@@ -6,22 +6,17 @@ services:
     image: prom/prometheus
     container_name: prometheus
     privileged: true
-    ports:
-      - "9090:9090"
     volumes:
-      - ${param_docker_data}/${param_role_name}/prometheus.yml:/etc/prometheus/prometheus.yml
-      - ${param_docker_data}/${param_role_name}/:/prometheus/
-    restart: always
-    user: root
-
-  grafana:
-    image: grafana/grafana
-    container_name: grafana
-    privileged: true
-    ports:
-      - "3000:3000"
-    volumes:
-      - ${param_docker_data}/grafana/:/var/lib/grafana/
+      - ${param_docker_data}/${param_role_name}/conf/:/etc/prometheus/
+      - ${param_docker_data}/${param_role_name}/data/:/prometheus/
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --web.console.libraries=/usr/share/prometheus/console_libraries
+      - --web.console.templates=/usr/share/prometheus/consoles
+      - --storage.tsdb.no-lockfile
+      - --storage.tsdb.retention.time=1y
+      - --web.enable-lifecycle
     restart: always
     user: root
 networks:
