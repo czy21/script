@@ -24,8 +24,7 @@
   "fiscalYearStartMonth": 0,
   "gnetId": 8919,
   "graphTooltip": 0,
-  "id": 3,
-  "iteration": 1638028939009,
+  "iteration": 1638098529123,
   "links": [
     {
       "$$hashKey": "object:2300",
@@ -1204,209 +1203,6 @@
       "type": "bargauge"
     },
     {
-      "columns": [],
-      "datasource": "nas",
-      "description": "本看板中的：磁盘总量、使用量、可用量、使用率保持和df命令的Size、Used、Avail、Use% 列的值一致，并且Use%的值会四舍五入保留一位小数，会更加准确。\n\n注：df中Use%算法为：(size - free) * 100 / (avail + (size - free))，结果是整除则为该值，非整除则为该值+1，结果的单位是%。\n参考df命令源码：",
-      "fontSize": "80%",
-      "gridPos": {
-        "h": 6,
-        "w": 10,
-        "x": 5,
-        "y": 16
-      },
-      "id": 181,
-      "links": [
-        {
-          "targetBlank": true,
-          "title": "https://github.com/coreutils/coreutils/blob/master/src/df.c",
-          "url": "https://github.com/coreutils/coreutils/blob/master/src/df.c"
-        }
-      ],
-      "pageSize": null,
-      "scroll": true,
-      "showHeader": true,
-      "sort": {
-        "col": 6,
-        "desc": false
-      },
-      "styles": [
-        {
-          "$$hashKey": "object:307",
-          "alias": "分区",
-          "align": "auto",
-          "colorMode": null,
-          "colors": [
-            "rgba(50, 172, 45, 0.97)",
-            "rgba(237, 129, 40, 0.89)",
-            "rgba(245, 54, 54, 0.9)"
-          ],
-          "dateFormat": "YYYY-MM-DD HH:mm:ss",
-          "decimals": 2,
-          "mappingType": 1,
-          "pattern": "mountpoint",
-          "thresholds": [
-            ""
-          ],
-          "type": "string",
-          "unit": "bytes"
-        },
-        {
-          "$$hashKey": "object:308",
-          "alias": "可用空间",
-          "align": "auto",
-          "colorMode": "value",
-          "colors": [
-            "rgba(245, 54, 54, 0.9)",
-            "rgba(237, 129, 40, 0.89)",
-            "rgba(50, 172, 45, 0.97)"
-          ],
-          "dateFormat": "YYYY-MM-DD HH:mm:ss",
-          "decimals": 1,
-          "mappingType": 1,
-          "pattern": "Value #A",
-          "thresholds": [
-            "10000000000",
-            "20000000000"
-          ],
-          "type": "number",
-          "unit": "bytes"
-        },
-        {
-          "$$hashKey": "object:309",
-          "alias": "使用率",
-          "align": "auto",
-          "colorMode": "cell",
-          "colors": [
-            "rgba(50, 172, 45, 0.97)",
-            "rgba(237, 129, 40, 0.89)",
-            "rgba(245, 54, 54, 0.9)"
-          ],
-          "dateFormat": "YYYY-MM-DD HH:mm:ss",
-          "decimals": 1,
-          "mappingType": 1,
-          "pattern": "Value #B",
-          "thresholds": [
-            "70",
-            "85"
-          ],
-          "type": "number",
-          "unit": "percent"
-        },
-        {
-          "$$hashKey": "object:310",
-          "alias": "总空间",
-          "align": "auto",
-          "colorMode": null,
-          "colors": [
-            "rgba(245, 54, 54, 0.9)",
-            "rgba(237, 129, 40, 0.89)",
-            "rgba(50, 172, 45, 0.97)"
-          ],
-          "dateFormat": "YYYY-MM-DD HH:mm:ss",
-          "decimals": 0,
-          "link": false,
-          "mappingType": 1,
-          "pattern": "Value #C",
-          "thresholds": [],
-          "type": "number",
-          "unit": "bytes"
-        },
-        {
-          "$$hashKey": "object:311",
-          "alias": "文件系统",
-          "align": "auto",
-          "colorMode": null,
-          "colors": [
-            "rgba(245, 54, 54, 0.9)",
-            "rgba(237, 129, 40, 0.89)",
-            "rgba(50, 172, 45, 0.97)"
-          ],
-          "dateFormat": "YYYY-MM-DD HH:mm:ss",
-          "decimals": 2,
-          "link": false,
-          "mappingType": 1,
-          "pattern": "fstype",
-          "thresholds": [],
-          "type": "string",
-          "unit": "short"
-        },
-        {
-          "$$hashKey": "object:312",
-          "alias": "设备名",
-          "align": "auto",
-          "colorMode": null,
-          "colors": [
-            "rgba(245, 54, 54, 0.9)",
-            "rgba(237, 129, 40, 0.89)",
-            "rgba(50, 172, 45, 0.97)"
-          ],
-          "dateFormat": "YYYY-MM-DD HH:mm:ss",
-          "decimals": 2,
-          "link": false,
-          "mappingType": 1,
-          "pattern": "device",
-          "preserveFormat": false,
-          "sanitize": false,
-          "thresholds": [],
-          "type": "string",
-          "unit": "short"
-        },
-        {
-          "$$hashKey": "object:313",
-          "alias": "",
-          "align": "auto",
-          "colorMode": null,
-          "colors": [
-            "rgba(245, 54, 54, 0.9)",
-            "rgba(237, 129, 40, 0.89)",
-            "rgba(50, 172, 45, 0.97)"
-          ],
-          "decimals": 2,
-          "pattern": "/.*/",
-          "preserveFormat": true,
-          "sanitize": false,
-          "thresholds": [],
-          "type": "hidden",
-          "unit": "short"
-        }
-      ],
-      "targets": [
-        {
-          "expr": "node_filesystem_size_bytes{instance=~'$node',fstype=~\"ext.*|xfs|btrfs\",mountpoint !~\".*pod.*\"}-0",
-          "format": "table",
-          "hide": false,
-          "instant": true,
-          "interval": "",
-          "intervalFactor": 1,
-          "legendFormat": "总量",
-          "refId": "C"
-        },
-        {
-          "expr": "node_filesystem_avail_bytes {instance=~'$node',fstype=~\"ext.*|xfs|btrfs\",mountpoint !~\".*pod.*\"}-0",
-          "format": "table",
-          "hide": false,
-          "instant": true,
-          "interval": "10s",
-          "intervalFactor": 1,
-          "legendFormat": "",
-          "refId": "A"
-        },
-        {
-          "expr": "(node_filesystem_size_bytes{instance=~'$node',fstype=~\"ext.*|xfs|btrfs\",mountpoint !~\".*pod.*\"}-node_filesystem_free_bytes{instance=~'$node',fstype=~\"ext.*|xfs|btrfs\",mountpoint !~\".*pod.*\"}) *100/(node_filesystem_avail_bytes {instance=~'$node',fstype=~\"ext.*|xfs|btrfs\",mountpoint !~\".*pod.*\"}+(node_filesystem_size_bytes{instance=~'$node',fstype=~\"ext.*|xfs|btrfs\",mountpoint !~\".*pod.*\"}-node_filesystem_free_bytes{instance=~'$node',fstype=~\"ext.*|xfs|btrfs\",mountpoint !~\".*pod.*\"}))",
-          "format": "table",
-          "hide": false,
-          "instant": true,
-          "interval": "",
-          "intervalFactor": 1,
-          "legendFormat": "",
-          "refId": "B"
-        }
-      ],
-      "title": "【$show_hostname】：各分区可用空间(EXT.*/XFS)",
-      "transform": "table",
-      "type": "table-old"
-    },
-    {
       "cacheTimeout": null,
       "datasource": "nas",
       "description": "",
@@ -1938,6 +1734,209 @@
       "type": "stat"
     },
     {
+      "columns": [],
+      "datasource": "nas",
+      "description": "本看板中的：磁盘总量、使用量、可用量、使用率保持和df命令的Size、Used、Avail、Use% 列的值一致，并且Use%的值会四舍五入保留一位小数，会更加准确。\n\n注：df中Use%算法为：(size - free) * 100 / (avail + (size - free))，结果是整除则为该值，非整除则为该值+1，结果的单位是%。\n参考df命令源码：",
+      "fontSize": "80%",
+      "gridPos": {
+        "h": 6,
+        "w": 24,
+        "x": 0,
+        "y": 22
+      },
+      "id": 181,
+      "links": [
+        {
+          "targetBlank": true,
+          "title": "https://github.com/coreutils/coreutils/blob/master/src/df.c",
+          "url": "https://github.com/coreutils/coreutils/blob/master/src/df.c"
+        }
+      ],
+      "pageSize": null,
+      "scroll": true,
+      "showHeader": true,
+      "sort": {
+        "col": 6,
+        "desc": false
+      },
+      "styles": [
+        {
+          "$$hashKey": "object:307",
+          "alias": "分区",
+          "align": "auto",
+          "colorMode": null,
+          "colors": [
+            "rgba(50, 172, 45, 0.97)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(245, 54, 54, 0.9)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "mountpoint",
+          "thresholds": [
+            ""
+          ],
+          "type": "string",
+          "unit": "bytes"
+        },
+        {
+          "$$hashKey": "object:308",
+          "alias": "可用空间",
+          "align": "auto",
+          "colorMode": "value",
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 1,
+          "mappingType": 1,
+          "pattern": "Value #A",
+          "thresholds": [
+            "10000000000",
+            "20000000000"
+          ],
+          "type": "number",
+          "unit": "bytes"
+        },
+        {
+          "$$hashKey": "object:309",
+          "alias": "使用率",
+          "align": "auto",
+          "colorMode": "cell",
+          "colors": [
+            "rgba(50, 172, 45, 0.97)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(245, 54, 54, 0.9)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 1,
+          "mappingType": 1,
+          "pattern": "Value #B",
+          "thresholds": [
+            "70",
+            "85"
+          ],
+          "type": "number",
+          "unit": "percent"
+        },
+        {
+          "$$hashKey": "object:310",
+          "alias": "总空间",
+          "align": "auto",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 0,
+          "link": false,
+          "mappingType": 1,
+          "pattern": "Value #C",
+          "thresholds": [],
+          "type": "number",
+          "unit": "bytes"
+        },
+        {
+          "$$hashKey": "object:311",
+          "alias": "文件系统",
+          "align": "auto",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "link": false,
+          "mappingType": 1,
+          "pattern": "fstype",
+          "thresholds": [],
+          "type": "string",
+          "unit": "short"
+        },
+        {
+          "$$hashKey": "object:312",
+          "alias": "设备名",
+          "align": "auto",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "link": false,
+          "mappingType": 1,
+          "pattern": "device",
+          "preserveFormat": false,
+          "sanitize": false,
+          "thresholds": [],
+          "type": "string",
+          "unit": "short"
+        },
+        {
+          "$$hashKey": "object:313",
+          "alias": "",
+          "align": "auto",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "decimals": 2,
+          "pattern": "/.*/",
+          "preserveFormat": true,
+          "sanitize": false,
+          "thresholds": [],
+          "type": "hidden",
+          "unit": "short"
+        }
+      ],
+      "targets": [
+        {
+          "expr": "node_filesystem_size_bytes{instance=~'$node',fstype=~\"ext.*|xfs|btrfs\",mountpoint !~\".*pod.*\"}-0",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "intervalFactor": 1,
+          "legendFormat": "总量",
+          "refId": "C"
+        },
+        {
+          "expr": "node_filesystem_avail_bytes {instance=~'$node',fstype=~\"ext.*|xfs|btrfs\",mountpoint !~\".*pod.*\"}-0",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "10s",
+          "intervalFactor": 1,
+          "legendFormat": "",
+          "refId": "A"
+        },
+        {
+          "expr": "(node_filesystem_size_bytes{instance=~'$node',fstype=~\"ext.*|xfs|btrfs\",mountpoint !~\".*pod.*\"}-node_filesystem_free_bytes{instance=~'$node',fstype=~\"ext.*|xfs|btrfs\",mountpoint !~\".*pod.*\"}) *100/(node_filesystem_avail_bytes {instance=~'$node',fstype=~\"ext.*|xfs|btrfs\",mountpoint !~\".*pod.*\"}+(node_filesystem_size_bytes{instance=~'$node',fstype=~\"ext.*|xfs|btrfs\",mountpoint !~\".*pod.*\"}-node_filesystem_free_bytes{instance=~'$node',fstype=~\"ext.*|xfs|btrfs\",mountpoint !~\".*pod.*\"}))",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "intervalFactor": 1,
+          "legendFormat": "",
+          "refId": "B"
+        }
+      ],
+      "title": "【$show_hostname】：各分区可用空间(EXT.*/XFS)",
+      "transform": "table",
+      "type": "table-old"
+    },
+    {
       "aliasColors": {
         "192.168.200.241:9100_Total": "dark-red",
         "Idle - Waiting for something to happen": "#052B51",
@@ -1971,7 +1970,7 @@
         "h": 8,
         "w": 8,
         "x": 0,
-        "y": 22
+        "y": 28
       },
       "hiddenSeries": false,
       "id": 7,
@@ -2132,7 +2131,7 @@
         "h": 8,
         "w": 8,
         "x": 8,
-        "y": 22
+        "y": 28
       },
       "height": "300",
       "hiddenSeries": false,
@@ -2321,7 +2320,7 @@
         "h": 8,
         "w": 8,
         "x": 16,
-        "y": 22
+        "y": 28
       },
       "height": "300",
       "hiddenSeries": false,
@@ -2449,7 +2448,7 @@
         "h": 8,
         "w": 8,
         "x": 0,
-        "y": 30
+        "y": 36
       },
       "height": "300",
       "hiddenSeries": false,
@@ -2598,7 +2597,7 @@
         "h": 8,
         "w": 8,
         "x": 8,
-        "y": 30
+        "y": 36
       },
       "height": "300",
       "hiddenSeries": false,
@@ -2721,7 +2720,7 @@
         "h": 8,
         "w": 8,
         "x": 16,
-        "y": 30
+        "y": 36
       },
       "hiddenSeries": false,
       "id": 174,
@@ -2845,7 +2844,7 @@
         "h": 9,
         "w": 8,
         "x": 0,
-        "y": 38
+        "y": 44
       },
       "height": "300",
       "hiddenSeries": false,
@@ -2991,7 +2990,7 @@
         "h": 9,
         "w": 8,
         "x": 8,
-        "y": 38
+        "y": 44
       },
       "hiddenSeries": false,
       "id": 175,
@@ -3102,7 +3101,7 @@
         "h": 9,
         "w": 8,
         "x": 16,
-        "y": 38
+        "y": 44
       },
       "height": "300",
       "hiddenSeries": false,
@@ -3248,7 +3247,7 @@
         "h": 8,
         "w": 16,
         "x": 0,
-        "y": 47
+        "y": 53
       },
       "height": "300",
       "hiddenSeries": false,
@@ -3444,7 +3443,7 @@
         "h": 8,
         "w": 8,
         "x": 16,
-        "y": 47
+        "y": 53
       },
       "hiddenSeries": false,
       "hideTimeOverride": false,
@@ -3568,9 +3567,9 @@
       {
         "allValue": "",
         "current": {
-          "selected": false,
-          "text": "dev",
-          "value": "dev"
+          "selected": true,
+          "text": "nas",
+          "value": "nas"
         },
         "datasource": "nas",
         "definition": "label_values(origin_prometheus)",
@@ -3599,8 +3598,8 @@
         "allValue": null,
         "current": {
           "selected": false,
-          "text": "k8s-node",
-          "value": "k8s-node"
+          "text": "node",
+          "value": "node"
         },
         "datasource": "nas",
         "definition": "label_values(node_uname_info{origin_prometheus=~\"$origin_prometheus\"}, job)",
@@ -3660,8 +3659,8 @@
         "allValue": null,
         "current": {
           "selected": false,
-          "text": "192.168.2.21:9200",
-          "value": "192.168.2.21:9200"
+          "text": "192.168.2.18:9100",
+          "value": "192.168.2.18:9100"
         },
         "datasource": "nas",
         "definition": "label_values(node_uname_info{origin_prometheus=~\"$origin_prometheus\",job=~\"$job\",nodename=~\"$hostname\"},instance)",
@@ -3780,8 +3779,8 @@
         "allValue": null,
         "current": {
           "selected": false,
-          "text": "/",
-          "value": "/"
+          "text": "/srv/dev-disk-by-id-scsi-1ATA_ST4000NM000A-2HZ100_WS213MF7-part1/docker-root/btrfs",
+          "value": "/srv/dev-disk-by-id-scsi-1ATA_ST4000NM000A-2HZ100_WS213MF7-part1/docker-root/btrfs"
         },
         "datasource": "nas",
         "definition": "query_result(topk(1,sort_desc (max(node_filesystem_size_bytes{origin_prometheus=~\"$origin_prometheus\",instance=~'$node',fstype=~\"ext.?|xfs|btrfs\",mountpoint!~\".*pods.*\"}) by (mountpoint))))",
@@ -3810,8 +3809,8 @@
         "allValue": null,
         "current": {
           "selected": false,
-          "text": "k8s-node-21",
-          "value": "k8s-node-21"
+          "text": "4fc80b3af584",
+          "value": "4fc80b3af584"
         },
         "datasource": "nas",
         "definition": "label_values(node_uname_info{origin_prometheus=~\"$origin_prometheus\",job=~\"$job\",instance=~\"$node\"}, nodename)",
@@ -3840,8 +3839,8 @@
         "allValue": null,
         "current": {
           "selected": false,
-          "text": "2",
-          "value": "2"
+          "text": "1",
+          "value": "1"
         },
         "datasource": "nas",
         "definition": "query_result(count(node_uname_info{origin_prometheus=~\"$origin_prometheus\",job=~\"$job\"}))",
