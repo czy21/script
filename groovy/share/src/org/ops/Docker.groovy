@@ -9,7 +9,7 @@ def build(){
      case "web":
         env.NODEJS_HOME = "${tool 'node-v16.13.0'}"
         env.PATH="${NODEJS_HOME}/bin:${PATH}"
-        sh 'nrm use taobao && yarn --cwd ${param_project_root}/${param_project_module} install && yarn --cwd ${param_project_root}/${param_project_module} --ignore-engines build'
+        sh 'npm config set registry ${param_yarn_registry} && npm install --prefix ${param_project_root}/${param_project_module} install && npm run build --prefix ${param_project_root}/${param_project_module}'
         break;
      default:
         println("The value is unknown");
