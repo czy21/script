@@ -31,6 +31,7 @@ def prepare(Map map){
     env.param_docker_file_context = "${param_project_root}/${param_project_module}/"
     println env.param_project_module
     println env.param_image_name
+    println env.param_project_module==null
 
 }
 
