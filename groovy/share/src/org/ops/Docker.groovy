@@ -1,5 +1,6 @@
 #!/usr/bin/env groovy
 package org.ops
+import java.util.stream.Collectors
 
 def build(){
     switch(env.param_code_type) {
