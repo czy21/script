@@ -34,7 +34,8 @@ def call(Map map) {
                     script{
                         map.each{ k, v -> env[k]=v }
                         sh 'env'
-                        
+                        print [env.param_registry_repo,env.param_registry_dir,[env.param_project_name,env.param_project_module].findAll{it->it!=null}.join("-")].findAll{it->it!=null}.join("/")
+
                         //def d = new org.ops.Docker()
                         //d.prepare(map)
                         //d.build()
