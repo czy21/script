@@ -26,9 +26,12 @@ def prepare(Map map){
         load "global_env.groovy";
     }
     env.param_release_version = params.param_branch
-    env.param_image_name="${param_registry_repo}/${param_registry_dir}/${param_project_name}-${param_project_module}"
+    env.param_image_name="${param_registry_repo}/${param_registry_dir}/${param_project_name}"+"${param_project_module}==null?\"\":-${param_project_module}"
     env.param_docker_file = "${param_project_root}/${param_project_module}/Dockerfile"
     env.param_docker_file_context = "${param_project_root}/${param_project_module}/"
+
+    println env.param_image_name
+
 }
 
 return this
