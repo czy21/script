@@ -11,8 +11,10 @@ def build(){
         env.PATH="${NODEJS_HOME}/bin:${PATH}"
         sh 'npm config set registry ${param_yarn_registry} && npm install --prefix ${param_project_root}/${param_project_module} && npm run build --prefix ${param_project_root}/${param_project_module}'
         break;
+     case "go":
+        break;
      default:
-        println("The value is unknown");
+        println [env.param_code_type,"not config"].join(" ");
         return;
     }
     sh 'docker login ${param_registry_repo} --username ${param_registry_username} --password ${param_registry_password}'
