@@ -32,6 +32,7 @@ def call(Map map) {
                 }
                 steps{
                     script{
+                        map.each{ k, v -> env[k]=v }
                         def d = new org.ops.Docker()
                         d.prepare(map)
                         d.build()
