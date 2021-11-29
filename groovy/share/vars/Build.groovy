@@ -33,6 +33,7 @@ def call(Map map) {
                 steps{
                     script{
                         map.each{ k, v -> env[k]=v }
+                        env.each{ k, v -> println k+":"+v }
                         println env
                         //def d = new org.ops.Docker()
                         //d.prepare(map)
