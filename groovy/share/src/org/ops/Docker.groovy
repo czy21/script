@@ -28,9 +28,9 @@ def prepare(Map map){
         load "global_env.groovy";
     }
     env.param_release_version = params.param_branch
-    env.param_image_name=[env.param_registry_repo,env.param_registry_dir,[env.param_project_name,env.param_project_module].findAll{ t -> ![null, "null", ""].contains(t) }.join("-")].join("/")
-    env.param_docker_file = [env.param_project_root,env.param_project_module,"Dockerfile"].findAll{ t -> ![null, "null", ""].contains(t) }.join("/")
+    env.param_image_name=["${env.param_registry_repo}/${env.param_registry_dir}",[env.param_project_name,env.param_project_module].findAll{ t -> ![null, "null", ""].contains(t) }.join("-")].join("/")
     env.param_docker_file_context = [env.param_project_root,env.param_project_module].findAll{ t -> ![null, "null", ""].contains(t) }.join("/")
+    env.param_docker_file = "${param_docker_file_context}/Dockerfile"
 }
 
 return this
