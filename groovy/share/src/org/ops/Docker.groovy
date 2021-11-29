@@ -33,7 +33,7 @@ def prepare(Map map){
     env.param_docker_file_context = [env.param_project_root,env.param_project_module].findAll{it!=null|!it.equals("null")|it!=""}.join("/")
     def a=[env.param_registry_repo,env.param_registry_dir,[env.param_project_name,env.param_project_module].findAll{it->it!=null|!it!="null"|it!=""}.join("-")].findAll{it->it!=null|!it!="null"|it!=""}.join("/")
     println a
-    sh 'env'
+    println env.param_project_module.getClass()
 }
 
 return this
