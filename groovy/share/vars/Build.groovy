@@ -35,7 +35,8 @@ def call(Map map) {
                         map.each{ k, v -> env[k]=v }
 
 //                         sh 'env'
-                        println [env.param_project_name,env.param_project_module].findAll{it!=null}.join("-")
+                        def a=[env.param_project_name,env.param_project_module].findAll{it!=null}.join("-")
+                        println a
 
                         //def d = new org.ops.Docker()
                         //d.prepare(map)
