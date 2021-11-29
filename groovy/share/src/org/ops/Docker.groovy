@@ -29,7 +29,7 @@ def prepare(Map map){
     env.param_image_name="${param_registry_repo}/${param_registry_dir}/${param_project_name}"+ env.param_project_module == null ? "": ("-" + env.param_project_module)
     env.param_docker_file = "${param_project_root}/${param_project_module}/Dockerfile"
     env.param_docker_file_context = "${param_project_root}/${param_project_module}/"
-
+    println env.param_project_module
     println env.param_image_name
 
 }
