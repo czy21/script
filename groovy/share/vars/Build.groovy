@@ -12,7 +12,7 @@ def call(Map map) {
             param_git_repository_url = "${map.param_git_repository_url}"
             param_git_credential_id  = "${map.param_git_credential_id}"
             param_global_env_file_id = "${map.param_global_env_file_id}"
-            param_code_type = "${map.param_code_type}"
+            param_code_type          = "${map.param_code_type}"
         }
         parameters {
           gitParameter branchFilter: 'origin/(.*)', name: 'param_branch', type: 'PT_BRANCH',defaultValue: 'master',useRepository: "${map.param_git_repository_url}"
