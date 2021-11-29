@@ -31,7 +31,7 @@ def prepare(Map map){
     env.param_image_name=[env.param_registry_repo,env.param_registry_dir,[env.param_project_name,env.param_project_module].findAll{it!=null|!it.equals("null")|it!=""}.join("-")].join("/")
     env.param_docker_file = [env.param_project_root,env.param_project_module,"Dockerfile"].findAll{it!=null|!it.equals("null")|it!=""}.join("/")
     env.param_docker_file_context = [env.param_project_root,env.param_project_module].findAll{it!=null|!it.equals("null")|it!=""}.join("/")
-    def a=[env.param_project_name,env.param_project_module].findAll{t->t!="null"|t!=""}.join("-")
+    def a=[env.param_project_name,env.param_project_module].findAll{t->t!=null|t!="null"|t!=""}.join("-")
     println a
 }
 
