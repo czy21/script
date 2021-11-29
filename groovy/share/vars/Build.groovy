@@ -5,13 +5,13 @@ def call(Map map) {
         agent any
         environment {
             param_gradle_user_home   = "/var/jenkins_home/tools/gradle"
-            param_gradle_init_file   = [env.param_gradle_user_home,"init.gradle"].join("/")
-            param_project_root       = ["${WORKSPACE}",map.param_project_root].join("/")
-            param_project_name       = map.param_project_name
-            param_project_module     = map.param_project_module
-            param_git_repository_url = map.param_git_repository_url
-            param_git_credential_id  = map.param_git_credential_id
-            param_global_env_file_id = map.param_global_env_file_id
+            param_gradle_init_file   = ["${param_gradle_user_home}","init.gradle"].join("/")
+            param_project_root       = ["${WORKSPACE}","${map.param_project_root}"].join("/")
+            param_project_name       = "${map.param_project_name}"
+            param_project_module     = "${map.param_project_module}"
+            param_git_repository_url = "${map.param_git_repository_url}"
+            param_git_credential_id  = "${map.param_git_credential_id}"
+            param_global_env_file_id = "${map.param_global_env_file_id}"
             param_code_type = "${map.param_code_type}"
         }
         parameters {
