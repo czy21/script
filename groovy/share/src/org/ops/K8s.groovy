@@ -30,9 +30,14 @@ def prepare(Map map){
         env.param_release_chart_name= env.param_helm_web_chart_name
         env.param_release_chart_version=env.param_helm_web_chart_version
         break;
-     default:
-        println("The value is unknown");
+     case "go":
+        env.param_backend_url="${map.param_backend_url}"
+        env.param_release_chart_name= env.param_helm_go_chart_name
+        env.param_release_chart_version=env.param_helm_go_chart_version
         break;
+     default:
+        println [env.param_code_type,"not config"].join(" ");
+        return;
     }
 }
 

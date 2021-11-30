@@ -1,4 +1,4 @@
 release_version: ""
-registry_repo: registry.cluster2.com
-registry_dir: library
+registry_repo: ""
+registry_dir: ""
 data_claim_name: ""
