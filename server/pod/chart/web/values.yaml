@@ -1,4 +1,4 @@
 release_version: ""
+registry_repo: ""
+registry_dir: ""
 backend_url: ""
-registry_repo: registry.cluster.com
-registry_dir: library
