@@ -9,7 +9,7 @@ def build(){
      case "web":
         env.NODEJS_HOME = "${tool 'node-v16.13.0'}"
         env.PATH="${NODEJS_HOME}/bin:${PATH}"
-        sh 'npm config set registry ${param_yarn_registry} && npm config set cache ${param_npm_cache} && npm install --prefix ${param_project_context} --force && npm run build --prefix ${param_project_context}'
+        sh 'yarn config set registry ${param_npm_registry} && yarn --cwd ${param_project_context} install && yarn --cwd ${param_project_context} --ignore-engines build'
         break;
      case "go":
         break;
