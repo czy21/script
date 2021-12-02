@@ -9,7 +9,7 @@ def build(){
      case "web":
         env.NODEJS_HOME = "${tool 'node-v16.13.0'}"
         env.PATH="${NODEJS_HOME}/bin:${PATH}"
-        sh 'npm config set registry ${param_yarn_registry} && npm install --prefix ${param_project_root}/${param_project_module} && npm run build --prefix ${param_project_root}/${param_project_module}'
+        sh 'npm config set registry ${param_yarn_registry} && npm install --prefix ${param_project_context} && npm run build --prefix ${param_project_context}'
         break;
      case "go":
         break;
@@ -18,7 +18,7 @@ def build(){
         return;
     }
     sh 'docker login ${param_registry_repo} --username ${param_registry_username} --password ${param_registry_password}'
-    sh 'docker build --tag ${param_image_name}:${param_release_version} --file ${param_docker_file} ${param_docker_file_context} --no-cache --force-rm'
+    sh 'docker build --tag ${param_image_name}:${param_release_version} --file ${param_docker_file} ${param_project_context} --no-cache --force-rm'
     sh 'docker push ${param_image_name}:${param_release_version}'
 }
 
@@ -28,9 +28,9 @@ def prepare(Map map){
         load "global_env.groovy";
     }
     env.param_release_version = params.param_branch
-    env.param_image_name=["${env.param_registry_repo}/${env.param_registry_dir}",[env.param_project_name,env.param_project_module].findAll{ t -> ![null, "null", ""].contains(t) }.join("-")].join("/")
-    env.param_docker_file_context = [env.param_project_root,env.param_project_module].findAll{ t -> ![null, "null", ""].contains(t) }.join("/")
-    env.param_docker_file = "${param_docker_file_context}/Dockerfile"
+    env.param_project_context = [env.param_project_root,env.param_project_module].findAll{ t -> ![null, "null", ""].contains(t) }.join("/")
+    env.param_image_name      = ["${env.param_registry_repo}/${env.param_registry_dir}",[env.param_project_name,env.param_project_module].findAll{ t -> ![null, "null", ""].contains(t) }.join("-")].join("/")
+    env.param_docker_file     = "${param_project_context}/Dockerfile"
 }
 
 return this
