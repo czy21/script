@@ -6,7 +6,7 @@ def call(Map map) {
         environment {
             param_gradle_user_home   = "/var/jenkins_home/tools/gradle"
             param_gradle_init_file   = "${param_gradle_user_home}/init.gradle"
-            param_npm_cache          = "/var/jenkins_home/tools/npm-cache"
+            param_yarn_cache          = "/var/jenkins_home/tools/yarn-cache"
             param_project_root       = "${WORKSPACE}/${map.param_project_root}"
             param_project_name       = "${map.param_project_name}"
             param_project_module     = "${map.param_project_module}"
