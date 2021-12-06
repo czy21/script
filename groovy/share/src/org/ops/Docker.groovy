@@ -5,6 +5,7 @@ def build(){
     switch(env.param_code_type) {
      case "java":
         gradle_cmd = ["clean","build"].collect{t->["${env.param_project_module}",t].findAll{ c -> ![null, "null", ""].contains(c) }.join(":")}.join(" ")
+        println ${env.param_project_module}
         sh "chmod +x ${param_project_root}/gradlew && ${param_project_root}/gradlew --gradle-user-home ${param_gradle_user_home} --init-script ${param_gradle_init_file} --build-file ${param_project_root}/build.gradle ${gradle_cmd} -x test --parallel"
         break;
      case "web":
