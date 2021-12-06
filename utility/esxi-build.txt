@@ -12,3 +12,7 @@ $IntelNUCVib = Get-EsxSoftwarePackage | where {$_.name -eq "ne1000-intelnuc" -an
 New-EsxImageProfile -CloneProfile $esxiImageProfileName -Name $newImageProfileName -Vendor vGhetto
 Add-EsxSoftwarePackage -ImageProfile $newImageProfileName -SoftwarePackage $IntelNUCVib
 Export-EsxImageProfile -ImageProfile $newImageProfileName -ExportToIso -FilePath "C:\Users\bruce\Desktop\esxi\ESXi-7.0.2-custom.ISO"
+
+
+# use script
+.\ESXi-Customizer-PS-v2.6.0.ps1 -izip .\VMware-ESXi-7.0U2-17630552-depot.zip -pkgDir C:\Users\bruce\Desktop\esxi\pkg\
