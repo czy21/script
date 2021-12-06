@@ -4,8 +4,8 @@ package org.ops
 def build(){
     switch(env.param_code_type) {
      case "java":
-        cmd = "chmod +x ${param_project_root}/gradlew && ${param_project_root}/gradlew --gradle-user-home ${param_gradle_user_home} --init-script ${param_gradle_init_file} --build-file ${param_project_root}/build.gradle "+ ["clean","build"].map{t->["${param_project_module}",t].findAll{ t -> ![null, "null", ""].contains(t) }.join(":")}.join(" ") +" -x test --parallel"
-        sh ${cmd}
+        gradle_cmd = ["clean","build"].map{t->["${param_project_module}",t].findAll{ c -> ![null, "null", ""].contains(c) }.join(":")}.join(" ")
+        sh "chmod +x ${param_project_root}/gradlew && ${param_project_root}/gradlew --gradle-user-home ${param_gradle_user_home} --init-script ${param_gradle_init_file} --build-file ${param_project_root}/build.gradle ${gradle_cmd} -x test --parallel"
         break;
      case "web":
         env.NODEJS_HOME = "${tool 'node-v16.13.0'}"
