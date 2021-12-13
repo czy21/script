@@ -1,0 +1,21 @@
+version: '3.9'
+
+services:
+  photoprism:
+    image: photoprism/photoprism
+    container_name: photoprism
+    privileged: true
+    user: root
+    ports:
+      - "2342:2342"
+    volumes:
+      - /volume1/photo/:/photoprism/originals/
+      - ${param_docker_data}/${param_role_name}/data/backup:/var/lib/photoprism/
+    restart: always
+    environment:
+      PHOTOPRISM_ADMIN_PASSWORD: "Czy20210314."
+
+networks:
+  default:
+    external:
+      name: local
