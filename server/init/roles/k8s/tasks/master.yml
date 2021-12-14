@@ -2,8 +2,13 @@
   become: yes
   shell: kubeadm init --config {{ param_remote_role_path }}/config.yml
 
-# TODO unfinished 
-# - name: export admin.conf
-#   become: yes
-#   shell: echo 'export KUBECONFIG=/etc/kubernetes/admin.conf' >> ~/.bashrc
-#   when: "{{ lookup('env','KUBECONFIG') == ''}}"
+- name: install helm
+  become: yes
+  shell: |
+    sudo wget -O - https://get.helm.sh/helm-v3.6.3-linux-amd64.tar.gz | sudo tar -zxf - --strip-components 1 -C /usr/local/bin/ linux-amd64/helm
+    sudo chmod +x /usr/local/bin/helm
+    sudo ln -s /usr/local/bin/helm /usr/bin/helm
+
+- name: export admin.conf
+  become: yes
+  shell: sudo -i eval 'if [ -z ${KUBECONFIG} ];then echo 'export KUBECONFIG=/etc/kubernetes/admin.conf' >> ~/.bashrc; fi;'
