@@ -66,8 +66,7 @@ def apply(app_id: str, app_name: str, source_path: Path, **kwargs):
             helm_push_cmd = share.arr_param_to_str(
                 [
                     "helm plugin list | if [ -z \"$(grep nexus-push)\" ];then helm plugin install --version master https://github.com/sonatype-nexus-community/helm-nexus-push.git;else echo nexus-push installed;fi",
-                    "helm package {} --destination {}".format(source_path.as_posix(), source_path.as_posix()),
-                    "helm nexus-push {} {} -u {} -p {}".format(helm_registry, source_path.joinpath("*.tgz"), helm_username, helm_password)
+                    "helm nexus-push {} {} -u {} -p {}".format(helm_registry, source_path,helm_username, helm_password)
                 ], separator=" && ")
             share.execute_cmd(helm_push_cmd)
         if action in kube_actions:
