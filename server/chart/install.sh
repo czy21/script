@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # bash install.sh -h user@host
+# -a push apply delete
 # -n string namespace scope for this request
-# -d        kubectl delete
 # -t int    yaml's dir deep
 
 while getopts ":h" opt
