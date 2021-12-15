@@ -2,17 +2,17 @@
 ``` 
 script
 ├── domain
-├    ├── db_meta -- 向各数据库文件脚本 添加前置处理语句及后置处理语句
+├    ├── db_meta   -- 向各数据库文件脚本 添加前置处理语句及后置处理语句
 |    |
-├    ├── default -- python全局构建缺省变量及缺省路径
+├    ├── default   -- python全局构建缺省变量及缺省路径
 |    |
-├    ├── web/react -- 前端工程
-|    |
+├── groovy
+├    ├── share     -- jenkins share library
 ├── server
 |    |
-├    ├── init    -- linux环境,k8s,docker,ansible初始化脚本
-├    ├── utility -- python共用工具方法
-├    ├── docker -- 本地构建
+├    ├── init      -- linux环境,k8s,docker,ansible初始化脚本
+├    ├── utility   -- python工具方法
+├    ├── docker    -- 本地构建
 |    |    ├── compose
 |-   |    |-   ├── frp       -- 点对点内网穿透代理工具
 |-   |    |-   ├── hadoop    -- 分布式系统基础架构
@@ -28,8 +28,11 @@ script
 |-   |    |-   ├── rabbitmq  -- 消息中间件
 |-   |    |-   ├── redis     -- key-value存储
 |-   |    |-   ├── storm     -- 大数据实时计算组件
-├    ├── pod -- 集群
+├    ├── chart -- helm chart
 |    |    ├── app 应用
 |-   |    |-   ├──
 |    |    ├── ops k8s集群监控,NFS数据卷挂载
+├    ├── omv       -- openmediavalut nas
+├    ├── raspberry -- 树莓派
+├    ├── syno      -- 群晖
 ```
