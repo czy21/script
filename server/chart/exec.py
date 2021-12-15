@@ -71,7 +71,7 @@ def apply(app_id: str, app_name: str, source_path: Path, **kwargs):
             share.execute_cmd(helm_push_cmd)
         if action in kube_actions:
             kube_cmd = get_kube_cmd(action, temp_all_in_one_path.as_posix())
-            # share.execute_cmd(kube_cmd)
+            share.execute_cmd(kube_cmd)
 
 
 if __name__ == '__main__':
