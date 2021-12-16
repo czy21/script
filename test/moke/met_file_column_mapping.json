@@ -1,0 +1,113 @@
+[
+  {
+    "tableName": "ent_sale",
+    "businessType": "SD",
+    "fields": [
+      {
+        "key": "orderDate",
+        "column": "order_date",
+        "header": "订单日期"
+      },
+      {
+        "key": "fromInstitutionCode",
+        "column": "from_institution_code",
+        "header": "经销商代码"
+      },
+      {
+        "key": "fromInstitutionName",
+        "column": "from_institution_name",
+        "header": "*经销商名称",
+        "validators": [
+          {
+            "required": true,
+            "message": "经销商名称不能为空"
+          }
+        ]
+      },
+      {
+        "key": "toInstitutionCode",
+        "column": "to_institution_code",
+        "header": "客户代码"
+      },
+      {
+        "key": "toInstitutionName",
+        "column": "to_institution_name",
+        "header": "*客户名称",
+        "validators": [
+          {
+            "required": true,
+            "message": "客户名称不能为空"
+          }
+        ]
+      },
+      {
+        "key": "productCode",
+        "column": "product_code",
+        "header": "产品代码"
+      },
+      {
+        "key": "productName",
+        "column": "product_name",
+        "header": "*产品名称",
+        "validators": [
+          {
+            "required": true,
+            "message": "产品名称不能为空"
+          }
+        ]
+      },
+      {
+        "key": "productSpec",
+        "column": "product_spec",
+        "header": "*产品规格",
+        "validators": [
+          {
+            "required": true,
+            "message": "产品规格不能为空"
+          }
+        ]
+      },
+      {
+        "key": "productBatchNumber",
+        "column": "product_batch_number",
+        "header": "产品批号"
+      },
+      {
+        "key": "productQuantity",
+        "column": "product_quantity",
+        "header": "*数量",
+        "validators": [
+          {
+            "required": true,
+            "message": "数量不能为空"
+          },
+          {
+            "type": "float",
+            "message": "数量必须是数值类型"
+          }
+        ]
+      },
+      {
+        "key": "productUnit",
+        "column": "product_unit",
+        "header": "*单位",
+        "validators": [
+          {
+            "required": true,
+            "message": "单位不能为空"
+          }
+        ]
+      },
+      {
+        "key": "productPrice",
+        "column": "product_price",
+        "header": "单价"
+      },
+      {
+        "key": "productAmount",
+        "column": "product_amount",
+        "header": "金额"
+      }
+    ]
+  }
+]
