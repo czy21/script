@@ -62,7 +62,7 @@ def execute() -> None:
 
 
 def get_recreate_command(host, port, user, password, db_name) -> str:
-    extra_param_dict = [
+    extra_param = [
         "-Q \"{0}\"".format("".join(
             [
                 "declare @db_name varchar(100);set @db_name = (SELECT name FROM Master.dbo.SysDatabases where name = '{0}');".format(db_name),
@@ -72,4 +72,4 @@ def get_recreate_command(host, port, user, password, db_name) -> str:
             ])
         )
     ]
-    return list_util.arr_param_to_str(mssql_cmd, get_basic_param(host, port, user, password, None), extra_param_dict)
+    return list_util.arr_param_to_str(mssql_cmd, get_basic_param(host, port, user, password, None), extra_param)
