@@ -45,8 +45,8 @@ def apply(role_title: str, role_path: Path, **kwargs):
             share.execute_cmd(share.arr_param_to_str(
                 [
                     share.role_print(role_title, "copy conf"),
-                    'sudo mkdir -p {}'.format(target_app_path),
-                    'sudo cp -rv {} {}'.format(role_conf_path.as_posix(), target_app_path.as_posix())
+                    'sudo mkdir -p {0}'.format(target_app_path),
+                    'sudo cp -rv {0} {1}'.format(role_conf_path.as_posix(), target_app_path.as_posix())
                 ], separator=" && "
             ))
         if role_init_sh.exists():
@@ -57,7 +57,7 @@ def apply(role_title: str, role_path: Path, **kwargs):
                 ], separator=" && "
             ))
         if role_compose_file.exists():
-            def docker_compose_cmd(a): return 'sudo docker-compose --file {} --env-file {} {}'.format(role_compose_file.as_posix(), role_env_file, a)
+            def docker_compose_cmd(a): return 'sudo docker-compose --file {0} --env-file {1} {2}'.format(role_compose_file.as_posix(), role_env_file, a)
             share.execute_cmd(share.arr_param_to_str(
                 [
                     share.role_print(role_title, "deploy", role_compose_file.as_posix()),
@@ -74,18 +74,18 @@ def apply(role_title: str, role_path: Path, **kwargs):
         registry_password = env_values['param_registry_password']
         build_cmd = [
             share.role_print(role_title, "build", role_build_sh.as_posix()),
-            'sudo docker login {} --username {} --password {}'.format(registry_url, registry_username, registry_password)
+            'sudo docker login {0} --username {1} --password {2}'.format(registry_url, registry_username, registry_password)
         ]
 
         if role_docker_file.exists():
             docker_tag = "/".join([str(p).strip("/") for p in [registry_url, registry_dir, role_name]])
             build_cmd.append([
-                "docker build --tag {} --file {} {}".format(docker_tag, role_docker_file.as_posix(), role_path.as_posix()),
-                "docker push {}".format(docker_tag)
+                "docker build --tag {0} --file {1} {2}".format(docker_tag, role_docker_file.as_posix(), role_path.as_posix()),
+                "docker push {0}".format(docker_tag)
             ])
         if role_build_sh.exists():
             build_cmd.append(
-                ["source {}".format(t) for t in [role_env_file.as_posix(), role_build_sh.as_posix()]]
+                ["source {0}".format(t) for t in [role_env_file.as_posix(), role_build_sh.as_posix()]]
             )
         if role_docker_file.exists() or role_build_sh.exists():
             share.execute_cmd(share.arr_param_to_str(build_cmd, separator=" && "))
