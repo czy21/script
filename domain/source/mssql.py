@@ -53,7 +53,7 @@ def get_main_db_param_dict() -> str:
 def execute() -> None:
     extra_param_dict = [
         "-e",
-        "-i " + "\'" + Path(default_path.output_db_all_in_one_mssql).__fspath__() + "\'" if os.name == 'nt' else default_path.output_db_all_in_one_mssql
+        "-i " + (("\'" + Path(default_path.output_db_all_in_one_mssql).__fspath__() + "\'") if os.name == 'nt' else default_path.output_db_all_in_one_mssql)
     ]
     command = list_util.arr_param_to_str(mssql_cmd, get_main_db_param_dict(), extra_param_dict)
     logger.info(basic_util.action_formatter(__get_function_name(), command))
