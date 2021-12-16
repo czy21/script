@@ -11,6 +11,7 @@ services:
       - "1433:1433"
     volumes:
       - ${param_docker_data}/${param_role_name}/data/:/var/opt/mssql/
+    restart: always
     environment:
       - ACCEPT_EULA=Y
       - MSSQL_SA_PASSWORD=${param_db_mssql_password}

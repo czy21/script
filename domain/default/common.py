@@ -36,6 +36,11 @@ param_main_db_cksql_pass = ""
 param_main_db_cksql_file_path = ""
 
 # mssql
+param_main_db_mssql_name = ""
+param_main_db_mssql_host = ""
+param_main_db_mssql_port = ""
+param_main_db_mssql_user = ""
+param_main_db_mssql_pass = ""
 param_main_db_mssql_file_path = ""
 
 # neo4j
