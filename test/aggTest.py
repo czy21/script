@@ -1,7 +1,7 @@
 import math
 from pathlib import Path
+from textwrap import wrap
 
-p=Path(".")
-p.anchor.replace("\\","\\\\")
-print(p.resolve())
-print(p)
+p="hello"
+
+print(repr(p))
