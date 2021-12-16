@@ -61,11 +61,12 @@ def execute() -> None:
 
 def get_recreate_command(host, port, user, password, db_name) -> str:
     extra_param_dict = [
-        "--execute",
-        "\"",
-        "drop database if exists {0};".format(db_name),
-        "create database if not exists {0} default charset utf8mb4 collate utf8mb4_0900_ai_ci;".format(db_name),
-        "\""
+        "--execute \"{0}\"".format("".join(
+            [
+                "drop database if exists {0};".format(db_name),
+                "create database if not exists {0} default charset utf8mb4 collate utf8mb4_0900_ai_ci;".format(db_name),
+            ])
+        )
     ]
     return list_util.arr_param_to_str(mysql_cmd, get_basic_param(host, port, user, password, None), extra_param_dict)
 
@@ -100,6 +101,7 @@ def backup_db() -> None:
     logger.info(basic_util.action_formatter(__get_function_name(), command))
     basic_util.execute(command)
 
+
 def backup_sql() -> None:
     command = list_util.arr_param_to_str("mysqldump",
                                          list_util.arr_param_to_str([
@@ -117,6 +119,7 @@ def backup_sql() -> None:
                                          )
     logger.info(basic_util.action_formatter(__get_function_name(), command))
     basic_util.execute(command)
+
 
 def backup_gz() -> None:
     command = list_util.arr_param_to_str("mysqldump",

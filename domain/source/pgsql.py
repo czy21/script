@@ -61,13 +61,12 @@ def execute() -> None:
 
 def get_recreate_command(host, port, user, password, db_name) -> str:
     cmd = [
-        "echo",
-        "\"",
-        [
-            "drop database if exists {0} WITH (FORCE);".format(db_name),
-            "CREATE DATABASE {} WITH OWNER = postgres ENCODING = \'UTF8\' CONNECTION LIMIT = -1;".format(db_name)
-        ],
-        "\"",
+        "echo \"{0}\"".format("".join(
+            [
+                "drop database if exists {0} WITH (FORCE);".format(db_name),
+                "CREATE DATABASE {} WITH OWNER = postgres ENCODING = \'UTF8\' CONNECTION LIMIT = -1;".format(db_name)
+            ])
+        ),
         "|",
         "PGPASSWORD=" + default_common.param_main_db_pgsql_pass,
         pgsql_cmd,
