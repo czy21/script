@@ -7,10 +7,6 @@ from faker import Faker
 
 def generate():
     fake: Faker = Faker(locale="zh-CN")
-    met_file_column_mapping_path = Path(__file__).parent.joinpath("met_file_column_mapping.json")
-    with open(met_file_column_mapping_path.as_posix(), "r", encoding="utf-8") as mf:
-        met_file_column_list = json.load(mf)
-    sale_mapping = next(filter(lambda t: t["tableName"] == "ent_sale", met_file_column_list))
     sale_insert = "insert into ent_sale(" \
                   "from_institution_code," \
                   "from_institution_name," \
@@ -27,7 +23,7 @@ def generate():
                   "id) values({0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12});"
     products = ["第{0}个产品".format(t) for t in range(0, 10000)]
     product_units = ["什么{0}规格".format(t) for t in range(0, 10000)]
-    with open(Path(__file__).parent.joinpath("___temp/sql.sql"), "w+", encoding="utf-8", newline="\n") as sf:
+    with open(Path("n:").parent.joinpath("pgsql.sql"), "w+", encoding="utf-8", newline="\n") as sf:
         for t in range(0, 100000000):
             sf.write(u'{}'.format("".join(
                 [
