@@ -41,8 +41,8 @@ def apply(app_id: str, app_name: str, source_path: Path, **kwargs):
         pre_cmd = share.arr_param_to_str(
             [
                 share.role_print(app_id, "deploy", temp_all_in_one_path.as_posix()),
-                'helm dep up {}'.format(source_path.as_posix()),
-                'helm template {} {} --namespace {} --values {} --debug > {}'.format(app_name,
+                'helm dep up {0}'.format(source_path.as_posix()),
+                'helm template {0} {1} --namespace {2} --values {3} --debug > {4}'.format(app_name,
                                                                                      source_path.as_posix(),
                                                                                      args.n,
                                                                                      env_path.as_posix(),
@@ -66,7 +66,7 @@ def apply(app_id: str, app_name: str, source_path: Path, **kwargs):
             helm_push_cmd = share.arr_param_to_str(
                 [
                     "helm plugin list | if [ -z \"$(grep nexus-push)\" ];then helm plugin install --version master https://github.com/sonatype-nexus-community/helm-nexus-push.git;fi",
-                    "helm package {} --destination {} | sed 's/Successfully packaged chart and saved it to: //g' | xargs helm nexus-push {}  --username {} --password {}".format(source_path, source_path, helm_registry, helm_username, helm_password)
+                    "helm package {0} --destination {0} | sed 's/Successfully packaged chart and saved it to: //g' | xargs helm nexus-push {1}  --username {2} --password {3}".format(source_path, helm_registry, helm_username, helm_password)
                 ], separator=" && ")
             share.execute_cmd(helm_push_cmd)
         if action in kube_actions:
