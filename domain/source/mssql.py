@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 import inspect
+import os
+from pathlib import Path
 
 from script.domain.db_meta import mssql as mssql_meta
 from script.domain.default import common as default_common
@@ -50,7 +52,8 @@ def get_main_db_param_dict() -> str:
 
 def execute() -> None:
     extra_param_dict = [
-        "-i " + default_path.output_db_all_in_one_mssql
+        "-e",
+        "-i " + "\'" + Path(default_path.output_db_all_in_one_mssql).__fspath__() + "\'" if os.name == 'nt' else default_path.output_db_all_in_one_mssql
     ]
     command = list_util.arr_param_to_str(mssql_cmd, get_main_db_param_dict(), extra_param_dict)
     logger.info(basic_util.action_formatter(__get_function_name(), command))
@@ -61,8 +64,10 @@ def get_recreate_command(host, port, user, password, db_name) -> str:
     extra_param_dict = [
         "-Q",
         "\"",
+        "declare @db_name varchar(100);set @db_name = (SELECT name FROM Master.dbo.SysDatabases where name = '{0}');".format(db_name),
+        "if @db_name is not null ALTER DATABASE {0} SET SINGLE_USER WITH ROLLBACK IMMEDIATE;".format(db_name),
         "drop database if exists {0};".format(db_name),
-        "create database {0} ;".format(db_name),
+        "create database {0};".format(db_name),
         "\""
     ]
     return list_util.arr_param_to_str(mssql_cmd, get_basic_param(host, port, user, password, None), extra_param_dict)

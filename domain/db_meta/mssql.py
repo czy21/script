@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
 self = {
-    "header": "SELECT 'Executing: ${{{file_path}}}' AS file;",
-    "footer": "SELECT 'Executed: ${{{file_path}}}' AS file;",
+    "header": "SELECT 'executing: ${{{file_path}}}' AS [file];\ngo",
+    "footer": "SELECT 'executed: ${{{file_path}}}' AS [file];\ngo",
     "substitution": {
         "TrackedColumns": "id not null"
     }
