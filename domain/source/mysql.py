@@ -60,7 +60,7 @@ def execute() -> None:
 
 
 def get_recreate_command(host, port, user, password, db_name) -> str:
-    extra_param_dict = [
+    extra_param = [
         "--execute \"{0}\"".format("".join(
             [
                 "drop database if exists {0};".format(db_name),
@@ -68,7 +68,7 @@ def get_recreate_command(host, port, user, password, db_name) -> str:
             ])
         )
     ]
-    return list_util.arr_param_to_str(mysql_cmd, get_basic_param(host, port, user, password, None), extra_param_dict)
+    return list_util.arr_param_to_str(mysql_cmd, get_basic_param(host, port, user, password, None), extra_param)
 
 
 def backup_db() -> None:
