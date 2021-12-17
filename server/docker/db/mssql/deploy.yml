@@ -15,6 +15,7 @@ services:
     environment:
       - ACCEPT_EULA=Y
       - MSSQL_SA_PASSWORD=${param_db_mssql_password}
+      - MSSQL_COLLATION=Chinese_PRC_CI_AS
 networks:
   default:
     external:
