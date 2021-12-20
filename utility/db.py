@@ -2,6 +2,7 @@
 import copy
 import io
 import math
+import os
 import re
 
 from colorama import Fore
@@ -34,8 +35,17 @@ def assemble_ql(s_path, t_file_name, db_meta, file_suffix, **kwargs) -> None:
 
 
 def print_ql_msg(msg_lines, *proc, **func_param) -> None:
-    callback = list(map(lambda t: t.strip(), filter(re.compile(r"^\s*(executing:|executed:)").search, msg_lines)))
-    for m in callback[1::2]:
-        logger.info(m.strip())
-    if math.modf(len(callback) / 2)[0] > 0:
-        logger.error(callback[len(callback) - 1].strip())
+    exec_file_tuple = []
+    for line in msg_lines:
+        line = line.strip()
+        if line:
+            execute_match = re.compile(r"^\s*(executing:|executed:)").match(line)
+            if execute_match:
+                exec_file_tuple.append(line)
+            if os.environ.run_args.debug:
+                logger.debug(line, is_sleep=False)
+    if not os.environ.run_args.debug:
+        for m in exec_file_tuple[1::2]:
+            logger.info(m)
+    if math.modf(len(exec_file_tuple) / 2)[0] > 0:
+        logger.error(str(exec_file_tuple[len(exec_file_tuple) - 1].strip()).replace("executing:", "error_file"))
