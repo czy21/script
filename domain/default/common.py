@@ -65,7 +65,7 @@ param_main_rabbit_host = ""
 # api
 param_api_archive_file_name = "api.jar"
 param_api_root_project_path = ""
-param_api_gradle_init_script_file_path = path_util.pure_path_join(default_path.script_template, "java/init.gradle")
+param_api_gradle_init_script_file_path = ""
 param_api_gradle_plugin_root_project_path = default_path.project_plugin
 param_api_module_name = ""
 
