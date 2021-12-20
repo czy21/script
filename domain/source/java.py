@@ -18,7 +18,7 @@ def build_api():
     build_command = list_util.arr_param_to_str(
         [
             path_util.pure_path_join(default_common.param_api_root_project_path, "gradlew"),
-            "--init-script " + default_common.param_api_gradle_init_script_file_path,
+            "--init-script " + default_common.param_api_gradle_init_script_file_path if default_common.param_api_gradle_init_script_file_path else "",
             "--build-file " + path_util.pure_path_join(default_common.param_api_root_project_path, "build.gradle"),
             build_method,
             "-x test"
