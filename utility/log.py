@@ -1,7 +1,6 @@
 # coding:utf-8
 import logging
 import os
-import sys
 from pathlib import Path
 from time import sleep
 
@@ -16,13 +15,6 @@ log_colors_config = {
 }
 
 log_sleep = 0.1
-
-
-def parse_argv(argv: list, key):
-    for a in argv:
-        if a == key:
-            return sys.argv[sys.argv.index(key) + 1]
-    return ""
 
 
 class Logger:

@@ -44,8 +44,7 @@ def print_ql_msg(msg_lines, *proc, **func_param) -> None:
                 exec_file_tuple.append(line)
             if os.environ.run_args.debug:
                 logger.debug(line, is_sleep=False)
-    if not os.environ.run_args.debug:
-        for m in exec_file_tuple[1::2]:
-            logger.info(m)
+            if not os.environ.run_args.debug and execute_match:
+                logger.info(line)
     if math.modf(len(exec_file_tuple) / 2)[0] > 0:
         logger.error(str(exec_file_tuple[len(exec_file_tuple) - 1].strip()).replace("executing:", "error_file"))
