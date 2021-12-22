@@ -1,14 +1,10 @@
 #!/usr/bin/env python3
-import os
-import platform
 import subprocess
 import sys
 
 from colorama import Fore
 
 from script.utility import log
-
-logger = log.Logger(__name__)
 
 
 def action_formatter(action_name, msg=None, action_color=Fore.YELLOW):
@@ -19,6 +15,7 @@ def action_formatter(action_name, msg=None, action_color=Fore.YELLOW):
 
 
 def print_default(msg_lines, proc: subprocess.Popen, func_param) -> None:
+    logger = log.Logger(__name__)
     for line in msg_lines:
         line = line.strip()
         if line:
@@ -29,12 +26,12 @@ def execute(cmd, func=print_default, func_param=None):
     input_exec = str(input("Are you sure you want to execute (y/n)?").strip())
     if input_exec != "y":
         return
-    proc = subprocess.Popen(["sh", "-c", cmd], stdout=subprocess.PIPE, encoding="utf-8")
-    func(iter(proc.stdout.readline, ''), proc, func_param)
-    proc.stdout.close()
-    proc.wait()
-    if proc.returncode != 0:
-        sys.exit(0)
+    with subprocess.Popen(["sh", "-c", cmd], stdout=subprocess.PIPE, encoding="utf-8") as proc:
+        func(iter(proc.stdout.readline, ''), proc, func_param)
+        proc.stdout.close()
+        proc.wait()
+        if proc.returncode != 0:
+            sys.exit(0)
     return proc
 
 
