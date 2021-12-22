@@ -1,6 +1,6 @@
 # coding:utf-8
 import logging
-import sys
+import os
 from pathlib import Path
 from time import sleep
 
@@ -17,13 +17,6 @@ log_colors_config = {
 log_sleep = 0.1
 
 
-def parse_argv(argv: list, key):
-    for a in argv:
-        if a == key:
-            return sys.argv[sys.argv.index(key) + 1]
-    return ""
-
-
 class Logger:
 
     def __init__(self, name=None):
@@ -34,10 +27,11 @@ class Logger:
             '%(white)s%(asctime)s %(log_color)s%(levelname)s %(purple)s%(thread)d %(white)s[ %(threadName)s ] %(cyan)s%(name)s %(white)s- %(message)s',
             log_colors=log_colors_config))
 
-        env_path = parse_argv(sys.argv, "--env")
-        log_file = parse_argv(sys.argv, "--log-file")
-        if log_file != "":
-            fh = logging.FileHandler(filename=Path(env_path).joinpath("../", log_file).absolute().resolve().as_posix(), encoding='utf-8')
+        env_path = os.environ.run_args.env
+        log_file = os.environ.run_args.log_file
+
+        if log_file is not None:
+            fh = logging.FileHandler(filename=Path(env_path).joinpath("../", log_file).resolve().as_posix(), encoding='utf-8')
             fh.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(thread)d [ %(threadName)s ] %(name)s - %(message)s'))
             self.logger.addHandler(fh)
         self.logger.addHandler(ch)
