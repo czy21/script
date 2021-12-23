@@ -32,7 +32,6 @@ def execute(cmd, func=print_default, func_param=None):
         proc.wait()
         if proc.returncode != 0:
             sys.exit(0)
-    return proc
 
 
 if __name__ == '__main__':
