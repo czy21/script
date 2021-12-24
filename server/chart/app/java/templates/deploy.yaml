@@ -12,6 +12,32 @@ spec:
     - name: "http"
       port: 8080
       targetPort: 8080
+    - name: "jmx-metrics"
+      port: 8088
+      targetPort: 8088
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-default
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Release.Name }}-default
+data:
+  jmx-config.yaml: |
+    lowercaseOutputLabelNames: true
+    lowercaseOutputName: true
+    whitelistObjectNames: ["java.lang:type=OperatingSystem"]
+    blacklistObjectNames: []
+    rules:
+      - pattern: 'java.lang<type=OperatingSystem><>(committed_virtual_memory|free_physical_memory|free_swap_space|total_physical_memory|total_swap_space)_size:'
+        name: os_$1_bytes
+        type: GAUGE
+        attrNameSnakeCase: true
+      - pattern: 'java.lang<type=OperatingSystem><>((?!process_cpu_time)\w+):'
+        name: os_$1
+        type: GAUGE
+        attrNameSnakeCase: true
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -33,6 +59,9 @@ spec:
         - name: conf
           configMap:
             name: {{ .Release.Name }}
+        - name: default
+          configMap:
+            name: {{ .Release.Name }}-default
         - name: data
           persistentVolumeClaim:
             claimName: {{ .Values.data_claim_name }}
@@ -42,9 +71,15 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
+            - containerPort: 8088
+          env:
+            - name: JAVA_OPTS
+              value: "-javaagent:/home/app/jmx-agent.jar=8088:/home/app/default/jmx-config.yaml"
           volumeMounts:
             - name: conf
               mountPath: /home/app/config/
+            - name: default
+              mountPath: /home/app/default/
             - name: data
               mountPath: /home/app/data/
               subPath: data
