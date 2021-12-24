@@ -5,15 +5,15 @@ import numpy as np
 from pandas import DataFrame
 
 
-def split_csv(file_path, chunk_size):
+def split_excel(file_path, chunk_size):
     i = 1
     f_path = Path(file_path).resolve()
     f_name = f_path.stem
-    with open(f_path, encoding="utf-8") as fv:
-        df = pd.read_csv(fv, low_memory=False)
-        for chunk in np.array_split(df, len(df) // chunk_size):
-            chunk.to_excel(f_path.parent.joinpath("_".join([f_name, str(i)]) + ".xlsx").as_posix(), index=False)
-            i += 1
+    f_suffix = f_path.suffix
+    df = pd.read_excel(f_path.as_posix())
+    for chunk in np.array_split(df, len(df) // chunk_size):
+        chunk.to_excel(f_path.parent.joinpath("_".join([f_name, str(i)]) + f_suffix).as_posix(), index=False)
+        i += 1
 
 
 def count_excel(root_path, pattern):
@@ -28,4 +28,4 @@ def count_excel(root_path, pattern):
 
 if __name__ == '__main__':
     count_excel("C:/Users/zhaoyu.chen/Desktop/maixin", "calllog-2017-01-01~2021-12-01_*.xlsx")
-    # split_csv("C:/Users/zhaoyu.chen/Desktop/maixin/calllog-2017-01-01~2021-12-01.csv", 100000)
+    # split_excel("C:/Users/zhaoyu.chen/Desktop/maixin/contact-2017-01-01~2021-12-01.xlsx", 100000)
