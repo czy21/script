@@ -30,7 +30,7 @@ scrape_configs:
     params:
       'match[]':
         - '{job="prometheus"}'
-        - '{job="jmx-state"}'
+        - '{job="spring-state"}'
         - '{job=~"k8s-.*"}'
     static_configs:
       - targets: ['prom-ops.cluster.com']
