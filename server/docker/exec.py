@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import argparse
+import string
 import sys
 
 import share
@@ -42,6 +43,12 @@ def apply(role_title: str, role_path: Path, **kwargs):
 
     if args.i:
         if role_conf_path.exists():
+            for t in role_conf_path.rglob("*"):
+                if t.is_file():
+                    with open(t, "r", encoding="utf-8", newline="\n") as c_conf:
+                        content = share.Template(c_conf.read()).render(**env_values)
+                        with open(t, "w", encoding="utf-8") as t_conf:
+                            t_conf.write(content)
             share.execute_cmd(share.arr_param_to_str(
                 [
                     share.role_print(role_title, "copy conf"),
