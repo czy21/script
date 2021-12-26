@@ -1,11 +1,74 @@
 #!/usr/bin/env python3
+import re
 import subprocess
 import sys
 from itertools import zip_longest
 from pathlib import Path
-from typing import List
+
+import mako.lexer
+import mako.template
+import mako.parsetree
 
 flat = lambda L: sum(map(flat, L), []) if isinstance(L, list) else [L]
+
+
+class LexerCls(mako.lexer.Lexer):
+    def match_expression(self):
+        match = self.match(r"\{{")
+        if match:
+            line, pos = self.matched_lineno, self.matched_charpos
+            text, end = self.parse_until_text(True, r"\|", r"}}")
+            if end == "|":
+                escapes, end = self.parse_until_text(True, r"}}")
+            else:
+                escapes = ""
+            text = text.replace("\r\n", "\n")
+            self.append_node(
+                mako.parsetree.Expression,
+                text,
+                escapes.strip(),
+                lineno=line,
+                pos=pos,
+            )
+            return True
+        else:
+            return False
+
+    def match_text(self):
+        match = self.match(
+            r"""
+                (.*?)         # anything, followed by:
+                (
+                 (?<=\n)(?=[ \t]*(?=%|\#\#)) # an eval or line-based
+                                             # comment preceded by a
+                                             # consumed newline and whitespace
+                 |
+                 (?=\{{)      # an expression
+                 |
+                 (?=</?[%&])  # a substitution or block or call start or end
+                              # - don't consume
+                 |
+                 (\\\r?\n)    # an escaped newline  - throw away
+                 |
+                 \Z           # end of string
+                )""",
+            re.X | re.S,
+        )
+
+        if match:
+            text = match.group(1)
+            if text:
+                self.append_node(mako.parsetree.Text, text)
+            return True
+        else:
+            return False
+
+
+class Template(mako.template.Template):
+    lexer_cls = LexerCls
+
+    def __init__(self, text=None, filename=None, strict_undefined=True):
+        mako.template.Template.__init__(self, text=text, filename=filename, strict_undefined=strict_undefined)
 
 
 def arr_param_to_str(*items, separator=" ") -> str:
