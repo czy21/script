@@ -56,7 +56,7 @@ def execute() -> None:
         "< " + default_path.output_db_all_in_one_pgsql
     )
     logger.info(basic_util.action_formatter(__get_function_name(), command))
-    basic_util.execute(command, db_util.print_ql_msg)
+    basic_util.execute(command, db_util.print_ql_msg, encoding="gbk")
 
 
 def get_recreate_command(host, port, user, password, db_name) -> str:

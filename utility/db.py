@@ -4,6 +4,7 @@ import io
 import math
 import os
 import re
+import subprocess
 
 from colorama import Fore
 
@@ -34,7 +35,7 @@ def assemble_ql(s_path, t_file_name, db_meta, file_suffix, **kwargs) -> None:
         t_file.write(u'{}'.format("\n\n".join(db_file_content)))
 
 
-def print_ql_msg(msg_lines, *proc, **func_param) -> None:
+def print_ql_msg(msg_lines, proc: subprocess.Popen, func_param) -> None:
     exec_file_tuple = []
     for line in msg_lines:
         line = line.strip()

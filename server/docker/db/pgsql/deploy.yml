@@ -1,7 +1,7 @@
 version: '3.9'
 
 services:
-  postgres:
+  pgsql:
     image: postgres:14.0
     container_name: pgsql
     privileged: true
@@ -9,8 +9,10 @@ services:
     ports:
       - "5432:5432"
     volumes:
+      - ${param_docker_data}/${param_role_name}/conf/postgresql.conf:/etc/postgresql/postgresql.conf
       - ${param_docker_data}/${param_role_name}/data/:/var/lib/postgresql/data/
     restart: always
+    command: -c config_file=/etc/postgresql/postgresql.conf
     environment:
       POSTGRES_PASSWORD: ${param_db_pgsql_password}
 networks:
