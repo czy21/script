@@ -39,16 +39,7 @@ class LexerCls(mako.lexer.Lexer):
             r"""
                 (.*?)         # anything, followed by:
                 (
-                 (?<=\n)(?=[ \t]*(?=%|\#\#)) # an eval or line-based
-                                             # comment preceded by a
-                                             # consumed newline and whitespace
-                 |
                  (?=\{{)      # an expression
-                 |
-                 (?=</?[%&])  # a substitution or block or call start or end
-                              # - don't consume
-                 |
-                 (\\\r?\n)    # an escaped newline  - throw away
                  |
                  \Z           # end of string
                 )""",

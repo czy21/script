@@ -8,6 +8,7 @@ services:
     user: root
     volumes:
       - ${param_docker_data}/${param_role_name}/data/:/var/atlassian/jira/
+      - ${param_docker_data}/${param_role_name}/logs/:/opt/atlassian/jira/logs/
     environment:
       TZ: Asia/Shanghai
       CATALINA_OPTS: "-Xmx2G"
