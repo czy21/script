@@ -17,7 +17,7 @@ def execute(app_tuples, func, **kwargs):
         func(role_title, role_path, **kwargs)
 
 
-def apply(role_title: str, role_path: Path, **kwargs):
+def invoke(role_title: str, role_path: Path, **kwargs):
     args = kwargs["args"]
     env_file = kwargs["env_file"]
     role_name = role_path.name
@@ -116,4 +116,4 @@ if __name__ == '__main__':
     selected_option = share.select_option(int(args.t))
     if args.n is None:
         args.n = selected_option["namespace"]
-    execute(selected_option["list"], apply, env_file=env_file, args=args)
+    execute(selected_option["list"], invoke, env_file=env_file, args=args)
