@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import inspect
+import os
 
 from script.domain.db_meta import pgsql as pgsql_meta
 from script.domain.default import common as default_common
@@ -56,7 +57,7 @@ def execute() -> None:
         "< " + default_path.output_db_all_in_one_pgsql
     )
     logger.info(basic_util.action_formatter(__get_function_name(), command))
-    basic_util.execute(command, db_util.print_ql_msg, encoding="gbk")
+    basic_util.execute(command, db_util.print_ql_msg, encoding="gbk" if os.name == 'nt' else "utf-8")
 
 
 def get_recreate_command(host, port, user, password, db_name) -> str:
