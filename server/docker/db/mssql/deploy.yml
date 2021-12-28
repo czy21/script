@@ -13,6 +13,7 @@ services:
       - ${param_docker_data}/${param_role_name}/data/:/var/opt/mssql/
     restart: always
     environment:
+      - TZ=Asia/Shanghai
       - ACCEPT_EULA=Y
       - MSSQL_SA_PASSWORD=${param_db_mssql_password}
       - MSSQL_COLLATION=Chinese_PRC_CI_AS
