@@ -25,7 +25,7 @@ def generate():
     products = ["第{0}个产品".format(t) for t in range(0, 10000)]
     product_units = ["什么{0}规格".format(t) for t in range(0, 10000)]
     data = []
-    for t in range(0, 100000000):
+    for t in range(0, 2000000):
         data.append([
             fake.ean(length=13),  # from_institution_code
             fake.company(),  # from_institution_name
