@@ -41,8 +41,8 @@ def generate():
             str(fake.date_between(start_date=datetime.date.fromisoformat("2000-01-01"),
                                   end_date=datetime.date.fromisoformat("2021-12-01")))
         ])
-        df = pd.DataFrame(data=data, columns=columns)
-        df.to_excel(Path("c:/Users/zhaoyu.chen/Desktop/1M.xlsx"), index=False)
+    df = pd.DataFrame(data=data, columns=columns)
+    df.to_excel(Path("c:/Users/zhaoyu.chen/Desktop/1M.xlsx"), index=False)
 
 
 if __name__ == '__main__':
