@@ -2,6 +2,7 @@
 import argparse
 import sys
 
+import jinja2
 import share
 from pathlib import Path
 from dotenv import dotenv_values
@@ -44,7 +45,7 @@ def invoke(role_title: str, role_path: Path, **kwargs):
             for t in role_conf_path.rglob("*"):
                 if t.is_file():
                     with open(t, "r", encoding="utf-8", newline="\n") as c_conf:
-                        content = share.Template(c_conf.read()).render(**env_values)
+                        content = jinja2.Template(c_conf.read()).render(**env_values)
                         with open(t, "w", encoding="utf-8") as t_conf:
                             t_conf.write(content)
             share.execute_cmd(share.arr_param_to_str(
