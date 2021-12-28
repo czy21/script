@@ -25,7 +25,7 @@ def generate():
     products = ["第{0}个产品".format(t) for t in range(0, 10000)]
     product_units = ["什么{0}规格".format(t) for t in range(0, 10000)]
     data = []
-    for t in range(0, 1200000):
+    for t in range(0, 500000):
         data.append([
             fake.ean(length=13),  # from_institution_code
             fake.company(),  # from_institution_name
@@ -42,7 +42,7 @@ def generate():
                                   end_date=datetime.date.fromisoformat("2021-12-01")))
         ])
     df = pd.DataFrame(data=data, columns=columns)
-    df.to_excel(Path("c:/Users/zhaoyu.chen/Desktop/1M.xlsx"), index=False,engine="xlsxwriter")
+    df.to_excel(Path("c:/Users/zhaoyu.chen/Desktop/1M.xlsx"), index=False)
 
 
 if __name__ == '__main__':
