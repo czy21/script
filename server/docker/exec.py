@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
 import argparse
-import string
 import sys
 
 import share
 from pathlib import Path
 from dotenv import dotenv_values
-from urllib import parse
 
 
 def execute(app_tuples, func, **kwargs):

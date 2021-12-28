@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
 self = {
-    "header": "SELECT 'executing: ${{{file_path}}}' AS file;",
-    "footer": "SELECT 'executed: ${{{file_path}}}' AS file;",
+    "header": "SELECT 'executing: {{ file_path }}' AS file;",
+    "footer": "SELECT 'executed: {{ file_path }}' AS file;",
     "substitution": {
         "TrackedColumns": "\tcreated_date  TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP(6),\n"
                           "\tcreated_user  varchar(36) DEFAULT NULL,\n"
