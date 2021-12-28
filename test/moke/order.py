@@ -42,7 +42,7 @@ def generate():
                                   end_date=datetime.date.fromisoformat("2021-12-01")))
         ])
     df = pd.DataFrame(data=data, columns=columns)
-    df.to_excel(Path("c:/Users/zhaoyu.chen/Desktop/1M.xlsx"), index=False)
+    df.to_excel(Path("c:/Users/zhaoyu.chen/Desktop/1M.xlsx"), index=False,engine="xlsxwriter")
 
 
 if __name__ == '__main__':
