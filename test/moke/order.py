@@ -2,48 +2,47 @@ import datetime
 import json
 from pathlib import Path
 
+import pandas as pd
 from faker import Faker
 
 
 def generate():
     fake: Faker = Faker(locale="zh-CN")
-    sale_insert = "insert into ent_sale(" \
-                  "from_institution_code," \
-                  "from_institution_name," \
-                  "to_institution_code," \
-                  "to_institution_name," \
-                  "product_code," \
-                  "product_name," \
-                  "product_spec," \
-                  "product_quantity," \
-                  "product_unit," \
-                  "product_price," \
-                  "product_amount," \
-                  "order_date," \
-                  "id) values({0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12});"
+    columns = [
+        '经销商代码',
+        '*经销商名称',
+        '客户代码',
+        '*客户名称',
+        '产品代码',
+        '*产品名称',
+        '*产品规格',
+        '*数量',
+        '*单位',
+        '单价',
+        '金额',
+        '订单日期'
+    ]
     products = ["第{0}个产品".format(t) for t in range(0, 10000)]
     product_units = ["什么{0}规格".format(t) for t in range(0, 10000)]
-    with open(Path("n:").parent.joinpath("pgsql.sql"), "w+", encoding="utf-8", newline="\n") as sf:
-        for t in range(0, 100000000):
-            sf.write(u'{}'.format("".join(
-                [
-                    sale_insert.format(repr(fake.ean(length=13)),  # from_institution_code
-                                       repr(fake.company()),  # from_institution_name
-                                       repr(fake.ean(length=13)),  # to_institution_code
-                                       repr(fake.company()),  # to_institution_name
-                                       repr(fake.ean(length=13)),  # product_code
-                                       repr(fake.words(1, products)[0]),  # product_name
-                                       repr(fake.company()),  # product_spec
-                                       repr(str(fake.pydecimal(right_digits=4, min_value=20, max_value=200))),  # product_quantity
-                                       repr(fake.words(1, product_units)[0]),  # product_unit
-                                       repr(str(fake.pydecimal(right_digits=4, min_value=20, max_value=200))),  # product_price
-                                       repr(str(fake.pydecimal(right_digits=4, min_value=20, max_value=200))),  # product_amount
-                                       repr(str(fake.date_between(start_date=datetime.date.fromisoformat("2000-01-01"),
-                                                                  end_date=datetime.date.fromisoformat("2021-12-01")))),
-                                       "gen_random_uuid()"  # id
-                                       ),
-                    "\n",
-                ])))
+    data = []
+    for t in range(0, 100000000):
+        data.append([
+            fake.ean(length=13),  # from_institution_code
+            fake.company(),  # from_institution_name
+            fake.ean(length=13),  # to_institution_code
+            fake.company(),  # to_institution_name
+            fake.ean(length=13),  # product_code
+            fake.words(1, products)[0],  # product_name
+            fake.company(),  # product_spec
+            str(fake.pydecimal(right_digits=4, min_value=20, max_value=200)),  # product_quantity
+            fake.words(1, product_units)[0],  # product_unit
+            str(fake.pydecimal(right_digits=4, min_value=20, max_value=200)),  # product_price
+            str(fake.pydecimal(right_digits=4, min_value=20, max_value=200)),  # product_amount
+            str(fake.date_between(start_date=datetime.date.fromisoformat("2000-01-01"),
+                                  end_date=datetime.date.fromisoformat("2021-12-01")))
+        ])
+        df = pd.DataFrame(data=data, columns=columns)
+        df.to_excel(Path("c:/Users/zhaoyu.chen/Desktop/1M.xlsx"), index=False)
 
 
 if __name__ == '__main__':
