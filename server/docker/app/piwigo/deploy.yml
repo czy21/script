@@ -9,8 +9,8 @@ services:
     environment:
       - TZ=Asia/Shanghai
     volumes:
-      - ${param_docker_data}/${param_role_name}/conf/:/config/
-      - ${param_docker_data}/${param_role_name}/data/:/gallery/
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/:/config/
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/gallery/
     restart: always
 
 networks:

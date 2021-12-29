@@ -10,8 +10,8 @@ services:
       - "50000:50000"
     user: root
     volumes:
-      - ${param_docker_data}/${param_role_name}/data/:/var/jenkins_home/
-      - ${param_docker_data}/${param_role_name}/conf/init.gradle:/var/jenkins_home/tools/gradle/init.gradle
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/var/jenkins_home/
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/init.gradle:/var/jenkins_home/tools/gradle/init.gradle
       - /var/run/docker.sock:/var/run/docker.sock
       - /usr/bin/docker:/usr/bin/docker
     environment:

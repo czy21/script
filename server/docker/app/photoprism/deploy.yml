@@ -10,7 +10,7 @@ services:
       - "2342:2342"
     volumes:
       - /volume1/photo/:/photoprism/originals/
-      - ${param_docker_data}/${param_role_name}/data/backup:/var/lib/photoprism/
+      - {{ param_docker_data }}/{{ param_role_name }}/data/backup:/var/lib/photoprism/
     restart: always
     environment:
       PHOTOPRISM_ADMIN_PASSWORD: "***REMOVED***"

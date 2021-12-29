@@ -2,13 +2,13 @@ version: '3.9'
 
 services:
   jira:
-    image: ${param_registry_url}/${param_registry_dir}/jira
+    image: {{ param_registry_url }}/{{ param_registry_dir }}/jira
     container_name: jira
     privileged: true
     user: root
     volumes:
-      - ${param_docker_data}/${param_role_name}/data/:/var/atlassian/jira/
-      - ${param_docker_data}/${param_role_name}/logs/:/opt/atlassian/jira/logs/
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/var/atlassian/jira/
+      - {{ param_docker_data }}/{{ param_role_name }}/logs/:/opt/atlassian/jira/logs/
     environment:
       TZ: Asia/Shanghai
       CATALINA_OPTS: "-Xmx2G"

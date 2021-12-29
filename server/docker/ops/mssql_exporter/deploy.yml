@@ -8,10 +8,10 @@ services:
     ports:
       - "4000:4000"
     environment:
-      SERVER: ${param_db_mssql_host}
-      PORT: ${param_db_mssql_port}
-      USERNAME: ${param_db_mssql_username}
-      PASSWORD: ${param_db_mssql_password}
+      SERVER: {{ param_db_mssql_host }}
+      PORT: {{ param_db_mssql_port }}
+      USERNAME: {{ param_db_mssql_username }}
+      PASSWORD: {{ param_db_mssql_password }}
       DEBUG: app
     restart: always
     user: root

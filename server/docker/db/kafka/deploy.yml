@@ -3,38 +3,38 @@ version: '3.9'
 services:
   broker1:
     build:
-      context: ${param_pwd_home}/compose/kafka/image/
-      dockerfile: ${param_pwd_home}/compose/kafka/image/Dockerfile
+      context: {{ param_pwd_home }}/compose/kafka/image/
+      dockerfile: {{ param_pwd_home }}/compose/kafka/image/Dockerfile
     container_name: broker1
     privileged: true
     user: root
     ports:
       - "9092:9092"
     volumes:
-      - ${param_volumes_dir}/kafka/1/logs:/tmp/kafka-logs/
+      - {{ param_volumes_dir }}/kafka/1/logs:/tmp/kafka-logs/
     environment:
       KAFKA_SERVER_BROKER_ID: 0
       KAFKA_SERVER_LISTENERS: PLAINTEXT://:9092
-      KAFKA_SERVER_ADVERTISED_LISTENERS: PLAINTEXT://${param_host_ip}:9092
-      KAFKA_SERVER_ZOOKEEPER_CONNECT: ${param_host_ip}:2181,${param_host_ip}:2182,${param_host_ip}:2183
+      KAFKA_SERVER_ADVERTISED_LISTENERS: PLAINTEXT://{{ param_host_ip }}:9092
+      KAFKA_SERVER_ZOOKEEPER_CONNECT: {{ param_host_ip }}:2181,{{ param_host_ip }}:2182,{{ param_host_ip }}:2183
     restart: always
 
   broker2:
     build:
-      context: ${param_pwd_home}/compose/kafka/image/
-      dockerfile: ${param_pwd_home}/compose/kafka/image/Dockerfile
+      context: {{ param_pwd_home }}/compose/kafka/image/
+      dockerfile: {{ param_pwd_home }}/compose/kafka/image/Dockerfile
     container_name: broker2
     privileged: true
     user: root
     ports:
       - "9093:9093"
     volumes:
-      - ${param_volumes_dir}/kafka/2/logs:/tmp/kafka-logs/
+      - {{ param_volumes_dir }}/kafka/2/logs:/tmp/kafka-logs/
     environment:
       KAFKA_SERVER_BROKER_ID: 1
       KAFKA_SERVER_LISTENERS: PLAINTEXT://:9093
-      KAFKA_SERVER_ADVERTISED_LISTENERS: PLAINTEXT://${param_host_ip}:9093
-      KAFKA_SERVER_ZOOKEEPER_CONNECT: ${param_host_ip}:2181,${param_host_ip}:2182,${param_host_ip}:2183
+      KAFKA_SERVER_ADVERTISED_LISTENERS: PLAINTEXT://{{ param_host_ip }}:9093
+      KAFKA_SERVER_ZOOKEEPER_CONNECT: {{ param_host_ip }}:2181,{{ param_host_ip }}:2182,{{ param_host_ip }}:2183
     restart: always
 networks:
   default:
