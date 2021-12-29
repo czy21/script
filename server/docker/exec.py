@@ -27,19 +27,19 @@ def invoke(role_title: str, role_path: Path, **kwargs):
     role_init_sh = role_path.joinpath("init.sh")
     role_build_sh = role_path.joinpath("build.sh")
 
-    env_values = {
+    env_dict = {
         **dotenv_values(env_file),
         **{
             "param_role_name": role_name,
-            "param_role_path": role_path.as_posix(),
+            "param_role_path": role_path.as_posix()
         }
     }
-    target_app_path = Path(env_values["param_docker_data"]).joinpath(role_name)
+    target_app_path = Path(env_dict["param_docker_data"]).joinpath(role_name)
 
     for t in role_path.rglob("*"):
         if t.is_file():
             with open(t, "r", encoding="utf-8", newline="\n") as c_conf:
-                content = jinja2.Template(c_conf.read()).render(**env_values)
+                content = jinja2.Template(c_conf.read()).render(**env_dict)
                 with open(t, "w", encoding="utf-8") as t_conf:
                     t_conf.write(content)
 
@@ -56,7 +56,7 @@ def invoke(role_title: str, role_path: Path, **kwargs):
             share.execute_cmd(share.arr_param_to_str(
                 [
                     share.role_print(role_title, "init", role_init_sh.as_posix()),
-                    ["source {}".format(t) for t in [role_env_file, role_init_sh.as_posix()]],
+                    "source {}".format(role_init_sh.as_posix())
                 ], separator=" && "
             ))
         if role_compose_file.exists():
@@ -72,10 +72,10 @@ def invoke(role_title: str, role_path: Path, **kwargs):
     share.execute_cmd("echo \n")
 
     if args.b:
-        registry_url = env_values['param_registry_url']
-        registry_dir = env_values['param_registry_dir']
-        registry_username = env_values['param_registry_username']
-        registry_password = env_values['param_registry_password']
+        registry_url = env_dict['param_registry_url']
+        registry_dir = env_dict['param_registry_dir']
+        registry_username = env_dict['param_registry_username']
+        registry_password = env_dict['param_registry_password']
         build_cmd = [
             share.role_print(role_title, "build", role_build_sh.as_posix()),
             'sudo docker login {0} --username {1} --password {2}'.format(registry_url, registry_username, registry_password)
