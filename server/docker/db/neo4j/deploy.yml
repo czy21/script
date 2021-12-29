@@ -11,11 +11,11 @@ services:
       - "7474:7474"
       - "7687:7687"
     volumes:
-      - ${param_docker_data}/${param_role_name}/data/:/data/
-      - ${param_docker_data}/${param_role_name}/data/logs:/logs/
-      - ${param_docker_data}/${param_role_name}/conf/:/conf/
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/data/
+      - {{ param_docker_data }}/{{ param_role_name }}/data/logs:/logs/
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/:/conf/
     environment:
-      NEO4J_AUTH: neo4j/${param_db_neo4j_password}
+      NEO4J_AUTH: neo4j/{{ param_db_neo4j_password }}
       NEO4J_dbms_memory_pagecache_size: 2g
     restart: always
 networks:

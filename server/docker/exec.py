@@ -34,20 +34,17 @@ def invoke(role_title: str, role_path: Path, **kwargs):
             "param_role_path": role_path.as_posix(),
         }
     }
-
-    with open(role_env_file, "w+", encoding="utf-8") as f:
-        f.write(u'{}'.format("\n".join(["=".join([k, v]) for (k, v) in env_values.items()])))
-
     target_app_path = Path(env_values["param_docker_data"]).joinpath(role_name)
+
+    for t in role_path.rglob("*"):
+        if t.is_file():
+            with open(t, "r", encoding="utf-8", newline="\n") as c_conf:
+                content = jinja2.Template(c_conf.read()).render(**env_values)
+                with open(t, "w", encoding="utf-8") as t_conf:
+                    t_conf.write(content)
 
     if args.i:
         if role_conf_path.exists():
-            for t in role_conf_path.rglob("*"):
-                if t.is_file():
-                    with open(t, "r", encoding="utf-8", newline="\n") as c_conf:
-                        content = jinja2.Template(c_conf.read()).render(**env_values)
-                        with open(t, "w", encoding="utf-8") as t_conf:
-                            t_conf.write(content)
             share.execute_cmd(share.arr_param_to_str(
                 [
                     share.role_print(role_title, "copy conf"),
@@ -63,7 +60,8 @@ def invoke(role_title: str, role_path: Path, **kwargs):
                 ], separator=" && "
             ))
         if role_compose_file.exists():
-            def docker_compose_cmd(a): return 'sudo docker-compose --file {0} --env-file {1} {2}'.format(role_compose_file.as_posix(), role_env_file, a)
+            def docker_compose_cmd(a): return 'sudo docker-compose --file {0} {1}'.format(role_compose_file.as_posix(), a)
+
             share.execute_cmd(share.arr_param_to_str(
                 [
                     share.role_print(role_title, "deploy", role_compose_file.as_posix()),

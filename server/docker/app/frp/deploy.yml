@@ -4,8 +4,8 @@ services:
 
   frp:
     build:
-      context: ${param_pwd_home}/compose/frp/
-      dockerfile: ${param_pwd_home}/compose/frp/Dockerfile
+      context: {{ param_pwd_home }}/compose/frp/
+      dockerfile: {{ param_pwd_home }}/compose/frp/Dockerfile
     image: frp:1.0.0
     container_name: frp
     privileged: true
@@ -13,7 +13,7 @@ services:
     ports:
       - 7000:7000
     volumes:
-      - ${param_config_dir}/frp/:/usr/local/frp/conf/
+      - {{ param_config_dir }}/frp/:/usr/local/frp/conf/
     restart: always
 networks:
   default:

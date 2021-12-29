@@ -7,8 +7,8 @@ services:
     privileged: true
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ${param_docker_data}/${param_role_name}/data:/data/
-      - ${param_docker_data}/${param_role_name}/conf/portainer_password:/tmp/portainer_password
+      - {{ param_docker_data }}/{{ param_role_name }}/data:/data/
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/portainer_password:/tmp/portainer_password
     command: --admin-password-file /tmp/portainer_password
     restart: always
 networks:

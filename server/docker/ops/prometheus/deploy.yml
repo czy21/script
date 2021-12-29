@@ -7,8 +7,8 @@ services:
     container_name: prometheus
     privileged: true
     volumes:
-      - ${param_docker_data}/${param_role_name}/conf/:/etc/prometheus/
-      - ${param_docker_data}/${param_role_name}/data/:/prometheus/
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/:/etc/prometheus/
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/prometheus/
     command:
       - --config.file=/etc/prometheus/prometheus.yml
       - --storage.tsdb.path=/prometheus

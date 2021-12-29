@@ -10,14 +10,14 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - ${param_docker_data}/${param_role_name}/data/:/var/lib/mysql/
-      - ${param_docker_data}/${param_role_name}/conf/my.cnf:/etc/mysql/my.cnf
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/var/lib/mysql/
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/my.cnf:/etc/mysql/my.cnf
     command: --default-authentication-plugin=mysql_native_password
     restart: always
     environment:
       TZ: Asia/Shanghai
       MYSQL_ALLOW_EMPTY_PASSWORD: 0
-      MYSQL_ROOT_PASSWORD: ${param_db_mysql_password}
+      MYSQL_ROOT_PASSWORD: {{ param_db_mysql_password }}
 networks:
   default:
     external:
