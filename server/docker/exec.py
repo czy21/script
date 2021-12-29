@@ -36,12 +36,11 @@ def invoke(role_title: str, role_path: Path, **kwargs):
     }
     target_app_path = Path(env_dict["param_docker_data"]).joinpath(role_name)
 
-    for t in role_path.rglob("*"):
-        if t.is_file():
-            with open(t, "r", encoding="utf-8", newline="\n") as c_conf:
-                content = jinja2.Template(c_conf.read()).render(**env_dict)
-                with open(t, "w", encoding="utf-8") as t_conf:
-                    t_conf.write(content)
+    for t in [t for t in role_path.rglob("*") if t.is_file()]:
+        with open(t, "r", encoding="utf-8", newline="\n") as r_file:
+            content = jinja2.Template(r_file.read()).render(**env_dict)
+            with open(t, "w", encoding="utf-8") as t_file:
+                t_file.write(content)
 
     if args.i:
         if role_conf_path.exists():
