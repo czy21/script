@@ -12,3 +12,4 @@ SQLAlchemy==1.4.28
 pyyaml==6.0
 ruamel.yaml==0.17.17
 Faker==10.0.0
+requests==2.26.0

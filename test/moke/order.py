@@ -38,7 +38,7 @@ def generate():
             fake.words(1, product_units)[0],  # product_unit
             str(fake.pydecimal(right_digits=4, min_value=20, max_value=200)),  # product_price
             str(fake.pydecimal(right_digits=4, min_value=20, max_value=200)),  # product_amount
-            str(fake.date_between(start_date=datetime.date.fromisoformat("2000-01-01"),
+            str(fake.date_between(start_date=datetime.date.fromisoformat("2018-01-01"),
                                   end_date=datetime.date.fromisoformat("2021-12-01")))
         ])
     df = pd.DataFrame(data=data, columns=columns)
