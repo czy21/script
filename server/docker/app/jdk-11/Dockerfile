@@ -1,4 +1,4 @@
-FROM openjdk:11.0.10-jre
+FROM openjdk:11-jre-slim
 WORKDIR /home/app
 
 RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
