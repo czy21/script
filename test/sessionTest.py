@@ -1,3 +1,4 @@
+import multiprocessing
 from datetime import datetime
 from multiprocessing import Pool
 
@@ -5,7 +6,7 @@ import requests
 
 
 def get_session(sid):
-    r = requests.post(url="http://127.0.0.1:8080/user/search".format(sid), headers={})
+    r = requests.post(url="http://192.168.2.21:48926/user/search".format(sid), headers={}, json={"seq": sid})
     print(r.json())
 
 
@@ -13,8 +14,8 @@ if __name__ == '__main__':
 
     start_time = datetime.now()
 
-    p = Pool(20)
-    for f in range(0, 1000):
+    p = Pool(multiprocessing.cpu_count() * 2)
+    for f in range(0, 20000):
         p.apply_async(get_session, args=(str(f + 1),))
     p.close()
     p.join()
