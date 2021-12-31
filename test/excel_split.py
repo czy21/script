@@ -27,5 +27,5 @@ def count_excel(root_path, pattern):
 
 
 if __name__ == '__main__':
-    # count_excel("C:/Users/zhaoyu.chen/Desktop/maixin", "calllog-2017-01-01~2021-12-01_*.xlsx")
-    split_excel("C:/Users/zhaoyu.chen/Desktop/maixin/calllog-2017-01-01~2021-12-01.xlsx", 100000)
+    count_excel("C:/Users/zhaoyu.chen/Desktop/maixin/contact-split/", "contact-2017-01-01~2021-12-01_*.xlsx")
+    # split_excel("C:/Users/zhaoyu.chen/Desktop/maixin/calllog-2017-01-01~2021-12-01.xlsx", 100000)
