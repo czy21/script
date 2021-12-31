@@ -32,6 +32,7 @@ def prepare(Map map){
      case "python":
         env.param_release_chart_name= env.param_helm_python_chart_name
         env.param_release_chart_version=env.param_helm_python_chart_version
+        break;
      case "web":
         env.param_backend_url="${map.param_backend_url}"
         env.param_release_chart_name= env.param_helm_web_chart_name
