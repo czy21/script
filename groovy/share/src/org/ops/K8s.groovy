@@ -25,15 +25,17 @@ def prepare(Map map){
         env.param_release_chart_name= env.param_helm_java_chart_name
         env.param_release_chart_version= env.param_helm_java_chart_version
         break;
+     case "go":
+        env.param_release_chart_name= env.param_helm_go_chart_name
+        env.param_release_chart_version=env.param_helm_go_chart_version
+        break;
+     case "python":
+        env.param_release_chart_name= env.param_helm_python_chart_name
+        env.param_release_chart_version=env.param_helm_python_chart_version
      case "web":
         env.param_backend_url="${map.param_backend_url}"
         env.param_release_chart_name= env.param_helm_web_chart_name
         env.param_release_chart_version=env.param_helm_web_chart_version
-        break;
-     case "go":
-        env.param_backend_url="${map.param_backend_url}"
-        env.param_release_chart_name= env.param_helm_go_chart_name
-        env.param_release_chart_version=env.param_helm_go_chart_version
         break;
      default:
         println [env.param_code_type,"not config"].join(" ");
