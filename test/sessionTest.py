@@ -5,7 +5,7 @@ import requests
 
 
 def get_session(sid):
-    r = requests.get(url="http://192.168.2.12:8080/word/analyse?seq={0}".format(sid), headers={})
+    r = requests.post(url="http://192.168.2.21:48926/user/search".format(sid), headers={})
     print(r.content)
 
 
