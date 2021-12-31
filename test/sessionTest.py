@@ -5,8 +5,8 @@ import requests
 
 
 def get_session(sid):
-    r = requests.post(url="http://192.168.2.21:48926/user/search".format(sid), headers={})
-    print(r.content)
+    r = requests.post(url="http://127.0.0.1:8080/user/search".format(sid), headers={})
+    print(r.json())
 
 
 if __name__ == '__main__':
