@@ -1,22 +1,14 @@
 #!/usr/bin/env python3
 import argparse
 import io
-import subprocess
+from pathlib import Path
 
 import share
-from pathlib import Path
-from ruamel import yaml
-
-
-def _str_representer(dumper: yaml.Dumper, data):
-    style = ''
-    if '\n' in data:
-        style = '|'
-    return dumper.represent_scalar('tag:yaml.org,2002:str', data, style)
+import yaml
 
 
 def execute(app_tuples, func, **kwargs):
-    yaml.RoundTripRepresenter.add_representer(str, _str_representer)
+    yaml.add_representer(str, lambda dumper, data: dumper.represent_scalar('tag:yaml.org,2002:str', data, '|' if '\n' in data else ''))
     for t in app_tuples:
         app_number = str(t[0])
         source_path = Path(t[1])
@@ -32,7 +24,7 @@ def get_kube_cmd(action: str, yaml_path: str):
 def apply(app_id: str, app_name: str, source_path: Path, **kwargs):
     args = kwargs["args"]
     with io.open(env_path, "r", encoding="utf-8", newline="\n") as ef:
-        env_dict = yaml.load(ef.read(), Loader=yaml.UnsafeLoader)
+        env_dict = yaml.full_load(ef.read())
     kube_actions = ["apply", "delete"]
     temp_all_in_one_path = source_path.joinpath("___temp/deploy.yaml")
     temp_all_in_one_path.parent.mkdir(parents=True, exist_ok=True)
@@ -43,21 +35,21 @@ def apply(app_id: str, app_name: str, source_path: Path, **kwargs):
                 share.role_print(app_id, "deploy", temp_all_in_one_path.as_posix()),
                 'helm dep up {0}'.format(source_path.as_posix()),
                 'helm template {0} {1} --namespace {2} --values {3} --debug > {4}'.format(app_name,
-                                                                                     source_path.as_posix(),
-                                                                                     args.n,
-                                                                                     env_path.as_posix(),
-                                                                                     temp_all_in_one_path.as_posix())
+                                                                                          source_path.as_posix(),
+                                                                                          args.n,
+                                                                                          env_path.as_posix(),
+                                                                                          temp_all_in_one_path.as_posix())
             ], separator=" && ")
         share.execute_cmd(pre_cmd)
         with io.open(temp_all_in_one_path, "r", encoding="utf-8", newline="\n") as o_file:
-            y = yaml.load_all(o_file.read(), Loader=yaml.UnsafeLoader)
+            y = yaml.full_load_all(o_file.read())
         with io.open(temp_all_in_one_path, "w+", encoding="utf-8", newline="\n") as y_file:
             all_doc = []
             for content in y:
                 if content and content["metadata"] and "namespace" not in content["metadata"].keys():
                     content["metadata"]["namespace"] = args.n
                 all_doc.append(content)
-            yaml.dump_all(all_doc, y_file, Dumper=yaml.RoundTripDumper, default_flow_style=False, explicit_start=True)
+            yaml.dump_all(all_doc, y_file)
     for action in args.a:
         if action == "push":
             helm_registry = env_dict["helm"]["registry"]
