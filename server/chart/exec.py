@@ -23,8 +23,9 @@ def get_kube_cmd(action: str, yaml_path: str):
 
 def apply(app_id: str, app_name: str, source_path: Path, **kwargs):
     args = kwargs["args"]
+
     with io.open(env_path, "r", encoding="utf-8", newline="\n") as ef:
-        env_dict = yaml.full_load(ef.read())
+        env_dict = yaml.unsafe_load(ef.read())
     kube_actions = ["apply", "delete"]
     temp_all_in_one_path = source_path.joinpath("___temp/deploy.yaml")
     temp_all_in_one_path.parent.mkdir(parents=True, exist_ok=True)
@@ -42,7 +43,7 @@ def apply(app_id: str, app_name: str, source_path: Path, **kwargs):
             ], separator=" && ")
         share.execute_cmd(pre_cmd)
         with io.open(temp_all_in_one_path, "r", encoding="utf-8", newline="\n") as o_file:
-            y = yaml.full_load_all(o_file.read())
+            y = yaml.unsafe_load_all(o_file.read())
         with io.open(temp_all_in_one_path, "w+", encoding="utf-8", newline="\n") as y_file:
             all_doc = []
             for content in y:
