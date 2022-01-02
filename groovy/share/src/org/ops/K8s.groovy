@@ -10,7 +10,7 @@ def build(){
 
 def apply(){
     withKubeConfig([credentialsId: env.param_kube_credential, serverUrl: env.param_kube_server]) {
-        sh 'kubectl apply --prune --filename=deploy.yaml --label app=${param_release_name}'
+        sh 'kubectl apply --prune --filename=deploy.yaml -l app=${param_release_name}'
     }
 }
 
