@@ -12,7 +12,7 @@ function upload_exec_py() {
 
   ssh $host 'sudo pip3 install --requirement $HOME/'${name_path}/'requirements.txt && python3 -B $HOME/'${name_path}/'exec.py '$@';'
 
-  ssh $host 'rm -rf $HOME/'${name_path}';'
+  # ssh $host 'rm -rf $HOME/'${name_path}';'
 }
 
 function upload_exec_sh() {
