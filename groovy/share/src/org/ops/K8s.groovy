@@ -2,8 +2,10 @@
 package org.ops
 
 def build(){
-    sh 'env | grep \'^param_\'| paste -d "," -s > env.conf'
-    sh 'xargs --arg-file=env.conf --verbose helm template ${param_release_name} ${param_release_chart_name} --version ${param_release_chart_version} --namespace ${param_release_namespace} --repo ${param_helm_repo} --set | tee deploy.yaml'
+    sh 'env | grep \'^param_\' > env.conf'
+    sh 'cat env.conf'
+    sh 'cat env.conf | sed \'s/^param_//g\' | paste -d "," -s | xargs helm template ${param_release_name} ${param_release_chart_name} --version ${param_release_chart_version} --namespace ${param_release_namespace} --repo ${param_helm_repo} --set-string  2>&1 | tee deploy.yaml'
+    sh 'sleep 99999'
 }
 
 
