@@ -10,7 +10,7 @@ def build(){
 
 def apply(){
     withKubeConfig([credentialsId: env.param_kube_credential, serverUrl: env.param_kube_server]) {
-        sh 'kubectl delete -filename deploy.yaml --ignore-not-found=true && kubectl apply --filename deploy.yaml'
+        sh 'kubectl delete --filename deploy.yaml --ignore-not-found=true && kubectl apply --filename deploy.yaml'
     }
 }
 
