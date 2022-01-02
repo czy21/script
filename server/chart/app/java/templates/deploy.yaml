@@ -48,7 +48,7 @@ spec:
             - containerPort: 8080
           env:
             - name: JAVA_OPTS
-              value: {{ .Values.java_ops}}
+              value: {{ .Values.app_args}}
           volumeMounts:
             - name: conf
               mountPath: /home/app/config/
