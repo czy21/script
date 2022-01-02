@@ -3,8 +3,7 @@ package org.ops
 
 def build(){
     sh 'env | grep \'^param_\'| paste -d "," -s > env.conf'
-    sh 'cat env.conf'
-    sh 'cat env.conf |  helm template ${param_release_name} ${param_release_chart_name} --version ${param_release_chart_version} --namespace ${param_release_namespace} --repo ${param_helm_repo} --set-string  | tee deploy.yaml'
+    sh 'xargs --arg-file=env.conf --verbose helm template ${param_release_name} ${param_release_chart_name} --version ${param_release_chart_version} --namespace ${param_release_namespace} --repo ${param_helm_repo} --set | tee deploy.yaml'
 }
 
 
