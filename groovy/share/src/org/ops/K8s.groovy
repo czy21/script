@@ -10,7 +10,7 @@ def build(){
 
 def apply(){
     withKubeConfig([credentialsId: env.param_kube_credential, serverUrl: env.param_kube_server]) {
-        sh 'kubectl patch --patch-file deploy.yaml'
+        sh 'kubectl apply --filename=deploy.yaml'
     }
 }
 
