@@ -1,4 +1,0 @@
-bootJar {
-    archiveFileName = "{{ param_api_archive_file_name }}"
-    destinationDirectory = project.file "{{ param_api_output_path }}"
-}
