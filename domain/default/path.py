@@ -18,7 +18,7 @@ script_template = path_util.pure_path_join(root_path, "script/template")
 project_code_api = path_util.pure_path_join(project_code, "api")
 project_code_web = path_util.pure_path_join(project_code, "web")
 project_code_app = path_util.pure_path_join(project_code, "app")
-project_plugin = path_util.pure_path_join(project_code, "gradle-plugin")
+project_code_plugin = path_util.pure_path_join(project_code, "gradle-plugin")
 
 # child dir of output
 output_api = path_util.pure_path_join(output, "api")

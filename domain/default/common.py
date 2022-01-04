@@ -66,7 +66,7 @@ param_main_rabbit_host = ""
 param_api_archive_file_name = "api.jar"
 param_api_root_project_path = ""
 param_api_gradle_init_script_file_path = ""
-param_api_gradle_plugin_root_project_path = default_path.project_plugin
+param_api_gradle_plugin_root_project_path = default_path.project_code_plugin
 param_api_module_name = ""
 
 # api output
