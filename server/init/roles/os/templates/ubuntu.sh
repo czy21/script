@@ -2,7 +2,7 @@
 set -e
 
 apt -y update
-apt -y install wget vim git network-manager nfs-common python3-pip
+apt -y install wget vim git network-manager nfs-common
 
 # postgres repo
 sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
