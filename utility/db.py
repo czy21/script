@@ -31,7 +31,7 @@ def assemble_ql(s_path, t_file_name, db_meta, file_suffix, **kwargs) -> None:
             db_file_content.insert(0, prep)
         if post:
             db_file_content.append(post)
-        tf.write(u'{}'.format("\n".join(db_file_content)))
+        tf.write(u'{}'.format("\n\n".join(db_file_content)))
 
 
 def print_ql_msg(msg_lines, proc: subprocess.Popen, func_param) -> None:
