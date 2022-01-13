@@ -44,7 +44,7 @@ spec:
             path: app-http.conf
       - name: log
         persistentVolumeClaim:
-          claimName: data-{{ .Release.Name }}
+          claimName: {{ .Values.data_claim_name }}
       containers:
       - name: '{{ .Release.Name }}'
         image: {{ .Values.registry_repo }}/{{ .Values.registry_dir }}/{{ .Release.Name }}:{{ .Values.release_version }}
@@ -61,16 +61,3 @@ spec:
         - name: log
           mountPath: /var/log/nginx/
           subPath: log
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: data-{{ .Release.Name }}
-  namespace: '{{ .Release.Namespace }}'
-spec:
-  accessModes:
-  - ReadWriteMany
-  resources:
-    requests:
-      storage: 256Gi
-  storageClassName: managed-nfs-storage
