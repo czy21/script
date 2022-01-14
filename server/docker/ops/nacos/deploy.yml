@@ -1,0 +1,30 @@
+version: '3.9'
+
+services:
+
+  {{ param_role_name }}:
+    image: nacos/nacos-server:2.0.3
+    container_name: {{ param_role_name }}
+    privileged: true
+    user: root
+    ports:
+      - "8848:8848"
+    volumes:
+       - {{ param_docker_data }}/{{ param_role_name }}/conf/:/home/nacos/init.d/
+    restart: always
+    environment:
+      PREFER_HOST_MODE: hostname
+      MODE: standalone
+      SPRING_DATASOURCE_PLATFORM: mysql
+      MYSQL_SERVICE_HOST: {{ param_db_mysql_host }}
+      MYSQL_SERVICE_DB_NAME: nacos
+      MYSQL_SERVICE_PORT: {{ param_db_mysql_port }}
+      MYSQL_SERVICE_USER: {{ param_db_mysql_username }}
+      MYSQL_SERVICE_PASSWORD: {{ param_db_mysql_password }}
+      MYSQL_SERVICE_DB_PARAM: characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&serverTimezone=UTC
+
+
+networks:
+  default:
+    external:
+      name: local
