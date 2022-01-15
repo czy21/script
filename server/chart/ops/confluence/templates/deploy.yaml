@@ -39,7 +39,7 @@ spec:
     spec:
       containers:
       - name: {{ .Release.Name }}
-        image: {{ .Values.registry.url }}/{{ .Values.registry.dir }}/confluence
+        image: {{ .Values.param_registry_url }}/{{ .Values.param_registry_dir }}/confluence
         imagePullPolicy: Always
         resources:
           limits:

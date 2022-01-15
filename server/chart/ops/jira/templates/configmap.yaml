@@ -15,7 +15,7 @@ data:
         <url>jdbc:mysql://mysql.db.svc:3306/jira?useUnicode=true&amp;characterEncoding=UTF8</url>
         <driver-class>com.mysql.cj.jdbc.Driver</driver-class>
         <username>root</username>
-        <password>{{ .Values.db.password }}</password>
+        <password>{{ .Values.param_db_password }}</password>
         <pool-min-size>20</pool-min-size>
         <pool-max-size>20</pool-max-size>
         <pool-max-wait>30000</pool-max-wait>

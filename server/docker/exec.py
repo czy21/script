@@ -1,27 +1,25 @@
 #!/usr/bin/env python3
 import argparse
-import json
 import sys
-
 import jinja2
 import share
-from pathlib import Path
 
-import yaml
 from dotenv import dotenv_values
+from pathlib import Path
 
 
 def execute(app_tuples, func, **kwargs):
+    env_dict = dotenv_values(env_file)
     for t in app_tuples:
         app_number = str(t[0])
         role_path = t[1]
         role_title = ".".join([app_number, role_path.name])
-        func(role_title, role_path, **kwargs)
+        func(role_title=role_title, role_path=role_path, env_dict=env_dict, **kwargs)
 
 
 def invoke(role_title: str, role_path: Path, **kwargs):
     args = kwargs["args"]
-    env_file = kwargs["env_file"]
+    env_dict: dict = kwargs["env_dict"]
     role_name = role_path.name
     role_env_file = role_path.joinpath(".env")
     role_conf_path = role_path.joinpath("conf")
@@ -29,24 +27,25 @@ def invoke(role_title: str, role_path: Path, **kwargs):
     role_docker_file = role_path.joinpath("Dockerfile")
     role_init_sh = role_path.joinpath("init.sh")
     role_build_sh = role_path.joinpath("build.sh")
-    
+
     env_dict = {
-        **dotenv_values(env_file),
+        **env_dict,
         **{
             "param_role_name": role_name,
             "param_role_path": role_path.as_posix()
         }
     }
     target_app_path = Path(env_dict["param_docker_data"]).joinpath(role_name)
-    
+
     for t in filter(lambda f: f.is_file(), role_path.rglob("*")):
         with open(t, "r", encoding="utf-8", newline="\n") as r_file:
             content = jinja2.Template(r_file.read()).render(**env_dict)
             with open(t, "w", encoding="utf-8") as t_file:
                 t_file.write(content)
-    
+
     def docker_compose_cmd(a):
         return 'sudo docker-compose --file {0} {1}'.format(role_compose_file.as_posix(), a)
+
     if args.i:
         if role_conf_path.exists():
             share.execute_cmd(share.arr_param_to_str(
@@ -79,7 +78,7 @@ def invoke(role_title: str, role_path: Path, **kwargs):
             ], separator=" && "
         ))
     share.execute_cmd("echo \n")
-    
+
     if args.b:
         registry_url = env_dict['param_registry_url']
         registry_dir = env_dict['param_registry_dir']
@@ -89,7 +88,7 @@ def invoke(role_title: str, role_path: Path, **kwargs):
             share.role_print(role_title, "build", role_build_sh.as_posix()),
             'sudo docker login {0} --username {1} --password {2}'.format(registry_url, registry_username, registry_password)
         ]
-    
+
         if role_docker_file.exists():
             docker_tag = "/".join([str(p).strip("/") for p in [registry_url, registry_dir, role_name]])
             build_cmd.append([

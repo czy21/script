@@ -33,7 +33,7 @@ spec:
             - --default-authentication-plugin=mysql_native_password
           env:
             - name: MYSQL_ROOT_PASSWORD
-              value: '{{ .Values.db.password }}'
+              value: '{{ .Values.param_db_password }}'
           volumeMounts:
             - name: conf
               mountPath: /etc/mysql/conf.d/
@@ -45,7 +45,7 @@ spec:
             - containerPort: 9104
           env:
             - name: DATA_SOURCE_NAME
-              value: 'root:{{ .Values.db.password }}@({{ .Values.db.mysql.host }}:{{ .Values.db.mysql.port }})/'
+              value: 'root:{{ .Values.param_db_password }}@({{ .Values.param_db_mysql_host }}:{{ .Values.param_db_mysql_port }})/'
   volumeClaimTemplates:
     - metadata:
         name: data

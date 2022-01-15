@@ -17,11 +17,11 @@ spec:
     spec:
       containers:
         - name: '{{ .Release.Name }}'
-          image: {{ .Values.registry.url }}/{{ .Values.registry.dir }}/kafka
+          image: {{ .Values.param_registry_url }}/{{ .Values.param_registry_dir }}/kafka
           imagePullPolicy: Always
           args:
             - "--override broker.id=${HOSTNAME##*-} \
-               --override zookeeper.connect={{ .Values.zk.connect }} \
+               --override zookeeper.connect={{ .Values.param_db_zk_connect }} \
                --override host.name=$(POD_NAME).{{ .Release.Name }}-hs.{{ .Release.Namespace }}.svc.cluster.local \
                --override listeners=PLAINTEXT://:9092 \
                --override advertised.listeners=PLAINTEXT://$(POD_NAME).{{ .Release.Name }}-hs.{{ .Release.Namespace }}.svc.cluster.local:9092"

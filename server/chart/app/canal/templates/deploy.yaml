@@ -105,7 +105,7 @@ spec:
           claimName: data-canal
       containers:
       - name: canal
-        image: {{ .Values.registry.url }}/{{ .Values.registry.dir }}/canal
+        image: {{ .Values.param_registry_url }}/{{ .Values.param_registry_dir }}/canal
         imagePullPolicy: Always
         args:
         - /bin/bash

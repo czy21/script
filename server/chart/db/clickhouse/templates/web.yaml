@@ -27,4 +27,4 @@ spec:
             - name: CH_LOGIN
               value: "default"
             - name: CH_PASSWORD
-              value: "{{ .Values.db.password }}"
+              value: "{{ .Values.param_db_password }}"

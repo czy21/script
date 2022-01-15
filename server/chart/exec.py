@@ -1,18 +1,17 @@
 #!/usr/bin/env python3
 import argparse
 import io
-import pathlib
-from pathlib import Path
-
+import yaml
 import jinja2
 import share
-import yaml
+
+from dotenv import dotenv_values
+from pathlib import Path
 
 
 def execute(app_tuples, func, **kwargs):
     yaml.add_representer(str, lambda dumper, data: dumper.represent_scalar('tag:yaml.org,2002:str', data, '|' if '\n' in data else ''))
-    with io.open(kwargs["env_path"], "r", encoding="utf-8") as ef:
-        env_dict = yaml.unsafe_load(ef.read())
+    env_dict = dotenv_values(kwargs["env_path"])
     for t in app_tuples:
         app_number = str(t[0])
         role_path = t[1]
@@ -28,7 +27,10 @@ def invoke(role_title: str, role_path: Path, **kwargs):
     args = kwargs["args"]
     role_name = role_path.name
     role_values_file = role_path.joinpath("values.yaml")
-    env_dict = kwargs["env_dict"]
+
+    env_dict: dict = {
+        **kwargs["env_dict"]
+    }
 
     kube_actions = ["apply", "delete"]
     temp_all_in_one_path = role_path.joinpath("___temp/deploy.yaml")
@@ -46,11 +48,11 @@ def invoke(role_title: str, role_path: Path, **kwargs):
             [
                 share.role_print(role_title, "deploy", temp_all_in_one_path.as_posix()),
                 'helm dep up {0}'.format(role_path.as_posix()),
-                'helm template {0} {1} --namespace {2} --values {3} --debug > {4}'.format(role_name,
-                                                                                          role_path.as_posix(),
-                                                                                          args.n,
-                                                                                          env_path.as_posix(),
-                                                                                          temp_all_in_one_path.as_posix())
+                'helm template {0} {1} --namespace {2} --set {3} --debug > {4}'.format(role_name,
+                                                                                       role_path.as_posix(),
+                                                                                       args.n,
+                                                                                       ",".join(["=".join([k, "\"" + v + "\""]) for (k, v) in env_dict.items()]),
+                                                                                       temp_all_in_one_path.as_posix())
             ], separator=" && ")
         share.execute_cmd(pre_cmd)
         with io.open(temp_all_in_one_path, "r", encoding="utf-8", newline="\n") as o_file:
@@ -80,7 +82,7 @@ def invoke(role_title: str, role_path: Path, **kwargs):
 
 
 if __name__ == '__main__':
-    env_path = Path(__file__).parent.joinpath("env.yaml")
+    env_path = Path(__file__).parent.joinpath(".env")
     parser = argparse.ArgumentParser()
     parser.add_argument('-a', nargs="+", required=True)
     parser.add_argument("-t", default=2)

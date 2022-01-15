@@ -11,7 +11,7 @@ data:
     <yandex>
         <users>
             <default>
-                <password>{{ .Values.db.password }}</password>
+                <password>{{ .Values.param_db_password }}</password>
             </default>
         </users>
         <profiles>
