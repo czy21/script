@@ -1,7 +1,7 @@
 superset:
   supersetNode:
     connections:
-      redis_host: ":{{ db.redis.password }}@{{ db.redis.host }}"
+      redis_host: "{{ db.redis.host }}"
       redis_port: "{{ db.redis.port }}"
       db_host: "{{ db.pgsql.host }}"
       db_port: "{{ db.pgsql.port }}"
