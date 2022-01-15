@@ -5,7 +5,7 @@ metadata:
   name: es-filerealm-secret
   namespace: '{{ .Release.Namespace }}'
 stringData:
-  users: '{{ htpasswd .Values.db.username .Values.db.password }}'
+  users: '{{ htpasswd .Values.param_db_username .Values.param_db_password }}'
   users_roles: superuser:admin
 ---
 apiVersion: elasticsearch.k8s.elastic.co/v1

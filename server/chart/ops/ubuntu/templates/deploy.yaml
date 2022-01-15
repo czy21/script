@@ -23,7 +23,7 @@ spec:
               mountPath: /home/bruce/data/
       containers:
       - name: ubuntu
-        image: {{ .Values.registry.url }}/{{ .Values.registry.dir }}/ubuntu
+        image: {{ .Values.param_registry_url }}/{{ .Values.param_registry_dir }}/ubuntu
         args:
         - /bin/bash
         - -c

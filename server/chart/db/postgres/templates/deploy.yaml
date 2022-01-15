@@ -21,7 +21,7 @@ spec:
         - containerPort: 5432
         env:
         - name: POSTGRES_PASSWORD
-          value: '{{ .Values.db.password }}'
+          value: '{{ .Values.param_db_password }}'
         securityContext:
           runAsUser: 0
         volumeMounts:

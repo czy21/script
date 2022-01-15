@@ -25,7 +25,7 @@ data:
       datasource:
         type: com.zaxxer.hikari.HikariDataSource
         driver-class-name: com.mysql.cj.jdbc.Driver
-        url: jdbc:mysql://{{ .Values.db.mysql.host }}:{{ .Values.db.mysql.port }}/xxl_job?user={{ .Values.db.username }}&password={{ .Values.db.password }}&useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
+        url: jdbc:mysql://{{ .Values.param_db_mysql_host }}:{{ .Values.param_db_mysql_port }}/xxl_job?user={{ .Values.param_db_username }}&password={{ .Values.param_db_password }}&useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
         hikari:
           auto-commit: true
           connection-test-query: SELECT 1

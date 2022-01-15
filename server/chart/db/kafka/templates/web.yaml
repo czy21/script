@@ -22,7 +22,7 @@ spec:
             path: system-config.properties
       containers:
         - name: '{{ .Release.Name }}-web'
-          image: {{ .Values.registry.url }}/{{ .Values.registry.dir }}/kafka-web
+          image: {{ .Values.param_registry_url }}/{{ .Values.param_registry_dir }}/kafka-web
           args:
           - /bin/bash
           - -c
@@ -48,8 +48,8 @@ data:
     # Settings prefixed with 'kafka.eagle.' will be deprecated, use 'efak.' instead
     ######################################
     efak.zk.cluster.alias=cluster1,cluster2
-    cluster1.zk.list={{ .Values.zk.connect }}
-    cluster2.zk.list={{ .Values.zk.connect }}
+    cluster1.zk.list={{ .Values.param_db_zk_connect }}
+    cluster2.zk.list={{ .Values.param_db_zk_connect }}
 
     ######################################
     # zookeeper enable acl
@@ -116,6 +116,6 @@ data:
     # kafka mysql jdbc driver address
     ######################################
     efak.driver=com.mysql.cj.jdbc.Driver
-    efak.url=jdbc:mysql://{{ .Values.db.mysql.host }}:{{ .Values.db.mysql.port }}/ke?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
-    efak.username={{ .Values.db.username }}
-    efak.password={{ .Values.db.password }}
+    efak.url=jdbc:mysql://{{ .Values.param_db_mysql_host }}:{{ .Values.param_db_mysql_port }}/ke?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
+    efak.username={{ .Values.param_db_username }}
+    efak.password={{ .Values.param_db_password }}
