@@ -65,9 +65,9 @@ def invoke(role_title: str, role_path: Path, **kwargs):
 
     for action in args.a:
         if action == "push":
-            helm_registry = env_dict["helm"]["registry"]
-            helm_username = env_dict["helm"]["username"]
-            helm_password = env_dict["helm"]["password"]
+            helm_registry = env_dict["param_helm_registry"]
+            helm_username = env_dict["param_helm_username"]
+            helm_password = env_dict["param_helm_password"]
             helm_push_cmd = share.arr_param_to_str(
                 [
                     "helm plugin list | if [ -z \"$(grep nexus-push)\" ];then helm plugin install --version master https://github.com/sonatype-nexus-community/helm-nexus-push.git;fi",
