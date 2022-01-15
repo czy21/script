@@ -42,6 +42,8 @@ def invoke(role_title: str, role_path: Path, **kwargs):
             with open(t, "w", encoding="utf-8") as t_file:
                 t_file.write(content)
 
+    def docker_compose_cmd(a):
+        return 'sudo docker-compose --file {0} {1}'.format(role_compose_file.as_posix(), a)
     if args.i:
         if role_conf_path.exists():
             share.execute_cmd(share.arr_param_to_str(
@@ -59,8 +61,6 @@ def invoke(role_title: str, role_path: Path, **kwargs):
                 ], separator=" && "
             ))
         if role_compose_file.exists():
-            def docker_compose_cmd(a): return 'sudo docker-compose --file {0} {1}'.format(role_compose_file.as_posix(), a)
-
             share.execute_cmd(share.arr_param_to_str(
                 [
                     share.role_print(role_title, "deploy", role_compose_file.as_posix()),
@@ -68,6 +68,13 @@ def invoke(role_title: str, role_path: Path, **kwargs):
                     docker_compose_cmd("up --detach --build")
                 ], separator=" && "
             ))
+    if args.d:
+        share.execute_cmd(share.arr_param_to_str(
+            [
+                share.role_print(role_title, "down", role_compose_file.as_posix()),
+                docker_compose_cmd("down")
+            ], separator=" && "
+        ))
     share.execute_cmd("echo \n")
 
     if args.b:
@@ -99,6 +106,7 @@ if __name__ == '__main__':
     env_file = Path(__file__).parent.joinpath(".env").as_posix()
     parser = argparse.ArgumentParser()
     parser.add_argument('-i', action="store_true")
+    parser.add_argument('-d', action="store_true")
     parser.add_argument('-b', action="store_true")
     parser.add_argument('-p', action="store_true")
 
