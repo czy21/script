@@ -1,0 +1,14 @@
+superset:
+  supersetNode:
+    connections:
+      redis_host: ":{{ db.redis.password }}@{{ db.redis.host }}"
+      redis_port: "{{ db.redis.port }}"
+      db_host: "{{ db.pgsql.host }}"
+      db_port: "{{ db.pgsql.port }}"
+      db_user: {{ db.pgsql.username }}
+      db_pass: {{ db.pgsql.password }}
+      db_name: superset
+  postgresql:
+    enabled: false
+  redis:
+    enabled: false
