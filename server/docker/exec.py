@@ -4,17 +4,7 @@ import sys
 import jinja2
 import share
 
-from dotenv import dotenv_values
 from pathlib import Path
-
-
-def execute(app_tuples, func, **kwargs):
-    env_dict = dotenv_values(env_file)
-    for t in app_tuples:
-        app_number = str(t[0])
-        role_path = t[1]
-        role_title = ".".join([app_number, role_path.name])
-        func(role_title=role_title, role_path=role_path, env_dict=env_dict, **kwargs)
 
 
 def invoke(role_title: str, role_path: Path, **kwargs):
@@ -28,13 +18,6 @@ def invoke(role_title: str, role_path: Path, **kwargs):
     role_init_sh = role_path.joinpath("init.sh")
     role_build_sh = role_path.joinpath("build.sh")
 
-    env_dict = {
-        **env_dict,
-        **{
-            "param_role_name": role_name,
-            "param_role_path": role_path.as_posix()
-        }
-    }
     target_app_path = Path(env_dict["param_docker_data"]).joinpath(role_name)
 
     for t in filter(lambda f: f.is_file(), role_path.rglob("*")):
@@ -122,4 +105,4 @@ if __name__ == '__main__':
     selected_option = share.select_option(int(args.t))
     if args.n is None:
         args.n = selected_option["namespace"]
-    execute(selected_option["list"], invoke, env_file=env_file, args=args)
+    share.execute(selected_option["list"], invoke, env_file=env_file, args=args)
