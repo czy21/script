@@ -5,18 +5,7 @@ import yaml
 import jinja2
 import share
 
-from dotenv import dotenv_values
 from pathlib import Path
-
-
-def execute(app_tuples, func, **kwargs):
-    yaml.add_representer(str, lambda dumper, data: dumper.represent_scalar('tag:yaml.org,2002:str', data, '|' if '\n' in data else ''))
-    env_dict = dotenv_values(kwargs["env_path"])
-    for t in app_tuples:
-        app_number = str(t[0])
-        role_path = t[1]
-        role_title = ".".join([app_number, role_path.name])
-        func(role_title=role_title, role_path=role_path, env_dict=env_dict, **kwargs)
 
 
 def get_kube_cmd(action: str, yaml_path: str):
@@ -25,12 +14,10 @@ def get_kube_cmd(action: str, yaml_path: str):
 
 def invoke(role_title: str, role_path: Path, **kwargs):
     args = kwargs["args"]
+    env_dict: dict = kwargs["env_dict"]
+
     role_name = role_path.name
     role_values_file = role_path.joinpath("values.yaml")
-
-    env_dict: dict = {
-        **kwargs["env_dict"]
-    }
 
     kube_actions = ["apply", "delete"]
     temp_all_in_one_path = role_path.joinpath("___temp/deploy.yaml")
@@ -82,7 +69,8 @@ def invoke(role_title: str, role_path: Path, **kwargs):
 
 
 if __name__ == '__main__':
-    env_path = Path(__file__).parent.joinpath(".env")
+    yaml.add_representer(str, lambda dumper, data: dumper.represent_scalar('tag:yaml.org,2002:str', data, '|' if '\n' in data else ''))
+    env_file = Path(__file__).parent.joinpath(".env")
     parser = argparse.ArgumentParser()
     parser.add_argument('-a', nargs="+", required=True)
     parser.add_argument("-t", default=2)
@@ -91,4 +79,4 @@ if __name__ == '__main__':
     selected_option = share.select_option(int(args.t))
     if args.n is None:
         args.n = selected_option["namespace"]
-    execute(selected_option["list"], invoke, env_path=env_path, args=args)
+    share.execute(selected_option["list"], invoke, env_file=env_file, args=args)

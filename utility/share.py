@@ -1,10 +1,10 @@
-#!/usr/bin/env python3
 import subprocess
 import sys
 from itertools import zip_longest
 from pathlib import Path
+from dotenv import dotenv_values
 
-flat = lambda L: sum(map(flat, L), []) if isinstance(L, list) else [L]
+flat = lambda a: sum(map(flat, a), []) if isinstance(a, list) else [a]
 
 
 def arr_param_to_str(*items, separator=" ") -> str:
@@ -76,3 +76,23 @@ def select_option(deep) -> dict:
 
 def execute_cmd(cmd):
     subprocess.Popen(cmd, shell=True).wait()
+
+
+def execute(app_tuples, func, **kwargs):
+    env_dict = dotenv_values(kwargs["env_file"])
+    for t in app_tuples:
+        app_number = str(t[0])
+        role_path = t[1]
+        role_name = role_path.name
+        role_title = ".".join([app_number, role_path.name])
+        func(role_title=role_title,
+             role_path=role_path,
+             env_dict={
+                 **env_dict,
+                 **{
+                     "param_role_name": role_name,
+                     "param_role_path": role_path.as_posix(),
+                     "param_role_title": role_title
+                 }
+             },
+             **kwargs)
