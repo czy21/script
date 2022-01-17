@@ -1,13 +1,11 @@
 @Library('ops-library@master') _
 
-def map = [:]
-map.put("param_global_env_file_id","dev.env")
-map.put("param_git_repository_url","git@gitee.com:czyhome/erp.git")
-map.put("param_git_credential_id","bruce")
+env.param_global_env_file_id="dev.env"
+env.param_git_repository_url="git@gitee.com:czyhome/erp.git"
+env.param_git_credential_id="bruce"
+env.param_project_root="code/api"
+env.param_project_name="erp"
+env.param_project_module="portal"
+env.param_code_type="java"
 
-map.put("param_project_root","code/api")
-map.put("param_project_name","erp")
-map.put("param_project_module","portal")
-map.put("param_code_type","java")
-
-Build(map)
+Build()

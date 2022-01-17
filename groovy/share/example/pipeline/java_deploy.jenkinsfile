@@ -1,15 +1,13 @@
 @Library('ops-library@master') _
 
 def map = [:]
-map.put("param_env_name","dev")
-map.put("param_global_env_file_id","dev.env")
+env.param_env_name="dev"
+env.param_global_env_file_id="dev.env"
+env.param_release_namespace="stable"
+env.param_release_name="erp-portal"
+env.param_data_claim_name="data-erp"
+env.param_release_version="dev-bruce"
+env.param_code_type="java"
+env.param_app_args="-Xms128m -Xmx256M"
 
-map.put("param_release_namespace","stable")
-map.put("param_release_name","erp-portal")
-map.put("param_data_claim_name","data-erp")
-
-map.put("param_release_version","dev-bruce")
-map.put("param_code_type","java")
-
-
-Deploy(map)
+Deploy()
