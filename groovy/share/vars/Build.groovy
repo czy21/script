@@ -27,18 +27,18 @@ def call() {
                     }
                 }
             }
-//             stage('build'){
-//                 when{
-//                     expression { param_branch != 'master' }
-//                 }
-//                 steps{
-//                     script{
-//                         def d = new org.ops.Docker()
-//                         d.prepare(map)
+            stage('build'){
+                when{
+                    expression { param_branch != 'master' }
+                }
+                steps{
+                    script{
+                        def d = new org.ops.Docker()
+                        d.prepare()
 //                         d.build()
-//                     }
-//                 }
-//             }
+                    }
+                }
+            }
         }
     }
 }
