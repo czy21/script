@@ -11,7 +11,6 @@ def invoke(role_title: str, role_path: Path, **kwargs):
     args = kwargs["args"]
     env_dict: dict = kwargs["env_dict"]
     role_name = role_path.name
-    role_env_file = role_path.joinpath(".env")
     role_conf_path = role_path.joinpath("conf")
     role_compose_file = role_path.joinpath("deploy.yml")
     role_docker_file = role_path.joinpath("Dockerfile")
@@ -80,7 +79,7 @@ def invoke(role_title: str, role_path: Path, **kwargs):
             ])
         if role_build_sh.exists():
             build_cmd.append(
-                ["source {0}".format(t) for t in [role_env_file.as_posix(), role_build_sh.as_posix()]]
+                "sudo bash {0}".format(role_build_sh.as_posix())
             )
         if role_docker_file.exists() or role_build_sh.exists():
             share.execute_cmd(share.arr_param_to_str(build_cmd, separator=" && "))
