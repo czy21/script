@@ -40,7 +40,6 @@ def call() {
             script {
                 def k = new org.ops.K8s()
                 k.prepare()
-                k.build()
                 k.apply()
             }
           }
