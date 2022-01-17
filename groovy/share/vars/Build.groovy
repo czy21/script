@@ -29,7 +29,7 @@ def call() {
             }
             stage('build'){
                 when{
-                    expression { param_branch != 'master' }
+                    expression { params.param_branch != 'master' }
                 }
                 steps{
                     script{
