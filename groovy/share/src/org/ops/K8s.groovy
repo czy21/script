@@ -1,18 +1,13 @@
 #!/usr/bin/env groovy
 package org.ops
 
-def build(){
+def apply(){
     sh 'env | grep \'^param_\' > env.conf && cat env.conf'
     sh "cat env.conf | sed \'s/^param_//g\' | awk -F"=" \'{print $1\"=\"\"\\"\"$2\"\\"\"}\' | paste -d "," -s | xargs helm template ${env.param_release_name} ${env.param_release_chart_name} --version ${env.param_release_chart_version} --namespace ${env.param_release_namespace} --repo ${env.param_helm_repo} --set  2>&1 | tee deploy.yaml"
-}
-
-
-def apply(){
     withKubeConfig([credentialsId: env.param_kube_credential, serverUrl: env.param_kube_server]) {
         sh 'kubectl delete --filename deploy.yaml --ignore-not-found=true && kubectl apply --filename deploy.yaml'
     }
 }
-
 
 def prepare(){
     configFileProvider([configFile(fileId: "${env.param_global_env_file_id}", targetLocation: 'global_env.groovy', variable: 'ENV_CONFIG')]) {

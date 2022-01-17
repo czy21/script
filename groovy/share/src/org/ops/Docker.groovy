@@ -27,6 +27,9 @@ def build(){
 
 
 def prepare(){
+    configFileProvider([configFile(fileId: "${env.param_global_env_file_id}", targetLocation: 'global_env.groovy', variable: 'ENV_CONFIG')]) {
+        load "global_env.groovy";
+    }
     env.param_release_version = params.param_branch
     env.param_project_context = [env.param_project_root,env.param_project_module].findAll{ t -> ![null, "null", ""].contains(t) }.join("/")
     env.param_image_name      = ["${env.param_registry_repo}/${env.param_registry_dir}",[env.param_project_name,env.param_project_module].findAll{ t -> ![null, "null", ""].contains(t) }.join("-")].join("/")
