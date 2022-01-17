@@ -14,7 +14,7 @@ def build(){
      case "web":
         env.NODEJS_HOME = "${tool 'node-v16.13.0'}"
         env.PATH="${NODEJS_HOME}/bin:${PATH}"
-        sh 'yarn --cwd ${param_project_context} --registry ${param_npm_registry} --cache-folder ${param_yarn_cache} install && yarn --cwd ${param_project_context} --registry ${param_npm_registry} --cache-folder ${param_yarn_cache} --ignore-engines build'
+        sh "yarn --cwd ${env.param_project_context} --registry ${env.param_npm_registry} --cache-folder ${env.param_yarn_cache} install && yarn --cwd ${env.param_project_context} --registry ${env.param_npm_registry} --cache-folder ${env.param_yarn_cache} --ignore-engines build"
         break;
      default:
         println [env.param_code_type,"not config"].join(" ");
