@@ -3,7 +3,7 @@ package org.ops
 
 def apply(){
     sh 'env | grep \'^param_\' > env.conf && cat env.conf'
-    sh 'cat env.conf | sed \'s/^param_//g\' | paste -d "," -s | xargs helm template ${param_release_name} ${param_release_chart_name} --version ${param_release_chart_version} --namespace ${param_release_namespace} --repo ${param_helm_repo} --set-string  2>&1 | tee deploy.yaml'
+    sh 'cat env.conf | sed \'s/^param_//g\' | paste -d "," -s | xargs helm template ${param_release_name} ${param_release_chart_name} --version ${param_release_chart_version} --namespace ${param_release_namespace} --repo ${param_helm_repo} --set-string \" \" 2>&1 | tee deploy.yaml'
     withKubeConfig([credentialsId: env.param_kube_credential, serverUrl: env.param_kube_server]) {
         sh 'kubectl delete --filename deploy.yaml --ignore-not-found=true && kubectl apply --filename deploy.yaml'
     }
