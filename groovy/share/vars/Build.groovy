@@ -1,6 +1,9 @@
 #!/usr/bin/env groovy
 
 def call() {
+    configFileProvider([configFile(fileId: "${env.param_global_env_file_id}", targetLocation: 'global_env.groovy', variable: 'ENV_CONFIG')]) {
+        load "global_env.groovy";
+    }
     pipeline{
         agent any
         environment {
