@@ -35,7 +35,7 @@ def call() {
                     script{
                         def d = new org.ops.Docker()
                         d.prepare()
-//                         d.build()
+                        d.build()
                     }
                 }
             }
