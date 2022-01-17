@@ -1,10 +1,10 @@
 #!/usr/bin/env groovy
 
-def call(Map map) {
+def call() {
     pipeline{
       agent {
         kubernetes {
-            cloud map.param_env_name
+            cloud env.param_env_name
             yaml '''
               apiVersion: v1
               kind: Pod
@@ -38,9 +38,8 @@ def call(Map map) {
         stage('deploy') {
           steps {
             script {
-                map.each{ k, v -> env[k]=v }
                 def k = new org.ops.K8s()
-                k.prepare(map)
+                k.prepare()
                 k.build()
                 k.apply()
             }
