@@ -8,7 +8,7 @@ function upload_exec_py() {
   ssh $host 'rm -rf $HOME/'${name_path}';'
 
   scp -rqC ${pwd_path} $host:
-  scp -rqC ${pwd_path}/../requirements.txt ${utility_dir}/share.py $host:${name_path}
+  scp -rqC ${pwd_path}/../requirements.txt ${pwd_path}/../.env ${utility_dir}/share.py $host:${name_path}
 
   ssh $host 'sudo pip3 install --requirement $HOME/'${name_path}/'requirements.txt && python3 -B $HOME/'${name_path}/'exec.py '$@';'
 
