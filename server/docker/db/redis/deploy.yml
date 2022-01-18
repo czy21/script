@@ -11,8 +11,8 @@ services:
       - "6379:6379"
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/data/
-      - {{ param_config_dir }}/redis/conf/redis.conf:/etc/redis/redis.conf
-    command: redis-server /etc/redis/redis.conf
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/redis.conf:/etc/redis/redis.conf
+    command: redis-server /etc/redis/redis.conf --appendonly yes
     restart: always
 
 networks:
