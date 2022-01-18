@@ -3,17 +3,18 @@ version: '3.9'
 services:
 
   redis:
-    image: redis:5.0.3
+    image: redis:6.2.6-alpine
     container_name: redis
     privileged: true
     user: root
     ports:
-      - 6379:6379
+      - "6379:6379"
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/data/
       - {{ param_config_dir }}/redis/conf/redis.conf:/etc/redis/redis.conf
-    command: redis-server /etc/redis/redis.conf --appendonly yes
+    command: redis-server /etc/redis/redis.conf
     restart: always
+
 networks:
   default:
     external:

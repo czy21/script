@@ -2,14 +2,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: '{{ .Release.Name }}'
-  namespace: '{{ .Release.Namespace }}'
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
 spec:
   selector:
-    app: '{{ .Release.Name }}'
+    app: {{ .Release.Name }}
   type: NodePort
   ports:
-  - name: '6379'
+  - name: 'tcp'
     port: 6379
     targetPort: 6379
     nodePort: 6379
@@ -17,29 +17,28 @@ spec:
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: '{{ .Release.Name }}'
-  namespace: '{{ .Release.Namespace }}'
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
 spec:
   selector:
     matchLabels:
-      app: '{{ .Release.Name }}'
-  serviceName: '{{ .Release.Name }}'
+      app: {{ .Release.Name }}
+  serviceName: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: '{{ .Release.Name }}'
+        app: {{ .Release.Name }}
     spec:
       volumes:
       - name: conf
         configMap:
-          name: '{{ .Release.Name }}'
+          name: {{ .Release.Name }}
       containers:
-      - name: '{{ .Release.Name }}'
-        image: redis:5.0.3
+      - name: {{ .Release.Name }}
+        image: redis:6.2.6-alpine
         command:
-        - redis-server
-        - /etc/redis/redis.conf
-        - --appendonly yes
+          - redis-server
+          - /etc/redis/redis.conf
         ports:
         - containerPort: 6379
         volumeMounts:
