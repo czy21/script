@@ -1,0 +1,17 @@
+version: '3.9'
+
+services:
+
+  redis_exporter:
+    image: oliver006/redis_exporter:alpine
+    container_name: redis_exporter
+    user: root
+    ports:
+      - "9121:9121"
+    command:
+      - --redis.addr=redis://{{ param_db_redis_password }}@{{ param_db_redis_host }}:{{ param_db_redis_port }}
+    restart: always
+networks:
+  default:
+    external:
+      name: local
