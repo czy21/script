@@ -1,6 +1,5 @@
 @Library('ops-library@master') _
 
-def map = [:]
 env.param_env_name="dev"
 env.param_global_env_file_id="dev.env"
 env.param_release_namespace="stable"
