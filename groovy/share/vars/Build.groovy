@@ -22,8 +22,10 @@ def call() {
             stage('clone'){
                 steps{
                     script {
-                        def g = new org.ops.Git()
-                        g.checkout()
+                        checkout([$class: 'GitSCM', branches: [[name: "${params.param_branch}"]],
+                                  extensions: [[$class: 'SubmoduleOption', disableSubmodules: false, parentCredentials: true, recursiveSubmodules: true, reference: '', trackingSubmodules: false]],
+                                  userRemoteConfigs: [[credentialsId: "${env.param_git_credential_id}", url: "${env.param_git_repository_url}"]]
+                        ])
                     }
                 }
             }
