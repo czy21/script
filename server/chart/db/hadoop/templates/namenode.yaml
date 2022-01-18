@@ -3,7 +3,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: hadoop-namenode
-  namespace: '{{ .Release.Namespace }}'
+  namespace: {{ .Release.Namespace }}
 spec:
   selector:
     app: hadoop-namenode
@@ -21,7 +21,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: hadoop-namenode
-  namespace: '{{ .Release.Namespace }}'
+  namespace: {{ .Release.Namespace }}
 spec:
   strategy:
     type: Recreate
@@ -87,7 +87,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: data-hadoop-namenode
-  namespace: '{{ .Release.Namespace }}'
+  namespace: {{ .Release.Namespace }}
 spec:
   accessModes:
   - ReadWriteOnce

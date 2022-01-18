@@ -2,20 +2,20 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: '{{ .Release.Name }}'
-  namespace: '{{ .Release.Namespace }}'
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
 spec:
   selector:
     matchLabels:
-      app: '{{ .Release.Name }}'
-  serviceName: '{{ .Release.Name }}'
+      app: {{ .Release.Name }}
+  serviceName: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: '{{ .Release.Name }}'
+        app: {{ .Release.Name }}
     spec:
       containers:
-      - name: '{{ .Release.Name }}'
+      - name: {{ .Release.Name }}
         image: mongo:4.4.6
         ports:
         - containerPort: 27017

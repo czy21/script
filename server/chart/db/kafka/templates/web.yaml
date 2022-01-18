@@ -3,7 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: '{{ .Release.Name }}-web'
-  namespace: '{{ .Release.Namespace }}'
+  namespace: {{ .Release.Namespace }}
 spec:
   selector:
     matchLabels:
@@ -38,7 +38,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: '{{ .Release.Name }}-web'
-  namespace: '{{ .Release.Namespace }}'
+  namespace: {{ .Release.Namespace }}
   labels:
     app: '{{ .Release.Name }}-web'
 data:
