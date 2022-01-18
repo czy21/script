@@ -3163,7 +3163,7 @@
       "30d"
     ]
   },
-  "timezone": "",
+  "timezone": "browser",
   "title": "pgsql",
   "uid": "000000039",
   "version": 1
