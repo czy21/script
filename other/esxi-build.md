@@ -1,4 +1,4 @@
-
+```shell
 Install-Module -Name VMware.PowerCLI
 Set-ExecutionPolicy RemoteSigned
 
@@ -13,6 +13,6 @@ New-EsxImageProfile -CloneProfile $esxiImageProfileName -Name $newImageProfileNa
 Add-EsxSoftwarePackage -ImageProfile $newImageProfileName -SoftwarePackage $IntelNUCVib
 Export-EsxImageProfile -ImageProfile $newImageProfileName -ExportToIso -FilePath "C:\Users\bruce\Desktop\esxi\ESXi-7.0.2-custom.ISO"
 
-
 # use script
 .\ESXi-Customizer-PS-v2.6.0.ps1 -izip .\VMware-ESXi-7.0U2-17630552-depot.zip -pkgDir C:\Users\bruce\Desktop\esxi\pkg\
+```
