@@ -21,8 +21,8 @@ def build() {
             return;
     }
     sh "docker login ${env.param_registry_repo} --username ${env.param_registry_username} --password ${env.param_registry_password}"
-    sh "docker build --tag ${env.param_image_name}:${env.param_release_version} --file ${env.param_docker_file} ${env.param_project_context} --no-cache --force-rm"
-    sh "docker push ${env.param_image_name}:${env.param_release_version}"
+    sh "docker build --tag ${env.param_release_name}:${env.param_release_version} --file ${env.param_docker_file} ${env.param_project_context} --no-cache --force-rm"
+    sh "docker push ${env.param_release_name}:${env.param_release_version}"
 }
 
 
@@ -32,7 +32,7 @@ def prepare() {
     }
     env.param_release_version = params.param_branch
     env.param_project_context = [env.param_project_root, env.param_project_module].findAll { t -> ![null, "null", ""].contains(t) }.join("/")
-    env.param_image_name = ["${env.param_registry_repo}/${env.param_registry_dir}", [env.param_project_name, env.param_project_module].findAll { t -> ![null, "null", ""].contains(t) }.join("-")].join("/")
+    env.param_release_name = ["${env.param_registry_repo}/${env.param_registry_dir}",[null, "null", ""].contains("${env.param_release_name}")? [env.param_project_name, env.param_project_module].findAll { t -> ![null, "null", ""].contains(t) }.join("-"): env.param_release_name ].join("/")
     env.param_docker_file = "${env.param_project_context}/Dockerfile"
 }
 
