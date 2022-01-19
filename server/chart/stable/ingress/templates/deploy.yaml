@@ -12,13 +12,20 @@ spec:
     - host: app-dev.cluster.com
       http:
         paths:
-          - path: /erp(/|$)(.*)
+          - path: /
             pathType: Prefix
             backend:
-              serviceName: erp-operation
+              serviceName: erp-operation-react
               servicePort: 80
-          - path: /circler(/|$)(.*)
+
+          - path: /react(/|$)(.*)
             pathType: Prefix
             backend:
-              serviceName: circler-web
+              serviceName: erp-operation-react
+              servicePort: 80
+              
+          - path: /vue(/|$)(.*)
+            pathType: Prefix
+            backend:
+              serviceName: erp-operation-vue
               servicePort: 80
