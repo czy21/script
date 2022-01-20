@@ -1,3 +1,5 @@
+## nginx.conf for app
+```yaml
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -64,3 +66,4 @@ data:
     stream {
         
     }
+```

@@ -19,7 +19,7 @@ def invoke(role_title: str, role_path: Path, **kwargs):
     role_name = role_path.name
     role_values_file = role_path.joinpath("values.yaml")
 
-    kube_actions = ["apply", "delete"]
+    kube_actions = ["apply", "delete","diff"]
     temp_all_in_one_path = role_path.joinpath("___temp/deploy.yaml")
     temp_all_in_one_path.parent.mkdir(parents=True, exist_ok=True)
     temp_all_in_one_path.touch()
