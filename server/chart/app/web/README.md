@@ -12,7 +12,7 @@ data:
     user  nginx;
     worker_processes  auto;
 
-    error_log  /var/log/nginx/error.log notice;
+    error_log  /dev/stderr;
     pid        /var/run/nginx.pid;
 
     events {
@@ -27,7 +27,7 @@ data:
                           '$status $body_bytes_sent "$http_referer" '
                           '"$http_user_agent" "$http_x_forwarded_for"';
 
-        access_log  /var/log/nginx/access.log  main;
+        access_log  /dev/stdout;
 
         sendfile        on;
         #tcp_nopush     on;
