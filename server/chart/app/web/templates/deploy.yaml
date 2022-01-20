@@ -36,9 +36,6 @@ spec:
           items:
           - key: nginx.conf
             path: nginx.conf
-      - name: log
-        persistentVolumeClaim:
-          claimName: {{ .Values.data_claim_name }}
       containers:
       - name: {{ .Release.Name }}
         image: '{{ .Values.registry_repo }}/{{ .Values.registry_dir }}/{{ .Release.Name }}:{{ .Values.release_version }}'
@@ -50,6 +47,3 @@ spec:
         - name: nginx-conf
           mountPath: /etc/nginx/nginx.conf
           subPath: nginx.conf
-        - name: log
-          mountPath: /var/log/nginx/
-          subPath: log
