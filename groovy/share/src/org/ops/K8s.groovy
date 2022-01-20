@@ -5,7 +5,7 @@ def apply() {
     sh 'env | grep \'^param_\' | sed -r \'s/=/: /\' | sed \'s/^param_//g\' > values.yaml'
     sh "helm template ${env.param_release_name} ${env.param_release_chart_name} --version ${env.param_release_chart_version} --namespace ${env.param_release_namespace} --repo ${env.param_helm_repo} --values values.yaml 2>&1 | tee deploy.yaml"
     withKubeConfig([credentialsId: env.param_kube_credential, serverUrl: env.param_kube_server]) {
-        sh "kubectl -n ${env.param_release_namespace} delete pod,service ${env.param_release_name} && kubectl apply --filename deploy.yaml"
+        sh "kubectl delete --filename deploy.yaml --ignore-not-found=true && kubectl apply --filename deploy.yaml"
     }
 }
 
