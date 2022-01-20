@@ -36,12 +36,6 @@ spec:
           items:
           - key: nginx.conf
             path: nginx.conf
-      - name: conf
-        configMap:
-          name: {{ .Release.Name }}
-          items:
-          - key: app-http.conf
-            path: app-http.conf
       - name: log
         persistentVolumeClaim:
           claimName: {{ .Values.data_claim_name }}
@@ -56,8 +50,6 @@ spec:
         - name: nginx-conf
           mountPath: /etc/nginx/nginx.conf
           subPath: nginx.conf
-        - name: conf
-          mountPath: /etc/nginx/conf.d/
         - name: log
           mountPath: /var/log/nginx/
           subPath: log
