@@ -32,7 +32,7 @@ def prepare() {
     }
     env.param_release_version = params.param_branch
     env.param_project_context = [env.param_project_root, env.param_project_module].findAll { t -> ![null, "null", ""].contains(t) }.join("/")
-    env.param_release_name = ["${env.param_registry_repo}/${env.param_registry_dir}",[null, "null", ""].contains("${env.param_release_name}")? [env.param_project_name, env.param_project_module].findAll { t -> ![null, "null", ""].contains(t) }.join("-"): env.param_release_name ].join("/")
+    env.param_release_name = ["${env.param_registry_repo}/${env.param_registry_dir}",[null, "null", ""].contains(env.param_release_name)? [env.param_project_name, env.param_project_module].findAll { t -> ![null, "null", ""].contains(t) }.join("-"): env.param_release_name ].join("/")
     env.param_docker_file = "${env.param_project_context}/Dockerfile"
 }
 
