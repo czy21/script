@@ -1,7 +1,6 @@
 FROM openjdk:11-jre-slim
 WORKDIR /home/app
-
-RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+ENV TZ=Asia/Shanghai
 ENV JAR=/home/app/api.jar
 
 COPY docker-entrypoint.sh /
