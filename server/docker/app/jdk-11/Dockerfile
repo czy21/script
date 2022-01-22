@@ -1,6 +1,6 @@
 FROM openjdk:11-jre-slim
 WORKDIR /home/app
-ENV TZ=Asia/Shanghai
+
 ENV JAR=/home/app/api.jar
 
 COPY docker-entrypoint.sh /
