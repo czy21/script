@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   pgsql:
-    image: postgres:14.0
+    image: postgres:14.0-alpine
     container_name: pgsql
     privileged: true
     user: root
@@ -14,6 +14,7 @@ services:
     restart: always
     command: -c config_file=/etc/postgresql/postgresql.conf
     environment:
+      TZ: Asia/Shanghai
       POSTGRES_PASSWORD: {{ param_db_pgsql_password }}
 networks:
   default:
