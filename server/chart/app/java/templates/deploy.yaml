@@ -47,6 +47,8 @@ spec:
           ports:
             - containerPort: 8080
           env:
+            - name: TZ
+              value: Asia/Shanghai
             - name: APP_ARGS
               value: {{ .Values.app_args }}
           volumeMounts:
