@@ -3,19 +3,20 @@ version: '3.9'
 services:
 
   jenkins:
-    image: jenkins/jenkins:lts-jdk11
+    image: jenkins/jenkins:lts-alpine-jdk11
     container_name: jenkins
     privileged: true
+    user: root
     ports:
       - "50000:50000"
-    user: root
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/var/jenkins_home/
       - {{ param_docker_data }}/{{ param_role_name }}/conf/init.gradle:/var/jenkins_home/tools/gradle/init.gradle
       - /var/run/docker.sock:/var/run/docker.sock
       - /usr/bin/docker:/usr/bin/docker
     environment:
-      JAVA_OPTS: -Xms2G -Xmx2G
+      TZ: Asia/Shanghai
+      JAVA_OPTS: -Duser.timezone=Asia/Shanghai -Xms2G -Xmx2G
     restart: always
 networks:
   default:
