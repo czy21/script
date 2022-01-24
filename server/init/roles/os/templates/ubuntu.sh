@@ -2,7 +2,7 @@
 set -e
 
 apt -y update
-apt -y install wget vim git network-manager nfs-common
+apt -y install wget vim git network-manager nfs-common make gcc
 
 # postgres repo
 sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
