@@ -1,8 +1,8 @@
-FROM jenkins/inbound-agent
+FROM jenkins/inbound-agent:alpine-jdk11
 USER root
 
-RUN apt-get update;
-RUN apt-get install -y wget vim;
+RUN apk update;
+RUN apk add wget vim;
 
 RUN wget -O - https://get.helm.sh/helm-v3.6.3-linux-amd64.tar.gz | tar -zxf - --strip-components 1 -C /usr/local/bin/ linux-amd64/helm
 RUN chmod +x /usr/local/bin/helm
