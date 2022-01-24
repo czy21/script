@@ -12,6 +12,8 @@ services:
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/data/
       - {{ param_docker_data }}/{{ param_role_name }}/conf/redis.conf:/etc/redis/redis.conf
+    environment:
+      TZ: Asia/Shanghai
     command: redis-server /etc/redis/redis.conf --appendonly yes
     restart: always
 

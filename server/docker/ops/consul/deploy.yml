@@ -3,7 +3,7 @@ version: '3.9'
 services:
 
   consul:
-    image: consul
+    image: consul:1.11.2
     container_name: consul
     privileged: true
     user: root
@@ -11,6 +11,8 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/consul/data/
       - {{ param_docker_data }}/{{ param_role_name }}/conf/:/consul/config/
     command: 'agent -server -ui -node=server-1 -bootstrap-expect=1 -client=0.0.0.0 -datacenter=nas'
+    environment:
+      TZ: Asia/Shanghai
     restart: always
 networks:
   default:

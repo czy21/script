@@ -10,6 +10,7 @@ services:
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/nexus-data/
     environment:
+      TZ: Asia/Shanghai
       INSTALL4J_ADD_VM_PARAMS: -Xms2g -Xmx2g -XX:MaxDirectMemorySize=4g
     restart: always
 

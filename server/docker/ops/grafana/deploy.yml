@@ -5,13 +5,15 @@ services:
     image: grafana/grafana
     container_name: grafana
     privileged: true
+    user: root
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/grafana.ini:/etc/grafana/grafana.ini
       - {{ param_docker_data }}/{{ param_role_name }}/conf/datasources/:/etc/grafana/provisioning/datasources/
       - {{ param_docker_data }}/{{ param_role_name }}/conf/dashboards/:/etc/grafana/provisioning/dashboards/
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/var/lib/grafana/
+    environment:
+      TZ: Asia/Shanghai
     restart: always
-    user: root
 networks:
   default:
     external:
