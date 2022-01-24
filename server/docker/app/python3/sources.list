@@ -1,8 +1,0 @@
-deb http://nexus.cluster.com/repository/apt-debian11-proxy/ bullseye main non-free contrib
-deb-src http://nexus.cluster.com/repository/apt-debian11-proxy/ bullseye main non-free contrib
-deb http://nexus.cluster.com/repository/apt-debian11-proxy-security/ bullseye-security main
-deb-src http://nexus.cluster.com/repository/apt-debian11-proxy-security/ bullseye-security main
-deb http://nexus.cluster.com/repository/apt-debian11-proxy/ bullseye-updates main non-free contrib
-deb-src http://nexus.cluster.com/repository/apt-debian11-proxy/ bullseye-updates main non-free contrib
-deb http://nexus.cluster.com/repository/apt-debian11-proxy/ bullseye-backports main non-free contrib
-deb-src http://nexus.cluster.com/repository/apt-debian11-proxy/ bullseye-backports main non-free contrib
