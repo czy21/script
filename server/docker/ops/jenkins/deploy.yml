@@ -15,8 +15,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - /usr/bin/docker:/usr/bin/docker
     environment:
-      TZ: Asia/Shanghai
-      JAVA_OPTS: -Duser.timezone=Asia/Shanghai -Xms2G -Xmx2G
+      JAVA_OPTS: -Xms2G -Xmx2G
     restart: always
 networks:
   default:
