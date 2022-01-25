@@ -4,15 +4,13 @@ services:
 
   jobmanager:
     build:
-      context: {{ param_pwd_home }}/app/flink/
-      dockerfile: {{ param_pwd_home }}/app/flink/Dockerfile
+      context: {{ param_role_path }}
+      dockerfile: {{ param_role_path }}/Dockerfile
     privileged: true
     user: root
-    ports:
-      - "8088:8081"
     command: jobmanager
     volumes:
-      - {{ param_volumes_dir }}/flink/usrlib/:/opt/flink/usrlib/
+      - {{ param_docker_data }}/{{ param_role_name }}/data/usrlib/:/opt/flink/usrlib/
     environment:
       - |
         FLINK_PROPERTIES=
@@ -21,8 +19,8 @@ services:
 
   taskmanager:
     build:
-      context: {{ param_pwd_home }}/compose/flink/
-      dockerfile: {{ param_pwd_home }}/compose/flink/Dockerfile
+      context: {{ param_role_path }}
+      dockerfile: {{ param_role_path }}/Dockerfile
     privileged: true
     user: root
     depends_on:
@@ -30,7 +28,7 @@ services:
     command: taskmanager
     scale: 1
     volumes:
-      - {{ param_volumes_dir }}/flink/usrlib/:/opt/flink/usrlib/
+      - {{ param_docker_data }}/{{ param_role_name }}/data/usrlib/:/opt/flink/usrlib/
     environment:
       - |
         FLINK_PROPERTIES=
