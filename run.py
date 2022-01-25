@@ -22,6 +22,8 @@ def exec_file():
     parser.add_argument('--log-file')
     parser.add_argument('--cmd')
     args = parser.parse_args()
+    param_iter = iter(args.param)
+    param_input_dict = dict(zip(param_iter, param_iter))
     os.environ.__setattr__("run_args", args)
     logger = log_util.Logger(__name__)
 
@@ -41,11 +43,11 @@ def exec_file():
     env_common_mod = env_pwd_mod.env_common
     default_common_mod = importlib.import_module("script.domain.default.common")
     env_output_json = path_util.pure_path_join(getattr(default_path_module, "output"), "env.json")
-    env_cfg = configparser.ConfigParser()
+
     if args.init:
-        env_common_mod.__dict__.update(dict({k: v for k, v in env_pwd_mod.__dict__.items() if k.startswith("param")}).items(), **args.__dict__)
+        env_common_mod.__dict__.update(dict({k: v for k, v in env_pwd_mod.__dict__.items() if k.startswith("param")}).items(), **param_input_dict)
         default_common_mod.__dict__.update(dict({k: v for k, v in env_common_mod.__dict__.items() if k.startswith("param")}))
-        env_cfg['param'] = default_common_param = dict({k: v for k, v in default_common_mod.__dict__.items() if k.startswith("param")})
+        default_common_param = dict({k: v for k, v in default_common_mod.__dict__.items() if k.startswith("param")})
         env_json = json.dumps(default_common_param, sort_keys=True, indent=2)
         with io.open(env_output_json, "w+", encoding="utf-8") as f:
             f.write(env_json)
