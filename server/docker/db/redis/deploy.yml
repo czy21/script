@@ -1,21 +1,47 @@
 version: '3.9'
 
+x-redis-common: &redis-common
+  image: redis:6.2.6-alpine
+  privileged: true
+  user: root
+  environment:
+    TZ: Asia/Shanghai
+  restart: always
+
 services:
 
-  redis:
-    image: redis:6.2.6-alpine
-    container_name: redis
-    privileged: true
-    user: root
+  redis1:
+    <<: *redis-common
+    container_name: redis1
     ports:
-      - "6379:6379"
+      - "7001:7001"
+      - "17001:17001"
     volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/data/:/data/
       - {{ param_docker_data }}/{{ param_role_name }}/conf/redis.conf:/etc/redis/redis.conf
-    environment:
-      TZ: Asia/Shanghai
-    command: redis-server /etc/redis/redis.conf --appendonly yes
-    restart: always
+      - {{ param_docker_data }}/{{ param_role_name }}/data/1/:/data/
+    command: redis-server /etc/redis/redis.conf --port 7001 --cluster-enabled yes --cluster-announce-ip 192.168.2.18
+
+  redis2:
+    <<: *redis-common
+    container_name: redis2
+    ports:
+      - "7002:7002"
+      - "17002:17002"
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/redis.conf:/etc/redis/redis.conf
+      - {{ param_docker_data }}/{{ param_role_name }}/data/2/:/data/
+    command: redis-server /etc/redis/redis.conf --port 7002 --cluster-enabled yes --cluster-announce-ip 192.168.2.18
+
+  redis3:
+    <<: *redis-common
+    container_name: redis3
+    ports:
+      - "7003:7003"
+      - "17003:17003"
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/redis.conf:/etc/redis/redis.conf
+      - {{ param_docker_data }}/{{ param_role_name }}/data/3/:/data/
+    command: redis-server /etc/redis/redis.conf --port 7003 --cluster-enabled yes --cluster-announce-ip 192.168.2.18
 
 networks:
   default:
