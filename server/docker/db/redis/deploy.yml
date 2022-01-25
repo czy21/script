@@ -9,39 +9,20 @@ x-redis-common: &redis-common
   restart: always
 
 services:
-
-  redis1:
+  {% for i in range(param_db_redis_cluster_replicas | int) %}
+    {% set j = i + 1%}
+    {% set p = (param_db_redis_port | int) + i %}
+  redis{{ j }}:
     <<: *redis-common
-    container_name: redis1
+    container_name: redis{{ j }}
     ports:
-      - "7001:7001"
-      - "17001:17001"
+      - "{{ p }}:{{ p }}"
+      - "1{{ p }}:1{{ p }}"
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/redis.conf:/etc/redis/redis.conf
-      - {{ param_docker_data }}/{{ param_role_name }}/data/1/:/data/
-    command: redis-server /etc/redis/redis.conf --port 7001 --cluster-enabled yes --cluster-announce-ip 192.168.2.18
-
-  redis2:
-    <<: *redis-common
-    container_name: redis2
-    ports:
-      - "7002:7002"
-      - "17002:17002"
-    volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/redis.conf:/etc/redis/redis.conf
-      - {{ param_docker_data }}/{{ param_role_name }}/data/2/:/data/
-    command: redis-server /etc/redis/redis.conf --port 7002 --cluster-enabled yes --cluster-announce-ip 192.168.2.18
-
-  redis3:
-    <<: *redis-common
-    container_name: redis3
-    ports:
-      - "7003:7003"
-      - "17003:17003"
-    volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/redis.conf:/etc/redis/redis.conf
-      - {{ param_docker_data }}/{{ param_role_name }}/data/3/:/data/
-    command: redis-server /etc/redis/redis.conf --port 7003 --cluster-enabled yes --cluster-announce-ip 192.168.2.18
+      - {{ param_docker_data }}/{{ param_role_name }}/data/{{ j }}/:/data/
+    command: redis-server /etc/redis/redis.conf --port {{ p }} --cluster-enabled yes --cluster-announce-ip {{ param_db_redis_cluster_ip }}
+  {% endfor %}
 
 networks:
   default:
