@@ -9,7 +9,9 @@ services:
     ports:
       - "9121:9121"
     command:
-      - --redis.addr=redis://{{ param_db_redis_password }}@{{ param_db_redis_host }}:{{ param_db_redis_port }}
+      - --redis.addr=redis://{{ param_db_redis_password }}@{{ param_db_redis_host }}:{{ param_db_redis_cluster_start_port }}
+    environment:
+      REDIS_EXPORTER_IS_CLUSTER: "true"
     restart: always
 networks:
   default:

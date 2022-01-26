@@ -4,9 +4,10 @@ self = {
     "header": "SELECT 'executing: {{ file_path }}' AS file;",
     "footer": "SELECT 'executed: {{ file_path }}' AS file;",
     "substitution": {
-        "TrackedColumns": "\tcreated_date  timestamp(6) DEFAULT CURRENT_TIMESTAMP,\n"
-                          "\tcreated_user  varchar(36) DEFAULT NULL,\n"
-                          "\tmodified_date timestamp(6) DEFAULT CURRENT_TIMESTAMP,\n"
-                          "\tmodified_user varchar(36) DEFAULT NULL"
+        "TrackedColumns": "\tcreate_time  timestamp(6) DEFAULT CURRENT_TIMESTAMP,\n"
+                          "\tcreate_user  varchar(36)  DEFAULT NULL,\n"
+                          "\tupdate_time  timestamp(6) DEFAULT CURRENT_TIMESTAMP,\n"
+                          "\tupdate_user  varchar(36)  DEFAULT NULL,\n"
+                          "\tdeleted bool NOT NULL DEFAULT 'n'"
     }
 }
