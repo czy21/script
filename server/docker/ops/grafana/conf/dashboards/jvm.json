@@ -35,20 +35,15 @@
   "description": "Dashboard for Micrometer instrumented applications (Java, Spring Boot, Micronaut)",
   "editable": true,
   "fiscalYearStartMonth": 0,
-  "gnetId": 13657,
+  "gnetId": 4701,
   "graphTooltip": 1,
-  "id": 9,
-  "iteration": 1640326410717,
+  "id": 1,
+  "iteration": 1643202036113,
   "links": [],
   "liveNow": false,
   "panels": [
     {
       "collapsed": false,
-      "datasource": "nas",
-      "fieldConfig": {
-        "defaults": {},
-        "overrides": []
-      },
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -57,13 +52,14 @@
       },
       "id": 125,
       "panels": [],
-      "repeat": null,
       "title": "Quick Facts",
       "type": "row"
     },
     {
-      "cacheTimeout": null,
-      "datasource": "nas",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P047DE0F543C7E359"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -105,7 +101,6 @@
         "y": 1
       },
       "id": 63,
-      "interval": null,
       "links": [],
       "maxDataPoints": 100,
       "options": {
@@ -117,18 +112,16 @@
           "calcs": [
             "lastNotNull"
           ],
-          "fields": "/^process_uptime_seconds{instance=\"10.244.11.137:8083\", job=\"spring metrics\", spring_name=\"prepaidcard-openapi\", spring_namespace=\"yufuqia-dev\"}$/",
+          "fields": "",
           "values": false
         },
-        "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.2.5",
+      "pluginVersion": "8.3.3",
       "targets": [
         {
-          "expr": "process_uptime_seconds{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\"}",
+          "expr": "process_uptime_seconds{application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
-          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "",
           "metric": "",
@@ -140,8 +133,10 @@
       "type": "stat"
     },
     {
-      "cacheTimeout": null,
-      "datasource": "nas",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P047DE0F543C7E359"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -182,7 +177,6 @@
         "y": 1
       },
       "id": 92,
-      "interval": null,
       "links": [],
       "maxDataPoints": 100,
       "options": {
@@ -194,18 +188,17 @@
           "calcs": [
             "lastNotNull"
           ],
-          "fields": "/^{instance=\"10.244.11.137:8083\", job=\"spring metrics\", spring_name=\"prepaidcard-openapi\", spring_namespace=\"yufuqia-dev\"}$/",
+          "fields": "",
           "values": false
         },
         "text": {},
-        "textMode": "auto"
+        "textMode": "value"
       },
-      "pluginVersion": "8.2.5",
+      "pluginVersion": "8.3.3",
       "targets": [
         {
-          "expr": "process_start_time_seconds{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\"}*1000",
+          "expr": "process_start_time_seconds{application=\"$application\", instance=\"$instance\"}*1000",
           "format": "time_series",
-          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "",
           "metric": "",
@@ -217,35 +210,27 @@
       "type": "stat"
     },
     {
-      "cacheTimeout": null,
-      "datasource": "nas",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P047DE0F543C7E359"
+      },
       "fieldConfig": {
         "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
           "decimals": 2,
           "mappings": [
             {
               "options": {
-                "from": null,
+                "match": "null",
                 "result": {
                   "text": "N/A"
-                },
-                "to": null
+                }
               },
-              "type": "range"
-            },
-            {
-              "options": {
-                "from": -1e+32,
-                "result": {
-                  "text": "N/A"
-                },
-                "to": 0
-              },
-              "type": "range"
+              "type": "special"
             }
           ],
-          "max": 100,
-          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -273,11 +258,13 @@
         "x": 12,
         "y": 1
       },
-      "id": 75,
-      "interval": null,
+      "id": 65,
       "links": [],
       "maxDataPoints": 100,
       "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
           "calcs": [
@@ -286,30 +273,32 @@
           "fields": "",
           "values": false
         },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true,
-        "text": {}
+        "textMode": "auto"
       },
-      "pluginVersion": "8.2.5",
+      "pluginVersion": "8.3.3",
       "targets": [
         {
-          "expr": "sum(jvm_memory_used_bytes{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\", area=\"nonheap\"})*100/sum(jvm_memory_max_bytes{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\", area=\"nonheap\"})",
+          "expr": "sum(jvm_memory_used_bytes{application=\"$application\", instance=\"$instance\", area=\"heap\"})*100/sum(jvm_memory_max_bytes{application=\"$application\",instance=\"$instance\", area=\"heap\"})",
           "format": "time_series",
-          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "",
           "refId": "A",
           "step": 14400
         }
       ],
-      "title": "Non-Heap used",
-      "type": "gauge"
+      "title": "Heap used",
+      "type": "stat"
     },
     {
-      "cacheTimeout": null,
-      "datasource": "nas",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P047DE0F543C7E359"
+      },
       "fieldConfig": {
         "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
           "decimals": 2,
           "mappings": [
             {
@@ -320,10 +309,18 @@
                 }
               },
               "type": "special"
+            },
+            {
+              "options": {
+                "from": -1e+32,
+                "result": {
+                  "text": "N/A"
+                },
+                "to": 0
+              },
+              "type": "range"
             }
           ],
-          "max": 100,
-          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -351,11 +348,13 @@
         "x": 18,
         "y": 1
       },
-      "id": 65,
-      "interval": null,
+      "id": 75,
       "links": [],
       "maxDataPoints": 100,
       "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
           "calcs": [
@@ -364,32 +363,24 @@
           "fields": "",
           "values": false
         },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true,
-        "text": {}
+        "textMode": "auto"
       },
-      "pluginVersion": "8.2.5",
+      "pluginVersion": "8.3.3",
       "targets": [
         {
-          "expr": "sum(jvm_memory_used_bytes{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\", area=\"heap\"})*100/sum(jvm_memory_max_bytes{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\", area=\"heap\"})",
+          "expr": "sum(jvm_memory_used_bytes{application=\"$application\", instance=\"$instance\", area=\"nonheap\"})*100/sum(jvm_memory_max_bytes{application=\"$application\",instance=\"$instance\", area=\"nonheap\"})",
           "format": "time_series",
-          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "",
           "refId": "A",
           "step": 14400
         }
       ],
-      "title": "Heap used",
-      "type": "gauge"
+      "title": "Non-Heap used",
+      "type": "stat"
     },
     {
       "collapsed": false,
-      "datasource": "nas",
-      "fieldConfig": {
-        "defaults": {},
-        "overrides": []
-      },
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -398,7 +389,6 @@
       },
       "id": 126,
       "panels": [],
-      "repeat": null,
       "title": "I/O Overview",
       "type": "row"
     },
@@ -407,7 +397,10 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "nas",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P047DE0F543C7E359"
+      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -435,7 +428,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.2.5",
+      "pluginVersion": "8.3.3",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -445,18 +438,15 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(rate(http_server_requests_seconds_count{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\"}[1m]))",
+          "expr": "sum(rate(http_server_requests_seconds_count{application=\"$application\", instance=\"$instance\"}[1m]))",
           "format": "time_series",
-          "interval": "",
           "intervalFactor": 1,
           "legendFormat": "HTTP",
           "refId": "A"
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "Rate",
       "tooltip": {
         "shared": true,
@@ -465,34 +455,25 @@
       },
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
       "yaxes": [
         {
-          "decimals": null,
           "format": "ops",
-          "label": null,
           "logBase": 1,
-          "max": null,
           "min": "0",
           "show": true
         },
         {
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
@@ -503,7 +484,10 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "nas",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P047DE0F543C7E359"
+      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -531,7 +515,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.2.5",
+      "pluginVersion": "8.3.3",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -541,18 +525,15 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(rate(http_server_requests_seconds_count{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\", status=~\"5..\"}[1m]))",
+          "expr": "sum(rate(http_server_requests_seconds_count{application=\"$application\", instance=\"$instance\", status=~\"5..\"}[1m]))",
           "format": "time_series",
-          "interval": "",
           "intervalFactor": 1,
           "legendFormat": "HTTP - 5xx",
           "refId": "A"
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "Errors",
       "tooltip": {
         "shared": true,
@@ -561,34 +542,25 @@
       },
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
       "yaxes": [
         {
-          "decimals": null,
           "format": "ops",
-          "label": null,
           "logBase": 1,
-          "max": null,
           "min": "0",
           "show": true
         },
         {
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
@@ -596,7 +568,10 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "nas",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P047DE0F543C7E359"
+      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -624,7 +599,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.2.5",
+      "pluginVersion": "8.3.3",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -634,28 +609,24 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(rate(http_server_requests_seconds_sum{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\", status!~\"5..\"}[1m]))/sum(rate(http_server_requests_seconds_count{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\", status!~\"5..\"}[1m]))",
+          "expr": "sum(rate(http_server_requests_seconds_sum{application=\"$application\", instance=\"$instance\", status!~\"5..\"}[1m]))/sum(rate(http_server_requests_seconds_count{application=\"$application\", instance=\"$instance\", status!~\"5..\"}[1m]))",
           "format": "time_series",
           "hide": false,
-          "interval": "",
           "intervalFactor": 1,
           "legendFormat": "HTTP - AVG",
           "refId": "A"
         },
         {
-          "expr": "max(http_server_requests_seconds_max{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\", status!~\"5..\"})",
+          "expr": "max(http_server_requests_seconds_max{application=\"$application\", instance=\"$instance\", status!~\"5..\"})",
           "format": "time_series",
           "hide": false,
-          "interval": "",
           "intervalFactor": 1,
           "legendFormat": "HTTP - MAX",
           "refId": "B"
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "Duration",
       "tooltip": {
         "shared": true,
@@ -664,33 +635,25 @@
       },
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
       "yaxes": [
         {
           "format": "s",
-          "label": null,
           "logBase": 1,
-          "max": null,
           "min": "0",
           "show": true
         },
         {
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
@@ -698,7 +661,10 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "nas",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P047DE0F543C7E359"
+      },
       "description": "",
       "fill": 1,
       "fillGradient": 0,
@@ -728,7 +694,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.2.5",
+      "pluginVersion": "8.3.3",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -738,64 +704,56 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "tomcat_threads_busy_threads{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\"}",
+          "expr": "tomcat_threads_busy_threads{application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
           "hide": false,
-          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "TOMCAT - BSY",
           "refId": "A"
         },
         {
-          "expr": "tomcat_threads_current_threads{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\"}",
+          "expr": "tomcat_threads_current_threads{application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
           "hide": false,
-          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "TOMCAT - CUR",
           "refId": "B"
         },
         {
-          "expr": "tomcat_threads_config_max_threads{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\"}",
+          "expr": "tomcat_threads_config_max_threads{application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
           "hide": false,
-          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "TOMCAT - MAX",
           "refId": "C"
         },
         {
-          "expr": "jetty_threads_busy{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\"}",
+          "expr": "jetty_threads_busy{application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
           "hide": false,
-          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "JETTY - BSY",
           "refId": "D"
         },
         {
-          "expr": "jetty_threads_current{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\"}",
+          "expr": "jetty_threads_current{application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
           "hide": false,
-          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "JETTY - CUR",
           "refId": "E"
         },
         {
-          "expr": "jetty_threads_config_max{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\"}",
+          "expr": "jetty_threads_config_max{application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
           "hide": false,
-          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "JETTY - MAX",
           "refId": "F"
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "Utilisation",
       "tooltip": {
         "shared": true,
@@ -804,42 +762,29 @@
       },
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
       "yaxes": [
         {
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
           "min": "0",
           "show": true
         },
         {
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
       "collapsed": false,
-      "datasource": "nas",
-      "fieldConfig": {
-        "defaults": {},
-        "overrides": []
-      },
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -848,7 +793,6 @@
       },
       "id": 127,
       "panels": [],
-      "repeat": null,
       "title": "JVM Memory",
       "type": "row"
     },
@@ -857,18 +801,17 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "nas",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P047DE0F543C7E359"
+      },
       "editable": true,
       "error": false,
       "fill": 1,
       "fillGradient": 0,
       "grid": {
         "leftLogBase": 1,
-        "leftMax": null,
-        "leftMin": null,
-        "rightLogBase": 1,
-        "rightMax": null,
-        "rightMin": null
+        "rightLogBase": 1
       },
       "gridPos": {
         "h": 7,
@@ -895,7 +838,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.2.5",
+      "pluginVersion": "8.3.3",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -905,9 +848,8 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(jvm_memory_used_bytes{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\", area=\"heap\"})",
+          "expr": "sum(jvm_memory_used_bytes{application=\"$application\", instance=\"$instance\", area=\"heap\"})",
           "format": "time_series",
-          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "used",
           "metric": "",
@@ -915,18 +857,16 @@
           "step": 2400
         },
         {
-          "expr": "sum(jvm_memory_committed_bytes{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\", area=\"heap\"})",
+          "expr": "sum(jvm_memory_committed_bytes{application=\"$application\", instance=\"$instance\", area=\"heap\"})",
           "format": "time_series",
-          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "committed",
           "refId": "B",
           "step": 2400
         },
         {
-          "expr": "sum(jvm_memory_max_bytes{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\", area=\"heap\"})",
+          "expr": "sum(jvm_memory_max_bytes{application=\"$application\", instance=\"$instance\", area=\"heap\"})",
           "format": "time_series",
-          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "max",
           "refId": "C",
@@ -934,9 +874,7 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "JVM Heap",
       "tooltip": {
         "msResolution": false,
@@ -947,9 +885,7 @@
       "type": "graph",
       "x-axis": true,
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
@@ -961,24 +897,18 @@
       "yaxes": [
         {
           "format": "bytes",
-          "label": null,
           "logBase": 1,
-          "max": null,
           "min": 0,
           "show": true
         },
         {
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
@@ -986,18 +916,17 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "nas",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P047DE0F543C7E359"
+      },
       "editable": true,
       "error": false,
       "fill": 1,
       "fillGradient": 0,
       "grid": {
         "leftLogBase": 1,
-        "leftMax": null,
-        "leftMin": null,
-        "rightLogBase": 1,
-        "rightMax": null,
-        "rightMin": null
+        "rightLogBase": 1
       },
       "gridPos": {
         "h": 7,
@@ -1024,7 +953,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.2.5",
+      "pluginVersion": "8.3.3",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -1034,7 +963,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(jvm_memory_used_bytes{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\", area=\"nonheap\"})",
+          "expr": "sum(jvm_memory_used_bytes{application=\"$application\", instance=\"$instance\", area=\"nonheap\"})",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -1044,18 +973,16 @@
           "step": 2400
         },
         {
-          "expr": "sum(jvm_memory_committed_bytes{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\", area=\"nonheap\"})",
+          "expr": "sum(jvm_memory_committed_bytes{application=\"$application\", instance=\"$instance\", area=\"nonheap\"})",
           "format": "time_series",
-          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "committed",
           "refId": "B",
           "step": 2400
         },
         {
-          "expr": "sum(jvm_memory_max_bytes{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\", area=\"nonheap\"})",
+          "expr": "sum(jvm_memory_max_bytes{application=\"$application\", instance=\"$instance\", area=\"nonheap\"})",
           "format": "time_series",
-          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "max",
           "refId": "C",
@@ -1063,9 +990,7 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "JVM Non-Heap",
       "tooltip": {
         "msResolution": false,
@@ -1076,9 +1001,7 @@
       "type": "graph",
       "x-axis": true,
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
@@ -1090,24 +1013,18 @@
       "yaxes": [
         {
           "format": "bytes",
-          "label": null,
           "logBase": 1,
-          "max": null,
           "min": 0,
           "show": true
         },
         {
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
@@ -1115,18 +1032,17 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "nas",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P047DE0F543C7E359"
+      },
       "editable": true,
       "error": false,
       "fill": 1,
       "fillGradient": 0,
       "grid": {
         "leftLogBase": 1,
-        "leftMax": null,
-        "leftMin": null,
-        "rightLogBase": 1,
-        "rightMax": null,
-        "rightMin": null
+        "rightLogBase": 1
       },
       "gridPos": {
         "h": 7,
@@ -1154,7 +1070,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.2.5",
+      "pluginVersion": "8.3.3",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -1164,9 +1080,8 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(jvm_memory_used_bytes{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\"})",
+          "expr": "sum(jvm_memory_used_bytes{application=\"$application\", instance=\"$instance\"})",
           "format": "time_series",
-          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "used",
           "metric": "",
@@ -1174,18 +1089,16 @@
           "step": 2400
         },
         {
-          "expr": "sum(jvm_memory_committed_bytes{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\"})",
+          "expr": "sum(jvm_memory_committed_bytes{application=\"$application\", instance=\"$instance\"})",
           "format": "time_series",
-          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "committed",
           "refId": "B",
           "step": 2400
         },
         {
-          "expr": "sum(jvm_memory_max_bytes{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\"})",
+          "expr": "sum(jvm_memory_max_bytes{application=\"$application\", instance=\"$instance\"})",
           "format": "time_series",
-          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "max",
           "refId": "C",
@@ -1193,9 +1106,7 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "JVM Total",
       "tooltip": {
         "msResolution": false,
@@ -1206,9 +1117,7 @@
       "type": "graph",
       "x-axis": true,
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
@@ -1222,22 +1131,17 @@
           "format": "bytes",
           "label": "",
           "logBase": 1,
-          "max": null,
           "min": 0,
           "show": true
         },
         {
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
@@ -1245,18 +1149,17 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "nas",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P047DE0F543C7E359"
+      },
       "editable": true,
       "error": false,
       "fill": 1,
       "fillGradient": 0,
       "grid": {
         "leftLogBase": 1,
-        "leftMax": null,
-        "leftMin": null,
-        "rightLogBase": 1,
-        "rightMax": null,
-        "rightMin": null
+        "rightLogBase": 1
       },
       "gridPos": {
         "h": 7,
@@ -1283,7 +1186,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.2.5",
+      "pluginVersion": "8.3.3",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -1293,10 +1196,9 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "process_memory_vss_bytes{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\"}",
+          "expr": "process_memory_vss_bytes{application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
           "hide": true,
-          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "vss",
           "metric": "",
@@ -1304,34 +1206,29 @@
           "step": 2400
         },
         {
-          "expr": "process_memory_rss_bytes{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\"}",
+          "expr": "process_memory_rss_bytes{application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
-          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "rss",
           "refId": "B"
         },
         {
-          "expr": "process_memory_swap_bytes{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\"}",
+          "expr": "process_memory_swap_bytes{application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
-          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "swap",
           "refId": "C"
         },
         {
-          "expr": "process_memory_rss_bytes{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\"} + process_memory_swap_bytes{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\"}",
+          "expr": "process_memory_rss_bytes{application=\"$application\", instance=\"$instance\"} + process_memory_swap_bytes{application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
-          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "total",
           "refId": "D"
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "JVM Process Memory",
       "tooltip": {
         "msResolution": false,
@@ -1342,9 +1239,7 @@
       "type": "graph",
       "x-axis": true,
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
@@ -1358,31 +1253,21 @@
           "format": "bytes",
           "label": "",
           "logBase": 1,
-          "max": null,
           "min": "0",
           "show": true
         },
         {
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
       "collapsed": false,
-      "datasource": "nas",
-      "fieldConfig": {
-        "defaults": {},
-        "overrides": []
-      },
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -1391,7 +1276,6 @@
       },
       "id": 128,
       "panels": [],
-      "repeat": null,
       "title": "JVM Misc",
       "type": "row"
     },
@@ -1400,18 +1284,17 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "nas",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P047DE0F543C7E359"
+      },
       "editable": true,
       "error": false,
       "fill": 1,
       "fillGradient": 0,
       "grid": {
         "leftLogBase": 1,
-        "leftMax": null,
-        "leftMin": null,
-        "rightLogBase": 1,
-        "rightMax": null,
-        "rightMin": null
+        "rightLogBase": 1
       },
       "gridPos": {
         "h": 7,
@@ -1438,7 +1321,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.2.5",
+      "pluginVersion": "8.3.3",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -1448,10 +1331,9 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "system_cpu_usage{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\"}",
+          "expr": "system_cpu_usage{application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
           "hide": false,
-          "interval": "",
           "intervalFactor": 1,
           "legendFormat": "system",
           "metric": "",
@@ -1459,28 +1341,24 @@
           "step": 2400
         },
         {
-          "expr": "process_cpu_usage{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\"}",
+          "expr": "process_cpu_usage{application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
           "hide": false,
-          "interval": "",
           "intervalFactor": 1,
           "legendFormat": "process",
           "refId": "B"
         },
         {
-          "expr": "avg_over_time(process_cpu_usage{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\"}[1h])",
+          "expr": "avg_over_time(process_cpu_usage{application=\"$application\", instance=\"$instance\"}[1h])",
           "format": "time_series",
           "hide": false,
-          "interval": "",
           "intervalFactor": 1,
           "legendFormat": "process-1h",
           "refId": "C"
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "CPU Usage",
       "tooltip": {
         "msResolution": false,
@@ -1491,9 +1369,7 @@
       "type": "graph",
       "x-axis": true,
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
@@ -1514,16 +1390,12 @@
         },
         {
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
@@ -1531,18 +1403,17 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "nas",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P047DE0F543C7E359"
+      },
       "editable": true,
       "error": false,
       "fill": 1,
       "fillGradient": 0,
       "grid": {
         "leftLogBase": 1,
-        "leftMax": null,
-        "leftMin": null,
-        "rightLogBase": 1,
-        "rightMax": null,
-        "rightMin": null
+        "rightLogBase": 1
       },
       "gridPos": {
         "h": 7,
@@ -1569,7 +1440,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.2.5",
+      "pluginVersion": "8.3.3",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -1579,9 +1450,8 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "system_load_average_1m{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\"}",
+          "expr": "system_load_average_1m{application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
-          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "system-1m",
           "metric": "",
@@ -1589,18 +1459,15 @@
           "step": 2400
         },
         {
-          "expr": "system_cpu_count{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\"}",
+          "expr": "system_cpu_count{application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
-          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "cpus",
           "refId": "B"
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "Load",
       "tooltip": {
         "msResolution": false,
@@ -1611,9 +1478,7 @@
       "type": "graph",
       "x-axis": true,
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
@@ -1628,22 +1493,17 @@
           "format": "short",
           "label": "",
           "logBase": 1,
-          "max": null,
           "min": 0,
           "show": true
         },
         {
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
@@ -1651,18 +1511,17 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "nas",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P047DE0F543C7E359"
+      },
       "editable": true,
       "error": false,
       "fill": 1,
       "fillGradient": 0,
       "grid": {
         "leftLogBase": 1,
-        "leftMax": null,
-        "leftMin": null,
-        "rightLogBase": 1,
-        "rightMax": null,
-        "rightMin": null
+        "rightLogBase": 1
       },
       "gridPos": {
         "h": 7,
@@ -1689,7 +1548,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.2.5",
+      "pluginVersion": "8.3.3",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -1699,9 +1558,8 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "jvm_threads_live_threads{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\"}",
+          "expr": "jvm_threads_live_threads{application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
-          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "live",
           "metric": "",
@@ -1709,9 +1567,8 @@
           "step": 2400
         },
         {
-          "expr": "jvm_threads_daemon_threads{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\"}",
+          "expr": "jvm_threads_daemon_threads{application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
-          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "daemon",
           "metric": "",
@@ -1719,16 +1576,15 @@
           "step": 2400
         },
         {
-          "expr": "jvm_threads_peak_threads{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\"}",
+          "expr": "jvm_threads_peak_threads{application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
-          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "peak",
           "refId": "C",
           "step": 2400
         },
         {
-          "expr": "process_threads{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\"}",
+          "expr": "process_threads{application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -1738,9 +1594,7 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "Threads",
       "tooltip": {
         "msResolution": false,
@@ -1751,9 +1605,7 @@
       "type": "graph",
       "x-axis": true,
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
@@ -1766,24 +1618,18 @@
         {
           "decimals": 0,
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
           "min": 0,
           "show": true
         },
         {
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
@@ -1798,7 +1644,10 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "nas",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P047DE0F543C7E359"
+      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -1828,7 +1677,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.2.5",
+      "pluginVersion": "8.3.3",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -1838,18 +1687,15 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "jvm_threads_states_threads{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\"}",
+          "expr": "jvm_threads_states_threads{application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
-          "interval": "",
           "intervalFactor": 2,
-          "legendFormat": "{{state}}",
+          "legendFormat": "",
           "refId": "A"
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "Thread States",
       "tooltip": {
         "shared": true,
@@ -1858,33 +1704,24 @@
       },
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
       "yaxes": [
         {
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         },
         {
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
@@ -1898,18 +1735,17 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "nas",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P047DE0F543C7E359"
+      },
       "editable": true,
       "error": false,
       "fill": 1,
       "fillGradient": 0,
       "grid": {
         "leftLogBase": 1,
-        "leftMax": null,
-        "leftMin": null,
-        "rightLogBase": 1,
-        "rightMax": null,
-        "rightMin": null
+        "rightLogBase": 1
       },
       "gridPos": {
         "h": 7,
@@ -1941,7 +1777,7 @@
         "alertThreshold": true
       },
       "percentage": true,
-      "pluginVersion": "8.2.5",
+      "pluginVersion": "8.3.3",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -1960,20 +1796,18 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "increase(logback_events_total{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\"}[1m])",
+          "expr": "increase(logback_events_total{application=\"$application\", instance=\"$instance\"}[1m])",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
-          "legendFormat": "{{level}}",
+          "legendFormat": "",
           "metric": "",
           "refId": "A",
           "step": 1200
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "Log Events",
       "tooltip": {
         "msResolution": false,
@@ -1984,9 +1818,7 @@
       "type": "graph",
       "x-axis": true,
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
@@ -1999,24 +1831,18 @@
         {
           "decimals": 0,
           "format": "opm",
-          "label": null,
           "logBase": 1,
-          "max": null,
           "min": "0",
           "show": true
         },
         {
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
@@ -2024,18 +1850,17 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "nas",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P047DE0F543C7E359"
+      },
       "editable": true,
       "error": false,
       "fill": 1,
       "fillGradient": 0,
       "grid": {
         "leftLogBase": 1,
-        "leftMax": null,
-        "leftMin": null,
-        "rightLogBase": 1,
-        "rightMax": null,
-        "rightMin": null
+        "rightLogBase": 1
       },
       "gridPos": {
         "h": 7,
@@ -2062,7 +1887,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.2.5",
+      "pluginVersion": "8.3.3",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -2072,10 +1897,9 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "process_files_open_files{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\"}",
+          "expr": "process_files_open_files{application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
           "hide": false,
-          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "open",
           "metric": "",
@@ -2083,10 +1907,9 @@
           "step": 2400
         },
         {
-          "expr": "process_files_max_files{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\"}",
+          "expr": "process_files_max_files{application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
           "hide": false,
-          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "max",
           "metric": "",
@@ -2095,9 +1918,7 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "File Descriptors",
       "tooltip": {
         "msResolution": false,
@@ -2108,9 +1929,7 @@
       "type": "graph",
       "x-axis": true,
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
@@ -2123,33 +1942,22 @@
         {
           "decimals": 0,
           "format": "short",
-          "label": null,
           "logBase": 10,
-          "max": null,
           "min": 0,
           "show": true
         },
         {
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
       "collapsed": false,
-      "datasource": "nas",
-      "fieldConfig": {
-        "defaults": {},
-        "overrides": []
-      },
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -2167,18 +1975,17 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "nas",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P047DE0F543C7E359"
+      },
       "editable": true,
       "error": false,
       "fill": 1,
       "fillGradient": 0,
       "grid": {
         "leftLogBase": 1,
-        "leftMax": null,
-        "leftMin": null,
-        "rightLogBase": 1,
-        "rightMax": null,
-        "rightMin": null
+        "rightLogBase": 1
       },
       "gridPos": {
         "h": 7,
@@ -2208,7 +2015,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.2.5",
+      "pluginVersion": "8.3.3",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -2219,7 +2026,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "jvm_memory_used_bytes{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\", id=~\"$jvm_memory_pool_heap\"}",
+          "expr": "jvm_memory_used_bytes{application=\"$application\", instance=\"$instance\", id=~\"$jvm_memory_pool_heap\"}",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -2230,7 +2037,7 @@
           "step": 1800
         },
         {
-          "expr": "jvm_memory_committed_bytes{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\", id=~\"$jvm_memory_pool_heap\"}",
+          "expr": "jvm_memory_committed_bytes{application=\"$application\", instance=\"$instance\", id=~\"$jvm_memory_pool_heap\"}",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -2241,7 +2048,7 @@
           "step": 1800
         },
         {
-          "expr": "jvm_memory_max_bytes{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\", id=~\"$jvm_memory_pool_heap\"}",
+          "expr": "jvm_memory_max_bytes{application=\"$application\", instance=\"$instance\", id=~\"$jvm_memory_pool_heap\"}",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -2253,9 +2060,7 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "$jvm_memory_pool_heap",
       "tooltip": {
         "msResolution": false,
@@ -2266,9 +2071,7 @@
       "type": "graph",
       "x-axis": true,
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
@@ -2280,33 +2083,22 @@
       "yaxes": [
         {
           "format": "bytes",
-          "label": null,
           "logBase": 1,
-          "max": null,
           "min": 0,
           "show": true
         },
         {
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
       "collapsed": false,
-      "datasource": "nas",
-      "fieldConfig": {
-        "defaults": {},
-        "overrides": []
-      },
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -2315,7 +2107,6 @@
       },
       "id": 130,
       "panels": [],
-      "repeat": null,
       "title": "JVM Memory Pools (Non-Heap)",
       "type": "row"
     },
@@ -2324,18 +2115,17 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "nas",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P047DE0F543C7E359"
+      },
       "editable": true,
       "error": false,
       "fill": 1,
       "fillGradient": 0,
       "grid": {
         "leftLogBase": 1,
-        "leftMax": null,
-        "leftMin": null,
-        "rightLogBase": 1,
-        "rightMax": null,
-        "rightMin": null
+        "rightLogBase": 1
       },
       "gridPos": {
         "h": 7,
@@ -2365,7 +2155,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.2.5",
+      "pluginVersion": "8.3.3",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -2376,7 +2166,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "jvm_memory_used_bytes{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\", id=~\"$jvm_memory_pool_nonheap\"}",
+          "expr": "jvm_memory_used_bytes{application=\"$application\", instance=\"$instance\", id=~\"$jvm_memory_pool_nonheap\"}",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -2387,7 +2177,7 @@
           "step": 1800
         },
         {
-          "expr": "jvm_memory_committed_bytes{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\", id=~\"$jvm_memory_pool_nonheap\"}",
+          "expr": "jvm_memory_committed_bytes{application=\"$application\", instance=\"$instance\", id=~\"$jvm_memory_pool_nonheap\"}",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -2410,9 +2200,7 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "$jvm_memory_pool_nonheap",
       "tooltip": {
         "msResolution": false,
@@ -2423,9 +2211,7 @@
       "type": "graph",
       "x-axis": true,
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
@@ -2437,33 +2223,22 @@
       "yaxes": [
         {
           "format": "bytes",
-          "label": null,
           "logBase": 1,
-          "max": null,
           "min": 0,
           "show": true
         },
         {
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
       "collapsed": false,
-      "datasource": "nas",
-      "fieldConfig": {
-        "defaults": {},
-        "overrides": []
-      },
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -2472,7 +2247,6 @@
       },
       "id": 131,
       "panels": [],
-      "repeat": null,
       "title": "Garbage Collection",
       "type": "row"
     },
@@ -2481,7 +2255,10 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "nas",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P047DE0F543C7E359"
+      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -2509,7 +2286,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.2.5",
+      "pluginVersion": "8.3.3",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -2519,19 +2296,16 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(jvm_gc_pause_seconds_count{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\"}[1m])",
+          "expr": "rate(jvm_gc_pause_seconds_count{application=\"$application\", instance=\"$instance\"}[1m])",
           "format": "time_series",
           "hide": false,
-          "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "{{action}} ({{cause}})",
+          "legendFormat": " ()",
           "refId": "A"
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "Collections",
       "tooltip": {
         "shared": true,
@@ -2540,18 +2314,14 @@
       },
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
       "yaxes": [
         {
           "format": "ops",
-          "label": null,
           "logBase": 1,
-          "max": null,
           "min": "0",
           "show": true
         },
@@ -2559,14 +2329,11 @@
           "format": "short",
           "label": "",
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
@@ -2574,7 +2341,10 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "nas",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P047DE0F543C7E359"
+      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -2602,7 +2372,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.2.5",
+      "pluginVersion": "8.3.3",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -2612,30 +2382,26 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(jvm_gc_pause_seconds_sum{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\"}[1m])/rate(jvm_gc_pause_seconds_count{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\"}[1m])",
+          "expr": "rate(jvm_gc_pause_seconds_sum{application=\"$application\", instance=\"$instance\"}[1m])/rate(jvm_gc_pause_seconds_count{application=\"$application\", instance=\"$instance\"}[1m])",
           "format": "time_series",
           "hide": false,
           "instant": false,
-          "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "avg {{action}} ({{cause}})",
+          "legendFormat": "avg  ()",
           "refId": "A"
         },
         {
-          "expr": "jvm_gc_pause_seconds_max{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\"}",
+          "expr": "jvm_gc_pause_seconds_max{application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
           "hide": false,
           "instant": false,
-          "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "max {{action}} ({{cause}})",
+          "legendFormat": "max  ()",
           "refId": "B"
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "Pause Durations",
       "tooltip": {
         "shared": true,
@@ -2644,18 +2410,14 @@
       },
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
       "yaxes": [
         {
           "format": "s",
-          "label": null,
           "logBase": 1,
-          "max": null,
           "min": "0",
           "show": true
         },
@@ -2663,14 +2425,11 @@
           "format": "short",
           "label": "",
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
@@ -2678,7 +2437,10 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "nas",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P047DE0F543C7E359"
+      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -2706,7 +2468,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.2.5",
+      "pluginVersion": "8.3.3",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -2716,7 +2478,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(jvm_gc_memory_allocated_bytes_total{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\"}[1m])",
+          "expr": "rate(jvm_gc_memory_allocated_bytes_total{application=\"$application\", instance=\"$instance\"}[1m])",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -2724,7 +2486,7 @@
           "refId": "A"
         },
         {
-          "expr": "rate(jvm_gc_memory_promoted_bytes_total{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\"}[1m])",
+          "expr": "rate(jvm_gc_memory_promoted_bytes_total{application=\"$application\", instance=\"$instance\"}[1m])",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -2733,9 +2495,7 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "Allocated/Promoted",
       "tooltip": {
         "shared": true,
@@ -2744,42 +2504,29 @@
       },
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
       "yaxes": [
         {
           "format": "Bps",
-          "label": null,
           "logBase": 1,
-          "max": null,
           "min": "0",
           "show": true
         },
         {
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
       "collapsed": false,
-      "datasource": "nas",
-      "fieldConfig": {
-        "defaults": {},
-        "overrides": []
-      },
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -2788,7 +2535,6 @@
       },
       "id": 132,
       "panels": [],
-      "repeat": null,
       "title": "Classloading",
       "type": "row"
     },
@@ -2797,18 +2543,17 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "nas",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P047DE0F543C7E359"
+      },
       "editable": true,
       "error": false,
       "fill": 1,
       "fillGradient": 0,
       "grid": {
         "leftLogBase": 1,
-        "leftMax": null,
-        "leftMin": null,
-        "rightLogBase": 1,
-        "rightMax": null,
-        "rightMin": null
+        "rightLogBase": 1
       },
       "gridPos": {
         "h": 7,
@@ -2835,7 +2580,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.2.5",
+      "pluginVersion": "8.3.3",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -2845,9 +2590,8 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "jvm_classes_loaded_classes{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\"}",
+          "expr": "jvm_classes_loaded_classes{application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
-          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "loaded",
           "metric": "",
@@ -2856,9 +2600,7 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "Classes loaded",
       "tooltip": {
         "msResolution": false,
@@ -2869,9 +2611,7 @@
       "type": "graph",
       "x-axis": true,
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
@@ -2883,24 +2623,18 @@
       "yaxes": [
         {
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
           "min": 0,
           "show": true
         },
         {
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
@@ -2908,18 +2642,17 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "nas",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P047DE0F543C7E359"
+      },
       "editable": true,
       "error": false,
       "fill": 1,
       "fillGradient": 0,
       "grid": {
         "leftLogBase": 1,
-        "leftMax": null,
-        "leftMin": null,
-        "rightLogBase": 1,
-        "rightMax": null,
-        "rightMin": null
+        "rightLogBase": 1
       },
       "gridPos": {
         "h": 7,
@@ -2946,7 +2679,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.2.5",
+      "pluginVersion": "8.3.3",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -2956,7 +2689,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "delta(jvm_classes_loaded_classes{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\"}[1m])",
+          "expr": "delta(jvm_classes_loaded_classes{application=\"$application\",instance=\"$instance\"}[1m])",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -2968,9 +2701,7 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "Class delta",
       "tooltip": {
         "msResolution": false,
@@ -2981,9 +2712,7 @@
       "type": "graph",
       "x-axis": true,
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
@@ -2994,35 +2723,23 @@
       ],
       "yaxes": [
         {
-          "decimals": null,
           "format": "short",
           "label": "",
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         },
         {
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
       "collapsed": false,
-      "datasource": "nas",
-      "fieldConfig": {
-        "defaults": {},
-        "overrides": []
-      },
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -3031,7 +2748,6 @@
       },
       "id": 133,
       "panels": [],
-      "repeat": null,
       "title": "Buffer Pools",
       "type": "row"
     },
@@ -3040,18 +2756,17 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "nas",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P047DE0F543C7E359"
+      },
       "editable": true,
       "error": false,
       "fill": 1,
       "fillGradient": 0,
       "grid": {
         "leftLogBase": 1,
-        "leftMax": null,
-        "leftMin": null,
-        "rightLogBase": 1,
-        "rightMax": null,
-        "rightMin": null
+        "rightLogBase": 1
       },
       "gridPos": {
         "h": 7,
@@ -3078,7 +2793,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.2.5",
+      "pluginVersion": "8.3.3",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -3088,9 +2803,8 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "jvm_buffer_memory_used_bytes{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\", id=\"direct\"}",
+          "expr": "jvm_buffer_memory_used_bytes{application=\"$application\", instance=\"$instance\", id=\"direct\"}",
           "format": "time_series",
-          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "used",
           "metric": "",
@@ -3098,9 +2812,8 @@
           "step": 2400
         },
         {
-          "expr": "jvm_buffer_total_capacity_bytes{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\", id=\"direct\"}",
+          "expr": "jvm_buffer_total_capacity_bytes{application=\"$application\", instance=\"$instance\", id=\"direct\"}",
           "format": "time_series",
-          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "capacity",
           "metric": "",
@@ -3109,9 +2822,7 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "Direct Buffers",
       "tooltip": {
         "msResolution": false,
@@ -3122,9 +2833,7 @@
       "type": "graph",
       "x-axis": true,
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
@@ -3136,24 +2845,18 @@
       "yaxes": [
         {
           "format": "bytes",
-          "label": null,
           "logBase": 1,
-          "max": null,
           "min": 0,
           "show": true
         },
         {
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
@@ -3161,18 +2864,17 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "nas",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P047DE0F543C7E359"
+      },
       "editable": true,
       "error": false,
       "fill": 1,
       "fillGradient": 0,
       "grid": {
         "leftLogBase": 1,
-        "leftMax": null,
-        "leftMin": null,
-        "rightLogBase": 1,
-        "rightMax": null,
-        "rightMin": null
+        "rightLogBase": 1
       },
       "gridPos": {
         "h": 7,
@@ -3199,7 +2901,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.2.5",
+      "pluginVersion": "8.3.3",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -3209,9 +2911,8 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "jvm_buffer_count_buffers{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\", id=\"direct\"}",
+          "expr": "jvm_buffer_count_buffers{application=\"$application\", instance=\"$instance\", id=\"direct\"}",
           "format": "time_series",
-          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "count",
           "metric": "",
@@ -3220,9 +2921,7 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "Direct Buffers",
       "tooltip": {
         "msResolution": false,
@@ -3233,9 +2932,7 @@
       "type": "graph",
       "x-axis": true,
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
@@ -3248,24 +2945,18 @@
         {
           "decimals": 0,
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
           "min": 0,
           "show": true
         },
         {
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
@@ -3273,18 +2964,17 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "nas",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P047DE0F543C7E359"
+      },
       "editable": true,
       "error": false,
       "fill": 1,
       "fillGradient": 0,
       "grid": {
         "leftLogBase": 1,
-        "leftMax": null,
-        "leftMin": null,
-        "rightLogBase": 1,
-        "rightMax": null,
-        "rightMin": null
+        "rightLogBase": 1
       },
       "gridPos": {
         "h": 7,
@@ -3311,7 +3001,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.2.5",
+      "pluginVersion": "8.3.3",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -3321,9 +3011,8 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "jvm_buffer_memory_used_bytes{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\", id=\"mapped\"}",
+          "expr": "jvm_buffer_memory_used_bytes{application=\"$application\", instance=\"$instance\", id=\"mapped\"}",
           "format": "time_series",
-          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "used",
           "metric": "",
@@ -3331,9 +3020,8 @@
           "step": 2400
         },
         {
-          "expr": "jvm_buffer_total_capacity_bytes{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\", id=\"mapped\"}",
+          "expr": "jvm_buffer_total_capacity_bytes{application=\"$application\", instance=\"$instance\", id=\"mapped\"}",
           "format": "time_series",
-          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "capacity",
           "metric": "",
@@ -3342,9 +3030,7 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "Mapped Buffers",
       "tooltip": {
         "msResolution": false,
@@ -3355,9 +3041,7 @@
       "type": "graph",
       "x-axis": true,
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
@@ -3369,24 +3053,18 @@
       "yaxes": [
         {
           "format": "bytes",
-          "label": null,
           "logBase": 1,
-          "max": null,
           "min": 0,
           "show": true
         },
         {
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
@@ -3394,18 +3072,17 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "nas",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P047DE0F543C7E359"
+      },
       "editable": true,
       "error": false,
       "fill": 1,
       "fillGradient": 0,
       "grid": {
         "leftLogBase": 1,
-        "leftMax": null,
-        "leftMin": null,
-        "rightLogBase": 1,
-        "rightMax": null,
-        "rightMin": null
+        "rightLogBase": 1
       },
       "gridPos": {
         "h": 7,
@@ -3432,7 +3109,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.2.5",
+      "pluginVersion": "8.3.3",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -3442,10 +3119,8 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "jvm_buffer_count_buffers{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\", id=\"mapped\"}",
+          "expr": "jvm_buffer_count_buffers{application=\"$application\", instance=\"$instance\", id=\"mapped\"}",
           "format": "time_series",
-          "hide": false,
-          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "count",
           "metric": "",
@@ -3454,9 +3129,7 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "Mapped Buffers",
       "tooltip": {
         "msResolution": false,
@@ -3467,9 +3140,7 @@
       "type": "graph",
       "x-axis": true,
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
@@ -3482,53 +3153,42 @@
         {
           "decimals": 0,
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
           "min": 0,
           "show": true
         },
         {
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     }
   ],
-  "refresh": "5m",
-  "schemaVersion": 32,
+  "refresh": "30s",
+  "schemaVersion": 34,
   "style": "dark",
   "tags": [],
   "templating": {
     "list": [
       {
-        "allValue": null,
-        "current": {
-          "selected": false,
-          "text": "stable",
-          "value": "stable"
+        "datasource": {
+          "type": "prometheus",
+          "uid": "P047DE0F543C7E359"
         },
-        "datasource": "nas",
-        "definition": "label_values(spring_namespace)",
-        "description": null,
-        "error": null,
+        "definition": "",
         "hide": 0,
         "includeAll": false,
-        "label": "Namespace",
+        "label": "Application",
         "multi": false,
-        "name": "namespace",
+        "name": "application",
         "options": [],
         "query": {
           "query": "label_values(spring_namespace)",
-          "refId": "nas-namespace-Variable-Query"
+          "refId": "nas-application-Variable-Query"
         },
         "refresh": 2,
         "regex": "",
@@ -3540,27 +3200,20 @@
         "useTags": false
       },
       {
-        "allFormat": "glob",
-        "allValue": null,
-        "current": {
-          "selected": false,
-          "text": "erp-file-resolve",
-          "value": "erp-file-resolve"
+        "datasource": {
+          "type": "prometheus",
+          "uid": "P047DE0F543C7E359"
         },
-        "datasource": "nas",
-        "definition": "label_values(jvm_memory_used_bytes{spring_namespace=\"$namespace\"}, spring_name)",
-        "description": null,
-        "error": null,
+        "definition": "",
         "hide": 0,
         "includeAll": false,
-        "label": "Service",
+        "label": "Application",
         "multi": false,
-        "multiFormat": "glob",
-        "name": "service",
+        "name": "application",
         "options": [],
         "query": {
-          "query": "label_values(jvm_memory_used_bytes{spring_namespace=\"$namespace\"}, spring_name)",
-          "refId": "nas-service-Variable-Query"
+          "query": "label_values(application)",
+          "refId": "nas-application-Variable-Query"
         },
         "refresh": 2,
         "regex": "",
@@ -3573,16 +3226,11 @@
       },
       {
         "allFormat": "glob",
-        "allValue": null,
-        "current": {
-          "selected": false,
-          "text": "10.2.11.187:8080",
-          "value": "10.2.11.187:8080"
+        "datasource": {
+          "type": "prometheus",
+          "uid": "P047DE0F543C7E359"
         },
-        "datasource": "nas",
-        "definition": "label_values(jvm_memory_used_bytes{spring_namespace=\"$namespace\",spring_name=\"$service\"}, instance)",
-        "description": null,
-        "error": null,
+        "definition": "",
         "hide": 0,
         "includeAll": false,
         "label": "Instance",
@@ -3591,7 +3239,7 @@
         "name": "instance",
         "options": [],
         "query": {
-          "query": "label_values(jvm_memory_used_bytes{spring_namespace=\"$namespace\",spring_name=\"$service\"}, instance)",
+          "query": "label_values(jvm_memory_used_bytes{application=\"$application\"}, instance)",
           "refId": "nas-instance-Variable-Query"
         },
         "refresh": 2,
@@ -3605,16 +3253,11 @@
       },
       {
         "allFormat": "glob",
-        "allValue": null,
-        "current": {
-          "selected": false,
-          "text": "All",
-          "value": "$__all"
+        "datasource": {
+          "type": "prometheus",
+          "uid": "P047DE0F543C7E359"
         },
-        "datasource": "nas",
-        "definition": "label_values(jvm_memory_used_bytes{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\", area=\"heap\"},id)",
-        "description": null,
-        "error": null,
+        "definition": "",
         "hide": 0,
         "includeAll": true,
         "label": "JVM Memory Pools Heap",
@@ -3623,7 +3266,7 @@
         "name": "jvm_memory_pool_heap",
         "options": [],
         "query": {
-          "query": "label_values(jvm_memory_used_bytes{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\", area=\"heap\"},id)",
+          "query": "label_values(jvm_memory_used_bytes{application=\"$application\", instance=\"$instance\", area=\"heap\"},id)",
           "refId": "nas-jvm_memory_pool_heap-Variable-Query"
         },
         "refresh": 1,
@@ -3637,16 +3280,11 @@
       },
       {
         "allFormat": "glob",
-        "allValue": null,
-        "current": {
-          "selected": false,
-          "text": "All",
-          "value": "$__all"
+        "datasource": {
+          "type": "prometheus",
+          "uid": "P047DE0F543C7E359"
         },
-        "datasource": "nas",
-        "definition": "label_values(jvm_memory_used_bytes{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\", area=\"nonheap\"},id)",
-        "description": null,
-        "error": null,
+        "definition": "",
         "hide": 0,
         "includeAll": true,
         "label": "JVM Memory Pools Non-Heap",
@@ -3655,7 +3293,7 @@
         "name": "jvm_memory_pool_nonheap",
         "options": [],
         "query": {
-          "query": "label_values(jvm_memory_used_bytes{spring_namespace=\"$namespace\",spring_name=\"$service\", instance=\"$instance\", area=\"nonheap\"},id)",
+          "query": "label_values(jvm_memory_used_bytes{application=\"$application\", instance=\"$instance\", area=\"nonheap\"},id)",
           "refId": "nas-jvm_memory_pool_nonheap-Variable-Query"
         },
         "refresh": 1,
@@ -3670,7 +3308,7 @@
     ]
   },
   "time": {
-    "from": "now-15m",
+    "from": "now-30m",
     "to": "now"
   },
   "timepicker": {
@@ -3701,6 +3339,7 @@
   },
   "timezone": "browser",
   "title": "jvm",
-  "uid": "JQstJXbMz",
-  "version": 1
+  "uid": "jvm",
+  "version": 1,
+  "weekStart": ""
 }
