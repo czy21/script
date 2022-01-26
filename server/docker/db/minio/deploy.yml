@@ -2,7 +2,8 @@ version: '3.9'
 
 x-minio-common: &minio-common
   image: quay.io/minio/minio
-  command: server --console-address ":9001" http://minio{1...2}/data{1...2}
+  privileged: true
+  user: root
   expose:
     - "9000"
     - "9001"
@@ -11,24 +12,22 @@ x-minio-common: &minio-common
     MINIO_ROOT_USER: {{ param_db_minio_username }}
     MINIO_ROOT_PASSWORD: {{ param_db_minio_password }}
     MINIO_PROMETHEUS_AUTH_TYPE: public
+  command: server --console-address ":9001" http://minio{1...{{ param_db_minio_cluster_replicas }}}/data{1...{{ param_db_minio_cluster_drives }}}
+  restart: always
 
 services:
-
-  minio1:
+  {% for i in range(param_db_minio_cluster_replicas | int) %}
+    {% set i=i+1 %}
+  minio{{ i }}:
     <<: *minio-common
-    container_name: minio1
+    container_name: minio{{ i }}
     volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/data/empty:/data/
-      - {{ param_docker_data }}/{{ param_role_name }}/data/1-1:/data1
-      - {{ param_docker_data }}/{{ param_role_name }}/data/1-2:/data2
-
-  minio2:
-    <<: *minio-common
-    container_name: minio2
-    volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/data/empty:/data/
-      - {{ param_docker_data }}/{{ param_role_name }}/data/2-1:/data1
-      - {{ param_docker_data }}/{{ param_role_name }}/data/2-2:/data2
+      - {{ param_docker_data }}/{{ param_role_name }}/data/default:/data/
+      {% for j in range(param_db_minio_cluster_drives | int) %}
+        {% set j=j+1 %}
+      - {{ param_docker_data }}/{{ param_role_name }}/data/{{ i }}-{{ j }}:/data{{ j }}
+      {% endfor %}
+  {% endfor %}
 
 networks:
   default:
