@@ -9,9 +9,19 @@ x-redis-common: &redis-common
   restart: always
 
 services:
+  redis:
+    <<: *redis-common
+    container_name: redis
+    ports:
+      - "{{ param_db_redis_port }}:6379"
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/redis.conf:/etc/redis/redis.conf
+      - {{ param_docker_data }}/{{ param_role_name }}/data/single/:/data/
+    command: redis-server /etc/redis/redis.conf
+
   {% for i in range(param_db_redis_cluster_replicas | int) %}
-    {% set j = i + 1%}
-    {% set p = (param_db_redis_port | int) + i %}
+    {% set j = i + 1 %}
+    {% set p = (param_db_redis_cluster_start_port | int) + i %}
   redis{{ j }}:
     <<: *redis-common
     container_name: redis{{ j }}
