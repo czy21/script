@@ -116,4 +116,4 @@ data:
           target_label: spring_namespace
         - source_labels: [__meta_kubernetes_service_name]
           action: replace
-          target_label: spring_name
+          target_label: application
