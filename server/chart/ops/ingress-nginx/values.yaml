@@ -1,0 +1,13 @@
+ingress-nginx:
+  controller:
+    service:
+      type: NodePort
+      nodePorts:
+        http: 80
+        https: 443
+    metrics:
+      enabled: true
+      service:
+        annotations:
+          prometheus.io/port: "10254"
+          prometheus.io/scrape: "true"
