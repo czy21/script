@@ -13,7 +13,6 @@ data:
       scrape_timeout: 15s
 
     scrape_configs:
-
       - job_name: 'k8s-node'
         kubernetes_sd_configs:
           - role: node
@@ -30,44 +29,6 @@ data:
             regex: (.*)
             replacement: $1
             target_label: instance
-
-      - job_name: "k8s-cadvisor"
-        scheme: https
-        tls_config:
-          ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-        bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
-        kubernetes_sd_configs:
-          - role: node
-        relabel_configs:
-          - action: labelmap
-            regex: __meta_kubernetes_node_label_(.+)
-          - target_label: __address__
-            replacement: kubernetes.default.svc:443
-          - source_labels: [__meta_kubernetes_node_name]
-            regex: (.+)
-            target_label: __metrics_path__
-            replacement: /api/v1/nodes/${1}/proxy/metrics/cadvisor
-
-        metric_relabel_configs:
-          - source_labels: [instance]
-            separator: ;
-            regex: (.+)
-            target_label: node
-            replacement: $1
-            action: replace
-
-          - source_labels: [pod_name]
-            separator: ;
-            regex: (.+)
-            target_label: pod
-            replacement: $1
-            action: replace
-          - source_labels: [container_name]
-            separator: ;
-            regex: (.+)
-            target_label: container
-            replacement: $1
-            action: replace
 
       - job_name: k8s-state
         kubernetes_sd_configs:
@@ -89,8 +50,7 @@ data:
             action: replace
             target_label: k8s_name
             
-      
-      - job_name: ingress-nginx-endpoints
+      - job_name: ingress
         kubernetes_sd_configs:
           - role: pod
             namespaces:
@@ -100,21 +60,13 @@ data:
           - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
             action: keep
             regex: true
-          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scheme]
-            action: replace
-            target_label: __scheme__
-            regex: (https?)
-          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
-            action: replace
-            target_label: __metrics_path__
-            regex: (.+)
-          - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+          - source_labels: [__meta_kubernetes_pod_ip, __meta_kubernetes_pod_annotation_prometheus_io_port]
             action: replace
             target_label: __address__
-            regex: ([^:]+)(?::\d+)?;(\d+)
+            regex: (.+);(.+)
             replacement: $1:$2
 
-      - job_name: spring-state
+      - job_name: spring
         kubernetes_sd_configs:
           - role: endpoints
             namespaces:
@@ -122,7 +74,7 @@ data:
                 - stable
         metrics_path: actuator/prometheus
         relabel_configs:
-        - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_spring]
+        - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape]
           action: keep
           regex: true
         - source_labels: [__meta_kubernetes_pod_ip, __meta_kubernetes_service_annotation_prometheus_io_port]
