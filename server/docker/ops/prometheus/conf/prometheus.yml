@@ -20,10 +20,6 @@ rule_files:
 # Here it's Prometheus itself.
 scrape_configs:
 
-  - job_name: prom
-    static_configs:
-      - targets: [ 'prom-nas.cluster.com' ]
-
   - job_name: federate
     honor_labels: true
     metrics_path: '/federate'
@@ -39,6 +35,9 @@ scrape_configs:
       - targets: ['prom-dev.cluster.com']
         labels:
           origin_prometheus: dev
+      - targets: ['prom-{{ param_cluster_env }}.cluster.com']
+        labels:
+          origin_prometheus: {{ param_cluster_env }}
 
   - job_name: node
     static_configs:

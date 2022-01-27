@@ -3175,7 +3175,7 @@
         "name": "namespace",
         "options": [],
         "query": {
-          "query": "label_values(jvm_memory_used_bytes{job=\"spring-state\"}, namespace)",
+          "query": "label_values(jvm_memory_used_bytes{job=\"spring\"}, namespace)",
           "refId": "nas-namespace-Variable-Query"
         },
         "refresh": 2,
