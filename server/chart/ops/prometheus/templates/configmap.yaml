@@ -87,7 +87,7 @@ data:
             target_label: k8s_namespace
           - source_labels: [__meta_kubernetes_service_name]
             action: replace
-            target_label: k8s_sname
+            target_label: k8s_name
             
       
       - job_name: ingress-nginx-endpoints
