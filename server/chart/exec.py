@@ -72,6 +72,7 @@ if __name__ == '__main__':
     yaml.add_representer(str, lambda dumper, data: dumper.represent_scalar('tag:yaml.org,2002:str', data, '|' if '\n' in data else ''))
     env_file = Path(__file__).parent.joinpath(".env")
     parser = argparse.ArgumentParser()
+    parser.add_argument('-p', nargs="+", default=[])
     parser.add_argument('-a', nargs="+", required=True)
     parser.add_argument("-t", default=2)
     parser.add_argument('-n')
