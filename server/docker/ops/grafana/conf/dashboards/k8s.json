@@ -74,7 +74,7 @@
       },
       "id": 54,
       "panels": [],
-      "title": "节点资源总览：所选节点:【$Node】",
+      "title": "节点资源总览：所选节点:【$node】",
       "type": "row"
     },
     {
@@ -132,7 +132,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum(container_memory_working_set_bytes{origin_prometheus=~\"$origin_prometheus\",container!=\"\",node=~\"^$Node$\"}) / sum(kube_node_status_allocatable{origin_prometheus=~\"$origin_prometheus\",resource=\"memory\", unit=\"byte\", node=~\"^$Node$\"})",
+          "expr": "sum(container_memory_working_set_bytes{origin_prometheus=~\"$originPrometheus\",container!=\"\",node=~\"^$node$\"}) / sum(kube_node_status_allocatable{origin_prometheus=~\"$originPrometheus\",resource=\"memory\", unit=\"byte\", node=~\"^$node$\"})",
           "hide": false,
           "instant": true,
           "interval": "",
@@ -141,7 +141,7 @@
         },
         {
           "exemplar": true,
-          "expr": "sum(kube_pod_container_resource_requests{origin_prometheus=~\"$origin_prometheus\",resource=\"memory\", unit=\"byte\",node=~\"^$Node$\"}) / sum(kube_node_status_allocatable{origin_prometheus=~\"$origin_prometheus\",resource=\"memory\", unit=\"byte\", node=~\"^$Node$\"})",
+          "expr": "sum(kube_pod_container_resource_requests{origin_prometheus=~\"$originPrometheus\",resource=\"memory\", unit=\"byte\",node=~\"^$node$\"}) / sum(kube_node_status_allocatable{origin_prometheus=~\"$originPrometheus\",resource=\"memory\", unit=\"byte\", node=~\"^$node$\"})",
           "hide": false,
           "instant": true,
           "interval": "",
@@ -150,7 +150,7 @@
         },
         {
           "exemplar": true,
-          "expr": "sum(kube_pod_container_resource_limits{origin_prometheus=~\"$origin_prometheus\",resource=\"memory\", unit=\"byte\",node=~\"^$Node$\"}) / sum(kube_node_status_allocatable{origin_prometheus=~\"$origin_prometheus\",resource=\"memory\", unit=\"byte\", node=~\"^$Node$\"})",
+          "expr": "sum(kube_pod_container_resource_limits{origin_prometheus=~\"$originPrometheus\",resource=\"memory\", unit=\"byte\",node=~\"^$node$\"}) / sum(kube_node_status_allocatable{origin_prometheus=~\"$originPrometheus\",resource=\"memory\", unit=\"byte\", node=~\"^$node$\"})",
           "hide": false,
           "instant": true,
           "interval": "10s",
@@ -218,7 +218,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum (irate(container_cpu_usage_seconds_total{origin_prometheus=~\"$origin_prometheus\",container!=\"\",node=~\"^$Node$\"}[2m])) / sum(kube_node_status_allocatable{origin_prometheus=~\"$origin_prometheus\",resource=\"cpu\", unit=\"core\", node=~\"^$Node$\"})",
+          "expr": "sum (irate(container_cpu_usage_seconds_total{origin_prometheus=~\"$originPrometheus\",container!=\"\",node=~\"^$node$\"}[2m])) / sum(kube_node_status_allocatable{origin_prometheus=~\"$originPrometheus\",resource=\"cpu\", unit=\"core\", node=~\"^$node$\"})",
           "hide": false,
           "instant": true,
           "interval": "",
@@ -227,7 +227,7 @@
         },
         {
           "exemplar": true,
-          "expr": "sum(kube_pod_container_resource_requests{origin_prometheus=~\"$origin_prometheus\",resource=\"cpu\", unit=\"core\",node=~\"^$Node$\"}) / sum(kube_node_status_allocatable{origin_prometheus=~\"$origin_prometheus\",resource=\"cpu\", unit=\"core\", node=~\"^$Node$\"})",
+          "expr": "sum(kube_pod_container_resource_requests{origin_prometheus=~\"$originPrometheus\",resource=\"cpu\", unit=\"core\",node=~\"^$node$\"}) / sum(kube_node_status_allocatable{origin_prometheus=~\"$originPrometheus\",resource=\"cpu\", unit=\"core\", node=~\"^$node$\"})",
           "instant": true,
           "interval": "",
           "legendFormat": "CPU请求率",
@@ -235,7 +235,7 @@
         },
         {
           "exemplar": true,
-          "expr": "sum(kube_pod_container_resource_limits{origin_prometheus=~\"$origin_prometheus\",resource=\"cpu\", unit=\"core\",node=~\"^$Node$\"}) / sum(kube_node_status_allocatable{origin_prometheus=~\"$origin_prometheus\",resource=\"cpu\", unit=\"core\", node=~\"^$Node$\"})",
+          "expr": "sum(kube_pod_container_resource_limits{origin_prometheus=~\"$originPrometheus\",resource=\"cpu\", unit=\"core\",node=~\"^$node$\"}) / sum(kube_node_status_allocatable{origin_prometheus=~\"$originPrometheus\",resource=\"cpu\", unit=\"core\", node=~\"^$node$\"})",
           "instant": true,
           "interval": "",
           "legendFormat": "CPU限制率",
@@ -297,14 +297,14 @@
       "pluginVersion": "8.2.5",
       "targets": [
         {
-          "expr": "count(kube_node_info{origin_prometheus=~\"$origin_prometheus\"})",
+          "expr": "count(kube_node_info{origin_prometheus=~\"$originPrometheus\"})",
           "instant": true,
           "interval": "",
           "legendFormat": "节点数",
           "refId": "A"
         },
         {
-          "expr": "count(kube_pod_info{origin_prometheus=~\"$origin_prometheus\",created_by_kind!~\"<none>|Job\",node=~\"^$Node$\"})",
+          "expr": "count(kube_pod_info{origin_prometheus=~\"$originPrometheus\",created_by_kind!~\"<none>|Job\",node=~\"^$node$\"})",
           "hide": false,
           "instant": true,
           "interval": "",
@@ -313,7 +313,7 @@
         },
         {
           "exemplar": true,
-          "expr": "sum(kube_node_status_allocatable{origin_prometheus=~\"$origin_prometheus\",resource=\"pods\", unit=\"integer\",node=~\"^$Node$\"})",
+          "expr": "sum(kube_node_status_allocatable{origin_prometheus=~\"$originPrometheus\",resource=\"pods\", unit=\"integer\",node=~\"^$node$\"})",
           "hide": false,
           "instant": true,
           "interval": "",
@@ -445,7 +445,7 @@
       "pluginVersion": "8.2.5",
       "targets": [
         {
-          "expr": "count(kube_pod_info{origin_prometheus=~\"$origin_prometheus\",node=~\"^$Node$\"}) by (namespace)",
+          "expr": "count(kube_pod_info{origin_prometheus=~\"$originPrometheus\",node=~\"^$node$\"}) by (namespace)",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -453,7 +453,7 @@
           "refId": "A"
         },
         {
-          "expr": "count(kube_service_info{origin_prometheus=~\"$origin_prometheus\"}) by(namespace)",
+          "expr": "count(kube_service_info{origin_prometheus=~\"$originPrometheus\"}) by(namespace)",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -462,7 +462,7 @@
           "refId": "C"
         },
         {
-          "expr": "count(count(kube_pod_container_info{origin_prometheus=~\"$origin_prometheus\"}) by(container,namespace))by(namespace)",
+          "expr": "count(count(kube_pod_container_info{origin_prometheus=~\"$originPrometheus\"}) by(container,namespace))by(namespace)",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -471,7 +471,7 @@
           "refId": "D"
         },
         {
-          "expr": "count(kube_configmap_info{origin_prometheus=~\"$origin_prometheus\"}) by(namespace)",
+          "expr": "count(kube_configmap_info{origin_prometheus=~\"$originPrometheus\"}) by(namespace)",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -480,7 +480,7 @@
           "refId": "B"
         },
         {
-          "expr": "count(kube_secret_info{origin_prometheus=~\"$origin_prometheus\"}) by(namespace)",
+          "expr": "count(kube_secret_info{origin_prometheus=~\"$originPrometheus\"}) by(namespace)",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -594,7 +594,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum (rate(container_network_receive_bytes_total{origin_prometheus=~\"$origin_prometheus\",node=~\"^$Node$\",namespace=~\"$NameSpace\"}[2m]))*8",
+          "expr": "sum (rate(container_network_receive_bytes_total{origin_prometheus=~\"$originPrometheus\",node=~\"^$node$\",namespace=~\"$namespace\"}[2m]))*8",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -605,7 +605,7 @@
         },
         {
           "exemplar": true,
-          "expr": "sum (rate(container_network_transmit_bytes_total{origin_prometheus=~\"$origin_prometheus\",node=~\"^$Node$\",namespace=~\"$NameSpace\"}[2m]))*8",
+          "expr": "sum (rate(container_network_transmit_bytes_total{origin_prometheus=~\"$originPrometheus\",node=~\"^$node$\",namespace=~\"$namespace\"}[2m]))*8",
           "instant": false,
           "interval": "",
           "intervalFactor": 1,
@@ -619,7 +619,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "$NameSpace：网络总览（关联节点与命名空间）",
+      "title": "$namespace：网络总览（关联节点与命名空间）",
       "tooltip": {
         "msResolution": false,
         "shared": true,
@@ -712,7 +712,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum(kube_node_status_allocatable{origin_prometheus=~\"$origin_prometheus\",resource=\"memory\", unit=\"byte\", node=~\"^$Node$\"})",
+          "expr": "sum(kube_node_status_allocatable{origin_prometheus=~\"$originPrometheus\",resource=\"memory\", unit=\"byte\", node=~\"^$node$\"})",
           "instant": true,
           "interval": "",
           "legendFormat": "总内存",
@@ -720,7 +720,7 @@
         },
         {
           "exemplar": true,
-          "expr": "sum (container_memory_working_set_bytes{origin_prometheus=~\"$origin_prometheus\",container!=\"\",node=~\"^$Node$\"})",
+          "expr": "sum (container_memory_working_set_bytes{origin_prometheus=~\"$originPrometheus\",container!=\"\",node=~\"^$node$\"})",
           "instant": true,
           "interval": "",
           "legendFormat": "使用量",
@@ -728,7 +728,7 @@
         },
         {
           "exemplar": true,
-          "expr": "sum(kube_pod_container_resource_requests{origin_prometheus=~\"$origin_prometheus\",resource=\"memory\", unit=\"byte\",node=~\"^$Node$\"})",
+          "expr": "sum(kube_pod_container_resource_requests{origin_prometheus=~\"$originPrometheus\",resource=\"memory\", unit=\"byte\",node=~\"^$node$\"})",
           "instant": true,
           "interval": "",
           "legendFormat": "请求量",
@@ -736,7 +736,7 @@
         },
         {
           "exemplar": true,
-          "expr": "sum(kube_pod_container_resource_limits{origin_prometheus=~\"$origin_prometheus\",resource=\"memory\", unit=\"byte\",node=~\"^$Node$\"})",
+          "expr": "sum(kube_pod_container_resource_limits{origin_prometheus=~\"$originPrometheus\",resource=\"memory\", unit=\"byte\",node=~\"^$node$\"})",
           "instant": true,
           "interval": "",
           "legendFormat": "限制量",
@@ -801,7 +801,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum(kube_node_status_allocatable{origin_prometheus=~\"$origin_prometheus\",resource=\"cpu\", unit=\"core\", node=~\"^$Node$\"})",
+          "expr": "sum(kube_node_status_allocatable{origin_prometheus=~\"$originPrometheus\",resource=\"cpu\", unit=\"core\", node=~\"^$node$\"})",
           "instant": true,
           "interval": "",
           "legendFormat": "总核数",
@@ -809,7 +809,7 @@
         },
         {
           "exemplar": true,
-          "expr": "sum (irate(container_cpu_usage_seconds_total{origin_prometheus=~\"$origin_prometheus\",id=\"/\",node=~\"^$Node$\"}[2m]))",
+          "expr": "sum (irate(container_cpu_usage_seconds_total{origin_prometheus=~\"$originPrometheus\",id=\"/\",node=~\"^$node$\"}[2m]))",
           "instant": true,
           "interval": "",
           "legendFormat": "使用量",
@@ -817,7 +817,7 @@
         },
         {
           "exemplar": true,
-          "expr": "sum(kube_pod_container_resource_requests{origin_prometheus=~\"$origin_prometheus\",resource=\"cpu\", unit=\"core\",node=~\"^$Node$\"})",
+          "expr": "sum(kube_pod_container_resource_requests{origin_prometheus=~\"$originPrometheus\",resource=\"cpu\", unit=\"core\",node=~\"^$node$\"})",
           "instant": true,
           "interval": "",
           "legendFormat": "请求量",
@@ -825,7 +825,7 @@
         },
         {
           "exemplar": true,
-          "expr": "sum(kube_pod_container_resource_limits{origin_prometheus=~\"$origin_prometheus\",resource=\"cpu\", unit=\"core\",node=~\"^$Node$\"})",
+          "expr": "sum(kube_pod_container_resource_limits{origin_prometheus=~\"$originPrometheus\",resource=\"cpu\", unit=\"core\",node=~\"^$node$\"})",
           "instant": true,
           "interval": "",
           "legendFormat": "限制量",
@@ -930,21 +930,21 @@
       "pluginVersion": "8.2.5",
       "targets": [
         {
-          "expr": "sum (container_fs_usage_bytes{origin_prometheus=~\"$origin_prometheus\",device=~\"^/dev/.*$\",id=\"/\",node=~\"^$Node$\"}) / sum (container_fs_limit_bytes{origin_prometheus=~\"$origin_prometheus\",device=~\"^/dev/.*$\",id=\"/\",node=~\"^$Node$\"})",
+          "expr": "sum (container_fs_usage_bytes{origin_prometheus=~\"$originPrometheus\",device=~\"^/dev/.*$\",id=\"/\",node=~\"^$node$\"}) / sum (container_fs_limit_bytes{origin_prometheus=~\"$originPrometheus\",device=~\"^/dev/.*$\",id=\"/\",node=~\"^$node$\"})",
           "instant": true,
           "interval": "",
           "legendFormat": "使用率",
           "refId": "C"
         },
         {
-          "expr": "sum (container_fs_usage_bytes{origin_prometheus=~\"$origin_prometheus\",device=~\"^/dev/.*$\",id=\"/\",node=~\"^$Node$\"})",
+          "expr": "sum (container_fs_usage_bytes{origin_prometheus=~\"$originPrometheus\",device=~\"^/dev/.*$\",id=\"/\",node=~\"^$node$\"})",
           "instant": true,
           "interval": "",
           "legendFormat": "使用量",
           "refId": "A"
         },
         {
-          "expr": "sum (container_fs_limit_bytes{origin_prometheus=~\"$origin_prometheus\",device=~\"^/dev/.*$\",id=\"/\",node=~\"^$Node$\"})",
+          "expr": "sum (container_fs_limit_bytes{origin_prometheus=~\"$originPrometheus\",device=~\"^/dev/.*$\",id=\"/\",node=~\"^$node$\"})",
           "instant": true,
           "interval": "",
           "legendFormat": "总量",
@@ -1364,7 +1364,7 @@
       "pluginVersion": "8.2.5",
       "targets": [
         {
-          "expr": "count(kube_pod_info{origin_prometheus=~\"$origin_prometheus\",created_by_kind!~\"<none>|Job\",node=~\"^$Node$\"}) by (node)",
+          "expr": "count(kube_pod_info{origin_prometheus=~\"$originPrometheus\",created_by_kind!~\"<none>|Job\",node=~\"^$node$\"}) by (node)",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -1374,7 +1374,7 @@
         },
         {
           "exemplar": true,
-          "expr": "kube_node_status_condition{origin_prometheus=~\"$origin_prometheus\",status=\"true\",node=~\"^$Node$\"}  == 1",
+          "expr": "kube_node_status_condition{origin_prometheus=~\"$originPrometheus\",status=\"true\",node=~\"^$node$\"}  == 1",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -1383,7 +1383,7 @@
         },
         {
           "exemplar": true,
-          "expr": "sum (irate(container_cpu_usage_seconds_total{origin_prometheus=~\"$origin_prometheus\",container!=\"\",node=~\"^$Node$\"}[2m])) by (node)",
+          "expr": "sum (irate(container_cpu_usage_seconds_total{origin_prometheus=~\"$originPrometheus\",container!=\"\",node=~\"^$node$\"}[2m])) by (node)",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -1393,7 +1393,7 @@
         },
         {
           "exemplar": true,
-          "expr": "kube_node_status_allocatable{origin_prometheus=~\"$origin_prometheus\",resource=\"cpu\", unit=\"core\", node=~\"^$Node$\"} - 0",
+          "expr": "kube_node_status_allocatable{origin_prometheus=~\"$originPrometheus\",resource=\"cpu\", unit=\"core\", node=~\"^$node$\"} - 0",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -1403,7 +1403,7 @@
         },
         {
           "exemplar": true,
-          "expr": "sum(kube_pod_container_resource_requests{origin_prometheus=~\"$origin_prometheus\",resource=\"cpu\", unit=\"core\",node=~\"^$Node$\"}) by (node)",
+          "expr": "sum(kube_pod_container_resource_requests{origin_prometheus=~\"$originPrometheus\",resource=\"cpu\", unit=\"core\",node=~\"^$node$\"}) by (node)",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -1413,7 +1413,7 @@
         },
         {
           "exemplar": true,
-          "expr": "sum(kube_pod_container_resource_limits{origin_prometheus=~\"$origin_prometheus\",resource=\"cpu\", unit=\"core\",node=~\"^$Node$\"}) by (node)",
+          "expr": "sum(kube_pod_container_resource_limits{origin_prometheus=~\"$originPrometheus\",resource=\"cpu\", unit=\"core\",node=~\"^$node$\"}) by (node)",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -1423,7 +1423,7 @@
         },
         {
           "exemplar": true,
-          "expr": "sum (container_memory_working_set_bytes{origin_prometheus=~\"$origin_prometheus\",container!=\"\",node=~\"^$Node$\"}) by (node)",
+          "expr": "sum (container_memory_working_set_bytes{origin_prometheus=~\"$originPrometheus\",container!=\"\",node=~\"^$node$\"}) by (node)",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -1433,7 +1433,7 @@
         },
         {
           "exemplar": true,
-          "expr": "sum(kube_node_status_allocatable{origin_prometheus=~\"$origin_prometheus\",resource=\"memory\", unit=\"byte\", node=~\"^$Node$\"}) by (node) - 0",
+          "expr": "sum(kube_node_status_allocatable{origin_prometheus=~\"$originPrometheus\",resource=\"memory\", unit=\"byte\", node=~\"^$node$\"}) by (node) - 0",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -1443,7 +1443,7 @@
         },
         {
           "exemplar": true,
-          "expr": "sum(kube_pod_container_resource_requests{origin_prometheus=~\"$origin_prometheus\",resource=\"memory\", unit=\"byte\",node=~\"^$Node$\"}) by (node)",
+          "expr": "sum(kube_pod_container_resource_requests{origin_prometheus=~\"$originPrometheus\",resource=\"memory\", unit=\"byte\",node=~\"^$node$\"}) by (node)",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -1453,7 +1453,7 @@
         },
         {
           "exemplar": true,
-          "expr": "sum(kube_pod_container_resource_limits{origin_prometheus=~\"$origin_prometheus\",resource=\"memory\", unit=\"byte\",node=~\"^$Node$\"}) by (node)",
+          "expr": "sum(kube_pod_container_resource_limits{origin_prometheus=~\"$originPrometheus\",resource=\"memory\", unit=\"byte\",node=~\"^$node$\"}) by (node)",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -1462,7 +1462,7 @@
           "refId": "H"
         },
         {
-          "expr": "sum (container_fs_usage_bytes{origin_prometheus=~\"$origin_prometheus\",device=~\"^/dev/.*$\",id=\"/\",node=~\"^$Node$\"}) by (node)",
+          "expr": "sum (container_fs_usage_bytes{origin_prometheus=~\"$originPrometheus\",device=~\"^/dev/.*$\",id=\"/\",node=~\"^$node$\"}) by (node)",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -1472,7 +1472,7 @@
         },
         {
           "exemplar": true,
-          "expr": "sum (container_fs_limit_bytes{origin_prometheus=~\"$origin_prometheus\",device=~\"^/dev/.*$\",id=\"/\",node=~\"^$Node$\"}) by (node)",
+          "expr": "sum (container_fs_limit_bytes{origin_prometheus=~\"$originPrometheus\",device=~\"^/dev/.*$\",id=\"/\",node=~\"^$node$\"}) by (node)",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -1482,7 +1482,7 @@
         },
         {
           "exemplar": true,
-          "expr": "sum (container_memory_working_set_bytes{origin_prometheus=~\"$origin_prometheus\",container!=\"\",node=~\"^$Node$\"})by (node) / sum(kube_node_status_allocatable{origin_prometheus=~\"$origin_prometheus\",resource=\"memory\", unit=\"byte\", node=~\"^$Node$\"})by (node)",
+          "expr": "sum (container_memory_working_set_bytes{origin_prometheus=~\"$originPrometheus\",container!=\"\",node=~\"^$node$\"})by (node) / sum(kube_node_status_allocatable{origin_prometheus=~\"$originPrometheus\",resource=\"memory\", unit=\"byte\", node=~\"^$node$\"})by (node)",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -1492,7 +1492,7 @@
         },
         {
           "exemplar": true,
-          "expr": "sum(kube_pod_container_resource_requests{origin_prometheus=~\"$origin_prometheus\",resource=\"memory\", unit=\"byte\",node=~\"^$Node$\"})by (node) / sum(kube_node_status_allocatable{origin_prometheus=~\"$origin_prometheus\",resource=\"memory\", unit=\"byte\", node=~\"^$Node$\"})by (node)",
+          "expr": "sum(kube_pod_container_resource_requests{origin_prometheus=~\"$originPrometheus\",resource=\"memory\", unit=\"byte\",node=~\"^$node$\"})by (node) / sum(kube_node_status_allocatable{origin_prometheus=~\"$originPrometheus\",resource=\"memory\", unit=\"byte\", node=~\"^$node$\"})by (node)",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -1502,7 +1502,7 @@
         },
         {
           "exemplar": true,
-          "expr": "sum(kube_pod_container_resource_limits{origin_prometheus=~\"$origin_prometheus\",resource=\"memory\", unit=\"byte\",node=~\"^$Node$\"})by (node) / sum(kube_node_status_allocatable{origin_prometheus=~\"$origin_prometheus\",resource=\"memory\", unit=\"byte\", node=~\"^$Node$\"})by (node)",
+          "expr": "sum(kube_pod_container_resource_limits{origin_prometheus=~\"$originPrometheus\",resource=\"memory\", unit=\"byte\",node=~\"^$node$\"})by (node) / sum(kube_node_status_allocatable{origin_prometheus=~\"$originPrometheus\",resource=\"memory\", unit=\"byte\", node=~\"^$node$\"})by (node)",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -1512,7 +1512,7 @@
         },
         {
           "exemplar": true,
-          "expr": "sum (irate(container_cpu_usage_seconds_total{origin_prometheus=~\"$origin_prometheus\",container!=\"\",node=~\"^$Node$\"}[2m]))by (node) / sum(kube_node_status_allocatable{origin_prometheus=~\"$origin_prometheus\",resource=\"cpu\", unit=\"core\", node=~\"^$Node$\"})by (node)",
+          "expr": "sum (irate(container_cpu_usage_seconds_total{origin_prometheus=~\"$originPrometheus\",container!=\"\",node=~\"^$node$\"}[2m]))by (node) / sum(kube_node_status_allocatable{origin_prometheus=~\"$originPrometheus\",resource=\"cpu\", unit=\"core\", node=~\"^$node$\"})by (node)",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -1522,7 +1522,7 @@
         },
         {
           "exemplar": true,
-          "expr": "sum(kube_pod_container_resource_requests{origin_prometheus=~\"$origin_prometheus\",resource=\"cpu\", unit=\"core\",node=~\"^$Node$\"})by (node) / sum(kube_node_status_allocatable{origin_prometheus=~\"$origin_prometheus\",resource=\"cpu\", unit=\"core\", node=~\"^$Node$\"})by (node)",
+          "expr": "sum(kube_pod_container_resource_requests{origin_prometheus=~\"$originPrometheus\",resource=\"cpu\", unit=\"core\",node=~\"^$node$\"})by (node) / sum(kube_node_status_allocatable{origin_prometheus=~\"$originPrometheus\",resource=\"cpu\", unit=\"core\", node=~\"^$node$\"})by (node)",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -1532,7 +1532,7 @@
         },
         {
           "exemplar": true,
-          "expr": "sum(kube_pod_container_resource_limits{origin_prometheus=~\"$origin_prometheus\",resource=\"cpu\", unit=\"core\",node=~\"^$Node$\"})by (node) / sum(kube_node_status_allocatable{origin_prometheus=~\"$origin_prometheus\",resource=\"cpu\", unit=\"core\", node=~\"^$Node$\"})by (node)",
+          "expr": "sum(kube_pod_container_resource_limits{origin_prometheus=~\"$originPrometheus\",resource=\"cpu\", unit=\"core\",node=~\"^$node$\"})by (node) / sum(kube_node_status_allocatable{origin_prometheus=~\"$originPrometheus\",resource=\"cpu\", unit=\"core\", node=~\"^$node$\"})by (node)",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -1541,7 +1541,7 @@
           "refId": "R"
         },
         {
-          "expr": "sum (container_fs_usage_bytes{origin_prometheus=~\"$origin_prometheus\",device=~\"^/dev/.*$\",id=\"/\",node=~\"^$Node$\"})by (node) / sum (container_fs_limit_bytes{origin_prometheus=~\"$origin_prometheus\",device=~\"^/dev/.*$\",id=\"/\",node=~\"^$Node$\"})by (node)",
+          "expr": "sum (container_fs_usage_bytes{origin_prometheus=~\"$originPrometheus\",device=~\"^/dev/.*$\",id=\"/\",node=~\"^$node$\"})by (node) / sum (container_fs_limit_bytes{origin_prometheus=~\"$originPrometheus\",device=~\"^/dev/.*$\",id=\"/\",node=~\"^$node$\"})by (node)",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -1551,7 +1551,7 @@
         },
         {
           "exemplar": true,
-          "expr": "sum(kube_node_status_allocatable{origin_prometheus=~\"$origin_prometheus\",resource=\"pods\", unit=\"integer\",node=~\"^$Node$\"})by (node)",
+          "expr": "sum(kube_node_status_allocatable{origin_prometheus=~\"$originPrometheus\",resource=\"pods\", unit=\"integer\",node=~\"^$node$\"})by (node)",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -1562,7 +1562,7 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "$Node：节点信息明细",
+      "title": "$node：节点信息明细",
       "transformations": [
         {
           "id": "merge",
@@ -1749,7 +1749,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum (irate(container_cpu_usage_seconds_total{origin_prometheus=~\"$origin_prometheus\",container!=\"\",node=~\"^$Node$\"}[2m]))by (node) / sum(kube_node_status_allocatable{origin_prometheus=~\"$origin_prometheus\",resource=\"cpu\", unit=\"core\", node=~\"^$Node$\"})by (node)*100",
+          "expr": "sum (irate(container_cpu_usage_seconds_total{origin_prometheus=~\"$originPrometheus\",container!=\"\",node=~\"^$node$\"}[2m]))by (node) / sum(kube_node_status_allocatable{origin_prometheus=~\"$originPrometheus\",resource=\"cpu\", unit=\"core\", node=~\"^$node$\"})by (node)*100",
           "format": "time_series",
           "hide": false,
           "instant": false,
@@ -1762,7 +1762,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "$Node：节点CPU明细",
+      "title": "$node：节点CPU明细",
       "tooltip": {
         "shared": true,
         "sort": 2,
@@ -1849,7 +1849,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum (container_memory_working_set_bytes{origin_prometheus=~\"$origin_prometheus\",container!=\"\",node=~\"^$Node$\"})by (node) / sum(kube_node_status_allocatable{origin_prometheus=~\"$origin_prometheus\",resource=\"memory\", unit=\"byte\", node=~\"^$Node$\"})by (node)*100",
+          "expr": "sum (container_memory_working_set_bytes{origin_prometheus=~\"$originPrometheus\",container!=\"\",node=~\"^$node$\"})by (node) / sum(kube_node_status_allocatable{origin_prometheus=~\"$originPrometheus\",resource=\"memory\", unit=\"byte\", node=~\"^$node$\"})by (node)*100",
           "format": "time_series",
           "hide": false,
           "instant": false,
@@ -1862,7 +1862,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "$Node：节点内存明细",
+      "title": "$node：节点内存明细",
       "tooltip": {
         "shared": true,
         "sort": 2,
@@ -1961,7 +1961,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum (irate(container_network_receive_bytes_total{origin_prometheus=~\"$origin_prometheus\",node=~\"^$Node$\"}[2m]))by (node) *8",
+          "expr": "sum (irate(container_network_receive_bytes_total{origin_prometheus=~\"$originPrometheus\",node=~\"^$node$\"}[2m]))by (node) *8",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -1972,7 +1972,7 @@
         },
         {
           "exemplar": true,
-          "expr": "sum (irate(container_network_transmit_bytes_total{origin_prometheus=~\"$origin_prometheus\",node=~\"^$Node$\"}[2m]))by (node) *8",
+          "expr": "sum (irate(container_network_transmit_bytes_total{origin_prometheus=~\"$originPrometheus\",node=~\"^$node$\"}[2m]))by (node) *8",
           "instant": false,
           "interval": "",
           "intervalFactor": 1,
@@ -1986,7 +1986,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "$Node：节点网络总览",
+      "title": "$node：节点网络总览",
       "tooltip": {
         "msResolution": false,
         "shared": true,
@@ -2379,7 +2379,7 @@
           "targets": [
             {
               "exemplar": true,
-              "expr": "sum(irate(container_cpu_usage_seconds_total{origin_prometheus=~\"$origin_prometheus\",container =~\"$Container\",container !=\"\",container!=\"POD\",namespace=~\"$NameSpace\"}[2m])) by (container) / (sum(container_spec_cpu_quota{origin_prometheus=~\"$origin_prometheus\",container =~\"$Container\",container !=\"\",container!=\"POD\",namespace=~\"$NameSpace\"}/100000) by (container)) * 100",
+              "expr": "sum(irate(container_cpu_usage_seconds_total{origin_prometheus=~\"$originPrometheus\",container =~\"$container\",container !=\"\",container!=\"POD\",namespace=~\"$namespace\"}[2m])) by (container) / (sum(container_spec_cpu_quota{origin_prometheus=~\"$originPrometheus\",container =~\"$container\",container !=\"\",container!=\"POD\",namespace=~\"$namespace\"}/100000) by (container)) * 100",
               "format": "table",
               "hide": false,
               "instant": true,
@@ -2389,7 +2389,7 @@
             },
             {
               "exemplar": true,
-              "expr": "sum(irate(container_cpu_usage_seconds_total{origin_prometheus=~\"$origin_prometheus\",container =~\"$Container\",container !=\"\",container!=\"POD\",namespace=~\"$NameSpace\"}[2m])) by (container)",
+              "expr": "sum(irate(container_cpu_usage_seconds_total{origin_prometheus=~\"$originPrometheus\",container =~\"$container\",container !=\"\",container!=\"POD\",namespace=~\"$namespace\"}[2m])) by (container)",
               "format": "table",
               "hide": false,
               "instant": true,
@@ -2399,7 +2399,7 @@
             },
             {
               "exemplar": true,
-              "expr": "sum(kube_pod_container_resource_requests{origin_prometheus=~\"$origin_prometheus\",resource=\"cpu\", unit=\"core\",container =~\"$Container\",container !=\"\",container!=\"POD\",namespace=~\"$NameSpace\"}) by (container)",
+              "expr": "sum(kube_pod_container_resource_requests{origin_prometheus=~\"$originPrometheus\",resource=\"cpu\", unit=\"core\",container =~\"$container\",container !=\"\",container!=\"POD\",namespace=~\"$namespace\"}) by (container)",
               "format": "table",
               "hide": false,
               "instant": true,
@@ -2409,7 +2409,7 @@
             },
             {
               "exemplar": true,
-              "expr": "sum(kube_pod_container_resource_limits{origin_prometheus=~\"$origin_prometheus\",resource=\"cpu\", unit=\"core\",container =~\"$Container\",container !=\"\",container!=\"POD\",namespace=~\"$NameSpace\"}) by (container)",
+              "expr": "sum(kube_pod_container_resource_limits{origin_prometheus=~\"$originPrometheus\",resource=\"cpu\", unit=\"core\",container =~\"$container\",container !=\"\",container!=\"POD\",namespace=~\"$namespace\"}) by (container)",
               "format": "table",
               "instant": true,
               "interval": "",
@@ -2417,7 +2417,7 @@
               "refId": "C"
             },
             {
-              "expr": "sum (container_memory_working_set_bytes{origin_prometheus=~\"$origin_prometheus\",container =~\"$Container\",container !=\"\",container!=\"POD\",namespace=~\"$NameSpace\"}) by (container)/ sum(container_spec_memory_limit_bytes{origin_prometheus=~\"$origin_prometheus\",container =~\"$Container\",container !=\"\",container!=\"POD\",namespace=~\"$NameSpace\"}) by (container) * 100",
+              "expr": "sum (container_memory_working_set_bytes{origin_prometheus=~\"$originPrometheus\",container =~\"$container\",container !=\"\",container!=\"POD\",namespace=~\"$namespace\"}) by (container)/ sum(container_spec_memory_limit_bytes{origin_prometheus=~\"$originPrometheus\",container =~\"$container\",container !=\"\",container!=\"POD\",namespace=~\"$namespace\"}) by (container) * 100",
               "format": "table",
               "hide": false,
               "instant": true,
@@ -2426,7 +2426,7 @@
               "refId": "I"
             },
             {
-              "expr": "sum (container_memory_working_set_bytes{origin_prometheus=~\"$origin_prometheus\",container =~\"$Container\",container !=\"\",container!=\"POD\",namespace=~\"$NameSpace\"}) by (container)",
+              "expr": "sum (container_memory_working_set_bytes{origin_prometheus=~\"$originPrometheus\",container =~\"$container\",container !=\"\",container!=\"POD\",namespace=~\"$namespace\"}) by (container)",
               "format": "table",
               "hide": false,
               "instant": true,
@@ -2435,7 +2435,7 @@
               "refId": "D"
             },
             {
-              "expr": "sum (container_memory_rss{origin_prometheus=~\"$origin_prometheus\",container =~\"$Container\",container !=\"\",container!=\"POD\",namespace=~\"$NameSpace\"}) by (container)/ sum(container_spec_memory_limit_bytes{origin_prometheus=~\"$origin_prometheus\",container =~\"$Container\",container !=\"\",container!=\"POD\",namespace=~\"$NameSpace\"}) by (container) * 100",
+              "expr": "sum (container_memory_rss{origin_prometheus=~\"$originPrometheus\",container =~\"$container\",container !=\"\",container!=\"POD\",namespace=~\"$namespace\"}) by (container)/ sum(container_spec_memory_limit_bytes{origin_prometheus=~\"$originPrometheus\",container =~\"$container\",container !=\"\",container!=\"POD\",namespace=~\"$namespace\"}) by (container) * 100",
               "format": "table",
               "hide": false,
               "instant": true,
@@ -2444,7 +2444,7 @@
               "refId": "H"
             },
             {
-              "expr": "sum (container_memory_rss{origin_prometheus=~\"$origin_prometheus\",container =~\"$Container\",container !=\"\",container!=\"POD\",namespace=~\"$NameSpace\"}) by (container)",
+              "expr": "sum (container_memory_rss{origin_prometheus=~\"$originPrometheus\",container =~\"$container\",container !=\"\",container!=\"POD\",namespace=~\"$namespace\"}) by (container)",
               "format": "table",
               "hide": false,
               "instant": true,
@@ -2454,7 +2454,7 @@
             },
             {
               "exemplar": true,
-              "expr": "sum(kube_pod_container_resource_requests{origin_prometheus=~\"$origin_prometheus\",resource=\"memory\", unit=\"byte\",container =~\"$Container\",container !=\"\",container!=\"POD\",namespace=~\"$NameSpace\"}) by (container)",
+              "expr": "sum(kube_pod_container_resource_requests{origin_prometheus=~\"$originPrometheus\",resource=\"memory\", unit=\"byte\",container =~\"$container\",container !=\"\",container!=\"POD\",namespace=~\"$namespace\"}) by (container)",
               "format": "table",
               "hide": false,
               "instant": true,
@@ -2464,7 +2464,7 @@
             },
             {
               "exemplar": true,
-              "expr": "sum(kube_pod_container_resource_limits{origin_prometheus=~\"$origin_prometheus\",resource=\"memory\", unit=\"byte\",container =~\"$Container\",container !=\"\",container!=\"POD\",namespace=~\"$NameSpace\"}) by (container)",
+              "expr": "sum(kube_pod_container_resource_limits{origin_prometheus=~\"$originPrometheus\",resource=\"memory\", unit=\"byte\",container =~\"$container\",container !=\"\",container!=\"POD\",namespace=~\"$namespace\"}) by (container)",
               "format": "table",
               "hide": false,
               "instant": true,
@@ -2473,7 +2473,7 @@
               "refId": "F"
             },
             {
-              "expr": "sum(container_fs_usage_bytes{origin_prometheus=~\"$origin_prometheus\",container =~\"$Container\",container !=\"\",container!=\"POD\",namespace=~\"$NameSpace\"}) by (container)",
+              "expr": "sum(container_fs_usage_bytes{origin_prometheus=~\"$originPrometheus\",container =~\"$container\",container !=\"\",container!=\"POD\",namespace=~\"$namespace\"}) by (container)",
               "format": "table",
               "instant": true,
               "interval": "",
@@ -2482,7 +2482,7 @@
             },
             {
               "exemplar": true,
-              "expr": "count(kube_pod_container_info{origin_prometheus=~\"$origin_prometheus\",container =~\"$Container\",container !=\"\",container!=\"POD\",namespace=~\"$NameSpace\"}) by(container,namespace) - 0",
+              "expr": "count(kube_pod_container_info{origin_prometheus=~\"$originPrometheus\",container =~\"$container\",container !=\"\",container!=\"POD\",namespace=~\"$namespace\"}) by(container,namespace) - 0",
               "format": "table",
               "instant": true,
               "interval": "",
@@ -2632,7 +2632,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum(rate(container_cpu_usage_seconds_total{origin_prometheus=~\"$origin_prometheus\",container =~\"$Container\",container !=\"\",container!=\"POD\",namespace=~\"$NameSpace\"}[2m])) by (container) / (sum(container_spec_cpu_quota{origin_prometheus=~\"$origin_prometheus\",container =~\"$Container\",container !=\"\",container!=\"POD\",namespace=~\"$NameSpace\"}/100000) by (container)) * 100",
+              "expr": "sum(rate(container_cpu_usage_seconds_total{origin_prometheus=~\"$originPrometheus\",container =~\"$container\",container !=\"\",container!=\"POD\",namespace=~\"$namespace\"}[2m])) by (container) / (sum(container_spec_cpu_quota{origin_prometheus=~\"$originPrometheus\",container =~\"$container\",container !=\"\",container!=\"POD\",namespace=~\"$namespace\"}/100000) by (container)) * 100",
               "hide": false,
               "instant": false,
               "interval": "",
@@ -2746,7 +2746,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum (container_memory_working_set_bytes{origin_prometheus=~\"$origin_prometheus\",container =~\"$Container\",container !=\"\",container!=\"POD\",namespace=~\"$NameSpace\"}) by (container)/ sum(container_spec_memory_limit_bytes{origin_prometheus=~\"$origin_prometheus\",container =~\"$Container\",container !=\"\",container!=\"POD\",namespace=~\"$NameSpace\"}) by (container) * 100",
+              "expr": "sum (container_memory_working_set_bytes{origin_prometheus=~\"$originPrometheus\",container =~\"$container\",container !=\"\",container!=\"POD\",namespace=~\"$namespace\"}) by (container)/ sum(container_spec_memory_limit_bytes{origin_prometheus=~\"$originPrometheus\",container =~\"$container\",container !=\"\",container!=\"POD\",namespace=~\"$namespace\"}) by (container) * 100",
               "interval": "",
               "intervalFactor": 1,
               "legendFormat": "WSS：{{ container }}",
@@ -2755,7 +2755,7 @@
               "step": 10
             },
             {
-              "expr": "sum (container_memory_rss{origin_prometheus=~\"$origin_prometheus\",container =~\"$Container\",container !=\"\",container!=\"POD\",namespace=~\"$NameSpace\"}) by (container)/ sum(container_spec_memory_limit_bytes{origin_prometheus=~\"$origin_prometheus\",container =~\"$Container\",container !=\"\",container!=\"POD\",namespace=~\"$NameSpace\"}) by (container) * 100",
+              "expr": "sum (container_memory_rss{origin_prometheus=~\"$originPrometheus\",container =~\"$container\",container !=\"\",container!=\"POD\",namespace=~\"$namespace\"}) by (container)/ sum(container_spec_memory_limit_bytes{origin_prometheus=~\"$originPrometheus\",container =~\"$container\",container !=\"\",container!=\"POD\",namespace=~\"$namespace\"}) by (container) * 100",
               "interval": "",
               "intervalFactor": 1,
               "legendFormat": "RSS：{{ container }}",
@@ -2871,7 +2871,7 @@
           "targets": [
             {
               "exemplar": true,
-              "expr": "sum(sum(irate(container_network_receive_bytes_total{origin_prometheus=~\"$origin_prometheus\",image!=\"\",name=~\"^k8s_.*\",node=~\"^$Node$\",namespace=~\"$NameSpace\",pod=~\".*$Container.*\"}[2m])) by (pod)* on(pod) group_right kube_pod_container_info) by(container) *8",
+              "expr": "sum(sum(irate(container_network_receive_bytes_total{origin_prometheus=~\"$originPrometheus\",image!=\"\",name=~\"^k8s_.*\",node=~\"^$node$\",namespace=~\"$namespace\",pod=~\".*$container.*\"}[2m])) by (pod)* on(pod) group_right kube_pod_container_info) by(container) *8",
               "hide": false,
               "interval": "",
               "intervalFactor": 1,
@@ -2882,7 +2882,7 @@
             },
             {
               "exemplar": true,
-              "expr": "sum(sum(irate(container_network_transmit_bytes_total{origin_prometheus=~\"$origin_prometheus\",image!=\"\",name=~\"^k8s_.*\",node=~\"^$Node$\",namespace=~\"$NameSpace\",pod=~\".*$Container.*\"}[2m])) by (pod)* on(pod) group_right kube_pod_container_info) by(container) *8",
+              "expr": "sum(sum(irate(container_network_transmit_bytes_total{origin_prometheus=~\"$originPrometheus\",image!=\"\",name=~\"^k8s_.*\",node=~\"^$node$\",namespace=~\"$namespace\",pod=~\".*$container.*\"}[2m])) by (pod)* on(pod) group_right kube_pod_container_info) by(container) *8",
               "interval": "",
               "intervalFactor": 1,
               "legendFormat": "流出:{{ container }}",
@@ -2891,7 +2891,7 @@
               "step": 10
             },
             {
-              "expr": "sum (rate (container_network_receive_bytes_total{origin_prometheus=~\"$origin_prometheus\",pod=~\"$Pod\",image!=\"\",name=~\"^k8s_.*\",node=~\"^$Node$\",namespace=~\"$NameSpace\",pod=~\".*$Container.*\"}[2m])) by (pod)",
+              "expr": "sum (rate (container_network_receive_bytes_total{origin_prometheus=~\"$originPrometheus\",pod=~\"$pod\",image!=\"\",name=~\"^k8s_.*\",node=~\"^$node$\",namespace=~\"$namespace\",pod=~\".*$container.*\"}[2m])) by (pod)",
               "hide": true,
               "interval": "",
               "intervalFactor": 1,
@@ -2901,7 +2901,7 @@
               "step": 10
             },
             {
-              "expr": "- sum (rate (container_network_transmit_bytes_total{origin_prometheus=~\"$origin_prometheus\",pod=~\"$Pod\",image!=\"\",name=~\"^k8s_.*\",node=~\"^$Node$\",namespace=~\"$NameSpace\",pod=~\".*$Container.*\"}[2m])) by (pod)",
+              "expr": "- sum (rate (container_network_transmit_bytes_total{origin_prometheus=~\"$originPrometheus\",pod=~\"$pod\",image!=\"\",name=~\"^k8s_.*\",node=~\"^$node$\",namespace=~\"$namespace\",pod=~\".*$container.*\"}[2m])) by (pod)",
               "hide": true,
               "interval": "",
               "intervalFactor": 1,
@@ -2956,7 +2956,7 @@
           }
         }
       ],
-      "title": "微服务(容器名)资源总览：所选微服务:【$Container】",
+      "title": "微服务(容器名)资源总览：所选微服务:【$container】",
       "type": "row"
     },
     {
@@ -3335,7 +3335,7 @@
           "targets": [
             {
               "exemplar": true,
-              "expr": "sum(irate(container_cpu_usage_seconds_total{origin_prometheus=~\"$origin_prometheus\",pod=~\"$Pod\",container =~\"$Container\",container !=\"\",container!=\"POD\",node=~\"^$Node$\",namespace=~\"$NameSpace\"}[2m])) by (container, pod,node,namespace) / (sum(container_spec_cpu_quota{origin_prometheus=~\"$origin_prometheus\",pod=~\"$Pod\",container =~\"$Container\",container !=\"\",container!=\"POD\",node=~\"^$Node$\",namespace=~\"$NameSpace\"}/100000) by (container, pod,node,namespace)) * 100",
+              "expr": "sum(irate(container_cpu_usage_seconds_total{origin_prometheus=~\"$originPrometheus\",pod=~\"$pod\",container =~\"$container\",container !=\"\",container!=\"POD\",node=~\"^$node$\",namespace=~\"$namespace\"}[2m])) by (container, pod,node,namespace) / (sum(container_spec_cpu_quota{origin_prometheus=~\"$originPrometheus\",pod=~\"$pod\",container =~\"$container\",container !=\"\",container!=\"POD\",node=~\"^$node$\",namespace=~\"$namespace\"}/100000) by (container, pod,node,namespace)) * 100",
               "format": "table",
               "hide": false,
               "instant": true,
@@ -3345,7 +3345,7 @@
             },
             {
               "exemplar": true,
-              "expr": "sum(irate(container_cpu_usage_seconds_total{origin_prometheus=~\"$origin_prometheus\",pod=~\"$Pod\",container =~\"$Container\",container !=\"\",container!=\"POD\",node=~\"^$Node$\",namespace=~\"$NameSpace\"}[2m])) by (container, pod,node,namespace)",
+              "expr": "sum(irate(container_cpu_usage_seconds_total{origin_prometheus=~\"$originPrometheus\",pod=~\"$pod\",container =~\"$container\",container !=\"\",container!=\"POD\",node=~\"^$node$\",namespace=~\"$namespace\"}[2m])) by (container, pod,node,namespace)",
               "format": "table",
               "hide": false,
               "instant": true,
@@ -3355,7 +3355,7 @@
             },
             {
               "exemplar": true,
-              "expr": "sum(kube_pod_container_resource_requests{origin_prometheus=~\"$origin_prometheus\",resource=\"cpu\", unit=\"core\",pod=~\"$Pod\",container =~\"$Container\",node=~\"^$Node$\",namespace=~\"$NameSpace\"}) by (container,pod,node,namespace)",
+              "expr": "sum(kube_pod_container_resource_requests{origin_prometheus=~\"$originPrometheus\",resource=\"cpu\", unit=\"core\",pod=~\"$pod\",container =~\"$container\",node=~\"^$node$\",namespace=~\"$namespace\"}) by (container,pod,node,namespace)",
               "format": "table",
               "hide": false,
               "instant": true,
@@ -3365,7 +3365,7 @@
             },
             {
               "exemplar": true,
-              "expr": "sum(kube_pod_container_resource_limits{origin_prometheus=~\"$origin_prometheus\",resource=\"cpu\", unit=\"core\",pod=~\"$Pod\",container =~\"$Container\",node=~\"^$Node$\",namespace=~\"$NameSpace\"}) by (container,pod,node,namespace)",
+              "expr": "sum(kube_pod_container_resource_limits{origin_prometheus=~\"$originPrometheus\",resource=\"cpu\", unit=\"core\",pod=~\"$pod\",container =~\"$container\",node=~\"^$node$\",namespace=~\"$namespace\"}) by (container,pod,node,namespace)",
               "format": "table",
               "instant": true,
               "interval": "",
@@ -3374,7 +3374,7 @@
             },
             {
               "exemplar": true,
-              "expr": "sum (container_memory_working_set_bytes{origin_prometheus=~\"$origin_prometheus\",pod=~\"$Pod\",container =~\"$Container\",container !=\"\",container!=\"POD\",node=~\"^$Node$\",namespace=~\"$NameSpace\"}) by (container, pod,node,namespace)/ sum(container_spec_memory_limit_bytes{origin_prometheus=~\"$origin_prometheus\",pod=~\"$Pod\",container =~\"$Container\",container !=\"\",container!=\"POD\",node=~\"^$Node$\",namespace=~\"$NameSpace\"}) by (container, pod,node,namespace) * 100",
+              "expr": "sum (container_memory_working_set_bytes{origin_prometheus=~\"$originPrometheus\",pod=~\"$pod\",container =~\"$container\",container !=\"\",container!=\"POD\",node=~\"^$node$\",namespace=~\"$namespace\"}) by (container, pod,node,namespace)/ sum(container_spec_memory_limit_bytes{origin_prometheus=~\"$originPrometheus\",pod=~\"$pod\",container =~\"$container\",container !=\"\",container!=\"POD\",node=~\"^$node$\",namespace=~\"$namespace\"}) by (container, pod,node,namespace) * 100",
               "format": "table",
               "hide": false,
               "instant": true,
@@ -3384,7 +3384,7 @@
             },
             {
               "exemplar": true,
-              "expr": "sum (container_memory_working_set_bytes{origin_prometheus=~\"$origin_prometheus\",pod=~\"$Pod\",container =~\"$Container\",container !=\"\",container!=\"POD\",node=~\"^$Node$\",namespace=~\"$NameSpace\"}) by (container, pod,node,namespace)",
+              "expr": "sum (container_memory_working_set_bytes{origin_prometheus=~\"$originPrometheus\",pod=~\"$pod\",container =~\"$container\",container !=\"\",container!=\"POD\",node=~\"^$node$\",namespace=~\"$namespace\"}) by (container, pod,node,namespace)",
               "format": "table",
               "hide": false,
               "instant": true,
@@ -3394,7 +3394,7 @@
             },
             {
               "exemplar": true,
-              "expr": "sum (container_memory_rss{origin_prometheus=~\"$origin_prometheus\",pod=~\"$Pod\",container =~\"$Container\",container !=\"\",container!=\"POD\",node=~\"^$Node$\",namespace=~\"$NameSpace\"}) by (container, pod,node,namespace)/ sum(container_spec_memory_limit_bytes{origin_prometheus=~\"$origin_prometheus\",pod=~\"$Pod\",container =~\"$Container\",container !=\"\",container!=\"POD\",node=~\"^$Node$\",namespace=~\"$NameSpace\"}) by (container, pod,node,namespace) * 100",
+              "expr": "sum (container_memory_rss{origin_prometheus=~\"$originPrometheus\",pod=~\"$pod\",container =~\"$container\",container !=\"\",container!=\"POD\",node=~\"^$node$\",namespace=~\"$namespace\"}) by (container, pod,node,namespace)/ sum(container_spec_memory_limit_bytes{origin_prometheus=~\"$originPrometheus\",pod=~\"$pod\",container =~\"$container\",container !=\"\",container!=\"POD\",node=~\"^$node$\",namespace=~\"$namespace\"}) by (container, pod,node,namespace) * 100",
               "format": "table",
               "hide": false,
               "instant": true,
@@ -3404,7 +3404,7 @@
             },
             {
               "exemplar": true,
-              "expr": "sum (container_memory_rss{origin_prometheus=~\"$origin_prometheus\",pod=~\"$Pod\",container =~\"$Container\",container !=\"\",container!=\"POD\",node=~\"^$Node$\",namespace=~\"$NameSpace\"}) by (container, pod,node,namespace)",
+              "expr": "sum (container_memory_rss{origin_prometheus=~\"$originPrometheus\",pod=~\"$pod\",container =~\"$container\",container !=\"\",container!=\"POD\",node=~\"^$node$\",namespace=~\"$namespace\"}) by (container, pod,node,namespace)",
               "format": "table",
               "hide": false,
               "instant": true,
@@ -3414,7 +3414,7 @@
             },
             {
               "exemplar": true,
-              "expr": "sum(kube_pod_container_resource_requests{origin_prometheus=~\"$origin_prometheus\",resource=\"memory\", unit=\"byte\",pod=~\"$Pod\",container =~\"$Container\",node=~\"^$Node$\",namespace=~\"$NameSpace\"}) by (container,pod,node,namespace)",
+              "expr": "sum(kube_pod_container_resource_requests{origin_prometheus=~\"$originPrometheus\",resource=\"memory\", unit=\"byte\",pod=~\"$pod\",container =~\"$container\",node=~\"^$node$\",namespace=~\"$namespace\"}) by (container,pod,node,namespace)",
               "format": "table",
               "hide": false,
               "instant": true,
@@ -3424,7 +3424,7 @@
             },
             {
               "exemplar": true,
-              "expr": "sum(kube_pod_container_resource_limits{origin_prometheus=~\"$origin_prometheus\",resource=\"memory\", unit=\"byte\",pod=~\"$Pod\",container =~\"$Container\",node=~\"^$Node$\",namespace=~\"$NameSpace\"}) by (container,pod,node,namespace)",
+              "expr": "sum(kube_pod_container_resource_limits{origin_prometheus=~\"$originPrometheus\",resource=\"memory\", unit=\"byte\",pod=~\"$pod\",container =~\"$container\",node=~\"^$node$\",namespace=~\"$namespace\"}) by (container,pod,node,namespace)",
               "format": "table",
               "hide": false,
               "instant": true,
@@ -3434,7 +3434,7 @@
             },
             {
               "exemplar": true,
-              "expr": "sum(container_fs_usage_bytes{origin_prometheus=~\"$origin_prometheus\",pod=~\"$Pod\",container =~\"$Container\",container !=\"\",container!=\"POD\",node=~\"^$Node$\",namespace=~\"$NameSpace\"}) by (container,pod,node,namespace)",
+              "expr": "sum(container_fs_usage_bytes{origin_prometheus=~\"$originPrometheus\",pod=~\"$pod\",container =~\"$container\",container !=\"\",container!=\"POD\",node=~\"^$node$\",namespace=~\"$namespace\"}) by (container,pod,node,namespace)",
               "format": "table",
               "instant": true,
               "interval": "",
@@ -3443,7 +3443,7 @@
             },
             {
               "exemplar": true,
-              "expr": "kube_pod_container_status_restarts_total{origin_prometheus=~\"$origin_prometheus\",pod=~\"$Pod\",container =~\"$Container\",container !=\"\",container!=\"POD\",namespace=~\"$NameSpace\"} * on (pod) group_left(node) kube_pod_info{origin_prometheus=~\"$origin_prometheus\",pod=~\"$Pod\",node=~\"^$Node$\",namespace=~\"$NameSpace\"}",
+              "expr": "kube_pod_container_status_restarts_total{origin_prometheus=~\"$originPrometheus\",pod=~\"$pod\",container =~\"$container\",container !=\"\",container!=\"POD\",namespace=~\"$namespace\"} * on (pod) group_left(node) kube_pod_info{origin_prometheus=~\"$originPrometheus\",pod=~\"$pod\",node=~\"^$node$\",namespace=~\"$namespace\"}",
               "format": "table",
               "hide": false,
               "instant": true,
@@ -3453,7 +3453,7 @@
             },
             {
               "exemplar": true,
-              "expr": "cass_jvm_heap{service=~\"$Container\"} * on (pod_ip) group_right(service) kube_pod_info{origin_prometheus=~\"$origin_prometheus\",pod=~\"$Pod\",namespace=~\"$NameSpace\"}",
+              "expr": "cass_jvm_heap{service=~\"$container\"} * on (pod_ip) group_right(service) kube_pod_info{origin_prometheus=~\"$originPrometheus\",pod=~\"$pod\",namespace=~\"$namespace\"}",
               "format": "table",
               "hide": true,
               "instant": true,
@@ -3463,7 +3463,7 @@
             },
             {
               "exemplar": true,
-              "expr": "cass_jvm_heap_max{service=~\"$Container\"} * on (pod_ip) group_right(service) kube_pod_info{origin_prometheus=~\"$origin_prometheus\",pod=~\"$Pod\",namespace=~\"$NameSpace\"}",
+              "expr": "cass_jvm_heap_max{service=~\"$container\"} * on (pod_ip) group_right(service) kube_pod_info{origin_prometheus=~\"$originPrometheus\",pod=~\"$pod\",namespace=~\"$namespace\"}",
               "format": "table",
               "hide": true,
               "instant": true,
@@ -3472,7 +3472,7 @@
               "refId": "N"
             },
             {
-              "expr": "cass_jvm_noheap{service=~\"$Container\"} * on (pod_ip) group_right(service) kube_pod_info{origin_prometheus=~\"$origin_prometheus\",pod=~\"$Pod\",namespace=~\"$NameSpace\"}",
+              "expr": "cass_jvm_noheap{service=~\"$container\"} * on (pod_ip) group_right(service) kube_pod_info{origin_prometheus=~\"$originPrometheus\",pod=~\"$pod\",namespace=~\"$namespace\"}",
               "format": "table",
               "hide": true,
               "instant": true,
@@ -3481,7 +3481,7 @@
               "refId": "O"
             },
             {
-              "expr": "cass_jvm_noheap_max{service=~\"$Container\"} * on (pod_ip) group_right(service) kube_pod_info{origin_prometheus=~\"$origin_prometheus\",pod=~\"$Pod\",namespace=~\"$NameSpace\"}",
+              "expr": "cass_jvm_noheap_max{service=~\"$container\"} * on (pod_ip) group_right(service) kube_pod_info{origin_prometheus=~\"$originPrometheus\",pod=~\"$pod\",namespace=~\"$namespace\"}",
               "format": "table",
               "hide": true,
               "instant": true,
@@ -3492,7 +3492,7 @@
           ],
           "timeFrom": null,
           "timeShift": null,
-          "title": "$Node：Pod资源明细(可关联节点)",
+          "title": "$node：Pod资源明细(可关联节点)",
           "transformations": [
             {
               "id": "merge",
@@ -3726,7 +3726,7 @@
           "targets": [
             {
               "exemplar": true,
-              "expr": "sum(irate(container_cpu_usage_seconds_total{origin_prometheus=~\"$origin_prometheus\",pod=~\"$Pod\",container =~\"$Container\",container !=\"\",container!=\"POD\",node=~\"^$Node$\",namespace=~\"$NameSpace\"}[2m])) by (container, pod) / (sum(container_spec_cpu_quota{origin_prometheus=~\"$origin_prometheus\",pod=~\"$Pod\",container =~\"$Container\",container !=\"\",container!=\"POD\",node=~\"^$Node$\",namespace=~\"$NameSpace\"}/100000) by (container, pod)) * 100",
+              "expr": "sum(irate(container_cpu_usage_seconds_total{origin_prometheus=~\"$originPrometheus\",pod=~\"$pod\",container =~\"$container\",container !=\"\",container!=\"POD\",node=~\"^$node$\",namespace=~\"$namespace\"}[2m])) by (container, pod) / (sum(container_spec_cpu_quota{origin_prometheus=~\"$originPrometheus\",pod=~\"$pod\",container =~\"$container\",container !=\"\",container!=\"POD\",node=~\"^$node$\",namespace=~\"$namespace\"}/100000) by (container, pod)) * 100",
               "hide": false,
               "instant": false,
               "interval": "",
@@ -3841,7 +3841,7 @@
           "targets": [
             {
               "exemplar": true,
-              "expr": "sum (container_memory_working_set_bytes{origin_prometheus=~\"$origin_prometheus\",pod=~\"$Pod\",container =~\"$Container\",container !=\"\",container!=\"POD\",node=~\"^$Node$\",namespace=~\"$NameSpace\"}) by (container, pod)/ sum(container_spec_memory_limit_bytes{origin_prometheus=~\"$origin_prometheus\",pod=~\"$Pod\",container =~\"$Container\",container !=\"\",container!=\"POD\",node=~\"^$Node$\",namespace=~\"$NameSpace\"}) by (container, pod) * 100",
+              "expr": "sum (container_memory_working_set_bytes{origin_prometheus=~\"$originPrometheus\",pod=~\"$pod\",container =~\"$container\",container !=\"\",container!=\"POD\",node=~\"^$node$\",namespace=~\"$namespace\"}) by (container, pod)/ sum(container_spec_memory_limit_bytes{origin_prometheus=~\"$originPrometheus\",pod=~\"$pod\",container =~\"$container\",container !=\"\",container!=\"POD\",node=~\"^$node$\",namespace=~\"$namespace\"}) by (container, pod) * 100",
               "interval": "",
               "intervalFactor": 1,
               "legendFormat": "WSS：{{ pod }}",
@@ -3851,7 +3851,7 @@
             },
             {
               "exemplar": true,
-              "expr": "sum (container_memory_rss{origin_prometheus=~\"$origin_prometheus\",pod=~\"$Pod\",container =~\"$Container\",container !=\"\",container!=\"POD\",node=~\"^$Node$\",namespace=~\"$NameSpace\"}) by (container, pod)/ sum(container_spec_memory_limit_bytes{origin_prometheus=~\"$origin_prometheus\",pod=~\"$Pod\",container =~\"$Container\",container !=\"\",container!=\"POD\",node=~\"^$Node$\",namespace=~\"$NameSpace\"}) by (container, pod) * 100",
+              "expr": "sum (container_memory_rss{origin_prometheus=~\"$originPrometheus\",pod=~\"$pod\",container =~\"$container\",container !=\"\",container!=\"POD\",node=~\"^$node$\",namespace=~\"$namespace\"}) by (container, pod)/ sum(container_spec_memory_limit_bytes{origin_prometheus=~\"$originPrometheus\",pod=~\"$pod\",container =~\"$container\",container !=\"\",container!=\"POD\",node=~\"^$node$\",namespace=~\"$namespace\"}) by (container, pod) * 100",
               "interval": "",
               "intervalFactor": 1,
               "legendFormat": "RSS：{{ pod }}",
@@ -3861,7 +3861,7 @@
             },
             {
               "exemplar": true,
-              "expr": "(cass_jvm_heap{service=~\"$Container\"} * on (pod_ip) group_right(service) kube_pod_info{origin_prometheus=~\"$origin_prometheus\",pod=~\"$Pod\",namespace=~\"$NameSpace\"}) / (cass_jvm_heap_max{service=~\"$Container\"} * on (pod_ip) group_right(service) kube_pod_info{origin_prometheus=~\"$origin_prometheus\",pod=~\"$Pod\",namespace=~\"$NameSpace\"}) * 100",
+              "expr": "(cass_jvm_heap{service=~\"$container\"} * on (pod_ip) group_right(service) kube_pod_info{origin_prometheus=~\"$originPrometheus\",pod=~\"$pod\",namespace=~\"$namespace\"}) / (cass_jvm_heap_max{service=~\"$container\"} * on (pod_ip) group_right(service) kube_pod_info{origin_prometheus=~\"$originPrometheus\",pod=~\"$pod\",namespace=~\"$namespace\"}) * 100",
               "instant": false,
               "interval": "",
               "intervalFactor": 1,
@@ -3978,7 +3978,7 @@
           "targets": [
             {
               "exemplar": true,
-              "expr": "sum(sum(irate(container_network_receive_bytes_total{origin_prometheus=~\"$origin_prometheus\",pod=~\"$Pod\",image!=\"\",name=~\"^k8s_.*\",node=~\"^$Node$\",namespace=~\"$NameSpace\",pod=~\".*$Container.*\"}[2m])) by (pod)* on(pod) group_right kube_pod_container_info) by(pod) *8",
+              "expr": "sum(sum(irate(container_network_receive_bytes_total{origin_prometheus=~\"$originPrometheus\",pod=~\"$pod\",image!=\"\",name=~\"^k8s_.*\",node=~\"^$node$\",namespace=~\"$namespace\",pod=~\".*$container.*\"}[2m])) by (pod)* on(pod) group_right kube_pod_container_info) by(pod) *8",
               "hide": false,
               "interval": "",
               "intervalFactor": 1,
@@ -3989,7 +3989,7 @@
             },
             {
               "exemplar": true,
-              "expr": "sum(sum(irate(container_network_transmit_bytes_total{origin_prometheus=~\"$origin_prometheus\",pod=~\"$Pod\",image!=\"\",name=~\"^k8s_.*\",node=~\"^$Node$\",namespace=~\"$NameSpace\",pod=~\".*$Container.*\"}[2m])) by (pod)* on(pod) group_right kube_pod_container_info) by(pod) *8",
+              "expr": "sum(sum(irate(container_network_transmit_bytes_total{origin_prometheus=~\"$originPrometheus\",pod=~\"$pod\",image!=\"\",name=~\"^k8s_.*\",node=~\"^$node$\",namespace=~\"$namespace\",pod=~\".*$container.*\"}[2m])) by (pod)* on(pod) group_right kube_pod_container_info) by(pod) *8",
               "interval": "",
               "intervalFactor": 1,
               "legendFormat": "流出:{{ pod}}",
@@ -3998,7 +3998,7 @@
               "step": 10
             },
             {
-              "expr": "sum (rate (container_network_receive_bytes_total{origin_prometheus=~\"$origin_prometheus\",pod=~\"$Pod\",image!=\"\",name=~\"^k8s_.*\",node=~\"^$Node$\",namespace=~\"$NameSpace\",pod=~\".*$Container.*\"}[2m])) by (pod)",
+              "expr": "sum (rate (container_network_receive_bytes_total{origin_prometheus=~\"$originPrometheus\",pod=~\"$pod\",image!=\"\",name=~\"^k8s_.*\",node=~\"^$node$\",namespace=~\"$namespace\",pod=~\".*$container.*\"}[2m])) by (pod)",
               "hide": true,
               "interval": "",
               "intervalFactor": 1,
@@ -4008,7 +4008,7 @@
               "step": 10
             },
             {
-              "expr": "- sum (rate (container_network_transmit_bytes_total{origin_prometheus=~\"$origin_prometheus\",pod=~\"$Pod\",image!=\"\",name=~\"^k8s_.*\",node=~\"^$Node$\",namespace=~\"$NameSpace\",pod=~\".*$Container.*\"}[2m])) by (pod)",
+              "expr": "- sum (rate (container_network_transmit_bytes_total{origin_prometheus=~\"$originPrometheus\",pod=~\"$pod\",image!=\"\",name=~\"^k8s_.*\",node=~\"^$node$\",namespace=~\"$namespace\",pod=~\".*$container.*\"}[2m])) by (pod)",
               "hide": true,
               "interval": "",
               "intervalFactor": 1,
@@ -4063,7 +4063,7 @@
           }
         }
       ],
-      "title": "Pod资源总览：所选Pod:【$Pod】",
+      "title": "Pod资源总览：所选Pod:【$pod】",
       "type": "row"
     }
   ],
@@ -4079,24 +4079,19 @@
     "list": [
       {
         "allValue": "",
-        "current": {
-          "selected": false,
-          "text": "ops",
-          "value": "ops"
-        },
         "datasource": "nas",
-        "definition": "label_values(origin_prometheus)",
+        "definition": "",
         "description": null,
         "error": null,
         "hide": 0,
         "includeAll": false,
-        "label": "K8S",
+        "label": "Cluster",
         "multi": false,
-        "name": "origin_prometheus",
+        "name": "originPrometheus",
         "options": [],
         "query": {
-          "query": "label_values(origin_prometheus)",
-          "refId": " VictoriaMetrics-origin_prometheus-Variable-Query"
+          "query": "label_values(kube_node_info,origin_prometheus)",
+          "refId": " VictoriaMetrics-OriginPrometheus-Variable-Query"
         },
         "refresh": 2,
         "regex": "",
@@ -4109,23 +4104,18 @@
       },
       {
         "allValue": "",
-        "current": {
-          "selected": false,
-          "text": "All",
-          "value": "$__all"
-        },
         "datasource": "nas",
-        "definition": "label_values(kube_node_info{origin_prometheus=~\"$origin_prometheus\"},node)",
+        "definition": "label_values(kube_node_info{origin_prometheus=~\"$originPrometheus\"},node)",
         "description": null,
         "error": null,
         "hide": 0,
         "includeAll": true,
-        "label": "节点",
+        "label": "Node",
         "multi": false,
-        "name": "Node",
+        "name": "node",
         "options": [],
         "query": {
-          "query": "label_values(kube_node_info{origin_prometheus=~\"$origin_prometheus\"},node)",
+          "query": "label_values(kube_node_info{origin_prometheus=~\"$originPrometheus\"},node)",
           "refId": " VictoriaMetrics-Node-Variable-Query"
         },
         "refresh": 1,
@@ -4139,24 +4129,19 @@
       },
       {
         "allValue": "",
-        "current": {
-          "selected": false,
-          "text": "All",
-          "value": "$__all"
-        },
         "datasource": "nas",
-        "definition": "label_values(kube_namespace_labels{origin_prometheus=~\"$origin_prometheus\"},namespace)",
+        "definition": "label_values(kube_namespace_labels{origin_prometheus=~\"$originPrometheus\"},namespace)",
         "description": null,
         "error": null,
         "hide": 0,
         "includeAll": true,
-        "label": "命名空间",
+        "label": "Namespace",
         "multi": false,
-        "name": "NameSpace",
+        "name": "namespace",
         "options": [],
         "query": {
-          "query": "label_values(kube_namespace_labels{origin_prometheus=~\"$origin_prometheus\"},namespace)",
-          "refId": " VictoriaMetrics-NameSpace-Variable-Query"
+          "query": "label_values(kube_namespace_labels{origin_prometheus=~\"$originPrometheus\"},namespace)",
+          "refId": " VictoriaMetrics-Namespace-Variable-Query"
         },
         "refresh": 1,
         "regex": "",
@@ -4169,23 +4154,18 @@
       },
       {
         "allValue": ".*",
-        "current": {
-          "selected": false,
-          "text": "All",
-          "value": "$__all"
-        },
         "datasource": "nas",
-        "definition": "label_values(kube_pod_container_info{origin_prometheus=~\"$origin_prometheus\",namespace=~\"$NameSpace\"},container)",
+        "definition": "label_values(kube_pod_container_info{origin_prometheus=~\"$originPrometheus\",namespace=~\"$namespace\"},container)",
         "description": null,
         "error": null,
         "hide": 0,
         "includeAll": true,
-        "label": "微服务(容器名)",
+        "label": "Service(Container)",
         "multi": false,
-        "name": "Container",
+        "name": "container",
         "options": [],
         "query": {
-          "query": "label_values(kube_pod_container_info{origin_prometheus=~\"$origin_prometheus\",namespace=~\"$NameSpace\"},container)",
+          "query": "label_values(kube_pod_container_info{origin_prometheus=~\"$originPrometheus\",namespace=~\"$namespace\"},container)",
           "refId": " VictoriaMetrics-Container-Variable-Query"
         },
         "refresh": 1,
@@ -4199,23 +4179,18 @@
       },
       {
         "allValue": ".*",
-        "current": {
-          "selected": false,
-          "text": "All",
-          "value": "$__all"
-        },
         "datasource": "nas",
-        "definition": "label_values(kube_pod_container_info{origin_prometheus=~\"$origin_prometheus\",namespace=~\"$NameSpace\",container=~\"$Container\"},pod)",
+        "definition": "label_values(kube_pod_container_info{origin_prometheus=~\"$originPrometheus\",namespace=~\"$namespace\",container=~\"$container\"},pod)",
         "description": null,
         "error": null,
         "hide": 0,
         "includeAll": true,
         "label": "Pod",
         "multi": false,
-        "name": "Pod",
+        "name": "pod",
         "options": [],
         "query": {
-          "query": "label_values(kube_pod_container_info{origin_prometheus=~\"$origin_prometheus\",namespace=~\"$NameSpace\",container=~\"$Container\"},pod)",
+          "query": "label_values(kube_pod_container_info{origin_prometheus=~\"$originPrometheus\",namespace=~\"$namespace\",container=~\"$container\"},pod)",
           "refId": " VictoriaMetrics-Pod-Variable-Query"
         },
         "refresh": 1,

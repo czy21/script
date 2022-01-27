@@ -113,7 +113,7 @@ data:
           regex: __meta_kubernetes_service_label_(.+)
         - source_labels: [__meta_kubernetes_namespace]
           action: replace
-          target_label: spring_namespace
+          target_label: namespace
         - source_labels: [__meta_kubernetes_service_name]
           action: replace
           target_label: application
