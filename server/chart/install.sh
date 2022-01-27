@@ -2,8 +2,8 @@
 
 # bash install.sh -h user@host
 # -a push apply delete
-# -n string namespace scope for this request
-# -t int    yaml's dir deep
+# -n string # namespace for this request
+# -t int    # yaml's dir deep
 # -p param_cluster_env <env>
 
 while getopts ":h" opt
