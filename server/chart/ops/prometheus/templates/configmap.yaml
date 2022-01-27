@@ -22,18 +22,17 @@ data:
           - role: node
         relabel_configs:
           - source_labels: [__address__]
+            action: replace
             regex: '(.*):10250'
             replacement: '${1}:9200'
             target_label: __address__
-            action: replace
           - action: labelmap
             regex: __meta_kubernetes_node_label_(.+)
-          - source_labels:
-            - __meta_kubernetes_pod_node_name
-            target_label: instance
+          - source_labels: [__meta_kubernetes_pod_node_name]
+            action: replace
             regex: (.*)
             replacement: $1
-            action: replace
+            target_label: instance
 
       - job_name: "k8s-cadvisor"
         scheme: https
