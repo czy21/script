@@ -80,6 +80,9 @@ def execute_cmd(cmd):
 
 def execute(app_tuples, func, **kwargs):
     env_dict = dotenv_values(kwargs["env_file"])
+    param_iter = iter(kwargs["args"].p)
+    param_input_dict = dict(zip(param_iter, param_iter))
+    env_dict.update(param_input_dict)
     for t in app_tuples:
         app_number = str(t[0])
         role_path = t[1]

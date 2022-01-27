@@ -89,18 +89,14 @@ def invoke(role_title: str, role_path: Path, **kwargs):
 if __name__ == '__main__':
     env_file = Path(__file__).parent.joinpath(".env").as_posix()
     parser = argparse.ArgumentParser()
+    parser.add_argument('-p', nargs="+", default=[])
     parser.add_argument('-i', action="store_true")
     parser.add_argument('-d', action="store_true")
     parser.add_argument('-b', action="store_true")
-    parser.add_argument('-p', action="store_true")
-
     parser.add_argument("-t", default=2)
     parser.add_argument('-n')
 
     args = parser.parse_args()
-    if args.p:
-        share.execute_cmd("docker image prune --force --all")
-        sys.exit()
     selected_option = share.select_option(int(args.t))
     if args.n is None:
         args.n = selected_option["namespace"]
