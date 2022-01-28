@@ -6,7 +6,7 @@
 #    site: os | docker | hosts | k8s-master | k8s-node
 #    general: prune | k8s-reset
 
-while getopts ":h" opt
+while getopts "h:" opt
 do
 	case $opt in
 		h)
