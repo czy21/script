@@ -24,10 +24,10 @@ spec:
       - name: {{ .Release.Name }}
         image: quay.io/prometheus/node-exporter
         args:
-        - --web.listen-address=0.0.0.0:9200
+        - --web.listen-address=0.0.0.0:9100
         ports:
-        - containerPort: 9200
-          hostPort: 9200
+        - containerPort: 9100
+          hostPort: 9100
         volumeMounts:
         - name: host
           mountPath: /host

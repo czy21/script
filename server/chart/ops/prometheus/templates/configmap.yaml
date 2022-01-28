@@ -21,7 +21,7 @@ data:
           - source_labels: [__address__]
             action: replace
             regex: '(.*):10250'
-            replacement: '${1}:9200'
+            replacement: '${1}:9100'
             target_label: __address__
           - action: labelmap
             regex: __meta_kubernetes_node_label_(.+)
