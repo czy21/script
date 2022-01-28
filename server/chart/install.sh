@@ -4,7 +4,8 @@
 # -a push apply delete
 # -n string # namespace for this request
 # -t int    # yaml's dir deep
-# -p param_cluster_env <env>
+# -p param_cluster_env < dev|ops >
+#    param_ks_cluster_role < host | member >
 
 while getopts "h:" opt
 do

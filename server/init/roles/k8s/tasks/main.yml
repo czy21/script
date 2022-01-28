@@ -12,6 +12,6 @@
     sudo sysctl --system
 
 - name: install
-  shell: bash {{ param_remote_role_path }}/{{ ansible_distribution | lower}}.sh
+  shell: bash {{ param_remote_role_path }}/{{ ansible_distribution | lower}}.sh && kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
 
 - include_tasks: "{{ param_k8s_role }}.yml"
