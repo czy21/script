@@ -14,12 +14,12 @@ function upload_exec_py() {
   local args
   local exec_cmd
   for i in "$@" ; do
-    if [ "-r" == $i ]; then
+    if [ "-r" == ${i} ]; then
         exec_cmd+='sudo pip3 install --requirement $HOME/'${name_path}/'requirements.txt;'
         shift 1
         continue
     fi
-    args+=" $i"
+    args+=" ${i}"
   done
   exec_cmd+='python3 -B $HOME/'${name_path}/'exec.py '${args}';'
   exec_cmd+=${prune_cmd}
