@@ -7,7 +7,7 @@
 # -c exec post.sh
 # -p param_cluster_env <env>
 
-while getopts ":h" opt
+while getopts "h:" opt
 do
 	case $opt in
 		h)
