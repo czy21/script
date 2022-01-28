@@ -9,17 +9,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: grafana.cluster.com
-    http:
-      paths:
-      - pathType: Prefix
-        path: /
-        backend:
-          service:
-            name: grafana
-            port:
-              number: 3000
-  - host: prometheus.cluster.com
+  - host: prom-{{ .Values.param_cluster_env }}.cluster.com
     http:
       paths:
       - pathType: Prefix
