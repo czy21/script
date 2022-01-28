@@ -11,7 +11,7 @@ spec:
     storageClass: ""        # If there is no default StorageClass in your cluster, you need to specify an existing StorageClass here.
   authentication:
     jwtSecret: {{ .Values.authentication.jwtSecret }}           # Keep the jwtSecret consistent with the Host Cluster. Retrieve the jwtSecret by executing "kubectl -n kubesphere-system get cm kubesphere-config -o yaml | grep -v "apiVersion" | grep jwtSecret" on the Host Cluster.
-  local_registry: ""        # Add your private registry address if it is needed.
+  local_registry: "{{ .Values.param_registry_url }}"        # Add your private registry address if it is needed.
   etcd:
     monitoring: false       # Enable or disable etcd monitoring dashboard installation. You have to create a Secret for etcd before you enable it.
     endpointIps: localhost  # etcd cluster EndpointIps. It can be a bunch of IPs here.
@@ -48,15 +48,7 @@ spec:
     #   replicas: 1
     #   resources: {}
   auditing:                # Provide a security-relevant chronological set of records，recording the sequence of activities happening on the platform, initiated by different tenants.
-    enabled: false         # Enable or disable the KubeSphere Auditing Log System. 
-  devops:                  # (CPU: 0.47 Core, Memory: 8.6 G) Provide an out-of-the-box CI/CD system based on Jenkins, and automated workflow tools including Source-to-Image & Binary-to-Image.
-    enabled: false             # Enable or disable the KubeSphere DevOps System.
-    jenkinsMemoryLim: 2Gi      # Jenkins memory limit.
-    jenkinsMemoryReq: 1500Mi   # Jenkins memory request.
-    jenkinsVolumeSize: 8Gi     # Jenkins volume size.
-    jenkinsJavaOpts_Xms: 512m  # The following three fields are JVM parameters.
-    jenkinsJavaOpts_Xmx: 512m
-    jenkinsJavaOpts_MaxRAM: 2g
+    enabled: false         # Enable or disable the KubeSphere Auditing Log System.
   events:                  # Provide a graphical web console for Kubernetes Events exporting, filtering and alerting in multi-tenant Kubernetes clusters.
     enabled: true         # Enable or disable the KubeSphere Events System.
     ruler:
