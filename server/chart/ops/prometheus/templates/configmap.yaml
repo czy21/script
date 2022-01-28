@@ -14,7 +14,7 @@ data:
 
     scrape_configs:
       
-      - job_name: 'k8s-node'
+      - job_name: k8s-node
         kubernetes_sd_configs:
           - role: node
         relabel_configs:
@@ -36,7 +36,7 @@ data:
           - role: endpoints
             namespaces:
               names:
-                - "ops"
+                - ops
         relabel_configs:
           - source_labels: [__meta_kubernetes_service_label_app_kubernetes_io_name]
             regex: kube-state-metrics
@@ -51,7 +51,7 @@ data:
             action: replace
             target_label: k8s_name
             
-      - job_name: "k8s-cadvisor"
+      - job_name: k8s-cadvisor
         scheme: https
         tls_config:
           ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
@@ -89,7 +89,7 @@ data:
             replacement: $1
             action: replace
             
-      - job_name: ingress
+      - job_name: k8s-ingress
         kubernetes_sd_configs:
           - role: pod
             namespaces:
@@ -104,7 +104,9 @@ data:
             target_label: __address__
             regex: ([^:]+)(?::\d+)?;(\d+)
             replacement: $1:$2
-
+          - source_labels: [__meta_kubernetes_pod_name]
+            action: replace
+            target_label: kubernetes_pod_name
       - job_name: spring
         kubernetes_sd_configs:
           - role: endpoints
@@ -113,19 +115,19 @@ data:
                 - stable
         metrics_path: actuator/prometheus
         relabel_configs:
-        - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape]
-          action: keep
-          regex: true
-        - source_labels: [__address__, __meta_kubernetes_service_annotation_prometheus_io_port]
-          action: replace
-          target_label: __address__
-          regex: ([^:]+)(?::\d+)?;(\d+)
-          replacement: $1:$2
-        - action: labelmap
-          regex: __meta_kubernetes_service_label_(.+)
-        - source_labels: [__meta_kubernetes_namespace]
-          action: replace
-          target_label: namespace
-        - source_labels: [__meta_kubernetes_service_name]
-          action: replace
-          target_label: application
+          - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape]
+            action: keep
+            regex: true
+          - source_labels: [__address__, __meta_kubernetes_service_annotation_prometheus_io_port]
+            action: replace
+            target_label: __address__
+            regex: ([^:]+)(?::\d+)?;(\d+)
+            replacement: $1:$2
+          - action: labelmap
+            regex: __meta_kubernetes_service_label_(.+)
+          - source_labels: [__meta_kubernetes_namespace]
+            action: replace
+            target_label: namespace
+          - source_labels: [__meta_kubernetes_service_name]
+            action: replace
+            target_label: application
