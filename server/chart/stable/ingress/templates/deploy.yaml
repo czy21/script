@@ -5,10 +5,10 @@ metadata:
   name: ingress
   namespace: {{ .Release.Namespace }}
   annotations:
+    kubesphere.io/creator: admin
     nginx.ingress.kubernetes.io/proxy-body-size: '0'
-    nginx.ingress.kubernetes.io/app-root: /react
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
 spec:
+  ingressClassName: nginx
   rules:
     - host: app-dev.cluster.com
       http:
@@ -16,15 +16,7 @@ spec:
           - path: /
             pathType: Prefix
             backend:
-              serviceName: erp-operation-react
-              servicePort: 80
-          - path: /react(/|$)(.*)
-            pathType: Prefix
-            backend:
-              serviceName: erp-operation-react
-              servicePort: 80
-          - path: /vue(/|$)(.*)
-            pathType: Prefix
-            backend:
-              serviceName: erp-operation-vue
-              servicePort: 80
+              service:
+                name: erp-operation-react
+                port:
+                  number: 80

@@ -1,8 +1,8 @@
 log:
-  elkPrefix: logstash-ops
+  elkPrefix: logstash-{{ param_cluster_env }}
 
 authentication:
   jwtSecret: "gfIwilcc0WjNGKJ5DLeksf2JKfcLgTZU"
 
 multicluster:
-  clusterRole: host
+  clusterRole: {{ param_kubesphere_cluster_role }}
