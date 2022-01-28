@@ -11,7 +11,7 @@ spec:
     storageClass: ""        # If there is no default StorageClass in your cluster, you need to specify an existing StorageClass here.
   authentication:
     jwtSecret: {{ .Values.authentication.jwtSecret }}           # Keep the jwtSecret consistent with the Host Cluster. Retrieve the jwtSecret by executing "kubectl -n kubesphere-system get cm kubesphere-config -o yaml | grep -v "apiVersion" | grep jwtSecret" on the Host Cluster.
-  local_registry: "{{ .Values.param_registry_url }}"        # Add your private registry address if it is needed.
+  local_registry: ""        # Add your private registry address if it is needed.
   etcd:
     monitoring: false       # Enable or disable etcd monitoring dashboard installation. You have to create a Secret for etcd before you enable it.
     endpointIps: localhost  # etcd cluster EndpointIps. It can be a bunch of IPs here.
@@ -26,8 +26,8 @@ spec:
     openldapVolumeSize: 2Gi   # openldap PVC size.
     redisVolumSize: 2Gi # Redis PVC size.
     monitoring:
-      # type: external   # Whether to specify the external prometheus stack, and need to modify the endpoint at the next line.
-      endpoint: http://prometheus-operated.kubesphere-monitoring-system.svc:9090 # Prometheus endpoint to get metrics data.
+       type: external   # Whether to specify the external prometheus stack, and need to modify the endpoint at the next line.
+       endpoint: http://prometheus.ops.svc:9090 # Prometheus endpoint to get metrics data.
     es:   # Storage backend for logging, events and auditing.
       elasticsearchMasterVolumeSize: 4Gi   # The volume size of Elasticsearch master nodes.
       elasticsearchDataVolumeSize: 24Gi    # The volume size of Elasticsearch data nodes.
@@ -49,6 +49,8 @@ spec:
     #   resources: {}
   auditing:                # Provide a security-relevant chronological set of records，recording the sequence of activities happening on the platform, initiated by different tenants.
     enabled: false         # Enable or disable the KubeSphere Auditing Log System.
+  devops:                  # (CPU: 0.47 Core, Memory: 8.6 G) Provide an out-of-the-box CI/CD system based on Jenkins, and automated workflow tools including Source-to-Image & Binary-to-Image.
+    enabled: false
   events:                  # Provide a graphical web console for Kubernetes Events exporting, filtering and alerting in multi-tenant Kubernetes clusters.
     enabled: true         # Enable or disable the KubeSphere Events System.
     ruler:
@@ -82,29 +84,3 @@ spec:
       enabled: false # Enable or disable the KubeSphere App Store.
   servicemesh:         # (0.3 Core, 300 MiB) Provide fine-grained traffic management, observability and tracing, and visualized traffic topology.
     enabled: false     # Base component (pilot). Enable or disable KubeSphere Service Mesh (Istio-based).
-  kubeedge:          # Add edge nodes to your cluster and deploy workloads on edge nodes.
-    enabled: false   # Enable or disable KubeEdge.
-    cloudCore:
-      nodeSelector: {"node-role.kubernetes.io/worker": ""}
-      tolerations: []
-      cloudhubPort: "10000"
-      cloudhubQuicPort: "10001"
-      cloudhubHttpsPort: "10002"
-      cloudstreamPort: "10003"
-      tunnelPort: "10004"
-      cloudHub:
-        advertiseAddress: # At least a public IP address or an IP address which can be accessed by edge nodes must be provided.
-          - ""            # Note that once KubeEdge is enabled, CloudCore will malfunction if the address is not provided.
-        nodeLimit: "100"
-      service:
-        cloudhubNodePort: "30000"
-        cloudhubQuicNodePort: "30001"
-        cloudhubHttpsNodePort: "30002"
-        cloudstreamNodePort: "30003"
-        tunnelNodePort: "30004"
-    edgeWatcher:
-      nodeSelector: {"node-role.kubernetes.io/worker": ""}
-      tolerations: []
-      edgeWatcherAgent:
-        nodeSelector: {"node-role.kubernetes.io/worker": ""}
-        tolerations: []
