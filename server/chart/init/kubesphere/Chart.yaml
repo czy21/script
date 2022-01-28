@@ -1,3 +1,3 @@
 apiVersion: v2
-name: ks-installer
+name: kubesphere
 version: 0.1.0
