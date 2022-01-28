@@ -26,8 +26,8 @@ spec:
     openldapVolumeSize: 2Gi   # openldap PVC size.
     redisVolumSize: 2Gi # Redis PVC size.
     monitoring:
-       type: external   # Whether to specify the external prometheus stack, and need to modify the endpoint at the next line.
-       endpoint: http://prometheus.ops.svc:9090 # Prometheus endpoint to get metrics data.
+      type: external   # Whether to specify the external prometheus stack, and need to modify the endpoint at the next line.
+      endpoint: http://prometheus.ops.svc:9090 # Prometheus endpoint to get metrics data.
     es:   # Storage backend for logging, events and auditing.
       elasticsearchMasterVolumeSize: 4Gi   # The volume size of Elasticsearch master nodes.
       elasticsearchDataVolumeSize: 24Gi    # The volume size of Elasticsearch data nodes.
