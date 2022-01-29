@@ -55,7 +55,7 @@ spec:
        volumeSize: 24Gi  # The volume size of Elasticsearch data nodes.
        replicas: 2       # The total number of data nodes.
        resources: {}
-      logMaxAge: 7             # Log retention time in built-in Elasticsearch. It is 7 days by default.
+      logMaxAge: 10             # Log retention time in built-in Elasticsearch. It is 7 days by default.
       elkPrefix: {{ .Values.log.elkPrefix }}      # The string making up index names. The index name will be formatted as ks-<elk_prefix>-log.
       basicAuth:
         enabled: true
@@ -101,14 +101,14 @@ spec:
     #   resources: {}
     # kube_state_metrics:
     #   resources: {}
-    # prometheus:
-    #   replicas: 1  # Prometheus replicas are responsible for monitoring different segments of data source and providing high availability.
-    #   volumeSize: 20Gi  # Prometheus PVC size.
-    #   resources: {}
-    #   operator:
-    #     resources: {}
-    #   adapter:
-    #     resources: {}
+    prometheus:
+     replicas: 2  # Prometheus replicas are responsible for monitoring different segments of data source and providing high availability.
+     volumeSize: 24Gi  # Prometheus PVC size.
+     resources: {}
+     operator:
+       resources: {}
+     adapter:
+       resources: {}
     # node_exporter:
     #   resources: {}
     # alertmanager:
