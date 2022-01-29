@@ -5,7 +5,7 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/proxy-body-size: '0'
   name: ingress
-  namespace: {{ .Release.Namespace }}
+  namespace: kubesphere-monitoring-system
 spec:
   ingressClassName: nginx
   rules:

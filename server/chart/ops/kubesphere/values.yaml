@@ -2,7 +2,7 @@ log:
   elkPrefix: {{ param_cluster_env }}
 
 authentication:
-  jwtSecret: "{{ param_ks_cluster_jwt }}"
+  jwtSecret: "{{ param_ks_jwt }}"
 
 multicluster:
-  clusterRole: {{ param_ks_cluster_role }}
+  clusterRole: {{ param_ks_role }}

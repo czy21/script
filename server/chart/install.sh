@@ -5,7 +5,8 @@
 # -n string # namespace for this request
 # -t int    # yaml's dir deep
 # -p param_cluster_env < dev|ops >
-#    param_ks_cluster_role < host | member >
+#    param_ks_role < host | member >
+#    param_ks_jwt <>
 
 while getopts "h:" opt
 do
