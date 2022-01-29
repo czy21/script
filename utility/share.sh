@@ -15,7 +15,7 @@ function upload_exec_py() {
   local exec_cmd
   for i in "$@" ; do
     if [ "-r" == ${i} ]; then
-        exec_cmd+='sudo pip3 install --requirement $HOME/'${name_path}/'requirements.txt;'
+        exec_cmd+='sudo pip3 install --requirement $HOME/'${name_path}/'requirements.txt --ignore-installed;'
         shift 1
         continue
     fi
