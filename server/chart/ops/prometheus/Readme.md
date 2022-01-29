@@ -11,5 +11,5 @@ spring-metrics: 13657
 cd ~ && git clone https://github.com/prometheus-operator/kube-prometheus.git offical-prometheus && cd offical-prometheus && git checkout tags/v0.9.0 -b v0.9.0
 kubectl apply -f manifests/setup/
 rm -rf manifests/prometheus-adapter-*
-find manifests/prometheus-* node-exporter-* kube-state-metrics-* -exec kubectl apply -f {} \;
+find manifests/prometheus-* manifests/node-exporter-* manifests/kube-state-metrics-* -exec kubectl apply -f {} \;
 ```
