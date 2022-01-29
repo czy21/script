@@ -26,3 +26,6 @@ sudo -u root bash -c "${public_key}"
 sudo -u bruce bash -c "${public_key}"
 
 ufw disable
+
+swapoff -a
+sed -i -r "s/^\s*/swap.img\s+\w+/#\0/" /etc/fstab
