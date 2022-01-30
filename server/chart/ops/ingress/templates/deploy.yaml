@@ -5,7 +5,7 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/proxy-body-size: '0'
   name: ingress
-  namespace: kubesphere-monitoring-system
+  namespace: {{ .Release.Namespace }}
 spec:
   ingressClassName: nginx
   rules:
@@ -16,6 +16,29 @@ spec:
         path: /
         backend:
           service:
+            name: prometheus
+            port:
+              number: 9090
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: '0'
+  name: ingress
+  namespace: kubesphere-monitoring-system
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: ks-prom-{{ .Values.param_cluster_env }}.cluster.com
+    http:
+      paths:
+      - pathType: Prefix
+        path: /
+        backend:
+          service:
             name: prometheus-operated
             port:
               number: 9090
+
