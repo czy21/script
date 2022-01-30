@@ -22,7 +22,7 @@ function upload_exec_py() {
     args+=" ${i}"
   done
   exec_cmd+='python3 -B $HOME/'${name_path}/'exec.py '${args}';'
-  exec_cmd+=${prune_cmd}
+  # exec_cmd+=${prune_cmd}
   echo -e '\033[32m command: \033[0m'${exec_cmd}
   ssh $host ${exec_cmd}
 }
