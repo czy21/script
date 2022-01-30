@@ -28,6 +28,8 @@ showmount -e [host]
 
 ### join cluster
 ```shell
+# allow master taint
+kubectl taint nodes --all node-role.kubernetes.io/master-
 # get join command on master node
 kubeadm token create --print-join-command
 ```
