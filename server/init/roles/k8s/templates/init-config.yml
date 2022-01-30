@@ -1,0 +1,17 @@
+---
+apiVersion: kubeadm.k8s.io/v1beta2
+kind: InitConfiguration
+localAPIEndpoint:
+  advertiseAddress: "{{ inventory_hostname }}"
+---
+apiVersion: kubeadm.k8s.io/v1beta2
+kind: ClusterConfiguration
+kubernetesVersion: "v{{ param_k8s_version }}"
+imageRepository: "{{ param_docker_image_proxy }}"
+networking:
+  serviceSubnet: "{{ param_svc_network_cidr }}"
+  podSubnet: "{{ param_pod_network_cidr }}"
+apiServer:
+  extraArgs:
+    service-node-port-range: "1-65535"
+    feature-gates: "RemoveSelfLink=false"
