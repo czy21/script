@@ -41,7 +41,7 @@ spec:
             path: nginx.conf
       containers:
       - name: {{ .Release.Name }}
-        image: '{{ .Values.registry_repo }}/{{ .Values.registry_dir }}/{{ .Release.Name }}:{{ .Values.release_version }}'
+        image: {{ .Values.registry_repo }}/{{ .Values.registry_dir }}/{{ .Release.Name }}:{{ .Values.release_version }}
         imagePullPolicy: Always
         ports:
           - containerPort: 80
