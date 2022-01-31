@@ -297,7 +297,7 @@
       "pluginVersion": "8.2.5",
       "targets": [
         {
-          "expr": "count(kube_node_info{origin_prometheus=~\"$originPrometheus\"})",
+          "expr": "count(kube_node_labels{origin_prometheus=~\"$originPrometheus\"})",
           "instant": true,
           "interval": "",
           "legendFormat": "节点数",
@@ -4090,7 +4090,7 @@
         "name": "originPrometheus",
         "options": [],
         "query": {
-          "query": "label_values(kube_node_info,origin_prometheus)",
+          "query": "label_values(kube_node_labels,origin_prometheus)",
           "refId": " VictoriaMetrics-OriginPrometheus-Variable-Query"
         },
         "refresh": 2,
@@ -4105,7 +4105,7 @@
       {
         "allValue": "",
         "datasource": "nas",
-        "definition": "label_values(kube_node_info{origin_prometheus=~\"$originPrometheus\"},node)",
+        "definition": "label_values(kube_node_labels{origin_prometheus=~\"$originPrometheus\"},node)",
         "description": null,
         "error": null,
         "hide": 0,
@@ -4115,7 +4115,7 @@
         "name": "node",
         "options": [],
         "query": {
-          "query": "label_values(kube_node_info{origin_prometheus=~\"$originPrometheus\"},node)",
+          "query": "label_values(kube_node_labels{origin_prometheus=~\"$originPrometheus\"},node)",
           "refId": " VictoriaMetrics-Node-Variable-Query"
         },
         "refresh": 1,
