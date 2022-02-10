@@ -12,7 +12,7 @@ def build() {
         case "python":
             break;
         case "web":
-            env.NODEJS_HOME = "${tool 'node-v14.18.3'}"
+            env.NODEJS_HOME = "${tool 'node-v16.13.2'}"
             env.PATH = "${NODEJS_HOME}/bin:${PATH}"
             sh "yarn --cwd ${env.param_project_context} --registry ${env.param_npm_registry} --cache-folder ${env.param_yarn_cache} install && yarn --cwd ${env.param_project_context} --registry ${env.param_npm_registry} --cache-folder ${env.param_yarn_cache} --ignore-engines build"
             break;
