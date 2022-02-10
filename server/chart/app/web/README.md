@@ -38,7 +38,7 @@ data:
 
         server {
             listen       80;
-            server_name  localhost;
+            server_name  127.0.0.1;
 
             location / {
                 root /usr/share/nginx/web/;
