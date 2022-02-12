@@ -32,9 +32,9 @@ function prune() {
 		echo "option requires an argument -- t";
 		exit 1;
 	fi
-	# echo -e "${target_regex}\033[32m prune started \033[0m"
-	find ${target_regex}-* -exec sh -c 'f={};file_date=$(basename ${f} | cut -d"-" -f3);if [ $(date +%s -d ${file_date}) -ge '$(date +%s -d ${minus_date})' ]; then echo $f;fi;' \;
-	# echo -e "${target_regex}\033[32m prune finished \033[0m"
+	echo -e "${target_regex}\033[32m prune started \033[0m"
+	find ${target_regex}-* -exec sh -c 'f={};file_date=$(basename ${f} | cut -d"-" -f3);if [ $(date +%s -d ${file_date}) -ge '$(date +%s -d ${minus_date})' ]; then echo $f;rm -f $f;fi;' \;
+	echo -e "${target_regex}\033[32m prune finished \033[0m"
 }
 
 while getopts "f:" opt;do
