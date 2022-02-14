@@ -22,7 +22,7 @@ spec:
           path: /
       containers:
       - name: {{ .Release.Name }}
-        image: quay.io/prometheus/node-exporter
+        image: {{ .Values.param_registry_proxy_url | default "quay.io" }}/prometheus/node-exporter
         args:
         - --web.listen-address=0.0.0.0:9200
         ports:

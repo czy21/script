@@ -3,7 +3,7 @@ version: '3.9'
 services:
 
   pgsql_exporter:
-    image: quay.io/prometheuscommunity/postgres-exporter
+    image: {{ .Values.param_registry_proxy_url | default("quay.io") }}/prometheuscommunity/postgres-exporter
     container_name: pgsql_exporter
     ports:
       - "9187:9187"

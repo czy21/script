@@ -14,7 +14,7 @@ metadata:
   name: cluster
   namespace: {{ .Release.Namespace }}
 spec:
-  version: 7.15.0
+  version: {{ .Values.version }}
   auth:
     fileRealm:
       - secretName: es-filerealm-secret
@@ -31,7 +31,7 @@ spec:
         spec: 
           containers:
             - name: elasticsearch
-              image: registry-proxy.cluster.com/elasticsearch/elasticsearch:7.15.0
+              image: {{ .Values.param_registry_proxy_url | default "docker.elastic.co" }}/elasticsearch/elasticsearch:{{ .Values.version }}
       volumeClaimTemplates:
         - metadata:
             name: elasticsearch-data
@@ -49,7 +49,7 @@ metadata:
   name: cluster
   namespace: {{ .Release.Namespace }}
 spec:
-  version: 7.15.0
+  version: {{ .Values.version }}
   count: 1
   elasticsearchRef:
     name: cluster
@@ -57,8 +57,7 @@ spec:
     spec:
       containers:
         - name: kibana
-          image: registry-proxy.cluster.com/kibana/kibana:7.15.0
-
+          image: {{ .Values.param_registry_proxy_url | default "docker.elastic.co" }}/kibana/kibana:{{ .Values.version }}
   http:
     tls:
       selfSignedCertificate:

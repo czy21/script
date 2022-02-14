@@ -21,8 +21,7 @@ spec:
       serviceAccountName: nfs-client-provisioner
       containers:
         - name: nfs-client-provisioner
-          # quay.io/external_storage/nfs-client-provisioner:latest
-          image: registry-proxy.cluster.com/external_storage/nfs-client-provisioner:latest
+          image: {{ .Values.param_registry_proxy_url | default "quay.io" }}/external_storage/nfs-client-provisioner:latest
           volumeMounts:
             - name: nfs-client-root
               mountPath: /persistentvolumes
