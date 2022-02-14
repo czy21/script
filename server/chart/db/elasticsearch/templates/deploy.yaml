@@ -14,20 +14,11 @@ metadata:
   name: cluster
   namespace: {{ .Release.Namespace }}
 spec:
-  version: 7.15.0
+  version: 8.0.0
   auth:
     fileRealm:
       - secretName: es-filerealm-secret
   http:
-    service:
-      spec:
-        type: NodePort
-        ports:
-          - name: http
-            nodePort: 9210
-            port: 9200
-            protocol: TCP
-            targetPort: 9200
     tls:
       selfSignedCertificate:
         disabled: true
@@ -36,6 +27,11 @@ spec:
       count: 2
       config:
         node.store.allow_mmap: false
+      podTemplate:
+        spec: 
+          containers:
+            - name: elasticsearch
+              image: registry-proxy.cluster.com/elasticsearch/elasticsearch:8.0.0
       volumeClaimTemplates:
         - metadata:
             name: elasticsearch-data
@@ -53,20 +49,17 @@ metadata:
   name: cluster
   namespace: {{ .Release.Namespace }}
 spec:
-  version: 7.15.0
+  version: 8.0.0
   count: 1
   elasticsearchRef:
     name: cluster
+  podTemplate:
+    spec:
+      containers:
+        - name: kibana
+          image: registry-proxy.cluster.com/kibana/kibana:8.0.0
+
   http:
-    service:
-      spec:
-        type: NodePort
-        ports:
-          - name: http
-            nodePort: 5601
-            port: 5601
-            protocol: TCP
-            targetPort: 5601
     tls:
       selfSignedCertificate:
         disabled: true

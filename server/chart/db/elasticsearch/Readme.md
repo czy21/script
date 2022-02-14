@@ -1,8 +1,9 @@
 
 # eck install
 ```shell
-kubectl create -f https://download.elastic.co/downloads/eck/1.8.0/crds.yaml
-kubectl apply -f https://download.elastic.co/downloads/eck/1.8.0/operator.yaml
+kubectl create -f https://download.elastic.co/downloads/eck/2.0.0/crds.yaml
+kubectl apply -f https://download.elastic.co/downloads/eck/2.0.0/operator.yaml
+
 ```
 
 
@@ -11,8 +12,8 @@ kubectl apply -f https://download.elastic.co/downloads/eck/1.8.0/operator.yaml
 # 删除所有es资源
 kubectl get namespaces --no-headers -o custom-columns=:metadata.name | xargs -n1 kubectl delete elastic --all -n
 # 删除 operator
-kubectl delete -f https://download.elastic.co/downloads/eck/1.8.0/operator.yaml
-kubectl delete -f https://download.elastic.co/downloads/eck/1.8.0/crds.yaml
+kubectl delete -f https://download.elastic.co/downloads/eck/2.0.0/operator.yaml
+kubectl delete -f https://download.elastic.co/downloads/eck/2.0.0/crds.yaml
 ```
 
 # login
