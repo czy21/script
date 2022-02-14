@@ -14,7 +14,7 @@ metadata:
   name: cluster
   namespace: {{ .Release.Namespace }}
 spec:
-  version: 8.0.0
+  version: 7.15.0
   auth:
     fileRealm:
       - secretName: es-filerealm-secret
@@ -31,7 +31,7 @@ spec:
         spec: 
           containers:
             - name: elasticsearch
-              image: registry-proxy.cluster.com/elasticsearch/elasticsearch:8.0.0
+              image: registry-proxy.cluster.com/elasticsearch/elasticsearch:7.15.0
       volumeClaimTemplates:
         - metadata:
             name: elasticsearch-data
@@ -49,7 +49,7 @@ metadata:
   name: cluster
   namespace: {{ .Release.Namespace }}
 spec:
-  version: 8.0.0
+  version: 7.15.0
   count: 1
   elasticsearchRef:
     name: cluster
@@ -57,7 +57,7 @@ spec:
     spec:
       containers:
         - name: kibana
-          image: registry-proxy.cluster.com/kibana/kibana:8.0.0
+          image: registry-proxy.cluster.com/kibana/kibana:7.15.0
 
   http:
     tls:
