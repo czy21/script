@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
 
-  {{ param_role_name }}:
+  nacos:
     image: nacos/nacos-server:2.0.3
     container_name: {{ param_role_name }}
     privileged: true

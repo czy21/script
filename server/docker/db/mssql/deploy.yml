@@ -3,7 +3,7 @@ version: '3.9'
 services:
 
   mssql:
-    image: mcr.microsoft.com/mssql/server:2019-latest
+    image: {{ param_registry_proxy_url | default("mcr.microsoft.com") }}/mssql/server:2019-latest
     container_name: mssql
     privileged: true
     user: root
