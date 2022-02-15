@@ -3,14 +3,12 @@ import argparse
 import importlib
 import io
 import json
-import operator
 import os
 import sys
 from pathlib import Path
 
 sys.path.append(Path(__file__).joinpath("../../").resolve().as_posix())
 from script.utility import log as log_util, basic as basic_util, path as path_util
-import configparser
 
 
 def exec_file():
