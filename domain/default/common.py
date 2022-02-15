@@ -63,7 +63,6 @@ param_main_redis_host = ""
 param_main_rabbit_host = ""
 
 # api
-param_api_archive_file_name = "api.jar"
 param_api_root_project_path = ""
 param_api_gradle_init_script_file_path = ""
 param_api_gradle_plugin_root_project_path = default_path.project_code_plugin
