@@ -28,8 +28,12 @@ showmount -e [host]
 
 ### join cluster
 ```shell
-# allow master taint
+# allow master scheduling
 kubectl taint nodes --all node-role.kubernetes.io/master-
+
+# deny master scheduling
+kubectl taint node [master host] node-role.kubernetes.io/master="":NoSchedule
+
 # get join command on master node
 kubeadm token create --print-join-command
 ```
