@@ -245,7 +245,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "topk(1, sum(minio_cluster_capacity_usable_free_bytes{job=\"$scrape_jobs\"}) by (instance))",
+          "expr": "topk(1, sum(minio_node_disk_free_bytes{job=\"$scrape_jobs\"}) by (instance))",
           "format": "time_series",
           "instant": false,
           "interval": "1m",
