@@ -4,27 +4,49 @@ apt:
     apt-debian11-proxy:
       type: proxy
       distribution: bullseye
-      proxy-url: http://mirrors.aliyun.com/debian/
+      proxy-url: https://mirrors.aliyun.com/debian/
     apt-debian11-proxy-security:
       type: proxy
       distribution: bullseye
-      proxy-url: http://mirrors.aliyun.com/debian-security/
+      proxy-url: https://mirrors.aliyun.com/debian-security/
     apt-ubuntu18-proxy:
       type: proxy
       distribution: bionic
-      proxy-url: http://mirrors.aliyun.com/ubuntu/
+      proxy-url: https://mirrors.aliyun.com/ubuntu/
     apt-ubuntu20-proxy:
       type: proxy
       distribution: focal
-      proxy-url: http://mirrors.aliyun.com/ubuntu/
+      proxy-url: https://mirrors.aliyun.com/ubuntu/
+docker:
+  docker-proxy-offical:
+    type: proxy
+    proxy-url: https://registry-1.docker.io
+  docker-proxy-quay:
+    type: proxy
+    proxy-url: https://quay.io
+  docker-proxy-gcr:
+    type: proxy
+    proxy-url: https://gcr.io
+  docker-proxy-mcr:
+    type: proxy
+    proxy-url: https://mcr.microsoft.com
+  docker-proxy-k8s:
+    type: proxy
+    proxy-url: https://k8s.gcr.io
+  docker-proxy-es:
+    type: proxy
+    proxy-url: https://docker.elastic.co
+  
 go: 
   go-proxy:
     type: proxy
     proxy-url: https://goproxy.io
+    
 helm:
   helm-hosted:
     type: hosted
     deployment-policy: Allow
+    
 maven:
   maven-central:
     type: proxy
@@ -57,7 +79,7 @@ pypi:
 yum:
   yum-proxy:
     type: proxy
-    proxy-url: http://mirror.centos.org/centos/
+    proxy-url: https://mirror.centos.org/centos/
 npm:
   npm-proxy:
     type: proxy
