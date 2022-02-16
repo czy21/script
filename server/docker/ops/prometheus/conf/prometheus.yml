@@ -65,7 +65,7 @@ scrape_configs:
           - 'redis_exporter_{{ param_db_redis_cluster_start_port }}:9121'
 
   - job_name: minio
-    metrics_path: /minio/v2/metrics/node
+    metrics_path: /minio/v2/metrics/cluster
     scheme: http
     static_configs:
     - targets: ['minio:9000']
