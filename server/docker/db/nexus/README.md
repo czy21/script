@@ -58,6 +58,10 @@ yum:
   yum-proxy:
     type: proxy
     proxy-url: http://mirror.centos.org/centos/
+npm:
+  npm-proxy:
+    type: proxy
+    proxy-url: https://registry.npmjs.org
 nuget:
   nuget-hosted:
     type: hosted
