@@ -5,4 +5,4 @@ authentication:
   jwtSecret: "{{ param_ks_jwt }}"
 
 multicluster:
-  clusterRole: {{ param_ks_role }}
+  clusterRole: {{ param_ks_role | default("none") }}
