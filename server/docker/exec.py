@@ -75,7 +75,7 @@ def invoke(role_title: str, role_path: Path, **kwargs):
             docker_tag = "/".join([str(p).strip("/") for p in [registry_url, registry_dir, role_name]])
             build_cmd.append([
                 "docker build --tag {0} --file {1} {2}".format(docker_tag, role_docker_file.as_posix(), role_path.as_posix()),
-                "docker push {0}".format(docker_tag)
+                # "docker push {0}".format(docker_tag)
             ])
         if role_build_sh.exists():
             build_cmd.append(
