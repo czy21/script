@@ -19,7 +19,7 @@ def invoke(role_title: str, role_path: Path, **kwargs):
     role_name = role_path.name
     role_values_file = role_path.joinpath("values.yaml")
 
-    kube_actions = ["apply", "delete","diff"]
+    kube_actions = ["apply", "delete", "diff"]
     temp_all_in_one_path = role_path.joinpath("___temp/deploy.yaml")
     temp_all_in_one_path.parent.mkdir(parents=True, exist_ok=True)
     temp_all_in_one_path.touch()
@@ -54,13 +54,15 @@ def invoke(role_title: str, role_path: Path, **kwargs):
 
     for action in args.a:
         if action == "push":
-            helm_registry = env_dict["param_helm_registry"]
+            helm_repo_name = env_dict["param_helm_repo_name"]
+            helm_repo_url = env_dict["param_helm_repo_url"]
             helm_username = env_dict["param_helm_username"]
             helm_password = env_dict["param_helm_password"]
             helm_push_cmd = share.arr_param_to_str(
                 [
                     "helm plugin list | if [ -z \"$(grep nexus-push)\" ];then helm plugin install --version master https://github.com/sonatype-nexus-community/helm-nexus-push.git;fi",
-                    "helm package {0} --destination {0} | sed 's/Successfully packaged chart and saved it to: //g' | xargs helm nexus-push {1}  --username {2} --password {3}".format(role_path, helm_registry, helm_username, helm_password)
+                    "helm repo   list | if [ -z \"$(grep {0})\" ];then helm repo add {0} {1};fi".format(helm_repo_name, helm_repo_url),
+                    "helm package {0} --destination {0} | sed 's/Successfully packaged chart and saved it to: //g' | xargs helm nexus-push {1}  --username {2} --password {3}".format(role_path, helm_repo_name, helm_username, helm_password)
                 ], separator=" && ")
             share.execute_cmd(helm_push_cmd)
         if action in kube_actions:

@@ -1,19 +1,15 @@
 # apt
 ```yaml
 apt:
-    apt-debian11-proxy:
+    apt-proxy-debian:
       type: proxy
       distribution: bullseye
       proxy-url: https://mirrors.aliyun.com/debian/
-    apt-debian11-proxy-security:
+    apt-proxy-debian-security:
       type: proxy
       distribution: bullseye
       proxy-url: https://mirrors.aliyun.com/debian-security/
-    apt-ubuntu18-proxy:
-      type: proxy
-      distribution: bionic
-      proxy-url: https://mirrors.aliyun.com/ubuntu/
-    apt-ubuntu20-proxy:
+    apt-proxy-ubuntu:
       type: proxy
       distribution: focal
       proxy-url: https://mirrors.aliyun.com/ubuntu/
