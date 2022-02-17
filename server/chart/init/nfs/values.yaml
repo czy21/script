@@ -1,4 +1,10 @@
-
-nfs:
-  host: 192.168.2.18
-  path: /export/kube-data
+nfs-subdir-external-provisioner:
+  replicaCount: 1
+  image:
+    repository: {{ param_registry_proxy_url }}/sig-storage/nfs-subdir-external-provisioner
+  storageClass:
+    name: managed-nfs-storage
+    defaultClass: true
+  nfs:
+    server: {{ param_nfs_server }}
+    path: {{ param_nfs_kube_data }}
