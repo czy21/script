@@ -1,0 +1,11 @@
+kiali-server:
+  istio_namespace: istio-system
+  auth:
+    strategy: anonymous
+  deployment:
+    image_name: {{ param_registry_proxy_url | default("quay.io") }}/kiali/kiali
+  external_services:
+    prometheus:
+      url: http://prometheus.ops.svc:9090
+    grafana:
+      enable: false

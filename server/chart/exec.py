@@ -47,9 +47,10 @@ def invoke(role_title: str, role_path: Path, **kwargs):
         with io.open(temp_all_in_one_path, "w+", encoding="utf-8", newline="\n") as y_file:
             all_doc = []
             for content in y:
-                if content and content["metadata"] and "namespace" not in content["metadata"].keys():
-                    content["metadata"]["namespace"] = args.n
-                all_doc.append(content)
+                if content:
+                    if content["metadata"] and "namespace" not in content["metadata"].keys():
+                        content["metadata"]["namespace"] = args.n
+                    all_doc.append(content)
             yaml.dump_all(all_doc, y_file)
 
     for action in args.a:

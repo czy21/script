@@ -2,10 +2,10 @@
 # upload sh_file and execute it
 # -r install requirement.txt
 function upload_exec_py() {
-  pwd_path=$(pwd)
-  name_path=`basename ${pwd_path}`
-  utility_dir=$(cd ${pwd_path}/../../utility; pwd)
-  prune_cmd='rm -rf $HOME/'${name_path}';'
+  local pwd_path=$(pwd)
+  local name_path=`basename ${pwd_path}`
+  local utility_dir=$(cd ${pwd_path}/../../utility; pwd)
+  local prune_cmd='rm -rf $HOME/'${name_path}';'
   ssh $host ${prune_cmd}
 
   scp -rqC ${pwd_path} $host:
@@ -25,13 +25,4 @@ function upload_exec_py() {
   exec_cmd+=${prune_cmd}
   echo -e '\033[32mcommand: \033[0m'${exec_cmd}
   ssh $host ${exec_cmd}
-}
-
-function upload_exec_sh() {
-  pwd_path=$(pwd)
-  name_path=`basename ${pwd_path}`
-  ssh $host 'rm -rf $HOME/'${name_path}';'
-  scp -rqC ${pwd_path} $host:
-  ssh $host 'sh $HOME/'${name_path}/${sh_file}' '$@';'
-  ssh $host 'rm -rf $HOME/'${name_path}';'
 }
