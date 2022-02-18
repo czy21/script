@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+sed -i "s/^mirrorlist/#mirrorlist/g; s|^#baseurl=http://mirror.centos.org|baseurl={{ param_vault_centos_proxy }}|g"  /etc/yum.repos.d/CentOS-*
+
 yum -y install wget vim git nfs-utils bash-completion
 dnf -y install python38
 sed -i -r "s/ll='ls\s+-l/\0va/" /etc/profile.d/colorls.sh
