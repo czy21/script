@@ -1,6 +1,7 @@
 # ansible install and config on server
 ## centos
 ```shell
+sudo hostnamectl set-hostname [hostname]
 sudo yum -y install epel-release 
 sudo yum -y update
 sudo yum -y install ansible
@@ -57,7 +58,7 @@ kubectl get node --show-labels
 sudo yum install -y kubeadm-1.23.3-0 --disableexcludes=kubernetes
 # master
 sudo kubeadm upgrade plan
-sudo kubeadm upgrade apply v1.23.3
+sudo kubeadm upgrade apply v1.23.3 --force
 
 yum install -y kubelet-1.23.3-0 kubectl-1.23.3-0 --disableexcludes=kubernetes
 sudo systemctl daemon-reload && sudo systemctl restart kubelet
