@@ -25,7 +25,7 @@ if __name__ == '__main__':
         "--ask-pass" if args.k else ["--private-key", private_key],
         "--flush-cache",
         "--step",
-        "--verbose"
+        # "--verbose"
     ])
     print(ansible_cmd)
     share.execute_cmd(ansible_cmd)

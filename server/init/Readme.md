@@ -50,3 +50,15 @@ kubectl label nodes k8s-nodeX slave=X
 ```shell
 kubectl get node --show-labels
 ```
+
+### k8s upgrade
+```shell
+# all
+sudo yum install -y kubeadm-1.23.3-0 --disableexcludes=kubernetes
+# master
+sudo kubeadm upgrade plan
+sudo kubeadm upgrade apply v1.23.3
+
+yum install -y kubelet-1.23.3-0 kubectl-1.23.3-0 --disableexcludes=kubernetes
+sudo systemctl daemon-reload && sudo systemctl restart kubelet
+```
