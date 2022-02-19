@@ -39,7 +39,7 @@ def invoke(role_title: str, role_path: Path, **kwargs):
             _action = "template"
             _extension = "--debug > {0}".format(temp_all_in_one_path)
 
-        return 'helm {0} {1} {2} --namespace {3} --set {4} {5}'.format(_action,
+        return 'helm {0} {1} {2} --namespace {3} --dependency-update --replace --set {4} {5}'.format(_action,
                                                                        role_name,
                                                                        role_path.as_posix(),
                                                                        args.n,
@@ -48,10 +48,6 @@ def invoke(role_title: str, role_path: Path, **kwargs):
 
     cmds = [
         share.role_print(role_title, "deploy", temp_all_in_one_path.as_posix())
-    ]
-    helm_cmds = [
-        'helm dep up {0}'.format(role_path.as_posix()),
-        helm_action_cmd()
     ]
     if ctl == "helm":
         if args.a == "push":
@@ -66,7 +62,7 @@ def invoke(role_title: str, role_path: Path, **kwargs):
                     "helm package {0} --destination {0} | sed 's/Successfully packaged chart and saved it to: //g' | xargs helm nexus-push {1}  --username {2} --password {3}".format(role_path, helm_repo_name, helm_username, helm_password)
                 ], separator=" && "))
         else:
-            cmds.append(helm_cmds)
+            cmds.append(helm_action_cmd())
     elif ctl == "kubectl":
         with io.open(temp_all_in_one_path, "r", encoding="utf-8", newline="\n") as o_file:
             y = yaml.unsafe_load_all(o_file.read())
@@ -78,7 +74,7 @@ def invoke(role_title: str, role_path: Path, **kwargs):
                         content["metadata"]["namespace"] = args.n
                     all_doc.append(content)
             yaml.dump_all(all_doc, y_file)
-        cmds.append(helm_cmds)
+        cmds.append(helm_action_cmd())
         cmds.append(get_kube_cmd(args.a, temp_all_in_one_path.as_posix()))
     _cmd_str = share.arr_param_to_str(cmds, separator=" && ")
     share.execute_cmd(_cmd_str)
