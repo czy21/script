@@ -12,6 +12,14 @@
     sudo sysctl --system
 
 - name: install
-  shell: bash {{ param_remote_role_path }}/{{ ansible_distribution | lower}}.sh && kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
+  shell: bash {{ param_remote_role_path }}/{{ ansible_distribution | lower}}.sh && kubectl completion bash > /etc/bash_completion.d/kubectl
 
 - include_tasks: "{{ param_k8s_role }}.yml"
+
+- name: install helm
+  become: yes
+  shell: |
+    sudo wget -O - https://get.helm.sh/helm-v3.6.3-linux-amd64.tar.gz | sudo tar -zxf - --strip-components 1 -C /usr/local/bin/ linux-amd64/helm
+    sudo chmod +x /usr/local/bin/helm
+    sudo ln -s /usr/local/bin/helm /usr/bin/helm
+    helm completion bash > /etc/bash_completion.d/helm
