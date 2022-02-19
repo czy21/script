@@ -9,7 +9,7 @@ from pathlib import Path
 
 
 def get_kube_cmd(action: str, yaml_path: str):
-    return 'kubectl {} --filename={} '.format(action, yaml_path)
+    return 'kubectl {0} --filename={1} '.format(action, yaml_path)
 
 
 def invoke(role_title: str, role_path: Path, **kwargs):
@@ -32,19 +32,22 @@ def invoke(role_title: str, role_path: Path, **kwargs):
 
     def helm_action_cmd():
         _action = args.a
-        if _action == "uninstall":
-            return "helm uninstall {0} --namespace {1}".format(role_name, args.n)
         _extension = ""
+        if ctl == "helm" and _action == "delete":
+            return "helm delete {0} --namespace {1}".format(role_name, args.n)
+        if ctl == "helm" and _action == "install":
+            _action = "upgrade --install"
         if ctl == "kubectl":
             _action = "template"
-            _extension = "--debug > {0}".format(temp_all_in_one_path)
-
-        return 'helm {0} {1} {2} --namespace {3} --dependency-update --replace --set {4} {5}'.format(_action,
-                                                                                                     role_name,
-                                                                                                     role_path.as_posix(),
-                                                                                                     args.n,
-                                                                                                     ",".join(["=".join([k, "\"" + v + "\""]) for (k, v) in env_dict.items()]),
-                                                                                                     _extension)
+            _extension = "> {0}".format(temp_all_in_one_path)
+        return "&&".join([
+            'helm dep up {0}'.format(role_path.as_posix()),
+            'helm {0} {1} {2} --namespace {3} --set {4} {5}'.format(_action,
+                                                                    role_name,
+                                                                    role_path.as_posix(),
+                                                                    args.n,
+                                                                    ",".join(["=".join([k, "\"" + v + "\""]) for (k, v) in env_dict.items()]),
+                                                                    _extension)])
 
     cmds = [
         share.role_print(role_title, "deploy", temp_all_in_one_path.as_posix())
