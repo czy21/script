@@ -40,11 +40,11 @@ def invoke(role_title: str, role_path: Path, **kwargs):
             _extension = "--debug > {0}".format(temp_all_in_one_path)
 
         return 'helm {0} {1} {2} --namespace {3} --dependency-update --replace --set {4} {5}'.format(_action,
-                                                                       role_name,
-                                                                       role_path.as_posix(),
-                                                                       args.n,
-                                                                       ",".join(["=".join([k, "\"" + v + "\""]) for (k, v) in env_dict.items()]),
-                                                                       _extension)
+                                                                                                     role_name,
+                                                                                                     role_path.as_posix(),
+                                                                                                     args.n,
+                                                                                                     ",".join(["=".join([k, "\"" + v + "\""]) for (k, v) in env_dict.items()]),
+                                                                                                     _extension)
 
     cmds = [
         share.role_print(role_title, "deploy", temp_all_in_one_path.as_posix())
