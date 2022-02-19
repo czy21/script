@@ -1,5 +1,9 @@
 ingress-nginx:
   controller:
+    image:
+      registry: {{ param_registry_proxy_url }}
+    ingressClassResource:
+      default: true
     service:
       type: NodePort
       nodePorts:
