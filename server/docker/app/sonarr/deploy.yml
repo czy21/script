@@ -1,0 +1,34 @@
+version: '3.9'
+
+
+services:
+
+  sonarr:
+    image: linuxserver/sonarr
+    container_name: sonarr
+    privileged: true
+    user: root
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/sonarr/:/config/
+      - {{ param_docker_data }}/{{ param_role_name }}/data/download:/downloads/
+    environment:
+      TZ: Asia/Shanghai
+    restart: always
+
+  jackett:
+    image: linuxserver/jackett
+    container_name: jackett
+    privileged: true
+    user: root
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/jackett/:/config/
+      - {{ param_docker_data }}/{{ param_role_name }}/data/download:/downloads/
+    environment:
+      TZ: Asia/Shanghai
+      AUTO_UPDATE: "true"
+    restart: always
+
+networks:
+  default:
+    external:
+      name: local

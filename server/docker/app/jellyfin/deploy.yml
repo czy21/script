@@ -1,19 +1,18 @@
 version: '3.9'
 
 services:
-
   jellyfin:
     image: jellyfin/jellyfin
     container_name: jellyfin
     privileged: true
     user: root
-    ports:
-      - "8101:8096"
     volumes:
-      - /volume1/public/media/:/media/
+      - /srv/dev-disk-by-id-scsi-1ATA_ST4000NM000A-2HZ100_WS213MF7-part1/public/media/:/media/
       - {{ param_docker_data }}/{{ param_role_name }}/data/cache/:/cache/
       - {{ param_docker_data }}/{{ param_role_name }}/data/config/:/config/
     restart: always
+
+
 networks:
   default:
     external:
