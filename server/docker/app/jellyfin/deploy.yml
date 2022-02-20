@@ -7,9 +7,11 @@ services:
     container_name: jellyfin
     privileged: true
     user: root
+    ports:
+      - "8101:8096"
     volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/data/media/:/media
-      - {{ param_docker_data }}/{{ param_role_name }}/data/cache/:/cache
+      - /volume1/public/media/:/media/
+      - {{ param_docker_data }}/{{ param_role_name }}/data/cache/:/cache/
       - {{ param_docker_data }}/{{ param_role_name }}/data/config/:/config/
     restart: always
 networks:
