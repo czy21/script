@@ -1,0 +1,18 @@
+version: '3.9'
+
+services:
+
+  jellyfin:
+    image: jellyfin/jellyfin
+    container_name: jellyfin
+    privileged: true
+    user: root
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/data/media/:/media
+      - {{ param_docker_data }}/{{ param_role_name }}/data/cache/:/cache
+      - {{ param_docker_data }}/{{ param_role_name }}/data/config/:/config/
+    restart: always
+networks:
+  default:
+    external:
+      name: local
