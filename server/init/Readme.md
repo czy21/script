@@ -36,7 +36,7 @@ kubectl taint nodes --all node-role.kubernetes.io/master-
 kubectl taint node [master host] node-role.kubernetes.io/master="":NoSchedule
 
 # get join command on master node
-kubeadm token create --print-join-command
+sudo kubeadm token create --print-join-command
 ```
 ### kubectl for non-root user
 ```shell

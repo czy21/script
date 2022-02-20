@@ -7,9 +7,8 @@ metadata:
   name: ingress
   namespace: {{ .Release.Namespace }}
 spec:
-  ingressClassName: nginx
   rules:
-  - host: prom-{{ .Values.param_cluster_env }}.cluster.com
+  - host: prom-{{ .Values.param_cluster_name }}.cluster.com
     http:
       paths:
       - pathType: Prefix

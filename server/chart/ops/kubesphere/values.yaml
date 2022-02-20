@@ -1,8 +1,31 @@
-log:
-  elkPrefix: {{ param_cluster_env }}
-
-authentication:
-  jwtSecret: "{{ param_ks_jwt }}"
-
-multicluster:
-  clusterRole: {{ param_ks_role | default("none") }}
+ks-installer:
+  image:
+    repository: {{ param_registry_proxy_url }}/kubesphere/ks-installer
+  cc:
+    authentication:
+      jwtSecret: "{{ param_ks_jwt }}"
+    multicluster:
+      clusterRole: {{ param_ks_role | default("none") }}
+    es:
+      logMaxAge: 15
+      elkPrefix: {{ param_cluster_name }}
+      basicAuth:
+        enabled: true
+        username: {{ param_db_es_username }}
+        password: {{ param_db_es_password }}
+      externalElasticsearchUrl: {{ param_db_es_host }}
+      externalElasticsearchPort: {{ param_db_es_port }}
+    events:
+      enabled: true
+      ruler:
+        enabled: true
+        replicas: 2
+    logging:
+      enabled: true
+      logsidecar:
+        enabled: true
+        replicas: 2
+    monitoring:
+      prometheus:
+       replicas: 1
+       volumeSize: 24Gi
