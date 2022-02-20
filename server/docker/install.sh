@@ -5,7 +5,7 @@
 # -i exec init.sh and start compose.yaml
 # -b exec build.sh
 # -c exec post.sh
-# -p param_cluster_env <env>
+# -p param_cluster_name <env>
 
 while getopts "h:" opt
 do

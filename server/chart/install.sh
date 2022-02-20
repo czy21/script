@@ -4,7 +4,7 @@
 # -a push apply delete
 # -n string # namespace for this request
 # -t int    # yaml's dir deep
-# -p param_cluster_env < dev|ops >
+# -p param_cluster_name < dev|ops >
 #    param_ks_role < host | member >
 #    param_ks_jwt <>
 

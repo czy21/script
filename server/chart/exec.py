@@ -34,7 +34,7 @@ def invoke(role_title: str, role_path: Path, **kwargs):
         _action = args.a
         _extension = ""
         if ctl == "helm" and _action == "delete":
-            return "helm delete {0} --namespace {1}".format(role_name, args.n)
+            return "helm delete {0} {1}".format(role_name, "" if args.skip_namespace else "--namespace {0}".format(args.n),)
         if ctl == "helm" and _action == "install":
             _action = "upgrade --install"
         if ctl == "kubectl":
@@ -42,12 +42,12 @@ def invoke(role_title: str, role_path: Path, **kwargs):
             _extension = "> {0}".format(temp_all_in_one_path)
         return "&&".join([
             'helm dep up {0}'.format(role_path.as_posix()),
-            'helm {0} {1} {2} --namespace {3} --set {4} {5}'.format(_action,
-                                                                    role_name,
-                                                                    role_path.as_posix(),
-                                                                    args.n,
-                                                                    ",".join(["=".join([k, "\"" + v + "\""]) for (k, v) in env_dict.items()]),
-                                                                    _extension)])
+            'helm {0} {1} {2} {3} --set {4} {5}'.format(_action,
+                                                        role_name,
+                                                        role_path.as_posix(),
+                                                        "" if args.skip_namespace else "--namespace {0}".format(args.n),
+                                                        ",".join(["=".join([k, "\"" + v + "\""]) for (k, v) in env_dict.items()]),
+                                                        _extension)])
 
     cmds = [
         share.role_print(role_title, "deploy", temp_all_in_one_path.as_posix())
@@ -92,6 +92,7 @@ if __name__ == '__main__':
     parser.add_argument('-a', type=str, required=True)
     parser.add_argument("-t", default=2)
     parser.add_argument('-n')
+    parser.add_argument('--skip-namespace', action="store_true")
     args = parser.parse_args()
     selected_option = share.select_option(int(args.t))
     if args.n is None:

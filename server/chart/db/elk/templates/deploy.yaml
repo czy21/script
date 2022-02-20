@@ -5,13 +5,13 @@ metadata:
   name: es-filerealm-secret
   namespace: {{ .Release.Namespace }}
 stringData:
-  users: '{{ htpasswd .Values.param_db_username .Values.param_db_password }}'
+  users: '{{ htpasswd .Values.param_db_es_username .Values.param_db_es_password }}'
   users_roles: superuser:admin
 ---
 apiVersion: elasticsearch.k8s.elastic.co/v1
 kind: Elasticsearch
 metadata:
-  name: cluster
+  name: {{ .Release.Name }}
   namespace: {{ .Release.Namespace }}
 spec:
   version: {{ .Values.version }}
@@ -22,13 +22,14 @@ spec:
     tls:
       selfSignedCertificate:
         disabled: true
+  volumeClaimDeletePolicy: DeleteOnScaledownOnly
   nodeSets:
     - name: default
       count: 2
       config:
         node.store.allow_mmap: false
       podTemplate:
-        spec: 
+        spec:
           containers:
             - name: elasticsearch
               image: {{ .Values.param_registry_proxy_url | default "docker.elastic.co" }}/elasticsearch/elasticsearch:{{ .Values.version }}
@@ -46,13 +47,13 @@ spec:
 apiVersion: kibana.k8s.elastic.co/v1
 kind: Kibana
 metadata:
-  name: cluster
+  name: {{ .Release.Name }}
   namespace: {{ .Release.Namespace }}
 spec:
   version: {{ .Values.version }}
   count: 1
   elasticsearchRef:
-    name: cluster
+    name: {{ .Release.Name }}
   podTemplate:
     spec:
       containers:
