@@ -1,17 +1,22 @@
 version: '3.9'
 
 services:
-
-  sonarr:
-    image: linuxserver/sonarr
-    container_name: sonarr
+  transmission:
+    image: linuxserver/transmission
+    container_name: transmission
+    ports:
+      - "51413:51413"
+      - "51413:51413/udp"
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/:/config/
       - {{ param_docker_data }}/{{ param_role_name }}/data/downloads/:/downloads/
+      - {{ param_docker_data }}/{{ param_role_name }}/data/watch/:/watch/
     environment:
       PUID: 1000
       PGID: 1000
       TZ: Asia/Shanghai
+      USER: {{ param_manage_username }}
+      PASS: {{ param_manage_password }}
     restart: always
 
 networks:

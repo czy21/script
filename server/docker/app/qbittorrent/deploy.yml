@@ -1,10 +1,12 @@
 version: '3.9'
 
 services:
-
-  sonarr:
-    image: linuxserver/sonarr
-    container_name: sonarr
+  qbittorrent:
+    image: linuxserver/qbittorrent
+    container_name: qbittorrent
+    ports:
+      - "6881:6881"
+      - "6881:6881/udp"
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/:/config/
       - {{ param_docker_data }}/{{ param_role_name }}/data/downloads/:/downloads/
@@ -12,6 +14,7 @@ services:
       PUID: 1000
       PGID: 1000
       TZ: Asia/Shanghai
+      WEBUI_PORT: 8080
     restart: always
 
 networks:

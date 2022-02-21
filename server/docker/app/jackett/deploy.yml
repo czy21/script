@@ -2,9 +2,9 @@ version: '3.9'
 
 services:
 
-  sonarr:
-    image: linuxserver/sonarr
-    container_name: sonarr
+  jackett:
+    image: linuxserver/jackett
+    container_name: jackett
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/:/config/
       - {{ param_docker_data }}/{{ param_role_name }}/data/downloads/:/downloads/
@@ -12,6 +12,7 @@ services:
       PUID: 1000
       PGID: 1000
       TZ: Asia/Shanghai
+      AUTO_UPDATE: "true"
     restart: always
 
 networks:
