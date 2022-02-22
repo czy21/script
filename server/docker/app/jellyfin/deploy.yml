@@ -8,8 +8,9 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/:/config/
       - {{ param_docker_data }}/{{ param_role_name }}/data/cache/:/cache/
       - {{ param_public_path }}/media/:/media/
+    devices:
+      - /dev/dri:/dev/dri
     restart: always
-
 networks:
   default:
     external:
