@@ -6,9 +6,7 @@ services:
     container_name: qbittorrent
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/qbittorrent/:/config/
-      - {{ param_public_path }}/download/:/downloads/
-      - {{ param_public_path }}/media/tv/:/mv/
-      - {{ param_public_path }}/media/tv/:/tv/
+      - {{ param_public_path }}/media/:/media/
     environment:
       PUID: 1000
       PGID: 1000
@@ -21,7 +19,6 @@ services:
     container_name: jackett
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/jackett/:/config/
-      - {{ param_public_path }}/download/:/downloads/
     environment:
       PUID: 1000
       PGID: 1000
@@ -34,8 +31,7 @@ services:
     container_name: radarr
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/radarr/:/config/
-      - {{ param_public_path }}/media/mv/:/downloads/
-      - {{ param_public_path }}/media/mv/:/mv/
+      - {{ param_public_path }}/media/:/media/
     environment:
       PUID: 1000
       PGID: 1000
@@ -47,8 +43,7 @@ services:
     container_name: sonarr
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/sonarr/:/config/
-      - {{ param_public_path }}/media/tv/:/downloads/
-      - {{ param_public_path }}/media/tv/:/tv/
+      - {{ param_public_path }}/media/:/media/
     environment:
       PUID: 1000
       PGID: 1000
