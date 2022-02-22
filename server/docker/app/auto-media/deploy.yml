@@ -16,13 +16,26 @@ services:
       WEBUI_PORT: 8080
     restart: always
 
+  jackett:
+    image: linuxserver/jackett
+    container_name: jackett
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/jackett/:/config/
+      - {{ param_public_path }}/download/:/downloads/
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: Asia/Shanghai
+      AUTO_UPDATE: "true"
+    restart: always
+
   radarr:
     image: linuxserver/radarr
     container_name: radarr
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/radarr/:/config/
-      - {{ param_public_path }}/media/tv/:/downloads/
-      - {{ param_public_path }}/media/tv/:/tv/
+      - {{ param_public_path }}/media/mv/:/downloads/
+      - {{ param_public_path }}/media/mv/:/mv/
     environment:
       PUID: 1000
       PGID: 1000
@@ -34,8 +47,8 @@ services:
     container_name: sonarr
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/sonarr/:/config/
-      - {{ param_public_path }}/media/mv/:/downloads/
-      - {{ param_public_path }}/media/mv/:/mv/
+      - {{ param_public_path }}/media/tv/:/downloads/
+      - {{ param_public_path }}/media/tv/:/tv/
     environment:
       PUID: 1000
       PGID: 1000
