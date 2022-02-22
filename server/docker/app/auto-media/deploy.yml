@@ -1,0 +1,48 @@
+version: '3.9'
+
+services:
+  qbittorrent:
+    image: linuxserver/qbittorrent
+    container_name: qbittorrent
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/qbittorrent/:/config/
+      - {{ param_public_path }}/download/:/downloads/
+      - {{ param_public_path }}/media/tv/:/mv/
+      - {{ param_public_path }}/media/tv/:/tv/
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: Asia/Shanghai
+      WEBUI_PORT: 8080
+    restart: always
+
+  radarr:
+    image: linuxserver/radarr
+    container_name: radarr
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/radarr/:/config/
+      - {{ param_public_path }}/media/tv/:/downloads/
+      - {{ param_public_path }}/media/tv/:/tv/
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: Asia/Shanghai
+    restart: always
+
+  sonarr:
+    image: linuxserver/sonarr
+    container_name: sonarr
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/sonarr/:/config/
+      - {{ param_public_path }}/media/mv/:/downloads/
+      - {{ param_public_path }}/media/mv/:/mv/
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: Asia/Shanghai
+    restart: always
+
+networks:
+  default:
+    external:
+      name: local
