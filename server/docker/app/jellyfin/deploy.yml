@@ -10,7 +10,6 @@ services:
       - {{ param_public_path }}/media/:/media/
     restart: always
 
-
 networks:
   default:
     external:
