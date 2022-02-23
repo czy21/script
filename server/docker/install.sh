@@ -6,6 +6,7 @@
 # -b exec build.sh
 # -c exec post.sh
 # -p param_cluster_name <env>
+# --force-recreate  # recreate containers
 
 while getopts "h:" opt
 do

@@ -34,7 +34,7 @@ def invoke(role_title: str, role_path: Path, **kwargs):
         _action = args.a
         _extension = ""
         if ctl == "helm" and _action == "delete":
-            return "helm delete {0} {1}".format(role_name, "" if args.skip_namespace else "--namespace {0}".format(args.n),)
+            return "helm delete {0} {1}".format(role_name, "" if args.skip_namespace else "--namespace {0}".format(args.n), )
         if ctl == "helm" and _action == "install":
             _action = "upgrade --install"
         if ctl == "kubectl":
@@ -87,7 +87,7 @@ if __name__ == '__main__':
     yaml.add_representer(str, lambda dumper, data: dumper.represent_scalar('tag:yaml.org,2002:str', data, '|' if '\n' in data else ''))
     env_file = Path(__file__).parent.joinpath(".env")
     parser = argparse.ArgumentParser()
-    parser.add_argument('--ctl', default="kubectl")
+    parser.add_argument('--ctl', default="helm")
     parser.add_argument('-p', nargs="+", default=[])
     parser.add_argument('-a', type=str, required=True)
     parser.add_argument("-t", default=2)
