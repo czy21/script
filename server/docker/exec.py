@@ -25,41 +25,38 @@ def invoke(role_title: str, role_path: Path, **kwargs):
             with open(t, "w", encoding="utf-8") as t_file:
                 t_file.write(content)
 
-    def docker_compose_cmd(a):
-        return 'sudo docker-compose --file {0} {1}'.format(role_compose_file.as_posix(), a)
+    def docker_compose_cmd(option):
+        return 'sudo docker-compose --file {0} {1}'.format(role_compose_file.as_posix(), option)
 
+    _cmds = []
     if args.i:
         if role_conf_path.exists():
-            share.execute_cmd(share.arr_param_to_str(
-                [
-                    share.role_print(role_title, "copy conf"),
-                    'sudo mkdir -p {0}'.format(target_app_path),
-                    'sudo cp -rv {0} {1}'.format(role_conf_path.as_posix(), target_app_path.as_posix())
-                ], separator=" && "
-            ))
+            _cmds.append([
+                share.role_print(role_title, "copy conf"),
+                'sudo mkdir -p {0}'.format(target_app_path),
+                'sudo cp -rv {0} {1}'.format(role_conf_path.as_posix(), target_app_path.as_posix())
+            ])
         if role_init_sh.exists():
-            share.execute_cmd(share.arr_param_to_str(
-                [
-                    share.role_print(role_title, "init", role_init_sh.as_posix()),
-                    "source {}".format(role_init_sh.as_posix())
-                ], separator=" && "
-            ))
+            _cmds.append([
+                share.role_print(role_title, "init", role_init_sh.as_posix()),
+                "source {}".format(role_init_sh.as_posix())
+            ])
         if role_compose_file.exists():
-            share.execute_cmd(share.arr_param_to_str(
-                [
-                    share.role_print(role_title, "deploy", role_compose_file.as_posix()),
-                    docker_compose_cmd("config"),
-                    docker_compose_cmd("up --detach --build")
-                ], separator=" && "
-            ))
+            docker_up_options = [
+                "up --detach --build",
+            ]
+            if args.force_recreate:
+                docker_up_options.append("--force-recreate")
+            _cmds.append([
+                share.role_print(role_title, "deploy", role_compose_file.as_posix()),
+                docker_compose_cmd("config"),
+                docker_compose_cmd(share.arr_param_to_str(docker_up_options))
+            ])
     if args.d:
-        share.execute_cmd(share.arr_param_to_str(
-            [
-                share.role_print(role_title, "down", role_compose_file.as_posix()),
-                docker_compose_cmd("down")
-            ], separator=" && "
-        ))
-    share.execute_cmd("echo \n")
+        _cmds.append([
+            share.role_print(role_title, "down", role_compose_file.as_posix()),
+            docker_compose_cmd("down")
+        ])
 
     if args.b:
         registry_url = env_dict['param_registry_url']
@@ -82,13 +79,15 @@ def invoke(role_title: str, role_path: Path, **kwargs):
                 "sudo bash {0}".format(role_build_sh.as_posix())
             )
         if role_docker_file.exists() or role_build_sh.exists():
-            share.execute_cmd(share.arr_param_to_str(build_cmd, separator=" && "))
-    share.execute_cmd("echo \n")
+            _cmds.append(build_cmd)
+    _cmd_str = share.arr_param_to_str([_cmds, "echo \n"], separator=" && ")
+    share.execute_cmd(_cmds)
 
 
 if __name__ == '__main__':
     env_file = Path(__file__).parent.joinpath(".env").as_posix()
     parser = argparse.ArgumentParser()
+    parser.add_argument('--force-recreate', action="store_true")
     parser.add_argument('-p', nargs="+", default=[])
     parser.add_argument('-i', action="store_true")
     parser.add_argument('-d', action="store_true")
