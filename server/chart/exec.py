@@ -49,7 +49,7 @@ def invoke(role_title: str, role_path: Path, **kwargs):
                                                         ",".join(["=".join([k, "\"" + v + "\""]) for (k, v) in env_dict.items()]),
                                                         _extension)])
 
-    cmds = [
+    _cmds = [
         share.role_print(role_title, "deploy", temp_all_in_one_path.as_posix())
     ]
     if ctl == "helm":
@@ -58,14 +58,14 @@ def invoke(role_title: str, role_path: Path, **kwargs):
             helm_repo_url = env_dict["param_helm_repo_url"]
             helm_username = env_dict["param_helm_username"]
             helm_password = env_dict["param_helm_password"]
-            cmds.append(share.arr_param_to_str(
+            _cmds.append(share.arr_param_to_str(
                 [
                     "helm plugin list | if [ -z \"$(grep nexus-push)\" ];then helm plugin install --version master https://github.com/sonatype-nexus-community/helm-nexus-push.git;fi",
                     "helm repo   list | if [ -z \"$(grep {0})\" ];then helm repo add {0} {1};fi".format(helm_repo_name, helm_repo_url),
                     "helm package {0} --destination {0} | sed 's/Successfully packaged chart and saved it to: //g' | xargs helm nexus-push {1}  --username {2} --password {3}".format(role_path, helm_repo_name, helm_username, helm_password)
                 ], separator=" && "))
         else:
-            cmds.append(helm_action_cmd())
+            _cmds.append(helm_action_cmd())
     elif ctl == "kubectl":
         with io.open(temp_all_in_one_path, "r", encoding="utf-8", newline="\n") as o_file:
             y = yaml.unsafe_load_all(o_file.read())
@@ -77,9 +77,9 @@ def invoke(role_title: str, role_path: Path, **kwargs):
                         content["metadata"]["namespace"] = args.n
                     all_doc.append(content)
             yaml.dump_all(all_doc, y_file)
-        cmds.append(helm_action_cmd())
-        cmds.append(get_kube_cmd(args.a, temp_all_in_one_path.as_posix()))
-    _cmd_str = share.arr_param_to_str(cmds, separator=" && ")
+        _cmds.append(helm_action_cmd())
+        _cmds.append(get_kube_cmd(args.a, temp_all_in_one_path.as_posix()))
+    _cmd_str = share.arr_param_to_str(_cmds, separator=" && ")
     share.execute_cmd(_cmd_str)
 
 
