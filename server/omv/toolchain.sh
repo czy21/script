@@ -32,7 +32,7 @@ function prune() {
 		echo "option requires an argument -- t";
 		exit 1;
 	fi
-	local recent_date=$(find ${target_regex}-* -exec sh -c 'f={};file_date=$(basename ${f} | cut -d"-" -f3);echo ${file_date}' \; | xargs | perl -lane '$m<$_ and $m=$_ for @F; print $m')
+	local recent_date=$(find ${target_regex}-* -exec sh -c 'f={};file_date=$(basename ${f} | cut -d"-" -f3);echo ${file_date}' \; | sort -rg | head -1)
 	find ${target_regex}-* -exec sh -c 'f={};file_date=$(basename ${f} | cut -d"-" -f3);if [ ${file_date} -ne '${recent_date}' ] && [ $(date +%s -d ${file_date}) -ge '$(date +%s -d ${minus_date})' ]; then rm -fv $f;fi;' \;
 }
 
