@@ -13,7 +13,8 @@ function backup() {
 		esac
 	done;
 	echo -e "${p_dir}/${d_dir}\033[32m backup started \033[0m"
-	tar --use-compress-program=pigz -cpf ${p_dir}/backup/${d_dir}-$(date +%Y%m%d-%H%M).tar.gz -C ${p_dir} ${d_dir}
+	local archive=${p_dir}/backup/${d_dir}-$(date +%Y%m%d-%H%M).tar.gz;
+	tar --use-compress-program=pigz -cpf ${file} -C ${p_dir} ${d_dir}
 	echo -e "${p_dir}/${d_dir}\033[32m backup finished \033[0m"
 }
 
