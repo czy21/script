@@ -8,6 +8,7 @@ metadata:
     prometheus.io/port: "8080"
     prometheus.io/scrape: "true"
     prometheus.io/path: "actuator/prometheus"
+    helm.sh/revision: "{{ .Release.Revision }}"
 spec:
   selector:
     app: {{ .Release.Name }}
@@ -23,7 +24,7 @@ metadata:
   name: {{ .Release.Name }}
   namespace: {{ .Release.Namespace }}
   annotations:
-    meta.helm.sh/reversion: "{{ .Release.Revision }}"
+    helm.sh/revision: "{{ .Release.Revision }}"
 spec:
   strategy:
     type: Recreate
@@ -34,6 +35,8 @@ spec:
     metadata:
       labels:
         app: {{ .Release.Name }}
+      annotations:
+        helm.sh/revision: "{{ .Release.Revision }}"
     spec:
       volumes:
         - name: conf
