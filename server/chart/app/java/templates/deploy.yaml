@@ -22,6 +22,8 @@ kind: Deployment
 metadata:
   name: {{ .Release.Name }}
   namespace: {{ .Release.Namespace }}
+  annotations:
+    meta.helm.sh/reversion: "{{ .Release.Revision }}"
 spec:
   strategy:
     type: Recreate
