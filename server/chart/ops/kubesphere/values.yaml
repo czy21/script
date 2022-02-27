@@ -19,12 +19,12 @@ ks-installer:
       enabled: true
       ruler:
         enabled: true
-        replicas: 2
+        replicas: 1
     logging:
       enabled: true
       logsidecar:
         enabled: true
-        replicas: 2
+        replicas: 1
     monitoring:
       prometheus:
        replicas: 1
