@@ -4,6 +4,8 @@ kind: Service
 metadata:
   name: {{ .Release.Name }}
   namespace: {{ .Release.Namespace }}
+  annotations:
+    helm.sh/revision: "{{ .Release.Revision }}"
 spec:
   selector:
     app: {{ .Release.Name }}
@@ -21,6 +23,8 @@ kind: Deployment
 metadata:
   name: {{ .Release.Name }}
   namespace: {{ .Release.Namespace }}
+  annotations:
+    helm.sh/revision: "{{ .Release.Revision }}"
 spec:
   strategy:
     type: Recreate
@@ -29,6 +33,8 @@ spec:
       app: {{ .Release.Name }}
   template:
     metadata:
+      annotations:
+        helm.sh/revision: "{{ .Release.Revision }}"
       labels:
         app: {{ .Release.Name }}
     spec:
