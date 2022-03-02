@@ -2,7 +2,7 @@
 package org.ops
 
 def apply() {
-    sh 'env | grep \'^param_\' | sed -r \'s/=/: /\' | sed \'s/^param_//g\' > values.yaml'
+    sh 'env | grep \'^param_\' | sed \'s/=/: /\' | sed \'s/^param_//\' > values.yaml'
     withKubeConfig([credentialsId: env.param_kube_credential, serverUrl: env.param_kube_server]) {
         sh "helm upgrade --install ${env.param_release_name} ${env.param_release_chart_name} --version ${env.param_release_chart_version} --namespace ${env.param_release_namespace} --repo ${env.param_helm_repo} --values values.yaml --output yaml"
     }
