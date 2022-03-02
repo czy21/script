@@ -33,12 +33,11 @@ def invoke(role_title: str, role_path: Path, **kwargs):
     def helm_action_cmd():
         _action = args.a
         _extension = ""
-        if ctl == "helm" and _action == "delete":
-            return "helm delete {0} {1}".format(role_name, "" if args.skip_namespace else "--namespace {0}".format(args.n), )
-        if ctl == "helm" and _action == "install":
+        if _action == "delete":
+            return "helm delete {0} {1}".format(role_name, "" if args.skip_namespace else "--namespace {0}".format(args.n))
+        if _action == "install":
             _action = "upgrade --install"
-        if ctl == "kubectl":
-            _action = "template"
+        if _action == "template":
             _extension = "> {0}".format(temp_all_in_one_path)
         return "&&".join([
             'helm dep up {0}'.format(role_path.as_posix()),
@@ -52,33 +51,19 @@ def invoke(role_title: str, role_path: Path, **kwargs):
     _cmds = [
         share.role_print(role_title, "deploy", temp_all_in_one_path.as_posix())
     ]
-    if ctl == "helm":
-        if args.a == "push":
-            helm_repo_name = env_dict["param_helm_repo_name"]
-            helm_repo_url = env_dict["param_helm_repo_url"]
-            helm_username = env_dict["param_helm_username"]
-            helm_password = env_dict["param_helm_password"]
-            _cmds.append(share.arr_param_to_str(
-                [
-                    "helm plugin list | if [ -z \"$(grep nexus-push)\" ];then helm plugin install --version master https://github.com/sonatype-nexus-community/helm-nexus-push.git;fi",
-                    "helm repo   list | if [ -z \"$(grep {0})\" ];then helm repo add {0} {1};fi".format(helm_repo_name, helm_repo_url),
-                    "helm package {0} --destination {0} | sed 's/Successfully packaged chart and saved it to: //g' | xargs helm nexus-push {1}  --username {2} --password {3}".format(role_path, helm_repo_name, helm_username, helm_password)
-                ], separator=" && "))
-        else:
-            _cmds.append(helm_action_cmd())
-    elif ctl == "kubectl":
-        with io.open(temp_all_in_one_path, "r", encoding="utf-8", newline="\n") as o_file:
-            y = yaml.unsafe_load_all(o_file.read())
-        with io.open(temp_all_in_one_path, "w+", encoding="utf-8", newline="\n") as y_file:
-            all_doc = []
-            for content in y:
-                if content:
-                    if content["metadata"] and "namespace" not in content["metadata"].keys():
-                        content["metadata"]["namespace"] = args.n
-                    all_doc.append(content)
-            yaml.dump_all(all_doc, y_file)
+
+    if args.a == "push":
+        helm_repo_name = env_dict["param_helm_repo_name"]
+        helm_repo_url = env_dict["param_helm_repo_url"]
+        helm_username = env_dict["param_helm_username"]
+        helm_password = env_dict["param_helm_password"]
+        _cmds.append(share.arr_param_to_str([
+            "helm plugin list | if [ -z \"$(grep nexus-push)\" ];then helm plugin install --version master https://github.com/sonatype-nexus-community/helm-nexus-push.git;fi",
+            "helm repo   list | if [ -z \"$(grep {0})\" ];then helm repo add {0} {1};fi".format(helm_repo_name, helm_repo_url),
+            "helm package {0} --destination {0} | sed 's/Successfully packaged chart and saved it to: //g' | xargs helm nexus-push {1}  --username {2} --password {3}".format(role_path, helm_repo_name, helm_username, helm_password)
+        ], separator=" && "))
+    else:
         _cmds.append(helm_action_cmd())
-        _cmds.append(get_kube_cmd(args.a, temp_all_in_one_path.as_posix()))
     _cmd_str = share.arr_param_to_str(_cmds, separator=" && ")
     share.execute_cmd(_cmd_str)
 
@@ -87,7 +72,6 @@ if __name__ == '__main__':
     yaml.add_representer(str, lambda dumper, data: dumper.represent_scalar('tag:yaml.org,2002:str', data, '|' if '\n' in data else ''))
     env_file = Path(__file__).parent.joinpath(".env")
     parser = argparse.ArgumentParser()
-    parser.add_argument('--ctl', default="helm")
     parser.add_argument('-p', nargs="+", default=[])
     parser.add_argument('-a', type=str, required=True)
     parser.add_argument("-t", default=2)

@@ -1,8 +1,7 @@
 #!/bin/bash
 
 # bash install.sh -h user@host
-# --ctl [helm(default) | kubectl]
-# -a push apply delete
+# -a [install|delete|template|push|]
 # -n string # namespace for this request
 # -t int    # yaml's dir deep
 # -p param_cluster_name < dev|ops >
