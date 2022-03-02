@@ -14,7 +14,7 @@ function backup() {
 	done;
 
 	for m in ${modules[@]}; do
-	  if [ -d "${p_dir}${m}" ]; then
+	  if [ -d "${p_dir}/${m}" ]; then
       local archive=${p_dir}/backup/${m}-$(date +%Y%m%d-%H%M).tar.gz;
       tar --use-compress-program=pigz -cpf ${archive} -C ${p_dir} ${m}
 	  else
