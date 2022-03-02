@@ -1,15 +1,10 @@
 #!/usr/bin/env python3
 import argparse
-import io
 import yaml
 import jinja2
 import share
 
 from pathlib import Path
-
-
-def get_kube_cmd(action: str, yaml_path: str):
-    return 'kubectl {0} --filename={1} '.format(action, yaml_path)
 
 
 def invoke(role_title: str, role_path: Path, **kwargs):
@@ -49,7 +44,7 @@ def invoke(role_title: str, role_path: Path, **kwargs):
                                                         _extension)])
 
     _cmds = [
-        share.role_print(role_title, "deploy", temp_all_in_one_path.as_posix())
+        share.role_print(role_title, args.a, temp_all_in_one_path.as_posix())
     ]
 
     if args.a == "push":
