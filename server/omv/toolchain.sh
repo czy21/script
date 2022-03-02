@@ -1,21 +1,26 @@
 #!/bin/bash
 
-# bash toolchain.sh -f backup -p [path] -d [dir name]
+# bash toolchain.sh -f backup -p [path] -m [module]
 # bash toolchain.sh -f prune  -t [path] -n [day]
 
 function backup() {
 	local p_dir;
-	local d_dir;
-	while getopts "p:d:" opt;do
+	local modules;
+	while getopts "p:m:" opt;do
 		case $opt in
 			p) p_dir=$OPTARG;;
-			d) d_dir=$OPTARG;;
+			m) modules+=($OPTARG);;
 		esac
 	done;
-	echo -e "${p_dir}/${d_dir}\033[32m backup started \033[0m"
-	local archive=${p_dir}/backup/${d_dir}-$(date +%Y%m%d-%H%M).tar.gz;
-	tar --use-compress-program=pigz -cpf ${archive} -C ${p_dir} ${d_dir}
-	echo -e "${p_dir}/${d_dir}\033[32m backup finished \033[0m"
+
+	for m in ${modules[@]}; do
+	  if [ -d "${p_dir}${m}" ]; then
+      local archive=${p_dir}/backup/${m}-$(date +%Y%m%d-%H%M).tar.gz;
+      tar --use-compress-program=pigz -cpf ${archive} -C ${p_dir} ${m}
+	  else
+	    echo -e "${m} not exists in ${p_dir}"
+	  fi
+	done
 }
 
 function prune() {
