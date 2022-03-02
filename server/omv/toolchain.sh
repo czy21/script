@@ -17,7 +17,7 @@ function backup() {
 	  if [ -d "${p_dir}/${m}" ]; then
       tar --use-compress-program=pigz -cpf ${p_dir}/backup/${m}-${now_time}.tar.gz -C ${p_dir} ${m}
 	  else
-	    echo -e "${m} not exists in ${p_dir}"
+	    echo -e "${p_dir} not found ${m}"
 	  fi
 	done
 }
