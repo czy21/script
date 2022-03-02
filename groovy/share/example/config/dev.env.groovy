@@ -19,4 +19,4 @@ env.param_registry_dir= 'library'
 env.param_registry_username = 'admin'
 env.param_registry_password = 'Czy20210314.'
 
-env.param_npm_registry="http://nexus.cluster.com/repository/npm-proxy/"
+env.param_npm_repo="http://nexus.cluster.com/repository/npm-proxy/"
