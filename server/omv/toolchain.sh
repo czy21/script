@@ -12,11 +12,10 @@ function backup() {
 			m) modules+=($OPTARG);;
 		esac
 	done;
-
+	local now_time=$(date +%Y%m%d-%H%M)
 	for m in ${modules[@]}; do
 	  if [ -d "${p_dir}/${m}" ]; then
-      local archive=${p_dir}/backup/${m}-$(date +%Y%m%d-%H%M).tar.gz;
-      tar --use-compress-program=pigz -cpf ${archive} -C ${p_dir} ${m}
+      tar --use-compress-program=pigz -cpf ${p_dir}/backup/${m}-${now_time}.tar.gz -C ${p_dir} ${m}
 	  else
 	    echo -e "${m} not exists in ${p_dir}"
 	  fi
