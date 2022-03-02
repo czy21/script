@@ -15,7 +15,7 @@ function backup() {
 	local now_time=$(date +%Y%m%d-%H%M)
 	for m in ${modules[@]}; do
 	  if [ -d "${p_dir}/${m}" ]; then
-      tar --use-compress-program=pigz -cpf ${p_dir}/backup/${m}-${now_time}.tar.gz -C ${p_dir} ${m}
+	    tar --use-compress-program=pigz -cpf ${p_dir}/backup/${m}-${now_time}.tar.gz -C ${p_dir} ${m}
 	  else
 	    echo -e "${p_dir} not found ${m}"
 	  fi
