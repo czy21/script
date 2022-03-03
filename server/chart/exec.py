@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import argparse
-import yaml
 import jinja2
 import share
 
@@ -67,7 +66,6 @@ def invoke(role_title: str, role_path: Path, **kwargs):
 
 
 if __name__ == '__main__':
-    yaml.add_representer(str, lambda dumper, data: dumper.represent_scalar('tag:yaml.org,2002:str', data, '|' if '\n' in data else ''))
     env_file = Path(__file__).parent.joinpath(".env")
     parser = argparse.ArgumentParser()
     parser.add_argument('-p', nargs="+", default=[])
