@@ -53,8 +53,8 @@ def invoke(role_title: str, role_path: Path, **kwargs):
         helm_username = env_dict["param_helm_username"]
         helm_password = env_dict["param_helm_password"]
         _cmds.append(share.arr_param_to_str([
-            "helm plugin list | if [ -z \"$(grep nexus-push)\" ];then helm plugin install --version master https://github.com/sonatype-nexus-community/helm-nexus-push.git;fi",
-            "helm repo   list | if [ -z \"$(grep {0})\" ];then helm repo add {0} {1};fi".format(helm_repo_name, helm_repo_url),
+            "helm plugin list | if [ -z \"$(grep -w nexus-push)\" ];then helm plugin install --version master https://github.com/sonatype-nexus-community/helm-nexus-push.git;fi",
+            "helm repo   list | if [ -z \"$(grep -w {0})\" ];then helm repo add {0} {1};fi".format(helm_repo_name, helm_repo_url),
             "helm package {0} --destination {0} | sed 's/Successfully packaged chart and saved it to: //g' | xargs helm nexus-push {1}  --username {2} --password {3}".format(role_path, helm_repo_name, helm_username, helm_password)
         ], separator=" && "))
     else:
