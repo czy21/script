@@ -7,7 +7,8 @@
 # -p param_cluster_name < dev|ops >
 #    param_ks_role < host | member >
 #    param_ks_jwt <>
-# --skip-namespace
+# --ignore-namespace
+# --create-namespace
 
 while getopts "h:" opt
 do
