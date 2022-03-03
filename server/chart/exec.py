@@ -46,7 +46,7 @@ def invoke(role_title: str, role_path: Path, **kwargs):
         ])
 
     _cmds = [
-        share.role_print(role_title, args.a, temp_all_in_one_path.as_posix())
+        share.role_print(role_title, args.a)
     ]
 
     if args.a == "push":
