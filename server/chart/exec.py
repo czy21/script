@@ -9,7 +9,6 @@ from pathlib import Path
 
 def invoke(role_title: str, role_path: Path, **kwargs):
     args = kwargs["args"]
-    ctl = args.ctl
     env_dict: dict = kwargs["env_dict"]
 
     role_name = role_path.name
@@ -32,16 +31,20 @@ def invoke(role_title: str, role_path: Path, **kwargs):
             return "helm delete {0} {1}".format(role_name, "" if args.skip_namespace else "--namespace {0}".format(args.n))
         if _action == "install":
             _action = "upgrade --install"
+        helm_cmd = [
+            "helm {0} {1} {2}".format(_action, role_name, role_path.as_posix()),
+            "--set {0}".format(",".join(["=".join([k, "\"" + v + "\""]) for (k, v) in env_dict.items()]))
+        ]
+        if not args.ignore_namespace:
+            helm_cmd.append("--namespace {0}".format(args.n))
+        if args.create_namespace:
+            helm_cmd.append("--create-namespace")
         if _action == "template":
-            _extension = "> {0}".format(temp_all_in_one_path)
+            helm_cmd.append("> {0}".format(temp_all_in_one_path))
         return "&&".join([
             'helm dep up {0}'.format(role_path.as_posix()),
-            'helm {0} {1} {2} {3} --set {4} {5}'.format(_action,
-                                                        role_name,
-                                                        role_path.as_posix(),
-                                                        "" if args.skip_namespace else "--namespace {0}".format(args.n),
-                                                        ",".join(["=".join([k, "\"" + v + "\""]) for (k, v) in env_dict.items()]),
-                                                        _extension)])
+            share.arr_param_to_str(helm_cmd)
+        ])
 
     _cmds = [
         share.role_print(role_title, args.a, temp_all_in_one_path.as_posix())
@@ -71,7 +74,8 @@ if __name__ == '__main__':
     parser.add_argument('-a', type=str, required=True)
     parser.add_argument("-t", default=2)
     parser.add_argument('-n')
-    parser.add_argument('--skip-namespace', action="store_true")
+    parser.add_argument('--ignore-namespace', action="store_true")
+    parser.add_argument('--create-namespace', action="store_true")
     args = parser.parse_args()
     selected_option = share.select_option(int(args.t))
     if args.n is None:
