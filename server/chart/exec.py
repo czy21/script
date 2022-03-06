@@ -27,7 +27,7 @@ def invoke(role_title: str, role_path: Path, **kwargs):
         _action = args.a
         _extension = ""
         if _action == "delete":
-            return "helm delete {0} {1}".format(role_name, "" if args.skip_namespace else "--namespace {0}".format(args.n))
+            return "helm delete {0} {1}".format(role_name, "" if args.ignore_namespace else "--namespace {0}".format(args.n))
         if _action == "install":
             _action = "upgrade --install"
         helm_cmd = [
