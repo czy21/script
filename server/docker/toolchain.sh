@@ -1,7 +1,6 @@
 #!/bin/bash
 
-# bash install.sh -h user@host -i
-# bash install.sh -i -c
+# bash toolchain.sh -h user@host -i
 # -i exec init.sh and start compose.yaml
 # -b exec build.sh
 # -c exec post.sh

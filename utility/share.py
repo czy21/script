@@ -79,7 +79,7 @@ def execute_cmd(cmd):
 
 
 def execute(app_tuples, func, **kwargs):
-    env_dict = dotenv_values(kwargs["env_file"])
+    env_dict = dotenv_values(kwargs["env_file"]) if kwargs.__contains__("env_file") else {}
     param_iter = iter(kwargs["args"].p)
     param_input_dict = dict(zip(param_iter, param_iter))
     print(param_input_dict)

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# bash switch.sh -h user@host -i [inventory_name] -t [tags]
+# bash toolchain.sh -h user@host -i [inventory_name] -t [tags]
 # -i site | general
 # -t [tags within inventory_file]
 #    site: os | docker | hosts | k8s-master | k8s-node
