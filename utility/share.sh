@@ -15,14 +15,15 @@ function upload_exec_py() {
   local exec_cmd
   for i in "$@" ; do
     if [ "-r" == ${i} ]; then
-        exec_cmd+='sudo pip3 install --requirement $HOME/'${name_path}/'requirements.txt --ignore-installed;'
+        pip_cmd='pip3 install --ignore-installed -r $HOME/'${name_path}/'requirements.txt'
+        exec_cmd+='type sudo && sudo '${pip_cmd}' || '${pip_cmd}';'
         shift 1
         continue
     fi
     args+=" ${i}"
   done
   exec_cmd+='python3 -B $HOME/'${name_path}/'exec.py '${args}';'
-#  exec_cmd+=${prune_cmd}
+  exec_cmd+=${prune_cmd}
   echo -e '\033[32mcommand: \033[0m'${exec_cmd}
   ssh $host ${exec_cmd}
 }
