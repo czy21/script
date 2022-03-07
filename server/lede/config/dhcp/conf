@@ -1,4 +1,8 @@
 config domain
+        option name 'nexus.cluster.com'
+        option ip '192.168.2.18'
+
+config domain
         option name 'registry.cluster.com'
         option ip '192.168.2.18'
 
@@ -7,15 +11,15 @@ config domain
         option ip '192.168.2.18'
 
 config domain
-        option name 'nexus.cluster.com'
+        option name 'minio.cluster.com'
         option ip '192.168.2.18'
 
 config domain
-        option name 'jenkins.cluster.com'
+        option name 'minio-web.cluster.com'
         option ip '192.168.2.18'
 
 config domain
-        option name 'kibana.cluster.com'
+        option name 'rabbitmq.cluster.com'
         option ip '192.168.2.25'
 
 config domain
@@ -23,12 +27,20 @@ config domain
         option ip '192.168.2.25'
 
 config domain
+        option name 'kibana.cluster.com'
+        option ip '192.168.2.25'
+
+config domain
         option name 'consul.cluster.com'
         option ip '192.168.2.18'
 
 config domain
+        option name 'jenkins.cluster.com'
         option ip '192.168.2.18'
+
+config domain
         option name 'portainer-nas.cluster.com'
+        option ip '192.168.2.18'
 
 config domain
         option name 'grafana.cluster.com'
@@ -63,16 +75,12 @@ config domain
         option ip '192.168.2.21'
 
 config domain
-        option name 'kiali-dev.cluster.com'
-        option ip '192.168.2.21'
-
-config domain
         option name 'prom-ops.cluster.com'
         option ip '192.168.2.25'
 
 config domain
-        option name 'rabbitmq.cluster.com'
-        option ip '192.168.2.25'
+        option name 'kiali-dev.cluster.com'
+        option ip '192.168.2.21'
 
 config domain
         option name 'dev-app.cluster.com'
@@ -85,11 +93,3 @@ config domain
 config domain
         option name 'dsm.cluster.com'
         option ip '192.168.2.19'
-
-config domain
-        option name 'minio.cluster.com'
-        option ip '192.168.2.18'
-
-config domain
-        option name 'minio-web.cluster.com'
-        option ip '192.168.2.18'

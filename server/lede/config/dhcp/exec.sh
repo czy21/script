@@ -6,5 +6,5 @@ function prune() {
 }
 
 function backup() {
-
+  echo backup
 }
