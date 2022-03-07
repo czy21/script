@@ -1,6 +1,6 @@
 # /bin/bash
 
-function prune() {
-  # prune
-  for i in $(seq $(uci show {{ param_role_name }} | grep '^{{ param_role_name }}\(.*\)=domain' | wc -l) -1 1);do uci del {{ param_role_name }}.@domain[$(($i-1))]; done
-}
+source {{ param_common_sh }}
+role_name={{ param_role_name }}
+role_config_types="domain"
+prune_list_by_types
