@@ -1,2 +1,3 @@
 service:
+  section: "ALI_DNS"
   template: |
