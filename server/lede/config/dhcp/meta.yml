@@ -1,5 +1,2 @@
 domain:
-  template: |
-    config domain
-        option name '{{ param_domain_name }}'
-        option ip '{{ param_domain_ip }}'
+  section: ""
