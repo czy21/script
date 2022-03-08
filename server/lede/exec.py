@@ -2,7 +2,7 @@
 import argparse
 import configparser
 import io
-
+from itertools import groupby
 import dotenv
 import yaml
 import jinja2
@@ -67,8 +67,18 @@ def invoke(role_title: str, role_path: Path, **kwargs):
             key: str = t[0]
             val: dict[str, object] = t[1]
             config_key = val.get("section") if val.get("section") else '@' + key
-            print(type_dict[config_key])
-
+            config_val = type_dict[config_key]
+            contents = []
+            for k, l in groupby(type_dict[config_key].keys(), key=lambda s: s.split(".")[0]):
+                a = "\n\t".join([" ".join(["option", sk.split(".")[1], config_val[sk]]) for sk in filter(lambda a: a != k, l)])
+                config_node = ["config", key]
+                config_section = str(val.get("section"))
+                if config_section:
+                    config_node.append("'{0}'".format(config_section))
+                contents.append(" ".join(config_node) + "\n\t" + a)
+            with open(bak_conf, "w", encoding="utf-8") as t_file:
+                print("\n".join(contents))
+                t_file.write("\n".join(contents))
 
     _cmd_str = share.arr_param_to_str(_cmds, separator=" && ")
     share.execute_cmd(_cmd_str)
