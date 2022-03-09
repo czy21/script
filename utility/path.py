@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import os
+import pathlib
 import re
-from pathlib import Path
 
 
 def dfs_dir(target_path, pattern=None) -> list:
@@ -27,7 +27,7 @@ def os_path_join(path, *paths) -> str:
 
 
 def pure_path_join(root, *elements) -> str:
-    left_path = Path(root).resolve()
+    left_path = pathlib.Path(root).resolve()
     for p in elements:
         left_path = left_path.joinpath(p)
     return left_path.absolute().resolve().as_posix()

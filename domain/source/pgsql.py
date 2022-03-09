@@ -38,7 +38,7 @@ def get_basic_param(host, port, user, password, db_name) -> str:
              ]
     if db_name:
         param.append("--dbname=" + db_name)
-    return list_util.arr_param_to_str(param)
+    return list_util.flat_to_str(param)
 
 
 def get_main_db_param_dict() -> str:
@@ -50,7 +50,7 @@ def get_main_db_param_dict() -> str:
 
 
 def execute() -> None:
-    command = list_util.arr_param_to_str(
+    command = list_util.flat_to_str(
         "PGPASSWORD=" + default_common.param_main_db_pgsql_pass,
         pgsql_cmd,
         get_main_db_param_dict(),
@@ -73,11 +73,11 @@ def get_recreate_command(host, port, user, password, db_name) -> str:
         pgsql_cmd,
         get_basic_param(host, port, user, password, None)
     ]
-    return list_util.arr_param_to_str(cmd)
+    return list_util.flat_to_str(cmd)
 
 
 def backup_gz() -> None:
-    cmd = list_util.arr_param_to_str([
+    cmd = list_util.flat_to_str([
         "PGPASSWORD=" + default_common.param_main_db_pgsql_pass,
         pg_dump_cmd,
         get_main_db_param_dict(),
@@ -90,7 +90,7 @@ def backup_gz() -> None:
 
 
 def backup_sql() -> None:
-    cmd = list_util.arr_param_to_str([
+    cmd = list_util.flat_to_str([
         "PGPASSWORD=" + default_common.param_main_db_pgsql_pass,
         pg_dump_cmd,
         get_main_db_param_dict(),

@@ -15,7 +15,7 @@ def build_api():
     build_method = ["clean", "build"]
     if default_common.param_api_module_name:
         build_method = [default_common.param_api_module_name + ":" + b for b in build_method]
-    build_command = list_util.arr_param_to_str(
+    build_command = list_util.flat_to_str(
         [
             path_util.pure_path_join(default_common.param_api_root_project_path, "gradlew"),
             "--init-script " + default_common.param_api_gradle_init_script_file_path if default_common.param_api_gradle_init_script_file_path else "",
@@ -28,7 +28,7 @@ def build_api():
 
 
 def build_plugin(publish_task=None):
-    command = list_util.arr_param_to_str(
+    command = list_util.flat_to_str(
         [
             path_util.pure_path_join(default_common.param_api_gradle_plugin_root_project_path, "gradlew"),
             "--init-script " + default_common.param_api_gradle_init_script_file_path,
@@ -37,8 +37,8 @@ def build_plugin(publish_task=None):
     )
 
     if publish_task:
-        command = list_util.arr_param_to_str(command, publish_task)
+        command = list_util.flat_to_str(command, publish_task)
     else:
-        command = list_util.arr_param_to_str(command, "publishAllPublicationsToBuildRepository")
+        command = list_util.flat_to_str(command, "publishAllPublicationsToBuildRepository")
     logger.info(basic_util.action_formatter(__get_function_name(), command))
     basic_util.execute(command)

@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-import sys
-
-flat = lambda L: sum(map(flat, L), []) if isinstance(L, list) else [L]
 
 
-def arr_param_to_str(*items, separator=" ") -> str:
-    return separator.join(flat(list(items)))
+def flat(a): return sum(map(flat, a), []) if isinstance(a, list) else [a]
+
+
+def flat_to_str(items: list, separator=" ") -> str:
+    return separator.join(flat(items))
 
 
 def flat_dict(src, target=None, prefix=""):
@@ -17,4 +17,3 @@ def flat_dict(src, target=None, prefix=""):
         else:
             target[prefix + k] = value
     return target
-
