@@ -9,13 +9,13 @@ import dotenv
 def flat(a): return sum(map(flat, a), []) if isinstance(a, list) else [a]
 
 
-def flat_to_str(items: list, separator=" ") -> str:
-    return separator.join(flat(items))
+def flat_to_str(items: list, delimiter=" ") -> str:
+    return delimiter.join(flat(items))
 
 
-def dfs_dir(target_path: pathlib.Path, deep=1) -> list:
+def dfs_dir(path: pathlib.Path, deep=1) -> list:
     ret = []
-    for p in sorted(target_path.iterdir()):
+    for p in sorted(path.iterdir()):
         if p.is_dir():
             ret.append({"path": p, "deep": deep})
             ret += dfs_dir(p, deep + 1)

@@ -51,7 +51,7 @@ def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
             "mkdir -p {0}".format(role_bak_path.as_posix()),
             [echo_section(t, role_name, role_bak_conf) for t in meta_dict.items()]
         ]
-        share.execute_cmd(share.flat_to_str(_bak_cmds, separator=" && "))
+        share.execute_cmd(share.flat_to_str(_bak_cmds, delimiter=" && "))
 
         type_parser = configparser.ConfigParser()
         type_parser.optionxform = str
@@ -76,7 +76,7 @@ def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
                 t_file.write("\n".join(contents))
         _cmds.append("mkdir -p {0};cp -r {1} {0}".format(bak_path.joinpath(role_name), role_bak_path))
 
-    _cmd_str = share.flat_to_str(_cmds, separator=" && ")
+    _cmd_str = share.flat_to_str(_cmds, delimiter=" && ")
     share.execute_cmd(_cmd_str)
 
 

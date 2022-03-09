@@ -61,7 +61,7 @@ def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
         ], separator=" && "))
     else:
         _cmds.append(helm_action_cmd())
-    _cmd_str = share.flat_to_str(_cmds, separator=" && ")
+    _cmd_str = share.flat_to_str(_cmds, delimiter=" && ")
     share.execute_cmd(_cmd_str)
 
 
