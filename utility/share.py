@@ -11,7 +11,7 @@ def arr_param_to_str(*items, separator=" ") -> str:
     return separator.join(flat(list(items)))
 
 
-def dfs_dir(target_path: Path, deep) -> list:
+def dfs_dir(target_path: Path, deep=1) -> list:
     ret = []
     for p in sorted(target_path.iterdir()):
         if p.is_dir():
@@ -27,70 +27,61 @@ def role_print(role, content, exec_file=None) -> str:
     return 'echo "' + c + '"'
 
 
-def get_install_tuple(root_path: Path) -> list:
-    app_paths = [p for p in sorted(root_path.iterdir()) if p.is_dir()]
+def get_install_tuple(app_path: Path) -> dict:
+    app_dict: dict = {str(i): t for i, t in enumerate([p for p in sorted(app_path.iterdir()) if p.is_dir()], start=1)}
     # group by
-    list_str = [list(t) for t in zip_longest(*[iter([".".join([str(i), p.name]) for i, p in enumerate(app_paths, start=1)])] * 5, fillvalue='')]
+    col_group = [list(t) for t in zip_longest(*[iter([".".join([str(k), v.name]) for k, v in app_dict.items()])] * 5, fillvalue='')]
     # get every column max length
-    column_widths = [len(max([t[p] for t in list_str for p in range(len(t)) if p == i], key=len, default='')) for i in range(len(list_str[0]))]
-    for t in list_str:
-        print("".join([str(t[p]).ljust(column_widths[o] + 2) for p in range(len(t)) for o in range(len(column_widths)) if p == o]))
-    app_options = input("please select app number(example:1 2 3) ").strip().split()
-    return [(int(t), app_paths.__getitem__(int(t) - 1)) for t in app_options if t in [str(i) for i, p in enumerate(app_paths, start=1)]]
+    col_widths = [len(max([t[p] for t in col_group for p in range(len(t)) if p == i], key=len, default='')) for i in range(len(col_group[0]))]
+    for t in col_group:
+        print("".join([str(t[p]).ljust(col_widths[o] + 2) for p in range(len(t)) for o in range(len(col_widths)) if p == o]))
+    app_nums = input("please select app number(example:1 2 3) ").strip().split()
+    return dict((t, app_dict[t]) for t in app_nums if t in app_dict.keys())
 
 
-def select_option(deep: int = None) -> dict:
+def select_option(deep: int = 1) -> dict:
     root_path = Path(__file__).parent
+    flat_dirs = dfs_dir(root_path)
+    app_path = root_path
     deep_index = 1
-    flat_dirs = dfs_dir(root_path, deep_index)
-    path = None if deep else root_path
 
-    while deep and deep > deep_index:
-        o = []
-        for t in flat_dirs:
-            if deep_index == t["deep"]:
-                if path is None:
-                    o.append(t["path"])
-                else:
-                    if str(t["path"].as_posix()).startswith(path.as_posix()):
-                        o.append(t["path"])
-        for i, p in enumerate(o, start=1):
-            print(" ".join([str(i), p.name]))
+    while deep > deep_index:
+        app_dict = {str(i): p for i, p in enumerate(map(lambda a: a["path"], filter(lambda a: a["deep"] == deep_index, flat_dirs)), start=1)}
+        for k, v in app_dict.items():
+            print(" ".join([k, v.name]))
         one_option = input("please select one option(example:1) ").strip()
         if one_option == '':
             sys.exit()
         if not one_option.isnumeric():
             print("\ninvalid option")
             sys.exit()
-        one_option = int(one_option)
-        if one_option not in [i for i, p in enumerate(o, start=1)]:
-            print(" ".join(["\n", one_option, "not exist"]))
+        if one_option not in app_dict.keys():
+            print(" ".join(["\n", str(one_option), "not exist"]))
             sys.exit()
-        path = o[one_option - 1]
+        app_path = app_dict[one_option]
         deep_index = deep_index + 1
     return {
-        "namespace": path.name,
-        "list": get_install_tuple(path)
+        "namespace": app_path.name,
+        "list": get_install_tuple(app_path)
     }
 
 
 def execute_cmd(cmd):
-    print(cmd)
     subprocess.Popen(cmd, shell=True).wait()
 
 
-def execute(app_tuples, func, **kwargs):
+def execute(app_dict, func, **kwargs):
     env_dict = dotenv_values(kwargs["env_file"]) if kwargs.__contains__("env_file") else {}
     param_iter = iter(kwargs["args"].p)
     param_input_dict = dict(zip(param_iter, param_iter))
     if param_input_dict:
         print(param_input_dict)
     env_dict.update(param_input_dict)
-    for t in app_tuples:
-        app_number = str(t[0])
+    for t in app_dict.items():
+        app_num = t[0]
         role_path = t[1]
         role_name = role_path.name
-        role_title = ".".join([app_number, role_path.name])
+        role_title = ".".join([app_num, role_path.name])
         func(role_title=role_title,
              role_path=role_path,
              env_dict={
