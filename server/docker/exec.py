@@ -91,11 +91,10 @@ if __name__ == '__main__':
     parser.add_argument('-i', action="store_true")
     parser.add_argument('-d', action="store_true")
     parser.add_argument('-b', action="store_true")
-    parser.add_argument("-t", default=2)
     parser.add_argument('-n')
 
     args = parser.parse_args()
-    selected_option = share.select_option(int(args.t))
+    selected_option = share.select_option(2)
     if args.n is None:
         args.n = selected_option["namespace"]
     share.execute(selected_option["list"], invoke, env_file=env_file, args=args)
