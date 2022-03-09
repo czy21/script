@@ -12,7 +12,7 @@ def __get_function_name():
 
 
 def build_api():
-    command = list_util.arr_param_to_str([
+    command = list_util.flat_to_str([
         "cp -r",
         default_common.param_api_root_project_path + "/*",
         default_common.param_api_output_path

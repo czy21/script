@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 import argparse
+import pathlib
+
 import jinja2
 import share
 
-from pathlib import Path
 
-
-def invoke(role_title: str, role_path: Path, **kwargs):
+def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
     args = kwargs["args"]
     env_dict: dict = kwargs["env_dict"]
     role_name = role_path.name
@@ -16,7 +16,7 @@ def invoke(role_title: str, role_path: Path, **kwargs):
     role_init_sh = role_path.joinpath("init.sh")
     role_build_sh = role_path.joinpath("build.sh")
 
-    target_app_path = Path(env_dict["param_docker_data"]).joinpath(role_name)
+    target_app_path = pathlib.Path(env_dict["param_docker_data"]).joinpath(role_name)
 
     for t in filter(lambda f: f.is_file(), role_path.rglob("*")):
         with open(t, "r", encoding="utf-8", newline="\n") as r_file:
@@ -49,7 +49,7 @@ def invoke(role_title: str, role_path: Path, **kwargs):
             _cmds.append([
                 share.role_print(role_title, "deploy", role_compose_file.as_posix()),
                 docker_compose_cmd("config"),
-                docker_compose_cmd(share.arr_param_to_str(docker_up_options))
+                docker_compose_cmd(share.flat_to_str(docker_up_options))
             ])
     if args.d:
         _cmds.append([
@@ -79,12 +79,12 @@ def invoke(role_title: str, role_path: Path, **kwargs):
             )
         if role_docker_file.exists() or role_build_sh.exists():
             _cmds.append(build_cmd)
-    _cmd_str = share.arr_param_to_str([_cmds, "echo \n"], separator=" && ")
+    _cmd_str = share.flat_to_str([_cmds, "echo \n"], separator=" && ")
     share.execute_cmd(_cmd_str)
 
 
 if __name__ == '__main__':
-    env_file = Path(__file__).parent.joinpath(".env").as_posix()
+    env_file = pathlib.Path(__file__).parent.joinpath(".env").as_posix()
     parser = argparse.ArgumentParser()
     parser.add_argument('--force-recreate', action="store_true")
     parser.add_argument('-p', nargs="+", default=[])
@@ -97,4 +97,4 @@ if __name__ == '__main__':
     selected_option = share.select_option(2)
     if args.n is None:
         args.n = selected_option["namespace"]
-    share.execute(selected_option["list"], invoke, env_file=env_file, args=args)
+    share.execute(selected_option["role_dict"], invoke, env_file=env_file, args=args)

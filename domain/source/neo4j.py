@@ -25,7 +25,7 @@ def exec() -> None:
     extra_param_dict = [
         "--file " + default_path.output_db_all_in_one_neo4j
     ]
-    basic_param_str = list_util.arr_param_to_str(get_main_db_param_dict(), extra_param_dict)
+    basic_param_str = list_util.flat_to_str(get_main_db_param_dict(), extra_param_dict)
     command = "cypher-shell" + basic_param_str
     logger.info(basic_util.action_formatter(exec.__name__, command))
     neo4j_msg = [elem.replace("\"", '') for elem in os.popen(command).readlines() if elem != "msg\n"]
@@ -45,7 +45,7 @@ def recreate() -> None:
     extra_param_dict = [
         "\"match(n) detach delete n;\""
     ]
-    basic_param_str = list_util.arr_param_to_str(get_main_db_param_dict(), extra_param_dict)
+    basic_param_str = list_util.flat_to_str(get_main_db_param_dict(), extra_param_dict)
     command = "cypher-shell" + basic_param_str
     logger.info(basic_util.action_formatter(recreate.__name__, command))
     basic_util.execute(command)

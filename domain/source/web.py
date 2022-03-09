@@ -12,7 +12,7 @@ def __get_function_name():
 
 
 def build_web():
-    command = list_util.arr_param_to_str([
+    command = list_util.flat_to_str([
         "nrm use taobao",
         "&& yarn --cwd " + default_common.param_web_root_project_path, "install",
         "&& yarn --cwd " + default_common.param_web_root_project_path, "build",

@@ -43,7 +43,7 @@ def execute() -> None:
     extra_param = [
         default_path.output_db_all_in_one_mongo
     ]
-    command = list_util.arr_param_to_str("mongo", get_main_db_uri(), extra_param)
+    command = list_util.flat_to_str("mongo", get_main_db_uri(), extra_param)
     logger.info(basic_util.action_formatter(__get_function_name(), command))
     basic_util.execute(command, db_util.print_ql_msg)
 
@@ -56,11 +56,11 @@ def get_recreate_command(host, port, user, password, db_name) -> str:
             ])
         )
     ]
-    return list_util.arr_param_to_str("mongo", get_basic_uri(host, port, user, password, None), extra_param)
+    return list_util.flat_to_str("mongo", get_basic_uri(host, port, user, password, None), extra_param)
 
 
 def backup_gz() -> None:
-    command = list_util.arr_param_to_str("mongodump",
+    command = list_util.flat_to_str("mongodump",
                                          "--uri=" + get_main_db_uri(),
                                          "--archive=" + default_path.output_db_bak_gz_mongo,
                                          "--gzip"

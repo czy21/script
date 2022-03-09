@@ -41,7 +41,7 @@ def get_basic_param(host, port, user, password, db_name) -> str:
     ]
     if db_name:
         param.append("-d " + db_name)
-    return list_util.arr_param_to_str(param)
+    return list_util.flat_to_str(param)
 
 
 def get_main_db_param_dict() -> str:
@@ -57,7 +57,7 @@ def execute() -> None:
         "-e",
         "-i \"{0}\"".format(Path(default_path.output_db_all_in_one_mssql).__fspath__())
     ]
-    command = list_util.arr_param_to_str(mssql_cmd, get_main_db_param_dict(), extra_param_dict)
+    command = list_util.flat_to_str(mssql_cmd, get_main_db_param_dict(), extra_param_dict)
     logger.info(basic_util.action_formatter(__get_function_name(), command))
     basic_util.execute(command, db_util.print_ql_msg)
 
@@ -73,4 +73,4 @@ def get_recreate_command(host, port, user, password, db_name) -> str:
             ])
         )
     ]
-    return list_util.arr_param_to_str(mssql_cmd, get_basic_param(host, port, user, password, None), extra_param)
+    return list_util.flat_to_str(mssql_cmd, get_basic_param(host, port, user, password, None), extra_param)
