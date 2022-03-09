@@ -39,13 +39,13 @@ def get_install_tuple(root_path: Path) -> list:
     return [(int(t), app_paths.__getitem__(int(t) - 1)) for t in app_options if t in [str(i) for i, p in enumerate(app_paths, start=1)]]
 
 
-def select_option(deep) -> dict:
+def select_option(deep: int = None) -> dict:
+    root_path = Path(__file__).parent
     deep_index = 1
-    flat_dirs = dfs_dir(Path(__file__).parent, deep_index)
+    flat_dirs = dfs_dir(root_path, deep_index)
+    path = None if deep else root_path
 
-    path = None
-
-    while deep > deep_index:
+    while deep and deep > deep_index:
         o = []
         for t in flat_dirs:
             if deep_index == t["deep"]:

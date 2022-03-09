@@ -70,12 +70,11 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-p', nargs="+", default=[])
     parser.add_argument('-a', type=str, required=True)
-    parser.add_argument("-t", default=2)
     parser.add_argument('-n')
     parser.add_argument('--ignore-namespace', action="store_true")
     parser.add_argument('--create-namespace', action="store_true")
     args = parser.parse_args()
-    selected_option = share.select_option(int(args.t))
+    selected_option = share.select_option(2)
     if args.n is None:
         args.n = selected_option["namespace"]
     share.execute(selected_option["list"], invoke, env_file=env_file, args=args)
