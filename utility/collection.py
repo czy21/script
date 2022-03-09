@@ -4,8 +4,8 @@
 def flat(a): return sum(map(flat, a), []) if isinstance(a, list) else [a]
 
 
-def flat_to_str(items: list, separator=" ") -> str:
-    return separator.join(flat(items))
+def flat_to_str(items: list, delimiter=" ") -> str:
+    return delimiter.join(flat(items))
 
 
 def flat_dict(src, target=None, prefix=""):

@@ -79,7 +79,7 @@ def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
             )
         if role_docker_file.exists() or role_build_sh.exists():
             _cmds.append(build_cmd)
-    _cmd_str = share.flat_to_str([_cmds, "echo \n"], separator=" && ")
+    _cmd_str = share.flat_to_str([_cmds, "echo \n"], delimiter=" && ")
     share.execute_cmd(_cmd_str)
 
 
