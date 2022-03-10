@@ -13,10 +13,12 @@ def flat_to_str(items: list, delimiter=" ") -> str:
     return delimiter.join(flat(items))
 
 
-def dfs_dir(path: pathlib.Path, deep=1) -> list:
+def dfs_dir(path: pathlib.Path, deep=1, exclude_path=None) -> list:
+    if exclude_path is None:
+        exclude_path = []
     ret = []
     for p in sorted(path.iterdir()):
-        if p.is_dir():
+        if p.is_dir() and not exclude_path.__contains__(p.name):
             ret.append({"path": p, "deep": deep})
             ret += dfs_dir(p, deep + 1)
     return ret
@@ -29,8 +31,10 @@ def role_print(role, content, exec_file=None) -> str:
     return 'echo "' + c + '"'
 
 
-def get_role_dict(roles_path: pathlib.Path) -> dict:
-    role_dict: dict = {str(i): t for i, t in enumerate([p for p in sorted(roles_path.iterdir()) if p.is_dir()], start=1)}
+def get_role_dict(roles_path: pathlib.Path, exclude_path=None) -> dict:
+    if exclude_path is None:
+        exclude_path = []
+    role_dict: dict = {str(i): t for i, t in enumerate([p for p in sorted(roles_path.iterdir()) if p.is_dir() and not exclude_path.__contains__(p.name)], start=1)}
     # group by
     col_group = [list(t) for t in itertools.zip_longest(*[iter([".".join([str(k), v.name]) for k, v in role_dict.items()])] * 5, fillvalue='')]
     # get every column max length
@@ -42,8 +46,9 @@ def get_role_dict(roles_path: pathlib.Path) -> dict:
 
 
 def select_option(deep: int = 1) -> dict:
+    exclude_path = ["___temp"]
     root_path = pathlib.Path(__file__).parent
-    flat_dirs = dfs_dir(root_path)
+    flat_dirs = dfs_dir(root_path, exclude_path=exclude_path)
     app_path = root_path
     deep_index = 1
 
@@ -64,11 +69,12 @@ def select_option(deep: int = 1) -> dict:
         deep_index = deep_index + 1
     return {
         "namespace": app_path.name,
-        "role_dict": get_role_dict(app_path)
+        "role_dict": get_role_dict(app_path, exclude_path=exclude_path)
     }
 
 
 def execute_cmd(cmd):
+    print(cmd)
     subprocess.Popen(cmd, shell=True).wait()
 
 
