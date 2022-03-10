@@ -74,7 +74,7 @@ def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
                         contents.append(" ".join(config_node) + "\n\t" + option_text)
             with open(role_bak_conf, "w", encoding="utf-8") as t_file:
                 t_file.write("\n".join(contents))
-        _cmds.append("mkdir -p {0};cp -r {1}/ {0}/".format(bak_path.joinpath(role_name), role_bak_path))
+        _cmds.append("mkdir -p {0};cp -r {1}/* {0}/".format(bak_path.joinpath(role_name), role_bak_path))
 
     _cmd_str = share.flat_to_str(_cmds, delimiter=" && ")
     share.execute_cmd(_cmd_str)
