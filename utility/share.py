@@ -74,7 +74,7 @@ def select_option(deep: int = 1) -> dict:
 
 
 def execute_cmd(cmd):
-    print(cmd)
+    # print(cmd)
     subprocess.Popen(cmd, shell=True).wait()
 
 
