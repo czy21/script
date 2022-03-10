@@ -70,8 +70,8 @@ def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
                         config_node = ["config", m_type_key]
                         if meta_dict.get(m_type_key).get("section"):
                             config_node.append("'{0}'".format(section_key.split(".")[1]))
-                        option_text = "\n\t".join([" ".join(["option", o[0], o[1]]) for o in option_dict.items()])
-                        contents.append(" ".join(config_node) + "\n\t" + option_text)
+                        option_text = "\n\t\t".join([" ".join(["option", o[0], o[1]]) for o in option_dict.items()])
+                        contents.append(" ".join(config_node) + "\n\t\t" + option_text)
             with open(role_bak_conf, "w", encoding="utf-8") as t_file:
                 t_file.write("\n".join(contents))
         _cmds.append("mkdir -p {0};cp -r {1}/* {0}/".format(bak_path.joinpath(role_name), role_bak_path))
