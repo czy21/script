@@ -25,8 +25,8 @@ function upload_exec_py() {
     args+=" ${item}"
   done
   exec_cmd+='python3 -B $HOME/'${name_path}/'exec.py '${args}';'
-  exec_cmd+='find '${temp_path}''
+  exec_cmd+='if [ -d '${temp_path}' ];then true;else false;fi'
   echo -e '\033[32mcommand: \033[0m'${exec_cmd}
-  ssh $host ${exec_cmd} && scp -rqC $host:${temp_path} ${pwd_path}/___temp/
+  ssh $host ${exec_cmd} && scp -rqC $host:${temp_path}/ ${pwd_path}/
   ssh $host ${prune_cmd}
 }
