@@ -15,7 +15,7 @@ function upload_exec_py() {
   scp -rqC ${pwd_path}/../requirements.txt ${pwd_path}/../.env ${utility_dir}/share.py $host:${name_path}
 
   local args
-  local exec_cmd
+  local exec_cmd=()
   for ((i=1;i<="$#";i++));do
     item=${!i}
     if [ "-r" == ${item} ]; then
