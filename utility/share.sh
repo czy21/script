@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -e
-
 # upload sh_file and execute it
 # -r install requirement.txt
 
@@ -28,9 +26,11 @@ function upload_exec_py() {
     fi
     args+=" ${item}"
   done
-  exec_cmd+='python3 -B $HOME/'${name_path}/'exec.py '${args}' && '
-  exec_cmd+='if [ -d '${temp_path}' ];then true;else false;fi'
+  exec_cmd+='python3 -B $HOME/'${name_path}/'exec.py '${args}''
   echo -e '\033[32mcommand: \033[0m'${exec_cmd}
-  ssh $host ${exec_cmd} && scp -rqC $host:${temp_path}/ ${pwd_path}/
+  ssh $host ${exec_cmd}
+  if ssh $host "[ -d ${temp_path} ]"; then
+    scp -rqC $host:${temp_path}/ ${pwd_path}/
+  fi
   ssh $host ${prune_cmd}
 }
