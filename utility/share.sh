@@ -1,4 +1,7 @@
 #!/bin/bash
+
+set -e
+
 # upload sh_file and execute it
 # -r install requirement.txt
 
@@ -18,7 +21,7 @@ function upload_exec_py() {
   for ((i=1;i<="$#";i++));do
     item=${!i}
     if [ "-r" == ${item} ]; then
-        pip_cmd='pip3 install --ignore-installed -r $HOME/'${name_path}/'requirements.txt'
+        pip_cmd='pip3 install -I -r $HOME/'${name_path}/'requirements.txt'
         exec_cmd+='type sudo && sudo '${pip_cmd}' || '${pip_cmd}' && '
         shift 1
         continue
