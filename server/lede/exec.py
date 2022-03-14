@@ -16,7 +16,7 @@ def echo_section(t, role_name, bak_conf):
     type_key: str = t[0]
     type_val: dict = t[1]
     section_keys = get_section_keys(type_key, type_val)
-    return ["uci show {0} | grep '^{0}.{1}' && echo '[{1}]' >> {2} && uci show {0} | grep '^{0}.{1}' >> {2}".format(role_name, s, bak_conf.as_posix()) for s in section_keys]
+    return ["uci show {0} | grep -q '^{0}.{1}' && echo '[{1}]' >> {2} && uci show {0} | grep '^{0}.{1}' >> {2}".format(role_name, s, bak_conf.as_posix()) for s in section_keys]
 
 
 def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
