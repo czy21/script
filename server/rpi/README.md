@@ -19,4 +19,9 @@ curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o 
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 sudo apt-get update
 sudo apt-get install docker-ce docker-ce-cli containerd.io
+# webadmin
+wget http://prdownloads.sourceforge.net/webadmin/webmin_1.990_all.deb
+sudo apt-get install libnet-ssleay-perl  libauthen-pam-perl libio-pty-perl shared-mime-info
+sudo apt --fix-broken install
+sudo dpkg --install webmin_1.990_all.deb
 ```

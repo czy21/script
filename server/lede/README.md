@@ -15,3 +15,12 @@ uci -f dhcp-domain -m import dhcp
 
 uci show dhcp | grep '^dhcp.@domain\(.*\)=domain' | sed 's/=domain//' | xargs uci delete
 ```
+
+```shell
+Target System: Broadcom BCM27xx
+Target Images 
+  Root filesystem partition size
+Kernel modules > USB Support:
+  kmod-usb-dwc2
+  kmod-usb-net-cdc-ether
+```
