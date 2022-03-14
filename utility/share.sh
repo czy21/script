@@ -1,4 +1,5 @@
 #!/bin/bash
+
 # upload sh_file and execute it
 # -r install requirement.txt
 
@@ -14,20 +15,22 @@ function upload_exec_py() {
   scp -rqC ${pwd_path}/../requirements.txt ${pwd_path}/../.env ${utility_dir}/share.py $host:${name_path}
 
   local args
-  local exec_cmd
+  local exec_cmd=()
   for ((i=1;i<="$#";i++));do
     item=${!i}
     if [ "-r" == ${item} ]; then
-        pip_cmd='pip3 install --ignore-installed -r $HOME/'${name_path}/'requirements.txt'
+        pip_cmd='pip3 install -I -r $HOME/'${name_path}/'requirements.txt'
         exec_cmd+='type sudo && sudo '${pip_cmd}' || '${pip_cmd}' && '
         shift 1
         continue
     fi
     args+=" ${item}"
   done
-  exec_cmd+='python3 -B $HOME/'${name_path}/'exec.py '${args}' && '
-  exec_cmd+='if [ -d '${temp_path}' ];then true;else false;fi'
+  exec_cmd+='python3 -B $HOME/'${name_path}/'exec.py '${args}''
   echo -e '\033[32mcommand: \033[0m'${exec_cmd}
-  ssh $host ${exec_cmd} && scp -rqC $host:${temp_path}/ ${pwd_path}/
+  ssh $host ${exec_cmd}
+  if ssh $host "[ -d ${temp_path} ]"; then
+    scp -rqC $host:${temp_path}/ ${pwd_path}/
+  fi
   ssh $host ${prune_cmd}
 }

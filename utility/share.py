@@ -45,8 +45,10 @@ def get_role_dict(roles_path: pathlib.Path, exclude_path=None) -> dict:
     return dict((t, role_dict[t]) for t in role_nums if t in role_dict.keys())
 
 
-def select_option(deep: int = 1) -> dict:
-    exclude_path = ["___temp"]
+def select_option(deep: int = 1, exclude_path=None) -> dict:
+    if exclude_path is None:
+        exclude_path = []
+    exclude_path.append("___temp")
     root_path = pathlib.Path(__file__).parent
     flat_dirs = dfs_dir(root_path, exclude_path=exclude_path)
     app_path = root_path
@@ -56,16 +58,13 @@ def select_option(deep: int = 1) -> dict:
         role_dict = {str(i): p for i, p in enumerate(map(lambda a: a["path"], filter(lambda a: a["deep"] == deep_index, flat_dirs)), start=1)}
         for k, v in role_dict.items():
             print(" ".join([k, v.name]))
-        one_option = input("please select one option(example:1) ").strip()
-        if one_option == '':
+        selected = input("please select one option(example:1) ").strip()
+        if selected == '':
             sys.exit()
-        if not one_option.isnumeric():
-            print("\ninvalid option")
+        if selected not in role_dict.keys():
+            print(" ".join(["\n", str(selected), "not exist"]))
             sys.exit()
-        if one_option not in role_dict.keys():
-            print(" ".join(["\n", str(one_option), "not exist"]))
-            sys.exit()
-        app_path = role_dict[one_option]
+        app_path = role_dict[selected]
         deep_index = deep_index + 1
     return {
         "namespace": app_path.name,
