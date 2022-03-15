@@ -25,3 +25,6 @@ sudo apt-get install libnet-ssleay-perl  libauthen-pam-perl libio-pty-perl share
 sudo apt --fix-broken install
 sudo dpkg --install webmin_1.990_all.deb
 ```
+
+# remark
+注: usb口插入otg失效,应接power口
