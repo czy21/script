@@ -14,7 +14,7 @@ def build() {
         case "web":
             env.NODEJS_HOME = "${tool 'node-v16.13.2'}"
             env.PATH = "${NODEJS_HOME}/bin:${PATH}"
-            sh "yarn --cwd ${env.param_project_context} --registry ${env.param_npm_repo} --cache-folder ${env.param_yarn_cache} install --focus yarn --cwd ${env.param_project_context} --registry ${env.param_npm_repo} --cache-folder ${env.param_yarn_cache} upgrade share-react --focus && yarn --cwd ${env.param_project_context} --registry ${env.param_npm_repo} --cache-folder ${env.param_yarn_cache} --ignore-engines build"
+            sh "yarn --cwd ${env.param_project_context} --registry ${env.param_npm_repo} --cache-folder ${env.param_yarn_cache} install --focus yarn --cwd ${env.param_project_context} --registry ${env.param_npm_repo} --cache-folder ${env.param_yarn_cache} upgrade share-react@0.1.0 --focus && yarn --cwd ${env.param_project_context} --registry ${env.param_npm_repo} --cache-folder ${env.param_yarn_cache} --ignore-engines build"
             break;
         default:
             println[env.param_code_type, "not config"].join(" ");
