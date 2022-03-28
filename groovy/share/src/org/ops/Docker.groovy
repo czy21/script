@@ -14,7 +14,7 @@ def build() {
         case "web":
             env.NODEJS_HOME = "${tool 'node-v16.13.2'}"
             env.PATH = "${NODEJS_HOME}/bin:${PATH}"
-            sh "cd ${env.param_project_context} && yarn set version berry && YARN_RC_FILENAME=\"${env.param_yarn_rc_file}\" YARN_YARN_PATH=\"${param_yarn_path}\" yarn install"
+            sh "cd ${env.param_project_context} && YARN_YARN_PATH=\"${param_yarn_path}\" yarn set version berry && YARN_YARN_PATH=\"${param_yarn_path}\" YARN_RC_FILENAME=\"${env.param_yarn_rc_file}\" yarn install"
             break;
         default:
             println[env.param_code_type, "not config"].join(" ");
