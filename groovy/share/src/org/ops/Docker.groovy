@@ -14,7 +14,8 @@ def build() {
         case "web":
             env.NODEJS_HOME = "${tool 'node-v16.13.2'}"
             env.PATH = "${NODEJS_HOME}/bin:${PATH}"
-            sh "cd ${env.param_project_context} && yarn set version 3.2.0 && YARN_RC_FILENAME=\"${env.param_yarn_rc_file}\" YARN_YARN_PATH=\"${env.param_project_context}/.yarn/releases/yarn-3.2.0.cjs\" yarn install"
+            yarn_cmd = "yarn --cwd ${env.param_project_context} --registry ${env.param_npm_repo} --cache-folder ${env.param_yarn_cache}"
+            sh "${yarn_cmd} install --no-lockfile --update-checksums && ${yarn_cmd} --ignore-engines build"
             break;
         default:
             println[env.param_code_type, "not config"].join(" ");
