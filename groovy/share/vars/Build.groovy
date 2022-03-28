@@ -6,7 +6,7 @@ def call() {
         environment {
             param_gradle_user_home = "/var/jenkins_home/tools/gradle"
             param_gradle_init_file = "${param_gradle_user_home}/init.gradle"
-            param_yarn_cache = "/var/jenkins_home/tools/yarn-cache"
+            param_yarn_rc_file = "/var/jenkins_home/tools/yarn/.yarnrc.yml"
             param_project_root = "${WORKSPACE}/${env.param_project_root}"
             param_project_name = "${env.param_project_name}"
             param_project_module = "${env.param_project_module}"
