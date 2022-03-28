@@ -82,7 +82,6 @@ def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
     _cmd_str = share.flat_to_str([_cmds, "echo \n"], delimiter=" && ")
     share.execute_cmd(_cmd_str)
 
-
 if __name__ == '__main__':
     env_file = pathlib.Path(__file__).parent.joinpath(".env").as_posix()
     parser = argparse.ArgumentParser()
