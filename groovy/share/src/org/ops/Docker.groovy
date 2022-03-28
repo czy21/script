@@ -14,7 +14,7 @@ def build() {
         case "web":
             env.NODEJS_HOME = "${tool 'node-v16.13.2'}"
             env.PATH = "${NODEJS_HOME}/bin:${PATH}"
-            yarn_env = "YARN_RC_FILENAME = \"${env.param_yarn_rc_file}\""
+            yarn_env = "export YARN_RC_FILENAME = \"${env.param_yarn_rc_file}\""
             sh "${yarn_env} yarn install && yarn build"
             break;
         default:
