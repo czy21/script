@@ -6,7 +6,7 @@ import requests
 
 
 def get_session(sid):
-    r = requests.post(url="http://192.168.2.21:48926/kubernetes/volume/search".format(sid), headers={}, json={"seq": sid})
+    r = requests.post(url="http://dev-app.cluster.com/api/erp-portal/sale/redisQueuePush".format(sid), headers={}, json={"seq": sid})
     print(r.json())
 
 
