@@ -1,0 +1,38 @@
+{{- if or .Values.pulsar.components.proxy .Values.pulsar.extra.proxy }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: "{{ template "pulsar.fullname" . }}-{{ .Values.pulsar.proxy.component }}"
+  namespace: {{ template "pulsar.namespace" . }}
+  labels:
+    {{- include "pulsar.standardLabels" . | nindent 4 }}
+    component: {{ .Values.pulsar.proxy.component }}
+  annotations:
+  {{- with .Values.pulsar.proxy.service.annotations }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: NodePort
+  ports:
+    {{- if or (not .Values.pulsar.tls.enabled) (not .Values.pulsar.tls.proxy.enabled) }}
+    - name: http
+      port: {{ .Values.pulsar.proxy.ports.http }}
+      protocol: TCP
+    - name: "{{ .Values.pulsar.tcpPrefix }}pulsar"
+      port: {{ .Values.pulsar.proxy.ports.pulsar }}
+      protocol: TCP
+      nodePort: {{ .Values.pulsar.proxy.ports.pulsar }}
+    {{- end }}
+    {{- if and .Values.pulsar.tls.enabled .Values.pulsar.tls.proxy.enabled }}
+    - name: https
+      port: {{ .Values.pulsar.proxy.ports.https }}
+      protocol: TCP
+    - name: "{{ .Values.pulsar.tlsPrefix }}pulsarssl"
+      port: {{ .Values.pulsar.proxy.ports.pulsarssl }}
+      protocol: TCP
+      nodePort: {{ .Values.pulsar.proxy.ports.pulsarssl }}
+    {{- end }}
+  selector:
+    {{- include "pulsar.matchLabels" . | nindent 4 }}
+    component: {{ .Values.pulsar.proxy.component }}
+{{- end }}
