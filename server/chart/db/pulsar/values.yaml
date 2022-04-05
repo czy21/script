@@ -29,3 +29,6 @@ pulsar:
 #    userProvidedZookeepers: "zookeeper-headless.db.svc:2181"
   pulsar_manager:
     component: manager
+    configData:
+      DRIVER_CLASS_NAME: org.postgresql.Driver
+      URL: jdbc:postgresql://{{ param_db_pgsql_host }}:{{ param_db_pgsql_port }}/pulsar_manager?user={{ param_db_pgsql_username }}&password={{ param_db_pgsql_password }}
