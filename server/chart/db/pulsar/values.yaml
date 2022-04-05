@@ -9,6 +9,8 @@ pulsar:
     alert_manager: false
   zookeeper:
     replicaCount: 2
+    affinity:
+      anti_affinity: false
     volumes:
       data:
         size: 20Gi
