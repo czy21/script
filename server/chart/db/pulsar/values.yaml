@@ -1,6 +1,9 @@
 pulsar:
   initialize: true
+  affinity:
+    anti_affinity: false
   components:
+    proxy: true
     pulsar_manager: true
   monitoring:
     prometheus: false
@@ -9,8 +12,6 @@ pulsar:
     alert_manager: false
   zookeeper:
     replicaCount: 2
-    affinity:
-      anti_affinity: false
     volumes:
       data:
         size: 20Gi
@@ -28,5 +29,3 @@ pulsar:
 #    userProvidedZookeepers: "zookeeper-headless.db.svc:2181"
   pulsar_manager:
     component: manager
-    service:
-      type: ClusterIP
