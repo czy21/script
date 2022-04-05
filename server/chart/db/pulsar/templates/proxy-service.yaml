@@ -15,18 +15,12 @@ spec:
   type: NodePort
   ports:
     {{- if or (not .Values.pulsar.tls.enabled) (not .Values.pulsar.tls.proxy.enabled) }}
-    - name: http
-      port: {{ .Values.pulsar.proxy.ports.http }}
-      protocol: TCP
     - name: "{{ .Values.pulsar.tcpPrefix }}pulsar"
       port: {{ .Values.pulsar.proxy.ports.pulsar }}
       protocol: TCP
       nodePort: {{ .Values.pulsar.proxy.ports.pulsar }}
     {{- end }}
     {{- if and .Values.pulsar.tls.enabled .Values.pulsar.tls.proxy.enabled }}
-    - name: https
-      port: {{ .Values.pulsar.proxy.ports.https }}
-      protocol: TCP
     - name: "{{ .Values.pulsar.tlsPrefix }}pulsarssl"
       port: {{ .Values.pulsar.proxy.ports.pulsarssl }}
       protocol: TCP
