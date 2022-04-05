@@ -22,7 +22,7 @@ def build() {
             return;
     }
     sh "docker login ${env.param_registry_repo} --username ${env.param_registry_username} --password ${env.param_registry_password}"
-    sh "docker build --tag ${env.param_release_name}:${env.param_release_version} --file ${env.param_docker_file} ${env.param_project_context} --no-cache --force-rm"
+    sh "docker build --tag ${env.param_release_name}:${env.param_release_version} --file ${env.param_docker_file} ${env.param_project_context} --force-rm"
     sh "docker push ${env.param_release_name}:${env.param_release_version}"
 }
 
