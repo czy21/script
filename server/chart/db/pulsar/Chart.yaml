@@ -1,0 +1,8 @@
+apiVersion: v2
+name: pulsar
+version: 0.1.0
+
+dependencies:
+  - name: pulsar
+    version: 2.7.13
+    repository: https://pulsar.apache.org/charts

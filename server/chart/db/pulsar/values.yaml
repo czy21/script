@@ -1,0 +1,30 @@
+pulsar:
+  initialize: true
+  components:
+    pulsar_manager: true
+  monitoring:
+    prometheus: false
+    grafana: false
+    node_exporter: false
+    alert_manager: false
+  zookeeper:
+    replicaCount: 2
+    volumes:
+      data:
+        size: 20Gi
+  bookkeeper:
+    replicaCount: 2
+    volumes:
+      journal:
+        size: 10Gi
+  broker:
+    replicaCount: 2
+  proxy:
+    replicaCount: 2
+  pulsar_metadata:
+    component: init
+#    userProvidedZookeepers: "zookeeper-headless.db.svc:2181"
+  pulsar_manager:
+    component: manager
+    service:
+      type: ClusterIP
