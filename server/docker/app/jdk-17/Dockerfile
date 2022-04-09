@@ -1,4 +1,4 @@
-FROM openjdk:17-jdk
+FROM openjdk:17-slim
 WORKDIR /home/app
 
 ENV JAR=/home/app/api.jar
