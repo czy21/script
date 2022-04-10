@@ -55,7 +55,7 @@ spec:
               value: {{ .Values.app_args }}
           volumeMounts:
             - name: conf
-              mountPath: /app/config/
+              mountPath: /app/conf/
             - name: data
               mountPath: /app/data/
               subPath: data
