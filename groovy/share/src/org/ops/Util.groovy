@@ -1,3 +1,5 @@
+#!/usr/bin/env groovy
+package org.ops
 @Grab('org.apache.commons:commons-lang3:3.12.0')
 import org.apache.commons.lang3.StringUtils
 

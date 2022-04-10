@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 package org.ops
-import org.ops.util
+import org.ops.Util
 
 def build() {
     switch (env.param_code_type) {
