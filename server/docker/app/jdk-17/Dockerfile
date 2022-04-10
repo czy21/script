@@ -1,11 +1,11 @@
 FROM openjdk:17-slim
-WORKDIR /home/app
+WORKDIR /app
 
-ENV JAR=/home/app/api.jar
+ENV JAR=/app/api.jar
 
 COPY docker-entrypoint.sh /
 RUN chmod +x /docker-entrypoint.sh
 
-VOLUME ["/home/app/config/","/home/app/data/"]
+VOLUME ["/app/config/","/app/data/"]
 EXPOSE 8080
 ENTRYPOINT ["/docker-entrypoint.sh"]
