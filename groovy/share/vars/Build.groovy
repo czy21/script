@@ -22,7 +22,6 @@ def call() {
             stage('clone') {
                 steps {
                     script {
-                        cleanWs()
                         checkout([$class           : 'GitSCM',
                                   branches         : [
                                           [name: "${params.param_branch}"]
