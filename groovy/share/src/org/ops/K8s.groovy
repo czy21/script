@@ -2,13 +2,8 @@
 package org.ops
 
 def apply() {
-    sh 'env | grep \'^param_\' | sed \'s/=/: /\' | sed \'s/^param_//\' > values.yaml'
-    withKubeConfig([credentialsId: env.param_kube_credential, serverUrl: env.param_kube_server]) {
-        sh "helm upgrade --install ${env.param_release_name} ${env.param_release_chart_name} --version ${env.param_release_chart_version} --namespace ${env.param_release_namespace} --repo ${env.param_helm_repo} --values values.yaml --output yaml"
-    }
-}
 
-def prepare() {
+    // prepare
     configFileProvider([configFile(fileId: "${env.param_global_env_file_id}", targetLocation: 'global_env.groovy', variable: 'ENV_CONFIG')]) {
         load "global_env.groovy";
     }
@@ -31,8 +26,14 @@ def prepare() {
             env.param_release_chart_version = env.param_helm_web_chart_version
             break;
         default:
-            println[env.param_code_type, "not config"].join(" ");
+            println(env.param_code_type + " not config" as String);
             return;
+    }
+
+    // k8s apply
+    sh 'env | grep \'^param_\' | sed \'s/=/: /\' | sed \'s/^param_//\' > values.yaml'
+    withKubeConfig([credentialsId: env.param_kube_credential, serverUrl: env.param_kube_server]) {
+        sh "helm upgrade --install ${env.param_release_name} ${env.param_release_chart_name} --version ${env.param_release_chart_version} --namespace ${env.param_release_namespace} --repo ${env.param_helm_repo} --values values.yaml --output yaml"
     }
 }
 

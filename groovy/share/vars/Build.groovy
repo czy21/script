@@ -43,9 +43,7 @@ def call() {
                 }
                 steps {
                     script {
-                        def d = new org.ops.Docker()
-                        d.prepare()
-                        d.build()
+                        new org.ops.Docker().build()
                     }
                 }
             }
