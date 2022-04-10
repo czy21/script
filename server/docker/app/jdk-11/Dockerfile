@@ -6,6 +6,6 @@ ENV JAR=/app/api.jar
 COPY docker-entrypoint.sh /
 RUN chmod +x /docker-entrypoint.sh
 
-VOLUME ["/app/config/","/app/data/"]
+VOLUME ["/app/conf/","/app/data/"]
 EXPOSE 8080
 ENTRYPOINT ["/docker-entrypoint.sh"]
