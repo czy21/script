@@ -1,6 +1,5 @@
 #!/usr/bin/env groovy
 package org.ops
-import org.ops.Util
 
 def build() {
 
