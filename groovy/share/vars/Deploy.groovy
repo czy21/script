@@ -38,9 +38,7 @@ def call() {
             stage('deploy') {
                 steps {
                     script {
-                        def k = new org.ops.K8s()
-                        k.prepare()
-                        k.apply()
+                        new org.ops.K8s().apply()
                     }
                 }
             }
