@@ -1,10 +1,12 @@
 #!/usr/bin/env groovy
 package org.ops
-@Grab('org.apache.commons:commons-lang3:3.12.0')
-import org.apache.commons.lang3.StringUtils
 
-static def isEmptyWithNullString(String str) {
-  return StringUtils.isEmpty(str) || str.equals("null")
+static def isEmpty(String str) {
+    return str == null || str.length() == 0 || "null".equals(str)
+}
+
+static def isNotEmpty(String str) {
+    return !isEmpty(str)
 }
 
 return this
