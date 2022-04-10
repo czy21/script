@@ -58,7 +58,7 @@ def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
             "helm plugin list | if [ -z \"$(grep -w nexus-push)\" ];then helm plugin install --version master https://github.com/sonatype-nexus-community/helm-nexus-push.git;fi",
             "helm repo   list | if [ -z \"$(grep -w {0})\" ];then helm repo add {0} {1};fi".format(helm_repo_name, helm_repo_url),
             "helm package {0} --destination {0} | sed 's/Successfully packaged chart and saved it to: //g' | xargs helm nexus-push {1}  --username {2} --password {3}".format(role_path, helm_repo_name, helm_username, helm_password)
-        ], separator=" && "))
+        ], delimiter=" && "))
     else:
         _cmds.append(helm_action_cmd())
     _cmd_str = share.flat_to_str(_cmds, delimiter=" && ")
