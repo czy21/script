@@ -1,5 +1,6 @@
 #!/usr/bin/env groovy
 package org.ops
+
 import org.ops.Util
 
 def build() {
@@ -7,7 +8,7 @@ def build() {
         case "java":
             env.JAVA_HOME = "${tool 'jdk-17'}"
             env.PATH = "${JAVA_HOME}/bin:${PATH}"
-            gradle_cmd = ["clean", "build"].collect { t -> [env.param_project_module, t].findAll { c -> !Util.isEmptyWithNullString(c as String) }.join(":") }.join(" ")
+            gradle_cmd = ["clean", "build"].collect { t -> [env.param_project_module, t].findAll { c -> Util.isNotEmpty(c as String) }.join(":") }.join(" ")
             sh "chmod +x ${env.param_project_root}/gradlew && ${env.param_project_root}/gradlew --gradle-user-home ${env.param_gradle_user_home} --init-script ${env.param_gradle_init_file} --build-file ${env.param_project_root}/build.gradle ${gradle_cmd} -x test"
             break;
         case "go":
@@ -36,7 +37,9 @@ def prepare() {
     }
     env.param_release_version = params.param_branch
     env.param_project_context = [env.param_project_root, env.param_project_module].findAll { t -> ![null, "null", ""].contains(t) }.join("/")
-    env.param_release_name = ["${env.param_registry_repo}/${env.param_registry_dir}",[null, "null", ""].contains(env.param_release_name)? [env.param_project_name, env.param_project_module].findAll { t -> ![null, "null", ""].contains(t) }.join("-"): env.param_release_name ].join("/")
+    env.param_release_name = ["${env.param_registry_repo}/${env.param_registry_dir}", Util.isEmpty(env.param_release_name as String)
+            ? [env.param_project_name, env.param_project_module].findAll { t -> Util.isNotEmpty(t as String) }.join("-")
+            : env.param_release_name].join("/")
     env.param_docker_file = "${env.param_project_context}/Dockerfile"
 }
 
