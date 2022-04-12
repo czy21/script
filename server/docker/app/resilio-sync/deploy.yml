@@ -1,0 +1,18 @@
+version: '3.9'
+
+services:
+  resilio-sync:
+    image: linuxserver/resilio-sync
+    container_name: resilio-sync
+    ports:
+      - 8888:8888
+      - 55555:55555
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/:/config/
+      - {{ param_docker_data }}/{{ param_role_name }}/data/download/:/downloads/
+      - {{ param_docker_data }}/{{ param_role_name }}/data/sync/:/sync/
+    restart: always
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Shanghai
