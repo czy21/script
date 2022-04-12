@@ -33,10 +33,12 @@ if __name__ == '__main__':
     args = parser.parse_args()
     for t in args.prune:
         if t == 'docker':
+            docker_prune_cmd = " && ".join(["sudo docker container prune --force", "sudo docker image prune --all --force"])
             for i in nodes:
                 _prune_cmd = "ssh -o StrictHostKeyChecking=no -i /root/.ssh/czy-rsa {0}@{1} '{2}'".format(
                     i["user"],
                     i["host"],
-                    " && ".join(["sudo docker container prune --force", "sudo docker image prune --all --force"])
+                    docker_prune_cmd
                 )
                 execute_cmd(_prune_cmd)
+            execute_cmd(docker_prune_cmd)
