@@ -51,18 +51,18 @@ scrape_configs:
   - job_name: mysql
     static_configs:
       - targets:
-          - 'mysql_exporter_{{ param_db_mysql_port }}:9104'
+          - 'mysql-exporter-{{ param_db_mysql_port }}:9104'
 
   - job_name: pgsql
     static_configs:
       - targets:
-          - 'pgsql_exporter_{{ param_db_pgsql_port }}:9187'
+          - 'pgsql-exporter-{{ param_db_pgsql_port }}:9187'
 
   - job_name: redis
     static_configs:
       - targets:
-          - 'redis_exporter_{{ param_db_redis_port }}:9121'
-          - 'redis_exporter_{{ param_db_redis_cluster_start_port }}:9121'
+          - 'redis-exporter-{{ param_db_redis_port }}:9121'
+          - 'redis-exporter-{{ param_db_redis_cluster_start_port }}:9121'
 
   - job_name: minio
     metrics_path: /minio/v2/metrics/cluster
