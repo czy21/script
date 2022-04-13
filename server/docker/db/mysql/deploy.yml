@@ -19,9 +19,9 @@ services:
       MYSQL_ALLOW_EMPTY_PASSWORD: 0
       MYSQL_ROOT_PASSWORD: {{ param_db_mysql_password }}
 
-  mysql_exporter_{{ param_db_mysql_port }}:
+  mysql-exporter-{{ param_db_mysql_port }}:
     image: prom/mysqld-exporter
-    container_name: mysql_exporter_{{ param_db_mysql_port }}
+    container_name: mysql-exporter-{{ param_db_mysql_port }}
     environment:
       DATA_SOURCE_NAME: "{{ param_db_mysql_username }}:{{ param_db_mysql_password }}@(mysql:{{ param_db_mysql_port }})/"
     restart: always
