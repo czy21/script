@@ -34,9 +34,9 @@ services:
     command: redis-server /etc/redis/redis.conf --port {{ p }} --cluster-enabled yes --cluster-announce-ip {{ param_db_redis_cluster_ip }}
   {% endfor %}
 
-  redis_exporter_{{ param_db_redis_port }}:
+  redis-exporter-{{ param_db_redis_port }}:
     image: oliver006/redis_exporter:alpine
-    container_name: redis_exporter_{{ param_db_redis_port }}
+    container_name: redis-exporter-{{ param_db_redis_port }}
     user: root
     command:
       - --redis.addr=redis://{{ param_db_redis_password }}@{{ param_db_redis_host }}:{{ param_db_redis_port }}
@@ -44,9 +44,9 @@ services:
       REDIS_EXPORTER_IS_CLUSTER: "false"
     restart: always
 
-  redis_exporter_{{ param_db_redis_cluster_start_port }}:
+  redis-exporter-{{ param_db_redis_cluster_start_port }}:
     image: oliver006/redis_exporter:alpine
-    container_name: redis_exporter_{{ param_db_redis_cluster_start_port }}
+    container_name: redis-exporter-{{ param_db_redis_cluster_start_port }}
     user: root
     command:
       - --redis.addr=redis://{{ param_db_redis_password }}@{{ param_db_redis_host }}:{{ param_db_redis_cluster_start_port }}

@@ -2,9 +2,9 @@ version: '3.9'
 
 services:
 
-  node_exporter:
+  node-exporter:
     image: {{ param_registry_proxy_url | default("quay.io") }}/prometheus/node-exporter
-    container_name: node_exporter
+    container_name: node-exporter
     privileged: true
     ports:
       - "9100:9100"
