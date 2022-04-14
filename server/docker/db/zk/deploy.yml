@@ -16,13 +16,7 @@ services:
       ZOO_TICK_TIME: 60000
       {% set zk_servers=[] %}
       {% for t in range(1,param_db_zk_cluster_replicas | int + 1) %}
-        {% set server="" %}
-        {% if t == i %}
-          {% set server="0.0.0.0" %}
-        {% else %}
-          {% set server="zk{0}".format(t | string) %}
-        {% endif %}
-        {{ zk_servers.append("server.{0}={1}:2888:3888;2181".format(t|string,server)) or '' }}
+        {{ zk_servers.append("server.{0}=zk{0}:2888:3888;2181".format(t|string)) or '' }}
       {% endfor %}
       ZOO_SERVERS: {{ zk_servers | join(' ') }}
     restart: always
