@@ -1,7 +1,7 @@
 version: "3.9"
 
 x-es-common: &es-common
-  image: {{ param_registry_proxy_url | default("docker.elastic.co") }}/elasticsearch/elasticsearch:7.5.2
+  image: {{ param_registry_proxy_url | default("docker.elastic.co") }}/elasticsearch/elasticsearch:7.17.2
   restart: always
   ulimits:
     memlock:
@@ -19,10 +19,7 @@ services:
     {% endif %}
     environment:
       node.name: es{{ i }}
-      cluster.name: {{ param_db_minio_cluster_name }}
-      xpack.security.enabled: "true"
-      ELASTIC_USERNAME: {{ param_db_es_username }}
-      ELASTIC_PASSWORD: {{ param_db_es_password }}
+      cluster.name: {{ param_db_es_cluster_name }}
       {% set seed_hosts=[] %}
       {% set initial_master_nodes=[] %}
       {% for t in range(1,param_db_minio_cluster_replicas | int) %}
