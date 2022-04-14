@@ -1,0 +1,45 @@
+version: "3.9"
+
+x-es-common: &es-common
+  image: {{ param_registry_proxy_url | default("docker.elastic.co") }}/elasticsearch/elasticsearch:7.5.2
+  restart: always
+  ulimits:
+    memlock:
+      soft: -1
+      hard: -1
+
+services:
+  {% for i in range(1,param_db_minio_cluster_replicas | int) %}
+  es{{ i }}:
+    <<: *es-common
+    container_name: es{{ i }}
+    {% if i == 1 %}
+    ports:
+      - "9200:9200"
+    {% endif %}
+    environment:
+      node.name: es{{ i }}
+      cluster.name: {{ param_db_minio_cluster_name }}
+      xpack.security.enabled: "true"
+      ELASTIC_USERNAME: {{ param_db_es_username }}
+      ELASTIC_PASSWORD: {{ param_db_es_password }}
+      {% set seed_hosts=[] %}
+      {% set initial_master_nodes=[] %}
+      {% for t in range(1,param_db_minio_cluster_replicas | int) %}
+        {% if t != i %}
+          {{ seed_hosts.append( "es"+t | string ) or ''}}
+        {% endif %}
+        {{ initial_master_nodes.append( "es"+t | string ) or ''}}
+      {% endfor %}
+      discovery.seed_hosts: {{ seed_hosts | join(',') }}
+      cluster.initial_master_nodes: {{ initial_master_nodes | join(',') }}
+      bootstrap.memory_lock: "true"
+      ES_JAVA_OPTS: -Xms512m -Xmx512m
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/data/{{ i }}:/usr/share/elasticsearch/data
+  {% endfor %}
+
+networks:
+  default:
+    external:
+      name: local
