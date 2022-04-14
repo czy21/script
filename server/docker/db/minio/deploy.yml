@@ -14,7 +14,7 @@ x-minio-common: &minio-common
   restart: always
 
 services:
-{% if   param_db_minio_mode == "standalone" %}
+{% if param_db_minio_mode == "standalone" %}
   minio:
     <<: *minio-common
     container_name: minio
