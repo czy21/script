@@ -14,4 +14,6 @@ WORKDIR $KAFKA_HOME
 
 COPY docker-entrypoint.sh /
 RUN chmod +x /docker-entrypoint.sh
+
+VOLUME ["/logs"]
 ENTRYPOINT ["/docker-entrypoint.sh"]
