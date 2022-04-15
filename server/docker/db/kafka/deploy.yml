@@ -5,20 +5,20 @@ services:
   {% for i in range(1,param_mq_kafka_cluster_replicas | int + 1) %}
     {% set j=i-1 %}
     {% set port=j+9092 %}
-  broker{{ i }}:
+  kafka{{ i }}:
     image: {{ param_registry_url }}/{{ param_registry_dir }}/kafka
-    container_name: broker{{ i }}
+    container_name: kafka{{ i }}
     privileged: true
     user: root
     ports:
       - "{{ port }}:{{ port }}"
     volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/logs/{{ i }}:/tmp/kafka-logs/
-    command:
-      - --override broker.id={{ i }} 
-      - --override listeners=PLAINTEXT://broker{{ i }}:{{ port }} 
-      - --override advertised.listeners=PLAINTEXT://{{ param_mq_kafka_cluster_host_ip }}:{{ port }} 
-      - --override zookeeper.connect={{ param_mq_kafka_cluster_zk_servers }}
+      - {{ param_docker_data }}/{{ param_role_name }}/logs/{{ i }}:/logs/
+    environment:
+      KAFKA_SERVER_broker.id: {{ i }}
+      KAFKA_SERVER_listeners: PLAINTEXT://kafka{{ i }}:{{ port }}
+      KAFKA_SERVER_advertised.listeners: PLAINTEXT://{{ param_mq_kafka_cluster_host_ip }}:{{ port }}
+      KAFKA_SERVER_zookeeper.connect: {{ param_mq_kafka_cluster_zk_servers }}
     restart: always
   {% endfor %}
 
