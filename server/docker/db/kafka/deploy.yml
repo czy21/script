@@ -5,6 +5,7 @@ services:
   {% for i in range(1,param_mq_kafka_cluster_replicas | int + 1) %}
     {% set j=i-1 %}
     {% set port=j+9092 %}
+    {% set jmx_port=j+9999 %}
   kafka{{ i }}:
     image: {{ param_registry_url }}/{{ param_registry_dir }}/kafka
     container_name: kafka{{ i }}
@@ -12,6 +13,7 @@ services:
     user: root
     ports:
       - "{{ port }}:{{ port }}"
+      - "{{ jmx_port }}:{{ jmx_port }}"
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/logs/{{ i }}:/logs/
     environment:
@@ -19,7 +21,7 @@ services:
       KAFKA_SERVER_listeners: PLAINTEXT://kafka{{ i }}:{{ port }}
       KAFKA_SERVER_advertised.listeners: PLAINTEXT://{{ param_mq_kafka_cluster_host_ip }}:{{ port }}
       KAFKA_SERVER_zookeeper.connect: {{ param_mq_kafka_cluster_zk_servers }}
-      JMX_PORT: "9999"
+      JMX_PORT: {{ jmx_port }}
     restart: always
   {% endfor %}
 
