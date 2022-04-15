@@ -1,4 +1,4 @@
-FROM openjdk:11-jre
+FROM openjdk:11-jdk
 
 ENV KAFKA_VERSION=2.13-3.0.1
 ENV KAFKA_TGZ_URL=https://downloads.apache.org/kafka/3.0.1/kafka_${KAFKA_VERSION}.tgz
