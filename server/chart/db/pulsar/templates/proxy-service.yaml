@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: "{{ template "pulsar.fullname" . }}-{{ .Values.pulsar.proxy.component }}"
+  name: "{{ template "pulsar.fullname" . }}-{{ .Values.pulsar.proxy.component }}-custom"
   namespace: {{ template "pulsar.namespace" . }}
   labels:
     {{- include "pulsar.standardLabels" . | nindent 4 }}
@@ -19,12 +19,6 @@ spec:
       port: {{ .Values.pulsar.proxy.ports.pulsar }}
       protocol: TCP
       nodePort: {{ .Values.pulsar.proxy.ports.pulsar }}
-    {{- end }}
-    {{- if and .Values.pulsar.tls.enabled .Values.pulsar.tls.proxy.enabled }}
-    - name: "{{ .Values.pulsar.tlsPrefix }}pulsarssl"
-      port: {{ .Values.pulsar.proxy.ports.pulsarssl }}
-      protocol: TCP
-      nodePort: {{ .Values.pulsar.proxy.ports.pulsarssl }}
     {{- end }}
   selector:
     {{- include "pulsar.matchLabels" . | nindent 4 }}
