@@ -19,6 +19,7 @@ services:
       KAFKA_SERVER_listeners: PLAINTEXT://kafka{{ i }}:{{ port }}
       KAFKA_SERVER_advertised.listeners: PLAINTEXT://{{ param_mq_kafka_cluster_host_ip }}:{{ port }}
       KAFKA_SERVER_zookeeper.connect: {{ param_mq_kafka_cluster_zk_servers }}
+      JMX_PORT: "9999"
     restart: always
   {% endfor %}
 
