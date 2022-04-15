@@ -5,7 +5,6 @@ pulsar:
   components:
     proxy: true
     pulsar_manager: true
-    zookeeper: false
   monitoring:
     prometheus: false
     grafana: false
@@ -27,7 +26,6 @@ pulsar:
     replicaCount: 2
   pulsar_metadata:
     component: init
-    userProvidedZookeepers: "192.168.2.18:2181,192.168.2.18:2182,192.168.2.18:2183"
   pulsar_manager:
     component: manager
     configData:
