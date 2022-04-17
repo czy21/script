@@ -4,25 +4,50 @@ x-flink-common: &flink-common
   image: {{ param_registry_url }}/{{ param_registry_dir }}/flink
   privileged: true
   user: root
-  volumes:
-    - {{ param_docker_data }}/{{ param_role_name }}/data/usrlib/:/opt/flink/usrlib/
-  environment:
-    FLINK_PROPERTIES: |
-      jobmanager.rpc.address: flink-jmr
-      parallelism.default: 2
-      jobmanager.archive.fs.dir: file:///data/completed-jobs/
   restart: always
 
 services:
   flink-jmr:
     <<: *flink-common
     container_name: flink-jmr
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/data/usrlib/:/opt/flink/usrlib/
+      - {{ param_docker_data }}/{{ param_role_name }}/data/jar/:/data/jar/
+      - {{ param_docker_data }}/{{ param_role_name }}/data/completed-jobs/:/data/completed-jobs/
+      - {{ param_docker_data }}/{{ param_role_name }}/log/:/opt/flink/log/
+    environment:
+      FLINK_PROPERTIES: |
+        jobmanager.rpc.address: flink-jmr
+        parallelism.default: 2
+        jobmanager.archive.fs.dir: file:///data/completed-jobs
+        web.upload.dir: /data/jar
     command: jobmanager
+
+  flink-his:
+    <<: *flink-common
+    container_name: flink-his
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/data/completed-jobs/:/data/completed-jobs/
+      - {{ param_docker_data }}/{{ param_role_name }}/log/:/opt/flink/log/
+    environment:
+      FLINK_PROPERTIES: |
+        historyserver.web.address: flink-his
+        historyserver.web.port: 8081
+        historyserver.archive.fs.dir: file:///data/completed-jobs
+        historyserver.archive.fs.refresh-interval: 10000
+    command: historyserver.sh start-foreground
 
   {% for i in range(1,param_bd_flink_cluster_tmr_replicas | int+1) %}
   flink-tmr{{i}}:
     <<: *flink-common
     container_name: flink-tmr{{i}}
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/data/usrlib/:/opt/flink/usrlib/
+      - {{ param_docker_data }}/{{ param_role_name }}/log/:/opt/flink/log/
+    environment:
+      FLINK_PROPERTIES: |
+        jobmanager.rpc.address: flink-jmr
+        parallelism.default: 2
     command: taskmanager
   {% endfor %}
 
