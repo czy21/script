@@ -7,8 +7,6 @@ services:
     container_name: kafka-eagle
     privileged: true
     user: root
-    ports:
-      - "8048:8048"
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/system-config.properties:/opt/kafka-eagle/conf/system-config.properties
       - {{ param_docker_data }}/{{ param_role_name }}/logs/:/opt/kafka-eagle/logs/

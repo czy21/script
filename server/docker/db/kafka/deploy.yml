@@ -20,7 +20,7 @@ services:
       KAFKA_SERVER_broker.id: {{ i }}
       KAFKA_SERVER_listeners: PLAINTEXT://kafka{{ i }}:{{ svc_port }}
       KAFKA_SERVER_advertised.listeners: PLAINTEXT://{{ param_mq_kafka_cluster_host_ip }}:{{ svc_port }}
-      KAFKA_SERVER_zookeeper.connect: {{ param_mq_kafka_cluster_zk_servers }}
+      KAFKA_SERVER_zookeeper.connect: {{ param_mq_kafka_cluster_zk_servers }}{{ param_mq_kafka_cluster_zk_root_path }}{{ param_mq_kafka_cluster_id }}
       JMX_PORT: {{ jmx_port }}
     restart: always
   {% endfor %}

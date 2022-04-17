@@ -41,7 +41,7 @@ def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
             ])
         if role_compose_file.exists():
             docker_up_options = [
-                "up --detach --build",
+                "up --detach --build --remove-orphans",
             ]
             if args.force_recreate:
                 docker_up_options.append("--force-recreate")
@@ -53,7 +53,7 @@ def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
     if args.d:
         _cmds.append([
             share.role_print(role_title, "down", role_compose_file.as_posix()),
-            docker_compose_cmd("down")
+            docker_compose_cmd("down --remove-orphans")
         ])
 
     if args.b:
