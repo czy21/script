@@ -1,40 +1,32 @@
 version: '3.9'
 
+x-flink-common: &flink-common
+  image: {{ param_registry_url }}/{{ param_registry_dir }}/flink
+  privileged: true
+  user: root
+  volumes:
+    - {{ param_docker_data }}/{{ param_role_name }}/data/usrlib/:/opt/flink/usrlib/
+  environment:
+    FLINK_PROPERTIES: |
+      jobmanager.rpc.address: flink-jmr
+      parallelism.default: 2
+      jobmanager.archive.fs.dir: file:///data/completed-jobs/
+  restart: always
+
 services:
-
-  jobmanager:
-    build:
-      context: {{ param_role_path }}
-      dockerfile: {{ param_role_path }}/Dockerfile
-    privileged: true
-    user: root
+  flink-jmr:
+    <<: *flink-common
+    container_name: flink-jmr
     command: jobmanager
-    volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/data/usrlib/:/opt/flink/usrlib/
-    environment:
-      - |
-        FLINK_PROPERTIES=
-        jobmanager.rpc.address: jobmanager
-        parallelism.default: 2
 
-  taskmanager:
-    build:
-      context: {{ param_role_path }}
-      dockerfile: {{ param_role_path }}/Dockerfile
-    privileged: true
-    user: root
-    depends_on:
-      - jobmanager
+  {% for i in range(1,param_bd_flink_cluster_tmr_replicas | int+1) %}
+  flink-tmr{{i}}:
+    <<: *flink-common
+    container_name: flink-tmr{{i}}
     command: taskmanager
-    scale: 1
-    volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/data/usrlib/:/opt/flink/usrlib/
-    environment:
-      - |
-        FLINK_PROPERTIES=
-        jobmanager.rpc.address: jobmanager
-        taskmanager.numberOfTaskSlots: 6
-        parallelism.default: 2
+  {% endfor %}
+
+
 networks:
   default:
     external:
