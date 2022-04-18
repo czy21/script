@@ -11,7 +11,6 @@ services:
     <<: *flink-common
     container_name: flink-jmr
     volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/data/usrlib/:/opt/flink/usrlib/
       - {{ param_docker_data }}/{{ param_role_name }}/data/jar/:/data/jar/
       - {{ param_docker_data }}/{{ param_role_name }}/data/completed-jobs/:/data/completed-jobs/
       - {{ param_docker_data }}/{{ param_role_name }}/log/jmr/:/opt/flink/log/
@@ -21,7 +20,7 @@ services:
         parallelism.default: 2
         jobmanager.archive.fs.dir: file:///data/completed-jobs
         web.upload.dir: /data/jar
-    command: jobmanager
+    command: jobmanager.sh start-foreground
 
   flink-his:
     <<: *flink-common
@@ -42,7 +41,6 @@ services:
     <<: *flink-common
     container_name: flink-tmr{{i}}
     volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/data/usrlib/:/opt/flink/usrlib/
       {% for i in range(1,param_bd_flink_cluster_tmr_replicas | int + 1) %}
       - {{ param_docker_data }}/{{ param_role_name }}/log/tmr/{{i}}:/opt/flink/log/
       {% endfor %}
@@ -50,7 +48,7 @@ services:
       FLINK_PROPERTIES: |
         jobmanager.rpc.address: flink-jmr
         parallelism.default: 2
-    command: taskmanager
+    command: taskmanager.sh start-foreground
   {% endfor %}
 
 
