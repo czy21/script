@@ -41,9 +41,7 @@ services:
     <<: *flink-common
     container_name: flink-tmr{{i}}
     volumes:
-      {% for i in range(1,param_bd_flink_cluster_tmr_replicas | int + 1) %}
       - {{ param_docker_data }}/{{ param_role_name }}/log/tmr/{{i}}:/opt/flink/log/
-      {% endfor %}
     environment:
       FLINK_PROPERTIES: |
         jobmanager.rpc.address: flink-jmr

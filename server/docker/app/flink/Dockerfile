@@ -1,6 +1,4 @@
-FROM flink:1.14-java11
-
-COPY ./___temp/lib /opt/flink/lib/
+FROM flink:1.14.4-scala_2.11-java11
 
 RUN chown -R root:root .
 
