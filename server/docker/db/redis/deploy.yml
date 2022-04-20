@@ -9,6 +9,7 @@ x-redis-common: &redis-common
   restart: always
 
 services:
+  {% if param_db_redis_standalone_enabled == true %}
   redis:
     <<: *redis-common
     container_name: redis
@@ -18,7 +19,17 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/redis.conf:/etc/redis/redis.conf
       - {{ param_docker_data }}/{{ param_role_name }}/data/single/:/data/
     command: redis-server /etc/redis/redis.conf
-
+  redis-exporter-{{ param_db_redis_port }}:
+    image: oliver006/redis_exporter:alpine
+    container_name: redis-exporter-{{ param_db_redis_port }}
+    user: root
+    command:
+      - --redis.addr=redis://{{ param_db_redis_host }}:{{ param_db_redis_port }}
+      - --redis.password={{ param_db_redis_password }}
+    environment:
+      REDIS_EXPORTER_IS_CLUSTER: "false"
+    restart: always
+  {% endif %}
   {% for i in range(param_db_redis_cluster_replicas | int) %}
     {% set j = i + 1 %}
     {% set p = (param_db_redis_cluster_start_port | int) + i %}
@@ -33,17 +44,6 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/data/{{ j }}/:/data/
     command: redis-server /etc/redis/redis.conf --port {{ p }} --cluster-enabled yes --cluster-announce-ip {{ param_db_redis_cluster_ip }}
   {% endfor %}
-
-  redis-exporter-{{ param_db_redis_port }}:
-    image: oliver006/redis_exporter:alpine
-    container_name: redis-exporter-{{ param_db_redis_port }}
-    user: root
-    command:
-      - --redis.addr=redis://{{ param_db_redis_host }}:{{ param_db_redis_port }}
-      - --redis.password={{ param_db_redis_password }}
-    environment:
-      REDIS_EXPORTER_IS_CLUSTER: "false"
-    restart: always
 
   redis-exporter-{{ param_db_redis_cluster_start_port }}:
     image: oliver006/redis_exporter:alpine

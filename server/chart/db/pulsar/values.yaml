@@ -27,7 +27,7 @@ pulsar:
     replicaCount: 2
   pulsar_metadata:
     component: init
-    userProvidedZookeepers: "192.168.2.18:2181,192.168.2.18:2182,192.168.2.18:2183/pulsar/cluster1" # need manual create zk path
+    userProvidedZookeepers: {{ param_mq_pulsar_cluster_zk_servers }}{{ param_mq_pulsar_cluster_zk_root_path }}{{ param_mq_pulsar_cluster_id }} # need manual create zk path
   pulsar_manager:
     component: manager
     configData:
