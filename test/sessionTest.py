@@ -6,7 +6,7 @@ import requests
 
 
 def get_session(sid):
-    r = requests.post(url="http://127.0.0.1:8080/es/order/add", headers={}, json={"seq": sid})
+    r = requests.post(url="http://127.0.0.1:8080/kafka/kafka/put", headers={}, json={"seq": sid})
     print(r.json())
 
 

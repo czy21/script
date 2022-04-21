@@ -22,6 +22,19 @@ services:
         web.upload.dir: /data/jar
     command: jobmanager.sh start-foreground
 
+  {% for i in range(1,param_bd_flink_cluster_tmr_replicas | int+1) %}
+  flink-tmr{{i}}:
+    <<: *flink-common
+    container_name: flink-tmr{{i}}
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/log/tmr/{{i}}:/opt/flink/log/
+    environment:
+      FLINK_PROPERTIES: |
+        jobmanager.rpc.address: flink-jmr
+        parallelism.default: 2
+    command: taskmanager.sh start-foreground
+  {% endfor %}
+
   flink-his:
     <<: *flink-common
     container_name: flink-his
@@ -35,19 +48,6 @@ services:
         historyserver.archive.fs.dir: file:///data/completed-jobs
         historyserver.archive.fs.refresh-interval: 10000
     command: historyserver.sh start-foreground
-
-  {% for i in range(1,param_bd_flink_cluster_tmr_replicas | int+1) %}
-  flink-tmr{{i}}:
-    <<: *flink-common
-    container_name: flink-tmr{{i}}
-    volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/log/tmr/{{i}}:/opt/flink/log/
-    environment:
-      FLINK_PROPERTIES: |
-        jobmanager.rpc.address: flink-jmr
-        parallelism.default: 2
-    command: taskmanager.sh start-foreground
-  {% endfor %}
 
 
 networks:
