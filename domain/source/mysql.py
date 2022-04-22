@@ -54,7 +54,7 @@ def execute() -> None:
         "--skip-column-names",
         "< " + default_path.output_db_all_in_one_mysql
     ]
-    command = list_util.flat_to_str(mysql_cmd, get_main_db_param_dict(), extra_param_dict)
+    command = list_util.flat_to_str([mysql_cmd, get_main_db_param_dict(), extra_param_dict])
     logger.info(basic_util.action_formatter(__get_function_name(), command))
     basic_util.execute(command, db_util.print_ql_msg)
 
@@ -68,7 +68,7 @@ def get_recreate_command(host, port, user, password, db_name) -> str:
             ])
         )
     ]
-    return list_util.flat_to_str(mysql_cmd, get_basic_param(host, port, user, password, None), extra_param)
+    return list_util.flat_to_str([mysql_cmd, get_basic_param(host, port, user, password, None), extra_param])
 
 
 def backup_db() -> None:

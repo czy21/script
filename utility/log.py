@@ -39,6 +39,8 @@ class Logger:
     def debug(self, message, name=None, is_sleep=True):
         if is_sleep:
             sleep(log_sleep)
+        if name:
+            self.logger.name = name
         self.logger.debug(message)
 
     def info(self, message, name=None, is_sleep=True):
