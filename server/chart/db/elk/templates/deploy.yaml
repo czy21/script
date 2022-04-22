@@ -2,7 +2,7 @@
 kind: Secret
 apiVersion: v1
 metadata:
-  name: es-filerealm-secret
+  name: {{ .Release.Name }}-filerealm
   namespace: {{ .Release.Namespace }}
 stringData:
   users: '{{ htpasswd .Values.param_db_es_username .Values.param_db_es_password }}'
@@ -17,7 +17,7 @@ spec:
   version: {{ .Values.version }}
   auth:
     fileRealm:
-      - secretName: es-filerealm-secret
+      - secretName: {{ .Release.Name }}-filerealm
   http:
     tls:
       selfSignedCertificate:
