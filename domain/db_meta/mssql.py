@@ -4,7 +4,7 @@ createTimeColumn = "create_time datetime NOT NULL DEFAULT GETDATE()"
 createUserColumn = "create_user varchar(36)  NULL"
 updateTimeColumn = "update_time datetime NOT NULL DEFAULT GETDATE()"
 updateUserColumn = "update_user varchar(36)  NULL"
-deletedColumn = "deleted bit(1) NOT NULL DEFAULT 0"
+deletedColumn = "deleted bit NOT NULL DEFAULT 0"
 
 self = {
     "header": "SELECT 'executing: {{ file_path }}' AS [file];",
@@ -15,6 +15,6 @@ self = {
         "UpdateTimeColumn": "\t{0}".format(updateTimeColumn),
         "UpdateUserColumn": "\t{0}".format(updateUserColumn),
         "DeletedColumn": "\t{0}".format(deletedColumn),
-        "TrackColumn": ",\n".join(["\t{0}".format(t) for t in [createTimeColumn, createUserColumn, updateTimeColumn, updateUserColumn]]),
+        "TrackColumn": ",\n".join(["\t{0}".format(t) for t in [createTimeColumn, createUserColumn, updateTimeColumn, updateUserColumn, deletedColumn]]),
     }
 }
