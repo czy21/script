@@ -1,6 +1,6 @@
 FROM openjdk:8-jdk
 ENV HADOOP_VERSION=3.2.3
-ENV HADOOP_TGZ_URL=https://mirrors.tuna.tsinghua.edu.cn/apache/hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz
+ENV HADOOP_TGZ_URL=https://dlcdn.apache.org/hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz
 ENV HADOOP_HOME=/opt/hadoop
 ENV PATH=$HADOOP_HOME/bin:$PATH
 COPY sources.list /etc/apt/
