@@ -31,10 +31,8 @@ services:
   pulsar-proxy:
     <<: *pulsar-common
     container_name: pulsar-proxy
-    hostname: pulsar-proxy
     ports:
       - "6650:6650"
-      - "8091:8080"
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/proxy.conf:/pulsar/conf/proxy.conf
     command: bin/pulsar proxy
