@@ -12,6 +12,8 @@ services:
       - "9527:9527"
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/manager.properties:/opt/pulsar-manager/application.properties
+      - {{ param_docker_data }}/{{ param_role_name }}/log/web/:/var/log/nginx/
+      - {{ param_docker_data }}/{{ param_role_name }}/log/api/:/log/
     environment:
       SPRING_CONFIGURATION_FILE: /opt/pulsar-manager/application.properties
     restart: always
