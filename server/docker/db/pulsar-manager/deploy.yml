@@ -1,0 +1,19 @@
+version: '3.9'
+
+services:
+
+  pulsar-manager:
+    image: apachepulsar/pulsar-manager:v0.2.0
+    container_name: pulsar-manager
+    privileged: true
+    user: root
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/manager.properties:/pulsar-manager/pulsar-manager/application.properties
+    environment:
+      SPRING_CONFIGURATION_FILE: /pulsar-manager/pulsar-manager/application.properties
+    restart: always
+
+networks:
+  default:
+    external:
+      name: local
