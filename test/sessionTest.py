@@ -6,7 +6,7 @@ import requests
 
 
 def get_session(sid):
-    r = requests.post(url="http://127.0.0.1:8080/kafka/kafka/put", headers={}, json={"seq": sid})
+    r = requests.post(url="http://127.0.0.1:6650/pulsar/put", headers={}, json={"seq": sid})
     print(r.json())
 
 
@@ -15,7 +15,7 @@ if __name__ == '__main__':
     start_time = datetime.now()
 
     p = Pool(multiprocessing.cpu_count() * 2)
-    for f in range(0, 10000):
+    for f in range(0, 2000):
         p.apply_async(get_session, args=(str(f + 1),))
     p.close()
     p.join()
