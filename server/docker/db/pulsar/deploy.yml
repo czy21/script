@@ -12,9 +12,11 @@ services:
     <<: *pulsar-common
     container_name: pulsar-bookie{{ i }}
     hostname: pulsar-bookie{{ i }}
+    expose:
+      - "3181"
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/bookie.conf:/pulsar/conf/bookkeeper.conf
-      - {{ param_docker_data }}/{{ param_role_name }}/data/bookie/{{ i }}:/pulsar/data/
+      - {{ param_docker_data }}/{{ param_role_name }}/data/bookie/{{ i }}:/pulsar/data/bookie/
     command: bin/pulsar bookie
   {% endfor %}
   {% for i in range(1,param_mq_pulsar_cluster_broker_replicas | int + 1) %}
@@ -22,6 +24,9 @@ services:
     <<: *pulsar-common
     container_name: pulsar-broker{{ i }}
     hostname: pulsar-broker{{ i }}
+    expose:
+      - "8080"
+      - "6650"
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/broker.conf:/pulsar/conf/broker.conf
       - {{ param_docker_data }}/{{ param_role_name }}/data/broker/{{ i }}:/pulsar/data/
@@ -32,6 +37,9 @@ services:
     <<: *pulsar-common
     container_name: pulsar-proxy
     hostname: pulsar-proxy
+    expose:
+      - "8080"
+      - "6650"
     ports:
       - "6650:6650"
     volumes:

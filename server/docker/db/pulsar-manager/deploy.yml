@@ -7,9 +7,8 @@ services:
     container_name: pulsar-manager
     privileged: true
     user: root
-    ports:
-      - "7750:7750"
-      - "9527:9527"
+    expose:
+      - "9527"
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/manager.properties:/opt/pulsar-manager/application.properties
       - {{ param_docker_data }}/{{ param_role_name }}/log/web/:/var/log/nginx/
