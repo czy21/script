@@ -3,14 +3,17 @@ version: '3.9'
 services:
 
   pulsar-manager:
-    image: apachepulsar/pulsar-manager:v0.2.0
+    image: {{ param_registry_url }}/{{ param_registry_dir }}/pulsar-manager
     container_name: pulsar-manager
     privileged: true
     user: root
+    ports:
+      - "7750:7750"
+      - "9527:9527"
     volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/manager.properties:/pulsar-manager/pulsar-manager/application.properties
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/manager.properties:/opt/pulsar-manager/application.properties
     environment:
-      SPRING_CONFIGURATION_FILE: /pulsar-manager/pulsar-manager/application.properties
+      SPRING_CONFIGURATION_FILE: /opt/pulsar-manager/application.properties
     restart: always
 
 networks:
