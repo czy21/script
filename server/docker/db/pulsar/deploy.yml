@@ -1,0 +1,58 @@
+version: '3.9'
+
+x-pulsar-common: &pulsar-common
+  image: apachepulsar/pulsar:2.10.0
+  privileged: true
+  user: root
+  restart: always
+
+services:
+  {% for i in range(1,param_mq_pulsar_cluster_bookie_replicas | int + 1) %}
+  pulsar-bookie{{ i }}:
+    <<: *pulsar-common
+    container_name: pulsar-bookie{{ i }}
+    hostname: pulsar-bookie{{ i }}
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/bookie.conf:/pulsar/conf/bookkeeper.conf
+      - {{ param_docker_data }}/{{ param_role_name }}/data/bookie/{{ i }}:/pulsar/data/
+    command: bin/pulsar bookie
+  {% endfor %}
+  {% for i in range(1,param_mq_pulsar_cluster_broker_replicas | int + 1) %}
+  pulsar-broker{{ i }}:
+    <<: *pulsar-common
+    container_name: pulsar-broker{{ i }}
+    hostname: pulsar-broker{{ i }}
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/broker.conf:/pulsar/conf/broker.conf
+      - {{ param_docker_data }}/{{ param_role_name }}/data/broker/{{ i }}:/pulsar/data/
+    command: bin/pulsar broker
+  {% endfor %}
+
+  pulsar-proxy:
+    <<: *pulsar-common
+    container_name: pulsar-proxy
+    hostname: pulsar-proxy
+    ports:
+      - "6650:6650"
+      - "8091:8080"
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/proxy.conf:/pulsar/conf/proxy.conf
+    command: bin/pulsar proxy
+
+#
+#  pulsar-manager:
+#    image: apachepulsar/pulsar-manager:v0.2.0
+#    container_name: pulsar-manager
+#    privileged: true
+#    user: root
+#    ports:
+#      - "7750:7750"
+#      - "9527:9527"
+#    environment:
+#      SPRING_CONFIGURATION_FILE: /pulsar-manager/pulsar-manager/application.properties
+#    restart: always
+
+networks:
+  default:
+    external:
+      name: local
