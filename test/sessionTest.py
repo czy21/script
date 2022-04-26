@@ -6,7 +6,7 @@ import requests
 
 
 def get_session(sid):
-    r = requests.post(url="http://127.0.0.1:6650/pulsar/put", headers={}, json={"seq": sid})
+    r = requests.post(url="http://127.0.0.1:6650/pulsar/put", headers={}, json={"seq": sid, "name": "hello", "address": "上海市"})
     print(r.json())
 
 

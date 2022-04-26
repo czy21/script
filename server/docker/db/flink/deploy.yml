@@ -10,6 +10,7 @@ services:
   flink-jmr:
     <<: *flink-common
     container_name: flink-jmr
+    hostname: flink-jmr
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/data/jar/:/data/jar/
       - {{ param_docker_data }}/{{ param_role_name }}/data/completed-jobs/:/data/completed-jobs/
@@ -26,6 +27,7 @@ services:
   flink-tmr{{i}}:
     <<: *flink-common
     container_name: flink-tmr{{i}}
+    hostname: flink-tmr{{i}}
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/log/tmr/{{i}}:/opt/flink/log/
     environment:
