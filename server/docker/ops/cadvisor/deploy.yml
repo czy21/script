@@ -1,0 +1,20 @@
+version: '3.9'
+
+services:
+
+  cadvisor:
+    image: {{ param_registry_proxy_url | default("gcr.io") }}/cadvisor/cadvisor
+    container_name: cadvisor
+    privileged: true
+    user: root
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - {{ param_docker_root }}:/var/lib/docker:ro
+    restart: always
+
+networks:
+  default:
+    external:
+      name: local

@@ -48,6 +48,15 @@ scrape_configs:
         labels:
           origin_prometheus: dsm
 
+  - job_name: cadvisor
+    static_configs:
+    - targets: ['cadvisor-nas.cluster.com']
+      labels:
+        origin_prometheus: nas
+    - targets: ['cadvisor-dsm.cluster.com']
+      labels:
+        origin_prometheus: dsm
+
   - job_name: mysql
     static_configs:
       - targets:
@@ -61,7 +70,6 @@ scrape_configs:
   - job_name: redis
     static_configs:
       - targets:
-          - 'redis-exporter-{{ param_db_redis_port }}:9121'
           - 'redis-exporter-{{ param_db_redis_cluster_start_port }}:9121'
 
   - job_name: minio
