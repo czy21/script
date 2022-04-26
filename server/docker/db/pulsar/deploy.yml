@@ -16,7 +16,8 @@ services:
       - "3181"
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/bookie.conf:/pulsar/conf/bookkeeper.conf
-      - {{ param_docker_data }}/{{ param_role_name }}/data/bookie/{{ i }}:/pulsar/data/bookie/
+      - {{ param_docker_data }}/{{ param_role_name }}/data/bookie/{{ i }}/:/pulsar/data/bookie/
+      - {{ param_docker_data }}/{{ param_role_name }}/log/bookie/{{ i }}/:/pulsar/logs/
     command: bin/pulsar bookie
   {% endfor %}
   {% for i in range(1,param_mq_pulsar_cluster_broker_replicas | int + 1) %}
@@ -29,7 +30,7 @@ services:
       - "6650"
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/broker.conf:/pulsar/conf/broker.conf
-      - {{ param_docker_data }}/{{ param_role_name }}/data/broker/{{ i }}:/pulsar/data/
+      - {{ param_docker_data }}/{{ param_role_name }}/log/broker/{{ i }}/:/pulsar/logs/
     command: bin/pulsar broker
   {% endfor %}
 
@@ -44,6 +45,7 @@ services:
       - "6650:6650"
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/proxy.conf:/pulsar/conf/proxy.conf
+      - {{ param_docker_data }}/{{ param_role_name }}/log/proxy/:/pulsar/logs/
     command: bin/pulsar proxy
 
 networks:
