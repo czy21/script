@@ -1,5 +1,3 @@
-\c pulsar_manager;
-
 CREATE TABLE IF NOT EXISTS environments (
   name varchar(256) NOT NULL,
   broker varchar(1024) NOT NULL,
