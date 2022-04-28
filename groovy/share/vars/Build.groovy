@@ -37,9 +37,6 @@ def call() {
                 }
             }
             stage('build') {
-                when {
-                    expression { params.param_branch != 'master' }
-                }
                 steps {
                     script {
                         new org.ops.Docker().build()
