@@ -4,6 +4,7 @@ services:
 
   jenkins:
     image: jenkins/jenkins:lts-alpine-jdk11
+    pull_policy: always
     container_name: jenkins
     privileged: true
     user: root
@@ -19,6 +20,12 @@ services:
       JENKINS_UC_EXPERIMENTAL: https://mirrors.aliyun.com/jenkins/updates/experimental/update-center.json
       JAVA_OPTS: -Xms2G -Xmx2G
     restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+        reservations:
+          memory: 256M
 networks:
   default:
     external:

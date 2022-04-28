@@ -1,16 +1,13 @@
 settingsEvaluated { settings ->
     settings.pluginManagement {
+        plugins {
+        }
         resolutionStrategy {
         }
         repositories {
-            gradlePluginPortal()
             maven {
-                name "home"
+                name "homePublic"
                 url "http://nexus.cluster.com/repository/maven-public/"
-                credentials {
-                    username "admin"
-                    password "***REMOVED***"
-                }
                 allowInsecureProtocol = true
             }
         }
@@ -21,8 +18,17 @@ allprojects {
     publishing {
         repositories {
             maven {
-                name "home"
+                name "homeReleases"
                 url "http://nexus.cluster.com/repository/maven-releases/"
+                credentials {
+                    username "admin"
+                    password "***REMOVED***"
+                }
+                allowInsecureProtocol = true
+            }
+            maven {
+                name "homeSnapshots"
+                url "http://nexus.cluster.com/repository/maven-snapshots/"
                 credentials {
                     username "admin"
                     password "***REMOVED***"
@@ -33,12 +39,8 @@ allprojects {
     }
     repositories {
         maven {
-            name "home"
+            name "homePublic"
             url "http://nexus.cluster.com/repository/maven-public/"
-            credentials {
-                username "admin"
-                password "***REMOVED***"
-            }
             allowInsecureProtocol = true
         }
     }
