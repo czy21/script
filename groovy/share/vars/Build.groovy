@@ -17,7 +17,6 @@ def call() {
         }
         parameters {
             gitParameter branchFilter: 'origin/(.*)', name: 'param_branch', type: 'PT_BRANCH', defaultValue: 'master', useRepository: "${env.param_git_repository_url}"
-            booleanParam(name: 'param_fetch_branch')
         }
         stages {
             stage('clone') {
@@ -38,9 +37,6 @@ def call() {
                 }
             }
             stage('build') {
-                when {
-                    expression { params.param_fetch_branch == false }
-                }
                 steps {
                     script {
                         new org.ops.Docker().build()
