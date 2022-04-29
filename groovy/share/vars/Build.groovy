@@ -17,7 +17,7 @@ def call() {
         }
         parameters {
             gitParameter branchFilter: 'origin/(.*)', name: 'param_branch', type: 'PT_BRANCH', defaultValue: 'master', useRepository: "${env.param_git_repository_url}"
-            booleanParam(defaultValue: false, name: 'param_init')
+            booleanParam(defaultValue: true, name: 'param_init')
         }
         stages {
             stage('clone') {
@@ -39,7 +39,7 @@ def call() {
             }
             stage('build') {
                 when {
-                    expression { param_init = false }
+                    expression { param_init = "false" }
                 }
                 steps {
                     script {
