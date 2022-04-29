@@ -39,7 +39,7 @@ def call() {
             }
             stage('build') {
                 when {
-                    expression { params.param_fetch_branch == "false" }
+                    expression { params.param_fetch_branch == false }
                 }
                 steps {
                     script {
