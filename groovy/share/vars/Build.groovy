@@ -37,9 +37,6 @@ def call() {
                 }
             }
             stage('build') {
-                when {
-                    expression { BUILD_ID != "1" }
-                }
                 steps {
                     script {
                         new org.ops.Docker().build()
