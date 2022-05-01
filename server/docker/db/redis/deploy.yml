@@ -1,7 +1,7 @@
 version: '3.9'
 
 x-redis-common: &redis-common
-  image: redis:6.2.6-alpine
+  image: redis/redis-stack-server:latest
   privileged: true
   user: root
   environment:
@@ -16,9 +16,11 @@ services:
     ports:
       - "{{ param_db_redis_port }}:6379"
     volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/redis.conf:/etc/redis/redis.conf
       - {{ param_docker_data }}/{{ param_role_name }}/data/single/:/data/
-    command: redis-server /etc/redis/redis.conf
+    environment:
+      REDIS_ARGS: |-
+        --requirepass {{ param_db_redis_password }}
+        --appendonly yes
   redis-exporter-{{ param_db_redis_port }}:
     image: oliver006/redis_exporter:alpine
     container_name: redis-exporter-{{ param_db_redis_port }}
@@ -40,9 +42,14 @@ services:
       - "{{ p }}:{{ p }}"
       - "1{{ p }}:1{{ p }}"
     volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/redis.conf:/etc/redis/redis.conf
       - {{ param_docker_data }}/{{ param_role_name }}/data/{{ j }}/:/data/
-    command: redis-server /etc/redis/redis.conf --port {{ p }} --cluster-enabled yes --cluster-announce-ip {{ param_db_redis_cluster_ip }}
+    environment:
+      REDIS_ARGS: |-
+        --port {{ p }}
+        --requirepass {{ param_db_redis_password }}
+        --appendonly yes
+        --cluster-enabled yes
+        --cluster-announce-ip {{ param_db_redis_cluster_ip }}
   {% endfor %}
 
   redis-exporter-{{ param_db_redis_cluster_start_port }}:
