@@ -1,7 +1,7 @@
 version: '3.9'
 
 x-redis-common: &redis-common
-  image: redis/redis-stack-server:6.2.0
+  image: redis/redis-stack-server
   privileged: true
   user: root
   environment:
@@ -21,7 +21,6 @@ services:
       REDIS_ARGS: |-
         --requirepass {{ param_db_redis_password }}
         --appendonly yes
-        --appenddirname appendonly
   redis-exporter-{{ param_db_redis_port }}:
     image: oliver006/redis_exporter:alpine
     container_name: redis-exporter-{{ param_db_redis_port }}
@@ -49,7 +48,6 @@ services:
         --port {{ p }}
         --requirepass {{ param_db_redis_password }}
         --appendonly yes
-        --appenddirname appendonly
         --cluster-enabled yes
         --cluster-announce-ip {{ param_db_redis_cluster_ip }}
   {% endfor %}
