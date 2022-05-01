@@ -6,7 +6,10 @@ import requests
 
 
 def get_session(sid):
-    r = requests.post(url="http://127.0.0.1:6650/pulsar/put", headers={}, json={"seq": sid, "name": "hello", "address": "上海市"})
+    r = requests.post(url="http://127.0.0.1:6379/redis/pubsub/push1", headers={}, json={
+        "payload": {
+            "seq": str(sid)
+        }})
     print(r.json())
 
 
@@ -15,7 +18,7 @@ if __name__ == '__main__':
     start_time = datetime.now()
 
     p = Pool(multiprocessing.cpu_count() * 2)
-    for f in range(0, 100):
+    for f in range(0, 50000):
         p.apply_async(get_session, args=(str(f + 1),))
     p.close()
     p.join()
