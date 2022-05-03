@@ -1,0 +1,7 @@
+- name: test
+  hosts: all
+  remote_user: root
+  pre_tasks:
+    - include_tasks: common/copy-task.yml
+  roles:
+    - "app/a"
