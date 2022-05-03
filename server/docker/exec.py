@@ -9,6 +9,16 @@ import share
 def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
     args = kwargs["args"]
     env_dict: dict = kwargs["env_dict"]
+
+    _role_node_path = role_path.joinpath("node")
+    _role_node_selected = share.get_dir_dict(_role_node_path) if _role_node_path.exists() else None
+    _role_node_target_path: pathlib.Path = _role_node_selected.get(next(iter(_role_node_selected))) if _role_node_selected else None
+    if _role_node_path.exists():
+        if _role_node_target_path:
+            share.execute_cmd("cp -rv {0}/* {1}".format(_role_node_target_path.as_posix(), role_path.as_posix()))
+        else:
+            return
+
     role_name = role_path.name
     role_conf_path = role_path.joinpath("conf")
     role_compose_file = role_path.joinpath("deploy.yml")
@@ -27,6 +37,7 @@ def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
         return 'sudo docker-compose --file {0} {1}'.format(role_compose_file.as_posix(), option)
 
     _cmds = []
+
     if args.i:
         if role_conf_path.exists():
             _cmds.append([
@@ -80,6 +91,7 @@ def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
             _cmds.append(build_cmd)
     _cmd_str = share.flat_to_str([_cmds, "echo \n"], delimiter=" && ")
     share.execute_cmd(_cmd_str)
+
 
 if __name__ == '__main__':
     env_file = pathlib.Path(__file__).parent.joinpath(".env").as_posix()
