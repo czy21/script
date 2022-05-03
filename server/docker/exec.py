@@ -18,7 +18,6 @@ def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
             share.execute_cmd("cp -rv {0}/* {1}".format(_role_node_target_path.as_posix(), role_path.as_posix()))
         else:
             return
-
     role_name = role_path.name
     role_conf_path = role_path.joinpath("conf")
     role_compose_file = role_path.joinpath("deploy.yml")
@@ -62,10 +61,11 @@ def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
                 docker_compose_cmd(share.flat_to_str(docker_up_options))
             ])
     if args.d:
-        _cmds.append([
-            share.role_print(role_title, "down", role_compose_file.as_posix()),
-            docker_compose_cmd("down --remove-orphans")
-        ])
+        if role_compose_file.exists():
+            _cmds.append([
+                share.role_print(role_title, "down", role_compose_file.as_posix()),
+                docker_compose_cmd("down --remove-orphans")
+            ])
 
     if args.b:
         registry_url = env_dict['param_registry_url']
