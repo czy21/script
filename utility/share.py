@@ -20,10 +20,9 @@ def exclude_match(pattern, name):
 
 def dfs_dir(path: pathlib.Path, deep=1, exclude_pattern: str = None) -> list:
     ret = []
-    for p in sorted(path.iterdir()):
-        if p.is_dir() and exclude_match(exclude_pattern, p.as_posix()):
-            ret.append({"path": p, "deep": deep})
-            ret += dfs_dir(p, deep + 1, exclude_pattern)
+    for p in filter(lambda a: a.is_dir() and exclude_match(exclude_pattern, a.as_posix()), sorted(path.iterdir())):
+        ret.append({"path": p, "deep": deep})
+        ret += dfs_dir(p, deep + 1, exclude_pattern)
     return ret
 
 
@@ -35,10 +34,7 @@ def role_print(role, content, exec_file=None) -> str:
 
 
 def get_dir_dict(root_path: pathlib.Path, exclude_pattern=None, select_tip="") -> dict:
-    role_dict: dict = {str(i): t for i, t in enumerate([
-        p for p in sorted(root_path.iterdir())
-        if p.is_dir() and exclude_match(exclude_pattern, p.as_posix())
-    ], start=1)}
+    role_dict: dict = {str(i): t for i, t in enumerate(filter(lambda a: a.is_dir() and exclude_match(exclude_pattern, a.as_posix()), sorted(root_path.iterdir())), start=1)}
     # group by
     col_group = [list(t) for t in itertools.zip_longest(*[iter([".".join([str(k), v.name]) for k, v in role_dict.items()])] * 5, fillvalue='')]
     # get every column max length
