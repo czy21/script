@@ -88,11 +88,12 @@ def execute(ctx, func, **kwargs):
     if param_input_dict:
         print(param_input_dict)
     env_dict.update(param_input_dict)
-    for t in ctx["role_dict"].items():
-        role_num = t[0]
-        role_path = t[1]
+
+    for k, v in ctx["role_dict"].items():
+        role_num = k
+        role_path = v
         role_name = role_path.name
-        role_title = ".".join([role_num, role_path.name])
+        role_title = ".".join([role_num, role_name])
         func(role_title=role_title,
              role_path=role_path,
              env_dict={
