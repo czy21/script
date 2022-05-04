@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 import argparse
 import pathlib
-import re
+import urllib.parse
 
 import jinja2
 import share
+import urllib3.util
 
 
 def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
@@ -43,55 +44,35 @@ def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
 
     if args.i:
         if role_conf_path.exists():
-            _cmds.append([
-                share.role_print(role_title, "copy conf"),
-                'sudo mkdir -p {0}'.format(target_app_path),
-                'sudo cp -rv {0} {1}'.format(role_conf_path.as_posix(), target_app_path.as_posix())
-            ])
+            _cmds.append(share.role_print(role_title, "copy conf"))
+            _cmds.append('sudo mkdir -p {0}'.format(target_app_path))
+            _cmds.append('sudo cp -rv {0} {1}'.format(role_conf_path.as_posix(), target_app_path.as_posix()))
         if role_init_sh.exists():
-            _cmds.append([
-                share.role_print(role_title, "init", role_init_sh.as_posix()),
-                "source {}".format(role_init_sh.as_posix())
-            ])
+            _cmds.append(share.role_print(role_title, "init", role_init_sh.as_posix()))
+            _cmds.append("source {}".format(role_init_sh.as_posix()))
         if role_compose_file.exists():
-            docker_up_options = [
-                "up --detach --build --remove-orphans",
-            ]
-            if args.force_recreate:
-                docker_up_options.append("--force-recreate")
             _cmds.append(share.role_print(role_title, "deploy", role_compose_file.as_posix()))
             if args.debug:
                 _cmds.append(docker_compose_cmd("config"))
-            _cmds.append(docker_compose_cmd(share.flat_to_str(docker_up_options)))
+            _cmds.append(docker_compose_cmd(share.flat_to_str("up --detach --build --remove-orphans")))
     if args.d:
         if role_compose_file.exists():
-            _cmds.append([
-                share.role_print(role_title, "down", role_compose_file.as_posix()),
-                docker_compose_cmd("down --remove-orphans")
-            ])
+            _cmds.append(share.role_print(role_title, "down", role_compose_file.as_posix()))
+            _cmds.append(docker_compose_cmd("down --remove-orphans"))
 
     if args.b:
         registry_url = env_dict['param_registry_url']
         registry_dir = env_dict['param_registry_dir']
         registry_username = env_dict['param_registry_username']
         registry_password = env_dict['param_registry_password']
-        build_cmd = [
-            share.role_print(role_title, "build", role_build_sh.as_posix()),
-            'sudo docker login {0} --username {1} --password {2}'.format(registry_url, registry_username, registry_password)
-        ]
-
+        _cmds.append(share.role_print(role_title, "build", role_build_sh.as_posix()))
+        _cmds.append('sudo docker login {0} --username {1} --password {2}'.format(registry_url, registry_username, registry_password))
         if role_docker_file.exists():
-            docker_tag = "/".join([str(p).strip("/") for p in [registry_url, registry_dir, role_name]])
-            build_cmd.append([
-                "docker build --tag {0} --file {1} {2}".format(docker_tag, role_docker_file.as_posix(), role_path.as_posix()),
-                "docker push {0}".format(docker_tag)
-            ])
+            docker_image_tag = "/".join([str(p).strip("/") for p in [registry_url, registry_dir, role_name]])
+            _cmds.append("docker build --tag {0} --file {1} {2}".format(docker_image_tag, role_docker_file.as_posix(), role_path.as_posix()))
+            _cmds.append("docker push {0}".format(docker_image_tag))
         if role_build_sh.exists():
-            build_cmd.append(
-                "sudo bash {0}".format(role_build_sh.as_posix())
-            )
-        if role_docker_file.exists() or role_build_sh.exists():
-            _cmds.append(build_cmd)
+            _cmds.append("sudo bash {0}".format(role_build_sh.as_posix()))
     _cmd_str = share.flat_to_str([_cmds, "echo \n"], delimiter=" && ")
     share.execute_cmd(_cmd_str)
 
@@ -99,7 +80,6 @@ def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
 if __name__ == '__main__':
     env_file = pathlib.Path(__file__).parent.joinpath(".env").as_posix()
     parser = argparse.ArgumentParser()
-    parser.add_argument('--force-recreate', action="store_true")
     parser.add_argument('-p', nargs="+", default=[])
     parser.add_argument('-i', action="store_true")
     parser.add_argument('-d', action="store_true")
