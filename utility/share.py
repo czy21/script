@@ -36,10 +36,10 @@ def role_print(role, content, exec_file=None) -> str:
 def get_dir_dict(root_path: pathlib.Path, exclude_pattern=None, select_tip="") -> dict:
     role_dict: dict = {str(i): t for i, t in enumerate(filter(lambda a: a.is_dir() and exclude_match(exclude_pattern, a.as_posix()), sorted(root_path.iterdir())), start=1)}
     # group by
-    col_group = [list(t) for t in itertools.zip_longest(*[iter([".".join([str(k), v.name]) for k, v in role_dict.items()])] * 5, fillvalue='')]
+    col_groups = [list(t) for t in itertools.zip_longest(*[iter(["{0}.{1}".format(str(k), v.name) for k, v in role_dict.items()])] * 5, fillvalue='')]
     # get every column max length
-    col_widths = [len(max([t[p] for t in col_group for p in range(len(t)) if p == i], key=len, default='')) for i in range(len(col_group[0]))]
-    for t in col_group:
+    col_widths = [len(max([t[p] for t in col_groups for p in range(len(t)) if p == i], key=len, default='')) for i in range(len(col_groups[0]))]
+    for t in col_groups:
         print("".join([str(t[p]).ljust(col_widths[o] + 2) for p in range(len(t)) for o in range(len(col_widths)) if p == o]))
     role_nums = input("please select {0}".format(select_tip)).strip().split()
     return dict((t, role_dict[t]) for t in role_nums if t in role_dict.keys())
