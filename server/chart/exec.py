@@ -82,4 +82,4 @@ if __name__ == '__main__':
     selected_option = share.select_option(2)
     if args.n is None:
         args.n = selected_option["namespace"]
-    share.execute(selected_option["role_dict"], invoke, env_file=env_file, args=args)
+    share.execute(selected_option, invoke, env_file=env_file, args=args)

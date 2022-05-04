@@ -14,14 +14,16 @@ def flat_to_str(*items: list, delimiter=" ") -> str:
     return delimiter.join(flat(list(items)))
 
 
-def dfs_dir(path: pathlib.Path, deep=1, exclude_path=None) -> list:
-    if exclude_path is None:
-        exclude_path = []
+def exclude_match(pattern, name):
+    return pattern is None or not re.search(pattern, name)
+
+
+def dfs_dir(path: pathlib.Path, deep=1, exclude_pattern: str = None) -> list:
     ret = []
     for p in sorted(path.iterdir()):
-        if p.is_dir() and not exclude_path.__contains__(p.name):
+        if p.is_dir() and exclude_match(exclude_pattern, p.as_posix()):
             ret.append({"path": p, "deep": deep})
-            ret += dfs_dir(p, deep + 1)
+            ret += dfs_dir(p, deep + 1, exclude_pattern)
     return ret
 
 
@@ -32,10 +34,11 @@ def role_print(role, content, exec_file=None) -> str:
     return 'echo "' + c + '"'
 
 
-def get_dir_dict(roles_path: pathlib.Path, exclude_path=None, select_tip="") -> dict:
-    if exclude_path is None:
-        exclude_path = []
-    role_dict: dict = {str(i): t for i, t in enumerate([p for p in sorted(roles_path.iterdir()) if p.is_dir() and not exclude_path.__contains__(p.name)], start=1)}
+def get_dir_dict(root_path: pathlib.Path, exclude_pattern=None, select_tip="") -> dict:
+    role_dict: dict = {str(i): t for i, t in enumerate([
+        p for p in sorted(root_path.iterdir())
+        if p.is_dir() and exclude_match(exclude_pattern, p.as_posix())
+    ], start=1)}
     # group by
     col_group = [list(t) for t in itertools.zip_longest(*[iter([".".join([str(k), v.name]) for k, v in role_dict.items()])] * 5, fillvalue='')]
     # get every column max length
@@ -50,9 +53,10 @@ def select_option(deep: int = 1, exclude_path=None) -> dict:
     if exclude_path is None:
         exclude_path = []
     exclude_path.append("___temp")
+    exclude_pattern = "({0})".format("|").join(set(exclude_path))
     root_path = pathlib.Path(__file__).parent
-    flat_dirs = dfs_dir(root_path, exclude_path=exclude_path)
-    print(flat_dirs)
+    flat_dirs = dfs_dir(root_path, exclude_pattern=exclude_pattern)
+
     app_path = root_path
     deep_index = 1
 
@@ -70,7 +74,8 @@ def select_option(deep: int = 1, exclude_path=None) -> dict:
         deep_index = deep_index + 1
     return {
         "namespace": app_path.name,
-        "role_dict": get_dir_dict(app_path, exclude_path=exclude_path, select_tip="role num(example:1 2 3)")
+        "role_dict": get_dir_dict(app_path, exclude_pattern=exclude_pattern, select_tip="role num(example:1 2 3)"),
+        "exclude_pattern": exclude_pattern
     }
 
 
@@ -79,14 +84,15 @@ def execute_cmd(cmd):
     subprocess.Popen(cmd, shell=True).wait()
 
 
-def execute(app_dict, func, **kwargs):
+def execute(ctx, func, **kwargs):
+    kwargs["args"].exclude_pattern = ctx["exclude_pattern"]
     env_dict = dotenv.dotenv_values(kwargs["env_file"]) if kwargs.__contains__("env_file") else {}
     param_iter = iter(kwargs["args"].p)
     param_input_dict = dict(zip(param_iter, param_iter))
     if param_input_dict:
         print(param_input_dict)
     env_dict.update(param_input_dict)
-    for t in app_dict.items():
+    for t in ctx["role_dict"].items():
         role_num = t[0]
         role_path = t[1]
         role_name = role_path.name
