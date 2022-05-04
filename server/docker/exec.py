@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 import pathlib
+import re
 
 import jinja2
 import share
@@ -29,7 +30,7 @@ def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
     role_build_sh = role_path.joinpath("build.sh")
 
     target_app_path = pathlib.Path(env_dict["param_docker_data"]).joinpath(role_name)
-    for t in filter(lambda f: f.is_file() and not f.as_posix().__contains__("___temp"), role_path.rglob("*")):
+    for t in filter(lambda f: f.is_file() and not re.search("(___temp)", f.as_posix()), role_path.rglob("*")):
         with open(t, "r", encoding="utf-8", newline="\n") as r_file:
             content = jinja2.Template(r_file.read()).render(**env_dict)
             with open(t, "w", encoding="utf-8") as t_file:
