@@ -10,12 +10,15 @@ def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
     args = kwargs["args"]
     env_dict: dict = kwargs["env_dict"]
 
-    _role_node_path = role_path.joinpath("node")
-    _role_node_selected = share.get_dir_dict(_role_node_path) if _role_node_path.exists() else None
-    _role_node_target_path: pathlib.Path = _role_node_selected.get(next(iter(_role_node_selected))) if _role_node_selected else None
-    if _role_node_path.exists():
-        if _role_node_target_path:
-            share.execute_cmd("cp -rv {0}/* {1}".format(_role_node_target_path.as_posix(), role_path.as_posix()))
+    role_node_path = role_path.joinpath("node")
+    role_node_selected = share.get_dir_dict(role_node_path) if role_node_path.exists() else None
+    role_node_target_path: pathlib.Path = role_node_selected.get(next(iter(role_node_selected))) if role_node_selected else None
+    if role_node_path.exists():
+        if role_node_target_path:
+            share.execute_cmd(share.flat_to_str([
+                share.role_print(role_title, "copy node"),
+                "cp -rv {0}/* {1}".format(role_node_target_path.as_posix(), role_path.as_posix())
+            ], delimiter=" && "), select_tip="node option(example:1")
         else:
             return
     role_name = role_path.name
@@ -55,11 +58,10 @@ def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
             ]
             if args.force_recreate:
                 docker_up_options.append("--force-recreate")
-            _cmds.append([
-                share.role_print(role_title, "deploy", role_compose_file.as_posix()),
-                docker_compose_cmd("config"),
-                docker_compose_cmd(share.flat_to_str(docker_up_options))
-            ])
+            _cmds.append(share.role_print(role_title, "deploy", role_compose_file.as_posix()))
+            if args.debug:
+                _cmds.append(docker_compose_cmd("config"))
+            _cmds.append(docker_compose_cmd(share.flat_to_str(docker_up_options)))
     if args.d:
         if role_compose_file.exists():
             _cmds.append([
@@ -102,6 +104,7 @@ if __name__ == '__main__':
     parser.add_argument('-d', action="store_true")
     parser.add_argument('-b', action="store_true")
     parser.add_argument('-n')
+    parser.add_argument('--debug', action="store_true")
 
     args = parser.parse_args()
     selected_option = share.select_option(2)

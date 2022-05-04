@@ -1,5 +1,6 @@
 import itertools
 import pathlib
+import re
 import subprocess
 import sys
 
@@ -31,7 +32,7 @@ def role_print(role, content, exec_file=None) -> str:
     return 'echo "' + c + '"'
 
 
-def get_dir_dict(roles_path: pathlib.Path, exclude_path=None) -> dict:
+def get_dir_dict(roles_path: pathlib.Path, exclude_path=None, select_tip="") -> dict:
     if exclude_path is None:
         exclude_path = []
     role_dict: dict = {str(i): t for i, t in enumerate([p for p in sorted(roles_path.iterdir()) if p.is_dir() and not exclude_path.__contains__(p.name)], start=1)}
@@ -41,7 +42,7 @@ def get_dir_dict(roles_path: pathlib.Path, exclude_path=None) -> dict:
     col_widths = [len(max([t[p] for t in col_group for p in range(len(t)) if p == i], key=len, default='')) for i in range(len(col_group[0]))]
     for t in col_group:
         print("".join([str(t[p]).ljust(col_widths[o] + 2) for p in range(len(t)) for o in range(len(col_widths)) if p == o]))
-    role_nums = input("please select num(example:1 2 3) ").strip().split()
+    role_nums = input("please select {0}".format(select_tip)).strip().split()
     return dict((t, role_dict[t]) for t in role_nums if t in role_dict.keys())
 
 
@@ -51,6 +52,7 @@ def select_option(deep: int = 1, exclude_path=None) -> dict:
     exclude_path.append("___temp")
     root_path = pathlib.Path(__file__).parent
     flat_dirs = dfs_dir(root_path, exclude_path=exclude_path)
+    print(flat_dirs)
     app_path = root_path
     deep_index = 1
 
@@ -68,7 +70,7 @@ def select_option(deep: int = 1, exclude_path=None) -> dict:
         deep_index = deep_index + 1
     return {
         "namespace": app_path.name,
-        "role_dict": get_dir_dict(app_path, exclude_path=exclude_path)
+        "role_dict": get_dir_dict(app_path, exclude_path=exclude_path, select_tip="role num(example:1 2 3)")
     }
 
 
