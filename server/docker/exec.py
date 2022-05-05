@@ -29,7 +29,8 @@ def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
     role_build_sh = role_path.joinpath("build.sh")
 
     target_app_path = pathlib.Path(env_dict["param_docker_data"]).joinpath(role_name)
-    for t in filter(lambda f: f.is_file() and share.exclude_match(args.exclude_pattern, f.as_posix()), role_path.rglob("*")):
+
+    for t in filter(lambda f: f.is_file() and share.exclude_match("({0})".format("|".join(args.excludes)), f.as_posix()), role_path.rglob("*")):
         with open(t, "r", encoding="utf-8", newline="\n") as sf:
             content = jinja2.Template(sf.read()).render(**env_dict)
             with open(t, "w", encoding="utf-8") as tf:

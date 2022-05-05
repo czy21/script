@@ -44,11 +44,11 @@ def get_dir_dict(root_path: pathlib.Path, exclude_pattern=None, select_tip="", c
     return dict((t, dir_dict[t]) for t in dir_nums if t in dir_dict.keys())
 
 
-def select_option(deep: int = 1, exclude_path=None) -> dict:
-    if exclude_path is None:
-        exclude_path = []
-    exclude_path.append("___temp")
-    exclude_pattern = "({0})".format("|").join(set(exclude_path))
+def select_option(deep: int = 1, excludes=None) -> dict:
+    if excludes is None:
+        excludes = []
+    excludes.append("___temp")
+    exclude_pattern = "({0})".format("|").join(set(excludes))
     root_path = pathlib.Path(__file__).parent
     flat_dirs = dfs_dir(root_path, exclude_pattern=exclude_pattern)
 
@@ -70,7 +70,7 @@ def select_option(deep: int = 1, exclude_path=None) -> dict:
     return {
         "namespace": app_path.name,
         "role_dict": get_dir_dict(app_path, exclude_pattern=exclude_pattern, select_tip="role num(example:1 2 3)"),
-        "exclude_pattern": exclude_pattern
+        "excludes": excludes
     }
 
 
@@ -82,7 +82,7 @@ def execute_cmd(cmd):
 def execute(ctx, func, **kwargs):
     yaml.add_constructor('!join', lambda loader, node: "".join(loader.construct_sequence(node, deep=True)))
 
-    kwargs["args"].exclude_pattern = ctx["exclude_pattern"]
+    kwargs["args"].excludes = ctx["excludes"]
     with open(kwargs["env_file"], mode="r", encoding="utf-8") as ef:
         env_dict = yaml.full_load(ef)
     param_iter = iter(kwargs["args"].p)
