@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
 import argparse
 import pathlib
-import urllib.parse
 
 import jinja2
 import share
-import urllib3.util
 
 
 def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
@@ -78,7 +76,7 @@ def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
 
 
 if __name__ == '__main__':
-    env_file = pathlib.Path(__file__).parent.joinpath(".env").as_posix()
+    env_file = pathlib.Path(__file__).parent.joinpath("env.yaml").as_posix()
     parser = argparse.ArgumentParser()
     parser.add_argument('-p', nargs="+", default=[])
     parser.add_argument('-i', action="store_true")

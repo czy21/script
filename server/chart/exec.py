@@ -64,7 +64,7 @@ def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
 
 
 if __name__ == '__main__':
-    env_file = pathlib.Path(__file__).parent.joinpath(".env")
+    env_file = pathlib.Path(__file__).parent.joinpath("env.yaml")
     parser = argparse.ArgumentParser()
     parser.add_argument('-p', nargs="+", default=[])
     parser.add_argument('-a', type=str, required=True)

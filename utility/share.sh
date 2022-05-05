@@ -13,7 +13,7 @@ function upload_exec_py() {
   local scp_cmd="scp -o StrictHostKeyChecking=no -rqC"
 
   ${scp_cmd} ${pwd_path} $host:
-  ${scp_cmd} ${pwd_path}/../requirements.txt ${pwd_path}/../.env ${utility_dir}/share.py $host:${name_path}
+  ${scp_cmd} ${pwd_path}/../requirements.txt ${pwd_path}/../env.yaml ${utility_dir}/share.py $host:${name_path}
 
   local args
   local exec_cmd=()

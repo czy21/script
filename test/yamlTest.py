@@ -51,14 +51,22 @@ def split(root_path: str):
                         if "namespace" in content["metadata"].keys():
                             content["metadata"]["namespace"] = "{{ .Values.namespace }}"
                     all_doc.append(content)
-                yaml.dump_all(all_doc, y_file, Dumper=yaml.RoundTripDumper,default_flow_style=False, explicit_start=True)
+                yaml.dump_all(all_doc, y_file, Dumper=yaml.RoundTripDumper, default_flow_style=False, explicit_start=True)
             fo.close()
             os.remove(f)
 
 
+def self_ref():
+
+    with open(Path(__file__).joinpath("../___temp/a.yml").resolve().as_posix(), mode="r", encoding="utf-8") as f:
+        obj = yaml.load(f, yaml.UnsafeLoader)
+        print(obj)
+
+
 if __name__ == '__main__':
+    self_ref()
     # split(Path(__file__).joinpath("../../server/pod/app").resolve().as_posix())
     # split(Path(__file__).joinpath("../../server/pod/db").resolve().as_posix())
     # split(Path(__file__).joinpath("../../server/pod/init").resolve().as_posix())
     # split(Path(__file__).joinpath("../../server/pod/ops").resolve().as_posix())
-    split(Path(__file__).joinpath("../../server/pod/erp").resolve().as_posix())
+    # split(Path(__file__).joinpath("../../server/pod/erp").resolve().as_posix())

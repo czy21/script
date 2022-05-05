@@ -4,7 +4,7 @@ import re
 import subprocess
 import sys
 
-import dotenv
+import yaml
 
 
 def flat(a): return sum(map(flat, a), []) if isinstance(a, list) else [a]
@@ -80,8 +80,11 @@ def execute_cmd(cmd):
 
 
 def execute(ctx, func, **kwargs):
+    yaml.add_constructor('!join', lambda loader, node: "".join(loader.construct_sequence(node, deep=True)))
+
     kwargs["args"].exclude_pattern = ctx["exclude_pattern"]
-    env_dict = dotenv.dotenv_values(kwargs["env_file"]) if kwargs.__contains__("env_file") else {}
+    with open(kwargs["env_file"], mode="r", encoding="utf-8") as ef:
+        env_dict = yaml.full_load(ef)
     param_iter = iter(kwargs["args"].p)
     param_input_dict = dict(zip(param_iter, param_iter))
     if param_input_dict:
