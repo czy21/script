@@ -6,10 +6,14 @@ import requests
 
 
 def get_session(sid):
-    r = requests.post(url="http://127.0.0.1:6379/redis/pubsub/push1", headers={}, json={
-        "payload": {
-            "seq": str(sid)
-        }})
+    r = requests.post(url="http://127.0.0.1:37002/api/test/test1",
+                      headers={
+                          "authorization": "b530c5984da54f398552f7241da6eb17"
+                      },
+                      json={
+                          "payload": {
+                              "seq": str(sid)
+                          }})
     print(r.json())
 
 
@@ -18,7 +22,7 @@ if __name__ == '__main__':
     start_time = datetime.now()
 
     p = Pool(multiprocessing.cpu_count() * 2)
-    for f in range(0, 50000):
+    for f in range(0, 10000):
         p.apply_async(get_session, args=(str(f + 1),))
     p.close()
     p.join()

@@ -1,0 +1,20 @@
+version: '3.9'
+
+services:
+
+  traefik:
+    image: traefik:v2.6
+    pull_policy: always
+    container_name: traefik
+    privileged: true
+    user: root
+    ports:
+      - "8090:8080"
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/traefik.yml:/etc/traefik/traefik.yml
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: always
+networks:
+  default:
+    external:
+      name: local
