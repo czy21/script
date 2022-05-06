@@ -12,7 +12,6 @@ x-traefik-label: &traefik-label
   traefik.http.routers.registry-proxy.service: registry-proxy
   traefik.http.services.registry-proxy.loadbalancer.server.port: 5005
 
-
 services:
 
   nexus:

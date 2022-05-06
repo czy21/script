@@ -20,6 +20,7 @@ services:
       - "80:80"
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/traefik.yml:/etc/traefik/traefik.yml
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/conf.d/:/etc/traefik/conf.d/
       - /var/run/docker.sock:/var/run/docker.sock
     restart: always
 networks:
