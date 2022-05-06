@@ -9,3 +9,17 @@ accessLog:
   filePath: /dev/stdout
 api:
   insecure: true
+
+entryPoints:
+  web:
+    address: :80
+  websecure:
+    address: :443
+  traefik:
+    address: :8080
+  metrics:
+    address: :8082
+
+metrics:
+  prometheus:
+    entryPoint: metrics

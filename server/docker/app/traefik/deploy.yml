@@ -16,6 +16,11 @@ services:
       <<: *traefik-label
     privileged: true
     user: root
+    expose:
+      - "80"
+      - "443"
+      - "8080"
+      - "8082"
     ports:
       - "80:80"
     volumes:

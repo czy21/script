@@ -77,3 +77,11 @@ scrape_configs:
     scheme: http
     static_configs:
     - targets: ['minio.cluster.com']
+
+  - job_name: traefik
+    metrics_path: /metrics
+    scheme: http
+    static_configs:
+      - targets: ['traefik:8082']
+        labels:
+          origin_prometheus: nas
