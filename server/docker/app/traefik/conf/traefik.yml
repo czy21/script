@@ -2,5 +2,7 @@ providers:
   docker:
     endpoint: "unix:///var/run/docker.sock"
     exposedByDefault: false
+accessLog:
+  filePath: /dev/stdout
 api:
   insecure: true
