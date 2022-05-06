@@ -1,10 +1,25 @@
 version: '3.9'
 
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.nexus.rule: Host(`nexus.cluster.com`)
+  traefik.http.routers.nexus.service: nexus
+  traefik.http.services.nexus.loadbalancer.server.port: 8081
+  traefik.http.routers.registry.rule: Host(`registry.cluster.com`)
+  traefik.http.routers.registry.service: registry
+  traefik.http.services.registry.loadbalancer.server.port: 5000
+  traefik.http.routers.registry-proxy.rule: Host(`registry-proxy.cluster.com`)
+  traefik.http.routers.registry-proxy.service: registry-proxy
+  traefik.http.services.registry-proxy.loadbalancer.server.port: 5005
+
+
 services:
 
   nexus:
     image: sonatype/nexus3
     container_name: nexus
+    labels:
+      <<: *traefik-label
     privileged: true
     user: root
     volumes:

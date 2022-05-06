@@ -6,11 +6,25 @@ x-flink-common: &flink-common
   user: root
   restart: always
 
+x-traefik-jmr-label: &traefik-jmr-label
+  traefik.enable: true
+  traefik.http.routers.flink-jmr.rule: Host(`flink-jmr.cluster.com`)
+  traefik.http.routers.flink-jmr.service: flink-jmr
+  traefik.http.services.flink-jmr.loadbalancer.server.port: 8081
+
+x-traefik-his-label: &traefik-his-label
+  traefik.enable: true
+  traefik.http.routers.flink-his.rule: Host(`flink-his.cluster.com`)
+  traefik.http.routers.flink-his.service: flink-his
+  traefik.http.services.flink-his.loadbalancer.server.port: 8081
+
 services:
   flink-jmr:
     <<: *flink-common
     container_name: flink-jmr
     hostname: flink-jmr
+    labels:
+      <<: *traefik-jmr-label
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/data/jar/:/data/jar/
       - {{ param_docker_data }}/{{ param_role_name }}/data/completed-jobs/:/data/completed-jobs/
@@ -40,6 +54,8 @@ services:
   flink-his:
     <<: *flink-common
     container_name: flink-his
+    labels:
+      <<: *traefik-his-label
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/data/completed-jobs/:/data/completed-jobs/
       - {{ param_docker_data }}/{{ param_role_name }}/log/his/:/opt/flink/log/

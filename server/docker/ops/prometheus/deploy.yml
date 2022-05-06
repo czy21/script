@@ -1,10 +1,18 @@
 version: '3.9'
 
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.prometheus.rule: Host(`prom-nas.cluster.com`)
+  traefik.http.routers.prometheus.service: prometheus
+  traefik.http.services.prometheus.loadbalancer.server.port: 9090
+
 services:
 
   prometheus:
     image: prom/prometheus
     container_name: prometheus
+    labels:
+      <<: *traefik-label
     privileged: true
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/:/etc/prometheus/
