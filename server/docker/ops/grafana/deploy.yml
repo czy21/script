@@ -2,9 +2,9 @@ version: '3.9'
 
 x-traefik-label: &traefik-label
   traefik.enable: true
-  traefik.http.routers.grafana.rule: Host(`grafana.cluster.com`)
-  traefik.http.routers.grafana.service: traefik
-  traefik.http.services.grafana.loadbalancer.server.port: 3000
+  traefik.http.routers.{{ param_role_name }}.rule: Host(`grafana.cluster.com`)
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 3000
 
 services:
   grafana:

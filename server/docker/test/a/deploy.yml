@@ -23,6 +23,17 @@ services:
     pull_policy: always
     privileged: true
     restart: always
+  a3:
+    image: nginx
+    labels:
+      - traefik.http.routers.a.rule=Host(`nginx-a.cluster.com`)
+      - traefik.http.routers.a.service=a
+      - traefik.http.services.a.loadbalancer.server.port=80
+      - traefik.enable=true
+    container_name: nginx-a3
+    pull_policy: always
+    privileged: true
+    restart: always
 networks:
   default:
     external:
