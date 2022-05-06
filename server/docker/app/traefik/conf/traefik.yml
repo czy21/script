@@ -4,6 +4,7 @@ providers:
     exposedByDefault: false
   file:
     directory: /etc/traefik/conf.d/
+    watch: true
 accessLog:
   filePath: /dev/stdout
 api:
