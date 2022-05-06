@@ -1,4 +1,5 @@
 ```shell
+# kong init db
 docker run --rm \
     -e "KONG_DATABASE=postgres" \
     -e "KONG_PG_HOST=192.168.2.18" \
@@ -6,4 +7,6 @@ docker run --rm \
     -e "KONG_PG_PASSWORD=Czy.190815" \
     -e "KONG_CASSANDRA_CONTACT_POINTS=kong" \
     kong/kong-gateway:2.8-alpine kong migrations bootstrap
+# konga init db
+docker run --rm pantsel/konga:latest -c prepare -a mysql -u "mysql://admin:Czy.190815@192.168.2.18:3306/konga"
 ```
