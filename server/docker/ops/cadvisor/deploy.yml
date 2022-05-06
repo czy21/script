@@ -1,10 +1,18 @@
 version: '3.9'
 
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.cadvisor.rule: Host(`cadvisor-nas.cluster.com`)
+  traefik.http.routers.cadvisor.service: cadvisor
+  traefik.http.services.cadvisor.loadbalancer.server.port: 8080
+
 services:
 
   cadvisor:
     image: {{ param_registry_proxy_url | default("gcr.io") }}/cadvisor/cadvisor
     container_name: cadvisor
+    labels:
+      <<: *traefik-label
     privileged: true
     user: root
     volumes:

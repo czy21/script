@@ -1,15 +1,23 @@
 version: '3.9'
 
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.traefik.rule: Host(`traefik-nas.cluster.com`)
+  traefik.http.routers.traefik.service: traefik
+  traefik.http.services.traefik.loadbalancer.server.port: 8080
+
 services:
 
   traefik:
     image: traefik:v2.6
     pull_policy: always
     container_name: traefik
+    labels:
+      <<: *traefik-label
     privileged: true
     user: root
     ports:
-      - "8090:8080"
+      - "80:80"
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/traefik.yml:/etc/traefik/traefik.yml
       - /var/run/docker.sock:/var/run/docker.sock

@@ -1,9 +1,17 @@
 version: '3.9'
 
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.portainer.rule: Host(`portainer-nas.cluster.com`)
+  traefik.http.routers.portainer.service: portainer
+  traefik.http.services.portainer.loadbalancer.server.port: 9000
+
 services:
   portainer:
     image: portainer/portainer-ce:linux-amd64-2.11.0-alpine
     container_name: portainer
+    labels:
+      <<: *traefik-label
     privileged: true
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock

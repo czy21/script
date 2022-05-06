@@ -1,10 +1,18 @@
 version: '3.9'
 
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.consul.rule: Host(`consul.cluster.com`)
+  traefik.http.routers.consul.service: consul
+  traefik.http.services.consul.loadbalancer.server.port: 8500
+
 services:
 
   consul:
     image: consul:1.11.2
     container_name: consul
+    labels:
+      <<: *traefik-label
     privileged: true
     user: root
     volumes:

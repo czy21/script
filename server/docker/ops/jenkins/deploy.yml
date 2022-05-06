@@ -1,11 +1,19 @@
 version: '3.9'
 
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.jenkins.rule: Host(`jenkins.cluster.com`)
+  traefik.http.routers.jenkins.service: jenkins
+  traefik.http.services.jenkins.loadbalancer.server.port: 8080
+
 services:
 
   jenkins:
     image: jenkins/jenkins:lts-alpine-jdk11
     pull_policy: always
     container_name: jenkins
+    labels:
+      <<: *traefik-label
     privileged: true
     user: root
     ports:
