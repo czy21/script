@@ -1,10 +1,16 @@
 version: '3.9'
 
-x-traefik-label: &traefik-label
+x-traefik-kong-label: &traefik-kong-label
   traefik.enable: true
   traefik.http.routers.{{ param_role_name }}.rule: Host(`kong.cluster.com`)
   traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
-  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 8000
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 8002
+
+x-traefik-konga-label: &traefik-konga-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}a.rule: Host(`konga.cluster.com`)
+  traefik.http.routers.{{ param_role_name }}a.service: {{ param_role_name }}a
+  traefik.http.services.{{ param_role_name }}a.loadbalancer.server.port: 1337
 
 services:
 
@@ -13,10 +19,10 @@ services:
     pull_policy: always
     container_name: kong
     labels:
-      <<: *traefik-label
+      <<: *traefik-kong-label
     privileged: true
     user: root
-    expose: ["8000","8443","8001","8444"]
+    expose: ["8000","8001","8002","8003","8004","8443","8444","8445"]
     environment:
       KONG_DATABASE: postgres
       KONG_PG_HOST: {{ param_db_pgsql_host }}
@@ -24,11 +30,28 @@ services:
       KONG_PG_PASSWORD: {{ param_db_pgsql_password }}
       KONG_CASSANDRA_CONTACT_POINTS: kong
       KONG_PROXY_ACCESS_LOG: /dev/stdout
-      KONG_ADMIN_ACCESS_LOG: /dev/stdout
       KONG_PROXY_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_ACCESS_LOG: /dev/stdout
       KONG_ADMIN_ERROR_LOG: /dev/stderr
-      KONG_ADMIN_LISTEN: 0.0.0.0:8001, 0.0.0.0:8444 ssl
+      KONG_ADMIN_LISTEN: 0.0.0.0:8001
+      KONG_ADMIN_GUI_URL: http://localhost:8002
     restart: always
+
+  konga:
+    image: pantsel/konga
+    pull_policy: always
+    container_name: konga
+    labels:
+      <<: *traefik-konga-label
+    privileged: true
+    user: root
+    expose: ["1337"]
+    environment:
+      DB_ADAPTER: mysql
+      DB_URI: "mysql://{{ param_db_mysql_username }}:{{ param_db_mysql_password }}@{{ param_db_mysql_host }}:{{ param_db_mysql_port }}/konga"
+      NODE_ENV: production
+    restart: always
+
 networks:
   default:
     external:
