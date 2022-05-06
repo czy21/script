@@ -2,9 +2,9 @@ version: '3.9'
 
 x-traefik-label: &traefik-label
   traefik.enable: true
-  traefik.http.routers.consul.rule: Host(`consul.cluster.com`)
-  traefik.http.routers.consul.service: consul
-  traefik.http.services.consul.loadbalancer.server.port: 8500
+  traefik.http.routers.{{ param_role_name }}.rule: Host(`consul.cluster.com`)
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 8500
 
 services:
 

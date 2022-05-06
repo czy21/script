@@ -2,9 +2,9 @@ version: '3.9'
 
 x-traefik-label: &traefik-label
   traefik.enable: true
-  traefik.http.routers.jenkins.rule: Host(`jenkins.cluster.com`)
-  traefik.http.routers.jenkins.service: jenkins
-  traefik.http.services.jenkins.loadbalancer.server.port: 8080
+  traefik.http.routers.{{ param_role_name }}.rule: Host(`jenkins.cluster.com`)
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 8080
 
 services:
 

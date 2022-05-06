@@ -2,9 +2,9 @@ version: '3.9'
 
 x-traefik-label: &traefik-label
   traefik.enable: true
-  traefik.http.routers.prometheus.rule: Host(`prom-nas.cluster.com`)
-  traefik.http.routers.prometheus.service: prometheus
-  traefik.http.services.prometheus.loadbalancer.server.port: 9090
+  traefik.http.routers.{{ param_role_name }}.rule: Host(`prom-nas.cluster.com`)
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 9090
 
 services:
 

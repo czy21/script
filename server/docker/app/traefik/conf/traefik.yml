@@ -1,10 +1,6 @@
-## traefik.yml
-
-# Docker configuration backend
 providers:
   docker:
     endpoint: "unix:///var/run/docker.sock"
     exposedByDefault: false
-# API and dashboard configuration
 api:
   insecure: true
