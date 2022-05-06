@@ -25,9 +25,9 @@ services:
     expose: ["8000","8001","8002","8003","8004","8443","8444","8445"]
     environment:
       KONG_DATABASE: postgres
-      KONG_PG_HOST: {{ param_db_pgsql_host }}
-      KONG_PG_USER: {{ param_db_pgsql_username }}
-      KONG_PG_PASSWORD: {{ param_db_pgsql_password }}
+      KONG_PG_HOST: "{{ param_db_pgsql_host }}"
+      KONG_PG_USER: "{{ param_db_pgsql_username }}"
+      KONG_PG_PASSWORD: "{{ param_db_pgsql_password }}"
       KONG_CASSANDRA_CONTACT_POINTS: kong
       KONG_PROXY_ACCESS_LOG: /dev/stdout
       KONG_PROXY_ERROR_LOG: /dev/stderr
