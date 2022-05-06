@@ -1,0 +1,35 @@
+version: '3.9'
+
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}.rule: Host(`kong.cluster.com`)
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 8000
+
+services:
+
+  kong:
+    image: kong/kong-gateway:2.8-alpine
+    pull_policy: always
+    container_name: kong
+    labels:
+      <<: *traefik-label
+    privileged: true
+    user: root
+    expose: ["8000","8443","8001","8444"]
+    environment:
+      KONG_DATABASE: postgres
+      KONG_PG_HOST: {{ param_db_pgsql_host }}
+      KONG_PG_USER: {{ param_db_pgsql_username }}
+      KONG_PG_PASSWORD: {{ param_db_pgsql_password }}
+      KONG_CASSANDRA_CONTACT_POINTS: kong
+      KONG_PROXY_ACCESS_LOG: /dev/stdout
+      KONG_ADMIN_ACCESS_LOG: /dev/stdout
+      KONG_PROXY_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_LISTEN: 0.0.0.0:8001, 0.0.0.0:8444 ssl
+    restart: always
+networks:
+  default:
+    external:
+      name: local
