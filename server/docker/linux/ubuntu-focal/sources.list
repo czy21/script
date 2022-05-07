@@ -1,0 +1,11 @@
+deb http://nexus.cluster.com/repository/apt-proxy-ubuntu/ focal main restricted universe multiverse
+deb-src http://nexus.cluster.com/repository/apt-proxy-ubuntu/ focal main restricted universe multiverse
+
+deb http://nexus.cluster.com/repository/apt-proxy-ubuntu/ focal-security main restricted universe multiverse
+deb-src http://nexus.cluster.com/repository/apt-proxy-ubuntu/ focal-security main restricted universe multiverse
+
+deb http://nexus.cluster.com/repository/apt-proxy-ubuntu/ focal-updates main restricted universe multiverse
+deb-src http://nexus.cluster.com/repository/apt-proxy-ubuntu/ focal-updates main restricted universe multiverse
+
+deb http://nexus.cluster.com/repository/apt-proxy-ubuntu/ focal-backports main restricted universe multiverse
+deb-src http://nexus.cluster.com/repository/apt-proxy-ubuntu/ focal-backports main restricted universe multiverse
