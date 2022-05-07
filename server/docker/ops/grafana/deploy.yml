@@ -8,7 +8,7 @@ x-traefik-label: &traefik-label
 
 services:
   grafana:
-    image: grafana/grafana:8.5.2
+    image: {{ param_registry_url }}/{{ param_registry_dir }}/grafana
     container_name: grafana
     labels:
       <<: *traefik-label
@@ -19,6 +19,8 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/datasources/:/etc/grafana/provisioning/datasources/
       - {{ param_docker_data }}/{{ param_role_name }}/conf/dashboards/:/etc/grafana/provisioning/dashboards/
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/var/lib/grafana/
+    environment:
+      GF_INSTALL_PLUGINS: grafana-piechart-panel
     restart: always
 networks:
   default:
