@@ -5,8 +5,17 @@ http:
       middlewares:
        - apt-proxy
       service: nexus@docker
+    yum-proxy:
+      rule: "Host(`nexus.cluster.com`) && PathPrefix(`/repository/yum-proxy/`)"
+      middlewares:
+       - yum-proxy
+      service: nexus@docker
   middlewares:
     apt-proxy:
       replacePathRegex:
         regex: "^/repository/apt-proxy/(.*)/(.*)"
         replacement: "/repository/apt-proxy-${1}/${2}"
+    yum-proxy:
+      replacePathRegex:
+        regex: "^/repository/yum-proxy/(.*)"
+        replacement: "/repository/yum-proxy-group/${1}"
