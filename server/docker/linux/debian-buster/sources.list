@@ -1,0 +1,8 @@
+deb http://nexus.cluster.com/repository/apt-proxy/debian/ buster main non-free contrib
+deb-src http://nexus.cluster.com/repository/apt-proxy/debian/ buster main non-free contrib
+deb http://nexus.cluster.com/repository/apt-proxy/debian-security buster/updates main
+deb-src http://nexus.cluster.com/repository/apt-proxy/debian-security buster/updates main
+deb http://nexus.cluster.com/repository/apt-proxy/debian/ buster-updates main non-free contrib
+deb-src http://nexus.cluster.com/repository/apt-proxy/debian/ buster-updates main non-free contrib
+deb http://nexus.cluster.com/repository/apt-proxy/debian/ buster-backports main non-free contrib
+deb-src http://nexus.cluster.com/repository/apt-proxy/debian/ buster-backports main non-free contrib
