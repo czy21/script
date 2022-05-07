@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+sed -i.bak "s,\(archive\|security\).ubuntu.com,{{ param_mirror_apt }},g" /etc/apt/sources.list
+
 apt -y update
 apt -y install wget vim git network-manager nfs-common make gcc
 

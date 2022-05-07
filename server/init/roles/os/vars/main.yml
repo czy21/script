@@ -1,2 +1,2 @@
 ---
-param_vault_centos_proxy: http://nexus.cluster.com/repository/yum-proxy
+param_mirror_yum: nexus.cluster.com/repository/yum-proxy
