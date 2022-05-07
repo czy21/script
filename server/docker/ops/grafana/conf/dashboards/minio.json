@@ -3,7 +3,10 @@
     "list": [
       {
         "builtIn": 1,
-        "datasource": "-- Grafana --",
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
         "enable": true,
         "hide": true,
         "iconColor": "rgba(0, 211, 255, 1)",
@@ -23,8 +26,8 @@
   "fiscalYearStartMonth": 0,
   "gnetId": 13502,
   "graphTooltip": 0,
-  "id": 8,
-  "iteration": 1643171578362,
+  "id": 22,
+  "iteration": 1651888097291,
   "links": [
     {
       "icon": "external link",
@@ -94,11 +97,15 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "8.5.2",
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
           "exemplar": true,
-          "expr": "time() - max(minio_node_process_starttime_seconds{job=\"$scrape_jobs\"})",
+          "expr": "time() - max(minio_node_process_starttime_seconds{job=\"$job\"})",
           "format": "time_series",
           "instant": true,
           "interval": "",
@@ -168,11 +175,11 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "8.5.2",
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum by (instance) (minio_s3_traffic_received_bytes{job=\"$scrape_jobs\"})",
+          "expr": "sum by (instance) (minio_s3_traffic_received_bytes{job=\"$job\"})",
           "format": "table",
           "hide": false,
           "instant": false,
@@ -241,11 +248,11 @@
         "showThresholdMarkers": true,
         "text": {}
       },
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "8.5.2",
       "targets": [
         {
           "exemplar": true,
-          "expr": "topk(1, sum(minio_node_disk_free_bytes{job=\"$scrape_jobs\"}) by (instance))",
+          "expr": "topk(1, sum(minio_cluster_capacity_usable_free_bytes{job=\"$job\"}) by (instance))",
           "format": "time_series",
           "instant": false,
           "interval": "1m",
@@ -293,7 +300,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "8.5.2",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -304,7 +311,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum(minio_bucket_usage_total_bytes{job=\"$scrape_jobs\"}) by (instance)",
+          "expr": "sum(minio_bucket_usage_total_bytes{job=\"$job\"}) by (instance)",
           "interval": "",
           "legendFormat": "Used Capacity",
           "refId": "A"
@@ -376,6 +383,8 @@
       "links": [],
       "options": {
         "displayMode": "basic",
+        "minVizHeight": 10,
+        "minVizWidth": 0,
         "orientation": "horizontal",
         "reduceOptions": {
           "calcs": [
@@ -387,11 +396,11 @@
         "showUnfilled": false,
         "text": {}
       },
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "8.5.2",
       "targets": [
         {
           "exemplar": true,
-          "expr": "max by (range) (minio_bucket_objects_size_distribution{job=\"$scrape_jobs\"})",
+          "expr": "max by (range) (minio_bucket_objects_size_distribution{job=\"$job\"})",
           "format": "time_series",
           "instant": false,
           "interval": "",
@@ -464,11 +473,11 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "8.5.2",
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum (minio_node_file_descriptor_open_total{job=\"$scrape_jobs\"})",
+          "expr": "sum (minio_node_file_descriptor_open_total{job=\"$job\"})",
           "format": "table",
           "hide": false,
           "instant": false,
@@ -539,11 +548,11 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "8.5.2",
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum by (instance) (minio_s3_traffic_sent_bytes{job=\"$scrape_jobs\"})",
+          "expr": "sum by (instance) (minio_s3_traffic_sent_bytes{job=\"$job\"})",
           "format": "table",
           "hide": false,
           "instant": false,
@@ -618,11 +627,11 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "8.5.2",
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum without (server,instance) (minio_node_go_routine_total{job=\"$scrape_jobs\"})",
+          "expr": "sum without (server,instance) (minio_node_go_routine_total{job=\"$job\"})",
           "format": "table",
           "hide": false,
           "instant": false,
@@ -697,11 +706,11 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "8.5.2",
       "targets": [
         {
           "exemplar": true,
-          "expr": "minio_cluster_nodes_online_total{job=\"$scrape_jobs\"}",
+          "expr": "minio_cluster_nodes_online_total{job=\"$job\"}",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -776,11 +785,11 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "8.5.2",
       "targets": [
         {
           "exemplar": true,
-          "expr": "minio_cluster_disk_online_total{job=\"$scrape_jobs\"}",
+          "expr": "minio_cluster_disk_online_total{job=\"$job\"}",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -858,11 +867,11 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "8.5.2",
       "targets": [
         {
           "exemplar": true,
-          "expr": "count(count by (bucket) (minio_bucket_usage_total_bytes{job=\"$scrape_jobs\"}))",
+          "expr": "count(count by (bucket) (minio_bucket_usage_total_bytes{job=\"$job\"}))",
           "format": "time_series",
           "instant": false,
           "interval": "1m",
@@ -912,7 +921,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "8.5.2",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -923,7 +932,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum by (server) (rate(minio_s3_traffic_received_bytes{job=\"$scrape_jobs\"}[$__rate_interval]))",
+          "expr": "sum by (server) (rate(minio_s3_traffic_received_bytes{job=\"$job\"}[$__rate_interval]))",
           "interval": "1m",
           "intervalFactor": 2,
           "legendFormat": "Data Received [{{server}}]",
@@ -1000,7 +1009,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "8.5.2",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -1011,7 +1020,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum by (server) (rate(minio_s3_traffic_sent_bytes{job=\"$scrape_jobs\"}[$__rate_interval]))",
+          "expr": "sum by (server) (rate(minio_s3_traffic_sent_bytes{job=\"$job\"}[$__rate_interval]))",
           "interval": "1m",
           "intervalFactor": 2,
           "legendFormat": "Data Sent [{{server}}]",
@@ -1110,11 +1119,11 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "8.5.2",
       "targets": [
         {
           "exemplar": true,
-          "expr": "minio_cluster_nodes_offline_total{job=\"$scrape_jobs\"}",
+          "expr": "minio_cluster_nodes_offline_total{job=\"$job\"}",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -1189,11 +1198,11 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "8.5.2",
       "targets": [
         {
           "exemplar": true,
-          "expr": "minio_cluster_disk_offline_total{job=\"$scrape_jobs\"}",
+          "expr": "minio_cluster_disk_offline_total{job=\"$job\"}",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -1271,11 +1280,11 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "8.5.2",
       "targets": [
         {
           "exemplar": true,
-          "expr": "topk(1, sum(minio_bucket_usage_object_total{job=\"$scrape_jobs\"}) by (instance))",
+          "expr": "topk(1, sum(minio_bucket_usage_object_total{job=\"$job\"}) by (instance))",
           "format": "time_series",
           "instant": false,
           "interval": "1m",
@@ -1336,11 +1345,11 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "8.5.2",
       "targets": [
         {
           "exemplar": true,
-          "expr": "minio_heal_time_last_activity_nano_seconds{job=\"$scrape_jobs\"}",
+          "expr": "minio_heal_time_last_activity_nano_seconds{job=\"$job\"}",
           "format": "time_series",
           "instant": true,
           "interval": "",
@@ -1403,11 +1412,11 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "8.5.2",
       "targets": [
         {
           "exemplar": true,
-          "expr": "minio_usage_last_activity_nano_seconds{job=\"$scrape_jobs\"}",
+          "expr": "minio_usage_last_activity_nano_seconds{job=\"$job\"}",
           "format": "time_series",
           "instant": true,
           "interval": "",
@@ -1459,7 +1468,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "8.5.2",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -1470,7 +1479,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum by (server,api) (increase(minio_s3_requests_total{job=\"$scrape_jobs\"}[$__rate_interval]))",
+          "expr": "sum by (server,api) (increase(minio_s3_requests_total{job=\"$job\"}[$__rate_interval]))",
           "interval": "1m",
           "intervalFactor": 2,
           "legendFormat": "{{server,api}}",
@@ -1547,7 +1556,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "8.5.2",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -1558,7 +1567,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum by (server,api) (increase(minio_s3_requests_errors_total{job=\"$scrape_jobs\"}[$__rate_interval]))",
+          "expr": "sum by (server,api) (increase(minio_s3_requests_errors_total{job=\"$job\"}[$__rate_interval]))",
           "interval": "1m",
           "intervalFactor": 2,
           "legendFormat": "{{server,api}}",
@@ -1645,7 +1654,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "8.5.2",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -1656,7 +1665,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "rate(minio_inter_node_traffic_sent_bytes{job=\"$scrape_jobs\"}[$__rate_interval])",
+          "expr": "rate(minio_inter_node_traffic_sent_bytes{job=\"$job\"}[$__rate_interval])",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -1667,7 +1676,7 @@
         },
         {
           "exemplar": true,
-          "expr": "rate(minio_inter_node_traffic_received_bytes{job=\"$scrape_jobs\"}[$__rate_interval])",
+          "expr": "rate(minio_inter_node_traffic_received_bytes{job=\"$job\"}[$__rate_interval])",
           "interval": "",
           "legendFormat": "Internode Bytes Sent [{{server}}]",
           "refId": "B"
@@ -1740,7 +1749,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "8.5.2",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -1751,14 +1760,14 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum by (instance) (minio_heal_objects_heal_total{job=\"$scrape_jobs\"})",
+          "expr": "sum by (instance) (minio_heal_objects_heal_total{job=\"$job\"})",
           "interval": "",
           "legendFormat": "Objects healed in current self heal run",
           "refId": "A"
         },
         {
           "exemplar": true,
-          "expr": "sum by (instance) (minio_heal_objects_error_total{job=\"$scrape_jobs\"})",
+          "expr": "sum by (instance) (minio_heal_objects_error_total{job=\"$job\"})",
           "hide": false,
           "interval": "",
           "legendFormat": "Heal errors in current self heal run",
@@ -1766,7 +1775,7 @@
         },
         {
           "exemplar": true,
-          "expr": "sum by (instance) (minio_heal_objects_total{job=\"$scrape_jobs\"}) ",
+          "expr": "sum by (instance) (minio_heal_objects_total{job=\"$job\"}) ",
           "hide": false,
           "interval": "",
           "legendFormat": "Objects scanned in current self heal run",
@@ -1840,7 +1849,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "8.5.2",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -1851,7 +1860,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "rate(minio_node_process_cpu_total_seconds{job=\"$scrape_jobs\"}[$__rate_interval])",
+          "expr": "rate(minio_node_process_cpu_total_seconds{job=\"$job\"}[$__rate_interval])",
           "interval": "",
           "legendFormat": "CPU Usage Rate [{{server}}]",
           "refId": "A"
@@ -1924,7 +1933,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "8.5.2",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -1935,7 +1944,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "minio_node_process_resident_memory_bytes{job=\"$scrape_jobs\"}",
+          "expr": "minio_node_process_resident_memory_bytes{job=\"$job\"}",
           "interval": "",
           "legendFormat": "Memory Used [{{server}}]",
           "refId": "A"
@@ -2008,7 +2017,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "8.5.2",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -2019,7 +2028,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "minio_node_disk_used_bytes{job=\"$scrape_jobs\"}",
+          "expr": "minio_node_disk_used_bytes{job=\"$job\"}",
           "format": "time_series",
           "instant": false,
           "interval": "",
@@ -2094,7 +2103,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "8.5.2",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -2105,7 +2114,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "minio_cluster_disk_free_inodes{job=\"$scrape_jobs\"}",
+          "expr": "minio_cluster_disk_free_inodes{job=\"$job\"}",
           "format": "time_series",
           "instant": false,
           "interval": "",
@@ -2192,7 +2201,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "8.5.2",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -2203,7 +2212,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "rate(minio_node_syscall_read_total{job=\"$scrape_jobs\"}[$__rate_interval])",
+          "expr": "rate(minio_node_syscall_read_total{job=\"$job\"}[$__rate_interval])",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -2214,7 +2223,7 @@
         },
         {
           "exemplar": true,
-          "expr": "rate(minio_node_syscall_write_total{job=\"$scrape_jobs\"}[$__rate_interval])",
+          "expr": "rate(minio_node_syscall_write_total{job=\"$job\"}[$__rate_interval])",
           "interval": "",
           "legendFormat": "Write Syscalls [{{server}}]",
           "refId": "B"
@@ -2301,7 +2310,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "8.5.2",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -2312,7 +2321,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "minio_node_file_descriptor_open_total{job=\"$scrape_jobs\"}",
+          "expr": "minio_node_file_descriptor_open_total{job=\"$job\"}",
           "interval": "",
           "legendFormat": "Open FDs [{{server}}]",
           "refId": "B"
@@ -2387,7 +2396,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "8.5.2",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -2398,7 +2407,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "rate(minio_node_io_rchar_bytes{job=\"$scrape_jobs\"}[$__rate_interval])",
+          "expr": "rate(minio_node_io_rchar_bytes{job=\"$job\"}[$__rate_interval])",
           "format": "time_series",
           "instant": false,
           "interval": "",
@@ -2407,7 +2416,7 @@
         },
         {
           "exemplar": true,
-          "expr": "rate(minio_node_io_wchar_bytes{job=\"$scrape_jobs\"}[$__rate_interval])",
+          "expr": "rate(minio_node_io_wchar_bytes{job=\"$job\"}[$__rate_interval])",
           "interval": "",
           "legendFormat": "Node WChar [{{server}}]",
           "refId": "B"
@@ -2447,7 +2456,7 @@
     }
   ],
   "refresh": "10s",
-  "schemaVersion": 34,
+  "schemaVersion": 36,
   "style": "dark",
   "tags": [
     "minio"
@@ -2456,26 +2465,22 @@
     "list": [
       {
         "current": {
-          "selected": true,
-          "text": [
-            "minio"
-          ],
-          "value": [
-            "minio"
-          ]
+          "selected": false,
+          "text": "minio",
+          "value": "minio"
         },
         "datasource": {
           "type": "prometheus",
           "uid": "P047DE0F543C7E359"
         },
-        "definition": "label_values(job)",
+        "definition": "label_values(minio_node_process_starttime_seconds{job=~\"minio\"},job)",
         "hide": 0,
-        "includeAll": true,
-        "multi": true,
-        "name": "scrape_jobs",
+        "includeAll": false,
+        "multi": false,
+        "name": "job",
         "options": [],
         "query": {
-          "query": "label_values(job)",
+          "query": "label_values(minio_node_process_starttime_seconds{job=~\"minio\"},job)",
           "refId": "StandardVariableQuery"
         },
         "refresh": 1,
@@ -2517,6 +2522,6 @@
   "timezone": "",
   "title": "minio",
   "uid": "TgmJnqnnk",
-  "version": 1,
+  "version": 3,
   "weekStart": ""
 }
