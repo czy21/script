@@ -20,5 +20,4 @@ services:
     restart: always
 networks:
   default:
-    external:
-      name: local
+    name: local
