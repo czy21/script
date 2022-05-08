@@ -11,6 +11,4 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/kibana.yml:/usr/share/kibana/config/kibana.yml
     restart: always
 
-networks:
-  default:
-    name: local
+

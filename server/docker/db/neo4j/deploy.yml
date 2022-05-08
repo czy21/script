@@ -18,6 +18,4 @@ services:
       NEO4J_AUTH: neo4j/{{ param_db_neo4j_password }}
       NEO4J_dbms_memory_pagecache_size: 2g
     restart: always
-networks:
-  default:
-    name: local
+

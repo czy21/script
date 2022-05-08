@@ -34,6 +34,4 @@ services:
           memory: 4G
         reservations:
           memory: 256M
-networks:
-  default:
-    name: local
+

@@ -11,6 +11,4 @@ services:
     pull_policy: always
     privileged: true
     restart: always
-networks:
-  default:
-    name: local
+

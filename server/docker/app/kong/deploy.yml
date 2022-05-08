@@ -52,6 +52,4 @@ services:
       NODE_ENV: production
     restart: always
 
-networks:
-  default:
-    name: local
+

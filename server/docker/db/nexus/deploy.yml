@@ -34,6 +34,4 @@ services:
         reservations:
           memory: 256M
 
-networks:
-  default:
-    name: local
+

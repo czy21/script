@@ -22,6 +22,4 @@ services:
     environment:
       GF_INSTALL_PLUGINS: grafana-piechart-panel
     restart: always
-networks:
-  default:
-    name: local
+

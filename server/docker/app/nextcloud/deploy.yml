@@ -15,6 +15,4 @@ services:
       - MYSQL_PASSWORD={{ param_db_password }}
     restart: always
 
-networks:
-  default:
-    name: local
+

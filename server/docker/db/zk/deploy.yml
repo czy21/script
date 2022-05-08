@@ -22,6 +22,4 @@ services:
     restart: always
   {% endfor %}
 
-networks:
-  default:
-    name: local
+
