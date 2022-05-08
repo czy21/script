@@ -1,7 +1,7 @@
 ---
 param_docker_data: /volume1/docker-root
 param_registry_mirrors: 
-  - "http://{{ param_docker_image_proxy }}"
+  - "http://{{ param_registry_proxy_url }}"
 param_insecure_registries:
-  - "{{ param_docker_image_hosted }}"
-  - "{{ param_docker_image_proxy }}"
+  - "{{ param_registry_url }}"
+  - "{{ param_registry_proxy_url }}"
