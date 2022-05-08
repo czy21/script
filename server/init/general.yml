@@ -15,6 +15,8 @@
       shell: docker image prune --all --force
     - name: docker network prune
       shell: docker network prune --force
+    - name: reinstall docker-compose
+      shell: rm -rf /usr/local/bin/docker-compose && yum -y install docker-compose-plugin
   tags:
     - prune
 
@@ -44,5 +46,8 @@
 
     - name: replace docker mirror
       shell: sudo sed -i.bak -e "s,^baseurl=https://download.docker.com/linux,baseurl=http://{{ param_mirror_yum }},g" /etc/yum.repos.d/docker-ce.repo
+
+    - name: reinstall docker-compose
+      shell: rm -rf /usr/local/bin/docker-compose && sudo yum -y install docker-compose-plugin
   tags:
     - machine
