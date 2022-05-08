@@ -40,7 +40,7 @@ def get_dir_dict(root_path: pathlib.Path, exclude_pattern=None, select_tip="", c
     col_lens = [len(max([t[p] for t in col_rows for p in range(col_num) if p == i], key=len, default='')) for i in range(col_num)]
     for t in col_rows:
         print("".join([str(t[p]).ljust(col_lens[o] + 2) for p in range(col_num) for o in range(col_num) if p == o]))
-    dir_nums = input("please select {0}".format(select_tip)).strip().split()
+    dir_nums = input("please select {0}:".format(select_tip)).strip().split()
     return dict((t, dir_dict[t]) for t in dir_nums if t in dir_dict.keys())
 
 
