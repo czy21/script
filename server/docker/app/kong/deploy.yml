@@ -54,5 +54,4 @@ services:
 
 networks:
   default:
-    external:
-      name: local
+    name: local

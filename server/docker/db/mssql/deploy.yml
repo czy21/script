@@ -19,5 +19,4 @@ services:
       MSSQL_COLLATION: Chinese_PRC_CI_AS
 networks:
   default:
-    external:
-      name: local
+    name: local

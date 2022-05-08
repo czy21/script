@@ -25,5 +25,4 @@ services:
     user: root
 networks:
   default:
-    external:
-      name: local
+    name: local
