@@ -50,6 +50,3 @@ services:
       TZ: Asia/Shanghai
     restart: always
 
-networks:
-  default:
-    name: local

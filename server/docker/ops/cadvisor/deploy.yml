@@ -22,6 +22,3 @@ services:
       - {{ param_docker_root }}:/var/lib/docker:ro
     restart: always
 
-networks:
-  default:
-    name: local

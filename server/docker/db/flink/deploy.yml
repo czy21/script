@@ -68,6 +68,4 @@ services:
     command: historyserver.sh start-foreground
 
 
-networks:
-  default:
-    name: local
+

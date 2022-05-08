@@ -28,6 +28,4 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/conf.d/:/etc/traefik/conf.d/
       - /var/run/docker.sock:/var/run/docker.sock:ro
     restart: always
-networks:
-  default:
-    name: local
+

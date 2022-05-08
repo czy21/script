@@ -17,6 +17,3 @@ services:
       ELASTICSEARCH_PASSWORD: {{ param_db_es_password }}
     restart: always
 
-networks:
-  default:
-    name: local
