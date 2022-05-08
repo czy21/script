@@ -5,291 +5,265 @@
   "apt": [
     {
       "name": "apt-proxy-debian",
+      "type": "proxy",
       "url": "http://nexus.cluster.com/repository/apt-proxy-debian",
-      "apt": {
-        "distribution": "bullseye",
-        "flat": false
-      },
-      "proxy": {
-        "remoteUrl": "https://mirrors.aliyun.com/debian/"
-      },
-      "type": "proxy"
+      "attributes": {
+        "proxy": {
+          "remoteUrl": "https://mirrors.aliyun.com/debian/"
+        }
+      }
     },
     {
       "name": "apt-proxy-debian-security",
+      "type": "proxy",
       "url": "http://nexus.cluster.com/repository/apt-proxy-debian-security",
-      "apt": {
-        "distribution": "bullseye",
-        "flat": false
-      },
-      "proxy": {
-        "remoteUrl": "https://mirrors.aliyun.com/debian-security/"
-      },
-      "type": "proxy"
+      "attributes": {
+        "proxy": {
+          "remoteUrl": "https://mirrors.aliyun.com/debian-security/"
+        }
+      }
     },
     {
       "name": "apt-proxy-ubuntu",
+      "type": "proxy",
       "url": "http://nexus.cluster.com/repository/apt-proxy-ubuntu",
-      "apt": {
-        "distribution": "focal",
-        "flat": false
-      },
-      "proxy": {
-        "remoteUrl": "https://mirrors.aliyun.com/ubuntu/"
-      },
-      "type": "proxy"
+      "attributes": {
+        "proxy": {
+          "remoteUrl": "https://mirrors.aliyun.com/ubuntu/"
+        }
+      }
     }
   ],
   "docker": [
     {
       "name": "docker-proxy-group",
+      "type": "group",
       "url": "http://nexus.cluster.com/repository/docker-proxy-group",
-      "group": {
-        "memberNames": [
-          "docker-proxy-official",
-          "docker-proxy-gcr",
-          "docker-proxy-quay",
-          "docker-proxy-mcr",
-          "docker-proxy-k8s",
-          "docker-proxy-es"
-        ]
-      },
-      "type": "group"
+      "attributes": {}
     },
     {
       "name": "docker-hosted",
+      "type": "hosted",
       "url": "http://nexus.cluster.com/repository/docker-hosted",
-      "type": "hosted"
+      "attributes": {}
     },
     {
       "name": "docker-proxy-es",
+      "type": "proxy",
       "url": "http://nexus.cluster.com/repository/docker-proxy-es",
-      "dockerProxy": {
-        "indexType": "REGISTRY",
-        "indexUrl": null
-      },
-      "proxy": {
-        "remoteUrl": "https://docker.elastic.co"
-      },
-      "type": "proxy"
+      "attributes": {
+        "proxy": {
+          "remoteUrl": "https://docker.elastic.co"
+        }
+      }
     },
     {
       "name": "docker-proxy-gcr",
+      "type": "proxy",
       "url": "http://nexus.cluster.com/repository/docker-proxy-gcr",
-      "dockerProxy": {
-        "indexType": "REGISTRY",
-        "indexUrl": null
-      },
-      "proxy": {
-        "remoteUrl": "https://gcr.io"
-      },
-      "type": "proxy"
+      "attributes": {
+        "proxy": {
+          "remoteUrl": "https://gcr.io"
+        }
+      }
     },
     {
       "name": "docker-proxy-k8s",
+      "type": "proxy",
       "url": "http://nexus.cluster.com/repository/docker-proxy-k8s",
-      "dockerProxy": {
-        "indexType": "REGISTRY",
-        "indexUrl": null
-      },
-      "proxy": {
-        "remoteUrl": "https://k8s.gcr.io"
-      },
-      "type": "proxy"
+      "attributes": {
+        "proxy": {
+          "remoteUrl": "https://k8s.gcr.io"
+        }
+      }
     },
     {
       "name": "docker-proxy-mcr",
+      "type": "proxy",
       "url": "http://nexus.cluster.com/repository/docker-proxy-mcr",
-      "dockerProxy": {
-        "indexType": "REGISTRY",
-        "indexUrl": null
-      },
-      "proxy": {
-        "remoteUrl": "https://mcr.microsoft.com"
-      },
-      "type": "proxy"
+      "attributes": {
+        "proxy": {
+          "remoteUrl": "https://mcr.microsoft.com"
+        }
+      }
     },
     {
       "name": "docker-proxy-official",
+      "type": "proxy",
       "url": "http://nexus.cluster.com/repository/docker-proxy-official",
-      "dockerProxy": {
-        "indexType": "HUB",
-        "indexUrl": null
-      },
-      "proxy": {
-        "remoteUrl": "https://registry-1.docker.io"
-      },
-      "type": "proxy"
+      "attributes": {
+        "proxy": {
+          "remoteUrl": "https://registry-1.docker.io"
+        }
+      }
     },
     {
       "name": "docker-proxy-quay",
+      "type": "proxy",
       "url": "http://nexus.cluster.com/repository/docker-proxy-quay",
-      "dockerProxy": {
-        "indexType": "REGISTRY",
-        "indexUrl": null
-      },
-      "proxy": {
-        "remoteUrl": "https://quay.io"
-      },
-      "type": "proxy"
+      "attributes": {
+        "proxy": {
+          "remoteUrl": "https://quay.io"
+        }
+      }
     }
   ],
   "go": [
     {
       "name": "go-proxy",
+      "type": "proxy",
       "url": "http://nexus.cluster.com/repository/go-proxy",
-      "proxy": {
-        "remoteUrl": "https://goproxy.io"
-      },
-      "type": "proxy"
+      "attributes": {
+        "proxy": {
+          "remoteUrl": "https://goproxy.io"
+        }
+      }
     }
   ],
   "helm": [
     {
       "name": "helm-hosted",
+      "type": "hosted",
       "url": "http://nexus.cluster.com/repository/helm-hosted",
-      "type": "hosted"
+      "attributes": {}
     }
   ],
   "maven2": [
     {
       "name": "maven-public",
+      "type": "group",
       "url": "http://nexus.cluster.com/repository/maven-public",
-      "group": {
-        "memberNames": [
-          "maven-releases",
-          "maven-snapshots",
-          "maven-proxy-central",
-          "maven-proxy-gradle"
-        ]
-      },
-      "type": "group"
+      "attributes": {}
     },
     {
       "name": "maven-releases",
+      "type": "hosted",
       "url": "http://nexus.cluster.com/repository/maven-releases",
-      "maven": {
-        "versionPolicy": "RELEASE",
-        "layoutPolicy": "STRICT",
-        "contentDisposition": null
-      },
-      "type": "hosted"
+      "attributes": {}
     },
     {
       "name": "maven-snapshots",
+      "type": "hosted",
       "url": "http://nexus.cluster.com/repository/maven-snapshots",
-      "maven": {
-        "versionPolicy": "SNAPSHOT",
-        "layoutPolicy": "STRICT",
-        "contentDisposition": null
-      },
-      "type": "hosted"
+      "attributes": {}
     },
     {
-      "name": "maven-proxy-central",
-      "url": "http://nexus.cluster.com/repository/maven-proxy-central",
-      "proxy": {
-        "remoteUrl": "https://maven.aliyun.com/repository/central"
-      },
-      "maven": {
-        "versionPolicy": "RELEASE",
-        "layoutPolicy": "PERMISSIVE",
-        "contentDisposition": "INLINE"
-      },
-      "type": "proxy"
+      "name": "maven-central",
+      "type": "proxy",
+      "url": "http://nexus.cluster.com/repository/maven-central",
+      "attributes": {
+        "proxy": {
+          "remoteUrl": "https://repo1.maven.org/maven2/"
+        }
+      }
     },
     {
       "name": "maven-proxy-gradle",
+      "type": "proxy",
       "url": "http://nexus.cluster.com/repository/maven-proxy-gradle",
-      "proxy": {
-        "remoteUrl": "https://maven.aliyun.com/repository/gradle-plugin"
-      },
-      "maven": {
-        "versionPolicy": "RELEASE",
-        "layoutPolicy": "PERMISSIVE",
-        "contentDisposition": "INLINE"
-      },
-      "type": "proxy"
+      "attributes": {
+        "proxy": {
+          "remoteUrl": "https://plugins.gradle.org/m2/"
+        }
+      }
     }
   ],
   "npm": [
     {
       "name": "npm-group",
+      "type": "group",
       "url": "http://nexus.cluster.com/repository/npm-group",
-      "group": {
-        "memberNames": [
-          "npm-hosted",
-          "npm-proxy"
-        ]
-      },
-      "type": "group"
+      "attributes": {}
     },
     {
       "name": "npm-hosted",
+      "type": "hosted",
       "url": "http://nexus.cluster.com/repository/npm-hosted",
-      "type": "hosted"
+      "attributes": {}
     },
     {
       "name": "npm-proxy",
+      "type": "proxy",
       "url": "http://nexus.cluster.com/repository/npm-proxy",
-      "proxy": {
-        "remoteUrl": "https://registry.npmjs.org"
-      },
-      "npm": {
-        "removeNonCataloged": false,
-        "removeQuarantined": false
-      },
-      "type": "proxy"
+      "attributes": {
+        "proxy": {
+          "remoteUrl": "https://registry.npmjs.org"
+        }
+      }
     }
   ],
   "nuget": [
     {
       "name": "nuget-group",
+      "type": "group",
       "url": "http://nexus.cluster.com/repository/nuget-group",
-      "group": {
-        "memberNames": [
-          "nuget-hosted",
-          "nuget.org-proxy"
-        ]
-      },
-      "type": "group"
+      "attributes": {}
     },
     {
       "name": "nuget-hosted",
+      "type": "hosted",
       "url": "http://nexus.cluster.com/repository/nuget-hosted",
-      "type": "hosted"
+      "attributes": {}
     },
     {
       "name": "nuget.org-proxy",
+      "type": "proxy",
       "url": "http://nexus.cluster.com/repository/nuget.org-proxy",
-      "proxy": {
-        "remoteUrl": "https://api.nuget.org/v3/index.json"
-      },
-      "nugetProxy": {
-        "queryCacheItemMaxAge": 3600,
-        "nugetVersion": "V3"
-      },
-      "type": "proxy"
+      "attributes": {
+        "proxy": {
+          "remoteUrl": "https://api.nuget.org/v3/index.json"
+        }
+      }
     }
   ],
   "pypi": [
     {
       "name": "pypi-proxy",
+      "type": "proxy",
       "url": "http://nexus.cluster.com/repository/pypi-proxy",
-      "proxy": {
-        "remoteUrl": "https://pypi.org"
-      },
-      "type": "proxy"
+      "attributes": {
+        "proxy": {
+          "remoteUrl": "https://pypi.org"
+        }
+      }
     }
   ],
   "yum": [
     {
-      "name": "yum-proxy",
-      "url": "http://nexus.cluster.com/repository/yum-proxy",
-      "proxy": {
-        "remoteUrl": "https://mirrors.aliyun.com/centos-vault/"
-      },
-      "type": "proxy"
+      "name": "yum-proxy-group",
+      "type": "group",
+      "url": "http://nexus.cluster.com/repository/yum-proxy-group",
+      "attributes": {}
+    },
+    {
+      "name": "yum-proxy-centos",
+      "type": "proxy",
+      "url": "http://nexus.cluster.com/repository/yum-proxy-centos",
+      "attributes": {
+        "proxy": {
+          "remoteUrl": "http://mirrors.aliyun.com/"
+        }
+      }
+    },
+    {
+      "name": "yum-proxy-centos-vault",
+      "type": "proxy",
+      "url": "http://nexus.cluster.com/repository/yum-proxy-centos-vault",
+      "attributes": {
+        "proxy": {
+          "remoteUrl": "http://mirrors.aliyun.com/centos-vault/"
+        }
+      }
+    },
+    {
+      "name": "yum-proxy-docker",
+      "type": "proxy",
+      "url": "http://nexus.cluster.com/repository/yum-proxy-docker",
+      "attributes": {
+        "proxy": {
+          "remoteUrl": "http://download.docker.com/linux/"
+        }
+      }
     }
   ]
 }
