@@ -21,6 +21,8 @@
 - name: machine
   hosts: all
   remote_user: bruce
+  vars_files:
+    - "vars/main.yml"
   become: yes
   vars:
     param_users: 
@@ -39,5 +41,8 @@
 
     - name: machine shutdown
       shell: shutdown -h now
+
+    - name: replace docker mirror
+      shell: sudo sed -i.bak -e "s,^baseurl=https://download.docker.com/linux,baseurl=http://{{ param_mirror_yum }},g" /etc/yum.repos.d/docker-ce.repo
   tags:
     - machine

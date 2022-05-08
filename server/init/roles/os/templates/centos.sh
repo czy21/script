@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-sed -i.bak -e "s,^mirrorlist=,#mirrorlist=,g" -e "s,^#baseurl=,baseurl=,g" -e "s,^baseurl=http://\(mirror\|vault\).centos.org,baseurl=http://{{ param_mirror_yum }},g" /etc/yum.repos.d/CentOS-*.repo
+sed -i.bak -e "s,^mirrorlist=,#mirrorlist=,g" -e "s,^#baseurl=,baseurl=,g" -e "s,^baseurl=http://mirror.centos.org,baseurl=http://{{ param_mirror_yum }},g" /etc/yum.repos.d/CentOS-*.repo
 
 yum -y install wget vim git nfs-utils bash-completion
 dnf -y install python38
@@ -15,8 +15,7 @@ PasswordAuthentication no
 ClientAliveInterval 30
 " >>/etc/ssh/sshd_config
 
-yum clean all
-yum makecache
+yum clean all && yum makecache
 
 useradd -m bruce
 usermod -aG wheel bruce
