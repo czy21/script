@@ -11,14 +11,14 @@ def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
     env_dict: dict = kwargs["env_dict"]
 
     role_node_path = role_path.joinpath("node")
-    role_node_selected = share.get_dir_dict(role_node_path) if role_node_path.exists() else None
+    role_node_selected = share.get_dir_dict(role_node_path,select_tip="node num(example:1)") if role_node_path.exists() else None
     role_node_target_path: pathlib.Path = role_node_selected.get(next(iter(role_node_selected))) if role_node_selected else None
     if role_node_path.exists():
         if role_node_target_path:
             share.execute_cmd(share.flat_to_str([
                 share.role_print(role_title, "copy node"),
                 "cp -rv {0}/* {1}".format(role_node_target_path.as_posix(), role_path.as_posix())
-            ], delimiter=" && "), select_tip="node option(example:1")
+            ], delimiter=" && "))
         else:
             return
     role_name = role_path.name
