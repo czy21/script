@@ -27,7 +27,7 @@
   "gnetId": 11462,
   "graphTooltip": 0,
   "id": 20,
-  "iteration": 1651854140876,
+  "iteration": 1652000045482,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -95,7 +95,7 @@
       "pluginVersion": "8.5.2",
       "targets": [
         {
-          "expr": "time() - process_start_time_seconds{job=\"$job\"}",
+          "expr": "time() - process_start_time_seconds{instance=~\"$node\"}",
           "format": "time_series",
           "intervalFactor": 2,
           "refId": "A"
@@ -173,7 +173,7 @@
       "pluginVersion": "8.5.2",
       "targets": [
         {
-          "expr": "sum(increase(traefik_service_requests_total{code=\"404\",protocol=~\"$protocol\"}[$interval]))",
+          "expr": "sum(increase(traefik_service_requests_total{instance=~\"$node\",code=\"404\",protocol=~\"$protocol\"}[$interval]))",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "",
@@ -218,10 +218,10 @@
       "strokeWidth": 1,
       "targets": [
         {
-          "expr": "topk(5, sum(traefik_service_requests_total{protocol=~\"$protocol\"}) by (code))",
+          "expr": "topk(5, sum(traefik_service_requests_total{instance=~\"$node\",protocol=~\"$protocol\"}) by (code))",
           "format": "time_series",
           "intervalFactor": 2,
-          "legendFormat": "{{code}}",
+          "legendFormat": "",
           "refId": "A"
         }
       ],
@@ -294,7 +294,7 @@
       "pluginVersion": "8.5.2",
       "targets": [
         {
-          "expr": "sum(traefik_entrypoint_request_duration_seconds_sum) / sum(traefik_entrypoint_requests_total) * 1000",
+          "expr": "sum(traefik_entrypoint_request_duration_seconds_sum{instance=~\"$node\"}) / sum(traefik_entrypoint_requests_total{instance=~\"$node\"}) * 1000",
           "format": "time_series",
           "intervalFactor": 2,
           "refId": "A"
@@ -355,7 +355,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(traefik_service_request_duration_seconds_sum{protocol=~\"$protocol\"}) / sum(traefik_entrypoint_requests_total{protocol=~\"$protocol\"}) * 1000",
+          "expr": "sum(traefik_service_request_duration_seconds_sum{instance=~\"$node\",protocol=~\"$protocol\"}) / sum(traefik_entrypoint_requests_total{instance=~\"$node\",protocol=~\"$protocol\"}) * 1000",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "Average response time (ms)",
@@ -449,11 +449,11 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(increase(traefik_service_requests_total{code=\"404\",method=\"GET\",protocol=~\"$protocol\"}[$interval])) by (service)",
+          "expr": "sum(increase(traefik_service_requests_total{instance=~\"$node\",code=\"404\",method=\"GET\",protocol=~\"$protocol\"}[$interval])) by (service)",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
-          "legendFormat": "{{service}} ",
+          "legendFormat": " ",
           "refId": "A",
           "step": 240
         }
@@ -544,7 +544,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(rate(traefik_service_requests_total[$interval]))",
+          "expr": "sum(rate(traefik_service_requests_total{instance=~\"$node\"}[$interval]))",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "Total requests",
@@ -636,11 +636,11 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "process_open_fds{job=~\"$job\"}",
+          "expr": "process_open_fds{instance=~\"$node\"}",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
-          "legendFormat": "{{ instance }}",
+          "legendFormat": "",
           "refId": "A",
           "step": 240
         }
@@ -730,11 +730,11 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(rate(traefik_service_requests_total{protocol=~\"http|https\"}[$interval])) by (service)",
+          "expr": "sum(rate(traefik_service_requests_total{instance=~\"$node\",protocol=~\"http|https\"}[$interval])) by (service)",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
-          "legendFormat": "{{service}} ",
+          "legendFormat": " ",
           "refId": "A",
           "step": 240
         }
@@ -826,10 +826,10 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(traefik_entrypoint_open_connections) by (method)",
+          "expr": "sum(traefik_entrypoint_open_connections{instance=~\"$node\"}) by (method)",
           "format": "time_series",
           "intervalFactor": 1,
-          "legendFormat": "{{ method }}",
+          "legendFormat": "",
           "refId": "A"
         }
       ],
@@ -920,10 +920,10 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(traefik_service_open_connections) by (method)",
+          "expr": "sum(traefik_service_open_connections{instance=~\"$node\"}) by (method)",
           "format": "time_series",
           "intervalFactor": 1,
-          "legendFormat": "{{ method }}",
+          "legendFormat": "",
           "refId": "A"
         }
       ],
@@ -1010,10 +1010,10 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(increase(traefik_service_requests_total{protocol=~\"$protocol\"}[$interval])) by (code)",
+          "expr": "sum(increase(traefik_service_requests_total{instance=~\"$node\",protocol=~\"$protocol\"}[$interval])) by (code)",
           "format": "time_series",
           "intervalFactor": 2,
-          "legendFormat": "{{code}}",
+          "legendFormat": "",
           "refId": "A",
           "step": 120
         }
@@ -1065,7 +1065,7 @@
     "list": [
       {
         "current": {
-          "selected": false,
+          "selected": true,
           "text": "traefik",
           "value": "traefik"
         },
@@ -1092,6 +1092,23 @@
         "tagsQuery": "",
         "type": "query",
         "useTags": false
+      },
+      {
+        "definition": "label_values(process_start_time_seconds{job=~\"$job\"}, instance)",
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "name": "node",
+        "options": [],
+        "query": {
+          "query": "label_values(process_start_time_seconds{job=~\"$job\"}, instance)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
       },
       {
         "current": {
@@ -1231,6 +1248,6 @@
   "timezone": "",
   "title": "traefik",
   "uid": "3ipsWfViz",
-  "version": 1,
+  "version": 2,
   "weekStart": ""
 }

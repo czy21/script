@@ -1,0 +1,5 @@
+http:
+  routers:
+    metrics:
+      rule: "Host(`traefik-{{ param_cluster_name }}.cluster.com`) && PathPrefix(`/metrics`)"
+      service: prometheus@internal
