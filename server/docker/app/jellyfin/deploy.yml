@@ -11,6 +11,4 @@ services:
     devices:
       - /dev/dri:/dev/dri
     restart: always
-networks:
-  default:
-    name: local
+

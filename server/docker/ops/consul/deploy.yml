@@ -22,6 +22,4 @@ services:
     environment:
       TZ: Asia/Shanghai
     restart: always
-networks:
-  default:
-    name: local
+

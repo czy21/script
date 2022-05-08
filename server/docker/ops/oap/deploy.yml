@@ -34,6 +34,4 @@ services:
     environment:
       SW_OAP_ADDRESS: http://skywalking-oap:12800
 
-networks:
-  default:
-    name: local
+

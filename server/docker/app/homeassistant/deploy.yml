@@ -9,6 +9,4 @@ services:
     ports:
       - "8123:8123"
     restart: always
-networks:
-  default:
-    name: local
+

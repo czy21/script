@@ -63,6 +63,4 @@ services:
       REDIS_EXPORTER_IS_CLUSTER: "true"
     restart: always
 
-networks:
-  default:
-    name: local
+

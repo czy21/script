@@ -19,6 +19,4 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/portainer_password:/tmp/portainer_password
     command: --admin-password-file /tmp/portainer_password
     restart: always
-networks:
-  default:
-    name: local
+

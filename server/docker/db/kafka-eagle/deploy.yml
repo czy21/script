@@ -12,6 +12,4 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/logs/:/opt/kafka-eagle/logs/
     restart: always
 
-networks:
-  default:
-    name: local
+

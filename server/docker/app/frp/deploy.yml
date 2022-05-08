@@ -15,6 +15,4 @@ services:
     volumes:
       - {{ param_config_dir }}/frp/:/usr/local/frp/conf/
     restart: always
-networks:
-  default:
-    name: local
+

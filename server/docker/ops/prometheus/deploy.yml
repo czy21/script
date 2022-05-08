@@ -27,6 +27,4 @@ services:
       - --web.enable-lifecycle
     restart: always
     user: root
-networks:
-  default:
-    name: local
+

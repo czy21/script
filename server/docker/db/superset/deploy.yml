@@ -114,6 +114,4 @@ services:
       CYPRESS_CONFIG: "false"
       SUPERSET_PORT: 8088
 
-networks:
-  default:
-    name: local
+

@@ -17,6 +17,4 @@ services:
       SPRING_CONFIGURATION_FILE: /opt/pulsar-manager/application.properties
     restart: always
 
-networks:
-  default:
-    name: local
+

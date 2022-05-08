@@ -38,6 +38,3 @@ services:
     command: server --console-address ":9001" http://minio{1...{{ param_db_minio_cluster_replicas }}}/data{1...{{ param_db_minio_cluster_drives }}}
   {% endfor %}
 
-networks:
-  default:
-    name: local

@@ -15,6 +15,4 @@ services:
       DEBUG: app
     restart: always
     user: root
-networks:
-  default:
-    name: local
+
