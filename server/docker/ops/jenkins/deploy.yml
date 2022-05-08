@@ -36,5 +36,4 @@ services:
           memory: 256M
 networks:
   default:
-    external:
-      name: local
+    name: local
