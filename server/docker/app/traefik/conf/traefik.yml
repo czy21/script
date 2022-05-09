@@ -19,7 +19,10 @@ entryPoints:
     address: :8080
   metrics:
     address: :8082
-
+tls:
+  certificates:
+    - certFile: /etc/traefik/cert/cluster.crt
+      keyFile: /etc/traefik/cert/cluster.key
 metrics:
   prometheus:
     entryPoint: metrics
