@@ -1,4 +1,4 @@
-version: '3.9'
+version: "0"
 
 x-traefik-label: &traefik-label
   traefik.enable: true

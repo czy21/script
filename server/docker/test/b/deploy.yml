@@ -1,7 +1,7 @@
-version: '3.9'
+version: "0"
 
 services:
-  b:
+  nginx-b:
     image: nginx
     labels:
       - traefik.http.routers.b.rule=Host(`nginx-b.cluster.com`)

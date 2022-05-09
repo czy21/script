@@ -1,4 +1,4 @@
-version: '3.9'
+version: "0"
 
 x-flink-common: &flink-common
   image: {{ param_registry_url }}/{{ param_registry_dir }}/flink
