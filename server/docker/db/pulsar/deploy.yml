@@ -1,4 +1,4 @@
-version: "0"
+version: "3.9"
 
 x-pulsar-common: &pulsar-common
   image: apachepulsar/pulsar:2.10.0
