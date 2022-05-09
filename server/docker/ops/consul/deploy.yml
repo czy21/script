@@ -1,4 +1,4 @@
-version: "0"
+version: "3.9"
 
 x-traefik-label: &traefik-label
   traefik.enable: true
@@ -9,7 +9,8 @@ x-traefik-label: &traefik-label
 services:
 
   consul:
-    image: consul:1.11.2
+    image: consul:1.12
+    pull_policy: always
     container_name: consul
     labels:
       <<: *traefik-label
@@ -19,7 +20,5 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/consul/data/
       - {{ param_docker_data }}/{{ param_role_name }}/conf/:/consul/config/
     command: 'agent -server -ui -node=server-1 -bootstrap-expect=1 -client=0.0.0.0 -datacenter=nas'
-    environment:
-      TZ: Asia/Shanghai
     restart: always
 

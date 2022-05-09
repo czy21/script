@@ -1,4 +1,4 @@
-version: "0"
+version: "3.9"
 
 x-traefik-a-label: &traefik-a-label
   traefik.enable: true
@@ -8,7 +8,7 @@ x-traefik-a-label: &traefik-a-label
 
 services:
   nginx-a1:
-    image: nginx
+    image: nginx:1.21-alpine
     labels:
       <<: *traefik-a-label
     container_name: nginx-a1
@@ -16,7 +16,7 @@ services:
     privileged: true
     restart: always
   nginx-a2:
-    image: nginx
+    image: nginx:1.21-alpine
     labels:
       <<: *traefik-a-label
     container_name: nginx-a2
