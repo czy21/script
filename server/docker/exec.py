@@ -37,7 +37,7 @@ def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
                 tf.write(content)
 
     def docker_compose_cmd(option):
-        return 'sudo docker-compose --project-name {0} --file {1} --file {2} {3}'.format(role_name, kwargs["base_compose_file"], role_compose_file.as_posix(), option)
+        return 'sudo docker-compose --project-name {0} --file {1} --file {2} {3}'.format(role_name, kwargs["base_deploy_file"], role_compose_file.as_posix(), option)
 
     _cmds = []
 
@@ -78,7 +78,7 @@ def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
 
 if __name__ == '__main__':
     env_file = pathlib.Path(__file__).parent.joinpath("env.yaml").as_posix()
-    base_compose_file = pathlib.Path(__file__).parent.joinpath("base-compose.yml").as_posix()
+    base_deploy_file = pathlib.Path(__file__).parent.joinpath("base-deploy.yml").as_posix()
     parser = argparse.ArgumentParser()
     parser.add_argument('-p', nargs="+", default=[])
     parser.add_argument('-i', action="store_true")
@@ -91,4 +91,4 @@ if __name__ == '__main__':
     selected_option = share.select_option(2)
     if args.n is None:
         args.n = selected_option["namespace"]
-    share.execute(selected_option, invoke, env_file=env_file, base_compose_file=base_compose_file, args=args)
+    share.execute(selected_option, invoke, env_file=env_file, base_deploy_file=base_deploy_file, args=args)
