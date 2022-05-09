@@ -2,7 +2,7 @@ version: "0"
 
 services:
 
-  web:
+  nginx:
     image: nginx:1.21.5-alpine
     container_name: nginx
     privileged: true
