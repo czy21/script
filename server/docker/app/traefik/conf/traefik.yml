@@ -23,6 +23,7 @@ tls:
   certificates:
     - certFile: /etc/traefik/cert/cluster.crt
       keyFile: /etc/traefik/cert/cluster.key
+
 metrics:
   prometheus:
     entryPoint: metrics
