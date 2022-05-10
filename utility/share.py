@@ -83,8 +83,10 @@ def execute(ctx, func, **kwargs):
     yaml.add_constructor('!join', lambda loader, node: "".join(loader.construct_sequence(node, deep=True)))
 
     kwargs["args"].excludes = ctx["excludes"]
-    with open(kwargs["env_file"], mode="r", encoding="utf-8") as ef:
-        env_dict = yaml.full_load(ef)
+    env_dict = {}
+    if kwargs.get("env_file") and pathlib.Path(kwargs["env_file"]).exists():
+        with open(kwargs["env_file"], mode="r", encoding="utf-8") as ef:
+            env_dict.update(yaml.full_load(ef))
     param_iter = iter(kwargs["args"].p)
     param_input_dict = dict(zip(param_iter, param_iter))
     if param_input_dict:
@@ -96,6 +98,7 @@ def execute(ctx, func, **kwargs):
         role_path = v
         role_name = role_path.name
         role_title = ".".join([role_num, role_name])
+
         func(role_title=role_title,
              role_path=role_path,
              env_dict={
