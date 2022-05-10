@@ -22,6 +22,7 @@ services:
       - "8082"
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/traefik.yml:/etc/traefik/traefik.yml
       - {{ param_docker_data }}/{{ param_role_name }}/conf/conf.d/:/etc/traefik/conf.d/
