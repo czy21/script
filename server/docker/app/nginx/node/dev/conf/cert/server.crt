@@ -1,0 +1,118 @@
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number: 1 (0x1)
+        Signature Algorithm: sha256WithRSAEncryption
+        Issuer: C=CN, ST=SH, L=SH, O=czy, OU=czy, CN=root-ca
+        Validity
+            Not Before: May 10 10:34:20 2022 GMT
+            Not After : May 10 10:34:20 2023 GMT
+        Subject: C=CN, ST=SH, O=czy, OU=czy, CN=ubun.cluster.com
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+                RSA Public-Key: (4096 bit)
+                Modulus:
+                    00:c8:91:8e:ad:f7:d5:70:2f:df:fe:b1:2c:c5:89:
+                    fb:bf:3f:33:0f:40:21:f3:c2:c0:76:3a:69:36:91:
+                    c4:34:12:1d:36:cc:a6:ad:21:8e:c5:36:ae:38:64:
+                    3c:da:38:78:09:6f:61:17:88:c9:32:41:3d:b8:a7:
+                    3a:d0:20:0a:a4:9a:10:fa:80:cc:82:59:2e:4a:4b:
+                    a1:67:1c:83:22:a1:cf:ab:fe:d0:62:2d:e7:8c:53:
+                    f1:07:68:71:0f:1d:5f:95:8a:3c:b0:bf:41:5a:bb:
+                    b8:17:7f:6d:8e:32:2c:c4:6a:1a:25:66:21:3a:c8:
+                    05:4c:1c:bf:15:27:7d:1c:b4:95:48:55:74:7e:c3:
+                    da:cd:bc:a6:13:25:0d:24:8e:b0:a8:77:ad:cb:10:
+                    58:c7:7c:d5:13:00:d9:6a:97:40:d1:07:94:19:bb:
+                    31:ef:3c:da:90:a4:b3:40:08:82:c0:51:9d:75:cc:
+                    be:94:29:70:3e:00:7f:be:3e:94:a4:d4:23:f3:1d:
+                    18:40:d0:2e:82:5c:1e:0c:e5:73:d1:42:5d:ab:6a:
+                    46:b2:f3:5d:9b:9f:e7:39:f4:d9:6b:5c:13:8f:47:
+                    5d:a8:ee:74:6c:78:58:e3:b3:93:b3:85:be:49:96:
+                    c9:f7:0d:b9:8f:b9:7d:b7:10:d8:d7:fe:6b:ed:2f:
+                    dc:f6:f8:c6:28:43:40:fb:98:da:f3:c9:ac:a0:b0:
+                    c5:d9:4a:8e:1f:fd:37:88:c1:bd:3f:07:18:5c:ea:
+                    76:c8:1d:87:3f:ae:8c:f4:ec:9c:1b:5f:62:90:7a:
+                    32:90:0f:50:c1:aa:da:3c:8d:8e:3a:9a:d5:ad:c4:
+                    7f:3b:b2:7f:a8:37:8f:bc:be:50:d1:7d:d3:3e:43:
+                    05:36:a8:63:8b:b5:f3:7d:77:f1:17:58:15:43:e3:
+                    77:ee:92:a3:46:5d:a7:f0:c1:11:25:67:54:13:7d:
+                    e4:5f:ff:13:9b:63:17:21:96:24:bf:fe:22:aa:f0:
+                    2f:c6:ab:11:19:75:bc:92:13:30:30:16:96:7a:03:
+                    48:a9:b5:bf:e8:31:98:c5:64:97:16:a9:69:85:0d:
+                    77:97:16:25:6a:12:96:df:2b:44:d0:ae:96:da:75:
+                    d7:e1:4f:29:02:4f:59:38:1d:d3:2a:5c:0f:43:4d:
+                    82:70:52:4f:28:97:9d:7b:37:7f:94:3e:52:73:92:
+                    bc:d8:fd:85:af:0a:34:5a:86:64:d4:ed:5b:68:ee:
+                    a9:0f:43:ba:3a:94:21:f0:6f:dc:2a:33:59:f7:76:
+                    e1:cb:0b:98:10:35:28:3c:2e:66:e7:33:53:95:2e:
+                    3b:63:89:2b:4f:f0:05:06:a6:a7:78:8c:2e:10:05:
+                    d7:a3:f5
+                Exponent: 65537 (0x10001)
+        X509v3 extensions:
+            X509v3 Key Usage: 
+                Digital Signature, Non Repudiation, Key Encipherment
+            X509v3 Extended Key Usage: 
+                TLS Web Server Authentication, TLS Web Client Authentication
+            X509v3 Subject Alternative Name: 
+                DNS:ubun.cluster.com
+    Signature Algorithm: sha256WithRSAEncryption
+         65:e4:c5:3f:23:fd:d2:98:c0:54:89:b7:0e:df:50:b6:7f:7e:
+         57:b4:22:64:59:87:ae:93:d9:f1:42:34:69:cb:69:39:bb:50:
+         78:d7:18:9d:7d:09:1a:cc:9d:8d:e4:a1:b0:12:37:2f:60:94:
+         20:b4:b6:ae:6d:97:8d:54:7e:0c:5d:63:26:4f:6b:8f:f7:7f:
+         f4:c0:da:cf:36:47:5d:61:5a:b2:54:dc:7b:52:43:43:36:36:
+         ba:3d:c7:84:7e:dc:e2:b6:8e:6e:49:86:29:b0:7a:2b:56:01:
+         66:dd:38:aa:ff:26:21:e3:2f:64:ca:4e:86:40:48:27:cb:92:
+         b4:2b:9e:a8:d2:9a:b2:8d:eb:35:ad:93:e8:d6:c4:69:07:b3:
+         fa:c7:eb:94:00:a4:86:2e:d0:2c:cc:f2:b2:e2:32:cf:09:e2:
+         96:58:32:9f:a6:48:d9:d7:3e:bb:67:31:73:d0:b8:46:8f:97:
+         36:9f:c8:a8:d0:6d:4f:06:b1:fd:a3:61:51:e1:7e:c2:e8:6a:
+         09:a7:0e:a6:60:9b:00:46:e7:bf:71:1d:d6:a8:ea:a0:a6:c4:
+         05:df:41:dd:ef:51:68:f6:57:33:89:c3:e4:68:98:fe:00:db:
+         fa:56:57:7f:d3:7c:b6:d5:68:67:1f:5d:84:e6:1b:ce:fc:6f:
+         b6:f8:11:79:4a:70:f4:13:a8:2b:76:45:9d:ad:a3:1c:ab:9b:
+         03:b9:a0:d6:79:e0:87:fa:c7:83:d3:d1:c3:63:ac:aa:36:36:
+         63:24:fc:52:34:63:45:c6:e6:77:c9:29:41:75:c4:e7:82:f7:
+         8b:b2:88:29:80:34:0f:ad:05:a6:9c:fb:05:a9:2c:44:09:26:
+         2c:cd:02:4f:eb:48:07:c6:e6:20:d8:a7:ec:92:a3:11:f4:e7:
+         3f:67:38:71:77:e1:a4:73:0c:70:d6:26:74:bf:f6:3b:e8:5f:
+         f9:7a:6a:16:22:d1:f0:1b:55:c0:d0:61:d3:0a:4b:78:e4:b2:
+         6b:dd:92:77:5d:8c:10:30:04:36:aa:27:98:10:ac:7f:bc:c6:
+         e7:c3:27:5a:0f:a6:44:ea:40:e2:31:7e:01:4f:27:54:6f:13:
+         93:e0:b6:f2:8c:fc:89:fb:f6:dd:e8:6e:ee:12:27:ff:1d:21:
+         f8:6a:38:aa:9c:d3:43:b4:d5:f5:c3:84:09:b4:97:72:8a:f8:
+         04:8d:6e:02:bc:c1:0f:b6:ff:77:ec:41:ce:e5:f4:8b:44:8e:
+         34:6e:d4:48:36:26:0b:6a:f0:ba:28:4c:21:a9:51:2c:ca:19:
+         d5:d2:3c:db:ce:2d:22:17:63:c0:ad:1a:a8:b6:06:18:59:0c:
+         20:00:9f:68:d1:04:a5:22
+-----BEGIN CERTIFICATE-----
+MIIFbDCCA1SgAwIBAgIBATANBgkqhkiG9w0BAQsFADBVMQswCQYDVQQGEwJDTjEL
+MAkGA1UECAwCU0gxCzAJBgNVBAcMAlNIMQwwCgYDVQQKDANjenkxDDAKBgNVBAsM
+A2N6eTEQMA4GA1UEAwwHcm9vdC1jYTAeFw0yMjA1MTAxMDM0MjBaFw0yMzA1MTAx
+MDM0MjBaMFExCzAJBgNVBAYTAkNOMQswCQYDVQQIDAJTSDEMMAoGA1UECgwDY3p5
+MQwwCgYDVQQLDANjenkxGTAXBgNVBAMMEHVidW4uY2x1c3Rlci5jb20wggIiMA0G
+CSqGSIb3DQEBAQUAA4ICDwAwggIKAoICAQDIkY6t99VwL9/+sSzFifu/PzMPQCHz
+wsB2Omk2kcQ0Eh02zKatIY7FNq44ZDzaOHgJb2EXiMkyQT24pzrQIAqkmhD6gMyC
+WS5KS6FnHIMioc+r/tBiLeeMU/EHaHEPHV+Vijywv0Fau7gXf22OMizEaholZiE6
+yAVMHL8VJ30ctJVIVXR+w9rNvKYTJQ0kjrCod63LEFjHfNUTANlql0DRB5QZuzHv
+PNqQpLNACILAUZ11zL6UKXA+AH++PpSk1CPzHRhA0C6CXB4M5XPRQl2rakay812b
+n+c59NlrXBOPR12o7nRseFjjs5Ozhb5Jlsn3DbmPuX23ENjX/mvtL9z2+MYoQ0D7
+mNrzyaygsMXZSo4f/TeIwb0/Bxhc6nbIHYc/roz07JwbX2KQejKQD1DBqto8jY46
+mtWtxH87sn+oN4+8vlDRfdM+QwU2qGOLtfN9d/EXWBVD43fukqNGXafwwRElZ1QT
+feRf/xObYxchliS//iKq8C/GqxEZdbySEzAwFpZ6A0iptb/oMZjFZJcWqWmFDXeX
+FiVqEpbfK0TQrpbaddfhTykCT1k4HdMqXA9DTYJwUk8ol517N3+UPlJzkrzY/YWv
+CjRahmTU7Vto7qkPQ7o6lCHwb9wqM1n3duHLC5gQNSg8LmbnM1OVLjtjiStP8AUG
+pqd4jC4QBdej9QIDAQABo0swSTALBgNVHQ8EBAMCBeAwHQYDVR0lBBYwFAYIKwYB
+BQUHAwEGCCsGAQUFBwMCMBsGA1UdEQQUMBKCEHVidW4uY2x1c3Rlci5jb20wDQYJ
+KoZIhvcNAQELBQADggIBAGXkxT8j/dKYwFSJtw7fULZ/fle0ImRZh66T2fFCNGnL
+aTm7UHjXGJ19CRrMnY3kobASNy9glCC0tq5tl41UfgxdYyZPa4/3f/TA2s82R11h
+WrJU3HtSQ0M2Nro9x4R+3OK2jm5JhimweitWAWbdOKr/JiHjL2TKToZASCfLkrQr
+nqjSmrKN6zWtk+jWxGkHs/rH65QApIYu0CzM8rLiMs8J4pZYMp+mSNnXPrtnMXPQ
+uEaPlzafyKjQbU8Gsf2jYVHhfsLoagmnDqZgmwBG579xHdao6qCmxAXfQd3vUWj2
+VzOJw+RomP4A2/pWV3/TfLbVaGcfXYTmG878b7b4EXlKcPQTqCt2RZ2toxyrmwO5
+oNZ54If6x4PT0cNjrKo2NmMk/FI0Y0XG5nfJKUF1xOeC94uyiCmANA+tBaac+wWp
+LEQJJizNAk/rSAfG5iDYp+ySoxH05z9nOHF34aRzDHDWJnS/9jvoX/l6ahYi0fAb
+VcDQYdMKS3jksmvdknddjBAwBDaqJ5gQrH+8xufDJ1oPpkTqQOIxfgFPJ1RvE5Pg
+tvKM/In79t3obu4SJ/8dIfhqOKqc00O01fXDhAm0l3KK+ASNbgK8wQ+2/3fsQc7l
+9ItEjjRu1Eg2Jgtq8LooTCGpUSzKGdXSPNvOLSIXY8CtGqi2BhhZDCAAn2jRBKUi
+-----END CERTIFICATE-----
