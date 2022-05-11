@@ -2,7 +2,6 @@
 import argparse
 import pathlib
 
-import jinja2
 import share
 
 

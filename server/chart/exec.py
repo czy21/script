@@ -12,18 +12,11 @@ def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
     env_dict: dict = kwargs["env_dict"]
 
     role_name = role_path.name
-    role_values_file = role_path.joinpath("values.yaml")
     role_values_override_file = role_path.joinpath("values.override.yaml")
 
     temp_all_in_one_path = role_path.joinpath("___temp/deploy.yaml")
     temp_all_in_one_path.parent.mkdir(parents=True, exist_ok=True)
     temp_all_in_one_path.touch()
-
-    if role_values_file.exists():
-        with open(role_values_file, "r", encoding="utf-8", newline="\n") as vf:
-            content = jinja2.Template(vf.read()).render(**env_dict)
-            with open(role_values_file, "w", encoding="utf-8") as t_file:
-                t_file.write(content)
 
     with open(role_values_override_file, "w", encoding="utf-8") as ovf:
         yaml.dump(env_dict, ovf)
