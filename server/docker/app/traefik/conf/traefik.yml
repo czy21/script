@@ -5,6 +5,10 @@ providers:
   file:
     directory: /etc/traefik/conf.d/
     watch: true
+
+#log:
+#  level: debug
+
 accessLog:
   filePath: /dev/stdout
 api:
@@ -19,18 +23,6 @@ entryPoints:
     address: :8080
   metrics:
     address: :8082
-
-tls:
-  certificates:
-    - certFile: /etc/traefik/cert/server.crt
-      keyFile: /etc/traefik/cert/server.key
-      stores:
-        - default
-  stores:
-    default:
-      defaultCertificate:
-        certFile: /etc/traefik/cert/server.crt
-        keyFile: /etc/traefik/cert/server.key
 
 metrics:
   prometheus:
