@@ -6,11 +6,13 @@ providers:
     directory: /etc/traefik/conf.d/
     watch: true
 
-#log:
-#  level: debug
+log:
+  level: ERROR # DEBUG, PANIC, FATAL, ERROR, WARN, INFO
+  filePath: /dev/stdout
 
 accessLog:
   filePath: /dev/stdout
+
 api:
   insecure: true
 
