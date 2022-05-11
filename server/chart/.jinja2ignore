@@ -1,4 +1,5 @@
-___temp/
+.DS_Store
 README.md
+___temp/
 templates/
 Chart.yaml
