@@ -30,12 +30,6 @@ def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
 
     target_app_path = pathlib.Path(env_dict["param_docker_data"]).joinpath(role_name)
 
-    for t in filter(lambda f: f.is_file() and share.exclude_match("({0})".format("|".join(args.excludes)), f.as_posix()), role_path.rglob("*")):
-        with open(t, "r", encoding="utf-8", newline="\n") as sf:
-            content = jinja2.Template(sf.read()).render(**env_dict)
-            with open(t, "w", encoding="utf-8") as tf:
-                tf.write(content)
-
     def docker_compose_cmd(option):
         return 'sudo docker-compose --project-name {0} --file {1} --file {2} {3}'.format(role_name, kwargs["base_deploy_file"], role_compose_file.as_posix(), option)
 
@@ -77,8 +71,9 @@ def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
 
 
 if __name__ == '__main__':
-    env_file = pathlib.Path(__file__).parent.joinpath("env.yaml").as_posix()
-    base_deploy_file = pathlib.Path(__file__).parent.joinpath("base-deploy.yml").as_posix()
+    root_path = pathlib.Path(__file__).parent
+    env_file = root_path.joinpath("env.yaml").as_posix()
+    base_deploy_file = root_path.joinpath("base-deploy.yml").as_posix()
     parser = argparse.ArgumentParser()
     parser.add_argument('-p', nargs="+", default=[])
     parser.add_argument('-i', action="store_true")
@@ -91,4 +86,4 @@ if __name__ == '__main__':
     selected_option = share.select_option(2)
     if args.n is None:
         args.n = selected_option["namespace"]
-    share.execute(selected_option, invoke, env_file=env_file, base_deploy_file=base_deploy_file, args=args)
+    share.execute(selected_option, invoke, root_path=root_path.as_posix(), env_file=env_file, base_deploy_file=base_deploy_file, args=args)

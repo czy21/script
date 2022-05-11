@@ -64,7 +64,8 @@ def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
 
 
 if __name__ == '__main__':
-    env_file = pathlib.Path(__file__).parent.joinpath("env.yaml")
+    root_path = pathlib.Path(__file__).parent
+    env_file = root_path.joinpath("env.yaml")
     parser = argparse.ArgumentParser()
     parser.add_argument('-p', nargs="+", default=[])
     parser.add_argument('-a', type=str, required=True)
@@ -75,4 +76,4 @@ if __name__ == '__main__':
     selected_option = share.select_option(2)
     if args.n is None:
         args.n = selected_option["namespace"]
-    share.execute(selected_option, invoke, env_file=env_file, args=args)
+    share.execute(selected_option, invoke, root_path=root_path.as_posix(), env_file=env_file, args=args)

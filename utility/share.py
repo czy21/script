@@ -4,6 +4,7 @@ import re
 import subprocess
 import sys
 
+import jinja2
 import yaml
 
 
@@ -15,7 +16,7 @@ def flat_to_str(*items: list, delimiter=" ") -> str:
 
 
 def exclude_match(pattern, name):
-    return pattern is None or not re.search(pattern, name)
+    return pattern is None or not bool(re.search(pattern, name))
 
 
 def dfs_dir(path: pathlib.Path, deep=1, exclude_pattern: str = None) -> list:
@@ -82,6 +83,8 @@ def execute_cmd(cmd):
 def execute(ctx, func, **kwargs):
     yaml.add_constructor('!join', lambda loader, node: "".join(loader.construct_sequence(node, deep=True)))
 
+    root_path = kwargs["root_path"]
+    jinja2ignore = pathlib.Path(root_path).joinpath(".jinja2ignore")
     kwargs["args"].excludes = ctx["excludes"]
     env_dict = {}
     if kwargs.get("env_file") and pathlib.Path(kwargs["env_file"]).exists():
@@ -93,20 +96,32 @@ def execute(ctx, func, **kwargs):
         print(param_input_dict)
     env_dict.update(param_input_dict)
 
+    global_jinja2ignore_rules = []
+    if jinja2ignore.exists():
+        with open(jinja2ignore, mode="r", encoding="utf-8") as ji:
+            global_jinja2ignore_rules = [t.strip("\n") for t in ji.readlines()]
+
     for k, v in ctx["role_dict"].items():
         role_num = k
         role_path = v
         role_name = role_path.name
         role_title = ".".join([role_num, role_name])
 
-        func(role_title=role_title,
-             role_path=role_path,
-             env_dict={
-                 **env_dict,
-                 **{
-                     "param_role_name": role_name,
-                     "param_role_path": role_path.as_posix(),
-                     "param_role_title": role_title
-                 }
-             },
-             **kwargs)
+        role_dict = {
+            **env_dict,
+            **{
+                "param_role_name": role_name,
+                "param_role_path": role_path.as_posix(),
+                "param_role_title": role_title
+            }
+        }
+
+        for t in filter(lambda f: f.is_file(), role_path.rglob("*")):
+            _exclude_bools = [exclude_match(r, t.as_posix()) for r in global_jinja2ignore_rules]
+            if all(_exclude_bools):
+                with open(t, "r", encoding="utf-8", newline="\n") as sf:
+                    content = jinja2.Template(sf.read()).render(**role_dict)
+                    with open(t, "w", encoding="utf-8") as tf:
+                        tf.write(content)
+
+        func(role_title=role_title, role_path=role_path, env_dict=role_dict, **kwargs)
