@@ -5,11 +5,11 @@ x-traefik-a-label: &traefik-a-label
   traefik.http.routers.{{ param_role_name }}.rule: Host(`nginx-a.cluster.com`)
   traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
   traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 80
-  # traefik.http.routers.{{ param_role_name }}.tls: true
+  traefik.http.routers.{{ param_role_name }}.tls: true
   # redirect https
-  traefik.http.middlewares.https-redirect.redirectscheme.scheme: https
-  traefik.http.middlewares.https-redirect.redirectscheme.permanent: true
-  traefik.http.routers.{{ param_role_name }}.middlewares: https-redirect
+  # traefik.http.middlewares.https-redirect.redirectscheme.scheme: https
+  # traefik.http.middlewares.https-redirect.redirectscheme.permanent: true
+  # traefik.http.routers.{{ param_role_name }}.middlewares: https-redirect
 
 
 services:

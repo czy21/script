@@ -118,7 +118,6 @@ def execute(ctx, func, **kwargs):
         for t in filter(lambda f: f.is_file(), role_path.rglob("*")):
             _exclude_bools = [exclude_match(r, t.as_posix()) for r in global_jinja2ignore_rules]
             if all(_exclude_bools):
-                print(t)
                 with open(t, "r", encoding="utf-8", newline="\n") as sf:
                     content = jinja2.Template(sf.read()).render(**role_dict)
                     with open(t, "w", encoding="utf-8") as tf:
