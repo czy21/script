@@ -1,8 +1,0 @@
-http:
-  routers:
-    a:
-      rule: "Host(`nginx-a.cluster.com`)"
-      middlewares:
-        - https-redirect
-      service: a@docker
-      tls: {}
