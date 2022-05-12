@@ -13,19 +13,18 @@ x-traefik-label: &traefik-label
 #  traefik.http.routers.{{ param_role_name }}-https.rule: Host(`nginx-{{ param_cluster_name }}.cluster.com`)
 
 services:
-  httpd1:
-    image: httpd:alpine
+  {% for i in range(1,2 | int+1) %}
+  {% set node="web{0}".format(i | string) %}
+  {{ node }}:
+    image: nginx:1.21-alpine
     labels:
       <<: *traefik-label
-    container_name: httpd1
+    container_name: {{ node }}
     pull_policy: always
     privileged: true
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/templates/:/etc/nginx/templates/
+    environment:
+      WEB_NODE_NAME: {{ node }}
     restart: always
-  httpd2:
-    image: httpd:alpine
-    labels:
-      <<: *traefik-label
-    container_name: httpd2
-    pull_policy: always
-    privileged: true
-    restart: always
+  {% endfor %}
