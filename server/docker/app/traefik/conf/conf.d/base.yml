@@ -7,3 +7,6 @@ tls:
   certificates:
     - certFile: /etc/traefik/cert/server.crt
       keyFile: /etc/traefik/cert/server.key
+
+serversTransport:
+  insecureSkipVerify: true
