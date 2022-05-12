@@ -27,6 +27,10 @@ def dfs_dir(path: pathlib.Path, deep=1, exclude_pattern: str = None) -> list:
     return ret
 
 
+def get_files(path: pathlib.Path, remove_prefix: str = ""):
+    return [a.as_posix().replace(remove_prefix, "") for a in path.rglob("*") if a.is_file()]
+
+
 def role_print(role, content, exec_file=None) -> str:
     c = "{}\033[32m {} \033[0m".format(role, content)
     if exec_file:
