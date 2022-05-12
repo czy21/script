@@ -1,16 +1,17 @@
 http:
   routers:
     nginx:
-      rule: "Host(`nginx-{{ param_cluster_name }}.cluster.com`)"
-      service: nginx@docker
+      rule: "Host(`httpd-{{ param_cluster_name }}.cluster.com`)"
+      service: httpd@docker
       middlewares:
         - https-redirect
     nginx-https:
-      rule: "Host(`nginx-{{ param_cluster_name }}.cluster.com`)"
-      service: nginx@docker
+      rule: "Host(`httpd-{{ param_cluster_name }}.cluster.com`)"
+      service: httpd@docker
       tls: {}
   middlewares:
     https-redirect:
       redirectScheme:
         scheme: https
         permanent: true
+hhhhh
