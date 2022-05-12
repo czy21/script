@@ -3,7 +3,12 @@ http:
     metrics:
       rule: "Host(`traefik-{{ param_cluster_name }}.cluster.com`) && PathPrefix(`/metrics`)"
       service: prometheus@internal
-tls:
-  certificates:
-    - certFile: /etc/traefik/cert/server.crt
-      keyFile: /etc/traefik/cert/server.key
+#  middlewares:
+#    https-redirect:
+#      redirectScheme:
+#        scheme: https
+#        permanent: true
+#tls:
+#  certificates:
+#    - certFile: /etc/traefik/cert/server.crt
+#      keyFile: /etc/traefik/cert/server.key
