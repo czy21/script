@@ -8,18 +8,7 @@ import share
 def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
     args = kwargs["args"]
     env_dict: dict = kwargs["env_dict"]
-
-    role_node_path = role_path.joinpath("node")
-    role_node_selected = share.get_dir_dict(role_node_path, select_tip="node num(example:1)") if role_node_path.exists() else None
-    role_node_target_path: pathlib.Path = role_node_selected.get(next(iter(role_node_selected))) if role_node_selected else None
-    role_node_deploy_file = None
-    if role_node_path.exists():
-        if role_node_target_path:
-            role_node_deploy_file = role_node_target_path.joinpath("deploy.yml")
-            share.execute_cmd(share.flat_to_str([
-                share.role_print(role_title, "copy node"),
-                "find {0} -maxdepth 1 ! -path {0} ! -name deploy.yml -exec cp -rv -t {1}/".format(role_node_target_path.as_posix(), role_path.as_posix()) + " {} \\;"
-            ], delimiter=" && "))
+    cluster_name = env_dict.get("param_cluster_name")
     role_name = role_path.name
     role_conf_path = role_path.joinpath("conf")
     role_deploy_file = role_path.joinpath("deploy.yml")
@@ -28,6 +17,17 @@ def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
     role_build_sh = role_path.joinpath("build.sh")
 
     target_app_path = pathlib.Path(env_dict["param_docker_data"]).joinpath(role_name)
+
+    _cmds = []
+
+    role_node_path = role_path.joinpath("node")
+    role_node_target_path = next(filter(lambda a: str(a.name) == cluster_name, role_node_path.glob("*")), None) if role_node_path.exists() else None
+    role_node_deploy_file = None
+    if role_node_path.exists():
+        if role_node_target_path:
+            role_node_deploy_file = role_node_target_path.joinpath("deploy.yml")
+            _cmds.append(share.role_print(role_title, "copy node", cluster_name))
+            _cmds.append("find {0} -maxdepth 1 ! -path {0} ! -name deploy.yml -exec cp -rv -t {1}/".format(role_node_target_path.as_posix(), role_path.as_posix()) + " {} \\;")
 
     def docker_compose_cmd(option):
         role_deploy_files = [
@@ -38,20 +38,20 @@ def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
             role_deploy_files.append(role_node_deploy_file)
         return 'sudo docker-compose --project-name {0} {1} {2}'.format(role_name, " ".join(["--file {0}".format(t) for t in role_deploy_files]), option)
 
-    _cmds = []
-
     if args.i:
         if role_conf_path.exists():
             target_role_conf_path = target_app_path.joinpath("conf")
-            if target_role_conf_path.exists() and target_app_path.name is role_name:
-                relative_conf_files = [a.as_posix().replace(role_path.as_posix(), "") for a in role_conf_path.rglob("*") if a.is_file()]
-                remove_conf_files = [t.as_posix() for t in filter(lambda a: a.is_file(), target_role_conf_path.rglob("*")) if not any([t.as_posix().__contains__(s) for s in relative_conf_files])]
+            if target_role_conf_path.exists() and target_app_path.name == role_name:
+                role_conf_relative_files = set(share.get_files(role_conf_path, role_path.as_posix()))
+                if role_node_target_path and role_node_target_path.exists():
+                    role_node_target_conf_relative_files = share.get_files(role_node_target_path.joinpath("conf"), role_node_target_path.as_posix())
+                    role_conf_relative_files = role_conf_relative_files.union(role_node_target_conf_relative_files)
+                remove_conf_files = [t.as_posix() for t in filter(lambda a: a.is_file(), target_role_conf_path.rglob("*")) if not any([t.as_posix().__contains__(s) for s in role_conf_relative_files])]
                 if remove_conf_files:
                     _cmds.append(share.role_print(role_title, "remove conf"))
                     _cmds.append("sudo rm -rfv {0}".format(" ".join(remove_conf_files)))
             _cmds.append(share.role_print(role_title, "copy conf"))
-            _cmds.append('sudo mkdir -p {0}'.format(target_app_path))
-            _cmds.append('sudo cp -rv {0} {1}'.format(role_conf_path.as_posix(), target_app_path.as_posix()))
+            _cmds.append('sudo mkdir -p {1} && sudo cp -rv {0} {1}'.format(role_conf_path.as_posix(), target_app_path.as_posix()))
         if role_init_sh.exists():
             _cmds.append(share.role_print(role_title, "init", role_init_sh.as_posix()))
             _cmds.append("source {}".format(role_init_sh.as_posix()))
