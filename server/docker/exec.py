@@ -12,9 +12,10 @@ def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
     role_node_path = role_path.joinpath("node")
     role_node_selected = share.get_dir_dict(role_node_path, select_tip="node num(example:1)") if role_node_path.exists() else None
     role_node_target_path: pathlib.Path = role_node_selected.get(next(iter(role_node_selected))) if role_node_selected else None
-    role_node_deploy_file = role_node_target_path.joinpath("deploy.yml")
+    role_node_deploy_file = None
     if role_node_path.exists():
         if role_node_target_path:
+            role_node_deploy_file = role_node_target_path.joinpath("deploy.yml")
             share.execute_cmd(share.flat_to_str([
                 share.role_print(role_title, "copy node"),
                 "find {0} -maxdepth 1 ! -path {0} ! -name deploy.yml -exec cp -rv -t {1}/".format(role_node_target_path.as_posix(), role_path.as_posix()) + " {} \\;"
@@ -35,7 +36,7 @@ def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
             kwargs["base_deploy_file"],
             role_deploy_file.as_posix()
         ]
-        if role_node_target_path.exists():
+        if role_node_deploy_file and role_node_deploy_file.exists():
             role_deploy_files.append(role_node_deploy_file)
         return 'sudo docker-compose --project-name {0} {1} {2}'.format(role_name, " ".join(["--file {0}".format(t) for t in role_deploy_files]), option)
 
