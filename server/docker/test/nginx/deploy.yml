@@ -2,13 +2,15 @@ version: "3.9"
 
 x-traefik-a-label: &traefik-a-label
   traefik.enable: true
-  traefik.http.routers.{{ param_role_name }}.rule: Host(`nginx-{{ param_cluster_name }}.cluster.com`)
   traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
   traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 80
-  traefik.http.routers.{{ param_role_name }}.middlewares: https-redirect@file
 
-  traefik.http.routers.{{ param_role_name }}-https.tls: true
-  traefik.http.routers.{{ param_role_name }}-https.rule: Host(`nginx-{{ param_cluster_name }}.cluster.com`)
+  # dynamic config proxy for docker labels
+#  traefik.http.routers.{{ param_role_name }}.priority: 1
+#  traefik.http.routers.{{ param_role_name }}.rule: Host(`nginx-{{ param_cluster_name }}.cluster.com`)
+#  traefik.http.routers.{{ param_role_name }}.middlewares: https-redirect@file
+#  traefik.http.routers.{{ param_role_name }}-https.tls: true
+#  traefik.http.routers.{{ param_role_name }}-https.rule: Host(`nginx-{{ param_cluster_name }}.cluster.com`)
 
 services:
   nginx1:
