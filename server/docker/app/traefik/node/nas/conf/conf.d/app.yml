@@ -2,15 +2,20 @@ http:
   routers:
     apt-proxy:
       rule: "Host(`nexus.cluster.com`) && PathPrefix(`/repository/apt-proxy`)"
+      service: nexus@docker
       middlewares:
         - apt-proxy
-      service: nexus@docker
     yum-proxy:
       rule: "Host(`nexus.cluster.com`) && PathPrefix(`/repository/yum-proxy`)"
+      service: nexus@docker
       middlewares:
         - yum-proxy
-      service: nexus@docker
+
   middlewares:
+    https-redirect:
+      redirectScheme:
+        scheme: https
+        permanent: true
     apt-proxy:
       replacePathRegex:
         regex: "^/repository/apt-proxy/(.*)/(.*)"
