@@ -2,12 +2,6 @@ services:
 
   nginx:
     ports:
-      - mode: ingress
-        target: 80
-        published: 8080
-        protocol: tcp
-      - mode: ingress
-        target: 443
-        published: 8443
-        protocol: tcp
+      - "8080:80"
+      - "8443:443"
 
