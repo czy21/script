@@ -2,13 +2,10 @@ version: "3.9"
 
 x-traefik-label: &traefik-label
   traefik.enable: true
-  traefik.http.routers.{{ param_role_name }}.rule: Host(`nexus.cluster.com`)
   traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
   traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 8081
-  traefik.http.routers.registry.rule: Host(`registry.cluster.com`)
   traefik.http.routers.registry.service: registry
   traefik.http.services.registry.loadbalancer.server.port: 5000
-  traefik.http.routers.registry-proxy.rule: Host(`registry-proxy.cluster.com`)
   traefik.http.routers.registry-proxy.service: registry-proxy
   traefik.http.services.registry-proxy.loadbalancer.server.port: 5005
 
@@ -24,7 +21,6 @@ services:
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/nexus-data/
     environment:
-      TZ: Asia/Shanghai
       INSTALL4J_ADD_VM_PARAMS: -Xms2g -Xmx2g -XX:MaxDirectMemorySize=2g
     restart: always
     deploy:
