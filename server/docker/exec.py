@@ -20,8 +20,6 @@ def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
                 share.role_print(role_title, "copy node"),
                 "find {0} -maxdepth 1 ! -path {0} ! -name deploy.yml -exec cp -rv -t {1}/".format(role_node_target_path.as_posix(), role_path.as_posix()) + " {} \\;"
             ], delimiter=" && "))
-        else:
-            return
     role_name = role_path.name
     role_conf_path = role_path.joinpath("conf")
     role_deploy_file = role_path.joinpath("deploy.yml")
