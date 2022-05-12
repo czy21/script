@@ -44,8 +44,11 @@ def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
         if role_conf_path.exists():
             target_role_conf_path = target_app_path.joinpath("conf")
             if target_role_conf_path.exists() and target_app_path.name is role_name:
-                _cmds.append(share.role_print(role_title, "remove conf"))
-                _cmds.append('find {0} -maxdepth 1 ! -path {0} -exec sudo rm -rfv '.format(target_role_conf_path.as_posix()) + " {} \\;")
+                relative_conf_files = [a.as_posix().replace(role_path.as_posix(), "") for a in role_conf_path.rglob("*") if a.is_file()]
+                remove_conf_files = [t.as_posix() for t in filter(lambda a: a.is_file(), target_role_conf_path.rglob("*")) if not any([t.as_posix().__contains__(s) for s in relative_conf_files])]
+                if remove_conf_files:
+                    _cmds.append(share.role_print(role_title, "remove conf"))
+                    _cmds.append("sudo rm -rfv {0}".format(" ".join(remove_conf_files)))
             _cmds.append(share.role_print(role_title, "copy conf"))
             _cmds.append('sudo mkdir -p {0}'.format(target_app_path))
             _cmds.append('sudo cp -rv {0} {1}'.format(role_conf_path.as_posix(), target_app_path.as_posix()))

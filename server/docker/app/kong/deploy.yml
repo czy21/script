@@ -1,28 +1,16 @@
 version: "3.9"
 
-x-traefik-kong-label: &traefik-kong-label
-  traefik.enable: true
-  traefik.http.routers.{{ param_role_name }}.rule: Host(`kong.cluster.com`)
-  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
-  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 8002
-
-x-traefik-konga-label: &traefik-konga-label
-  traefik.enable: true
-  traefik.http.routers.{{ param_role_name }}a.rule: Host(`konga.cluster.com`)
-  traefik.http.routers.{{ param_role_name }}a.service: {{ param_role_name }}a
-  traefik.http.services.{{ param_role_name }}a.loadbalancer.server.port: 1337
-
 services:
 
   kong:
     image: kong/kong-gateway:2.8-alpine
     pull_policy: always
     container_name: kong
-    labels:
-      <<: *traefik-kong-label
     privileged: true
     user: root
     expose: ["8000","8001","8002","8003","8004","8443","8444","8445"]
+    ports:
+      - "8002:8002"
     environment:
       KONG_DATABASE: postgres
       KONG_PG_HOST: "{{ param_db_pgsql_host }}"
@@ -41,8 +29,6 @@ services:
     image: pantsel/konga
     pull_policy: always
     container_name: konga
-    labels:
-      <<: *traefik-konga-label
     privileged: true
     user: root
     expose: ["1337"]
