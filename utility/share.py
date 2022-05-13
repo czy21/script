@@ -96,9 +96,9 @@ def run_cmd(cmd):
 
 
 def loop_role_dict(role_dict: dict,
+                   role_func,
                    env_dict,
                    jinja2ignore_rules: list,
-                   handle_func,
                    **kwargs):
     for k, v in role_dict.items():
         role_num = k
@@ -120,7 +120,7 @@ def loop_role_dict(role_dict: dict,
             if all(_exclude_bools):
                 template_value = read_file(t, lambda f: jinja2.Template(f.read()).render(**role_env_dict))
                 write_file(t, lambda f: f.write(template_value))
-        handle_func(role_title=role_title, role_path=role_path, role_env_dict=role_env_dict, **kwargs)
+        role_func(role_title=role_title, role_path=role_path, role_env_dict=role_env_dict, **kwargs)
 
 
 class Installer:
@@ -171,9 +171,9 @@ class Installer:
         # loop selected_role_dict
         loop_role_dict(
             role_dict=selected_role_dict,
+            role_func=self.role_func,
             env_dict=global_env_dict,
             jinja2ignore_rules=global_jinja2ignore_rules,
-            handle_func=self.role_func,
             args=args,
             **kwargs
         )
