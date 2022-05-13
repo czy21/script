@@ -1,10 +1,10 @@
 #!/bin/bash
 set -e
 
-sed -i.bak "s,\(archive\|security\).ubuntu.com,{{ param_mirror_apt }},g" /etc/apt/sources.list
+sed -i.bak "s,\(ca.archive\|archive\|security\).ubuntu.com,{{ param_mirror_apt }},g" /etc/apt/sources.list
 
 apt -y update
-apt -y install wget vim git network-manager nfs-common make gcc
+apt -y install wget vim git network-manager nfs-common make gcc python3-pip
 
 # postgres repo
 sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
