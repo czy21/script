@@ -28,10 +28,8 @@ def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
     with io.open(meta_file, "r", encoding="utf-8", newline="\n") as o_file:
         meta_dict = yaml.unsafe_load(o_file.read())
 
-    _cmds = [
-        share.role_print(role_title, args.a)
-    ]
-    if args.a == "install":
+    _cmds = []
+    if args.install:
         def prune_type(t):
             return ";".join([
                 "type_total=$(uci show {0} | grep '^{0}\\(.*\\)={1}' | wc -l)",
@@ -40,18 +38,19 @@ def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
             ]).format(role_name, t)
 
         _cmds.append([
+            share.role_print(role_title, "install"),
             [prune_type(t) for t in meta_dict.keys()],
             "uci -f {0} -m import {1}".format(conf_file.as_posix(), role_name),
             "uci commit {0}".format(role_name)
         ])
-    if args.a == "backup":
+    if args.action == "backup":
         role_bak_path = role_path.joinpath("bak")
         role_bak_conf = role_bak_path.joinpath("conf")
         _bak_cmds = [
             "mkdir -p {0}".format(role_bak_path.as_posix()),
             [echo_section(t, role_name, role_bak_conf) for t in meta_dict.items()]
         ]
-        share.execute_cmd(share.flat_to_str(_bak_cmds, delimiter=" && "))
+        share.run_cmd(share.flat_to_str(_bak_cmds, delimiter=" && "))
 
         type_parser = configparser.ConfigParser()
         type_parser.optionxform = str
@@ -74,18 +73,14 @@ def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
                         contents.append(" ".join(config_node) + "\n\t\t" + option_text)
             with open(role_bak_conf, "w", encoding="utf-8") as t_file:
                 t_file.write("\n".join(contents))
+        _cmds.append(share.role_print(role_title, "backup")),
         _cmds.append("mkdir -p {0};cp -r {1}/* {0}/".format(bak_path.joinpath(role_name), role_bak_path))
 
     _cmd_str = share.flat_to_str(_cmds, delimiter=" && ")
-    share.execute_cmd(_cmd_str)
+    share.run_cmd(_cmd_str)
 
 
 if __name__ == '__main__':
-    bak_path = pathlib.Path(__file__).parent.joinpath("___temp/bak")
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-p', nargs="+", default=[])
-    parser.add_argument('-a', type=str, required=True)
-
-    args = parser.parse_args()
-    selected_option = share.select_option()
-    share.execute(selected_option["role_dict"], invoke, bak_path=bak_path, args=args)
+    root_path = pathlib.Path(__file__).parent
+    installer = share.Installer(root_path, invoke)
+    installer.run()
