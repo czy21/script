@@ -20,6 +20,16 @@ def exclude_match(pattern, name):
     return pattern is None or not bool(re.search(pattern, name))
 
 
+def read_file(file: pathlib.Path, read_func):
+    with open(file, mode="r", encoding="utf-8") as f:
+        return read_func(f)
+
+
+def write_file(file: pathlib.Path, write_func, mode: str = "w"):
+    with open(file, mode=mode, encoding="utf-8") as f:
+        write_func(f)
+
+
 def dfs_dir(path: pathlib.Path, deep=1, exclude_pattern: str = None) -> list:
     ret = []
     for p in filter(lambda a: a.is_dir() and exclude_match(exclude_pattern, a.as_posix()), sorted(path.iterdir())):
@@ -85,31 +95,18 @@ def run_cmd(cmd):
     subprocess.Popen(cmd, shell=True).wait()
 
 
-def execute(ctx, func, **kwargs):
-    yaml.add_constructor('!join', lambda loader, node: "".join(loader.construct_sequence(node, deep=True)))
-    kwargs["args"].excludes = ctx["excludes"]
-    env_dict = {}
-    if kwargs.get("env_file") and pathlib.Path(kwargs["env_file"]).exists():
-        with open(kwargs["env_file"], mode="r", encoding="utf-8") as ef:
-            env_dict.update(yaml.full_load(ef))
-    param_iter = iter(kwargs["args"].param)
-    param_input_dict = dict(zip(param_iter, param_iter))
-    if param_input_dict:
-        print(param_input_dict)
-    env_dict.update(param_input_dict)
-
-    global_jinja2ignore_rules = []
-    jinja2ignore_file = kwargs.get("jinja2ignore_file")
-    if jinja2ignore_file.exists():
-        with open(jinja2ignore_file, mode="r", encoding="utf-8") as ji:
-            global_jinja2ignore_rules = [t.strip("\n") for t in ji.readlines()]
-    for k, v in ctx["role_dict"].items():
+def loop_role_dict(role_dict: dict,
+                   env_dict,
+                   jinja2ignore_rules: list,
+                   handle_func,
+                   **kwargs):
+    for k, v in role_dict.items():
         role_num = k
         role_path = v
         role_name = role_path.name
         role_title = ".".join([role_num, role_name])
 
-        role_dict = {
+        role_env_dict = {
             **env_dict,
             **{
                 "param_role_name": role_name,
@@ -117,30 +114,31 @@ def execute(ctx, func, **kwargs):
                 "param_role_title": role_title
             }
         }
-
+        # parse jinja2 template
         for t in filter(lambda f: f.is_file(), role_path.rglob("*")):
-            _exclude_bools = [exclude_match(r, t.as_posix()) for r in global_jinja2ignore_rules]
+            _exclude_bools = [exclude_match(r, t.as_posix()) for r in jinja2ignore_rules]
             if all(_exclude_bools):
-                with open(t, "r", encoding="utf-8", newline="\n") as sf:
-                    try:
-                        content = jinja2.Template(sf.read()).render(**role_dict)
-                        with open(t, "w", encoding="utf-8") as tf:
-                            tf.write(content)
-                    except Exception as e:
-                        print("error: {0}".format(t))
-
-        func(role_title=role_title, role_path=role_path, env_dict=role_dict, **kwargs)
+                template_value = read_file(t, lambda f: jinja2.Template(f.read()).render(**role_env_dict))
+                write_file(t, lambda f: f.write(template_value))
+        handle_func(role_title=role_title, role_path=role_path, role_env_dict=role_env_dict, **kwargs)
 
 
 class Installer:
-    def __init__(self, root_path: pathlib.Path, handle_func, role_deep: int = 1) -> None:
+    def __init__(self,
+                 root_path: pathlib.Path,
+                 role_func,
+                 role_deep: int = 1
+                 ) -> None:
         self.root_path: pathlib.Path = root_path
         self.bak_path: pathlib.Path = root_path.joinpath("___temp/bak")
-        self.handle_func = handle_func
+        self.env_file: pathlib.Path = root_path.joinpath("env.yaml")
+        self.jinja2ignore_file: pathlib.Path = root_path.joinpath(".jinja2ignore")
+        self.role_func = role_func
         self.role_deep: int = role_deep
         self.arg_parser: argparse.ArgumentParser = argparse.ArgumentParser()
 
     def run(self, **kwargs):
+        yaml.add_constructor('!join', lambda loader, node: "".join(loader.construct_sequence(node, deep=True)))
         self.arg_parser.add_argument('-p', '--param', nargs="+", default=[])
         self.arg_parser.add_argument('-i', '--install', action="store_true")
         self.arg_parser.add_argument('-d', '--delete', action="store_true")
@@ -149,16 +147,33 @@ class Installer:
         self.arg_parser.add_argument('-n', '--namespace')
         self.arg_parser.add_argument('--debug', action="store_true")
 
-        args = self.arg_parser.parse_args()
-        selected_option = select_option(self.role_deep)
+        args: argparse.Namespace = self.arg_parser.parse_args()
+
+        # select role
+        selected_dict = select_option(self.role_deep)
+        selected_role_dict = selected_dict["role_dict"]
+        selected_role_namespace = selected_dict["namespace"]
         if args.namespace is None:
-            args.namespace = selected_option["namespace"]
-        jinja2ignore_file = self.root_path.joinpath(".jinja2ignore")
-        execute(selected_option,
-                self.handle_func,
-                root_path=self.root_path,
-                bak_path=self.bak_path,
-                env_file=self.root_path.joinpath("env.yaml").as_posix(),
-                jinja2ignore_file=jinja2ignore_file,
-                args=args,
-                **kwargs)
+            args.namespace = selected_role_namespace
+
+        global_env_dict = {}
+        # read env_file
+        if self.env_file and self.env_file.exists():
+            global_env_dict.update(read_file(self.env_file, lambda f: yaml.full_load(f)))
+        # read input param
+        param_input_iter = iter(args.param)
+        param_input_dict = dict(zip(param_input_iter, param_input_iter))
+        global_env_dict.update(param_input_dict)
+        # global env_dict finished
+        global_jinja2ignore_rules = []
+        if self.jinja2ignore_file and self.jinja2ignore_file.exists():
+            global_jinja2ignore_rules = read_file(self.jinja2ignore_file, lambda f: [t.strip("\n") for t in f.readlines()])
+        # loop selected_role_dict
+        loop_role_dict(
+            role_dict=selected_role_dict,
+            env_dict=global_env_dict,
+            jinja2ignore_rules=global_jinja2ignore_rules,
+            handle_func=self.role_func,
+            args=args,
+            **kwargs
+        )
