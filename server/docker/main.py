@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-import argparse
 import pathlib
 
 import share
 
 
 def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
+    print(kwargs)
     args = kwargs["args"]
     env_dict: dict = kwargs["env_dict"]
     cluster_name = env_dict.get("param_cluster_name")
@@ -38,7 +38,7 @@ def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
             role_deploy_files.append(role_node_deploy_file)
         return 'sudo docker-compose --project-name {0} {1} {2}'.format(role_name, " ".join(["--file {0}".format(t) for t in role_deploy_files]), option)
 
-    if args.i:
+    if args.action == "install":
         if role_conf_path.exists():
             target_role_conf_path = target_app_path.joinpath("conf")
             if target_role_conf_path.exists() and target_app_path.name == role_name:
@@ -60,12 +60,12 @@ def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
             if args.debug:
                 _cmds.append(docker_compose_cmd("config"))
             _cmds.append(docker_compose_cmd(share.flat_to_str("up --detach --build --remove-orphans")))
-    if args.d:
+    if args.action == "delete":
         if role_deploy_file.exists():
             _cmds.append(share.role_print(role_title, "down", role_deploy_file.as_posix()))
             _cmds.append(docker_compose_cmd("down --remove-orphans"))
 
-    if args.b:
+    if args.action == "build_dockerfile":
         registry_url = env_dict['param_registry_url']
         registry_dir = env_dict['param_registry_dir']
         registry_username = env_dict['param_registry_username']
@@ -76,6 +76,7 @@ def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
             docker_image_tag = "/".join([str(p).strip("/") for p in [registry_url, registry_dir, role_name]])
             _cmds.append("docker build --tag {0} --file {1} {2}".format(docker_image_tag, role_docker_file.as_posix(), role_path.as_posix()))
             _cmds.append("docker push {0}".format(docker_image_tag))
+    if args.action == "build_sh":
         if role_build_sh.exists():
             _cmds.append("sudo bash {0}".format(role_build_sh.as_posix()))
     _cmd_str = share.flat_to_str([_cmds, "echo \n"], delimiter=" && ")
@@ -84,18 +85,5 @@ def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
 
 if __name__ == '__main__':
     root_path = pathlib.Path(__file__).parent
-    env_file = root_path.joinpath("env.yaml").as_posix()
-    base_deploy_file = root_path.joinpath("base-deploy.yml").as_posix()
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-p', nargs="+", default=[])
-    parser.add_argument('-i', action="store_true")
-    parser.add_argument('-d', action="store_true")
-    parser.add_argument('-b', action="store_true")
-    parser.add_argument('-n')
-    parser.add_argument('--debug', action="store_true")
-
-    args = parser.parse_args()
-    selected_option = share.select_option(2)
-    if args.n is None:
-        args.n = selected_option["namespace"]
-    share.execute(selected_option, invoke, root_path=root_path.as_posix(), env_file=env_file, base_deploy_file=base_deploy_file, args=args)
+    installer = share.Installer(root_path, invoke, role_deep=2)
+    installer.run(base_deploy_file=root_path.joinpath("base_deploy.yml"))
