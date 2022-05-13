@@ -1,3 +1,4 @@
+import argparse
 import itertools
 import pathlib
 import re
@@ -86,23 +87,21 @@ def execute_cmd(cmd):
 
 def execute(ctx, func, **kwargs):
     yaml.add_constructor('!join', lambda loader, node: "".join(loader.construct_sequence(node, deep=True)))
-
-    root_path = kwargs["root_path"]
-    jinja2ignore = pathlib.Path(root_path).joinpath(".jinja2ignore")
     kwargs["args"].excludes = ctx["excludes"]
     env_dict = {}
     if kwargs.get("env_file") and pathlib.Path(kwargs["env_file"]).exists():
         with open(kwargs["env_file"], mode="r", encoding="utf-8") as ef:
             env_dict.update(yaml.full_load(ef))
-    param_iter = iter(kwargs["args"].p)
+    param_iter = iter(kwargs["args"].param)
     param_input_dict = dict(zip(param_iter, param_iter))
     if param_input_dict:
         print(param_input_dict)
     env_dict.update(param_input_dict)
 
     global_jinja2ignore_rules = []
-    if jinja2ignore.exists():
-        with open(jinja2ignore, mode="r", encoding="utf-8") as ji:
+    jinja2ignore_file = kwargs.get("jinja2ignore_file")
+    if jinja2ignore_file.exists():
+        with open(jinja2ignore_file, mode="r", encoding="utf-8") as ji:
             global_jinja2ignore_rules = [t.strip("\n") for t in ji.readlines()]
     for k, v in ctx["role_dict"].items():
         role_num = k
@@ -131,3 +130,30 @@ def execute(ctx, func, **kwargs):
                         print("error: {0}".format(t))
 
         func(role_title=role_title, role_path=role_path, env_dict=role_dict, **kwargs)
+
+
+class Installer:
+    def __init__(self, root_path: pathlib.Path, handle_func, role_deep: int = 1) -> None:
+        self.root_path = root_path
+        self.handle_func = handle_func
+        self.role_deep = role_deep
+        self.arg_parser: argparse.ArgumentParser = argparse.ArgumentParser()
+
+    def run(self, **kwargs):
+        self.arg_parser.add_argument('-p', '--param', nargs="+", default=[])
+        self.arg_parser.add_argument('-a', '--action', type=str, required=False)
+        self.arg_parser.add_argument('-n', '--namespace')
+        self.arg_parser.add_argument('--debug', action="store_true")
+
+        args = self.arg_parser.parse_args()
+        selected_option = select_option(self.role_deep)
+        if args.namespace is None:
+            args.namespace = selected_option["namespace"]
+        jinja2ignore_file = self.root_path.joinpath(".jinja2ignore")
+        execute(selected_option,
+                self.handle_func,
+                root_path=self.root_path,
+                env_file=self.root_path.joinpath("env.yaml").as_posix(),
+                jinja2ignore_file=jinja2ignore_file,
+                args=args,
+                **kwargs)

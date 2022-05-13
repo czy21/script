@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
-import argparse
 import pathlib
 
-import jinja2
 import share
 import yaml
 
@@ -58,15 +56,7 @@ def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
 
 if __name__ == '__main__':
     root_path = pathlib.Path(__file__).parent
-    env_file = root_path.joinpath("env.yaml")
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-p', nargs="+", default=[])
-    parser.add_argument('-a', type=str, required=True)
-    parser.add_argument('-n')
-    parser.add_argument('--ignore-namespace', action="store_true")
-    parser.add_argument('--create-namespace', action="store_true")
-    args = parser.parse_args()
-    selected_option = share.select_option(2)
-    if args.n is None:
-        args.n = selected_option["namespace"]
-    share.execute(selected_option, invoke, root_path=root_path.as_posix(), env_file=env_file, args=args)
+    installer = share.Installer(root_path, invoke, role_deep=2)
+    installer.arg_parser.add_argument('--ignore-namespace', action="store_true")
+    installer.arg_parser.add_argument('--create-namespace', action="store_true")
+    installer.run()
