@@ -6,14 +6,16 @@ import requests
 
 
 def get_session(sid):
-    r = requests.post(url="http://127.0.0.1:37002/api/test/test1",
+    r = requests.post(url="http://127.0.0.1:37001/api/sms/batchSend",
                       headers={
                           "authorization": "b530c5984da54f398552f7241da6eb17"
                       },
                       json={
-                          "payload": {
-                              "seq": str(sid)
-                          }})
+    "phoneNumbers":[
+        "15145033859"
+    ],
+    "businessType":"CUSTOMER_SERVICE"
+})
     print(r.json())
 
 

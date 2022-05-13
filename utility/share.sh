@@ -27,7 +27,7 @@ function upload_exec_py() {
     fi
     args+=" ${item}"
   done
-  exec_cmd+='python3 -B $HOME/'${name_path}/'exec.py '${args}''
+  exec_cmd+='python3 -B $HOME/'${name_path}/'main.py '${args}''
   echo -e '\033[32mcommand: \033[0m'${exec_cmd}
   ${ssh_cmd} ${exec_cmd}
   if ${ssh_cmd} "[ -d ${temp_path} ]"; then
