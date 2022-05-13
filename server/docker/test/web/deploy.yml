@@ -13,7 +13,7 @@ x-traefik-label: &traefik-label
 #  traefik.http.routers.{{ param_role_name }}-https.rule: Host(`nginx-{{ param_cluster_name }}.cluster.com`)
 
 services:
-  {% for i in range(1,2 | int+1) %}
+  {% for i in range(1,10 | int+1) %}
   {% set node="web{0}".format(i | string) %}
   {{ node }}:
     image: nginx:1.21-alpine
