@@ -1,14 +1,12 @@
 #!/usr/bin/env python3
+import argparse
 import pathlib
 
 import share
 
 
-def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
-    print(kwargs)
-    args = kwargs["args"]
-    env_dict: dict = kwargs["env_dict"]
-    cluster_name = env_dict.get("param_cluster_name")
+def invoke(role_title: str, role_path: pathlib.Path, role_env_dict: dict, args: argparse.Namespace, **kwargs):
+    cluster_name = role_env_dict.get("param_cluster_name")
     role_name = role_path.name
     role_conf_path = role_path.joinpath("conf")
     role_deploy_file = role_path.joinpath("deploy.yml")
@@ -16,7 +14,7 @@ def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
     role_init_sh = role_path.joinpath("init.sh")
     role_build_sh = role_path.joinpath("build.sh")
 
-    target_app_path = pathlib.Path(env_dict["param_docker_data"]).joinpath(role_name)
+    target_app_path = pathlib.Path(role_env_dict.get("param_docker_data")).joinpath(role_name)
 
     _cmds = []
 
@@ -31,7 +29,7 @@ def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
 
     def docker_compose_cmd(option):
         role_deploy_files = [
-            kwargs["base_deploy_file"],
+            kwargs.get("base_deploy_file"),
             role_deploy_file.as_posix()
         ]
         if role_node_deploy_file and role_node_deploy_file.exists():
@@ -66,10 +64,10 @@ def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
             _cmds.append(docker_compose_cmd("down --remove-orphans"))
 
     if args.build_file == "Dockerfile":
-        registry_url = env_dict['param_registry_url']
-        registry_dir = env_dict['param_registry_dir']
-        registry_username = env_dict['param_registry_username']
-        registry_password = env_dict['param_registry_password']
+        registry_url = role_env_dict['param_registry_url']
+        registry_dir = role_env_dict['param_registry_dir']
+        registry_username = role_env_dict['param_registry_username']
+        registry_password = role_env_dict['param_registry_password']
         _cmds.append(share.role_print(role_title, "build", role_build_sh.as_posix()))
         _cmds.append('sudo docker login {0} --username {1} --password {2}'.format(registry_url, registry_username, registry_password))
         if role_docker_file.exists():
@@ -86,4 +84,4 @@ def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
 if __name__ == '__main__':
     root_path = pathlib.Path(__file__).parent
     installer = share.Installer(root_path, invoke, role_deep=2)
-    installer.run(base_deploy_file=root_path.joinpath("base_deploy.yml"))
+    installer.run(base_deploy_file=root_path.joinpath("base-deploy.yml"))
