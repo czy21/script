@@ -80,7 +80,7 @@ def select_option(deep: int = 1, excludes=None) -> dict:
     }
 
 
-def execute_cmd(cmd):
+def run_cmd(cmd):
     # print(cmd)
     subprocess.Popen(cmd, shell=True).wait()
 
@@ -134,13 +134,17 @@ def execute(ctx, func, **kwargs):
 
 class Installer:
     def __init__(self, root_path: pathlib.Path, handle_func, role_deep: int = 1) -> None:
-        self.root_path = root_path
+        self.root_path: pathlib.Path = root_path
+        self.bak_path: pathlib.Path = root_path.joinpath("___temp/bak")
         self.handle_func = handle_func
-        self.role_deep = role_deep
+        self.role_deep: int = role_deep
         self.arg_parser: argparse.ArgumentParser = argparse.ArgumentParser()
 
     def run(self, **kwargs):
         self.arg_parser.add_argument('-p', '--param', nargs="+", default=[])
+        self.arg_parser.add_argument('-i', '--install', action="store_true")
+        self.arg_parser.add_argument('-d', '--delete', action="store_true")
+        self.arg_parser.add_argument('-b', '--build-file', type=str)
         self.arg_parser.add_argument('-a', '--action', type=str, required=False)
         self.arg_parser.add_argument('-n', '--namespace')
         self.arg_parser.add_argument('--debug', action="store_true")
@@ -153,6 +157,7 @@ class Installer:
         execute(selected_option,
                 self.handle_func,
                 root_path=self.root_path,
+                bak_path=self.bak_path,
                 env_file=self.root_path.joinpath("env.yaml").as_posix(),
                 jinja2ignore_file=jinja2ignore_file,
                 args=args,

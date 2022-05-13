@@ -1,11 +1,12 @@
 #!/bin/bash
 
 # bash toolchain.sh -h user@host -i
-# -i exec init.sh and start compose.yaml
-# -b exec build.sh
-# -c exec post.sh
-# -p param_cluster_name <env>
-# --force-recreate  # recreate containers
+# -i # exec init.sh and start compose.yaml
+# -d # docker-compose down
+# -b build_file
+# -a str
+# -n namespace
+# -p param_cluster_name test|nas|dsm
 
 while getopts "h:" opt
 do

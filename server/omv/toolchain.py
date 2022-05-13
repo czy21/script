@@ -23,7 +23,7 @@ nodes = [
 ]
 
 
-def execute_cmd(cmd):
+def run_cmd(cmd):
     subprocess.Popen(cmd, shell=True).wait()
 
 
@@ -40,5 +40,5 @@ if __name__ == '__main__':
                     i["host"],
                     docker_prune_cmd
                 )
-                execute_cmd(_prune_cmd)
-            execute_cmd(docker_prune_cmd)
+                run_cmd(_prune_cmd)
+            run_cmd(docker_prune_cmd)
