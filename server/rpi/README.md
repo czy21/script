@@ -6,7 +6,7 @@ interface wlan0
 static ip_address=192.168.2.11/24
 static routes=192.168.2.2
 # install pip3
-sudo spt-get install -y python3-pip
+sudo apt-get install -y python3-pip
 # install docker-compose
 sudo pip3 install docker-compose
 ```

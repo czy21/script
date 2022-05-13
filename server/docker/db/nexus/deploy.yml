@@ -16,6 +16,7 @@ services:
 
   nexus:
     image: sonatype/nexus3
+    pull_policy: always
     container_name: nexus
     labels:
       <<: *traefik-label
