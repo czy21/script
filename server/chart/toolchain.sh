@@ -1,12 +1,14 @@
 #!/bin/bash
 
 # bash toolchain.sh -h user@host
-# -a [install|delete|template|push|]
-# -n string # namespace for this request
-# -t int    # yaml's dir deep
-# -p param_cluster_name < dev|ops >
-#    param_ks_role < host | member >
-#    param_ks_jwt <>
+# -i # helm install
+# -d # helm delete
+# -b build_file
+# -a push
+# -n namespace
+# -p param_cluster_name dev|ops
+#    param_ks_role host|member
+#    param_ks_jwt  str
 # --ignore-namespace
 # --create-namespace
 

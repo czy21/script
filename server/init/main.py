@@ -36,4 +36,4 @@ if __name__ == '__main__':
         # "--verbose"
     ])
     print(ansible_cmd)
-    share.execute_cmd(ansible_cmd)
+    share.run_cmd(ansible_cmd)
