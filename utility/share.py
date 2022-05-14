@@ -175,5 +175,6 @@ class Installer:
             env_dict=global_env_dict,
             jinja2ignore_rules=global_jinja2ignore_rules,
             args=args,
+            bak_path=self.bak_path,
             **kwargs
         )

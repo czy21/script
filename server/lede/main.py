@@ -19,9 +19,8 @@ def echo_section(t, role_name, bak_conf):
     return ["uci show {0} | grep -q '^{0}.{1}' && echo '[{1}]' >> {2} && uci show {0} | grep '^{0}.{1}' >> {2}".format(role_name, s, bak_conf.as_posix()) for s in section_keys]
 
 
-def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
+def invoke(role_title: str, role_path: pathlib.Path, bak_path: pathlib.Path, **kwargs):
     args = kwargs["args"]
-    bak_path: pathlib.Path = kwargs["bak_path"]
     role_name = role_path.name
     conf_file = role_path.joinpath("conf")
     meta_file = role_path.joinpath("meta.yml")
