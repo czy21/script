@@ -20,10 +20,11 @@ if __name__ == '__main__':
     parser.add_argument('-i', required=True)
     parser.add_argument('-t', required=True)
     parser.add_argument('-k', action="store_true")
+    parser.add_argument('-u', '--user', type=str, default="bruce")
     args = parser.parse_args()
     ansible_file = pathlib.Path(__file__).parent.joinpath(args.i + ".yml").as_posix()
 
-    ansible_cmd = share.flat_to_str([
+    ansible_cmd = [
         "ANSIBLE_SUDO_PASS=0",
         "ANSIBLE_HOST_KEY_CHECKING=0",
         "ANSIBLE_FORCE_COLOR=1",
@@ -34,6 +35,7 @@ if __name__ == '__main__':
         "--flush-cache",
         "--step",
         # "--verbose"
-    ])
-    print(ansible_cmd)
-    share.run_cmd(ansible_cmd)
+    ]
+    if args.user:
+        ansible_cmd.append("--user {0}".format(args.user))
+    share.run_cmd(share.flat_to_str(ansible_cmd))

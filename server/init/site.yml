@@ -1,6 +1,5 @@
 - name: os
   hosts: all
-  remote_user: root
   vars_files:
     - "vars/env.yml"
     - "vars/main.yml"
@@ -17,7 +16,6 @@
 
 - name: docker
   hosts: all
-  remote_user: bruce
   vars_files:
     - "vars/env.yml"
     - "vars/main.yml"
@@ -34,7 +32,6 @@
 
 - name: hosts
   hosts: all
-  remote_user: bruce
   vars_files:
     - "vars/env.yml"
     - "vars/main.yml"
@@ -51,7 +48,6 @@
 
 - name: k8s-master
   hosts: master
-  remote_user: bruce
   vars_files:
     - "vars/env.yml"
     - "vars/main.yml"
@@ -69,7 +65,6 @@
 
 - name: k8s-node
   hosts: node
-  remote_user: bruce
   vars_files:
     - "vars/env.yml"
     - "vars/main.yml"
