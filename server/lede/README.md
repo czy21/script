@@ -16,11 +16,13 @@ nohup make -j$(($(nproc) + 1)) V=s &
 sudo curl -L "https://github.com/docker/compose/releases/download/v2.5.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/bin/docker-compose
 sudo chmod +x /usr/bin/docker-compose
 
-# node-exporter
-opkg install prometheus-node-exporter-lua \
-prometheus-node-exporter-lua-nat_traffic \
-prometheus-node-exporter-lua-netstat \
-prometheus-node-exporter-lua-openwrt
+# pip repo
+~/.pip/pip.conf
+[global]
+index-url = https://mirrors.aliyun.com/pypi/simple/
+
+[install]
+trusted-host=mirrors.aliyun.com
 ```
 
 ```shell
