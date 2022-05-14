@@ -1,5 +1,3 @@
-# apt
-
 ```json
 {
   "apt": [
@@ -24,12 +22,22 @@
       }
     },
     {
+      "name": "apt-proxy-docker-ce",
+      "type": "proxy",
+      "url": "http://nexus.cluster.com/repository/apt-proxy-docker-ce",
+      "attributes": {
+        "proxy": {
+          "remoteUrl": "http://mirrors.aliyun.com/docker-ce/"
+        }
+      }
+    },
+    {
       "name": "apt-proxy-ubuntu",
       "type": "proxy",
       "url": "http://nexus.cluster.com/repository/apt-proxy-ubuntu",
       "attributes": {
         "proxy": {
-          "remoteUrl": "https://mirrors.aliyun.com/ubuntu/"
+          "remoteUrl": "http://mirrors.aliyun.com/ubuntu/"
         }
       }
     }
@@ -252,16 +260,6 @@
       "attributes": {
         "proxy": {
           "remoteUrl": "http://mirrors.aliyun.com/centos-vault/"
-        }
-      }
-    },
-    {
-      "name": "yum-proxy-docker",
-      "type": "proxy",
-      "url": "http://nexus.cluster.com/repository/yum-proxy-docker",
-      "attributes": {
-        "proxy": {
-          "remoteUrl": "http://download.docker.com/linux/"
         }
       }
     }
