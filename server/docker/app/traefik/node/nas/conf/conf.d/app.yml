@@ -18,8 +18,8 @@ http:
         permanent: true
     apt-proxy:
       replacePathRegex:
-        regex: "^/repository/apt-proxy/(.*)/(.*)"
-        replacement: "/repository/apt-proxy-${1}/${2}"
+        regex: "^/repository/apt-proxy/(.*)"
+        replacement: "/repository/apt-proxy-${1}/"
     yum-proxy:
       replacePathRegex:
         regex: "^/repository/yum-proxy/(.*)"
