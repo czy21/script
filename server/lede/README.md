@@ -12,10 +12,6 @@ nohup make -j1 V=s &
 nohup make -j$(($(nproc) + 1)) V=s &
 ```
 ```shell
-# docker-compose
-sudo curl -L "https://github.com/docker/compose/releases/download/v2.5.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/bin/docker-compose
-sudo chmod +x /usr/bin/docker-compose
-
 # pip repo
 ~/.pip/pip.conf
 [global]
