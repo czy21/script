@@ -22,5 +22,5 @@ http:
         replacement: "/repository/apt-proxy-${1}/"
     yum-proxy:
       replacePathRegex:
-        regex: "^/repository/yum-proxy/(.*)"
-        replacement: "/repository/yum-proxy-group/${1}"
+        regex: "^/repository/yum-proxy/centos/"
+        replacement: "/repository/yum-proxy-centos-group/"
