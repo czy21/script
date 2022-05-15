@@ -1,0 +1,5 @@
+services:
+
+  traefik:
+    ports:
+      - "8080:80"
