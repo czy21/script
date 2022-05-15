@@ -47,11 +47,6 @@ scrape_configs:
       - targets: ['192.168.2.19:9100']
         labels:
           origin_prometheus: dsm
-  - job_name: openwrt
-    static_configs:
-      - targets: [ '192.168.2.2:9100' ]
-        labels:
-          origin_prometheus: lede
 
   - job_name: cadvisor
     static_configs:
