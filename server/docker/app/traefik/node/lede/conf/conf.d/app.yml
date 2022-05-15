@@ -1,0 +1,10 @@
+http:
+  routers:
+    lede:
+      rule: "Host(`lede.cluster.com`)"
+      service: lede@file
+  services:
+    lede:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.2.2:8080"
