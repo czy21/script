@@ -5,7 +5,7 @@ services:
   node-exporter:
     image: {{ param_registry_proxy_url | default("quay.io") }}/prometheus/node-exporter
     container_name: node-exporter
-    privileged: true
+    network_mode: host
     ports:
       - "9100:9100"
     volumes:
@@ -13,6 +13,5 @@ services:
     command:
       - '--path.rootfs=/host'
     restart: always
-    user: root
 
 
