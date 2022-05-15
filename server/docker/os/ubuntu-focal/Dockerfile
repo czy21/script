@@ -1,4 +1,4 @@
 FROM ubuntu:focal
 
-RUN sed -i.bak "s,\(archive\|security\).ubuntu.com,{{ param_mirror_apt }},g" /etc/apt/sources.list
+RUN sed -i.bak "s,\(ca.archive\|archive\|security\).ubuntu.com,{{ param_mirror_apt }},g" /etc/apt/sources.list
 RUN apt-get update && apt-get clean
