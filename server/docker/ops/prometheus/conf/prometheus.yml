@@ -52,7 +52,6 @@ scrape_configs:
     static_configs:
       - targets: ['cadvisor-nas.cluster.com']
       - targets: ['cadvisor-dsm.cluster.com']
-      - targets: ['cadvisor-lede.cluster.com']
 
   - job_name: mysql
     static_configs:
@@ -81,4 +80,3 @@ scrape_configs:
     static_configs:
       - targets: ['traefik-nas.cluster.com']
       - targets: ['traefik-dsm.cluster.com']
-      - targets: ['traefik-lede.cluster.com']
