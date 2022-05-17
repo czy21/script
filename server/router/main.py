@@ -81,21 +81,19 @@ def invoke(root_path: pathlib.Path, role_title: str, role_path: pathlib.Path, ro
         def get_plugin_checkout_cmd(source, target):
             return "svn checkout {0} {1}".format(source, target)
 
-        for k, v in role_env_dict.get("param_router_plugin").items():
-            for t in v:
-                repo: str = t["repo"]
-                apps: list = t["apps"]
-                for a in apps:
-                    source_app_trunk = [repo.split(",")[0], "trunk"]
-                    if repo.split(",").__len__() == 2:
-                        source_app_trunk.append(repo.split(",")[1])
-                    source_app_trunk.append(a)
-                    source_app_path = "/".join(source_app_trunk)
-                    target_app_path = router_target_project_path.joinpath(k).joinpath(t.get("name")).joinpath(a)
-                    if not target_app_path.exists():
-                        svn_checkout_cmd = " && ".join(["mkdir -p {0}".format(target_app_path.parent.parent), get_plugin_checkout_cmd(source_app_path, target_app_path)])
-                        print(svn_checkout_cmd)
-                        _cmds.append(svn_checkout_cmd)
+        for t in role_env_dict.get("param_router_plugin"):
+            repo: str = t["repo"]
+            apps: list = t["apps"]
+            for a in apps:
+                source_app_trunk = [repo.split(",")[0], "trunk"]
+                if repo.split(",").__len__() == 2:
+                    source_app_trunk.append(repo.split(",")[1])
+                source_app_trunk.append(a)
+                source_app_path = "/".join(source_app_trunk)
+                target_app_path = router_target_project_path.joinpath(a)
+                if not target_app_path.exists():
+                    svn_checkout_cmd = " && ".join(["mkdir -p {0}".format(target_app_path.parent.parent), get_plugin_checkout_cmd(source_app_path, target_app_path)])
+                    _cmds.append(svn_checkout_cmd)
 
     _cmd_str = share.flat_to_str(_cmds, delimiter=" && ")
     share.run_cmd(_cmd_str)
