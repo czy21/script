@@ -2,8 +2,8 @@
 git clone https://github.com/coolsnowwolf/lede
 
 echo 'src-git helloworld https://github.com/fw876/helloworld' >> feeds.conf.default
-./scripts/feeds update -a && ./scripts/feeds install -a
 rm -rf ./tmp && rm -rf .config
+./scripts/feeds update -a && ./scripts/feeds install -a
 make menuconfig
 make -j8 download V=s
 # single thread
