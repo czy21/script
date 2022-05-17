@@ -102,10 +102,10 @@ def loop_role_dict(role_dict: dict,
                    **kwargs):
     for k, v in role_dict.items():
         role_num = k
-        role_path = v
+        role_path: pathlib.Path = v
         role_name = role_path.name
         role_title = ".".join([role_num, role_name])
-
+        role_env_file = role_path.joinpath("env.yaml")
         role_env_dict = {
             **env_dict,
             **{
@@ -114,6 +114,8 @@ def loop_role_dict(role_dict: dict,
                 "param_role_title": role_title
             }
         }
+        if role_env_file.exists():
+            role_env_dict.update(read_file(role_env_file, lambda f: yaml.full_load(f)))
         # parse jinja2 template
         for t in filter(lambda f: f.is_file(), role_path.rglob("*")):
             _exclude_bools = [exclude_match(r, t.as_posix()) for r in jinja2ignore_rules]
@@ -170,6 +172,7 @@ class Installer:
             global_jinja2ignore_rules = read_file(self.jinja2ignore_file, lambda f: [t.strip("\n") for t in f.readlines()])
         # loop selected_role_dict
         loop_role_dict(
+            root_path=self.root_path,
             role_dict=selected_role_dict,
             role_func=self.role_func,
             env_dict=global_env_dict,
