@@ -80,15 +80,15 @@ def invoke(root_path: pathlib.Path, role_title: str, role_path: pathlib.Path, ro
 
         def get_plugin_checkout_cmd(source, target):
             return "svn checkout {0} {1}".format(source, target)
-        for pk, pv in role_env_dict.get("param_router_plugin").items():
-            for dk, dv in pv.items():
-                for t in dv:
-                    repo: str = t["repo"]
-                    apps: list = t["apps"]
-                    for a in apps:
-                        source_app_path = "/".join([repo, "trunk", a])
-                        target_app_path = router_target_project_path.joinpath(pk).joinpath(dk).joinpath(a)
-                        print(get_plugin_checkout_cmd(source_app_path, target_app_path))
+
+        for k, v in role_env_dict.get("param_router_plugin").items():
+            for t in v:
+                repo: str = t["repo"]
+                apps: list = t["apps"]
+                for a in apps:
+                    source_app_path = "/".join([repo, "trunk", a])
+                    target_app_path = router_target_project_path.joinpath(k).joinpath(t.get("name")).joinpath(a)
+                    _cmds.append(" && ".join(["mkdir -p {0}".format(target_app_path.parent.parent), get_plugin_checkout_cmd(source_app_path, target_app_path)]))
 
     _cmd_str = share.flat_to_str(_cmds, delimiter=" && ")
     share.run_cmd(_cmd_str)
