@@ -4,7 +4,7 @@ git clone https://github.com/coolsnowwolf/lede
 echo 'src-git helloworld https://github.com/fw876/helloworld' >> feeds.conf.default
 rm -rf ./tmp && rm -rf .config
 ./scripts/feeds update -a && ./scripts/feeds install -a
-pkgName=helloworld && ./scripts/feeds update ${pkgName} && ./scripts/feeds install -a -p ${pkgName}
+pkgName=plugin && ./scripts/feeds update ${pkgName} && ./scripts/feeds install -a -p ${pkgName}
 make menuconfig
 make -j8 download V=s
 # single thread
