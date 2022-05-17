@@ -19,13 +19,14 @@ def echo_section(t, role_name, bak_conf):
     return ["uci show {0} | grep -q '^{0}.{1}' && echo '[{1}]' >> {2} && uci show {0} | grep '^{0}.{1}' >> {2}".format(role_name, s, bak_conf.as_posix()) for s in section_keys]
 
 
-def invoke(role_title: str, role_path: pathlib.Path, bak_path: pathlib.Path, **kwargs):
+def invoke(root_path: pathlib.Path, role_title: str, role_path: pathlib.Path, role_env_dict: dict, bak_path: pathlib.Path, **kwargs):
     args = kwargs["args"]
     role_name = role_path.name
     conf_file = role_path.joinpath("conf")
     meta_file = role_path.joinpath("meta.yml")
-    with io.open(meta_file, "r", encoding="utf-8", newline="\n") as o_file:
-        meta_dict = yaml.unsafe_load(o_file.read())
+    if meta_file and meta_file.exists():
+        with io.open(meta_file, "r", encoding="utf-8", newline="\n") as o_file:
+            meta_dict = yaml.unsafe_load(o_file.read())
 
     _cmds = []
     if args.install:
@@ -74,6 +75,20 @@ def invoke(role_title: str, role_path: pathlib.Path, bak_path: pathlib.Path, **k
                 t_file.write("\n".join(contents))
         _cmds.append(share.role_print(role_title, "backup")),
         _cmds.append("mkdir -p {0};cp -r {1}/* {0}/".format(bak_path.joinpath(role_name), role_bak_path))
+    if args.action == "plugin":
+        router_target_project_path = root_path.parent.joinpath(role_env_dict.get("param_router_project"))
+
+        def get_plugin_checkout_cmd(source, target):
+            return "svn checkout {0} {1}".format(source, target)
+        for pk, pv in role_env_dict.get("param_router_plugin").items():
+            for dk, dv in pv.items():
+                for t in dv:
+                    repo: str = t["repo"]
+                    apps: list = t["apps"]
+                    for a in apps:
+                        source_app_path = "/".join([repo, "trunk", a])
+                        target_app_path = router_target_project_path.joinpath(pk).joinpath(dk).joinpath(a)
+                        print(get_plugin_checkout_cmd(source_app_path, target_app_path))
 
     _cmd_str = share.flat_to_str(_cmds, delimiter=" && ")
     share.run_cmd(_cmd_str)
