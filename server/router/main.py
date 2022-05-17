@@ -86,9 +86,16 @@ def invoke(root_path: pathlib.Path, role_title: str, role_path: pathlib.Path, ro
                 repo: str = t["repo"]
                 apps: list = t["apps"]
                 for a in apps:
-                    source_app_path = "/".join([repo, "trunk", a])
+                    source_app_trunk = [repo.split(",")[0], "trunk"]
+                    if repo.split(",").__len__() == 2:
+                        source_app_trunk.append(repo.split(",")[1])
+                    source_app_trunk.append(a)
+                    source_app_path = "/".join(source_app_trunk)
                     target_app_path = router_target_project_path.joinpath(k).joinpath(t.get("name")).joinpath(a)
-                    _cmds.append(" && ".join(["mkdir -p {0}".format(target_app_path.parent.parent), get_plugin_checkout_cmd(source_app_path, target_app_path)]))
+                    if not target_app_path.exists():
+                        svn_checkout_cmd = " && ".join(["mkdir -p {0}".format(target_app_path.parent.parent), get_plugin_checkout_cmd(source_app_path, target_app_path)])
+                        print(svn_checkout_cmd)
+                        _cmds.append(svn_checkout_cmd)
 
     _cmd_str = share.flat_to_str(_cmds, delimiter=" && ")
     share.run_cmd(_cmd_str)
