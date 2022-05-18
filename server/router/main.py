@@ -73,9 +73,12 @@ def invoke(root_path: pathlib.Path, role_title: str, role_path: pathlib.Path, ro
                         contents.append(" ".join(config_node) + "\n\t\t" + option_text)
             with open(role_bak_conf, "w", encoding="utf-8") as t_file:
                 t_file.write("\n".join(contents))
-        _cmds.append(share.role_print(role_title, "backup")),
+        _cmds.append(share.role_print(role_title, "backup"))
         _cmds.append("mkdir -p {0};cp -r {1}/* {0}/".format(bak_path.joinpath(role_name), role_bak_path))
-
+    role_build_sh = role_path.joinpath("build.sh")
+    if args.build_file == "build.sh":
+        if role_build_sh.exists():
+            _cmds.append("bash {0}".format(role_build_sh.as_posix()))
     _cmd_str = share.flat_to_str(_cmds, delimiter=" && ")
     share.run_cmd(_cmd_str)
 

@@ -1,5 +1,5 @@
 uci -q batch << EOI
-set network.lan.ipaddr='192.168.2.15'
-set network.lan.gateway='192.168.2.2'
+set network.lan.ipaddr='192.168.2.2'
+set network.lan.gateway='192.168.2.1'
 commit network
 EOI
