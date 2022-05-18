@@ -76,7 +76,7 @@ def invoke(role_title: str, role_path: pathlib.Path, role_env_dict: dict, args: 
             _cmds.append("docker push {0}".format(docker_image_tag))
     if args.build_file == "build.sh":
         if role_build_sh.exists():
-            _cmds.append("sudo bash {0}".format(role_build_sh.as_posix()))
+            _cmds.append("bash {0}".format(role_build_sh.as_posix()))
     _cmd_str = share.flat_to_str([_cmds, "echo \n"], delimiter=" && ")
     share.run_cmd(_cmd_str)
 
