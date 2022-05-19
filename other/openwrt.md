@@ -15,4 +15,7 @@ gunzip --keep --force ${projectRoot}.img.gz; \
 qemu-img convert -f raw -O vmdk ${projectRoot}.img ${projectRoot}.vmdk
 
 scp ubun:openwrt/bin/targets/x86/64/openwrt-x86-64-generic-squashfs-combined-efi.vmdk .
+
+# esxi reboot disk exception resolve
+vmkfstools -X 1200M vmdk
 ```
