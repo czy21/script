@@ -1,0 +1,31 @@
+version: "3.9"
+
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}.rule: Host(`gitlab.cluster.com`)
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 80
+
+services:
+  gitlab:
+    image: gitlab/gitlab-ee
+    container_name: gitlab
+    labels:
+      <<: *traefik-label
+    privileged: true
+    user: root
+    expose:
+      - "80"
+      - "443"
+      - "22"
+    configs:
+      - source: gitlab
+        target: /omnibus_config.rb
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/var/opt/gitlab/
+      - {{ param_docker_data }}/{{ param_role_name }}/log/:/var/log/gitlab/
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'http://gitlab.cluster.com'
+      GITLAB_ROOT_PASSWORD: "{{ param_manage_password }}"
+    restart: always
