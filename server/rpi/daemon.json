@@ -1,5 +1,5 @@
 {
   "data-root": "/volume1/docker-root",
-  "registry-mirrors":["http://registry-proxy.cluster.com"],
-  "insecure-registries":["registry.cluster.com"]
+  "registry-mirrors": ["http://registry-proxy.cluster.com"],
+  "insecure-registries": ["registry.cluster.com", "registry-proxy.cluster.com"]
 }
