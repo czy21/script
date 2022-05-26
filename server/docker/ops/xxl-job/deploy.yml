@@ -1,0 +1,29 @@
+version: "3.9"
+
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}.rule: Host(`xxl-job.cluster.com`)
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 8080
+
+services:
+
+  xxl-job:
+    image: xuxueli/xxl-job-admin:2.3.1
+    container_name: xxl-job
+    labels:
+      <<: *traefik-label
+    privileged: true
+    expose:
+      - "8080"
+    user: root
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/log/:/data/applogs
+    environment:
+      PARAMS: "
+        --spring.datasource.url=jdbc:mysql://{{ param_db_mysql_host }}:{{ param_db_mysql_port }}/xxl_job?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai 
+        --spring.datasource.username={{ param_db_mysql_username }} 
+        --spring.datasource.password={{ param_db_mysql_password }}
+      "
+    restart: always
+
