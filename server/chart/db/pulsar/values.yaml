@@ -1,4 +1,7 @@
 pulsar:
+  images:
+    pulsar_manager:
+      tag: v0.3.0
   initialize: true
   affinity:
     anti_affinity: false
