@@ -42,7 +42,6 @@ services:
     command: bin/pulsar broker
     environment:
       PULSAR_MEM: "-Xms128m -Xmx256m -XX:MaxDirectMemorySize=256m"
-      brokerDeleteInactiveTopicsEnabled: "false"
   {% endfor %}
 
   pulsar-proxy:
@@ -62,5 +61,3 @@ services:
     command: bin/pulsar proxy
     environment:
       PULSAR_MEM: "-Xms64m -Xmx64m -XX:MaxDirectMemorySize=64m"
-
-
