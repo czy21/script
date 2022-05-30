@@ -26,6 +26,8 @@ pulsar:
         size: 10Gi
   broker:
     replicaCount: 2
+    configData:
+      brokerDeleteInactiveTopicsEnabled: "false"
   proxy:
     replicaCount: 2
   pulsar_metadata:

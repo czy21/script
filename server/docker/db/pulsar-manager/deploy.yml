@@ -1,20 +1,32 @@
 version: "3.9"
 
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}.rule: Host(`pulsar-web.cluster.com`)
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 9527
+
 services:
 
   pulsar-manager:
     image: {{ param_registry_url }}/{{ param_registry_dir }}/pulsar-manager
     container_name: pulsar-manager
+    labels:
+      <<: *traefik-label
     privileged: true
     user: root
     expose:
       - "9527"
     volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/manager.properties:/opt/pulsar-manager/application.properties
       - {{ param_docker_data }}/{{ param_role_name }}/log/web/:/var/log/nginx/
       - {{ param_docker_data }}/{{ param_role_name }}/log/api/:/log/
     environment:
       SPRING_CONFIGURATION_FILE: /opt/pulsar-manager/application.properties
+      JAVA_ARGS: "
+      --spring.datasource.driver-class-name=org.postgresql.Driver
+      --spring.datasource.url=jdbc:postgresql://{{ param_db_pgsql_host }}:{{ param_db_pgsql_port }}/pulsar_manager?user={{ param_db_pgsql_username }}&password={{ param_db_pgsql_password }}
+      --spring.datasource.initialization-mode=NEVER
+      "
     restart: always
 
 
