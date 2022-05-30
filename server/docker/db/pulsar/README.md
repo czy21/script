@@ -1,5 +1,5 @@
 ```shell
-docker run --rm --name pulsar-init apachepulsar/pulsar:2.10.0 bin/pulsar initialize-cluster-metadata \
+docker run --rm --name pulsar-init apachepulsar/pulsar:2.9.2 bin/pulsar initialize-cluster-metadata \
   --cluster cluster1 \
   --zookeeper 192.168.2.18:2181/pulsar/cluster1 \
   --configuration-store 192.168.2.18:2181/pulsar/cluster1 \
