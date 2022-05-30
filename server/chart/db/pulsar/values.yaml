@@ -5,6 +5,7 @@ pulsar:
   components:
     proxy: true
     pulsar_manager: true
+    functions: false
     zookeeper: false
   monitoring:
     prometheus: false
@@ -12,15 +13,20 @@ pulsar:
     node_exporter: false
     alert_manager: false
   bookkeeper:
+    restartPodsOnConfigMapChange: true
     replicaCount: 2
     volumes:
       journal:
         size: 10Gi
+      ledgers:
+        size: 50Gi
   broker:
+    restartPodsOnConfigMapChange: true
     replicaCount: 2
     configData:
       brokerDeleteInactiveTopicsEnabled: "false"
   proxy:
+    restartPodsOnConfigMapChange: true
     replicaCount: 2
   pulsar_metadata:
     component: init
