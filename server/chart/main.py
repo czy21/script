@@ -31,27 +31,28 @@ def invoke(role_title: str, role_path: pathlib.Path, role_env_dict: dict, args: 
     else:
         _action = args.action
         _extension = ""
-        if args.delete == "delete":
-            return " && ".join([
+        if args.delete:
+            _cmds.append([
                 share.role_print(role_title, "delete"),
-                "helm delete {0} {1}".format(role_name, "" if args.ignore_namespace else "--namespace {0}".format(args.n))
+                "helm delete {0} {1}".format(role_name, "" if args.ignore_namespace else "--namespace {0}".format(args.namespace))
             ])
-        if args.install == "install":
-            _cmds.append(share.role_print(role_title, "install"))
-            _action = "upgrade --install"
-        helm_cmd = [
-            "helm {0} {1} {2} --values {3}".format(_action, role_name, role_path.as_posix(), role_values_override_file)
-        ]
-        if not args.ignore_namespace:
-            helm_cmd.append("--namespace {0}".format(args.n))
-        if args.create_namespace:
-            helm_cmd.append("--create-namespace")
-        if _action == "template":
-            _cmds.append(share.role_print(role_title, "template"))
-            helm_cmd.append("> {0}".format(temp_all_in_one_path))
+        else:
+            if args.install:
+                _cmds.append(share.role_print(role_title, "install"))
+                _action = "upgrade --install"
+            helm_cmd = [
+                "helm {0} {1} {2} --values {3}".format(_action, role_name, role_path.as_posix(), role_values_override_file)
+            ]
+            if not args.ignore_namespace:
+                helm_cmd.append("--namespace {0}".format(args.namespace))
+            if args.create_namespace:
+                helm_cmd.append("--create-namespace")
+            if _action == "template":
+                _cmds.append(share.role_print(role_title, "template"))
+                helm_cmd.append("> {0}".format(temp_all_in_one_path))
 
-        _cmds.append('helm dep up {0}'.format(role_path.as_posix()))
-        _cmds.append(share.flat_to_str(helm_cmd))
+            _cmds.append('helm dep up {0}'.format(role_path.as_posix()))
+            _cmds.append(share.flat_to_str(helm_cmd))
     _cmd_str = share.flat_to_str(_cmds, delimiter=" && ")
     share.run_cmd(_cmd_str)
 
