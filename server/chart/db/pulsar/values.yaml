@@ -29,4 +29,4 @@ pulsar:
     component: manager
     configData:
       DRIVER_CLASS_NAME: org.postgresql.Driver
-      URL: jdbc:postgresql://{{ param_db_pgsql_host }}:{{ param_db_pgsql_port }}/pulsar_manager2?user={{ param_db_pgsql_username }}&password={{ param_db_pgsql_password }}
+      URL: jdbc:postgresql://{{ param_db_pgsql_host }}:{{ param_db_pgsql_port }}/pulsar_manager?user={{ param_db_pgsql_username }}&password={{ param_db_pgsql_password }}
