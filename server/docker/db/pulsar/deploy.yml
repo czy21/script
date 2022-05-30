@@ -1,10 +1,16 @@
 version: "3.9"
 
 x-pulsar-common: &pulsar-common
-  image: apachepulsar/pulsar:2.10.0
+  image: apachepulsar/pulsar:2.9.2
   privileged: true
   user: root
   restart: always
+
+x-traefik-pulsar-proxy-label: &traefik-pulsar-proxy-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}-proxy.rule: Host(`pulsar-proxy.cluster.com`)
+  traefik.http.routers.{{ param_role_name }}-proxy.service: {{ param_role_name }}-proxy
+  traefik.http.services.{{ param_role_name }}-proxy.loadbalancer.server.port: 8080
 
 services:
   {% for i in range(1,param_mq_pulsar_cluster_bookie_replicas | int + 1) %}
@@ -19,6 +25,8 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/data/bookie/{{ i }}/:/pulsar/data/bookie/
       - {{ param_docker_data }}/{{ param_role_name }}/log/bookie/{{ i }}/:/pulsar/logs/
     command: bin/pulsar bookie
+    environment:
+      PULSAR_MEM: "-Xms128m -Xmx256m -XX:MaxDirectMemorySize=256m"
   {% endfor %}
   {% for i in range(1,param_mq_pulsar_cluster_broker_replicas | int + 1) %}
   pulsar-broker{{ i }}:
@@ -32,12 +40,17 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/broker.conf:/pulsar/conf/broker.conf
       - {{ param_docker_data }}/{{ param_role_name }}/log/broker/{{ i }}/:/pulsar/logs/
     command: bin/pulsar broker
+    environment:
+      PULSAR_MEM: "-Xms128m -Xmx256m -XX:MaxDirectMemorySize=256m"
+      brokerDeleteInactiveTopicsEnabled: "false"
   {% endfor %}
 
   pulsar-proxy:
     <<: *pulsar-common
     container_name: pulsar-proxy
     hostname: pulsar-proxy
+    labels:
+      <<: *traefik-pulsar-proxy-label
     expose:
       - "8080"
       - "6650"
@@ -47,5 +60,7 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/proxy.conf:/pulsar/conf/proxy.conf
       - {{ param_docker_data }}/{{ param_role_name }}/log/proxy/:/pulsar/logs/
     command: bin/pulsar proxy
+    environment:
+      PULSAR_MEM: "-Xms64m -Xmx64m -XX:MaxDirectMemorySize=64m"
 
 
