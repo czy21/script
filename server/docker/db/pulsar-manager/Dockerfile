@@ -1,4 +1,4 @@
-FROM openjdk:8-jre
+FROM openjdk:11-jre-slim
 
 ENV PULSAR_MANAGER_VERSION=0.2.0
 ENV PULSAR_MANAGER_TGZ_URL=https://dist.apache.org/repos/dist/release/pulsar/pulsar-manager/pulsar-manager-${PULSAR_MANAGER_VERSION}/apache-pulsar-manager-${PULSAR_MANAGER_VERSION}-bin.tar.gz
@@ -9,7 +9,7 @@ COPY sources.list /etc/apt/
 
 RUN apt-get update
 
-RUN apt-get install --yes nginx \
+RUN apt-get install --yes nginx wget \
  && rm -rf /tmp/* \
  && rm -rf /var/lib/apt/lists/*
 
