@@ -29,6 +29,11 @@ data:
             target_label: __address__
           - action: labelmap
             regex: __meta_kubernetes_node_label_(.+)
+          - source_labels: [__meta_kubernetes_pod_node_name]
+            action: replace
+            regex: (.*)
+            replacement: $1
+            target_label: instance
       - job_name: k8s-apiserver
         scheme: https
         tls_config:
