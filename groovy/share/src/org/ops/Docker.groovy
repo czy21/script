@@ -19,7 +19,7 @@ def build() {
     switch (env.param_code_type) {
         case "java":
             gradle_cmd = ["clean", "build"].collect { t -> [env.param_project_module, t].findAll { c -> Util.isNotEmpty(c as String) }.join(":") }.join(" ")
-            sh "chmod +x ${env.param_project_root}/gradlew && ${env.param_project_root}/gradlew --gradle-user-home ${env.param_gradle_user_home} --init-script ${env.param_gradle_init_file} --build-file ${env.param_project_root}/build.gradle ${gradle_cmd} -x test"
+            sh "chmod +x ${env.param_project_root}/gradlew && ${env.param_project_root}/gradlew --gradle-user-home ${env.param_gradle_user_home} --init-script ${env.param_gradle_init_file} --build-file ${env.param_project_root}/build.gradle ${gradle_cmd} -x test --refresh-dependencies"
             break;
         case "go":
             break;
