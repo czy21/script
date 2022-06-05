@@ -40,8 +40,7 @@ def call() {
             stage('build') {
                 steps {
                     script {
-                        sh "echo ${env.param_project_root}"
-                        new org.ops.Docker().build()
+                        org.ops.Docker.build()
                     }
                 }
             }

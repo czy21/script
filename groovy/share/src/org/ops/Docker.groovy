@@ -1,7 +1,7 @@
 #!/usr/bin/env groovy
 package org.ops
 
-def build() {
+static def build() {
 
     // prepare
     configFileProvider([configFile(fileId: "${env.param_global_env_file_id}", targetLocation: 'global_env.groovy', variable: 'ENV_CONFIG')]) {
@@ -16,14 +16,22 @@ def build() {
             ? Util.join("-",env.param_project_name, env.param_project_module)
             : env.param_release_name
     )
-    env.param_docker_context = env.param_docker_context == null ? env.param_project_context : Util.ofPath(env.param_project_root,env.param_docker_context)
+    env.param_docker_context = env.param_docker_context == null
+                             ? env.param_project_context
+                             : Util.ofPath(env.param_project_root,env.param_docker_context)
     env.param_docker_file = Util.ofPath(env.param_docker_context,"Dockerfile")
 
     // build
     switch (env.param_code_type) {
         case "java":
-            gradle_cmd = ["clean", "build"].collect { t -> Util.join(":",env.param_project_module, t) }.join(" ")
-            sh "chmod +x ${env.param_project_root}/gradlew && ${env.param_project_root}/gradlew --gradle-user-home ${env.param_gradle_user_home} --init-script ${env.param_gradle_init_file} --build-file ${env.param_project_root}/build.gradle ${gradle_cmd} -x test"
+            gradle_cmd = Util.format(
+                "chmod +x {0}/gradlew && {0}/gradlew --gradle-user-home {1} --init-script {2} --build-file {0}/build.gradle {3} -x test",
+                env.param_project_root,
+                env.param_gradle_user_home,
+                env.param_gradle_init_file,
+                ["clean", "build"].collect { t -> Util.join(":",env.param_project_module, t) }.join(" ")
+            )
+            sh "${gradle_cmd}"
             break;
         case "go":
             break;
@@ -32,8 +40,14 @@ def build() {
         case "web":
             env.NODEJS_HOME = "${tool 'node-v16.14.0'}"
             env.PATH = "${NODEJS_HOME}/bin:${PATH}"
-            yarn_cmd = "yarn --cwd ${env.param_project_context} --registry ${env.param_npm_repo} --cache-folder ${env.param_yarn_cache}"
-            sh "${yarn_cmd} install --no-lockfile --update-checksums && ${yarn_cmd} --ignore-engines build"
+            yarn_cmd = Util.format(
+                "yarn --cwd {0} --registry {1} --cache-folder {2}",
+                env.param_project_context,
+                env.param_npm_repo,
+                env.param_yarn_cache
+            )
+            yarm_cmd = Util.format("{0} install --no-lockfile --update-checksums && {0} --ignore-engines build",yarn_cmd)
+            sh "${yarm_cmd}"
             break;
         default:
             println(env.param_code_type + " not config" as String);

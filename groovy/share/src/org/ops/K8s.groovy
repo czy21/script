@@ -1,7 +1,7 @@
 #!/usr/bin/env groovy
 package org.ops
 
-def apply() {
+static def apply() {
 
     // prepare
     configFileProvider([configFile(fileId: "${env.param_global_env_file_id}", targetLocation: 'global_env.groovy', variable: 'ENV_CONFIG')]) {
@@ -33,7 +33,15 @@ def apply() {
     // k8s apply
     sh 'env | grep \'^param_\' | sed \'s/=/: /\' | sed \'s/^param_//\' > values.yaml'
     withKubeConfig([credentialsId: env.param_kube_credential, serverUrl: env.param_kube_server]) {
-        sh "helm upgrade --install ${env.param_release_name} ${env.param_release_chart_name} --version ${env.param_release_chart_version} --namespace ${env.param_release_namespace} --repo ${env.param_helm_repo} --values values.yaml --output yaml"
+        helm_cmd = Util.format(
+            "helm upgrade --install {0} {1} --version {2} --namespace {3} --repo {4} --values values.yaml --output yaml",
+            env.param_release_name,
+            env.param_release_chart_name,
+            env.param_release_chart_version,
+            env.param_release_namespace,
+            env.param_helm_repo
+        )
+        sh "${helm_cmd}"
     }
 }
 
