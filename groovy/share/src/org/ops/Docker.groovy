@@ -33,16 +33,16 @@ def build() {
             env.NODEJS_HOME = "${tool 'node-v16.14.0'}"
             env.PATH = "${NODEJS_HOME}/bin:${PATH}"
             yarn_cmd = "yarn --cwd ${env.param_project_context} --registry ${env.param_npm_repo} --cache-folder ${env.param_yarn_cache}"
-            sh "${yarn_cmd} install --no-lockfile --update-checksums && ${yarn_cmd} --ignore-engines build"
+            // sh "${yarn_cmd} install --no-lockfile --update-checksums && ${yarn_cmd} --ignore-engines build"
             break;
         default:
             println(env.param_code_type + " not config" as String);
             return;
     }
     // docker push
-    sh "docker login ${env.param_registry_repo} --username ${env.param_registry_username} --password ${env.param_registry_password}"
-    sh "docker build --tag ${env.param_release_name}:${env.param_release_version} --file ${env.param_docker_file} ${env.param_docker_context}"
-    sh "docker push ${env.param_release_name}:${env.param_release_version}"
+    // sh "docker login ${env.param_registry_repo} --username ${env.param_registry_username} --password ${env.param_registry_password}"
+    // sh "docker build --tag ${env.param_release_name}:${env.param_release_version} --file ${env.param_docker_file} ${env.param_docker_context}"
+    // sh "docker push ${env.param_release_name}:${env.param_release_version}"
 }
 
 return this
