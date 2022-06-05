@@ -12,17 +12,17 @@ def build() {
     env.param_release_name = Util.ofPath(
             env.param_registry_repo,
             env.param_registry_dir,
-            Util.isEmpty(env.param_release_name as String)
-            ? [env.param_project_name, env.param_project_module].findAll { t -> Util.isNotEmpty(t as String) }.join("-")
+            Util.isEmpty(env.param_release_name)
+            ? Util.join("-",env.param_project_name, env.param_project_module)
             : env.param_release_name
     )
     env.param_docker_context = env.param_docker_context == null ? env.param_project_context : Util.ofPath(env.param_project_root,env.param_docker_context)
-    env.param_docker_file = "${env.param_docker_context}/Dockerfile"
+    env.param_docker_file = Util.ofPath(env.param_docker_context,"Dockerfile")
 
     // build
     switch (env.param_code_type) {
         case "java":
-            gradle_cmd = ["clean", "build"].collect { t -> [env.param_project_module, t].findAll { c -> Util.isNotEmpty(c as String) }.join(":") }.join(" ")
+            gradle_cmd = ["clean", "build"].collect { t -> Util.join(":",env.param_project_module, t) }.join(" ")
             sh "chmod +x ${env.param_project_root}/gradlew && ${env.param_project_root}/gradlew --gradle-user-home ${env.param_gradle_user_home} --init-script ${env.param_gradle_init_file} --build-file ${env.param_project_root}/build.gradle ${gradle_cmd} -x test"
             break;
         case "go":
