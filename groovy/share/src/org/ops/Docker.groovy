@@ -12,11 +12,10 @@ def build() {
     env.param_release_name = [
             "${env.param_registry_repo}/${env.param_registry_dir}",
             Util.isEmpty(env.param_release_name as String)
-            ? [env.param_project_name, env.param_project_module].findAll { t -> Util.isNotEmpty(t as String) }.join("-") 
+            ? [env.param_project_name, env.param_project_module].findAll { t -> Util.isNotEmpty(t as String) }.join("-")
             : env.param_release_name
     ].join("/")
-    env.param_docker_context = env.param_docker_context == null ? env.param_project_context : env.param_docker_context
-    sh 'echo ${param_docker_context}'
+    env.param_docker_context = env.param_docker_context == null ? env.param_project_context : "${env.param_project_root}/${env.param_docker_context}"
     env.param_docker_file = "${env.param_docker_context}/Dockerfile"
 
     // build
@@ -33,16 +32,16 @@ def build() {
             env.NODEJS_HOME = "${tool 'node-v16.14.0'}"
             env.PATH = "${NODEJS_HOME}/bin:${PATH}"
             yarn_cmd = "yarn --cwd ${env.param_project_context} --registry ${env.param_npm_repo} --cache-folder ${env.param_yarn_cache}"
-            // sh "${yarn_cmd} install --no-lockfile --update-checksums && ${yarn_cmd} --ignore-engines build"
+            sh "${yarn_cmd} install --no-lockfile --update-checksums && ${yarn_cmd} --ignore-engines build"
             break;
         default:
             println(env.param_code_type + " not config" as String);
             return;
     }
     // docker push
-    // sh "docker login ${env.param_registry_repo} --username ${env.param_registry_username} --password ${env.param_registry_password}"
-    // sh "docker build --tag ${env.param_release_name}:${env.param_release_version} --file ${env.param_docker_file} ${env.param_docker_context}"
-    // sh "docker push ${env.param_release_name}:${env.param_release_version}"
+    sh "docker login ${env.param_registry_repo} --username ${env.param_registry_username} --password ${env.param_registry_password}"
+    sh "docker build --tag ${env.param_release_name}:${env.param_release_version} --file ${env.param_docker_file} ${env.param_docker_context}"
+    sh "docker push ${env.param_release_name}:${env.param_release_version}"
 }
 
 return this
