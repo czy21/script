@@ -19,6 +19,9 @@ def build() {
                              ? env.param_project_context
                              : Util.ofPath(env.param_project_root,env.param_docker_context)
     env.param_docker_file = Util.ofPath(env.param_docker_context,"Dockerfile")
+    env.GO_HOME = "${tool 'go-v1.18.2'}"
+    env.NODEJS_HOME = "${tool 'node-v16.14.0'}"
+    env.PATH = "${NODEJS_HOME}/bin:${GO_HOME}/bin:${PATH}"
     // build
     switch (env.param_code_type) {
         case "java":
@@ -32,8 +35,6 @@ def build() {
             sh "${gradle_cmd}"
             break;
         case "go":
-            env.GO_HOME = "${tool 'go-v1.18.2'}"
-            env.PATH = "${GO_HOME}/bin:${PATH}"
             go_cmd = Util.format(
                "cd {0};go build -o build main.go;",
                env.param_project_context
@@ -43,8 +44,6 @@ def build() {
         case "python":
             break;
         case "web":
-            env.NODEJS_HOME = "${tool 'node-v16.14.0'}"
-            env.PATH = "${NODEJS_HOME}/bin:${PATH}"
             yarn_cmd = Util.format(
                 "yarn --cwd {0} --registry {1} --cache-folder {2}",
                 env.param_project_context,
@@ -54,6 +53,9 @@ def build() {
             yarm_cmd = Util.format("{0} install --no-lockfile --update-checksums && {0} --ignore-engines build",yarn_cmd)
             sh "${yarm_cmd}"
             break;
+        case "shell":
+            script_file = Util.format("{0}",env.param_build_shell)
+            sh "${script_file}"
         default:
             println(env.param_code_type + " not config" as String);
             return;
