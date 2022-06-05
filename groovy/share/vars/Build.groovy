@@ -1,4 +1,5 @@
 #!/usr/bin/env groovy
+import org.ops.Util
 
 def call() {
     pipeline {
