@@ -8,7 +8,7 @@ def call() {
             param_gradle_user_home = "/var/jenkins_home/tools/gradle"
             param_gradle_init_file = "${param_gradle_user_home}/init.gradle"
             param_yarn_cache = "/var/jenkins_home/tools/yarn/cache"
-            param_project_root = org.ops.Util.ofPath(WORKSPACE,env.param_project_root)
+            param_project_root = org.ops.Util.ofPath(WORKSPACE,"${env.param_project_root}")
             param_project_name = "${env.param_project_name}"
             param_project_module = "${env.param_project_module}"
             param_git_repository_url = "${env.param_git_repository_url}"
@@ -40,6 +40,7 @@ def call() {
             stage('build') {
                 steps {
                     script {
+                        sh "echo ${env.param_project_root}"
                         new org.ops.Docker().build()
                     }
                 }
