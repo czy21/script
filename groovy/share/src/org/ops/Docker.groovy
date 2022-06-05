@@ -20,6 +20,8 @@ def build() {
                              : Util.ofPath(env.param_project_root,env.param_docker_context)
     env.param_docker_file = Util.ofPath(env.param_docker_context,"Dockerfile")
     env.GO_HOME = "${tool 'go-v1.18.2'}"
+    env.GOPROXY = env.param_go_proxy
+    env.GOSUMDB = "off"
     env.NODEJS_HOME = "${tool 'node-v16.14.0'}"
     env.PATH = "${NODEJS_HOME}/bin:${GO_HOME}/bin:${PATH}"
     // build
