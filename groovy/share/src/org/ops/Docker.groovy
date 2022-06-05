@@ -55,7 +55,7 @@ def build() {
             break;
         case "shell":
             script_file = Util.format("chmod +x {0};{0}",Util.ofPath(env.param_project_root,env.param_project_shell_file))
-            sh "set -x;${script_file}"
+            sh "${script_file}"
         default:
             println(env.param_code_type + " not config" as String);
             return;
