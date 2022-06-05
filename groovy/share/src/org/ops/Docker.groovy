@@ -32,6 +32,13 @@ def build() {
             sh "${gradle_cmd}"
             break;
         case "go":
+            env.GO_HOME = "${tool 'go-v1.18.2'}"
+            env.PATH = "${GO_HOME}/bin:${PATH}"
+            go_cmd = Util.format(
+               "cd {0};go build -o build main.go;",
+               env.param_project_context
+            )
+            sh "${go_cmd}"
             break;
         case "python":
             break;
