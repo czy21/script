@@ -1,7 +1,7 @@
 #!/usr/bin/env groovy
 package org.ops
 
-static def apply() {
+def apply() {
 
     // prepare
     configFileProvider([configFile(fileId: "${env.param_global_env_file_id}", targetLocation: 'global_env.groovy', variable: 'ENV_CONFIG')]) {

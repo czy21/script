@@ -1,8 +1,7 @@
 #!/usr/bin/env groovy
 package org.ops
 
-static def build() {
-
+def build() {
     // prepare
     configFileProvider([configFile(fileId: "${env.param_global_env_file_id}", targetLocation: 'global_env.groovy', variable: 'ENV_CONFIG')]) {
         load "global_env.groovy";
@@ -20,7 +19,6 @@ static def build() {
                              ? env.param_project_context
                              : Util.ofPath(env.param_project_root,env.param_docker_context)
     env.param_docker_file = Util.ofPath(env.param_docker_context,"Dockerfile")
-
     // build
     switch (env.param_code_type) {
         case "java":
