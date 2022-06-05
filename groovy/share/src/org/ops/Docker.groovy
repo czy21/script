@@ -15,6 +15,7 @@ def build() {
             ? [env.param_project_name, env.param_project_module].findAll { t -> Util.isNotEmpty(t as String) }.join("-") 
             : env.param_release_name
     ].join("/")
+    sh 'echo ${param_project_context}'
     env.param_docker_context = env.param_docker_context == null ? env.param_project_context : env.param_docker_context
     env.param_docker_file = "${env.param_docker_context}/Dockerfile"
 
