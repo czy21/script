@@ -16,7 +16,7 @@ static def ofPath(String first, String... more) {
             more[i] = ""
         }
     }
-    return Path.of(first, more)
+    return Path.of(first, more).toString()
 }
 
 static def join(String delimiter, String... items) {
