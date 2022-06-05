@@ -19,4 +19,8 @@ static def ofPath(String first, String... more) {
     return Path.of(first, more)
 }
 
+static def join(String delimiter, String... items) {
+    return items.collect { t -> isNotEmpty(t) }.join(delimiter)
+}
+
 return this
