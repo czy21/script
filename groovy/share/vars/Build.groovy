@@ -40,7 +40,7 @@ def call() {
             stage('build') {
                 steps {
                     script {
-                        org.ops.Docker.build()
+                        new org.ops.Docker().build()
                     }
                 }
             }
