@@ -11,12 +11,8 @@ static def isNotEmpty(String str) {
 }
 
 static def ofPath(String first, String... more) {
-    for (int i = 0; i < more.length; i++) {
-        if (isEmpty(more[i])) {
-            more[i] = ""
-        }
-    }
-    return Path.of(first, more).toString()
+    String[] items = more.findAll { t -> isNotEmpty(t) }
+    return Path.of(first, items).toString()
 }
 
 static def join(String delimiter, String... items) {
