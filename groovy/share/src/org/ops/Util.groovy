@@ -12,7 +12,7 @@ static def isNotEmpty(String str) {
 
 static def ofPath(String first, String... more) {
     for (int i = 0; i < more.length; i++) {
-        if (more[i] == null) {
+        if (isEmpty(more[i])) {
             more[i] = ""
         }
     }
