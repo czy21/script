@@ -21,7 +21,7 @@ def call() {
             stage('deploy') {
                 steps {
                     script {
-                        new org.ops.K8s().apply()
+                        org.ops.K8s.apply()
                     }
                 }
             }
