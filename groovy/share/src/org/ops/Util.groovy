@@ -20,7 +20,7 @@ static def ofPath(String first, String... more) {
 }
 
 static def join(String delimiter, String... items) {
-    return items.collect { t -> isNotEmpty(t) }.join(delimiter)
+    return items.findAll { t -> isNotEmpty(t) }.join(delimiter)
 }
 
 return this
