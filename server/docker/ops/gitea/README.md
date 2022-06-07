@@ -14,5 +14,5 @@ where pm.id is not null
 
 ```bash
 # batch update .git/config
-find -maxdepth 2 -name 'config' -exec sed -i 's|<original>|<target>|g' {} \;
+find -maxdepth 2 -name 'config' -exec sed -i 's|<origin>|<target>|g' {} \;
 ```
