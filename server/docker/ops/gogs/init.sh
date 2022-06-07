@@ -2,4 +2,4 @@
 set -e
 
 
-sudo mkdir -p {{ param_docker_data }}/{{ param_role_name }}
+sudo mkdir -p {{ param_docker_data }}/{{ param_role_name }}/{data,backup}
