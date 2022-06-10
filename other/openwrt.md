@@ -1,5 +1,6 @@
 ```shell
-echo 'src-git helloworld https://github.com/fw876/helloworld' >> feeds.conf.default
+echo -e '\nsrc-git helloworld https://github.com/fw876/helloworld' >> feeds.conf.default
+echo -e '\nsrc-link plugin /home/bruce/openwrt-plugin' >> feeds.conf.default
 rm -rf ./tmp && rm -rf .config
 ./scripts/feeds update -a && ./scripts/feeds install -a
 pkgName=plugin && ./scripts/feeds update ${pkgName} && ./scripts/feeds install -a -p ${pkgName}
