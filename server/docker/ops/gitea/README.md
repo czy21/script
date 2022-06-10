@@ -10,6 +10,7 @@ select
 from repository r
 inner join push_mirror pm on r.id = pm.repo_id
 where pm.id is not null
+order by r.name
 ```
 
 ```bash
