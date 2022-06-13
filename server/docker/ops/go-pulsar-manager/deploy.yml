@@ -21,6 +21,7 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/app.yaml:/app/app.yaml
     environment:
       TZ: Asia/Shanghai
+      GIN_MODE: release
       GPM_CONFIG_FILE: /app/app.yaml
     restart: always
 
