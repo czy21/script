@@ -22,6 +22,7 @@ def build() {
     env.GO_HOME = "${tool 'go-v1.18.2'}"
     env.GOPROXY = env.param_go_proxy
     env.GOSUMDB = "off"
+    env.CGO_ENABLED = "0"
     env.GOMODCACHE = env.param_go_mod_cache
     env.NODEJS_HOME = "${tool 'node-v16.14.0'}"
     env.PATH = "${NODEJS_HOME}/bin:${GO_HOME}/bin:${PATH}"
