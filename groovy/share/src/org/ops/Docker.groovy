@@ -21,9 +21,10 @@ def build() {
     env.param_docker_file = Util.ofPath(env.param_docker_context,"Dockerfile")
     env.GO_HOME = "${tool 'go-v1.18.2'}"
     env.GOPROXY = env.param_go_proxy
+    env.GOCACHE = env.param_go_cache
     env.GOSUMDB = "off"
-    env.CGO_ENABLED = "0"
     env.GOMODCACHE = env.param_go_mod_cache
+    env.CGO_ENABLED = "0"
     env.NODEJS_HOME = "${tool 'node-v16.14.0'}"
     env.PATH = "${NODEJS_HOME}/bin:${GO_HOME}/bin:${PATH}"
     // build

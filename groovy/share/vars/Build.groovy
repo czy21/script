@@ -8,6 +8,7 @@ def call() {
             param_gradle_user_home = "/var/jenkins_home/tools/gradle"
             param_gradle_init_file = "${param_gradle_user_home}/init.gradle"
             param_go_mod_cache = "/var/jenkins_home/tools/go/pkg/mod"
+            param_go_cache = "/var/jenkins_home/tools/go/cache"
             param_yarn_cache = "/var/jenkins_home/tools/yarn/cache"
             param_project_root = org.ops.Util.ofPath(WORKSPACE,"${env.param_project_root}")
             param_project_name = "${env.param_project_name}"
