@@ -14,3 +14,7 @@ systemctl restart pkg-Docker-dockerd.service
 #ln -s /var/packages/py3k/target/usr/local/bin/pip3 /usr/local/bin/pip3
 #ln -s /usr/local/bin/pip3 /usr/bin/pip3
 ```
+
+```bash
+scp http.app.conf <host>:/etc/nginx/conf.d/
+```
