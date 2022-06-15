@@ -98,6 +98,7 @@ def run_cmd(cmd):
 def loop_role_dict(role_dict: dict,
                    role_func,
                    env_dict,
+                   args: argparse.Namespace,
                    jinja2ignore_rules: list,
                    **kwargs):
     for k, v in role_dict.items():
@@ -122,7 +123,14 @@ def loop_role_dict(role_dict: dict,
             if all(_exclude_bools):
                 template_value = read_file(t, lambda f: jinja2.Template(f.read()).render(**role_env_dict))
                 write_file(t, lambda f: f.write(template_value))
-        role_func(role_title=role_title, role_path=role_path, role_env_dict=role_env_dict, **kwargs)
+        role_build_sh = role_path.joinpath("build.sh")
+        if args.build_file == "build.sh":
+            if role_build_sh.exists():
+                run_cmd(flat_to_str([
+                    role_print(role_title, "build", role_build_sh.as_posix()),
+                    "bash {0}".format(role_build_sh.as_posix())
+                ], delimiter="&&"))
+        role_func(role_title=role_title, role_path=role_path, role_env_dict=role_env_dict, args=args, **kwargs)
 
 
 class Installer:
@@ -144,12 +152,13 @@ class Installer:
         self.arg_parser.add_argument('-p', '--param', nargs="+", default=[])
         self.arg_parser.add_argument('-i', '--install', action="store_true")
         self.arg_parser.add_argument('-d', '--delete', action="store_true")
-        self.arg_parser.add_argument('-b', '--build-file', type=str)
+        self.arg_parser.add_argument('-b', '--build-file', nargs='?', const="build.sh")
         self.arg_parser.add_argument('-a', '--action', type=str, required=False)
         self.arg_parser.add_argument('-n', '--namespace')
         self.arg_parser.add_argument('--debug', action="store_true")
 
         args: argparse.Namespace = self.arg_parser.parse_args()
+        print(args)
 
         # select role
         selected_dict = select_option(self.role_deep)
