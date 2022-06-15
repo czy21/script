@@ -9,7 +9,7 @@ x-traefik-label: &traefik-label
 services:
 
   alist:
-    image: xhofe/alist:latest
+    image: xhofe/alist
     container_name: alist
     labels:
       <<: *traefik-label
