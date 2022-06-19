@@ -1,9 +1,19 @@
 version: "3.9"
 
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}.rule: Host(`jellyfin.cluster.com`)
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 8096
+
 services:
   jellyfin:
     image: jellyfin/jellyfin
     container_name: jellyfin
+    labels:
+      <<: *traefik-label
+    expose:
+      - "8096"
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/:/config/
       - {{ param_docker_data }}/{{ param_role_name }}/data/cache/:/cache/
@@ -11,4 +21,3 @@ services:
     devices:
       - /dev/dri:/dev/dri
     restart: always
-
