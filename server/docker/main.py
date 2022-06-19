@@ -23,8 +23,10 @@ def invoke(role_title: str, role_path: pathlib.Path, role_env_dict: dict, args: 
     if role_node_path.exists():
         if role_node_target_path:
             role_node_deploy_file = role_node_target_path.joinpath("deploy.yml")
-            _cmds.append(share.role_print(role_title, "copy node", cluster_name))
-            _cmds.append("find {0} -maxdepth 1 ! -path {0} ! -name deploy.yml -exec cp -rv -t {1}/".format(role_node_target_path.as_posix(), role_path.as_posix()) + " {} \\;")
+            share.run_cmd(share.flat_to_str([
+                share.role_print(role_title, "copy node", cluster_name),
+                "find {0} -maxdepth 1 ! -path {0} ! -name deploy.yml -exec cp -rv -t {1}/".format(role_node_target_path.as_posix(), role_path.as_posix()) + " {} \\;"
+            ], delimiter=" && "))
 
     def docker_compose_cmd(option):
         role_deploy_files = [
