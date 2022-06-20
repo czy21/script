@@ -64,7 +64,7 @@ def get_recreate_command(host, port, user, password, db_name) -> str:
         "--execute \"{0}\"".format("".join(
             [
                 "drop database if exists {0};".format(db_name),
-                "create database if not exists {0} default charset utf8mb4 collate utf8mb4_0900_ai_ci;".format(db_name),
+                "create database if not exists {0} default charset utf8mb4 collate utf8mb4_unicode_ci;".format(db_name),
             ])
         )
     ]
