@@ -18,9 +18,10 @@ Export-EsxImageProfile -ImageProfile $newImageProfileName -ExportToIso -FilePath
 .\ESXi-Customizer-PS-v2.6.0.ps1 -izip .\VMware-ESXi-7.0U2-17630552-depot.zip -pkgDir C:\Users\bruce\Desktop\esxi\pkg\
 ```
 
-## install linux
 ```powershell
 # 程序和功能开启 虚拟机平台;windows 子系统
 wsl --list --online # list onine distribution
 wsl --install --distribution ubuntu-20.04
+
+# 安装git bash时 使用外部openssh
 ```
