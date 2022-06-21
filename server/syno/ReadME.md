@@ -11,10 +11,6 @@ sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 vim /var/packages/Docker/etc/dockerd.json
 # restart docker
 systemctl restart pkg-Docker-dockerd.service
-#cd /volume1/@appstore/py3k/usr/local/lib/python3.5/site-packages
-#curl -k https://bootstrap.pypa.io/pip/3.5/get-pip.py | python3
-#ln -s /var/packages/py3k/target/usr/local/bin/pip3 /usr/local/bin/pip3
-#ln -s /usr/local/bin/pip3 /usr/bin/pip3
 ```
 
 ```bash
