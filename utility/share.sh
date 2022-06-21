@@ -9,8 +9,9 @@ function upload_exec_py() {
   local temp_path=${name_path}/___temp/
   local utility_dir=$(cd ${pwd_path}/../../utility; pwd)
   local prune_cmd='rm -rf $HOME/'${name_path}';'
-  local ssh_cmd="ssh -o StrictHostKeyChecking=no ${host}"
-  local scp_cmd="scp -o StrictHostKeyChecking=no -rqC"
+  local ssh_opt="-o StrictHostKeyChecking=no"
+  local ssh_cmd="ssh ${ssh_opt} ${host}"
+  local scp_cmd="scp ${ssh_opt} -rqC"
 
   ${scp_cmd} ${pwd_path} $host:
   ${scp_cmd} ${pwd_path}/../requirements.txt ${pwd_path}/../env.yaml ${utility_dir}/share.py $host:${name_path}
