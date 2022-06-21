@@ -30,6 +30,8 @@ def build() {
     // build
     switch (env.param_code_type) {
         case "java":
+            env.JAVA_HOME = "${tool 'jdk-17'}"
+            env.PATH = "${JAVA_HOME}/bin:${PATH}"
             gradle_cmd = Util.format(
                 "chmod +x {0}/gradlew && {0}/gradlew --gradle-user-home {1} --init-script {2} --build-file {0}/build.gradle {3} -x test",
                 env.param_project_root,
