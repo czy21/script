@@ -7,6 +7,7 @@ def build() {
         param_obj = load ".jenkins/default_param.groovy"
     }
     param_obj.param.each{ k,v->
+      sh "echo ${env.getProperty(k)}"
       if (env.getProperty(k) == null) {
         println(k)
         env.setProperty(k,v)
