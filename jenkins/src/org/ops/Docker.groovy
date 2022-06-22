@@ -30,10 +30,10 @@ def build() {
     env.PATH = "${JAVA_HOME}/bin:${GO_HOME}/bin:${NODEJS_HOME}/bin:${PATH}"
 
     Map<String, Runnable> toolMap = new HashMap<>();
-    toolMap.put("java", () -> {
+    toolMap.put("java", {
         sh "echo ${env.param_release_version}"
     });
-    toolMap.put("web", ()-> {
+    toolMap.put("web",{
 
     })
     toolMap.get("java").run()
