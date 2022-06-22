@@ -43,7 +43,6 @@ def build() {
     switch (env.param_code_type) {
         case "java":
             tools.get(env.param_code_type).run()
-            sh "java --version"
             build_cmd = Util.format(
                 "chmod +x {0}/gradlew && {0}/gradlew --gradle-user-home {1} --init-script {2} --build-file {0}/build.gradle {3} -x test --refresh-dependencies",
                 env.param_project_root,
