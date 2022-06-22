@@ -4,8 +4,8 @@ package org.ops
 def apply() {
 
     // prepare
-    configFileProvider([configFile(fileId: "${env.param_global_env_file_id}", targetLocation: 'global_env.groovy', variable: 'ENV_CONFIG')]) {
-        load "global_env.groovy";
+    configFileProvider([configFile(fileId: "${env.param_global_env_file_id}", targetLocation: '.jenkins-build/global.env')]) {
+        load ".jenkins-build/global.env";
     }
 
     switch (env.param_code_type) {
