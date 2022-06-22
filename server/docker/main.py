@@ -67,10 +67,7 @@ def invoke(role_title: str, role_path: pathlib.Path, role_env_dict: dict, args: 
     if args.build_file == "Dockerfile":
         registry_url = role_env_dict['param_registry_url']
         registry_dir = role_env_dict['param_registry_dir']
-        registry_username = role_env_dict['param_registry_username']
-        registry_password = role_env_dict['param_registry_password']
         _cmds.append(share.role_print(role_title, "build", role_docker_file.as_posix()))
-        _cmds.append('sudo docker login {0} --username {1} --password {2}'.format(registry_url, registry_username, registry_password))
         if role_docker_file.exists():
             docker_image_tag = "/".join([str(p).strip("/") for p in [registry_url, registry_dir, role_name]])
             _cmds.append("docker build --tag {0} --file {1} {2}".format(docker_image_tag, role_docker_file.as_posix(), role_path.as_posix()))
