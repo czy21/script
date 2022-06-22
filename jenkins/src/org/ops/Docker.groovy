@@ -4,9 +4,9 @@ package org.ops
 def build() {
     // prepare
     configFileProvider([configFile(fileId: "${env.param_global_env_file_id}", targetLocation: '.jenkins/default_param.groovy')]) {
-        load ".jenkins/default_param.groovy"
+        param_obj = load ".jenkins/default_param.groovy"
     }
-    param.each{ k,v->
+    param_obj.param.each{ k,v->
       if (env.getProperty(k) == null) {
         env.setProperty(k,v)
       }
