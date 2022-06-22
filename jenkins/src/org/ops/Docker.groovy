@@ -3,8 +3,13 @@ package org.ops
 
 def build() {
     // prepare
-    configFileProvider([configFile(fileId: "${env.param_global_env_file_id}", targetLocation: '.jenkins/global.env')]) {
-        load ".jenkins/global.env";
+    configFileProvider([configFile(fileId: "${env.param_global_env_file_id}", targetLocation: '.jenkins/default_param.groovy')]) {
+        load ".jenkins/default_param.groovy"
+        param.each{k,v->{
+          if (env.getProperty(k) == null) {
+            env.setProperty(k,v)
+          }
+        }
     }
     env.param_project_context = Util.ofPath(env.param_project_root, env.param_project_module)
     env.param_release_version = params.param_branch
@@ -20,7 +25,7 @@ def build() {
                              : Util.ofPath(env.param_project_root,env.param_docker_context)
     env.param_docker_file = Util.ofPath(env.param_docker_context,"Dockerfile")
 
-    tools = [
+    tool = [
       java: {
         env.JAVA_HOME = "${tool 'jdk-17'}"
         env.PATH = "${JAVA_HOME}/bin:${PATH}"
@@ -39,9 +44,9 @@ def build() {
         env.PATH = "${NODEJS_HOME}/bin:${PATH}"
       }
     ]
-    cmds=[
+    cmd = [
       java: {
-        tools.get("java").call()
+        tool.get("java").call()
         return Util.format(
             "chmod +x {0}/gradlew && {0}/gradlew --gradle-user-home {1} --init-script {2} --build-file {0}/build.gradle {3} -x test --refresh-dependencies",
             env.param_project_root,
@@ -51,14 +56,14 @@ def build() {
         )
       },
       go: {
-        tools.get("go").call()
+        tool.get("go").call()
         return Util.format(
            "cd {0};go build -o build main.go;",
            env.param_project_context
         )
       },
       web: {
-        tools.get("web").call()
+        tool.get("web").call()
         yarn_cmd = Util.format(
             "yarn --cwd {0} --registry {1} --cache-folder {2}",
             env.param_project_context,
@@ -69,12 +74,12 @@ def build() {
       },
       shell: {
         if (Util.isNotEmpty(env.param_tools)) {
-         env.param_tools.split(",").each{ t -> tools.get(t).call() }
+         env.param_tools.split(",").each{ t -> tool.get(t).call() }
         }
         return Util.format("chmod +x {0};{0}",Util.ofPath(env.param_project_root,env.param_project_shell_file))
       }
     ]
-    sh "${cmds.get(env.param_code_type).call()}"
+    sh "${cmd.get(env.param_code_type).call()}"
     sh "docker build --tag ${env.param_release_name}:${env.param_release_version} --file ${env.param_docker_file} ${env.param_docker_context}"
     configFileProvider([configFile(fileId: "docker-config", targetLocation: '.jenkins/docker/config.json')]) {
         sh "docker --config .jenkins/docker/ push ${env.param_release_name}:${env.param_release_version}"
