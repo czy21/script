@@ -20,12 +20,12 @@ def build() {
                              : Util.ofPath(env.param_project_root,env.param_docker_context)
     env.param_docker_file = Util.ofPath(env.param_docker_context,"Dockerfile")
 
-    Map<String, Runnable> tools = new HashMap<>();
-    tools.put("java", {
+    Map<String, Runnable> tools = new HashMap<>()
+    tools["java"] = {
         env.JAVA_HOME = "${tool 'jdk-17'}"
         env.PATH = "${JAVA_HOME}/bin:${PATH}"
-    });
-    tools.put("go", {
+    }
+    tools["go"] = {
         env.GO_HOME = "${tool 'go-v1.18.2'}"
         env.GOPROXY = env.param_go_proxy
         env.GOCACHE = env.param_go_cache
@@ -33,11 +33,11 @@ def build() {
         env.GOMODCACHE = env.param_go_mod_cache
         env.CGO_ENABLED = "0"
         env.PATH = "${GO_HOME}/bin:${PATH}"
-    });
-    tools.put("web",{
+    }
+    tools["web"] = {
         env.NODEJS_HOME = "${tool 'node-v16.14.0'}"
         env.PATH = "${NODEJS_HOME}/bin:${PATH}"
-    })
+    }
 
     build_cmd = ""
     switch (env.param_code_type) {
