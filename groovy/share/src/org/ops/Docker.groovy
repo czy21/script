@@ -28,7 +28,7 @@ def build() {
     env.GOMODCACHE = env.param_go_mod_cache
     env.CGO_ENABLED = "0"
     env.PATH = "${JAVA_HOME}/bin:${GO_HOME}/bin:${NODEJS_HOME}/bin:${PATH}"
-    // build
+
     build_cmd = ""
     switch (env.param_code_type) {
         case "java":
@@ -63,11 +63,7 @@ def build() {
             println(env.param_code_type + " not config" as String);
             return;
     }
-    if (Util.isNotEmpty(build_cmd)){
-      sh "${build_cmd}"
-    }
-
-    // docker push
+    sh "${build_cmd}"
     sh "docker login ${env.param_registry_repo} --username ${env.param_registry_username} --password ${env.param_registry_password}"
     sh "docker build --tag ${env.param_release_name}:${env.param_release_version} --file ${env.param_docker_file} ${env.param_docker_context}"
     sh "docker push ${env.param_release_name}:${env.param_release_version}"
