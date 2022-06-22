@@ -5,8 +5,9 @@ def apply() {
 
     // prepare
     configFileProvider([configFile(fileId: "${env.param_global_env_file_id}", targetLocation: '.jenkins/default_param.groovy')]) {
-        def default_param = load ".jenkins/default_param.groovy"
-        default_param.param.each{ k,v->
+        load ".jenkins/default_param.groovy"
+        sh "echo ${param.param_helm_repo}"
+        param.each{ k,v->
           if (env.getProperty(k) == null) {
             env.setProperty(k,v)
           }
