@@ -3,8 +3,8 @@ package org.ops
 
 def build() {
     // prepare
-    configFileProvider([configFile(fileId: "${env.param_global_env_file_id}", targetLocation: 'global_env.groovy', variable: 'ENV_CONFIG')]) {
-        load "global_env.groovy";
+    configFileProvider([configFile(fileId: "${env.param_global_env_file_id}", targetLocation: 'global.env', variable: 'ENV_CONFIG')]) {
+        load "global.env";
     }
     env.param_project_context = Util.ofPath(env.param_project_root, env.param_project_module)
     env.param_release_version = params.param_branch
@@ -64,11 +64,10 @@ def build() {
             return;
     }
     sh "${build_cmd}"
-    configFileProvider([configFile(fileId: "docker-config", targetLocation: 'docker_config', variable: 'ENV_CONFIG')]) {
-        sh 'cat docker_config'
+    sh "docker build --tag ${env.param_release_name}:${env.param_release_version} --file ${env.param_docker_file} ${env.param_docker_context}"
+    configFileProvider([configFile(fileId: "docker-config", targetLocation: 'docker-config.json')]) {
+        sh "docker --config docker-config.json push ${env.param_release_name}:${env.param_release_version}"
     }
-//     sh "docker build --tag ${env.param_release_name}:${env.param_release_version} --file ${env.param_docker_file} ${env.param_docker_context}"
-//     sh "docker push ${env.param_release_name}:${env.param_release_version}"
 }
 
 return this
