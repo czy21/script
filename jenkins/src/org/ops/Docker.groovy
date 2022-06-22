@@ -3,9 +3,10 @@ package org.ops
 
 def build() {
     // prepare
+    def param = [:]
     configFileProvider([configFile(fileId: "${env.param_global_env_file_id}", targetLocation: '.jenkins/default_param.groovy')]) {
-        def default_param = load ".jenkins/default_param.groovy"
-        default_param.param.each{ k,v->
+        load ".jenkins/default_param.groovy"
+        param.each{ k,v->
           if (env.getProperty(k) == null) {
             env.setProperty(k,v)
           }
