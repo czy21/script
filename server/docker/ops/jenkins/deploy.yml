@@ -9,7 +9,7 @@ x-traefik-label: &traefik-label
 services:
 
   jenkins:
-    image: jenkins/jenkins:lts-slim-jdk11
+    image: jenkins/jenkins:2.355-jdk11
     pull_policy: always
     container_name: jenkins
     labels:
@@ -27,4 +27,3 @@ services:
       JENKINS_UC: https://mirrors.aliyun.com/jenkins/updates/update-center.json
       JENKINS_UC_EXPERIMENTAL: https://mirrors.aliyun.com/jenkins/updates/experimental/update-center.json
     restart: always
-
