@@ -39,47 +39,42 @@ def build() {
         env.PATH = "${NODEJS_HOME}/bin:${PATH}"
       }
     ]
-    build_cmd = ""
-    switch (env.param_code_type) {
-        case "java":
-            tools.get(env.param_code_type).call()
-            build_cmd = Util.format(
-                "chmod +x {0}/gradlew && {0}/gradlew --gradle-user-home {1} --init-script {2} --build-file {0}/build.gradle {3} -x test --refresh-dependencies",
-                env.param_project_root,
-                env.param_gradle_user_home,
-                env.param_gradle_init_file,
-                ["clean", "build"].collect { t -> Util.join(":",env.param_project_module, t) }.join(" ")
-            )
-            break;
-        case "go":
-            tools.get(env.param_code_type).call()
-            build_cmd = Util.format(
-               "cd {0};go build -o build main.go;",
-               env.param_project_context
-            )
-            break;
-        case "python":
-            break;
-        case "web":
-            tools.get(env.param_code_type).call()
-            yarn_cmd = Util.format(
-                "yarn --cwd {0} --registry {1} --cache-folder {2}",
-                env.param_project_context,
-                env.param_npm_repo,
-                env.param_yarn_cache
-            )
-            build_cmd = Util.format("{0} install --no-lockfile --update-checksums && {0} --ignore-engines build",yarn_cmd)
-            break;
-        case "shell":
-            if (Util.isNotEmpty(env.param_tools)) {
-             env.param_tools.split(",").each{ t -> tools.get(t).call() }
-            }
-            build_cmd = Util.format("chmod +x {0};{0}",Util.ofPath(env.param_project_root,env.param_project_shell_file))
-        default:
-            println(env.param_code_type + " not config" as String);
-            return;
-    }
-    sh "${build_cmd}"
+    cmds=[
+      java: {
+        tools.get("java").call()
+        return Util.format(
+            "chmod +x {0}/gradlew && {0}/gradlew --gradle-user-home {1} --init-script {2} --build-file {0}/build.gradle {3} -x test --refresh-dependencies",
+            env.param_project_root,
+            env.param_gradle_user_home,
+            env.param_gradle_init_file,
+            ["clean", "build"].collect { t -> Util.join(":",env.param_project_module, t) }.join(" ")
+        )
+      },
+      go: {
+        tools.get("go").call()
+        return Util.format(
+           "cd {0};go build -o build main.go;",
+           env.param_project_context
+        )
+      },
+      web: {
+        tools.get("web").call()
+        yarn_cmd = Util.format(
+            "yarn --cwd {0} --registry {1} --cache-folder {2}",
+            env.param_project_context,
+            env.param_npm_repo,
+            env.param_yarn_cache
+        )
+        return Util.format("{0} install --no-lockfile --update-checksums && {0} --ignore-engines build",yarn_cmd)
+      },
+      shell: {
+        if (Util.isNotEmpty(env.param_tools)) {
+         env.param_tools.split(",").each{ t -> tools.get(t).call() }
+        }
+        return Util.format("chmod +x {0};{0}",Util.ofPath(env.param_project_root,env.param_project_shell_file))
+      }
+    ]
+    sh "${cmds.get(env.param_code_type).call()}"
     sh "docker build --tag ${env.param_release_name}:${env.param_release_version} --file ${env.param_docker_file} ${env.param_docker_context}"
     configFileProvider([configFile(fileId: "docker-config", targetLocation: '.jenkins/docker/config.json')]) {
         sh "docker --config .jenkins/docker/ push ${env.param_release_name}:${env.param_release_version}"
