@@ -64,9 +64,11 @@ def build() {
             return;
     }
     sh "${build_cmd}"
-    sh "docker login ${env.param_registry_repo} --username ${env.param_registry_username} --password ${env.param_registry_password}"
-    sh "docker build --tag ${env.param_release_name}:${env.param_release_version} --file ${env.param_docker_file} ${env.param_docker_context}"
-    sh "docker push ${env.param_release_name}:${env.param_release_version}"
+    configFileProvider([configFile(fileId: "docker-config", targetLocation: 'docker_config', variable: 'ENV_CONFIG')]) {
+        sh 'cat ${docker_config}'
+    }
+//     sh "docker build --tag ${env.param_release_name}:${env.param_release_version} --file ${env.param_docker_file} ${env.param_docker_context}"
+//     sh "docker push ${env.param_release_name}:${env.param_release_version}"
 }
 
 return this
