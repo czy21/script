@@ -4,7 +4,7 @@ package org.ops
 def apply() {
 
     // prepare
-    def param = [:]
+    param = [:]
     configFileProvider([configFile(fileId: "${env.param_global_env_file_id}", targetLocation: '.jenkins/default_param.groovy')]) {
         load ".jenkins/default_param.groovy"
         param.each{ k,v->
