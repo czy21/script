@@ -63,7 +63,7 @@ def build() {
             println(env.param_code_type + " not config" as String);
             return;
     }
-    if (Util.isNotEmpty(build_cmd){
+    if (Util.isNotEmpty(build_cmd)){
       sh "${build_cmd}"
     }
 
