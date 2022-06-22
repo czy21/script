@@ -4,8 +4,13 @@ package org.ops
 def apply() {
 
     // prepare
-    configFileProvider([configFile(fileId: "${env.param_global_env_file_id}", targetLocation: '.jenkins/global.env')]) {
-        load ".jenkins/global.env";
+    configFileProvider([configFile(fileId: "${env.param_global_env_file_id}", targetLocation: '.jenkins/default_param.groovy')]) {
+        load ".jenkins/default_param.groovy"
+        param.each{k,v->{
+          if (env.getProperty(k) == null) {
+            env.setProperty(k,v)
+          }
+        }
     }
 
     switch (env.param_code_type) {
