@@ -3,14 +3,13 @@ package org.ops
 
 def build() {
     // prepare
-    param = [:]
     configFileProvider([configFile(fileId: "${env.param_global_env_file_id}", targetLocation: '.jenkins/default_param.groovy')]) {
         load ".jenkins/default_param.groovy"
-        param.each{ k,v->
-          if (env.getProperty(k) == null) {
-            env.setProperty(k,v)
-          }
-        }
+    }
+    param.each{ k,v->
+      if (env.getProperty(k) == null) {
+        env.setProperty(k,v)
+      }
     }
     env.param_project_context = Util.ofPath(env.param_project_root, env.param_project_module)
     env.param_release_version = params.param_branch
