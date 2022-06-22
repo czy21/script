@@ -72,7 +72,7 @@ def build() {
             break;
         case "shell":
             if (Util.isNotEmpty(env.param_tools)) {
-             env.param_tools.split(",").forEach({ t -> tools.get(t).run() })
+             env.param_tools.split(",").each{ t -> tools.get(t).run() }
             }
             build_cmd = Util.format("chmod +x {0};{0}",Util.ofPath(env.param_project_root,env.param_project_shell_file))
         default:
