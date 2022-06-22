@@ -5,7 +5,10 @@ def build() {
     // prepare
     configFileProvider([configFile(fileId: "${env.param_global_env_file_id}", targetLocation: '.jenkins/default_param.groovy')]) {
         param_obj = load ".jenkins/default_param.groovy"
+        sh "echo ${param_obj}"
+        sh "echo ${param_obj.param}"
     }
+    
     param_obj.param.each{ k,v->
       sh "echo ${env.getProperty(k)}"
       if (env.getProperty(k) == null) {
