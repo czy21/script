@@ -3,8 +3,8 @@ package org.ops
 
 def build() {
     // prepare
-    configFileProvider([configFile(fileId: "${env.param_global_env_file_id}", targetLocation: '.jenkins-build/global.env')]) {
-        load ".jenkins-build/global.env";
+    configFileProvider([configFile(fileId: "${env.param_global_env_file_id}", targetLocation: '.jenkins/global.env')]) {
+        load ".jenkins/global.env";
     }
     env.param_project_context = Util.ofPath(env.param_project_root, env.param_project_module)
     env.param_release_version = params.param_branch
@@ -65,8 +65,8 @@ def build() {
     }
     sh "${build_cmd}"
     sh "docker build --tag ${env.param_release_name}:${env.param_release_version} --file ${env.param_docker_file} ${env.param_docker_context}"
-    configFileProvider([configFile(fileId: "docker-config", targetLocation: '.jenkins-build/docker/config.json')]) {
-        sh "docker --config .jenkins-build/docker/ push ${env.param_release_name}:${env.param_release_version}"
+    configFileProvider([configFile(fileId: "docker-config", targetLocation: '.jenkins/docker/config.json')]) {
+        sh "docker --config .jenkins/docker/ push ${env.param_release_name}:${env.param_release_version}"
     }
 }
 
