@@ -29,6 +29,17 @@ def build() {
     env.CGO_ENABLED = "0"
     env.PATH = "${JAVA_HOME}/bin:${GO_HOME}/bin:${NODEJS_HOME}/bin:${PATH}"
 
+    Map<String, Runnable> toolMap = new HashMap<>();
+    toolMap.put("java", () -> {
+        sh "echo ${env.param_release_version}"
+    });
+    toolMap.put("web", ()-> {
+
+    })
+    toolMap.get("java").run()
+
+
+
     build_cmd = ""
     switch (env.param_code_type) {
         case "java":
