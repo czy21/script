@@ -8,10 +8,11 @@ def build() {
     }
     param_obj.param.each{ k,v->
       if (env.getProperty(k) == null) {
+        println(k)
         env.setProperty(k,v)
+        sh "printenv"
       }
     }
-    sh "echo ${env.param_registry_repo}"
 //     env.param_project_context = Util.ofPath(env.param_project_root, env.param_project_module)
 //     env.param_release_version = params.param_branch
 //     env.param_release_name = Util.ofPath(
