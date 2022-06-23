@@ -2,8 +2,8 @@
 package org.ops.util
 
 @NonCPS
-static def sortMapByKey(items) {
-    return items.sort { t -> t.key }
+static def sortMapByKey(Map<String, Object> map) {
+    return map.sort { t -> t.key }
 }
 
 return this
