@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 import inspect
 
-from script.domain.default import common as default_common
-from script.utility import basic as basic_util, collection as list_util, path as path_util, log
+from domain.default import common as default_common
+from utility import basic as basic_util, collection as list_util, path as path_util, log
 
 logger = log.Logger(__name__)
 
