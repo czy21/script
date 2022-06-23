@@ -44,7 +44,7 @@ def call() {
                     script {
                         configFileProvider([configFile(fileId: "${env.param_global_env_file_id}", variable: 'default_param')]) {
                             param = load "${default_param}"
-                            sh "${param}"
+                            sh "echo ${param}"
                             param.each{ k,v->
                               if (env.getProperty(k) == null) {
                                 env.setProperty(k,v)
