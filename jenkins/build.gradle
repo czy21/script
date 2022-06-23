@@ -32,4 +32,9 @@ sourceSets {
             srcDirs = ['src', "vars"]
         }
     }
+    test {
+        groovy {
+            srcDirs = ['test']
+        }
+    }
 }

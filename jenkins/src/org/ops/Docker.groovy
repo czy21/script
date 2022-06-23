@@ -69,7 +69,7 @@ def build() {
             },
             shell: {
                 if (StringUtils.isNotEmpty(env.param_tools)) {
-                    env.param_tools.split { "," }.each { tool.get(it).call() }
+                    env.param_tools.split(",").each { tool.get(it).call() }
                 }
                 return StringUtils.format("chmod +x {0};{0}", PathUtils.ofPath(env.param_project_root, env.param_project_shell_file))
             }
