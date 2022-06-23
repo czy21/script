@@ -2,7 +2,7 @@
 package org.ops
 
 @groovy.transform.Field
-def tool = [
+def code_tool = [
   java: {
     env.JAVA_HOME = "${tool 'jdk-17'}"
     env.PATH = "${JAVA_HOME}/bin:${PATH}"
@@ -24,7 +24,7 @@ def tool = [
 @groovy.transform.Field
 def cmd = [
   java: {
-    tool.get("java").call()
+    code_tool.get("java").call()
     return Util.format(
         "chmod +x {0}/gradlew && {0}/gradlew --gradle-user-home {1} --init-script {2} --build-file {0}/build.gradle {3} -x test --refresh-dependencies",
         env.param_project_root,
@@ -34,14 +34,14 @@ def cmd = [
     )
   },
   go: {
-    tool.get("go").call()
+    code_tool.get("go").call()
     return Util.format(
        "cd {0};go build -o build main.go;",
        env.param_project_context
     )
   },
   web: {
-    tool.get("web").call()
+    code_tool.get("web").call()
     yarn_cmd = Util.format(
         "yarn --cwd {0} --registry {1} --cache-folder {2}",
         env.param_project_context,
@@ -52,7 +52,7 @@ def cmd = [
   },
   shell: {
     if (Util.isNotEmpty(env.param_tools)) {
-     env.param_tools.split(",").each{ t -> tool.get(t).call() }
+     env.param_tools.split(",").each{ t -> code_tool.get(t).call() }
     }
     return Util.format("chmod +x {0};{0}",Util.ofPath(env.param_project_root,env.param_project_shell_file))
   }
