@@ -21,6 +21,14 @@ def call() {
             stage('deploy') {
                 steps {
                     script {
+                        configFileProvider([configFile(fileId: "${env.param_global_env_file_id}", targetLocation: '.jenkins/default_param.groovy')]) {
+                            param = load ".jenkins/default_param.groovy"
+                            param.each{ k,v->
+                              if (env.getProperty(k) == null) {
+                                env.setProperty(k,v)
+                              }
+                            }
+                        }
                         new org.ops.K8s().apply()
                     }
                 }
