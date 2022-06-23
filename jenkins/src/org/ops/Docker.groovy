@@ -75,7 +75,7 @@ static def build(script) {
             }
     ]
     def build_cmd = cmd.get(script.env.param_code_type).call()
-    Common.writeParamToYaml(this)
+    Common.writeParamToYaml(script)
     script.sh "${build_cmd}"
     script.sh "docker build --tag ${script.env.param_release_name}:${script.env.param_release_version} --file ${script.env.param_docker_file} ${script.env.param_docker_context}"
     script.configFileProvider([script.configFile(fileId: "docker-config", targetLocation: '.jenkins/docker/config.json')]) {
