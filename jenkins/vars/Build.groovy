@@ -1,4 +1,5 @@
 #!/usr/bin/env groovy
+import org.ops.Docker
 import org.ops.util.PathUtils
 
 def call() {
@@ -10,7 +11,7 @@ def call() {
             param_go_mod_cache = "/var/jenkins_home/tools/go/pkg/mod"
             param_go_cache = "/var/jenkins_home/tools/go/cache/go-build"
             param_yarn_cache = "/var/jenkins_home/tools/yarn/cache"
-            param_project_root = PathUtils.ofPath(WORKSPACE,"${env.param_project_root}")
+            param_project_root = PathUtils.ofPath(WORKSPACE, "${env.param_project_root}")
             param_project_name = "${env.param_project_name}"
             param_project_module = "${env.param_project_module}"
             param_git_repository_url = "${env.param_git_repository_url}"
@@ -44,13 +45,13 @@ def call() {
                     script {
                         configFileProvider([configFile(fileId: "${env.param_global_env_file_id}", variable: 'param')]) {
                             param = load "${param}"
-                            param.each{ k,v->
-                              if (env.getProperty(k) == null) {
-                                env.setProperty(k,v)
-                              }
+                            param.each { k, v ->
+                                if (env.getProperty(k) == null) {
+                                    env.setProperty(k, v)
+                                }
                             }
                         }
-                        new org.ops.Docker().build()
+                        Docker.build(this)
                     }
                 }
             }
