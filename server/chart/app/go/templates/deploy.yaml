@@ -35,16 +35,16 @@ spec:
             name: {{ .Release.Name }}
         - name: data
           persistentVolumeClaim:
-            claimName: {{ .Values.data_claim_name }}
+            claimName: {{ .Values.param_data_claim_name }}
       containers:
         - name: {{ .Release.Name }}
-          image: {{ .Values.registry_repo }}/{{ .Values.registry_dir }}/{{ .Release.Name }}:{{ .Values.release_version }}
+          image: {{ .Values.param_registry_repo }}/{{ .Values.param_registry_dir }}/{{ .Release.Name }}:{{ .Values.param_release_version }}
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
           env:
             - name: APP_ARGS
-              value: {{ .Values.app_args }}
+              value: {{ .Values.param_app_args }}
           volumeMounts:
             - name: conf
               mountPath: /app/conf/
