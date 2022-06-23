@@ -24,11 +24,11 @@ def apply() {
     ]
     release.get(env.param_code_type).call()
 
-    // k8s apply
-    sh 'env | grep \'^param_\' | sed \'s/=/: /\' | sed \'s/^param_//\' > values.yaml'
+    def param = readProperties text: sh(script: 'env | grep \'^param_\'', returnStdout: true).trim()
+    writeYaml file: '.jenkins/param.yaml', data: param, charset: 'UTF-8', overwrite: true
     withKubeConfig([credentialsId: env.param_kube_credential, serverUrl: env.param_kube_server]) {
         helm_cmd = StringUtils.format(
-            "helm upgrade --install {0} {1} --version {2} --namespace {3} --repo {4} --values values.yaml --output yaml",
+            "helm upgrade --install {0} {1} --version {2} --namespace {3} --repo {4} --values .jenkins/param.yaml --output yaml",
             env.param_release_name,
             env.param_release_chart_name,
             env.param_release_chart_version,
