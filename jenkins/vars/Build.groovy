@@ -9,7 +9,7 @@ def call() {
     env.param_go_mod_cache = "/var/jenkins_home/tools/go/pkg/mod"
     env.param_go_cache = "/var/jenkins_home/tools/go/cache/go-build"
     env.param_yarn_cache = "/var/jenkins_home/tools/yarn/cache"
-    env.param_project_root = PathUtils.ofPath("${WORKSPACE}", "${env.param_project_root}")
+    env.param_project_root = PathUtils.ofPath("${env.WORKSPACE}", "${env.param_project_root}")
     env.param_project_name = "${env.param_project_name}"
     env.param_project_module = "${env.param_project_module}"
     env.param_git_repository_url = "${env.param_git_repository_url}"
