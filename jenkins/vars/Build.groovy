@@ -1,5 +1,5 @@
 #!/usr/bin/env groovy
-import org.ops.Util
+import org.ops.util.PathUtils
 
 def call() {
     pipeline {
@@ -10,7 +10,7 @@ def call() {
             param_go_mod_cache = "/var/jenkins_home/tools/go/pkg/mod"
             param_go_cache = "/var/jenkins_home/tools/go/cache/go-build"
             param_yarn_cache = "/var/jenkins_home/tools/yarn/cache"
-            param_project_root = org.ops.Util.ofPath(WORKSPACE,"${env.param_project_root}")
+            param_project_root = PathUtils.ofPath(WORKSPACE,"${env.param_project_root}")
             param_project_name = "${env.param_project_name}"
             param_project_module = "${env.param_project_module}"
             param_git_repository_url = "${env.param_git_repository_url}"
