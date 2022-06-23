@@ -1,5 +1,5 @@
 #!/usr/bin/env groovy
-import org.ops.Helm
+import org.ops.Kubernetes
 
 def call() {
     pipeline {
@@ -30,7 +30,7 @@ def call() {
                                 }
                             }
                         }
-                        new Helm().deploy()
+                        new Kubernetes().deploy()
                     }
                 }
             }
