@@ -1,7 +1,8 @@
 #!/usr/bin/env groovy
 package org.ops
 
-tool = [
+@groovy.transform.Field
+def tool = [
   java: {
     env.JAVA_HOME = "${tool 'jdk-17'}"
     env.PATH = "${JAVA_HOME}/bin:${PATH}"
@@ -20,7 +21,8 @@ tool = [
     env.PATH = "${NODEJS_HOME}/bin:${PATH}"
   }
 ]
-cmd = [
+@groovy.transform.Field
+def cmd = [
   java: {
     tool.get("java").call()
     return Util.format(
