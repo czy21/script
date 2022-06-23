@@ -1,4 +1,5 @@
 #!/usr/bin/env groovy
+import org.ops.Helm
 
 def call() {
     pipeline {
@@ -23,13 +24,13 @@ def call() {
                     script {
                         configFileProvider([configFile(fileId: "${env.param_global_env_file_id}", variable: 'param')]) {
                             param = load "${param}"
-                            param.each{ k,v->
+                            param.each { k, v ->
                                 if (env.getProperty(k) == null) {
-                                    env.setProperty(k,v)
+                                    env.setProperty(k, v)
                                 }
                             }
                         }
-                        new org.ops.K8s().apply()
+                        new Helm().deploy()
                     }
                 }
             }
