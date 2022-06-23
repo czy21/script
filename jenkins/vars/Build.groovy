@@ -2,6 +2,7 @@
 import org.ops.Docker
 import org.ops.util.PathUtils
 
+
 def call() {
     pipeline {
         agent any
@@ -51,7 +52,7 @@ def call() {
                                 }
                             }
                         }
-                        Docker.build(this)
+                        new Docker().build()
                     }
                 }
             }
