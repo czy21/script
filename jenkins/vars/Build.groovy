@@ -50,7 +50,7 @@ def call() {
                               }
                             }
                         }
-                        new org.ops.Docker().build()
+                        new org.ops.Docker().build(this)
                     }
                 }
             }
