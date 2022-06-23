@@ -1,4 +1,5 @@
 import argparse
+import base64
 import itertools
 import pathlib
 import re
@@ -133,6 +134,19 @@ def loop_role_dict(role_dict: dict,
         role_func(role_title=role_title, role_path=role_path, role_env_dict=role_env_dict, args=args, **kwargs)
 
 
+def yaml_join_tag(loader, node):
+    return "".join(loader.construct_sequence(node, deep=True))
+
+
+def yaml_decode_tag(loader, node):
+    decode_args = loader.construct_sequence(node, deep=True)
+    decode_way = decode_args[0]
+    encode_val = decode_args[1]
+    if decode_way == "base64":
+        return base64.b64decode(encode_val).rstrip().decode("utf-8")
+    return encode_val
+
+
 class Installer:
     def __init__(self,
                  root_path: pathlib.Path,
@@ -148,7 +162,8 @@ class Installer:
         self.arg_parser: argparse.ArgumentParser = argparse.ArgumentParser()
 
     def run(self, **kwargs):
-        yaml.add_constructor('!join', lambda loader, node: "".join(loader.construct_sequence(node, deep=True)))
+        yaml.add_constructor('!join', yaml_join_tag)
+        yaml.add_constructor('!decode', yaml_decode_tag)
         self.arg_parser.add_argument('-p', '--param', nargs="+", default=[])
         self.arg_parser.add_argument('-i', '--install', action="store_true")
         self.arg_parser.add_argument('-d', '--delete', action="store_true")
