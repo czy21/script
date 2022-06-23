@@ -3,15 +3,6 @@ package org.ops
 
 def apply() {
 
-    // prepare
-    configFileProvider([configFile(fileId: "${env.param_global_env_file_id}", targetLocation: '.jenkins/default_param.groovy')]) {
-        param = load ".jenkins/default_param.groovy"
-        param.each{ k,v->
-          if (env.getProperty(k) == null) {
-            env.setProperty(k,v)
-          }
-        }
-    }
     switch (env.param_code_type) {
         case "java":
             env.param_release_chart_name = env.param_helm_java_chart_name
