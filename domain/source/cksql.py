@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 import inspect
 
-from script.domain.db_meta import cksql as cksql_meta
-from script.domain.default import common as default_common
-from script.domain.default import path as default_path
-from script.utility import db as db_util, collection as list_util, basic as basic_util, log
+from domain.db_meta import cksql as cksql_meta
+from domain.default import common as default_common
+from domain.default import path as default_path
+from utility import db as db_util, collection as list_util, basic as basic_util, log
 
 logger = log.Logger(__name__)
 

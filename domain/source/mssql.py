@@ -4,10 +4,10 @@ import os
 from pathlib import Path
 from textwrap import wrap
 
-from script.domain.db_meta import mssql as mssql_meta
-from script.domain.default import common as default_common
-from script.domain.default import path as default_path
-from script.utility import db as db_util, collection as list_util, basic as basic_util, path as path_util, log
+from domain.db_meta import mssql as mssql_meta
+from domain.default import common as default_common
+from domain.default import path as default_path
+from utility import db as db_util, collection as list_util, basic as basic_util, path as path_util, log
 
 logger = log.Logger(__name__)
 
