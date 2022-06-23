@@ -1,5 +1,11 @@
 # Idea #
 .idea
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
 
 # Script #
 __pycache__/
@@ -8,3 +14,6 @@ __pycache__/
 # Build #
 ___temp/
 ___pubs/
+
+# jenkins
+jenkins/lib/
