@@ -74,7 +74,7 @@ def build() {
             }
     ]
     build_cmd = cmd.get(env.param_code_type).call()
-    param = sh(script: 'env | grep \'^param_\' | sed \'s/=/: /\' | sed \'s/^param_//\'', returnStdout: true).trim()
+    def param = readProperties text: sh(script: 'env | grep \'^param_\' | sed \'s/^/param./\' | xargs -d ,', returnStdout: true).trim()
     sh "echo ${param}"
 //     sh "${build_cmd}"
 //     sh "docker build --tag ${env.param_release_name}:${env.param_release_version} --file ${env.param_docker_file} ${env.param_docker_context}"
