@@ -2,8 +2,8 @@
 import shutil
 from pathlib import Path
 
-from script.utility import log, basic as basic_util
-from script.utility import path as path_util
+from utility import log, basic as basic_util
+from utility import path as path_util
 
 logger = log.Logger(__name__)
 
