@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-from script.domain.default import path as default_path
-from script.utility import collection as list_util
-from script.utility import path as path_util
+from domain.default import path as default_path
+from utility import collection as list_util
+from utility import path as path_util
 
 param_project_name = ""
 param_env_suffix = ""

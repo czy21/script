@@ -1,14 +1,18 @@
 #!/usr/bin/env python3
 import argparse
 import importlib
+import importlib.util
+import importlib.machinery
 import io
 import json
 import os
+import pathlib
 import sys
 from pathlib import Path
 
-sys.path.append(Path(__file__).joinpath("../../").resolve().as_posix())
-from script.utility import log as log_util, basic as basic_util, path as path_util
+from utility import log as log_util, basic as basic_util, path as path_util
+
+sys.path.append(pathlib.Path(__file__).parent.parent.as_posix())
 
 
 def exec_file():
@@ -33,13 +37,13 @@ def exec_file():
         open(env_path.joinpath("../", log_file).resolve().as_posix(), 'w').close()
 
     # empty source log
-    default_path_module = importlib.import_module("script.domain.default.path")
+    default_path_module = importlib.import_module("domain.default.path")
     getattr(default_path_module, "re_mkdir")(rm_output=args.init)
 
     # injected param to global
     env_pwd_mod = importlib.import_module("".join(["shell.", env_stem, "._env"]))
     env_common_mod = env_pwd_mod.env_common
-    default_common_mod = importlib.import_module("script.domain.default.common")
+    default_common_mod = importlib.import_module("domain.default.common")
     env_output_json = path_util.pure_path_join(getattr(default_path_module, "output"), "env.json")
 
     if args.init:
