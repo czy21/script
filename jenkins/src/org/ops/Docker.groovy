@@ -75,7 +75,7 @@ def build() {
     ]
     build_cmd = cmd.get(env.param_code_type).call()
     def param = readProperties text: sh(script: 'env | grep \'^param_\'', returnStdout: true).trim()
-    writeFile file: '.jenkins/param.properties', text: param
+    writeYaml file: '.jenkins/param.yaml', data: param, charset: 'UTF-8'
 //     sh "${build_cmd}"
 //     sh "docker build --tag ${env.param_release_name}:${env.param_release_version} --file ${env.param_docker_file} ${env.param_docker_context}"
 //     configFileProvider([configFile(fileId: "docker-config", targetLocation: '.jenkins/docker/config.json')]) {
