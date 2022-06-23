@@ -14,12 +14,15 @@ repositories {
 
 dependencyManagement {
     imports {
-        mavenBom "io.jenkins.tools.bom:bom-2.289.x:1451.v15f1fdb_772a_f"
+        mavenBom "io.jenkins.tools.bom:bom-2.346.x:1451.v15f1fdb_772a_f"
+    }
+    dependencies {
+        dependency "org.apache.groovy:groovy:4.0.3"
     }
 }
 
 dependencies {
-    implementation 'org.apache.groovy:groovy:4.0.2'
+    implementation 'org.apache.groovy:groovy'
     implementation "org.jenkins-ci.plugins.workflow:workflow-cps"
 }
 
