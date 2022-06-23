@@ -20,7 +20,7 @@ static def isNotEmpty(String str) {
 }
 
 static def join(String delimiter, String... items) {
-    return items.findAll { t -> isNotEmpty(t) }.join(delimiter)
+    return items.findAll { isNotEmpty(it) }.join(delimiter)
 }
 
 static def format(String pattern, Object... arguments) {
