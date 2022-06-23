@@ -42,7 +42,16 @@ def call() {
             stage('build') {
                 steps {
                     script {
-                        new org.ops.Docker().build()
+                        configFileProvider([configFile(fileId: "${env.param_global_env_file_id}", targetLocation: '.jenkins/default_param.groovy')]) {
+                            def param = load ".jenkins/default_param.groovy"
+                            param.each{ k,v->
+                              if (env.getProperty(k) == null) {
+                                env.setProperty(k,v)
+                              }
+                            }
+                            sh "echo ${param}"
+                        }
+                        //new org.ops.Docker().build()
                     }
                 }
             }
