@@ -1,46 +1,21 @@
 import argparse
-import base64
 import itertools
 import pathlib
-import re
 import subprocess
 import sys
 
 import jinja2
 import yaml
 
-
-def flat(a): return sum(map(flat, a), []) if isinstance(a, list) else [a]
-
-
-def flat_to_str(*items: list, delimiter=" ") -> str:
-    return delimiter.join(flat(list(items)))
-
-
-def exclude_match(pattern, name):
-    return pattern is None or not bool(re.search(pattern, name))
-
-
-def read_file(file: pathlib.Path, read_func):
-    with open(file, mode="r", encoding="utf-8") as f:
-        return read_func(f)
-
-
-def write_file(file: pathlib.Path, write_func, mode: str = "w"):
-    with open(file, mode=mode, encoding="utf-8") as f:
-        write_func(f)
+from utility import collection as collection_util, file as file_util, regex as regex_util
 
 
 def dfs_dir(path: pathlib.Path, deep=1, exclude_pattern: str = None) -> list:
     ret = []
-    for p in filter(lambda a: a.is_dir() and exclude_match(exclude_pattern, a.as_posix()), sorted(path.iterdir())):
+    for p in filter(lambda a: a.is_dir() and regex_util.exclude_match(exclude_pattern, a.as_posix()), sorted(path.iterdir())):
         ret.append({"path": p, "deep": deep})
         ret += dfs_dir(p, deep + 1, exclude_pattern)
     return ret
-
-
-def get_files(path: pathlib.Path, remove_prefix: str = ""):
-    return [a.as_posix().replace(remove_prefix, "") for a in path.rglob("*") if a.is_file()]
 
 
 def role_print(role, content, exec_file=None) -> str:
@@ -61,12 +36,11 @@ def get_dir_dict(root_path: pathlib.Path, exclude_pattern=None, select_tip="", c
     return dict((t, dir_dict[t]) for t in dir_nums if t in dir_dict.keys())
 
 
-def select_option(deep: int = 1, excludes=None) -> dict:
+def select_option(root_path: pathlib.Path, deep: int = 1, excludes=None) -> dict:
     if excludes is None:
         excludes = []
-    excludes.append("___temp")
-    exclude_pattern = "({0})".format("|").join(set(excludes))
-    root_path = pathlib.Path(__file__).parent
+    excludes.extend(["___temp", "utility"])
+    exclude_pattern = "({0})".format("|".join(set(excludes)))
     flat_dirs = dfs_dir(root_path, exclude_pattern=exclude_pattern)
 
     app_path = root_path
@@ -117,34 +91,21 @@ def loop_role_dict(role_dict: dict,
             }
         }
         if role_env_file.exists():
-            role_env_dict.update(read_file(role_env_file, lambda f: yaml.full_load(f)))
+            role_env_dict.update(file_util.read_file(role_env_file, lambda f: yaml.full_load(f)))
         # parse jinja2 template
         for t in filter(lambda f: f.is_file(), role_path.rglob("*")):
-            _exclude_bools = [exclude_match(r, t.as_posix()) for r in jinja2ignore_rules]
+            _exclude_bools = [regex_util.exclude_match(r, t.as_posix()) for r in jinja2ignore_rules]
             if all(_exclude_bools):
-                template_value = read_file(t, lambda f: jinja2.Template(f.read()).render(**role_env_dict))
-                write_file(t, lambda f: f.write(template_value))
+                template_value = file_util.read_file(t, lambda f: jinja2.Template(f.read()).render(**role_env_dict))
+                file_util.write_file(t, lambda f: f.write(template_value))
         role_build_sh = role_path.joinpath("build.sh")
         if args.build_file == "build.sh":
             if role_build_sh.exists():
-                run_cmd(flat_to_str([
+                run_cmd(collection_util.flat_to_str([
                     role_print(role_title, "build", role_build_sh.as_posix()),
                     "bash {0}".format(role_build_sh.as_posix())
                 ], delimiter="&&"))
         role_func(role_title=role_title, role_path=role_path, role_env_dict=role_env_dict, args=args, **kwargs)
-
-
-def yaml_join_tag(loader, node):
-    return "".join(loader.construct_sequence(node, deep=True))
-
-
-def yaml_decode_tag(loader, node):
-    decode_args = loader.construct_sequence(node, deep=True)
-    decode_way = decode_args[0]
-    encode_val = decode_args[1]
-    if decode_way == "base64":
-        return base64.b64decode(encode_val).rstrip().decode("utf-8")
-    return encode_val
 
 
 class Installer:
@@ -162,8 +123,8 @@ class Installer:
         self.arg_parser: argparse.ArgumentParser = argparse.ArgumentParser()
 
     def run(self, **kwargs):
-        yaml.add_constructor('!join', yaml_join_tag)
-        yaml.add_constructor('!decode', yaml_decode_tag)
+        yaml.add_constructor('!join', file_util.yaml_join_tag)
+        yaml.add_constructor('!decode', file_util.yaml_decode_tag)
         self.arg_parser.add_argument('-p', '--param', nargs="+", default=[])
         self.arg_parser.add_argument('-i', '--install', action="store_true")
         self.arg_parser.add_argument('-d', '--delete', action="store_true")
@@ -176,7 +137,7 @@ class Installer:
         print(args)
 
         # select role
-        selected_dict = select_option(self.role_deep)
+        selected_dict = select_option(self.root_path, self.role_deep)
         selected_role_dict = selected_dict["role_dict"]
         selected_role_namespace = selected_dict["namespace"]
         if args.namespace is None:
@@ -185,7 +146,7 @@ class Installer:
         global_env_dict = {}
         # read env_file
         if self.env_file and self.env_file.exists():
-            global_env_dict.update(read_file(self.env_file, lambda f: yaml.full_load(f)))
+            global_env_dict.update(file_util.read_file(self.env_file, lambda f: yaml.full_load(f)))
         # read input param
         param_input_iter = iter(args.param)
         param_input_dict = dict(zip(param_input_iter, param_input_iter))
@@ -193,7 +154,7 @@ class Installer:
         # global env_dict finished
         global_jinja2ignore_rules = []
         if self.jinja2ignore_file and self.jinja2ignore_file.exists():
-            global_jinja2ignore_rules = read_file(self.jinja2ignore_file, lambda f: [t.strip("\n") for t in f.readlines()])
+            global_jinja2ignore_rules = file_util.read_file(self.jinja2ignore_file, lambda f: [t.strip("\n") for t in f.readlines()])
         # loop selected_role_dict
         loop_role_dict(
             root_path=self.root_path,
