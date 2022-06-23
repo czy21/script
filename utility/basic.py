@@ -4,7 +4,7 @@ import sys
 
 from colorama import Fore
 
-from script.utility import log
+import log
 
 
 def action_formatter(action_name, msg=None, action_color=Fore.YELLOW):
