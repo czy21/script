@@ -42,8 +42,9 @@ def call() {
             stage('build') {
                 steps {
                     script {
-                        configFileProvider([configFile(fileId: "${env.param_global_env_file_id}", variable: 'default_param')]) {
-                            load "${default_param}".each{ k,v->
+                        configFileProvider([configFile(fileId: "${env.param_global_env_file_id}", variable: 'param')]) {
+                            param = load "${param}"
+                            param.each{ k,v->
                               if (env.getProperty(k) == null) {
                                 env.setProperty(k,v)
                               }
