@@ -1,6 +1,8 @@
 #!/usr/bin/env groovy
 package org.ops
 
+import org.ops.util.StringUtils
+
 def apply() {
     release = [
       java: {
@@ -25,7 +27,7 @@ def apply() {
     // k8s apply
     sh 'env | grep \'^param_\' | sed \'s/=/: /\' | sed \'s/^param_//\' > values.yaml'
     withKubeConfig([credentialsId: env.param_kube_credential, serverUrl: env.param_kube_server]) {
-        helm_cmd = Util.format(
+        helm_cmd = StringUtils.format(
             "helm upgrade --install {0} {1} --version {2} --namespace {3} --repo {4} --values values.yaml --output yaml",
             env.param_release_name,
             env.param_release_chart_name,
