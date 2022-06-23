@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import argparse
 import configparser
 import io
 import itertools
@@ -7,6 +6,8 @@ import pathlib
 
 import share
 import yaml
+
+from utility import collection as collection_util
 
 
 def get_section_keys(k, v): return v["section"] if v.get("section") else ['@' + k]
@@ -50,7 +51,7 @@ def invoke(root_path: pathlib.Path, role_title: str, role_path: pathlib.Path, ro
             "mkdir -p {0}".format(role_bak_path.as_posix()),
             [echo_section(t, role_name, role_bak_conf) for t in meta_dict.items()]
         ]
-        share.run_cmd(share.flat_to_str(_bak_cmds, delimiter=" && "))
+        share.run_cmd(collection_util.flat_to_str(_bak_cmds, delimiter=" && "))
 
         type_parser = configparser.ConfigParser()
         type_parser.optionxform = str
@@ -75,7 +76,7 @@ def invoke(root_path: pathlib.Path, role_title: str, role_path: pathlib.Path, ro
                 t_file.write("\n".join(contents))
         _cmds.append(share.role_print(role_title, "backup"))
         _cmds.append("mkdir -p {0};cp -r {1}/* {0}/".format(bak_path.joinpath(role_name), role_bak_path))
-    _cmd_str = share.flat_to_str(_cmds, delimiter=" && ")
+    _cmd_str = collection_util.flat_to_str(_cmds, delimiter=" && ")
     share.run_cmd(_cmd_str)
 
 
