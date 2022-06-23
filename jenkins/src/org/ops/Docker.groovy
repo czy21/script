@@ -2,6 +2,7 @@
 package org.ops
 
 def build() {
+    sh "echo ${param}"
     env.param_project_context = Util.ofPath(env.param_project_root, env.param_project_module)
     env.param_release_version = params.param_branch
     env.param_release_name = Util.ofPath(
