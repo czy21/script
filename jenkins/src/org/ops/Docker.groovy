@@ -1,6 +1,7 @@
 #!/usr/bin/env groovy
 package org.ops
 
+import org.ops.util.CollectionUtils
 import org.ops.util.PathUtils
 import org.ops.util.StringUtils
 
@@ -75,6 +76,7 @@ def build() {
     ]
     build_cmd = cmd.get(env.param_code_type).call()
     def param = readProperties text: sh(script: 'env | grep \'^param_\'', returnStdout: true).trim()
+    param = CollectionUtils.sortMapByKey(param)
     writeYaml file: '.jenkins/param.yaml', data: param, charset: 'UTF-8', overwrite: true
      sh "${build_cmd}"
      sh "docker build --tag ${env.param_release_name}:${env.param_release_version} --file ${env.param_docker_file} ${env.param_docker_context}"
