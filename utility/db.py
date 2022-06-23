@@ -8,9 +8,11 @@ import subprocess
 import jinja2
 from colorama import Fore
 
-from script.utility import path as path_util, basic as basic_util, log
+import basic as basic_util
+import log as log_util
+import path as path_util
 
-logger = log.Logger(__name__)
+logger = log_util.Logger(__name__)
 
 
 def assemble_ql(s_path, t_file_name, db_meta, file_suffix, **kwargs) -> None:

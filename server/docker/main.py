@@ -2,6 +2,7 @@
 import argparse
 import pathlib
 
+from utility import collection as collection_util, file as file_util
 import share
 
 
@@ -23,7 +24,7 @@ def invoke(role_title: str, role_path: pathlib.Path, role_env_dict: dict, args: 
     if role_node_path.exists():
         if role_node_target_path:
             role_node_deploy_file = role_node_target_path.joinpath("deploy.yml")
-            share.run_cmd(share.flat_to_str([
+            share.run_cmd(collection_util.flat_to_str([
                 share.role_print(role_title, "copy node", cluster_name),
                 "find {0} -maxdepth 1 ! -path {0} ! -name deploy.yml -exec cp -rv -t {1}/".format(role_node_target_path.as_posix(), role_path.as_posix()) + " {} \\;"
             ], delimiter=" && "))
@@ -41,9 +42,9 @@ def invoke(role_title: str, role_path: pathlib.Path, role_env_dict: dict, args: 
         if role_conf_path.exists():
             target_role_conf_path = target_app_path.joinpath("conf")
             if target_role_conf_path.exists() and target_app_path.name == role_name:
-                role_conf_relative_files = set(share.get_files(role_conf_path, role_path.as_posix()))
+                role_conf_relative_files = set(file_util.get_files(role_conf_path, role_path.as_posix()))
                 if role_node_target_path and role_node_target_path.exists():
-                    role_node_target_conf_relative_files = share.get_files(role_node_target_path.joinpath("conf"), role_node_target_path.as_posix())
+                    role_node_target_conf_relative_files = file_util.get_files(role_node_target_path.joinpath("conf"), role_node_target_path.as_posix())
                     role_conf_relative_files = role_conf_relative_files.union(role_node_target_conf_relative_files)
                 remove_conf_files = [t.as_posix() for t in filter(lambda a: a.is_file(), target_role_conf_path.rglob("*")) if not any([t.as_posix().__contains__(s) for s in role_conf_relative_files])]
                 if remove_conf_files:
@@ -58,7 +59,7 @@ def invoke(role_title: str, role_path: pathlib.Path, role_env_dict: dict, args: 
             _cmds.append(share.role_print(role_title, "deploy", role_deploy_file.as_posix()))
             if args.debug:
                 _cmds.append(docker_compose_cmd("config"))
-            _cmds.append(docker_compose_cmd(share.flat_to_str("up --detach --build --remove-orphans")))
+            _cmds.append(docker_compose_cmd(collection_util.flat_to_str(["up --detach --build --remove-orphans"])))
     if args.delete:
         if role_deploy_file.exists():
             _cmds.append(share.role_print(role_title, "down", role_deploy_file.as_posix()))
@@ -72,7 +73,7 @@ def invoke(role_title: str, role_path: pathlib.Path, role_env_dict: dict, args: 
             docker_image_tag = "/".join([str(p).strip("/") for p in [registry_url, registry_dir, role_name]])
             _cmds.append("docker build --tag {0} --file {1} {2}".format(docker_image_tag, role_docker_file.as_posix(), role_path.as_posix()))
             _cmds.append("docker push {0}".format(docker_image_tag))
-    _cmd_str = share.flat_to_str([_cmds, "echo \n"], delimiter=" && ")
+    _cmd_str = collection_util.flat_to_str([_cmds, "echo \n"], delimiter=" && ")
     share.run_cmd(_cmd_str)
 
 

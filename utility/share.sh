@@ -14,7 +14,8 @@ function upload_exec_py() {
   local scp_cmd="scp ${ssh_opt} -rqC"
 
   ${scp_cmd} ${pwd_path} $host:
-  ${scp_cmd} ${pwd_path}/../requirements.txt ${pwd_path}/../env.yaml ${utility_dir}/share.py $host:${name_path}
+  ${scp_cmd} ${pwd_path}/../requirements.txt ${pwd_path}/../env.yaml ${pwd_path}/../share.py $host:${name_path}
+  ${ssh_cmd} "mkdir -p ${name_path}/utility/" && ${scp_cmd} ${utility_dir}/*.py $host:${name_path}/utility/
 
   local args
   local exec_cmd=()
