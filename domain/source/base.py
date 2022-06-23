@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import inspect
 
-from script.utility import log
+from utility import log
 
 logger = log.Logger(__name__)
 
