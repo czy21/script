@@ -1,13 +1,9 @@
 #!/usr/bin/env python3
-import argparse
-import configparser
-import io
-import itertools
 import pathlib
 
-import jinja2
 import share
-import yaml
+
+from utility import collection as collection_util
 
 
 def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
@@ -24,7 +20,7 @@ def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
             root_role_tmp_path = root_path.joinpath("___temp").joinpath(role_name)
             _cmds.append("mkdir -p {0}".format(root_role_tmp_path))
             _cmds.append("cp -r {0}/* {1}/".format(role_path.joinpath("___temp"), root_role_tmp_path))
-    _cmd_str = share.flat_to_str([_cmds, "echo \n"], delimiter=" && ")
+    _cmd_str = collection_util.flat_to_str([_cmds, "echo \n"], delimiter=" && ")
     share.run_cmd(_cmd_str)
 
 

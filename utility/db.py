@@ -8,9 +8,7 @@ import subprocess
 import jinja2
 from colorama import Fore
 
-import basic as basic_util
-import log as log_util
-import path as path_util
+from utility import basic as basic_util, log as log_util, path as path_util
 
 logger = log_util.Logger(__name__)
 

@@ -7,6 +7,8 @@ import stat
 import share
 import yaml
 
+from utility import collection as collection_util
+
 if __name__ == '__main__':
     yaml.add_constructor('!join', lambda loader, node: "".join(loader.construct_sequence(node, deep=True)))
     with open(pathlib.Path(__file__).parent.joinpath("env.yaml").as_posix(), mode="r", encoding="utf-8") as ef:
@@ -38,4 +40,4 @@ if __name__ == '__main__':
     ]
     if args.user:
         ansible_cmd.append("--user {0}".format(args.user))
-    share.run_cmd(share.flat_to_str(ansible_cmd))
+    share.run_cmd(collection_util.flat_to_str(ansible_cmd))

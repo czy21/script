@@ -4,7 +4,7 @@ import sys
 
 from colorama import Fore
 
-import log
+from utility import log as log_util
 
 
 def action_formatter(action_name, msg=None, action_color=Fore.YELLOW):
@@ -15,7 +15,7 @@ def action_formatter(action_name, msg=None, action_color=Fore.YELLOW):
 
 
 def print_default(msg_lines, proc: subprocess.Popen, func_param) -> None:
-    logger = log.Logger(__name__)
+    logger = log_util.Logger(__name__)
     for line in msg_lines:
         line = line.strip()
         if line:

@@ -5,6 +5,8 @@ import pathlib
 import share
 import yaml
 
+from utility import collection as collection_util, file as file_util
+
 
 def invoke(role_title: str, role_path: pathlib.Path, role_env_dict: dict, args: argparse.Namespace, **kwargs):
     role_name = role_path.name
@@ -14,7 +16,7 @@ def invoke(role_title: str, role_path: pathlib.Path, role_env_dict: dict, args: 
     temp_all_in_one_path.parent.mkdir(parents=True, exist_ok=True)
     temp_all_in_one_path.touch()
 
-    share.write_file(role_values_override_file, lambda f: yaml.dump(role_env_dict, f))
+    file_util.write_file(role_values_override_file, lambda f: yaml.dump(role_env_dict, f))
 
     _cmds = []
 
@@ -52,8 +54,8 @@ def invoke(role_title: str, role_path: pathlib.Path, role_env_dict: dict, args: 
                 helm_cmd.append("> {0}".format(temp_all_in_one_path))
 
             _cmds.append('helm dep up {0}'.format(role_path.as_posix()))
-            _cmds.append(share.flat_to_str(helm_cmd))
-    _cmd_str = share.flat_to_str(_cmds, delimiter=" && ")
+            _cmds.append(collection_util.flat_to_str(helm_cmd))
+    _cmd_str = collection_util.flat_to_str(_cmds, delimiter=" && ")
     share.run_cmd(_cmd_str)
 
 
