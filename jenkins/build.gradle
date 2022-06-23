@@ -1,14 +1,26 @@
 plugins {
     id 'groovy'
+    id 'io.spring.dependency-management' version "1.0.11.RELEASE"
 }
 
 group 'org.ops'
 version '1.0-SNAPSHOT'
 
+repositories {
+    maven {
+        url "https://repo.jenkins-ci.org/public/"
+    }
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "io.jenkins.tools.bom:bom-2.289.x:1451.v15f1fdb_772a_f"
+    }
+}
+
 dependencies {
     implementation 'org.apache.groovy:groovy:4.0.2'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    implementation "org.jenkins-ci.plugins.workflow:workflow-cps"
 }
 
 sourceSets {
@@ -17,8 +29,4 @@ sourceSets {
             srcDirs = ['src', "vars"]
         }
     }
-}
-
-test {
-    useJUnitPlatform()
 }
