@@ -123,8 +123,8 @@ class Installer:
         self.arg_parser: argparse.ArgumentParser = argparse.ArgumentParser()
 
     def run(self, **kwargs):
-        yaml.add_constructor('!join', file_util.yaml_join_tag)
-        yaml.add_constructor('!decode', file_util.yaml_decode_tag)
+        yaml.add_constructor('!join', file_util.yaml_tag_join)
+        yaml.add_constructor('!decode', file_util.yaml_tag_decode)
         self.arg_parser.add_argument('-p', '--param', nargs="+", default=[])
         self.arg_parser.add_argument('-i', '--install', action="store_true")
         self.arg_parser.add_argument('-d', '--delete', action="store_true")

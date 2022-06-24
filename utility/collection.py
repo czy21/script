@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
 
-def flat(a): return sum(map(flat, a), []) if isinstance(a, list) else [a]
+def flat(a) -> list: return sum(map(flat, a), []) if isinstance(a, list) else [a]
 
 
-def flat_to_str(*items: list, delimiter=" ") -> str:
+def flat_to_str(*items: list, delimiter: str = " ") -> str:
     return delimiter.join(flat(list(items)))
 
 
