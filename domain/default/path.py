@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-import shutil
-from pathlib import Path
+import pathlib
 
 from utility import log, basic as basic_util
 from utility import path as path_util
@@ -48,9 +47,7 @@ output_db_bak_sql_mongo = path_util.pure_path_join(output_db_bak, "mongo.sql")
 output_tmp = path_util.pure_path_join(output, "tmp")
 
 
-def re_mkdir(rm_output=False) -> None:
+def create_output() -> None:
     dirs = [output_tmp, output_api, output_web, output_app, output_db_bak, output_db_all_in_one]
-    if rm_output:
-        shutil.rmtree(path=output, ignore_errors=True)
-        logger.info(basic_util.action_formatter(re_mkdir.__name__, dirs.__str__()))
-    [Path(p).mkdir(parents=True, exist_ok=True) for p in dirs]
+    for p in dirs:
+        pathlib.Path(p).mkdir(parents=True, exist_ok=True)
