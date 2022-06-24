@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import inspect
 import os
+import pathlib
 
 from domain.db_meta import pgsql as pgsql_meta
 from domain.default import common as default_common
@@ -18,7 +19,7 @@ def __get_function_name():
 
 
 def assemble() -> None:
-    db_util.assemble_ql(default_common.param_main_db_pgsql_file_path, default_path.output_db_all_in_one_pgsql, pgsql_meta, "sql")
+    db_util.assemble_ql(pathlib.Path(default_common.param_main_db_pgsql_file_path), pathlib.Path(default_path.output_db_all_in_one_pgsql), pgsql_meta, "sql")
 
 
 def recreate() -> None:

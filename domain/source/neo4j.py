@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import os
+import pathlib
 
 from domain.db_meta import neo4j as neo4j_meta
 from domain.default import common as default_common
@@ -10,7 +11,7 @@ logger = log.Logger(__name__)
 
 
 def assemble() -> None:
-    db_util.assemble_ql(default_common.param_main_db_neo4j_file_path, default_path.output_db_all_in_one_neo4j, neo4j_meta, "cql")
+    db_util.assemble_ql(pathlib.Path(default_common.param_main_db_neo4j_file_path), pathlib.Path(default_path.output_db_all_in_one_neo4j), neo4j_meta, "cql")
 
 
 def get_main_db_param_dict() -> list:
