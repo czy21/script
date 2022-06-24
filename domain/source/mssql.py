@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import inspect
 import os
+import pathlib
 from pathlib import Path
 from textwrap import wrap
 
@@ -19,7 +20,7 @@ def __get_function_name():
 
 
 def assemble() -> None:
-    db_util.assemble_ql(default_common.param_main_db_mssql_file_path, default_path.output_db_all_in_one_mssql, mssql_meta, "sql")
+    db_util.assemble_ql(pathlib.Path(default_common.param_main_db_mssql_file_path), pathlib.Path(default_path.output_db_all_in_one_mssql), mssql_meta, "sql")
 
 
 def recreate() -> None:

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import inspect
+import pathlib
 
 from domain.db_meta import mongo as mongo_meta
 from domain.default import common as default_common
@@ -14,7 +15,7 @@ def __get_function_name():
 
 
 def assemble() -> None:
-    db_util.assemble_ql(default_common.param_main_db_mongo_file_path, default_path.output_db_all_in_one_mongo, mongo_meta, "mongo")
+    db_util.assemble_ql(pathlib.Path(default_common.param_main_db_mongo_file_path), pathlib.Path(default_path.output_db_all_in_one_mongo), mongo_meta, "mongo")
 
 
 def recreate() -> None:

@@ -15,8 +15,8 @@ from utility import basic as basic_util, log as log_util, path as path_util, fil
 logger = log_util.Logger(__name__)
 
 
-def assemble_ql(s_path: str, t_file: pathlib.Path, db_meta: {}, file_suffix: str, prep: str = None, post: str = None) -> None:
-    db_file_paths = path_util.dfs_dir(s_path, re.compile(r".*" + file_suffix))
+def assemble_ql(s_path: pathlib.Path, t_file: pathlib.Path, db_meta: {}, file_suffix: str, prep: str = None, post: str = None) -> None:
+    db_file_paths = path_util.dfs_dir(s_path.as_posix(), re.compile(r".*" + file_suffix))
     db_file_content = []
     for s in db_file_paths:
         logger.info(basic_util.action_formatter("loading", s, Fore.GREEN))

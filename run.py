@@ -1,19 +1,16 @@
 #!/usr/bin/env python3
 import argparse
 import importlib
-import importlib.util
 import importlib.machinery
-import io
-import json
+import importlib.util
 import os
 import pathlib
 import sys
 from pathlib import Path
-from typing import TextIO
 
 import yaml
 
-from utility import log as log_util, basic as basic_util, path as path_util, file as file_util
+from utility import file as file_util
 
 sys.path.append(pathlib.Path(__file__).parent.parent.as_posix())
 
@@ -30,7 +27,6 @@ def exec_file():
     param_iter = iter(args.param)
     param_input_dict = dict(zip(param_iter, param_iter))
     os.environ.__setattr__("run_args", args)
-    logger = log_util.Logger(__name__)
 
     env_path = Path(args.env).resolve()
     env_stem = env_path.parent.stem
