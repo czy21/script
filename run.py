@@ -9,8 +9,11 @@ import os
 import pathlib
 import sys
 from pathlib import Path
+from typing import TextIO
 
-from utility import log as log_util, basic as basic_util, path as path_util
+import yaml
+
+from utility import log as log_util, basic as basic_util, path as path_util, file as file_util
 
 sys.path.append(pathlib.Path(__file__).parent.parent.as_posix())
 
@@ -38,25 +41,20 @@ def exec_file():
 
     # empty source log
     default_path_module = importlib.import_module("domain.default.path")
-    getattr(default_path_module, "re_mkdir")(rm_output=args.init)
 
     # injected param to global
     env_pwd_mod = importlib.import_module("".join(["shell.", env_stem, "._env"]))
     env_common_mod = env_pwd_mod.env_common
     default_common_mod = importlib.import_module("domain.default.common")
-    env_output_json = path_util.pure_path_join(getattr(default_path_module, "output"), "env.json")
+    env_output_yaml = pathlib.Path(getattr(default_path_module, "output")).joinpath("env.yaml")
 
     if args.init:
         env_common_mod.__dict__.update(dict({k: v for k, v in env_pwd_mod.__dict__.items() if k.startswith("param")}).items(), **param_input_dict)
         default_common_mod.__dict__.update(dict({k: v for k, v in env_common_mod.__dict__.items() if k.startswith("param")}))
         default_common_param = dict({k: v for k, v in default_common_mod.__dict__.items() if k.startswith("param")})
-        env_json = json.dumps(default_common_param, sort_keys=True, indent=2)
-        with io.open(env_output_json, "w+", encoding="utf-8") as f:
-            f.write(env_json)
-        logger.info(basic_util.action_formatter("params", env_json), default_common_mod.__name__)
+        file_util.write_file(env_output_yaml, lambda f: f.write(yaml.dump(default_common_param)))
     else:
-        with io.open(env_output_json, 'r') as f:
-            default_common_mod.__dict__.update(json.load(f))
+        default_common_mod.__dict__.update(file_util.read_file(env_output_yaml, lambda f: yaml.full_load(f)))
     if args.cmd:
         exec(args.cmd)
 

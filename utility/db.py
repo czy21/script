@@ -2,20 +2,20 @@
 import io
 import math
 import os
+import pathlib
 import re
 import subprocess
+from typing import TextIO
 
 import jinja2
 from colorama import Fore
 
-from utility import basic as basic_util, log as log_util, path as path_util
+from utility import basic as basic_util, log as log_util, path as path_util, file as file_util
 
 logger = log_util.Logger(__name__)
 
 
-def assemble_ql(s_path, t_file_name, db_meta, file_suffix, **kwargs) -> None:
-    prep = kwargs.get("prep")
-    post = kwargs.get("post")
+def assemble_ql(s_path: str, t_file: pathlib.Path, db_meta: {}, file_suffix: str, prep: str = None, post: str = None) -> None:
     db_file_paths = path_util.dfs_dir(s_path, re.compile(r".*" + file_suffix))
     db_file_content = []
     for s in db_file_paths:
@@ -26,12 +26,15 @@ def assemble_ql(s_path, t_file_name, db_meta, file_suffix, **kwargs) -> None:
                 **{"file_path": s},
                 **db_meta.self["substitution"]
             }))
-    with io.open(t_file_name, "w", encoding="utf-8") as tf:
+
+    def write_func(f: TextIO):
         if prep:
             db_file_content.insert(0, prep)
         if post:
             db_file_content.append(post)
-        tf.write(u'{}'.format("\n\n".join(db_file_content)))
+        f.write(u'{}'.format("\n\n".join(db_file_content)))
+
+    file_util.write_file(t_file, write_func)
 
 
 def print_ql_msg(msg_lines, proc: subprocess.Popen, func_param) -> None:

@@ -7,7 +7,7 @@ from colorama import Fore
 from utility import log as log_util
 
 
-def action_formatter(action_name, msg=None, action_color=Fore.YELLOW):
+def action_formatter(action_name: str, msg=None, action_color=Fore.YELLOW):
     action_name_msg = action_color + action_name
     if msg:
         action_name_msg += Fore.WHITE + " => " + msg
