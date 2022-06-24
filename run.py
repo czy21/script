@@ -10,7 +10,7 @@ from pathlib import Path
 
 import yaml
 
-from utility import file as file_util
+from utility import log as log_util, file as file_util
 
 sys.path.append(pathlib.Path(__file__).parent.parent.as_posix())
 
@@ -27,6 +27,7 @@ def exec_file():
     param_iter = iter(args.param)
     param_input_dict = dict(zip(param_iter, param_iter))
     os.environ.__setattr__("run_args", args)
+    logger = log_util.Logger(__name__)
 
     env_path = Path(args.env).resolve()
     env_stem = env_path.parent.stem
