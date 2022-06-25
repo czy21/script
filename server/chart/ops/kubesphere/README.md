@@ -1,5 +1,6 @@
 ## install
 ```shell
+kubectl create namespace kubesphere-system
 -n kubesphere-system
 ```
 ###

@@ -1,7 +1,7 @@
 # ansible install and config on server
 ## centos
 ```shell
-sudo hostnamectl set-hostname [hostname]
+sudo hostnamectl set-hostname --static [hostname]
 sudo yum -y install epel-release 
 sudo yum -y update
 sudo yum -y install ansible

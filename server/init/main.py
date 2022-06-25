@@ -7,10 +7,14 @@ import stat
 import share
 import yaml
 
-from utility import collection as collection_util
+from utility import collection as collection_util, file as file_util
 
 if __name__ == '__main__':
-    yaml.add_constructor('!join', lambda loader, node: "".join(loader.construct_sequence(node, deep=True)))
+    yaml.add_constructor('!join', file_util.yaml_tag_join)
+    yaml.add_constructor('!decode', file_util.yaml_tag_decode)
+    env_dict = file_util.read_file(pathlib.Path(__file__).parent.joinpath("env.yaml"), lambda f: yaml.full_load(f))
+    file_util.write_file(pathlib.Path(__file__).parent.joinpath("vars/env.yml"), lambda f: f.write(yaml.dump(env_dict)))
+
     with open(pathlib.Path(__file__).parent.joinpath("env.yaml").as_posix(), mode="r", encoding="utf-8") as ef:
         with open(pathlib.Path(__file__).parent.joinpath("vars/env.yml"), mode="w", encoding="utf-8") as vf:
             yaml.dump(yaml.full_load(ef), vf)
@@ -22,7 +26,7 @@ if __name__ == '__main__':
     parser.add_argument('-i', required=True)
     parser.add_argument('-t', required=True)
     parser.add_argument('-k', action="store_true")
-    parser.add_argument('-u', '--user', type=str, default="bruce")
+    parser.add_argument('-u', '--user', type=str, default=env_dict["param_user_ops"])
     args = parser.parse_args()
     ansible_file = pathlib.Path(__file__).parent.joinpath(args.i + ".yml").as_posix()
 

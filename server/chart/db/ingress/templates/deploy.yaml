@@ -39,4 +39,14 @@ spec:
             name: rabbitmq
             port:
               number: 15672
+  - host: pulsar-web.cluster.com
+    http:
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+          backend:
+            service:
+              name: pulsar-manager
+              port:
+                number: 9527
 ---
