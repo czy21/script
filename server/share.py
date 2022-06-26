@@ -27,11 +27,7 @@ def role_print(role, content, exec_file=None) -> str:
 
 def get_dir_dict(root_path: pathlib.Path, exclude_pattern=None, select_tip="", col_num=5) -> dict:
     dir_dict: dict = {str(i): t for i, t in enumerate(filter(lambda a: a.is_dir() and regex_util.exclude_match(exclude_pattern, a.as_posix()), sorted(root_path.iterdir())), start=1)}
-    col_rows = [list(t) for t in itertools.zip_longest(*[iter(["{0}.{1}".format(str(k), v.name) for k, v in dir_dict.items()])] * col_num, fillvalue='')]
-    # get every col max len
-    col_lens = [len(max([t[p] for t in col_rows for p in range(col_num) if p == i], key=len, default='')) for i in range(col_num)]
-    for t in col_rows:
-        print("".join([str(t[p]).ljust(col_lens[o] + 2) for p in range(col_num) for o in range(col_num) if p == o]))
+    collection_util.print_grid(["{0}.{1}".format(str(k), v.name) for k, v in dir_dict.items()], col_num=col_num)
     dir_nums = input("please select {0}:".format(select_tip)).strip().split()
     return dict((t, dir_dict[t]) for t in dir_nums if t in dir_dict.keys())
 
@@ -48,8 +44,7 @@ def select_option(root_path: pathlib.Path, deep: int = 1, excludes=None) -> dict
 
     while deep > deep_index:
         role_dict = {str(i): p for i, p in enumerate(map(lambda a: a["path"], filter(lambda a: a["deep"] == deep_index, flat_dirs)), start=1)}
-        for k, v in role_dict.items():
-            print(" ".join([k, v.name]))
+        collection_util.print_grid(["{0}.{1}".format(k, v.name) for k, v in role_dict.items()], col_num=5)
         selected = input("please select one option(example:1) ").strip()
         if selected == '':
             sys.exit()
