@@ -72,7 +72,7 @@ def invoke(role_title: str, role_path: pathlib.Path, role_env_dict: dict, args: 
         if role_docker_file.exists():
             docker_image_tag = "/".join([str(p).strip("/") for p in [registry_url, registry_dir, role_name]])
             _cmds.append("docker build --tag {0} --file {1} {2}".format(docker_image_tag, role_docker_file.as_posix(), role_path.as_posix()))
-            _cmds.append("docker push {0}".format(docker_image_tag))
+            # _cmds.append("docker push {0}".format(docker_image_tag))
     _cmd_str = collection_util.flat_to_str([_cmds, "echo \n"], delimiter=" && ")
     share.run_cmd(_cmd_str)
 
