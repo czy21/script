@@ -21,15 +21,15 @@ function upload_exec_py() {
   for ((i=1;i<="$#";i++));do
     item=${!i}
     if [ "-r" == ${item} ]; then
-        pip_cmd='python3 -m pip install -I -r $HOME/'${book_target}/'requirements.txt'
-        exec_cmd+='type sudo && sudo '${pip_cmd}' || '${pip_cmd}' && '
+        pip_cmd="python3 -m pip install -I -r \$HOME/${book_target}/requirements.txt"
+        exec_cmd+="type sudo && sudo ${pip_cmd} || ${pip_cmd} && "
         shift 1
         continue
     fi
     args+=" ${item}"
   done
-  exec_cmd+='python3 -B $HOME/'${book_target}/'main.py '${args}''
-  echo -e '\033[32mcommand: \033[0m'${exec_cmd}
+  exec_cmd+="python3 -B \$HOME/${book_target}/main.py ${args}"
+  exec_cmd="echo -e command: '${exec_cmd}';${exec_cmd}"
   ${ssh_cmd} ${exec_cmd}
   if ${ssh_cmd} "[ -d ${book_target_temp_path} ]"; then
     ${scp_cmd} $host:${book_target_temp_path}/ ${book_source}/

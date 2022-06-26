@@ -129,7 +129,7 @@ class Installer:
         self.arg_parser.add_argument('--debug', action="store_true")
 
         args: argparse.Namespace = self.arg_parser.parse_args()
-        print(args)
+        print("   args:", args)
 
         # select role
         selected_dict = select_option(self.root_path, self.role_deep)
