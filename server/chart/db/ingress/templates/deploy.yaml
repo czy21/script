@@ -43,10 +43,20 @@ spec:
     http:
       paths:
         - path: /
-          pathType: ImplementationSpecific
+          pathType: Prefix
           backend:
             service:
               name: pulsar-manager
               port:
                 number: 9527
+  - host: pulsar-proxy.cluster.com
+    http:
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: pulsar-proxy
+              port:
+                number: 80
 ---
