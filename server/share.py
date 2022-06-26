@@ -1,5 +1,4 @@
 import argparse
-import itertools
 import pathlib
 import subprocess
 import sys
