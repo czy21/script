@@ -54,8 +54,8 @@
         sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
     - name: switch yum mirror
       shell: |-
-        #sed -i.bak -e "s,^mirrorlist=,#mirrorlist=,g" -e "s,^#baseurl=,baseurl=,g" -e "s,^baseurl=http://mirror.centos.org/\$contentdir,baseurl=http://nexus.cluster.com/repository/yum-proxy-centos,g" /etc/yum.repos.d/CentOS-*.repo
-        yum clean all && yum makecache
+        sed -i.bak -e "s,^mirrorlist=,#mirrorlist=,g" -e "s,^#baseurl=,baseurl=,g" -e "s,^baseurl=http://mirror.centos.org,baseurl=http://nexus.cluster.com/repository/yum-proxy,g" /etc/yum.repos.d/CentOS-*.repo
+        yum clean all && yum --refresh makecache
 
   tags:
     - machine
