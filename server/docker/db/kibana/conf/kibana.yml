@@ -1,5 +1,0 @@
-server:
-  host: "0.0.0.0"
-elasticsearch:
-  hosts: 
-    - http://es1:9200
