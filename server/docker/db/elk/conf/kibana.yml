@@ -9,6 +9,6 @@ monitoring:
 
 elasticsearch:
   hosts: 
-    - http://es-nas.cluster.com
-  username: elastic
-  password: Czy.190815
+    - http://{{ param_db_es_host }}
+  username: {{ param_db_es_username }}
+  password: {{ param_db_es_password }}
