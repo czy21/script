@@ -28,4 +28,4 @@ def count_excel(root_path, pattern):
 
 if __name__ == '__main__':
     # count_excel("C:/Users/zhaoyu.chen/Desktop/maixin/contact-split/", "contact-2017-01-01~2021-12-01_*.xlsx")
-    split_excel("C:/Users/zhaoyu.chen/Desktop/maixin/contact-2022-01-01~2022-01-19.xlsx", 5000)
+    split_excel("C:/Users/zhaoyu.chen/Desktop/contact.xlsx", 4000)
