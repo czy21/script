@@ -1,0 +1,14 @@
+server:
+  host: "0.0.0.0"
+
+monitoring:
+  ui:
+    container:
+      elasticsearch:
+        enabled: true
+
+elasticsearch:
+  hosts: 
+    - http://es-nas.cluster.com
+  username: elastic
+  password: Czy.190815
