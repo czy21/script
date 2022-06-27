@@ -85,6 +85,8 @@ def loop_role_dict(role_dict: dict,
             }
         }
         if role_env_file.exists():
+            template_value = file_util.read_file(role_env_file, lambda f: jinja2.Template(f.read()).render(**role_env_dict))
+            file_util.write_file(role_env_file, lambda f: f.write(template_value))
             role_env_dict.update(file_util.read_file(role_env_file, lambda f: yaml.full_load(f)))
         # parse jinja2 template
         for t in filter(lambda f: f.is_file(), role_path.rglob("*")):

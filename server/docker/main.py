@@ -15,6 +15,9 @@ def invoke(role_title: str, role_path: pathlib.Path, role_env_dict: dict, args: 
     role_init_sh = role_path.joinpath("init.sh")
 
     target_app_path = pathlib.Path(role_env_dict.get("param_docker_data")).joinpath(role_name)
+    param_role_target_path = role_env_dict.get("param_role_target_path")
+    if param_role_target_path:
+        target_app_path = pathlib.Path(param_role_target_path)
 
     _cmds = []
 
@@ -36,7 +39,8 @@ def invoke(role_title: str, role_path: pathlib.Path, role_env_dict: dict, args: 
         ]
         if role_node_deploy_file and role_node_deploy_file.exists():
             role_deploy_files.append(role_node_deploy_file)
-        return 'sudo docker-compose --project-name {0} {1} {2}'.format(role_name, " ".join(["--file {0}".format(t) for t in role_deploy_files]), option)
+        role_project_name = role_env_dict.get("param_role_project_name")
+        return 'sudo docker-compose --project-name {0} {1} {2}'.format(role_project_name if role_project_name else role_name, " ".join(["--file {0}".format(t) for t in role_deploy_files]), option)
 
     if args.install:
         if role_conf_path.exists():
@@ -72,7 +76,7 @@ def invoke(role_title: str, role_path: pathlib.Path, role_env_dict: dict, args: 
         if role_docker_file.exists():
             docker_image_tag = "/".join([str(p).strip("/") for p in [registry_url, registry_dir, role_name]])
             _cmds.append("docker build --tag {0} --file {1} {2}".format(docker_image_tag, role_docker_file.as_posix(), role_path.as_posix()))
-            # _cmds.append("docker push {0}".format(docker_image_tag))
+            _cmds.append("docker push {0}".format(docker_image_tag))
     _cmd_str = collection_util.flat_to_str([_cmds, "echo \n"], delimiter=" && ")
     share.run_cmd(_cmd_str)
 
