@@ -3,6 +3,8 @@ import base64
 import pathlib
 from typing import Callable, Any, TextIO, NoReturn
 
+import bcrypt
+
 
 def get_files(path: pathlib.Path, remove_prefix: str = "") -> list[str]:
     return [a.as_posix().replace(remove_prefix, "") for a in path.rglob("*") if a.is_file()]
@@ -30,3 +32,8 @@ def yaml_tag_decode(loader, node):
     if decode_way == "base64":
         return base64.b64decode(encode_val).rstrip().decode("utf-8")
     return encode_val
+
+
+def yaml_tag_htpasswd(loader, node):
+    args = loader.construct_sequence(node, deep=True)
+    return bcrypt.hashpw(str(args[0]).encode(), bcrypt.gensalt(rounds=12)).decode()

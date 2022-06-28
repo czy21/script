@@ -1,4 +1,5 @@
 import argparse
+import crypt
 import pathlib
 import subprocess
 import sys
@@ -121,6 +122,7 @@ class Installer:
     def run(self, **kwargs):
         yaml.add_constructor('!join', file_util.yaml_tag_join)
         yaml.add_constructor('!decode', file_util.yaml_tag_decode)
+        yaml.add_constructor('!htpasswd', file_util.yaml_tag_htpasswd)
         self.arg_parser.add_argument('-p', '--param', nargs="+", default=[])
         self.arg_parser.add_argument('-i', '--install', action="store_true")
         self.arg_parser.add_argument('-d', '--delete', action="store_true")
