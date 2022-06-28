@@ -20,7 +20,7 @@ def flat_dict(src, target=None, prefix=""):
     return target
 
 
-def print_grid(items: list[str], col_num: int = 0):
+def print_grid(items: list, col_num: int = 0):
     rows = [list(t) for t in itertools.zip_longest(*[iter(items)] * col_num, fillvalue='')]
     col_lens = [len(max([t[p] for t in rows for p in range(col_num) if p == i], key=len, default='')) for i in range(col_num)]
     for t in rows:
