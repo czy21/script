@@ -1,5 +1,4 @@
 import argparse
-import crypt
 import pathlib
 import subprocess
 import sys
