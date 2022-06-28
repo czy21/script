@@ -4,7 +4,7 @@ import pathlib
 import re
 
 
-def dfs_dir(t_path: str, pattern=None) -> list:
+def dfs_dir(t_path: str, pattern: re = None) -> list:
     ret = []
     sort_target = os.listdir(t_path)
     sort_target.sort(key=lambda x: re.compile("^\\d+").match(x).group() if re.compile("^\\d+").match(x) else x)
@@ -18,7 +18,7 @@ def dfs_dir(t_path: str, pattern=None) -> list:
             else:
                 ret.append(tmp_path)
         elif os.path.isdir(tmp_path):
-            ret += dfs_dir(tmp_path)
+            ret += dfs_dir(tmp_path, pattern=pattern)
     return ret
 
 
