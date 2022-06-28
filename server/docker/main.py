@@ -63,7 +63,10 @@ def invoke(role_title: str, role_path: pathlib.Path, role_env_dict: dict, args: 
             _cmds.append(share.role_print(role_title, "deploy", role_deploy_file.as_posix()))
             if args.debug:
                 _cmds.append(docker_compose_cmd("config"))
-            _cmds.append(docker_compose_cmd(collection_util.flat_to_str(["up --detach --build --remove-orphans"])))
+            up_args = ["up --detach --build --remove-orphans"]
+            if args.recreate:
+                up_args.append("--force-recreate")
+            _cmds.append(docker_compose_cmd(collection_util.flat_to_str(up_args)))
     if args.delete:
         if role_deploy_file.exists():
             _cmds.append(share.role_print(role_title, "down", role_deploy_file.as_posix()))
@@ -84,4 +87,5 @@ def invoke(role_title: str, role_path: pathlib.Path, role_env_dict: dict, args: 
 if __name__ == '__main__':
     root_path = pathlib.Path(__file__).parent
     installer = share.Installer(root_path, invoke, role_deep=2)
+    installer.arg_parser.add_argument('--recreate', action="store_true")
     installer.run(base_deploy_file=root_path.joinpath("base-deploy.yml"))

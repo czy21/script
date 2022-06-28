@@ -1,1 +1,1 @@
-superuser:admin
+superuser:{{ param_db_es_username }}
