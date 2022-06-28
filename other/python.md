@@ -11,7 +11,7 @@ ls -l /usr/bin/python*
 sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.8 1
 sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 2
 sudo update-alternatives --config python3
-curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py python3.10 get-pip.py
+curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && python3.10 get-pip.py
 
 sudo apt remove python3-apt
 sudo apt autoremove
