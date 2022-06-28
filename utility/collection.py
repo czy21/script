@@ -9,15 +9,16 @@ def flat_to_str(*items: list, delimiter: str = " ") -> str:
     return delimiter.join(flat(list(items)))
 
 
-def flat_dict(src, target=None, prefix=""):
-    if target is None:
-        target = {}
-    for k, value in src.items():
-        if isinstance(value, dict):
-            flat_dict(value, target, prefix + k + "_")
+def flat_dict(data: dict):
+    ret = {}
+    for k, v in data.items():
+        if isinstance(v, list):
+            ret.update(flat_dict({"{0}{1}".format(k, "[" + str(i) + "]"): t for i, t in enumerate(v)}))
+        elif isinstance(v, dict):
+            ret.update(flat_dict({"{0}.{1}".format(k, vk): vv for vk, vv in v.items()}))
         else:
-            target[prefix + k] = value
-    return target
+            ret[k] = v
+    return ret
 
 
 def print_grid(items: list, col_num: int = 0):
