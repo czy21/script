@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 import itertools
 
+import jinja2
+import pydash
+
+from utility import template as template_util
+
 
 def flat(a) -> list: return sum(map(flat, a), []) if isinstance(a, list) else [a]
 
@@ -9,7 +14,7 @@ def flat_to_str(*items: list, delimiter: str = " ") -> str:
     return delimiter.join(flat(list(items)))
 
 
-def flat_dict(data: dict):
+def flat_dict(data: dict) -> dict:
     ret = {}
     for k, v in data.items():
         if isinstance(v, list):
@@ -19,6 +24,13 @@ def flat_dict(data: dict):
         else:
             ret[k] = v
     return ret
+
+
+def dict_render(data: dict) -> dict:
+    for k, v in flat_dict(data).items():
+        if isinstance(v, str):
+            pydash.set_(data, k, template_util.Template(v).render(**data))
+    return data
 
 
 def print_grid(items: list, col_num: int = 0):

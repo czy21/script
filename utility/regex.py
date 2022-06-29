@@ -2,5 +2,9 @@
 import re
 
 
-def exclude_match(pattern: str, name: str):
-    return pattern is None or not bool(re.search(pattern, name))
+def is_match(pattern: str, name: str):
+    return bool(re.search(pattern, name))
+
+
+def not_match(pattern: str, text: str):
+    return not is_match(pattern, text)
