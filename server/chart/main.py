@@ -8,7 +8,7 @@ import yaml
 from utility import collection as collection_util, file as file_util
 
 
-def invoke(role_title: str, role_path: pathlib.Path, role_env_dict: dict, args: argparse.Namespace, **kwargs):
+def invoke(role_title: str, role_path: pathlib.Path, role_env: dict, args: argparse.Namespace, **kwargs):
     role_name = role_path.name
     role_values_override_file = role_path.joinpath("values.override.yaml")
 
@@ -16,15 +16,15 @@ def invoke(role_title: str, role_path: pathlib.Path, role_env_dict: dict, args: 
     temp_all_in_one_path.parent.mkdir(parents=True, exist_ok=True)
     temp_all_in_one_path.touch()
 
-    file_util.write_file(role_values_override_file, lambda f: yaml.dump(role_env_dict, f))
+    file_util.write_file(role_values_override_file, lambda f: yaml.dump(role_env, f))
 
     _cmds = []
 
     if args.action == "push":
-        helm_repo_name = role_env_dict.get("param_helm_repo_name")
-        helm_repo_url = role_env_dict.get("param_helm_repo_url")
-        helm_username = role_env_dict.get("param_helm_username")
-        helm_password = role_env_dict.get("param_helm_password")
+        helm_repo_name = role_env.get("param_helm_repo_name")
+        helm_repo_url = role_env.get("param_helm_repo_url")
+        helm_username = role_env.get("param_helm_username")
+        helm_password = role_env.get("param_helm_password")
         _cmds.append(share.role_print(role_title, "push"))
         _cmds.append("helm plugin list | if [ -z \"$(grep -w nexus-push)\" ];then helm plugin install --version master https://github.com/sonatype-nexus-community/helm-nexus-push.git;fi")
         _cmds.append("helm repo   list | if [ -z \"$(grep -w {0})\" ];then helm repo add {0} {1};fi".format(helm_repo_name, helm_repo_url))

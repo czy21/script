@@ -75,7 +75,7 @@ def run_cmd(cmd):
 
 def loop_role_dict(role_dict: dict,
                    role_func,
-                   env_dict,
+                   global_env,
                    args: argparse.Namespace,
                    jinja2ignore_rules: list,
                    **kwargs):
@@ -84,26 +84,23 @@ def loop_role_dict(role_dict: dict,
         role_path: pathlib.Path = v
         role_name = role_path.name
         role_title = ".".join([role_num, role_name])
-        role_env_dir = role_path.joinpath("var")
-        role_env_dict = {
-            **env_dict,
+        role_env_file = role_path.joinpath("env.yaml")
+        role_env = {
+            **global_env,
             **{
                 "param_role_name": role_name,
                 "param_role_path": role_path.as_posix(),
                 "param_role_title": role_title
             }
         }
-        for t in filter(lambda f: f.is_file(), role_env_dir.rglob("*")):
-            logger.info(t.as_posix())
-            template_str = file_util.read_file(t, lambda f: template_util.Template(f.read()).render(**role_env_dict))
-            role_env_dict.update(yaml_util.load(template_str))
-        logger.debug("{0} params: {1}".format(role_name, json.dumps(role_env_dict)))
+        if role_env_file and role_env_file.exists():
+            role_env.update(yaml_util.load(file_util.read_file(role_env_file, lambda f: template_util.Template(f.read()).render(**role_env))))
+        logger.debug("{0} params: {1}".format(role_name, json.dumps(role_env, indent=1)))
         # parse jinja2 template
         for t in filter(lambda f: f.is_file(), role_path.rglob("*")):
             _rules = regex_util.match_rules([*jinja2ignore_rules, *["var/.*.yaml"]], t.as_posix(), ".jinia2ignore {0}".format(loop_role_dict.__name__))
             if not any([r["isMatch"] for r in _rules]):
-                template_str = file_util.read_file(t, lambda f: template_util.Template(f.read()).render(**role_env_dict))
-                file_util.write_file(t, lambda f: f.write(template_str))
+                file_util.write_file(t, lambda f: f.write(file_util.read_file(t, lambda tf: template_util.Template(tf.read()).render(**role_env))))
         role_build_sh = role_path.joinpath("build.sh")
         if args.build_file == "build.sh":
             if role_build_sh.exists():
@@ -111,7 +108,7 @@ def loop_role_dict(role_dict: dict,
                     role_print(role_title, "build", role_build_sh.as_posix()),
                     "bash {0}".format(role_build_sh.as_posix())
                 ], delimiter="&&"))
-        # role_func(role_title=role_title, role_path=role_path, role_env_dict=role_env_dict, args=args, logger=logger, **kwargs)
+        role_func(role_title=role_title, role_path=role_path, role_env_dict=role_env, args=args, logger=logger, **kwargs)
 
 
 class Installer:
@@ -140,14 +137,14 @@ class Installer:
             logger.setLevel(logging.DEBUG)
         # select role
         selected_role_dict, excludes = select_option(self.root_path, self.role_deep, args=args)
-        global_env_dict = {}
+        global_env = {}
         # read env_file
         if self.env_file and self.env_file.exists():
-            global_env_dict.update(yaml_util.load(self.env_file))
+            global_env.update(yaml_util.load(self.env_file))
         # read input param
-        param_input_iter = iter(args.param)
-        param_input_dict = dict(zip(param_input_iter, param_input_iter))
-        global_env_dict.update(param_input_dict)
+        param_extra_iter = iter(args.param)
+        param_extra_dict = dict(zip(param_extra_iter, param_extra_iter))
+        global_env.update(param_extra_dict)
         # global env_dict finished
         global_jinja2ignore_rules = []
         if self.jinja2ignore_file and self.jinja2ignore_file.exists():
@@ -157,7 +154,7 @@ class Installer:
             root_path=self.root_path,
             role_dict=selected_role_dict,
             role_func=self.role_func,
-            env_dict=global_env_dict,
+            global_env=global_env,
             jinja2ignore_rules=global_jinja2ignore_rules,
             args=args,
             bak_path=self.bak_path,
