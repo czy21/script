@@ -8,11 +8,12 @@ function upload_exec_py() {
   local book_target=$(basename ${book_source})
   local book_target_temp_path=${book_target}/___temp/
   local utility=$(cd ${book_source}/../../utility; pwd)
-  local del_cmd='rm -rf $HOME/'${book_target}';'
+  local del_cmd="rm -rf \$HOME/${book_target}"
   local ssh_opt="-o StrictHostKeyChecking=no"
   local ssh_cmd="ssh ${ssh_opt} ${host}"
   local scp_cmd="scp ${ssh_opt} -rqC"
 
+  ${ssh_cmd} ${del_cmd}
   ${scp_cmd} ${book_source} $host:
   ${scp_cmd} ${book_source}/../requirements.txt ${book_source}/../env.yaml ${book_source}/../share.py ${utility} $host:${book_target}
 
@@ -29,10 +30,9 @@ function upload_exec_py() {
     args+=" ${item}"
   done
   exec_cmd+="python3 -B \$HOME/${book_target}/main.py ${args}"
-  exec_cmd="echo -e command: '${exec_cmd}';${exec_cmd}"
   ${ssh_cmd} ${exec_cmd}
   if ${ssh_cmd} "[ -d ${book_target_temp_path} ]"; then
     ${scp_cmd} $host:${book_target_temp_path}/ ${book_source}/
   fi
-#  ${ssh_cmd} ${del_cmd}
+  ${ssh_cmd} ${del_cmd}
 }
