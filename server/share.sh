@@ -34,5 +34,5 @@ function upload_exec_py() {
   if ${ssh_cmd} "[ -d ${book_target_temp_path} ]"; then
     ${scp_cmd} $host:${book_target_temp_path}/ ${book_source}/
   fi
-  ${ssh_cmd} ${del_cmd}
+#  ${ssh_cmd} ${del_cmd}
 }
