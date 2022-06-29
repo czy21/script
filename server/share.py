@@ -12,9 +12,8 @@ logger = logging.getLogger()
 
 def dfs_dir(path: pathlib.Path, deep=1, exclude_rules: list = None) -> list:
     ret = []
-    all_dirs = list(filter(lambda a: a.is_dir(), sorted(path.iterdir())))
     _include_dirs = []
-    for p in all_dirs:
+    for p in list(filter(lambda a: a.is_dir(), sorted(path.iterdir()))):
         _rules = regex_util.match_rules(exclude_rules, p.as_posix(), ".jinia2ignore {0}".format(dfs_dir.__name__))
         if not any([r["isMatch"] for r in _rules]):
             _include_dirs.append(p)
@@ -32,9 +31,8 @@ def role_print(role, content, exec_file=None) -> str:
 
 
 def get_dir_dict(root_path: pathlib.Path, exclude_rules: list = None, select_tip="", col_num=5) -> dict:
-    all_dirs = list(filter(lambda a: a.is_dir(), sorted(root_path.iterdir())))
     _include_dirs = []
-    for p in all_dirs:
+    for p in list(filter(lambda a: a.is_dir(), sorted(root_path.iterdir()))):
         _rules = regex_util.match_rules(exclude_rules, p.as_posix(), ".jinia2ignore {0}".format(get_dir_dict.__name__))
         if not any([r["isMatch"] for r in _rules]):
             _include_dirs.append(p)
@@ -96,9 +94,9 @@ def loop_role_dict(role_dict: dict,
         if role_env_file and role_env_file.exists():
             role_env.update(yaml_util.load(file_util.read_file(role_env_file, lambda f: template_util.Template(f.read()).render(**role_env))))
         logger.debug("{0} params: {1}".format(role_name, json.dumps(role_env, indent=1)))
-        # parse jinja2 template
+        # write jinja2 template
         for t in filter(lambda f: f.is_file(), role_path.rglob("*")):
-            _rules = regex_util.match_rules([*jinja2ignore_rules, *["var/.*.yaml"]], t.as_posix(), ".jinia2ignore {0}".format(loop_role_dict.__name__))
+            _rules = regex_util.match_rules([*jinja2ignore_rules, pathlib.Path(role_name).joinpath("env.yaml").as_posix()], t.as_posix(), ".jinia2ignore {0}".format(loop_role_dict.__name__))
             if not any([r["isMatch"] for r in _rules]):
                 file_util.write_file(t, lambda f: f.write(file_util.read_file(t, lambda tf: template_util.Template(tf.read()).render(**role_env))))
         role_build_sh = role_path.joinpath("build.sh")
@@ -114,6 +112,7 @@ def loop_role_dict(role_dict: dict,
 class Installer:
     def __init__(self, root_path: pathlib.Path, role_func, role_deep: int = 1) -> None:
         log_util.init_logger()
+        logger.setLevel(logging.INFO)
         self.root_path: pathlib.Path = root_path
         self.bak_path: pathlib.Path = root_path.joinpath("___temp/bak")
         self.env_file: pathlib.Path = root_path.joinpath("env.yaml")
@@ -132,7 +131,7 @@ class Installer:
         self.arg_parser.add_argument('--debug', action="store_true")
 
         args: argparse.Namespace = self.arg_parser.parse_args()
-        print("   args:", args)
+        logger.info("args: {0}".format(args))
         if args.debug:
             logger.setLevel(logging.DEBUG)
         # select role
