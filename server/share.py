@@ -15,7 +15,7 @@ def dfs_dir(path: pathlib.Path, deep=1, exclude_rules: list = None) -> list:
     all_dirs = list(filter(lambda a: a.is_dir(), sorted(path.iterdir())))
     _include_dirs = []
     for p in all_dirs:
-        _rules = regex_util.match_rules(exclude_rules, p.as_posix(), ".jinia2ignore")
+        _rules = regex_util.match_rules(exclude_rules, p.as_posix(), ".jinia2ignore {0}".format(dfs_dir.__name__))
         if not any([r["isMatch"] for r in _rules]):
             _include_dirs.append(p)
     for p in _include_dirs:
@@ -35,7 +35,7 @@ def get_dir_dict(root_path: pathlib.Path, exclude_rules: list = None, select_tip
     all_dirs = list(filter(lambda a: a.is_dir(), sorted(root_path.iterdir())))
     _include_dirs = []
     for p in all_dirs:
-        _rules = regex_util.match_rules(exclude_rules, p.as_posix(), ".jinia2ignore")
+        _rules = regex_util.match_rules(exclude_rules, p.as_posix(), ".jinia2ignore {0}".format(get_dir_dict.__name__))
         if not any([r["isMatch"] for r in _rules]):
             _include_dirs.append(p)
     dir_dict: dict = {str(i): t for i, t in enumerate(_include_dirs, start=1)}
@@ -69,7 +69,7 @@ def select_option(root_path: pathlib.Path, deep: int = 1, exclude_rules=None, ar
 
 
 def run_cmd(cmd):
-    # print(cmd)
+    logger.debug(cmd)
     subprocess.Popen(cmd, shell=True).wait()
 
 
@@ -94,11 +94,13 @@ def loop_role_dict(role_dict: dict,
             }
         }
         for t in filter(lambda f: f.is_file(), role_env_dir.rglob("*")):
+            logger.info(t.as_posix())
             template_str = file_util.read_file(t, lambda f: template_util.Template(f.read()).render(**role_env_dict))
             role_env_dict.update(yaml_util.load(template_str))
+        logger.debug("{0} params: {1}".format(role_name, json.dumps(role_env_dict)))
         # parse jinja2 template
         for t in filter(lambda f: f.is_file(), role_path.rglob("*")):
-            _rules = regex_util.match_rules([*jinja2ignore_rules, *["var/.*.yaml"]], t.as_posix(), ".jinia2ignore")
+            _rules = regex_util.match_rules([*jinja2ignore_rules, *["var/.*.yaml"]], t.as_posix(), ".jinia2ignore {0}".format(loop_role_dict.__name__))
             if not any([r["isMatch"] for r in _rules]):
                 template_str = file_util.read_file(t, lambda f: template_util.Template(f.read()).render(**role_env_dict))
                 file_util.write_file(t, lambda f: f.write(template_str))
@@ -109,7 +111,6 @@ def loop_role_dict(role_dict: dict,
                     role_print(role_title, "build", role_build_sh.as_posix()),
                     "bash {0}".format(role_build_sh.as_posix())
                 ], delimiter="&&"))
-        logger.info(json.dumps(role_env_dict, indent=1))
         # role_func(role_title=role_title, role_path=role_path, role_env_dict=role_env_dict, args=args, logger=logger, **kwargs)
 
 
