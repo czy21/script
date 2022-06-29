@@ -7,14 +7,20 @@ import sys
 
 from utility import collection as collection_util, file as file_util, regex as regex_util, template as template_util, yaml as yaml_util, log as log_util
 
-logger = log_util.Logger(__name__)
+logger = logging.getLogger()
 
 
-def dfs_dir(path: pathlib.Path, deep=1, exclude_pattern: str = None) -> list:
+def dfs_dir(path: pathlib.Path, deep=1, exclude_rules: list = None) -> list:
     ret = []
-    for p in filter(lambda a: a.is_dir() and regex_util.not_match(exclude_pattern, a.as_posix()), sorted(path.iterdir())):
+    all_dirs = list(filter(lambda a: a.is_dir(), sorted(path.iterdir())))
+    _include_dirs = []
+    for p in all_dirs:
+        _rules = regex_util.match_rules(exclude_rules, p.as_posix(), ".jinia2ignore")
+        if not any([r["isMatch"] for r in _rules]):
+            _include_dirs.append(p)
+    for p in _include_dirs:
         ret.append({"path": p, "deep": deep})
-        ret += dfs_dir(p, deep + 1, exclude_pattern)
+        ret += dfs_dir(p, deep + 1, exclude_rules)
     return ret
 
 
@@ -25,12 +31,11 @@ def role_print(role, content, exec_file=None) -> str:
     return 'echo "' + c + '"'
 
 
-def get_dir_dict(root_path: pathlib.Path, exclude_rules: list = None, select_tip="", col_num=5, args: argparse.Namespace = None) -> dict:
+def get_dir_dict(root_path: pathlib.Path, exclude_rules: list = None, select_tip="", col_num=5) -> dict:
     all_dirs = list(filter(lambda a: a.is_dir(), sorted(root_path.iterdir())))
     _include_dirs = []
     for p in all_dirs:
-        _rules = [{"rule": r, "isMatch": regex_util.is_match(r, p.as_posix())} for r in exclude_rules]
-        logger.debug(".jinja2ignore rules for namespace: {0} => {1}".format(p, json.dumps(_rules)))
+        _rules = regex_util.match_rules(exclude_rules, p.as_posix(), ".jinia2ignore")
         if not any([r["isMatch"] for r in _rules]):
             _include_dirs.append(p)
     dir_dict: dict = {str(i): t for i, t in enumerate(_include_dirs, start=1)}
@@ -42,8 +47,7 @@ def get_dir_dict(root_path: pathlib.Path, exclude_rules: list = None, select_tip
 def select_option(root_path: pathlib.Path, deep: int = 1, exclude_rules=None, args: argparse.Namespace = None):
     exclude_rules = exclude_rules if exclude_rules is not None else []
     exclude_rules.extend(["___temp", "utility"])
-    exclude_pattern = "({0})".format("|".join(set(exclude_rules)))
-    flat_dirs = dfs_dir(root_path, exclude_pattern=exclude_pattern)
+    flat_dirs = dfs_dir(root_path, exclude_rules=exclude_rules)
 
     app_path = root_path
     deep_index = 1
@@ -61,7 +65,7 @@ def select_option(root_path: pathlib.Path, deep: int = 1, exclude_rules=None, ar
         deep_index = deep_index + 1
     if args.namespace is None:
         args.namespace = app_path.name
-    return get_dir_dict(app_path, exclude_rules=exclude_rules, select_tip="role num(example:1 2 3)", args=args), exclude_rules
+    return get_dir_dict(app_path, exclude_rules=exclude_rules, select_tip="role num(example:1 2 3)"), exclude_rules
 
 
 def run_cmd(cmd):
@@ -94,8 +98,7 @@ def loop_role_dict(role_dict: dict,
             role_env_dict.update(yaml_util.load(template_str))
         # parse jinja2 template
         for t in filter(lambda f: f.is_file(), role_path.rglob("*")):
-            _rules = [{"rule": r, "isMatch": regex_util.is_match(r, t.as_posix())} for r in [*jinja2ignore_rules, *["var/.*.yaml"]]]
-            logger.debug(".jinja2ignore rules for role: {0} => {1}".format(t, json.dumps(_rules)))
+            _rules = regex_util.match_rules([*jinja2ignore_rules, *["var/.*.yaml"]], t.as_posix(), ".jinia2ignore")
             if not any([r["isMatch"] for r in _rules]):
                 template_str = file_util.read_file(t, lambda f: template_util.Template(f.read()).render(**role_env_dict))
                 file_util.write_file(t, lambda f: f.write(template_str))
@@ -111,12 +114,8 @@ def loop_role_dict(role_dict: dict,
 
 
 class Installer:
-    def __init__(self,
-                 root_path: pathlib.Path,
-                 role_func,
-                 role_deep: int = 1
-                 ) -> None:
-        self.logger = logger
+    def __init__(self, root_path: pathlib.Path, role_func, role_deep: int = 1) -> None:
+        log_util.init_logger()
         self.root_path: pathlib.Path = root_path
         self.bak_path: pathlib.Path = root_path.joinpath("___temp/bak")
         self.env_file: pathlib.Path = root_path.joinpath("env.yaml")
@@ -137,7 +136,7 @@ class Installer:
         args: argparse.Namespace = self.arg_parser.parse_args()
         print("   args:", args)
         if args.debug:
-            logger.logger.setLevel(logging.DEBUG)
+            logger.setLevel(logging.DEBUG)
         # select role
         selected_role_dict, excludes = select_option(self.root_path, self.role_deep, args=args)
         global_env_dict = {}
