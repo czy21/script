@@ -15,4 +15,11 @@ systemctl restart pkg-Docker-dockerd.service
 
 ```bash
 scp http.app.conf <host>:/etc/nginx/conf.d/
+
+wget https://raw.githubusercontent.com/th0ma7/synology/master/packages/ffmpeg-4.4.1/ffmpeg_x64-7.0_4.4.1-40.spk
+
+sudo mv /var/packages/CodecPack/target/bin/ffmpeg41 /var/packages/CodecPack/target/bin/ffmpeg41.bak
+# upload ffmpeg.spk
+
+ln /var/packages/ffmpeg/target/bin/ffmpeg /var/packages/CodecPack/target/bin/ffmpeg41
 ```
