@@ -16,5 +16,5 @@ def init_logger(name=None, file: pathlib.Path = None):
         file.parent.mkdir(exist_ok=True, parents=True)
         file.write_text("")
         fh = logging.FileHandler(filename=file.absolute().as_posix(), encoding='utf-8')
-        fh.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(thread)d [ %(threadName)s ] %(name)s - %(message)s'))
+        fh.setFormatter(logging.Formatter('%(asctime)s %(levelname)s [ %(threadName)s ] %(name)s - %(message)s'))
         logger.addHandler(fh)

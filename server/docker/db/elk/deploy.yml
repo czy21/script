@@ -23,8 +23,8 @@ x-traefik-kb-label: &traefik-kb-label
   traefik.http.services.{{ kb_name }}.loadbalancer.server.port: 5601
 
 services:
-  init-{{ param_db_es_cluster_name }}:
-    container_name: init-{{ param_db_es_cluster_name }}
+  {{ param_db_es_cluster_name }}-init:
+    container_name: {{ param_db_es_cluster_name }}-init
     image: docker.elastic.co/elasticsearch/elasticsearch:7.17.4
     command: |
       bash -c '
@@ -88,7 +88,7 @@ services:
       - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/data/{{ i }}:/usr/share/elasticsearch/data
       - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/cert/:/usr/share/elasticsearch/config/cert/
     depends_on:
-      - init-{{ param_db_es_cluster_name }}
+      - {{ param_db_es_cluster_name }}-init
   {{ kb_name }}:
     image: {{ param_registry_proxy_url | default("docker.elastic.co") }}/kibana/kibana:7.17.4
     container_name: {{ kb_name }}

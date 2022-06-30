@@ -24,7 +24,7 @@ def dfs_dir(path: pathlib.Path, deep=1, exclude_rules: list = None) -> list:
 
 
 def echo_action(role, content, exec_file=None) -> str:
-    c = "{}\033[32m {} \033[0m".format(role, content)
+    c = "{} {} ".format(role, content)
     if exec_file:
         c += "=> {}".format(exec_file)
     return 'echo "' + c + '"'
@@ -71,7 +71,12 @@ def select_option(root_path: pathlib.Path, deep: int = 1, exclude_rules=None, ar
 
 def run_cmd(cmd):
     logger.debug(cmd)
-    subprocess.Popen(cmd, shell=True).wait()
+    with subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, encoding="utf-8") as proc:
+        logger.info(proc.stdout.read())
+        proc.stdout.close()
+        proc.wait()
+        if proc.returncode != 0:
+            sys.exit(0)
 
 
 def loop_role_dict(role_dict: dict,
