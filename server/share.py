@@ -71,7 +71,12 @@ def select_option(root_path: pathlib.Path, deep: int = 1, exclude_rules=None, ar
 
 def run_cmd(cmd):
     logger.debug(cmd)
-    subprocess.Popen(cmd, shell=True).wait()
+    with subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, encoding="utf-8") as proc:
+        logger.info(proc.stdout.read())
+        proc.stdout.close()
+        proc.wait()
+        if proc.returncode != 0:
+            sys.exit(0)
 
 
 def loop_roles(roles: dict,
