@@ -25,7 +25,7 @@ def invoke(role_title: str, role_path: pathlib.Path, role_env: dict, args: argpa
         helm_repo_url = role_env.get("param_helm_repo_url")
         helm_username = role_env.get("param_helm_username")
         helm_password = role_env.get("param_helm_password")
-        _cmds.append(share.role_print(role_title, "push"))
+        _cmds.append(share.echo_action(role_title, "push"))
         _cmds.append("helm plugin list | if [ -z \"$(grep -w nexus-push)\" ];then helm plugin install --version master https://github.com/sonatype-nexus-community/helm-nexus-push.git;fi")
         _cmds.append("helm repo   list | if [ -z \"$(grep -w {0})\" ];then helm repo add {0} {1};fi".format(helm_repo_name, helm_repo_url))
         _cmds.append("helm package {0} --destination {0} | sed 's/Successfully packaged chart and saved it to: //g' | xargs helm nexus-push {1}  --username {2} --password {3}".format(role_path, helm_repo_name, helm_username, helm_password))
@@ -35,12 +35,12 @@ def invoke(role_title: str, role_path: pathlib.Path, role_env: dict, args: argpa
         _extension = ""
         if args.delete:
             _cmds.append([
-                share.role_print(role_title, "delete"),
+                share.echo_action(role_title, "delete"),
                 "helm delete {0} {1}".format(role_name, "" if args.ignore_namespace else "--namespace {0}".format(args.namespace))
             ])
         else:
             if args.install:
-                _cmds.append(share.role_print(role_title, "install"))
+                _cmds.append(share.echo_action(role_title, "install"))
                 _action = "upgrade --install"
             helm_cmd = [
                 "helm {0} {1} {2} --values {3}".format(_action, role_name, role_path.as_posix(), role_values_override_file)
@@ -50,7 +50,7 @@ def invoke(role_title: str, role_path: pathlib.Path, role_env: dict, args: argpa
             if args.create_namespace:
                 helm_cmd.append("--create-namespace")
             if _action == "template":
-                _cmds.append(share.role_print(role_title, "template"))
+                _cmds.append(share.echo_action(role_title, "template"))
                 helm_cmd.append("> {0}".format(temp_all_in_one_path))
 
             _cmds.append('helm dep up {0}'.format(role_path.as_posix()))

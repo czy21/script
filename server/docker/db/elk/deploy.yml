@@ -12,38 +12,27 @@ x-es-common: &es-common
 
 x-traefik-es-label: &traefik-es-label
   traefik.enable: true
-  traefik.http.routers.{{ param_db_es_cluster_name }}.rule: Host(`es.cluster.com`)
+  traefik.http.routers.{{ param_db_es_cluster_name }}.rule: Host(`{{ param_db_es_host }}`)
   traefik.http.routers.{{ param_db_es_cluster_name }}.service: {{ param_db_es_cluster_name }}
   traefik.http.services.{{ param_db_es_cluster_name }}.loadbalancer.server.port: 9200
 
 x-traefik-kb-label: &traefik-kb-label
   traefik.enable: true
-  traefik.http.routers.{{ kb_name }}.rule: Host(`kibana.cluster.com`)
+  traefik.http.routers.{{ kb_name }}.rule: Host(`{{ param_db_kb_host }}`)
   traefik.http.routers.{{ kb_name }}.service: {{ kb_name }}
   traefik.http.services.{{ kb_name }}.loadbalancer.server.port: 5601
 
 services:
-  init-{{ param_db_es_cluster_name }}:
-    container_name: init-{{ param_db_es_cluster_name }}
+  {{ param_db_es_cluster_name }}-init:
+    container_name: {{ param_db_es_cluster_name }}-init
     image: docker.elastic.co/elasticsearch/elasticsearch:7.17.4
-    command: |
-      bash -c '
-        for ((i=1;i<={{ param_db_es_cluster_replicas }};i++));do
-         data_node_dir=/usr/share/elasticsearch/data/$${i}
-         mkdir -p $${data_node_dir} && chown -R 1000:0 $${data_node_dir}
-        done
-        if [[ ! -f /cert/bundle.zip ]]; then
-          bin/elasticsearch-certutil cert --silent --pem --in config/instance.yml -out /cert/bundle.zip;
-          unzip /cert/bundle.zip -d /cert; 
-        fi;
-        chown -R 1000:0 /cert
-        rm -rf /cert/bundle.zip
-      '
+    command: sh ./init.sh
     user: "0"
     working_dir: /usr/share/elasticsearch
     volumes:
-      - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/cert/:/cert/
+      - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/conf/init.sh:/usr/share/elasticsearch/init.sh
       - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/conf/instance.yml/:/usr/share/elasticsearch/config/instance.yml
+      - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/cert/:{{ param_db_es_target_cert_path }}/
       - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/data/:/usr/share/elasticsearch/data/
   {% for i in range(1,param_db_es_cluster_replicas | int + 1) %}
     {% set es_node_name = param_db_es_cluster_name + '-' + i | string %}
@@ -72,23 +61,21 @@ services:
       bootstrap.memory_lock: "true"
       ES_JAVA_OPTS: -Xms512m -Xmx512m
       ELASTIC_PASSWORD: {{ param_db_es_password }}
-      {% set cert_dir='/usr/share/elasticsearch/config/cert' %}
       xpack.license.self_generated.type: trial
       xpack.security.enabled: true
       xpack.security.http.ssl.enabled: false
       xpack.security.transport.ssl.enabled: true
       xpack.security.transport.ssl.verification_mode: certificate
-      xpack.security.transport.ssl.certificate_authorities: {{ cert_dir }}/ca/ca.crt
-      xpack.security.transport.ssl.certificate: {{ cert_dir }}/{{ es_node_name }}/{{ es_node_name }}.crt
-      xpack.security.transport.ssl.key: {{ cert_dir }}/{{ es_node_name }}/{{ es_node_name }}.key
+      xpack.security.transport.ssl.certificate_authorities: {{ param_db_es_target_cert_path }}/ca/ca.crt
+      xpack.security.transport.ssl.certificate: {{ param_db_es_target_cert_path }}/{{ es_node_name }}/{{ es_node_name }}.crt
+      xpack.security.transport.ssl.key: {{ param_db_es_target_cert_path }}/{{ es_node_name }}/{{ es_node_name }}.key
       xpack.security.authc.realms.file.file1.order: 0
+      xpack.monitoring.collection.enabled: true
     volumes:
       - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/conf/users:/usr/share/elasticsearch/config/users
       - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/conf/users_roles:/usr/share/elasticsearch/config/users_roles
-      - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/data/{{ i }}:/usr/share/elasticsearch/data
-      - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/cert/:/usr/share/elasticsearch/config/cert/
-    depends_on:
-      - init-{{ param_db_es_cluster_name }}
+      - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/data/{{ i }}/:/usr/share/elasticsearch/data/
+      - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/cert/:{{ param_db_es_target_cert_path }}/
   {{ kb_name }}:
     image: {{ param_registry_proxy_url | default("docker.elastic.co") }}/kibana/kibana:7.17.4
     container_name: {{ kb_name }}
