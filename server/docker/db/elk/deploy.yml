@@ -3,12 +3,7 @@ version: "3.9"
 {% set kb_name = param_db_es_cluster_name + '-kb' %}
 
 x-es-common: &es-common
-  image: {{ param_registry_proxy_url | default("docker.elastic.co") }}/elasticsearch/elasticsearch:7.17.4
-  restart: always
-  ulimits:
-    memlock:
-      soft: -1
-      hard: -1
+  image: {{ param_registry_proxy_url | default("docker.elastic.co") }}/elasticsearch/elasticsearch:{{ param_db_es_version }}
 
 x-traefik-es-label: &traefik-es-label
   traefik.enable: true
@@ -23,17 +18,22 @@ x-traefik-kb-label: &traefik-kb-label
   traefik.http.services.{{ kb_name }}.loadbalancer.server.port: 5601
 
 services:
-  {{ param_db_es_cluster_name }}-init:
-    container_name: {{ param_db_es_cluster_name }}-init
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.4
-    command: sh ./init.sh
+  {{ param_db_es_cluster_name }}-setup:
+    <<: *es-common
+    container_name: {{ param_db_es_cluster_name }}-setup
+    command: sh ./setup.sh
     user: "0"
     working_dir: /usr/share/elasticsearch
     volumes:
-      - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/conf/init.sh:/usr/share/elasticsearch/init.sh
+      - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/conf/setup.sh:/usr/share/elasticsearch/setup.sh
       - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/conf/instance.yml/:/usr/share/elasticsearch/config/instance.yml
       - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/cert/:{{ param_db_es_target_cert_path }}/
       - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/data/:/usr/share/elasticsearch/data/
+    healthcheck:
+      test: ["CMD-SHELL", "[ -f {{ param_db_es_target_cert_path }}/{{ param_db_es_cluster_name + '-1' }}/{{ param_db_es_cluster_name + '-1' }}.crt ]"]
+      interval: 1s
+      timeout: 5s
+      retries: 120
   {% for i in range(1,param_db_es_cluster_replicas | int + 1) %}
     {% set es_node_name = param_db_es_cluster_name + '-' + i | string %}
   {{ es_node_name }}:
@@ -76,8 +76,19 @@ services:
       - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/conf/users_roles:/usr/share/elasticsearch/config/users_roles
       - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/data/{{ i }}/:/usr/share/elasticsearch/data/
       - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/cert/:{{ param_db_es_target_cert_path }}/
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    depends_on:
+      {% if i == 1 %}
+      {{ param_db_es_cluster_name }}-setup:
+        condition: service_healthy
+      {% else %}
+        - {{ param_db_es_cluster_name + '-' + (i|int-1) | string }}
+      {% endif %}
   {{ kb_name }}:
-    image: {{ param_registry_proxy_url | default("docker.elastic.co") }}/kibana/kibana:7.17.4
+    image: {{ param_registry_proxy_url | default("docker.elastic.co") }}/kibana/kibana:{{ param_db_es_version }}
     container_name: {{ kb_name }}
     labels:
       <<: *traefik-kb-label
