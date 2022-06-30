@@ -87,6 +87,12 @@ services:
       {% else %}
         - {{ param_db_es_cluster_name + '-' + (i|int-1) | string }}
       {% endif %}
+    healthcheck:
+      test: ["CMD-SHELL","curl -s http://localhost:9200 | grep -q 'missing authentication credentials'"]
+      interval: 10s
+      timeout: 10s
+      retries: 120
+  {% endfor %}
   {{ kb_name }}:
     image: {{ param_registry_proxy_url | default("docker.elastic.co") }}/kibana/kibana:{{ param_db_es_version }}
     container_name: {{ kb_name }}
@@ -96,5 +102,7 @@ services:
       - "5601"
     volumes:
       - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/conf/kibana.yml:/usr/share/kibana/config/kibana.yml
-    restart: always
-  {% endfor %}
+    depends_on:
+    {% for i in range(1,param_db_es_cluster_replicas | int + 1) %}
+      - {{ param_db_es_cluster_name + '-' + i|string }}
+    {% endfor %}
