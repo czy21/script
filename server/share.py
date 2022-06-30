@@ -74,13 +74,13 @@ def run_cmd(cmd):
     subprocess.Popen(cmd, shell=True).wait()
 
 
-def loop_role_dict(role_dict: dict,
-                   role_func,
-                   global_env,
-                   args: argparse.Namespace,
-                   jinja2ignore_rules: list,
-                   **kwargs):
-    for k, v in role_dict.items():
+def loop_roles(roles: dict,
+               role_func,
+               global_env,
+               args: argparse.Namespace,
+               jinja2ignore_rules: list,
+               **kwargs):
+    for k, v in roles.items():
         role_num = k
         role_path: pathlib.Path = v
         role_name = role_path.name
@@ -99,7 +99,7 @@ def loop_role_dict(role_dict: dict,
         logger.debug("{0} params: {1}".format(role_name, json.dumps(role_env, indent=1)))
         # write jinja2 template
         for t in filter(lambda f: f.is_file(), role_path.rglob("*")):
-            _rules = regex_util.match_rules([*jinja2ignore_rules, pathlib.Path(role_name).joinpath("env.yaml").as_posix()], t.as_posix(), ".jinia2ignore {0}".format(loop_role_dict.__name__))
+            _rules = regex_util.match_rules([*jinja2ignore_rules, pathlib.Path(role_name).joinpath("env.yaml").as_posix()], t.as_posix(), ".jinia2ignore {0}".format(loop_roles.__name__))
             if not any([r["isMatch"] for r in _rules]):
                 file_util.write_text(t, template_util.Template(file_util.read_text(t)).render(**role_env))
         role_build_sh = role_path.joinpath("build.sh")
@@ -138,8 +138,8 @@ class Installer:
         if args.debug:
             logger.setLevel(logging.DEBUG)
         # select role
-        selected_role_dict, excludes = select_option(self.root_path, self.role_deep, args=args)
-        logger.info("namespace: {0}; selected roles: {1}".format(args.namespace, ",".join(selected_role_dict.keys())))
+        selected_roles, excludes = select_option(self.root_path, self.role_deep, args=args)
+        logger.info("namespace: {0}; selected roles: {1}".format(args.namespace, ",".join(selected_roles.keys())))
         global_env = yaml_util.load(self.env_file) if self.env_file and self.env_file.exists() else {}
         # read input param
         param_extra_iter = iter(args.param)
@@ -148,9 +148,9 @@ class Installer:
         # global env_dict finished
         global_jinja2ignore_rules = file_util.read_text(self.jinja2ignore_file).split("\n") if self.jinja2ignore_file and self.jinja2ignore_file.exists() else []
         # loop selected_role_dict
-        loop_role_dict(
+        loop_roles(
             root_path=self.root_path,
-            role_dict=selected_role_dict,
+            roles=selected_roles,
             role_func=self.role_func,
             global_env=global_env,
             jinja2ignore_rules=global_jinja2ignore_rules,
