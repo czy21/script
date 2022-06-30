@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 import inspect
+import logging
 
 from utility import log
 
-logger = log.Logger(__name__)
+logger = logging.getLogger()
 
 
 def __get_function_name():

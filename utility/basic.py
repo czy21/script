@@ -1,25 +1,22 @@
 #!/usr/bin/env python3
+import logging
 import subprocess
 import sys
 
 from colorama import Fore
 
-from utility import log as log_util
+logger = logging.getLogger()
 
 
-def action_formatter(action_name: str, msg=None, action_color=Fore.YELLOW):
-    action_name_msg = action_color + action_name
-    if msg:
-        action_name_msg += Fore.WHITE + " => " + msg
-    return action_name_msg
+def action_formatter(action_name: str, message=None):
+    return "{0} => {1}".format(action_name, message)
 
 
 def print_default(msg_lines, proc: subprocess.Popen, func_param) -> None:
-    logger = log_util.Logger(__name__)
     for line in msg_lines:
         line = line.strip()
         if line:
-            logger.info(line, is_sleep=False)
+            logger.info(line)
 
 
 def execute(cmd, func=print_default, func_param=None, encoding="utf-8"):

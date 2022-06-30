@@ -4,7 +4,7 @@ import inspect
 from domain.default import common as default_common
 from utility import basic as basic_util, collection as list_util, log, path as path_util
 
-logger = log.Logger(__name__)
+logger = logging.getLogger()
 
 
 def __get_function_name():
@@ -17,7 +17,7 @@ def build_web():
         "&& yarn --cwd " + default_common.param_web_root_project_path, "install",
         "&& yarn --cwd " + default_common.param_web_root_project_path, "build",
         "&& cp -r",
-        path_util.pure_path_join(default_common.param_web_root_project_path, "build") + "/*",
+        path_util.join_path(default_common.param_web_root_project_path, "build") + "/*",
         default_common.param_web_output_path
     ])
     logger.info(basic_util.action_formatter(__get_function_name(), command))

@@ -6,7 +6,7 @@
 function upload_exec_py() {
   local book_source=$(pwd)
   local book_target=$(basename ${book_source})
-  local book_target_temp_path=${book_target}/___temp/
+  local book_target_temp_path=${book_target}/___temp
   local utility=$(cd ${book_source}/../../utility; pwd)
   local del_cmd="rm -rf \$HOME/${book_target}"
   local ssh_opt="-o StrictHostKeyChecking=no"

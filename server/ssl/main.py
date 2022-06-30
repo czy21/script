@@ -14,7 +14,7 @@ def invoke(role_title: str, role_path: pathlib.Path, **kwargs):
     _cmds = []
     role_build_sh = role_path.joinpath("build.sh")
     if args.build == "build.sh":
-        _cmds.append(share.role_print(role_title, "build.sh"))
+        _cmds.append(share.echo_action(role_title, "build.sh"))
         if role_build_sh.exists():
             _cmds.append("sh {0}".format(role_build_sh.as_posix()))
             root_role_tmp_path = root_path.joinpath("___temp").joinpath(role_name)

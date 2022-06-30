@@ -4,7 +4,7 @@ import inspect
 from domain.default import common as default_common
 from utility import basic as basic_util, collection as list_util, log
 
-logger = log.Logger(__name__)
+logger = logging.getLogger()
 
 
 def __get_function_name():
