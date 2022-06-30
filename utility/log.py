@@ -16,7 +16,7 @@ log_colors_config = {
 def init_logger(name=None, file: pathlib.Path = None):
     logger = logging.getLogger(name)
     ch = colorlog.StreamHandler()
-    color_format = '%(white)s%(asctime)s %(log_color)s%(levelname)s %(purple)s%(thread)d %(white)s[ %(threadName)s ] %(cyan)s%(name)s %(white)s- %(message)s'
+    color_format = '%(white)s%(asctime)s %(log_color)s%(levelname)s %(white)s[ %(threadName)s ] %(cyan)s%(name)s %(white)s- %(message)s'
     ch.setFormatter(colorlog.ColoredFormatter(color_format, log_colors=log_colors_config))
     logger.addHandler(ch)
     if file:
