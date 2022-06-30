@@ -32,7 +32,7 @@ services:
     volumes:
       - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/conf/init.sh:/usr/share/elasticsearch/init.sh
       - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/conf/instance.yml/:/usr/share/elasticsearch/config/instance.yml
-      - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/cert/:/usr/share/elasticsearch/config/cert/
+      - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/cert/:{{ param_db_es_target_cert_path }}/
       - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/data/:/usr/share/elasticsearch/data/
   {% for i in range(1,param_db_es_cluster_replicas | int + 1) %}
     {% set es_node_name = param_db_es_cluster_name + '-' + i | string %}
@@ -61,22 +61,21 @@ services:
       bootstrap.memory_lock: "true"
       ES_JAVA_OPTS: -Xms512m -Xmx512m
       ELASTIC_PASSWORD: {{ param_db_es_password }}
-      {% set cert_dir='/usr/share/elasticsearch/config/cert' %}
       xpack.license.self_generated.type: trial
       xpack.security.enabled: true
       xpack.security.http.ssl.enabled: false
       xpack.security.transport.ssl.enabled: true
       xpack.security.transport.ssl.verification_mode: certificate
-      xpack.security.transport.ssl.certificate_authorities: {{ cert_dir }}/ca/ca.crt
-      xpack.security.transport.ssl.certificate: {{ cert_dir }}/{{ es_node_name }}/{{ es_node_name }}.crt
-      xpack.security.transport.ssl.key: {{ cert_dir }}/{{ es_node_name }}/{{ es_node_name }}.key
+      xpack.security.transport.ssl.certificate_authorities: {{ param_db_es_target_cert_path }}/ca/ca.crt
+      xpack.security.transport.ssl.certificate: {{ param_db_es_target_cert_path }}/{{ es_node_name }}/{{ es_node_name }}.crt
+      xpack.security.transport.ssl.key: {{ param_db_es_target_cert_path }}/{{ es_node_name }}/{{ es_node_name }}.key
       xpack.security.authc.realms.file.file1.order: 0
       xpack.monitoring.collection.enabled: true
     volumes:
       - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/conf/users:/usr/share/elasticsearch/config/users
       - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/conf/users_roles:/usr/share/elasticsearch/config/users_roles
-      - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/data/{{ i }}:/usr/share/elasticsearch/data
-      - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/cert/:/usr/share/elasticsearch/config/cert/
+      - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/data/{{ i }}/:/usr/share/elasticsearch/data/
+      - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/cert/:{{ param_db_es_target_cert_path }}/
   {{ kb_name }}:
     image: {{ param_registry_proxy_url | default("docker.elastic.co") }}/kibana/kibana:7.17.4
     container_name: {{ kb_name }}
