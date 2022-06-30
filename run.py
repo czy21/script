@@ -3,6 +3,7 @@ import argparse
 import importlib
 import importlib.machinery
 import importlib.util
+import logging
 import os
 import pathlib
 import sys
@@ -13,6 +14,8 @@ import yaml
 from utility import log as log_util, file as file_util
 
 sys.path.append(pathlib.Path(__file__).parent.parent.as_posix())
+
+logger = logging.getLogger()
 
 
 def exec_file():
@@ -27,14 +30,12 @@ def exec_file():
     param_iter = iter(args.param)
     param_input_dict = dict(zip(param_iter, param_iter))
     os.environ.__setattr__("run_args", args)
-    logger = log_util.Logger(__name__)
 
     env_path = Path(args.env).resolve()
     env_stem = env_path.parent.stem
 
     log_file = os.environ.run_args.log_file
-    if log_file is not None:
-        open(env_path.joinpath("../", log_file).resolve().as_posix(), 'w').close()
+    log_util.init_logger(file=env_path.joinpath("../", log_file).absolute() if log_file is not None else None)
 
     # empty source log
     default_path_module = importlib.import_module("domain.default.path")
@@ -49,9 +50,9 @@ def exec_file():
         env_common_mod.__dict__.update(dict({k: v for k, v in env_pwd_mod.__dict__.items() if k.startswith("param")}).items(), **param_input_dict)
         default_common_mod.__dict__.update(dict({k: v for k, v in env_common_mod.__dict__.items() if k.startswith("param")}))
         default_common_param = dict({k: v for k, v in default_common_mod.__dict__.items() if k.startswith("param")})
-        file_util.write_file(env_output_yaml, lambda f: f.write(yaml.dump(default_common_param)))
+        file_util.write_text(env_output_yaml, yaml.dump(default_common_param))
     else:
-        default_common_mod.__dict__.update(file_util.read_file(env_output_yaml, lambda f: yaml.full_load(f)))
+        default_common_mod.__dict__.update(yaml.full_load(file_util.read_text(env_output_yaml)))
     if args.cmd:
         exec(args.cmd)
 
