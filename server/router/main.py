@@ -34,12 +34,12 @@ def invoke(root_path: pathlib.Path, role_title: str, role_path: pathlib.Path, ro
         def prune_type(t):
             return ";".join([
                 "type_total=$(uci show {0} | grep '^{0}\\(.*\\)={1}' | wc -l)",
-                share.role_print("prune", "{0}.@{1}", "total:${{type_total}}"),
+                share.echo_action("prune", "{0}.@{1}", "total:${{type_total}}"),
                 "for i in $(seq ${{type_total}} -1 1);do uci del {0}.@{1}[$(($i-1))];done"
             ]).format(role_name, t)
 
         _cmds.append([
-            share.role_print(role_title, "install"),
+            share.echo_action(role_title, "install"),
             [prune_type(t) for t in meta_dict.keys()],
             "uci -f {0} -m import {1}".format(conf_file.as_posix(), role_name),
             "uci commit {0}".format(role_name)
@@ -74,7 +74,7 @@ def invoke(root_path: pathlib.Path, role_title: str, role_path: pathlib.Path, ro
                         contents.append(" ".join(config_node) + "\n\t\t" + option_text)
             with open(role_bak_conf, "w", encoding="utf-8") as t_file:
                 t_file.write("\n".join(contents))
-        _cmds.append(share.role_print(role_title, "backup"))
+        _cmds.append(share.echo_action(role_title, "backup"))
         _cmds.append("mkdir -p {0};cp -r {1}/* {0}/".format(bak_path.joinpath(role_name), role_bak_path))
     _cmd_str = collection_util.flat_to_str(_cmds, delimiter=" && ")
     share.run_cmd(_cmd_str)
