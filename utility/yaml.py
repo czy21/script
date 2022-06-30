@@ -20,6 +20,4 @@ yaml.add_constructor("!join_path", lambda loader, node: path_util.join_path(*loa
 
 
 def load(stream: Union[str, pathlib.Path]) -> dict:
-    if isinstance(stream, str):
-        return yaml.full_load(stream)
-    return file_util.read_file(stream, lambda f: yaml.full_load(f.read()))
+    return yaml.full_load(stream if isinstance(stream, str) else file_util.read_text(stream))
