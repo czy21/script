@@ -38,7 +38,8 @@ def get_dir_dict(root_path: pathlib.Path, exclude_rules: list = None, select_tip
             _include_dirs.append(p)
     dir_dict: dict = {str(i): t for i, t in enumerate(_include_dirs, start=1)}
     collection_util.print_grid(["{0}.{1}".format(str(k), v.name) for k, v in dir_dict.items()], col_num=col_num)
-    dir_nums = input("please select {0}:".format(select_tip)).strip().split()
+    logger.info("please select {0}:".format(select_tip))
+    dir_nums = input().strip().split()
     return dict((t, dir_dict[t]) for t in dir_nums if t in dir_dict.keys())
 
 
@@ -53,7 +54,8 @@ def select_option(root_path: pathlib.Path, deep: int = 1, exclude_rules=None, ar
     while deep > deep_index:
         role_dict = {str(i): p for i, p in enumerate(map(lambda a: a["path"], filter(lambda a: a["deep"] == deep_index, flat_dirs)), start=1)}
         collection_util.print_grid(["{0}.{1}".format(k, v.name) for k, v in role_dict.items()], col_num=5)
-        selected = input("please select one option(example:1) ").strip()
+        logger.info("please select one option(example:1)")
+        selected = input().strip()
         if selected == '':
             sys.exit()
         if selected not in role_dict.keys():
@@ -111,8 +113,6 @@ def loop_role_dict(role_dict: dict,
 
 class Installer:
     def __init__(self, root_path: pathlib.Path, role_func, role_deep: int = 1) -> None:
-        log_util.init_logger()
-        logger.setLevel(logging.INFO)
         self.root_path: pathlib.Path = root_path
         self.bak_path: pathlib.Path = root_path.joinpath("___temp/bak")
         self.env_file: pathlib.Path = root_path.joinpath("env.yaml")
@@ -120,6 +120,9 @@ class Installer:
         self.role_func = role_func
         self.role_deep: int = role_deep
         self.arg_parser: argparse.ArgumentParser = argparse.ArgumentParser()
+
+        log_util.init_logger(file=root_path.joinpath("___temp/share.log"))
+        logger.setLevel(logging.INFO)
 
     def run(self, **kwargs):
         self.arg_parser.add_argument('-p', '--param', nargs="+", default=[])
