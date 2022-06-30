@@ -104,4 +104,13 @@ services:
       - "5601"
     volumes:
       - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/conf/kibana.yml:/usr/share/kibana/config/kibana.yml
-    depends_on: {{ es_node_names }}
+    healthcheck:
+      test: ["CMD-SHELL","curl -s -I http://localhost:5601 | grep -q 'HTTP/1.1 302 Found'"]
+      interval: 10s
+      timeout: 10s
+      retries: 120
+    depends_on:
+      {% for t in es_node_names %}
+      {{ t }}:
+        condition: service_healthy
+      {% endfor %}
