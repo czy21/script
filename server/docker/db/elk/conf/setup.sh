@@ -21,4 +21,4 @@ chown -R root:root ${cert_path}
 echo "Waiting for Elasticsearch availability";
 until curl -s http://{{ param_db_es_cluster_name + '-1' }}:9200 | grep -q "missing authentication credentials"; do sleep 30; done;
 
-echo "all done!";
+echo "All done!";
