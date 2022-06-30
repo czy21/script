@@ -12,13 +12,13 @@ x-es-common: &es-common
 
 x-traefik-es-label: &traefik-es-label
   traefik.enable: true
-  traefik.http.routers.{{ param_db_es_cluster_name }}.rule: Host(`es.cluster.com`)
+  traefik.http.routers.{{ param_db_es_cluster_name }}.rule: Host(`{{ param_db_es_host }}`)
   traefik.http.routers.{{ param_db_es_cluster_name }}.service: {{ param_db_es_cluster_name }}
   traefik.http.services.{{ param_db_es_cluster_name }}.loadbalancer.server.port: 9200
 
 x-traefik-kb-label: &traefik-kb-label
   traefik.enable: true
-  traefik.http.routers.{{ kb_name }}.rule: Host(`kibana.cluster.com`)
+  traefik.http.routers.{{ kb_name }}.rule: Host(`{{ param_db_kb_host }}`)
   traefik.http.routers.{{ kb_name }}.service: {{ kb_name }}
   traefik.http.services.{{ kb_name }}.loadbalancer.server.port: 5601
 
