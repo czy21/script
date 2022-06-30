@@ -26,24 +26,13 @@ services:
   {{ param_db_es_cluster_name }}-init:
     container_name: {{ param_db_es_cluster_name }}-init
     image: docker.elastic.co/elasticsearch/elasticsearch:7.17.4
-    command: |
-      bash -c '
-        for ((i=1;i<={{ param_db_es_cluster_replicas }};i++));do
-         data_node_dir=/usr/share/elasticsearch/data/$${i}
-         mkdir -p $${data_node_dir} && chown -R 1000:0 $${data_node_dir}
-        done
-        if [[ ! -f /cert/bundle.zip ]]; then
-          bin/elasticsearch-certutil cert --silent --pem --in config/instance.yml -out /cert/bundle.zip;
-          unzip /cert/bundle.zip -d /cert; 
-        fi;
-        chown -R 1000:0 /cert
-        rm -rf /cert/bundle.zip
-      '
+    command: sh ./init.sh
     user: "0"
     working_dir: /usr/share/elasticsearch
     volumes:
-      - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/cert/:/cert/
+      - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/conf/init.sh:/usr/share/elasticsearch/init.sh
       - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/conf/instance.yml/:/usr/share/elasticsearch/config/instance.yml
+      - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/cert/:/usr/share/elasticsearch/config/cert/
       - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/data/:/usr/share/elasticsearch/data/
   {% for i in range(1,param_db_es_cluster_replicas | int + 1) %}
     {% set es_node_name = param_db_es_cluster_name + '-' + i | string %}
@@ -87,8 +76,6 @@ services:
       - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/conf/users_roles:/usr/share/elasticsearch/config/users_roles
       - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/data/{{ i }}:/usr/share/elasticsearch/data
       - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/cert/:/usr/share/elasticsearch/config/cert/
-    depends_on:
-      - {{ param_db_es_cluster_name }}-init
   {{ kb_name }}:
     image: {{ param_registry_proxy_url | default("docker.elastic.co") }}/kibana/kibana:7.17.4
     container_name: {{ kb_name }}
