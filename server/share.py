@@ -56,7 +56,7 @@ def select_option(root_path: pathlib.Path, deep: int = 1, exclude_rules=None, ar
         collection_util.print_grid(["{0}.{1}".format(k, v.name) for k, v in role_dict.items()], col_num=5)
         logger.info("please select one option(example:1)")
         selected = input().strip()
-        logger.info("selected: {0}".format(selected))
+        logger.info("namespace: {0}".format(selected))
         if selected == '':
             sys.exit()
         if selected not in role_dict.keys():
@@ -140,6 +140,7 @@ class Installer:
             logger.setLevel(logging.DEBUG)
         # select role
         selected_role_dict, excludes = select_option(self.root_path, self.role_deep, args=args)
+        logger.info("namespace: {0}; selected roles: {1}".format(args.namespace, ",".join(selected_role_dict.keys())))
         global_env = {}
         # read env_file
         if self.env_file and self.env_file.exists():
