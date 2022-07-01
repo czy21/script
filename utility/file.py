@@ -3,7 +3,7 @@ import pathlib
 from typing import NoReturn
 
 
-def get_files(path: pathlib.Path, remove_prefix: str = "") -> list[str]:
+def get_files(path: pathlib.Path, remove_prefix: str = "") -> list:
     return [a.as_posix().replace(remove_prefix, "") for a in path.rglob("*") if a.is_file()]
 
 
