@@ -18,6 +18,7 @@ function upload_exec_py() {
 
   local args
   local exec_cmd=()
+  local is_debug=false
   for ((i=1;i<="$#";i++));do
     item=${!i}
     if [ "-r" == ${item} ]; then
@@ -26,6 +27,9 @@ function upload_exec_py() {
         shift 1
         continue
     fi
+    if [ "--debug" == ${item} ]; then
+      is_debug=true
+    fi
     args+=" ${item}"
   done
   exec_cmd+="python3 -B \$HOME/${book_target}/main.py ${args}"
@@ -33,5 +37,7 @@ function upload_exec_py() {
   if ${ssh_cmd} "[ -d ${book_target_temp_path} ]"; then
     ${scp_cmd} $host:${book_target_temp_path}/ ${book_source}/
   fi
-#  ${ssh_cmd} ${del_cmd}
+  if [ ${is_debug} = false ]; then
+    ${ssh_cmd} ${del_cmd}
+  fi
 }
