@@ -43,7 +43,7 @@ def get_dir_dict(root_path: pathlib.Path, exclude_rules: list = None, select_tip
     return dict((t, dir_dict[t]) for t in dir_nums if t in dir_dict.keys())
 
 
-def select_option(root_path: pathlib.Path, deep: int = 1, exclude_rules=None, args: argparse.Namespace = None):
+def select_role(root_path: pathlib.Path, deep: int = 1, exclude_rules=None, args: argparse.Namespace = None):
     exclude_rules = exclude_rules if exclude_rules else []
     exclude_rules.extend(["___temp", "utility"])
     flat_dirs = dfs_dir(root_path, exclude_rules=exclude_rules)
@@ -66,7 +66,7 @@ def select_option(root_path: pathlib.Path, deep: int = 1, exclude_rules=None, ar
         deep_index = deep_index + 1
     if args.namespace is None:
         args.namespace = app_path.name
-    return get_dir_dict(app_path, exclude_rules=exclude_rules, select_tip="role num(example:1 2 3)"), exclude_rules
+    return get_dir_dict(app_path, exclude_rules=exclude_rules, select_tip="role num(example:1 2 3)")
 
 
 def run_cmd(cmd):
@@ -143,13 +143,12 @@ class Installer:
         if args.debug:
             logger.setLevel(logging.DEBUG)
         # select role
-        selected_roles, excludes = select_option(self.root_path, self.role_deep, args=args)
+        selected_roles = select_role(self.root_path, self.role_deep, args=args)
         logger.info("namespace: {0}; selected roles: {1}".format(args.namespace, ",".join(selected_roles.keys())))
         global_env = yaml_util.load(self.env_file) if self.env_file and self.env_file.exists() else {}
         # read input param
         param_extra_iter = iter(args.param)
-        param_extra_dict = dict(zip(param_extra_iter, param_extra_iter))
-        global_env.update(param_extra_dict)
+        global_env.update(dict(zip(param_extra_iter, param_extra_iter)))
         # global env_dict finished
         global_jinja2ignore_rules = file_util.read_text(self.jinja2ignore_file).split("\n") if self.jinja2ignore_file and self.jinja2ignore_file.exists() else []
         # loop selected_role_dict
