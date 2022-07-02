@@ -16,7 +16,7 @@ def invoke(role_title: str, role_path: pathlib.Path, role_env: dict, args: argpa
     temp_all_in_one_path.parent.mkdir(parents=True, exist_ok=True)
     temp_all_in_one_path.touch()
 
-    file_util.write_file(role_values_override_file, lambda f: yaml.dump(role_env, f))
+    file_util.write_text(role_values_override_file, yaml.dump(role_env))
 
     _cmds = []
 

@@ -120,7 +120,7 @@ def loop_roles(root_path: pathlib.Path,
                     echo_action(role_title, "build", role_build_sh.as_posix()),
                     "bash {0}".format(role_build_sh.as_posix())
                 ], delimiter="&&"))
-        role_func(role_title=role_title, role_path=role_path, role_env_dict=role_env, args=args, **kwargs)
+        role_func(role_title=role_title, role_path=role_path, role_env=role_env, args=args, **kwargs)
         run_cmd("mkdir -p {1} && cp -r {0}/* {1}".format(role_path, tmp_path.joinpath(args.namespace).joinpath(role_name)))
 
 
