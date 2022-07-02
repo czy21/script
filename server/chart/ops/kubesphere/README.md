@@ -11,5 +11,5 @@ kubectl logs -n kubesphere-system $(kubectl get pod -n kubesphere-system -l app=
 # get jwt
 kubectl -n kubesphere-system get cm kubesphere-config -o yaml | grep -v "apiVersion" | grep jwtSecret
 # uninstall
-wget https://raw.githubusercontent.com/kubesphere/ks-installer/release-3.1/scripts/kubesphere-delete.sh
+wget https://raw.githubusercontent.com/kubesphere/ks-installer/release-3.3/scripts/kubesphere-delete.sh
 ```
