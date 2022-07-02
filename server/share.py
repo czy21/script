@@ -5,6 +5,8 @@ import pathlib
 import subprocess
 import sys
 
+import yaml
+
 from utility import collection as collection_util, file as file_util, regex as regex_util, template as template_util, yaml as yaml_util, log as log_util
 
 logger = logging.getLogger()
@@ -79,7 +81,10 @@ def run_cmd(cmd):
             sys.exit(0)
 
 
-def loop_roles(roles: dict,
+def loop_roles(root_path: pathlib.Path,
+               tmp_path: pathlib.Path,
+               bak_path: pathlib.Path,
+               roles: dict,
                role_func,
                global_env,
                args: argparse.Namespace,
@@ -101,6 +106,7 @@ def loop_roles(roles: dict,
         }
         if role_env_file and role_env_file.exists():
             role_env.update(yaml_util.load(template_util.Template(file_util.read_text(role_env_file)).render(**role_env)))
+            file_util.write_text(role_env_file, yaml.dump(role_env))
         logger.debug("{0} params: {1}".format(role_name, json.dumps(role_env, indent=1)))
         # write jinja2 template
         for t in filter(lambda f: f.is_file(), role_path.rglob("*")):
@@ -115,12 +121,14 @@ def loop_roles(roles: dict,
                     "bash {0}".format(role_build_sh.as_posix())
                 ], delimiter="&&"))
         role_func(role_title=role_title, role_path=role_path, role_env_dict=role_env, args=args, **kwargs)
+        run_cmd("mkdir -p {1} && cp -r {0}/* {1}".format(role_path, tmp_path.joinpath(args.namespace).joinpath(role_name)))
 
 
 class Installer:
     def __init__(self, root_path: pathlib.Path, role_func, role_deep: int = 1) -> None:
         self.root_path: pathlib.Path = root_path
-        self.bak_path: pathlib.Path = root_path.joinpath("___temp/bak")
+        self.tmp_path: pathlib.Path = root_path.joinpath("___temp")
+        self.bak_path: pathlib.Path = self.tmp_path.joinpath("bak")
         self.env_file: pathlib.Path = root_path.joinpath("env.yaml")
         self.jinja2ignore_file: pathlib.Path = root_path.joinpath(".jinja2ignore")
         self.role_func = role_func
@@ -154,11 +162,12 @@ class Installer:
         # loop selected_role_dict
         loop_roles(
             root_path=self.root_path,
+            tmp_path=self.tmp_path,
+            bak_path=self.bak_path,
             roles=selected_roles,
             role_func=self.role_func,
             global_env=global_env,
             jinja2ignore_rules=global_jinja2ignore_rules,
             args=args,
-            bak_path=self.bak_path,
             **kwargs
         )
