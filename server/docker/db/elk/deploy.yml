@@ -1,8 +1,6 @@
 version: "3.9"
 
-{%- set kb_name = param_db_es_cluster_name + '-kb' %}
 {%- set es_setup_name = param_db_es_cluster_name + '-setup' %}
-{%- set es_first_node_name = param_db_es_cluster_name + '-1' %}
 
 x-es-common: &es-common
   image: {{ param_registry_proxy_url | default("docker.elastic.co") }}/elasticsearch/elasticsearch:{{ param_db_es_version }}
@@ -15,9 +13,9 @@ x-traefik-es-label: &traefik-es-label
 
 x-traefik-kb-label: &traefik-kb-label
   traefik.enable: true
-  traefik.http.routers.{{ kb_name }}.rule: Host(`{{ param_db_kb_host }}`)
-  traefik.http.routers.{{ kb_name }}.service: {{ kb_name }}
-  traefik.http.services.{{ kb_name }}.loadbalancer.server.port: 5601
+  traefik.http.routers.{{ param_db_es_kb_name }}.rule: Host(`{{ param_db_kb_host }}`)
+  traefik.http.routers.{{ param_db_es_kb_name }}.service: {{ param_db_es_kb_name }}
+  traefik.http.services.{{ param_db_es_kb_name }}.loadbalancer.server.port: 5601
 
 services:
   {{ es_setup_name }}:
@@ -32,7 +30,7 @@ services:
       - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/cert/:{{ param_db_es_target_cert_path }}/
       - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/data/:/usr/share/elasticsearch/data/
     healthcheck:
-      test: ["CMD-SHELL", "[ -f {{ param_db_es_target_cert_path }}/{{ es_first_node_name }}/{{ es_first_node_name }}.crt ]"]
+      test: ["CMD-SHELL", "[ -f {{ param_db_es_target_cert_path }}/{{ param_db_es_first_node_name }}/{{ param_db_es_first_node_name }}.crt ]"]
       interval: 1s
       timeout: 5s
       retries: 120
@@ -96,9 +94,9 @@ services:
       timeout: 10s
       retries: 120
   {%- endfor %}
-  {{ kb_name }}:
+  {{ param_db_es_kb_name }}:
     image: {{ param_registry_proxy_url | default("docker.elastic.co") }}/kibana/kibana:{{ param_db_es_version }}
-    container_name: {{ kb_name }}
+    container_name: {{ param_db_es_kb_name }}
     labels:
       <<: *traefik-kb-label
     expose:
