@@ -19,11 +19,13 @@ function upload_exec_py() {
   local args
   local exec_cmd=()
   local is_debug=false
+  local PYTHON_HOME="\$HOME/.python3-opsor"
+  local PYTHON_EXEC="${PYTHON_HOME}/bin/python3"
+  exec_cmd+="if [ ! -d ${PYTHON_HOME} ];then python3 -m venv ${PYTHON_HOME};fi && "
   for ((i=1;i<="$#";i++));do
     item=${!i}
     if [ "-r" == ${item} ]; then
-        pip_cmd="python3 -m pip install -I -r \$HOME/${book_target}/requirements.txt"
-        exec_cmd+="type sudo && sudo ${pip_cmd} || ${pip_cmd} && "
+        exec_cmd+="${PYTHON_EXEC} -m pip install -I -r \$HOME/${book_target}/requirements.txt && "
         shift 1
         continue
     fi
@@ -32,7 +34,7 @@ function upload_exec_py() {
     fi
     args+=" ${item}"
   done
-  exec_cmd+="python3 -B \$HOME/${book_target}/main.py ${args}"
+  exec_cmd+="${PYTHON_EXEC} -B \$HOME/${book_target}/main.py ${args}"
   ${ssh_cmd} ${exec_cmd}
   if ${ssh_cmd} "[ -d ${book_target_temp_path} ]"; then
     ${scp_cmd} $host:${book_target_temp_path}/ ${book_source}/
