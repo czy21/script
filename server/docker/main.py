@@ -7,16 +7,16 @@ import share
 from utility import collection as collection_util, file as file_util
 
 
-def invoke(role_title: str, role_path: pathlib.Path, role_env_dict: dict, args: argparse.Namespace, **kwargs):
-    cluster_name = role_env_dict.get("param_cluster_name")
+def invoke(role_title: str, role_path: pathlib.Path, role_env: dict, args: argparse.Namespace, **kwargs):
+    cluster_name = role_env.get("param_cluster_name")
     role_name = role_path.name
     role_conf_path = role_path.joinpath("conf")
     role_deploy_file = role_path.joinpath("deploy.yml")
     role_docker_file = role_path.joinpath("Dockerfile")
     role_init_sh = role_path.joinpath("init.sh")
 
-    target_app_path = pathlib.Path(role_env_dict.get("param_docker_data")).joinpath(role_name)
-    param_role_target_path = role_env_dict.get("param_role_target_path")
+    target_app_path = pathlib.Path(role_env.get("param_docker_data")).joinpath(role_name)
+    param_role_target_path = role_env.get("param_role_target_path")
     if param_role_target_path:
         target_app_path = pathlib.Path(param_role_target_path)
 
@@ -40,7 +40,7 @@ def invoke(role_title: str, role_path: pathlib.Path, role_env_dict: dict, args: 
         ]
         if role_node_deploy_file and role_node_deploy_file.exists():
             role_deploy_files.append(role_node_deploy_file)
-        role_project_name = role_env_dict.get("param_role_project_name")
+        role_project_name = role_env.get("param_role_project_name")
         return 'sudo docker-compose --project-name {0} {1} {2}'.format(role_project_name if role_project_name else role_name, " ".join(["--file {0}".format(t) for t in role_deploy_files]), option)
 
     if args.install:
@@ -74,8 +74,8 @@ def invoke(role_title: str, role_path: pathlib.Path, role_env_dict: dict, args: 
             _cmds.append(docker_compose_cmd("down --remove-orphans"))
 
     if args.build_file == "Dockerfile":
-        registry_url = role_env_dict['param_registry_url']
-        registry_dir = role_env_dict['param_registry_dir']
+        registry_url = role_env['param_registry_url']
+        registry_dir = role_env['param_registry_dir']
         _cmds.append(share.echo_action(role_title, "build", role_docker_file.as_posix()))
         if role_docker_file.exists():
             docker_image_tag = "/".join([str(p).strip("/") for p in [registry_url, registry_dir, role_name]])

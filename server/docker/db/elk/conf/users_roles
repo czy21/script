@@ -1,1 +1,2 @@
 superuser:{{ param_db_es_username }}
+kibana_system:{{ param_db_es_username }}

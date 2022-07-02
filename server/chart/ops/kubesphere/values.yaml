@@ -1,6 +1,7 @@
 ks-installer:
   image:
     repository: {{ param_registry_proxy_url }}/kubesphere/ks-installer
+    tag: v3.3.0
   cc:
     authentication:
       jwtSecret: "{{ param_ks_jwt }}"
@@ -8,7 +9,7 @@ ks-installer:
       clusterRole: {{ param_ks_role | default("none") }}
     common:
       es:
-        logMaxAge: 15
+        logMaxAge: 7
         elkPrefix: {{ param_cluster_name }}
         basicAuth:
           enabled: true

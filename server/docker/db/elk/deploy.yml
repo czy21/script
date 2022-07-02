@@ -2,6 +2,7 @@ version: "3.9"
 
 {%- set kb_name = param_db_es_cluster_name + '-kb' %}
 {%- set es_setup_name = param_db_es_cluster_name + '-setup' %}
+{%- set es_first_node_name = param_db_es_cluster_name + '-1' %}
 
 x-es-common: &es-common
   image: {{ param_registry_proxy_url | default("docker.elastic.co") }}/elasticsearch/elasticsearch:{{ param_db_es_version }}
@@ -31,7 +32,7 @@ services:
       - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/cert/:{{ param_db_es_target_cert_path }}/
       - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/data/:/usr/share/elasticsearch/data/
     healthcheck:
-      test: ["CMD-SHELL", "[ -f {{ param_db_es_target_cert_path }}/{{ param_db_es_cluster_name + '-1' }}/{{ param_db_es_cluster_name + '-1' }}.crt ]"]
+      test: ["CMD-SHELL", "[ -f {{ param_db_es_target_cert_path }}/{{ es_first_node_name }}/{{ es_first_node_name }}.crt ]"]
       interval: 1s
       timeout: 5s
       retries: 120
@@ -109,8 +110,3 @@ services:
       interval: 10s
       timeout: 10s
       retries: 120
-    depends_on:
-    {%- for t in es_node_names %}
-      {{ t }}:
-        condition: service_healthy
-    {%- endfor %}
