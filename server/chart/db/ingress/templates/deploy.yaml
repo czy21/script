@@ -9,26 +9,6 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: kibana.cluster.com
-    http:
-      paths:
-      - pathType: Prefix
-        path: /
-        backend:
-          service:
-            name: elk-kb-http
-            port:
-              number: 5601
-  - host: es.cluster.com
-    http:
-      paths:
-      - pathType: Prefix
-        path: /
-        backend:
-          service:
-            name: elk-es-http
-            port:
-              number: 9200
   - host: rabbitmq.cluster.com
     http:
       paths:
