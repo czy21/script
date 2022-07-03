@@ -9,7 +9,7 @@ x-traefik-label: &traefik-label
 services:
 
   traefik:
-    image: traefik:v2.7
+    image: traefik:v2.8.0
     container_name: traefik
     labels:
       <<: *traefik-label
@@ -25,4 +25,3 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/conf.d/:/etc/traefik/conf.d/
       - {{ param_docker_data }}/{{ param_role_name }}/conf/cert/:/etc/traefik/cert/
       - /var/run/docker.sock:/var/run/docker.sock:ro
-    restart: always
