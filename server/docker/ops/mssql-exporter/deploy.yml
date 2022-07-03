@@ -13,6 +13,6 @@ services:
       USERNAME: {{ param_db_mssql_username }}
       PASSWORD: {{ param_db_mssql_password }}
       DEBUG: app
-    restart: always
+
     user: root
 

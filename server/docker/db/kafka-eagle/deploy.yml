@@ -10,6 +10,6 @@ services:
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/system-config.properties:/opt/kafka-eagle/conf/system-config.properties
       - {{ param_docker_data }}/{{ param_role_name }}/logs/:/opt/kafka-eagle/logs/
-    restart: always
+
 
 

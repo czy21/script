@@ -12,7 +12,7 @@ services:
       PGID: 1000
       TZ: Asia/Shanghai
       WEBUI_PORT: 8080
-    restart: always
+
 
   jackett:
     image: linuxserver/jackett
@@ -24,7 +24,7 @@ services:
       PGID: 1000
       TZ: Asia/Shanghai
       AUTO_UPDATE: "true"
-    restart: always
+
 
   radarr:
     image: linuxserver/radarr
@@ -36,7 +36,7 @@ services:
       PUID: 1000
       PGID: 1000
       TZ: Asia/Shanghai
-    restart: always
+
 
   sonarr:
     image: linuxserver/sonarr
@@ -48,5 +48,5 @@ services:
       PUID: 1000
       PGID: 1000
       TZ: Asia/Shanghai
-    restart: always
+
 

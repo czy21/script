@@ -44,14 +44,14 @@ scrape_configs:
       - targets: ['192.168.2.18:9100']
         labels:
           origin_prometheus: nas
-      - targets: ['192.168.2.19:9100']
+      - targets: ['192.168.2.9:9100']
         labels:
-          origin_prometheus: dsm
+          origin_prometheus: base
 
   - job_name: cadvisor
     static_configs:
       - targets: ['cadvisor-nas.cluster.com']
-      - targets: ['cadvisor-dsm.cluster.com']
+      - targets: ['cadvisor-base.cluster.com']
 
   - job_name: mysql
     static_configs:
@@ -79,4 +79,4 @@ scrape_configs:
     scheme: http
     static_configs:
       - targets: ['traefik-nas.cluster.com']
-      - targets: ['traefik-dsm.cluster.com']
+      - targets: ['traefik-base.cluster.com']

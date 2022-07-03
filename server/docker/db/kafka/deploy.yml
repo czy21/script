@@ -23,7 +23,7 @@ services:
       KAFKA_SERVER_zookeeper.connect: {{ param_mq_kafka_cluster_zk_servers }}/{{ param_mq_kafka_cluster_zk_root_path }}/{{ param_mq_kafka_cluster_id }}
       JMX_PORT: {{ jmx_port }}
       KAFKA_HEAP_OPTS: -Xms256M -Xmx512M
-    restart: always
+
   {% endfor %}
 
 

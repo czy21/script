@@ -4,7 +4,7 @@ x-pulsar-common: &pulsar-common
   image: apachepulsar/pulsar:2.9.2
   privileged: true
   user: root
-  restart: always
+
 
 x-traefik-pulsar-proxy-label: &traefik-pulsar-proxy-label
   traefik.enable: true

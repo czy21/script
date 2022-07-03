@@ -17,7 +17,7 @@ services:
       SW_TELEMETRY: prometheus
       SW_PROMETHEUS_FETCHER: default
       JAVA_OPTS: "-Xms2048m -Xmx2048m"
-    restart: always
+
     healthcheck:
       test: [ "CMD-SHELL", "/skywalking/bin/swctl ch" ]
       interval: 30s

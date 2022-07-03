@@ -19,7 +19,7 @@ services:
         {{ zk_servers.append("server.{0}=zk{0}:2888:3888;2181".format(t|string)) or '' }}
       {% endfor %}
       ZOO_SERVERS: {{ zk_servers | join(' ') }}
-    restart: always
+
   {% endfor %}
 
 
