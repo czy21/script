@@ -30,10 +30,3 @@ services:
       GITEA__security__INSTALL_LOCK: true
       GITEA__service__DISABLE_REGISTRATION: true
       GITEA__database__DB_TYPE: sqlite3
-#      GITEA__database__DB_TYPE: mysql
-#      GITEA__database__NAME: gitea
-#      GITEA__database__HOST: "{{ param_db_mysql_host }}:{{ param_db_mysql_port }}"
-#      GITEA__database__USER: "{{ param_db_mysql_username }}"
-#      GITEA__database__PASSWD: "{{ param_db_mysql_password }}"
-    restart: always
-
