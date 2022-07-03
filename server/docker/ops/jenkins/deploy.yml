@@ -27,4 +27,3 @@ services:
     environment:
       JENKINS_UC: https://mirrors.aliyun.com/jenkins/updates/update-center.json
       JENKINS_UC_EXPERIMENTAL: https://mirrors.aliyun.com/jenkins/updates/experimental/update-center.json
-    restart: always

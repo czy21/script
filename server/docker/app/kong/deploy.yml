@@ -23,7 +23,7 @@ services:
       KONG_ADMIN_ERROR_LOG: /dev/stderr
       KONG_ADMIN_LISTEN: 0.0.0.0:8001
       KONG_ADMIN_GUI_URL: http://localhost:8002
-    restart: always
+
 
   konga:
     image: pantsel/konga
@@ -36,6 +36,6 @@ services:
       DB_ADAPTER: mysql
       DB_URI: "mysql://{{ param_db_mysql_username }}:{{ param_db_mysql_password }}@{{ param_db_mysql_host }}:{{ param_db_mysql_port }}/konga"
       NODE_ENV: production
-    restart: always
+
 
 

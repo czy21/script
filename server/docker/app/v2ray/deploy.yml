@@ -11,5 +11,5 @@ services:
       - {{ param_config_dir }}/v2ray/:/etc/v2ray/
       - {{ param_volumes_dir }}/v2ray/log/:/var/log/v2ray/
     command: v2ray -config=/etc/v2ray/config.json
-    restart: always
+
 

@@ -8,6 +8,6 @@ services:
     ports:
       - "9308:9308"
     command: ["--kafka.server={{ param_host_ip }}:9092","--kafka.server={{ param_host_ip }}:9093"]
-    restart: always
+
     user: root
 

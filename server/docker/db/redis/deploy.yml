@@ -6,7 +6,7 @@ x-redis-common: &redis-common
   user: root
   environment:
     TZ: Asia/Shanghai
-  restart: always
+
 
 services:
   {% if param_db_redis_standalone_enabled == true %}
@@ -30,7 +30,7 @@ services:
       - --redis.password={{ param_db_redis_password }}
     environment:
       REDIS_EXPORTER_IS_CLUSTER: "false"
-    restart: always
+
   {% endif %}
   {% for i in range(param_db_redis_cluster_replicas | int) %}
     {% set j = i + 1 %}
@@ -61,6 +61,6 @@ services:
       - --redis.password={{ param_db_redis_password }}
     environment:
       REDIS_EXPORTER_IS_CLUSTER: "true"
-    restart: always
+
 
 

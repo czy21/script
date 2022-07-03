@@ -21,5 +21,5 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/var/lib/grafana/
     environment:
       GF_INSTALL_PLUGINS: grafana-piechart-panel
-    restart: always
+
 
