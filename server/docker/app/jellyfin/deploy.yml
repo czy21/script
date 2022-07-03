@@ -20,4 +20,4 @@ services:
       - {{ param_public_path }}/media/:/media/
     devices:
       - /dev/dri:/dev/dri
-    restart: always
+

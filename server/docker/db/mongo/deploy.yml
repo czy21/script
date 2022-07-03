@@ -16,5 +16,5 @@ services:
       TZ: Asia/Shanghai
       MONGO_INITDB_ROOT_USERNAME: {{ param_db_mongo_username }}
       MONGO_INITDB_ROOT_PASSWORD: {{ param_db_mongo_password }}
-    restart: always
+
 

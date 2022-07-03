@@ -25,5 +25,5 @@ services:
       TZ: Asia/Shanghai
       GIN_MODE: release
       GPM_CONFIG_FILE: /app/app.yaml
-    restart: always
+
 

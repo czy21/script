@@ -147,7 +147,7 @@ class Installer:
             logger.setLevel(logging.DEBUG)
         # select role
         selected_roles = select_role(self.root_path, self.role_deep, args=args)
-        logger.info("namespace: {0}; selected roles: {1}".format(args.namespace, ",".join(selected_roles.keys())))
+        logger.info("namespace: {0}; selected roles: {1}".format(args.namespace, ",".join(["{0}.{1}".format(k, v) for k, v in selected_roles.items()])))
         global_env = yaml_util.load(self.env_file) if self.env_file and self.env_file.exists() else {}
         # read input param
         param_extra_iter = iter(args.param)

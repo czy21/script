@@ -25,6 +25,5 @@ services:
       - --storage.tsdb.no-lockfile
       - --storage.tsdb.retention.time=7d
       - --web.enable-lifecycle
-    restart: always
     user: root
 

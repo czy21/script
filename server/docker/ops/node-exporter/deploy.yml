@@ -12,4 +12,3 @@ services:
       - '/:/host:ro,rslave'
     command:
       - '--path.rootfs=/host'
-    restart: always

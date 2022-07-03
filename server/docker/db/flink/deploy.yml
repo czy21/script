@@ -4,7 +4,7 @@ x-flink-common: &flink-common
   image: {{ param_registry_url }}/{{ param_registry_dir }}/flink
   privileged: true
   user: root
-  restart: always
+
 
 x-traefik-jmr-label: &traefik-jmr-label
   traefik.enable: true

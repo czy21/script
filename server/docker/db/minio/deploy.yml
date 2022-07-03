@@ -11,7 +11,7 @@ x-minio-common: &minio-common
     MINIO_ROOT_USER: {{ param_db_minio_username }}
     MINIO_ROOT_PASSWORD: {{ param_db_minio_password }}
     MINIO_PROMETHEUS_AUTH_TYPE: public
-  restart: always
+
 
 x-traefik-label: &traefik-label
   traefik.enable: true

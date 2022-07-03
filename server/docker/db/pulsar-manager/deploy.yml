@@ -27,6 +27,6 @@ services:
       --spring.datasource.url=jdbc:postgresql://{{ param_db_pgsql_host }}:{{ param_db_pgsql_port }}/pulsar_manager?user={{ param_db_pgsql_username }}&password={{ param_db_pgsql_password }}
       --spring.datasource.initialization-mode=NEVER
       "
-    restart: always
+
 
 

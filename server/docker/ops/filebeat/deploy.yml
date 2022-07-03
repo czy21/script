@@ -15,5 +15,5 @@ services:
       ELASTICSEARCH_HOSTS: {{ param_db_es_host }}:{{ param_db_es_port }}
       ELASTICSEARCH_USERNAME: {{ param_db_es_username }}
       ELASTICSEARCH_PASSWORD: {{ param_db_es_password }}
-    restart: always
+
 

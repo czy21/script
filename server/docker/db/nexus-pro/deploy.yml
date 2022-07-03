@@ -15,6 +15,6 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/sonatype-work/
     environment:
       TZ: Asia/Shanghai
-    restart: always
+
 
 
