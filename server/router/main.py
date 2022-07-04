@@ -66,8 +66,7 @@ def invoke(role_title: str, role_path: pathlib.Path, role_env: dict, **kwargs):
             _bak_cmds.append(uci_bak_config_section_cmd(role_name, _kind, _section, role_bak_script_uci))
         _cmds.append(share.echo_action(role_title, "backup"))
         _cmds.append(_bak_cmds)
-    _cmd_str = collection_util.flat_to_str(_cmds, delimiter=" && ")
-    share.run_cmd(_cmd_str)
+    share.run_cmd(collection_util.flat_to_str(_cmds, delimiter=" && "))
 
 
 if __name__ == '__main__':
