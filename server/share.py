@@ -71,9 +71,17 @@ def select_role(root_path: pathlib.Path, deep: int = 1, exclude_rules=None, args
     return get_dir_dict(app_path, exclude_rules=exclude_rules, select_tip="role num(example:1 2 3)")
 
 
-def run_cmd(cmd):
+def run_cmd(cmd, is_log: bool = True):
     logger.debug(cmd)
-    subprocess.Popen(cmd, shell=True).wait()
+    if is_log:
+        with subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, encoding="utf-8") as proc:
+            logger.info(proc.stdout.read())
+            proc.stdout.close()
+            proc.wait()
+            if proc.returncode != 0:
+                sys.exit(0)
+    else:
+        subprocess.Popen(cmd, shell=True).wait()
 
 
 def loop_roles(root_path: pathlib.Path,
