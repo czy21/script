@@ -1,3 +1,8 @@
+# guide
+```bash
+# https://docs.azure.cn/zh-cn/articles/azure-operations-guide/application-gateway/aog-application-gateway-howto-create-self-signed-cert-via-openssl
+```
+
 # openssl.ext
 ```ini
 keyUsage = nonRepudiation, digitalSignature, keyEncipherment
