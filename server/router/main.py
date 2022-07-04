@@ -20,7 +20,7 @@ def echo_section(t, role_name, bak_conf):
     return ["uci show {0} | grep -q '^{0}.{1}' && echo '[{1}]' >> {2} && uci show {0} | grep '^{0}.{1}' >> {2}".format(role_name, s, bak_conf.as_posix()) for s in section_keys]
 
 
-def invoke(root_path: pathlib.Path, role_title: str, role_path: pathlib.Path, role_env: dict, bak_path: pathlib.Path, **kwargs):
+def invoke(role_title: str, role_path: pathlib.Path, role_env: dict, **kwargs):
     args = kwargs["args"]
     role_name = role_path.name
     conf_file = role_path.joinpath("conf")
@@ -45,7 +45,7 @@ def invoke(root_path: pathlib.Path, role_title: str, role_path: pathlib.Path, ro
             "uci commit {0}".format(role_name)
         ])
     if args.action == "backup":
-        role_bak_path = role_path.joinpath("bak")
+        role_bak_path = role_path.joinpath("___temp/bak")
         role_bak_conf = role_bak_path.joinpath("conf")
         _bak_cmds = [
             "mkdir -p {0}".format(role_bak_path.as_posix()),
@@ -75,7 +75,6 @@ def invoke(root_path: pathlib.Path, role_title: str, role_path: pathlib.Path, ro
             with open(role_bak_conf, "w", encoding="utf-8") as t_file:
                 t_file.write("\n".join(contents))
         _cmds.append(share.echo_action(role_title, "backup"))
-        _cmds.append("mkdir -p {0};cp -r {1}/* {0}/".format(bak_path.joinpath(role_name), role_bak_path))
     _cmd_str = collection_util.flat_to_str(_cmds, delimiter=" && ")
     share.run_cmd(_cmd_str)
 
