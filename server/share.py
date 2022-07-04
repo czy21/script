@@ -139,6 +139,7 @@ class Installer:
         self.arg_parser: argparse.ArgumentParser = argparse.ArgumentParser()
 
         log_util.init_logger(file=root_path.joinpath("___temp/share.log"))
+        self.tmp_path.mkdir(exist_ok=True)
 
     def run(self, **kwargs):
         self.arg_parser.add_argument('-p', '--param', nargs="+", default=[])
