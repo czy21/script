@@ -119,11 +119,11 @@ def loop_roles(root_path: pathlib.Path,
 
         def build_target(file_name: str):
             build_file = role_path.joinpath(file_name)
-            if args.build_file[0] == file_name:
+            if args.build_file == file_name:
                 if build_file.exists():
                     run_cmd(collection_util.flat_to_str([
                         echo_action(role_title, file_name, build_file.as_posix()),
-                        "bash {0} {1}".format(build_file.as_posix(), " ".join([t for i, t in enumerate(args.build_file) if i != 0]))
+                        "sh {0} {1}".format(build_file.as_posix(), " ".join(args.build_args))
                     ], delimiter="&&"))
 
         build_target("build.sh")
@@ -150,7 +150,8 @@ class Installer:
         self.arg_parser.add_argument('-p', '--param', nargs="+", default=[])
         self.arg_parser.add_argument('-i', '--install', action="store_true")
         self.arg_parser.add_argument('-d', '--delete', action="store_true")
-        self.arg_parser.add_argument('-b', '--build-file', nargs='+', default=[])
+        self.arg_parser.add_argument('-b', '--build-file', nargs='?', const="build.sh")
+        self.arg_parser.add_argument('--build-args', nargs="+", default=[])
         self.arg_parser.add_argument('-a', '--action', type=str, required=False)
         self.arg_parser.add_argument('-n', '--namespace')
         self.arg_parser.add_argument('--debug', action="store_true")
