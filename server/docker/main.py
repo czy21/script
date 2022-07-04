@@ -59,7 +59,7 @@ def invoke(role_title: str, role_path: pathlib.Path, role_env: dict, args: argpa
             _cmds.append('sudo mkdir -p {1} && sudo cp -rv {0} {1}'.format(role_conf_path.as_posix(), target_app_path.as_posix()))
         if role_init_sh.exists():
             _cmds.append(share.echo_action(role_title, "init", role_init_sh.as_posix()))
-            _cmds.append("source {}".format(role_init_sh.as_posix()))
+            _cmds.append("bash {}".format(role_init_sh.as_posix()))
         if role_deploy_file.exists():
             _cmds.append(share.echo_action(role_title, "deploy", role_deploy_file.as_posix()))
             if args.debug:
