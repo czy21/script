@@ -116,19 +116,24 @@ def loop_roles(root_path: pathlib.Path,
             _rules = regex_util.match_rules([*jinja2ignore_rules, pathlib.Path(role_name).joinpath("env.yaml").as_posix()], t.as_posix(), ".jinia2ignore {0}".format(loop_roles.__name__))
             if not any([r["isMatch"] for r in _rules]):
                 file_util.write_text(t, template_util.Template(file_util.read_text(t)).render(**role_env))
-        role_build_sh = role_path.joinpath("build.sh")
-        if args.build_file == "build.sh":
-            if role_build_sh.exists():
-                run_cmd(collection_util.flat_to_str([
-                    echo_action(role_title, "build", role_build_sh.as_posix()),
-                    "bash {0}".format(role_build_sh.as_posix())
-                ], delimiter="&&"))
-        role_func(role_title=role_title, role_path=role_path, role_env=role_env, args=args, **kwargs)
+
+        def build_target(file_name: str):
+            build_file = role_path.joinpath(file_name)
+            if args.build_file[0] == file_name:
+                if build_file.exists():
+                    run_cmd(collection_util.flat_to_str([
+                        echo_action(role_title, file_name, build_file.as_posix()),
+                        "bash {0} {1}".format(build_file.as_posix(), " ".join([t for i, t in enumerate(args.build_file) if i != 0]))
+                    ], delimiter="&&"))
+
+        build_target("build.sh")
+        if role_func:
+            role_func(role_title=role_title, role_path=role_path, role_env=role_env, args=args, **kwargs)
         run_cmd("mkdir -p {1} && cp -r {0}/* {1}".format(role_path, tmp_path.joinpath(args.namespace).joinpath(role_name)))
 
 
 class Installer:
-    def __init__(self, root_path: pathlib.Path, role_func, role_deep: int = 1) -> None:
+    def __init__(self, root_path: pathlib.Path, role_func=None, role_deep: int = 1) -> None:
         self.root_path: pathlib.Path = root_path
         self.tmp_path: pathlib.Path = root_path.joinpath("___temp")
         self.bak_path: pathlib.Path = self.tmp_path.joinpath("bak")
@@ -145,7 +150,7 @@ class Installer:
         self.arg_parser.add_argument('-p', '--param', nargs="+", default=[])
         self.arg_parser.add_argument('-i', '--install', action="store_true")
         self.arg_parser.add_argument('-d', '--delete', action="store_true")
-        self.arg_parser.add_argument('-b', '--build-file', nargs='?', const="build.sh")
+        self.arg_parser.add_argument('-b', '--build-file', nargs='+', default=[])
         self.arg_parser.add_argument('-a', '--action', type=str, required=False)
         self.arg_parser.add_argument('-n', '--namespace')
         self.arg_parser.add_argument('--debug', action="store_true")
