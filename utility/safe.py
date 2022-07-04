@@ -1,6 +1,6 @@
 import base64
 
-import bcrypt
+# import bcrypt
 
 
 def decrypt(value: str, mode: str = "base64"):
@@ -10,4 +10,5 @@ def decrypt(value: str, mode: str = "base64"):
 
 
 def htpasswd(value: str):
-    return bcrypt.hashpw(value.encode(), bcrypt.gensalt(rounds=12)).decode()
+    return value
+    # return bcrypt.hashpw(value.encode(), bcrypt.gensalt(rounds=12)).decode()
