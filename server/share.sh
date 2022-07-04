@@ -22,8 +22,7 @@ function upload_exec_py() {
 
   local args=""
   local exec_cmd=""
-  exec_cmd+="if [ ! -f ${PYTHON_EXEC} ];then python3 -m venv ${PYTHON_HOME} --without-pip;fi && "
-  exec_cmd+="if [ ! -f ${PIP_EXEC} ];then wget -qO - https://bootstrap.pypa.io/get-pip.py | ${PYTHON_EXEC};fi && "
+  exec_cmd+="if [ ! -f ${PYTHON_EXEC} ];then python3 -m venv ${PYTHON_HOME} --without-pip --system-site-packages && wget -nv -O - https://bootstrap.pypa.io/get-pip.py | ${PYTHON_EXEC};fi && "
   for ((i=1;i<="$#";i++));do
     item=${!i}
     if [ "-r" == ${item} ]; then
@@ -37,8 +36,7 @@ function upload_exec_py() {
     args+=" ${item}"
   done
   exec_cmd+="${PYTHON_EXEC} -B \$HOME/${book_target}/main.py ${args}"
-  ${ssh_cmd} ${exec_cmd}
-  ${scp_cmd} $host:${book_target_temp_path}/ ${book_source}/
+  ${ssh_cmd} ${exec_cmd} && ${scp_cmd} $host:${book_target_temp_path}/ ${book_source}/
   if [ ${is_debug} == false ]; then
     ${ssh_cmd} ${del_cmd}
   fi
