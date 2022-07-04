@@ -6,6 +6,7 @@
 function upload_exec_py() {
   local PYTHON_HOME="\$HOME/.python3"
   local PYTHON_EXEC="${PYTHON_HOME}/bin/python3"
+  local PIP_EXEC="${PYTHON_HOME}/bin/pip3"
   local is_debug=false
   local book_source=$(pwd)
   local book_target=$(basename ${book_source})
@@ -21,7 +22,8 @@ function upload_exec_py() {
 
   local args=""
   local exec_cmd=""
-  exec_cmd+="if [ ! -d ${PYTHON_HOME} ];then python3 -m venv ${PYTHON_HOME};fi && "
+  exec_cmd+="if [ ! -f ${PYTHON_EXEC} ];then python3 -m venv ${PYTHON_HOME} --without-pip;fi && "
+  exec_cmd+="if [ ! -f ${PIP_EXEC} ];then wget -qO - https://bootstrap.pypa.io/get-pip.py | ${PYTHON_EXEC};fi && "
   for ((i=1;i<="$#";i++));do
     item=${!i}
     if [ "-r" == ${item} ]; then
