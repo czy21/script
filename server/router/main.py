@@ -43,7 +43,7 @@ def uci_del_config_section_cmd(config_name, kind: str, section: str):
 def invoke(role_title: str, role_path: pathlib.Path, role_env: dict, **kwargs):
     args = kwargs["args"]
     role_name = role_path.name
-    role_script_uci = role_path.joinpath("script.uci")
+    role_restore_script_uci = role_path.joinpath("___temp/restore").joinpath("{0}.uci".format(role_name))
 
     _cmds = []
 
@@ -51,7 +51,7 @@ def invoke(role_title: str, role_path: pathlib.Path, role_env: dict, **kwargs):
         for c in role_env.get("param_config"):
             _kind: str = c.get("kind")
             _section: str = c.get("section")
-            _cmds.append("({0};{1};echo;) | cat | uci batch".format(uci_del_config_section_cmd(role_name, _kind, _section), "cat {0}".format(role_script_uci.as_posix())))
+            _cmds.append("({0};{1};echo;) | cat | uci batch".format(uci_del_config_section_cmd(role_name, _kind, _section), "cat {0}".format(role_restore_script_uci.as_posix())))
             _cmds.append("uci commit {0}".format(role_name))
     if args.action == "backup":
         role_bak_path = role_path.joinpath("___temp")
