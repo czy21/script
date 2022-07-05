@@ -24,22 +24,6 @@ def uci_bak_config_section_cmd(config_name, kind: str, section: str, output_file
     return collection_util.flat_to_str(_uci_cmd, delimiter=" | ") + " >> {0}".format(output_file)
 
 
-def uci_del_config_section_cmd(config_name, kind: str, section: str):
-    _uci_cmd = [
-        "uci show {0}".format(config_name),
-        "grep '^{0}.{1}\\(.*\\)={2}'".format(config_name, "@{0}".format(kind) if section is None else section, kind)
-    ]
-    _sed_cmd = [
-        "sed",
-        "-e 's|={0}|\\1|g'".format(kind),
-        "-e 's|^{0}|delete \\0|g'".format(config_name)
-    ]
-    if section is None:
-        _sed_cmd.append("-e '1!G;h;$!d'")
-    _uci_cmd.append(collection_util.flat_to_str(_sed_cmd))
-    return collection_util.flat_to_str(_uci_cmd, delimiter=" | ")
-
-
 def invoke(role_title: str, role_path: pathlib.Path, role_env: dict, **kwargs):
     args = kwargs["args"]
     role_name = role_path.name
@@ -51,7 +35,20 @@ def invoke(role_title: str, role_path: pathlib.Path, role_env: dict, **kwargs):
         for c in role_env.get("param_config"):
             _kind: str = c.get("kind")
             _section: str = c.get("section")
-            _cmds.append("({0};{1};echo;) | cat | uci batch".format(uci_del_config_section_cmd(role_name, _kind, _section), "cat {0}".format(role_restore_script_uci.as_posix())))
+            if _section is None:
+                _cmds.append("while uci -q delete {0}.@{1}[0]; do :; done".format(role_name, _kind))
+                _cmds.append("cat {0} | uci batch".format(role_restore_script_uci.as_posix()))
+            else:
+                _section_del_cmd = collection_util.flat_to_str([
+                    "uci show {0}".format(role_name),
+                    "grep '^{0}.{1}\\(.*\\)={2}'".format(role_name, "@{0}".format(_kind) if _section is None else _section, _kind),
+                    collection_util.flat_to_str([
+                        "sed",
+                        "-e 's|={0}|\\1|g'".format(_kind),
+                        "-e 's|^{0}|delete \\0|g'".format(role_name)
+                    ]),
+                ], delimiter=" | ")
+                _cmds.append("({0};cat {1};echo;) | cat | uci batch".format(_section_del_cmd, role_restore_script_uci.as_posix()))
             _cmds.append("uci commit {0}".format(role_name))
     if args.action == "backup":
         role_bak_path = role_path.joinpath("___temp")
@@ -70,6 +67,5 @@ def invoke(role_title: str, role_path: pathlib.Path, role_env: dict, **kwargs):
 
 
 if __name__ == '__main__':
-    root_path = pathlib.Path(__file__).parent
-    installer = share.Installer(root_path, invoke)
+    installer = share.Installer(pathlib.Path(__file__).parent, invoke)
     installer.run()
