@@ -15,22 +15,15 @@ x-traefik-label: &traefik-label
 services:
 
   nexus:
-    image: sonatype/nexus3:3.40.0
+    image: sonatype/nexus3:3.40.1
     container_name: nexus
     labels:
       <<: *traefik-label
     privileged: true
     user: root
+    expose:
+      - "8081"
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/nexus-data/
     environment:
-      INSTALL4J_ADD_VM_PARAMS: -Xms2g -Xmx2g -XX:MaxDirectMemorySize=2g
-
-    deploy:
-      resources:
-        limits:
-          memory: 4G
-        reservations:
-          memory: 256M
-
-
+      INSTALL4J_ADD_VM_PARAMS: -Xms2703M -Xmx2703M -XX:MaxDirectMemorySize=2703M
