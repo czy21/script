@@ -16,9 +16,6 @@ services:
     user: root
     expose:
       - "8080"
-    volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/data/:/var/lib/odoo/
-      - {{ param_docker_data }}/{{ param_role_name }}/addon/:/mnt/extra-addons/
     environment:
       DB_VENDOR: mysql
       DB_NAME: bonita
