@@ -13,15 +13,6 @@ nohup make -j1 V=s &
 # multi thread
 nohup make -j$(($(nproc) + 1)) V=s &
 ```
-```shell
-# pip repo
-~/.pip/pip.conf
-[global]
-index-url = https://mirrors.aliyun.com/pypi/simple/
-
-[install]
-trusted-host=mirrors.aliyun.com
-```
 ```bash
 #build guide: https://openwrt.org/docs/guide-developer/toolchain/use-buildsystem
 sed -i 's|https://git.openwrt.org/\(.*\)/|http://gitea.cluster.com/openwrt/|g' feeds.conf.default
