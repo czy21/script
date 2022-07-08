@@ -13,4 +13,9 @@ mount -t nfs 192.168.1.3:/nfs_test /mnt/test1
 
 # vmware RDM硬盘直通{0} 硬盘挂载地址, {1} 生成目标映射地址
 vmkfstools -z /vmfs/devices/disks/t10.ATA_____ST4000NM000A2D2HZ100_________________________________WS213MF8 /vmfs/volumes/datastore1/4T_2.vmdk
+# vmware import ssl cert
+cd /etc/vmware/ssl
+mv rui.crt rui.crt.bak && mv rui.key rui.key.bak
+scp rui.* <host>:/etc/vmware/ssl/
+/etc/init.d/hostd restart && /etc/init.d/vpxa restart
 ```
