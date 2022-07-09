@@ -26,7 +26,7 @@ function upload_exec_py() {
   for ((i=1;i<="$#";i++));do
     item=${!i}
     if [ "-r" == ${item} ]; then
-        exec_cmd+="${PYTHON_EXEC} -m pip install -I -r \$HOME/${book_target}/requirements.txt && "
+        exec_cmd+="${PYTHON_EXEC} -m pip install -r \$HOME/${book_target}/requirements.txt && "
         shift 1
         continue
     fi
