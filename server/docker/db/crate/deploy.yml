@@ -1,0 +1,16 @@
+version: "3.9"
+
+services:
+  crate:
+    image: crate:4.8.1
+    container_name: crate
+    privileged: true
+    user: root
+    expose:
+      - "4200"
+      - "5432"
+    ports:
+      - "4200:4200"
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/data
+    command: -Cdiscovery.type=single-node

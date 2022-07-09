@@ -1,0 +1,25 @@
+version: "3.9"
+
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}.rule: Host(`redmine.cluster.com`)
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 3000
+
+services:
+
+  redmine:
+    image: redmine:5.0.2-bullseye
+    container_name: redmine
+    labels:
+      <<: *traefik-label
+    expose:
+      - "3000"
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/data/files/:/usr/src/redmine/files/
+    environment:
+      REDMINE_DB_MYSQL: '{{ param_db_mysql_host }}'
+      REDMINE_DB_USERNAME: '{{ param_db_mysql_username }}'
+      REDMINE_DB_PASSWORD: '{{ param_db_mysql_password }}'
+      REDMINE_DB_DATABASE: 'redmine'
+      REDMINE_DB_ENCODING: 'utf8'
