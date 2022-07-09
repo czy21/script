@@ -8,7 +8,7 @@ x-traefik-label: &traefik-label
 
 services:
   piwigo:
-    image: lscr.io/linuxserver/piwigo
+    image: linuxserver/piwigo
     container_name: piwigo
     labels:
       <<: *traefik-label

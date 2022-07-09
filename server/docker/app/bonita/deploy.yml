@@ -1,0 +1,37 @@
+version: "3.9"
+
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}.rule: Host(`bonita.cluster.com`)
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 8080
+
+services:
+  bonita:
+    image: bonita:7.14.0
+    container_name: bonita
+    labels:
+      <<: *traefik-label
+    privileged: true
+    user: root
+    expose:
+      - "8080"
+    environment:
+      DB_VENDOR: mysql
+      DB_NAME: bonita
+      DB_HOST: '{{ param_db_mysql_host }}'
+      DB_PORT: '{{ param_db_mysql_port }}'
+      DB_USER: '{{ param_db_mysql_username }}'
+      DB_PASS: '{{ param_db_mysql_password }}'
+      BIZ_DB_NAME: bonita_home
+      BIZ_DB_USER: '{{ param_db_mysql_username }}'
+      BIZ_DB_PASS: '{{ param_db_mysql_password }}'
+      TENANT_LOGIN: '{{ param_manage_username }}'
+      TENANT_PASSWORD: '{{ param_manage_password }}'
+      PLATFORM_LOGIN: '{{ param_manage_username }}'
+      PLATFORM_PASSWORD: '{{ param_manage_password }}'
+    entrypoint:
+      - bash
+      - -c
+      - |
+        exec /opt/files/startup.sh /opt/bonita/server/bin/catalina.sh run

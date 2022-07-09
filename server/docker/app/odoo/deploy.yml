@@ -1,0 +1,26 @@
+version: "3.9"
+
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}.rule: Host(`odoo.cluster.com`)
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 8069
+
+services:
+  odoo:
+    image: odoo:15.0
+    container_name: odoo
+    labels:
+      <<: *traefik-label
+    privileged: true
+    user: root
+    expose:
+      - "8069"
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/var/lib/odoo/
+      - {{ param_docker_data }}/{{ param_role_name }}/addon/:/mnt/extra-addons/
+    environment:
+     HOST: '{{ param_db_pgsql_host }}'
+     PORT: '{{ param_db_pgsql_port }}'
+     USER: 'odoo'
+     PASSWORD: '{{ param_db_pgsql_password }}'

@@ -1,0 +1,20 @@
+version: "3.9"
+
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}.rule: Host(`plone.cluster.com`)
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 8080
+
+services:
+  plone:
+    image: plone:5.2.7
+    container_name: plone
+    labels:
+      <<: *traefik-label
+    privileged: true
+    user: root
+    expose:
+      - "8080"
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/data/
