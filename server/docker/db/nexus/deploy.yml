@@ -27,3 +27,4 @@ services:
     environment:
       INSTALL4J_ADD_VM_PARAMS: -Xms2703M -Xmx2703M -XX:MaxDirectMemorySize=2703M
       NEXUS_SECURITY_INITIAL_PASSWORD: "{{ param_manage_password }}"
+    restart: always
