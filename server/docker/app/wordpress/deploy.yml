@@ -23,3 +23,4 @@ services:
       WORDPRESS_DB_USER: admin
       WORDPRESS_DB_PASSWORD: ***REMOVED***
       WORDPRESS_DB_NAME: wordpress
+    restart: always
