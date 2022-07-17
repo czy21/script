@@ -21,6 +21,7 @@ services:
       REDIS_ARGS: |-
         --requirepass {{ param_db_redis_password }}
         --appendonly yes
+    restart: always
   redis-exporter-{{ param_db_redis_port }}:
     image: oliver006/redis_exporter:alpine
     container_name: redis-exporter-{{ param_db_redis_port }}
@@ -30,6 +31,7 @@ services:
       - --redis.password={{ param_db_redis_password }}
     environment:
       REDIS_EXPORTER_IS_CLUSTER: "false"
+    restart: always
 
   {% endif %}
   {% for i in range(param_db_redis_cluster_replicas | int) %}
@@ -50,6 +52,7 @@ services:
         --appendonly yes
         --cluster-enabled yes
         --cluster-announce-ip {{ param_db_redis_cluster_ip }}
+    restart: always
   {% endfor %}
 
   redis-exporter-{{ param_db_redis_cluster_start_port }}:
@@ -61,6 +64,7 @@ services:
       - --redis.password={{ param_db_redis_password }}
     environment:
       REDIS_EXPORTER_IS_CLUSTER: "true"
+    restart: always
 
 
 
