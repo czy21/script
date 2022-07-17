@@ -7,9 +7,10 @@ x-redis-common: &redis-common
   environment:
     TZ: Asia/Shanghai
 
+{%- set deploy_roles = param_db_redis_deploy_roles.split(',') %}
 
 services:
-  {% if param_db_redis_standalone_enabled == true %}
+  {%- if 'single' in deploy_roles %}
   redis:
     <<: *redis-common
     container_name: redis
@@ -21,7 +22,6 @@ services:
       REDIS_ARGS: |-
         --requirepass {{ param_db_redis_password }}
         --appendonly yes
-    restart: always
   redis-exporter-{{ param_db_redis_port }}:
     image: oliver006/redis_exporter:alpine
     container_name: redis-exporter-{{ param_db_redis_port }}
@@ -31,12 +31,11 @@ services:
       - --redis.password={{ param_db_redis_password }}
     environment:
       REDIS_EXPORTER_IS_CLUSTER: "false"
-    restart: always
-
-  {% endif %}
-  {% for i in range(param_db_redis_cluster_replicas | int) %}
-    {% set j = i + 1 %}
-    {% set p = (param_db_redis_cluster_start_port | int) + i %}
+  {%- endif %}
+  {%- if 'cluster' in deploy_roles %}
+  {%- for i in range(param_db_redis_cluster_replicas | int) %}
+    {%- set j = i + 1 %}
+    {%- set p = (param_db_redis_cluster_start_port | int) + i %}
   redis{{ j }}:
     <<: *redis-common
     container_name: redis{{ j }}
@@ -52,9 +51,7 @@ services:
         --appendonly yes
         --cluster-enabled yes
         --cluster-announce-ip {{ param_db_redis_cluster_ip }}
-    restart: always
-  {% endfor %}
-
+  {%- endfor %}
   redis-exporter-{{ param_db_redis_cluster_start_port }}:
     image: oliver006/redis_exporter:alpine
     container_name: redis-exporter-{{ param_db_redis_cluster_start_port }}
@@ -64,7 +61,4 @@ services:
       - --redis.password={{ param_db_redis_password }}
     environment:
       REDIS_EXPORTER_IS_CLUSTER: "true"
-    restart: always
-
-
-
+    {%- endif %}
