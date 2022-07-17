@@ -2,13 +2,13 @@ version: "3.9"
 
 x-traefik-label: &traefik-label
   traefik.enable: true
-  traefik.http.routers.{{ param_role_name }}.rule: Host(`nexbox.cluster.com`)
+  traefik.http.routers.{{ param_role_name }}.rule: Host(`netbox.cluster.com`)
   traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
   traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 8000
 
 services:
 
-  alist:
+  netbox:
     image: linuxserver/netbox:3.2.6
     container_name: netbox
     labels:
@@ -23,7 +23,7 @@ services:
       TZ: Asia/Shanghai
       SUPERUSER_EMAIL: 805899926@qq.com
       SUPERUSER_PASSWORD: '{{ param_manage_password }}'
-      ALLOWED_HOST: 'nexbox.cluster.com'
+      ALLOWED_HOST: '*'
       DB_NAME: netbox
       DB_USER: '{{ param_db_pgsql_username }}'
       DB_PASSWORD: '{{ param_db_pgsql_password }}'
