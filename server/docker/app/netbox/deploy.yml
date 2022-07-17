@@ -1,0 +1,37 @@
+version: "3.9"
+
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}.rule: Host(`nexbox.cluster.com`)
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 8000
+
+services:
+
+  alist:
+    image: linuxserver/netbox:3.2.6
+    container_name: netbox
+    labels:
+      <<: *traefik-label
+    expose:
+      - "8000"
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/:/config
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: Asia/Shanghai
+      SUPERUSER_EMAIL: 805899926@qq.com
+      SUPERUSER_PASSWORD: '{{ param_manage_password }}'
+      ALLOWED_HOST: 'nexbox.cluster.com'
+      DB_NAME: netbox
+      DB_USER: '{{ param_db_pgsql_username }}'
+      DB_PASSWORD: '{{ param_db_pgsql_password }}'
+      DB_HOST: '{{ param_db_pgsql_host }}'
+      DB_PORT: '{{ param_db_pgsql_port }}'
+      REDIS_HOST: '{{ param_db_redis_host }}'
+      REDIS_PORT: '{{ param_db_redis_port }}'
+      REDIS_PASSWORD: '{{ param_db_redis_password }}'
+      REDIS_DB_TASK: 0
+      REDIS_DB_CACHE: 0
+    restart: always
