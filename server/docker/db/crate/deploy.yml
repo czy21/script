@@ -14,3 +14,4 @@ services:
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/data
     command: -Cdiscovery.type=single-node
+    restart: always
