@@ -6,7 +6,7 @@ data:
 
 db:
   driver-name: mysql
-  url: {{ param_db_mysql_username }}:{{ param_db_mysql_password }}@tcp(param_db_mysql_host:param_db_mysql_port)/ndisk?charset=utf8mb4&parseTime=True
+  url: {{ param_db_mysql_username }}:{{ param_db_mysql_password }}@tcp({{ param_db_mysql_host }}:{{ param_db_mysql_port }})/ndisk?charset=utf8mb4&parseTime=True
 
 log:
 #  file: app.log # if removed,log in console
