@@ -19,5 +19,3 @@ services:
     user: root
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/opt/alist/data/
-
-
