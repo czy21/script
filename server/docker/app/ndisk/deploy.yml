@@ -10,6 +10,7 @@ services:
 
   ndisk:
     image: registry.cluster.com/library/ndisk:master
+    pull_policy: always
     container_name: ndisk
     labels:
       <<: *traefik-label
@@ -19,5 +20,4 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/app.yaml:/app/app.yaml
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/data/
     environment:
-      TZ: Asia/Shanghai
       CONFIG_FILE: /app/app.yaml
