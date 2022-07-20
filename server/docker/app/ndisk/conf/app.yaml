@@ -6,7 +6,7 @@ data:
 
 db:
   driver-name: mysql
-  url: {{ param_db_mysql_username }}:{{ param_db_mysql_password }}@tcp({{ param_db_mysql_host }}:{{ param_db_mysql_port }})/ndisk?charset=utf8mb4&parseTime=True
+  url: {{ param_db_mysql_username }}:{{ param_db_mysql_password }}@tcp({{ param_db_mysql_host }}:{{ param_db_mysql_port }})/ndisk?charset=utf8mb4&parseTime=True&loc=Local
 
 log:
 #  file: app.log # if removed,log in console
@@ -16,4 +16,7 @@ cache:
   type: redis # redis,memory
   redis:
     url: redis://:{{ param_db_redis_password }}@{{ param_db_redis_host }}:{{ param_db_redis_port }}
-  expire: 120 # seconds
+  expire: 30 # seconds
+
+cloud189:
+  cookie: ''
