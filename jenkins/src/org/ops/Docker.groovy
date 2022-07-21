@@ -7,7 +7,9 @@ import org.ops.util.StringUtils
 
 def build() {
     env.param_project_context = PathUtils.ofPath(env.param_project_root, env.param_project_module)
-    env.param_release_version = params.param_branch
+    env.param_release_version = StringUtils.isNotEmpty(env.param_release_version)
+                              ? env.param_release_version
+                              : params.param_branch
     env.param_release_name = PathUtils.ofPath(
             env.param_registry_repo,
             env.param_registry_dir,
