@@ -9,7 +9,7 @@ x-traefik-label: &traefik-label
 services:
 
   ndisk:
-    image: registry.cluster.com/library/ndisk:master
+    image: registry.cluster.com/library/ndisk:latest
     pull_policy: always
     container_name: ndisk
     labels:
