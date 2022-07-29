@@ -16,7 +16,11 @@ cache:
   type: redis # redis,memory
   redis:
     url: redis://:{{ param_db_redis_password }}@{{ param_db_redis_host }}:{{ param_db_redis_port }}
-  expire: 30 # seconds
+  expire: 180 # seconds
+
+dav:
+  username: admin
+  password: ''
 
 cloud189:
   cookie: ''
