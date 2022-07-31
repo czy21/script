@@ -13,7 +13,12 @@ sudo add-apt-repository --yes --update ppa:ansible/ansible
 sudo apt install ansible
 sudo sed -ir 's/^#\(host_key_checking\)/\1/' /etc/ansible/ansible.cfg
 ```
-
+## debian 11
+```bash
+echo 'deb http://ppa.launchpad.net/ansible/ansible/ubuntu focal main' > /etc/apt/sources.list.d/ansible.list
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367
+sudo apt install ansible
+```
 ## ubuntu pre-installed 
 ```shell
 passwd

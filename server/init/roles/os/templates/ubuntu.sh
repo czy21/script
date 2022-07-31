@@ -1,7 +1,9 @@
 #!/bin/bash
 set -e
 
-sudo sed -i.bak "s,\(ca.archive\|jp.archive\|archive\|security\).ubuntu.com,{{ param_mirror_apt }},g" /etc/apt/sources.list
+sudo sed -i.bak "s,\(ca.archive\|jp.archive\|us.archive\|archive\|security\).ubuntu.com,{{ param_mirror_apt }},g" /etc/apt/sources.list
+
+sudo NEEDRESTART_SUSPEND=1 apt remove needrestart && sudo apt autoclean -y && sudo apt autoremove -y
 
 sudo apt -y update
 sudo NEEDRESTART_SUSPEND=1 apt -y install wget vim git network-manager nfs-common make gcc
@@ -31,8 +33,3 @@ ClientAliveInterval 30
 
 public_key="set -e;cd;mkdir -p .ssh;chmod 700 .ssh;echo {{ param_ssh_public_key }} > .ssh/authorized_keys;chmod 644 .ssh/authorized_keys"
 sudo -u {{ param_user_ops }} bash -c "${public_key}"
-
-sudo ufw disable
-
-sudo swapoff -a
-sudo sed -i -r "s/^\s*/swap.img\s+\w+/#\0/" /etc/fstab
