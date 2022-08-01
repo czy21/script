@@ -26,4 +26,5 @@ services:
       - --storage.tsdb.retention.time=7d
       - --web.enable-lifecycle
     user: root
+    restart: always
 
