@@ -21,3 +21,4 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/data/
     environment:
       CONFIG_FILE: /app/app.yaml
+    restart: always
