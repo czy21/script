@@ -3,7 +3,7 @@ version: "3.9"
 {%- set es_setup_name = param_db_es_cluster_name + '-setup' %}
 
 x-es-common: &es-common
-  image: {{ param_registry_proxy_url | default("docker.elastic.co") }}/elasticsearch/elasticsearch:{{ param_db_es_version }}
+  image: elasticsearch:{{ param_db_es_version }}
 
 x-traefik-es-label: &traefik-es-label
   traefik.enable: true
@@ -95,7 +95,7 @@ services:
       retries: 120
   {%- endfor %}
   {{ param_db_es_kb_name }}:
-    image: {{ param_registry_proxy_url | default("docker.elastic.co") }}/kibana/kibana:{{ param_db_es_version }}
+    image: kibana:{{ param_db_es_version }}
     container_name: {{ param_db_es_kb_name }}
     labels:
       <<: *traefik-kb-label
