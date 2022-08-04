@@ -11,16 +11,15 @@ services:
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/postgresql.conf:/etc/postgresql/postgresql.conf
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/var/lib/postgresql/data/
-
     command: -c config_file=/etc/postgresql/postgresql.conf
     environment:
       TZ: Asia/Shanghai
       POSTGRES_PASSWORD: {{ param_db_pgsql_password }}
+    restart: always
   pgsql-exporter-{{ param_db_pgsql_port }}:
-    image: {{ param_registry_proxy_url | default("quay.io") }}/prometheuscommunity/postgres-exporter
+    image: prometheuscommunity/postgres-exporter
     container_name: pgsql-exporter-{{ param_db_pgsql_port }}
     environment:
       DATA_SOURCE_NAME: "postgresql://{{ param_db_pgsql_username }}:{{ param_db_pgsql_password }}@pgsql:{{ param_db_pgsql_port }}/postgres?sslmode=disable"
-
-    user: root
+    restart: always
 

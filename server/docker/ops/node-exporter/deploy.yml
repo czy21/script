@@ -3,7 +3,7 @@ version: "3.9"
 services:
 
   node-exporter:
-    image: {{ param_registry_proxy_url | default("quay.io") }}/prometheus/node-exporter
+    image: prom/node-exporter
     container_name: node-exporter
     network_mode: host
     ports:
@@ -12,3 +12,4 @@ services:
       - '/:/host:ro,rslave'
     command:
       - '--path.rootfs=/host'
+    restart: always
