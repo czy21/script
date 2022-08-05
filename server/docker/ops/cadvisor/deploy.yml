@@ -20,3 +20,4 @@ services:
       - /var/run:/var/run:ro
       - /sys:/sys:ro
       - {{ param_docker_root }}:/var/lib/docker:ro
+    restart: always
