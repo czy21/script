@@ -6,6 +6,7 @@ x-redis-common: &redis-common
   user: root
   environment:
     TZ: Asia/Shanghai
+  restart: always
 
 {%- set deploy_roles = param_db_redis_deploy_roles.split(',') %}
 
@@ -31,6 +32,7 @@ services:
       - --redis.password={{ param_db_redis_password }}
     environment:
       REDIS_EXPORTER_IS_CLUSTER: "false"
+    restart: always
   {%- endif %}
   {%- if 'cluster' in deploy_roles %}
   {%- for i in range(param_db_redis_cluster_replicas | int) %}
@@ -61,4 +63,5 @@ services:
       - --redis.password={{ param_db_redis_password }}
     environment:
       REDIS_EXPORTER_IS_CLUSTER: "true"
+    restart: always
     {%- endif %}
