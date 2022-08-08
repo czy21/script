@@ -3,10 +3,10 @@ set -e
 
 sudo sed -i.bak "s,\(ca.archive\|jp.archive\|us.archive\|archive\|security\).ubuntu.com,{{ param_mirror_apt }},g" /etc/apt/sources.list
 
-sudo NEEDRESTART_SUSPEND=1 apt remove needrestart && sudo apt autoclean -y && sudo apt autoremove -y
+sudo NEEDRESTART_SUSPEND=1 apt remove needrestart -y && sudo apt autoclean -y && sudo apt autoremove -y
 
 sudo apt -y update
-sudo NEEDRESTART_SUSPEND=1 apt -y install wget vim git network-manager nfs-common make gcc
+sudo apt -y install wget vim git network-manager nfs-common make gcc
 
 # postgres repo
 #sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
