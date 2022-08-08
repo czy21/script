@@ -1,0 +1,4 @@
+#gateway:
+#  gateways:
+#    istio-ingressgateway:
+#      type: NodePort
