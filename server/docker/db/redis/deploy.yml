@@ -38,7 +38,7 @@ services:
     expose:
       - "9121"
     command:
-      - --redis.addr=redis://{{ param_db_redis_host }}:{{ param_db_redis_port }}
+      - --redis.addr=redis://redis:{{ param_db_redis_port }}
       - --redis.password={{ param_db_redis_password }}
     environment:
       REDIS_EXPORTER_IS_CLUSTER: "false"
@@ -73,7 +73,7 @@ services:
     expose:
       - "9121"
     command:
-      - --redis.addr=redis://{{ param_db_redis_host }}:{{ param_db_redis_cluster_start_port }}
+      - --redis.addr=redis://redis1:{{ param_db_redis_cluster_start_port }}
       - --redis.password={{ param_db_redis_password }}
     environment:
       REDIS_EXPORTER_IS_CLUSTER: "true"
