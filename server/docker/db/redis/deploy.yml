@@ -8,6 +8,12 @@ x-redis-common: &redis-common
     TZ: Asia/Shanghai
   restart: always
 
+x-traefik-exporter-label: &traefik-exporter-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}-exporter.rule: Host(`redis-exporter-{{ param_cluster_name }}.cluster.com`)
+  traefik.http.routers.{{ param_role_name }}-exporter.service: {{ param_role_name }}-exporter
+  traefik.http.services.{{ param_role_name }}-exporter.loadbalancer.server.port: 9121
+
 {%- set deploy_roles = param_db_redis_deploy_roles.split(',') %}
 
 services:
@@ -25,8 +31,12 @@ services:
         --appendonly yes
   redis-exporter-{{ param_db_redis_port }}:
     image: oliver006/redis_exporter:alpine
+    labels:
+      <<: *traefik-exporter-label
     container_name: redis-exporter-{{ param_db_redis_port }}
     user: root
+    expose:
+      - "9121"
     command:
       - --redis.addr=redis://{{ param_db_redis_host }}:{{ param_db_redis_port }}
       - --redis.password={{ param_db_redis_password }}
@@ -56,8 +66,12 @@ services:
   {%- endfor %}
   redis-exporter-{{ param_db_redis_cluster_start_port }}:
     image: oliver006/redis_exporter:alpine
+    labels:
+      <<: *traefik-exporter-label
     container_name: redis-exporter-{{ param_db_redis_cluster_start_port }}
     user: root
+    expose:
+      - "9121"
     command:
       - --redis.addr=redis://{{ param_db_redis_host }}:{{ param_db_redis_cluster_start_port }}
       - --redis.password={{ param_db_redis_password }}
