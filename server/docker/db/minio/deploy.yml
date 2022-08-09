@@ -13,7 +13,6 @@ x-minio-common: &minio-common
     MINIO_PROMETHEUS_AUTH_TYPE: public
   restart: always
 
-
 x-traefik-label: &traefik-label
   traefik.enable: true
   traefik.http.routers.{{ param_role_name }}-api.rule: Host(`minio.cluster.com`)
@@ -23,8 +22,18 @@ x-traefik-label: &traefik-label
   traefik.http.routers.{{ param_role_name }}-web.service: {{ param_role_name }}-web
   traefik.http.services.{{ param_role_name }}-web.loadbalancer.server.port: 9001
 
-
 services:
+  {%- if 'single' == param_db_minio_deploy_role %}
+  minio:
+    <<: *minio-common
+    container_name: minio
+    labels:
+      <<: *traefik-label
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/data/single:/data/
+    command: server /data --console-address ":9001"
+  {%- endif %}
+  {%- if 'cluster' == param_db_minio_deploy_role %}
   {% for i in range(1,param_db_minio_cluster_replicas | int+1) %}
   minio{{ i }}:
     <<: *minio-common
@@ -38,4 +47,5 @@ services:
       {% endfor %}
     command: server --console-address ":9001" http://minio{1...{{ param_db_minio_cluster_replicas }}}/data{1...{{ param_db_minio_cluster_drives }}}
   {% endfor %}
+  {%- endif %}
 
