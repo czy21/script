@@ -3,16 +3,15 @@
 Install-Module -Name VMware.PowerCLI
 Set-ExecutionPolicy RemoteSigned
 
-$esxiOfflineBundle = "C:\Users\bruce\Desktop\esxi\VMware-ESXi-7.0U2-17630552-depot.zip"
-$intelNicOfflineBundle = "C:\Users\bruce\Desktop\esxi\Intel-NUC-ne1000_0.8.4-3vmw.670.0.0.8169922-offline_bundle-16654787.zip"
-$esxiImageProfileName = "ESXi-7.0.2-17630552-standard"
-$newImageProfileName = "ESXi-7.0.2"
+$esxiOfflineBundle = "C:\Users\bruce\Desktop\esxi\VMware-ESXi-7.0U3d-19482537-depot.zip"
+$intelNicOfflineBundle = "C:\Users\bruce\Desktop\esxi\Net-Community-Driver_1.2.7.0-1vmw.700.1.0.15843807_19480755.zip"
+$esxiImageProfileName = "ESXi-7.0U3d-19482537-standard"
+$newImageProfileName = "ESXi-7.0U3d-19482537-NUC"
 Add-EsxSoftwareDepot $esxiOfflineBundle
 Add-EsxSoftwareDepot $intelNicOfflineBundle
-$IntelNUCVib = Get-EsxSoftwarePackage | where {$_.name -eq "ne1000-intelnuc" -and $_.version -eq "0.8.4-3vmw.670.0.0.8169922"}
-New-EsxImageProfile -CloneProfile $esxiImageProfileName -Name $newImageProfileName -Vendor vGhetto
-Add-EsxSoftwarePackage -ImageProfile $newImageProfileName -SoftwarePackage $IntelNUCVib
-Export-EsxImageProfile -ImageProfile $newImageProfileName -ExportToIso -FilePath "C:\Users\bruce\Desktop\esxi\ESXi-7.0.2-custom.ISO"
+New-EsxImageProfile -CloneProfile $esxiImageProfileName -Name $newImageProfileName -Vendor "virten.net"
+Add-EsxSoftwarePackage -ImageProfile $newImageProfileName -SoftwarePackage "net-community"
+Export-EsxImageProfile -ImageProfile $newImageProfileName -ExportToIso -FilePath "C:\Users\bruce\Desktop\esxi\$newImageProfileName.iso"
 
 # use script
 .\ESXi-Customizer-PS-v2.6.0.ps1 -izip .\VMware-ESXi-7.0U2-17630552-depot.zip -pkgDir C:\Users\bruce\Desktop\esxi\pkg\
