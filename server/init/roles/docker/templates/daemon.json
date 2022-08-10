@@ -1,11 +1,12 @@
 {
   "data-root": "{{ param_docker_root }}",
   "exec-opts": ["native.cgroupdriver=systemd"],
+  "storage-driver": "overlay2",
   "log-driver": "json-file",
   "log-opts": {
-    "max-size": "100m"
+    "max-size": "10m",
+    "max-file": "3"
   },
-  "storage-driver": "overlay2",
   "registry-mirrors": {{ param_registry_mirrors | to_json }},
   "insecure-registries": {{ param_insecure_registries | to_json }}
 }
