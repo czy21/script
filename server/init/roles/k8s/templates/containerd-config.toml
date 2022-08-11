@@ -150,12 +150,13 @@ version = 2
 
       [plugins."io.containerd.grpc.v1.cri".registry.headers]
 
-      [plugins."io.containerd.grpc.v1.cri".registry.mirrors."docker.io"]
-         endpoint = ["http://registry-proxy.cluster.com"]
-      [plugins."io.containerd.grpc.v1.cri".registry.mirrors."registry.cluster.com"]
-         endpoint = ["http://registry.cluster.com"]
-      [plugins."io.containerd.grpc.v1.cri".registry.mirrors."registry-proxy.cluster.com"]
-         endpoint = ["http://registry-proxy.cluster.com"]
+      [plugins."io.containerd.grpc.v1.cri".registry.mirrors]
+        [plugins."io.containerd.grpc.v1.cri".registry.mirrors."docker.io"]
+           endpoint = ["http://{{ param_registry_proxy_url }}","https://registry-1.docker.io"]
+        [plugins."io.containerd.grpc.v1.cri".registry.mirrors."registry.cluster.com"]
+           endpoint = ["http://{{ param_registry_url }}"]
+        [plugins."io.containerd.grpc.v1.cri".registry.mirrors."registry-proxy.cluster.com"]
+           endpoint = ["http://{{ param_registry_proxy_url }}"]
 
     [plugins."io.containerd.grpc.v1.cri".x509_key_pair_streaming]
       tls_cert_file = ""
