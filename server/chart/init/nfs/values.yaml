@@ -3,7 +3,7 @@ nfs-subdir-external-provisioner:
   image:
     repository: {{ param_registry_proxy_url }}/sig-storage/nfs-subdir-external-provisioner
   storageClass:
-    name: managed-nfs-storage
+    name: nfs
     defaultClass: true
   nfs:
     server: {{ param_nfs_server }}

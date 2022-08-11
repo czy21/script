@@ -1,0 +1,13 @@
+share_path: {{ param_smb_kube_server }}/{{ param_smb_kube_data }}-{{ param_cluster_name }}
+
+csi-driver-smb:
+  image:
+    baseRepo: '{{ param_registry_proxy_url }}' # registry.k8s.io
+    smb:
+      repository: /sig-storage/smbplugin
+    csiProvisioner:
+      repository: /sig-storage/csi-provisioner
+    livenessProbe:
+      repository: /sig-storage/livenessprobe
+    nodeDriverRegistrar:
+      repository: /sig-storage/csi-node-driver-registrar

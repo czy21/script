@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: smb-secret
+data:
+  username: {{ .Values.param_smb_kube_username | b64enc }}
+  password: {{ .Values.param_smb_kube_password | b64enc }}
+type: Opaque
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: smb
+  annotations:
+    storageclass.kubernetes.io/is-default-class: 'true'
+volumeBindingMode: Immediate
+allowVolumeExpansion: true
+provisioner: smb.csi.k8s.io
+parameters:
+  source: "//{{ .Values.share_path }}"
+  csi.storage.k8s.io/provisioner-secret-name: "smb-secret"
+  csi.storage.k8s.io/provisioner-secret-namespace: "default"
+  csi.storage.k8s.io/node-stage-secret-name: "smb-secret"
+  csi.storage.k8s.io/node-stage-secret-namespace: "default"
+mountOptions:
+  - dir_mode=0777
+  - file_mode=0777
+  - uid=1001
+  - gid=1001
+  - noperm
+  - mfsymlinks
+  - cache=strict
+  - noserverino  # required to prevent data corruption
