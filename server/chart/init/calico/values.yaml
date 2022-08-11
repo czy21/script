@@ -2,4 +2,4 @@ tigera-operator:
   tigeraOperator:
     registry: {{ param_registry_proxy_url }}
   calicoctl:
-    image: {{ param_registry_proxy_url | default("docker.io")}}/calico/ctl
+    image: '{{ param_registry_proxy_url }}/calico/ctl' # docker.io/calico/ctl
