@@ -6,5 +6,5 @@ nfs-subdir-external-provisioner:
     name: nfs
     defaultClass: true
   nfs:
-    server: {{ param_nfs_server }}
+    server: {{ param_nfs_kube_server }}
     path: {{ param_nfs_kube_data }}-{{ param_cluster_name }}
