@@ -2,6 +2,10 @@ pulsar:
   initialize: true
   affinity:
     anti_affinity: false
+  images:
+    pulsar_manager:
+      repository: apachepulsar/pulsar-manager
+      tag: v0.2.0
   components:
     proxy: true
     pulsar_manager: true
