@@ -1,4 +1,4 @@
 ---
-param_k8s_version: 1.23.8
+param_k8s_version: 1.24.3
 param_k8s_svc_network_cidr: 10.1.0.0/16
 param_k8s_pod_network_cidr: 10.2.0.0/16

@@ -1,6 +1,6 @@
 - name: kubeadm init
   become: yes
-  shell: kubeadm init --config {{ param_remote_role_path }}/init-config.yml
+  shell: kubeadm init --config {{ param_remote_role_path }}/k8s-init-config.yml
 
 - name: export admin.conf
   become: yes
