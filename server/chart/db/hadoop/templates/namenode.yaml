@@ -94,4 +94,3 @@ spec:
   resources:
     requests:
       storage: 256Gi
-  storageClassName: managed-nfs-storage
