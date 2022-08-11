@@ -35,7 +35,7 @@ showmount -e [host]
 ### join cluster
 ```shell
 # allow master scheduling
-kubectl taint nodes --all node-role.kubernetes.io/master-
+kubectl taint nodes --all node-role.kubernetes.io/control-plane- node-role.kubernetes.io/master-
 
 # deny master scheduling
 kubectl taint node [master host] node-role.kubernetes.io/master="":NoSchedule
