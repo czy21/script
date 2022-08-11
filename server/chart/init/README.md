@@ -1,0 +1,3 @@
+```shell
+--ignore-namespace
+```
