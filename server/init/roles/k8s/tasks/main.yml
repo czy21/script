@@ -1,3 +1,7 @@
+- name: containerd ensure config dir
+  become: yes
+  file: path=/etc/containerd state=directory
+
 - name: containerd config init
   become: yes
   template: src=containerd-config.toml dest=/etc/containerd/config.toml
@@ -31,5 +35,6 @@
   become: yes
   shell: |
     sudo wget -O - https://get.helm.sh/helm-v3.9.0-linux-amd64.tar.gz | sudo tar -zxf - --strip-components 1 -C /usr/local/bin/ linux-amd64/helm
-    sudo chmod +x /usr/local/bin/helm && sudo ln -s /usr/local/bin/helm /usr/bin/helm
+    sudo chown root:root /usr/local/bin/helm && sudo chmod +x /usr/local/bin/helm
+    sudo ln -s /usr/local/bin/helm /usr/bin/helm
     helm completion bash | sudo tee /etc/bash_completion.d/helm > /dev/null

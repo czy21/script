@@ -27,5 +27,5 @@ public_key="set -e;cd;mkdir -p .ssh;chmod 700 .ssh;echo {{ param_ssh_public_key 
 sudo -u root bash -c "${public_key}"
 sudo -u {{ param_user_ops }} bash -c "${public_key}"
 
-systemctl disable firewalld
+systemctl stop firewalld && systemctl disable firewalld
 sed -i -r "s/SELINUX=enforcing/SELINUX=disabled/" /etc/selinux/config
