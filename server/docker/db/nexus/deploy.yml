@@ -14,7 +14,7 @@ x-traefik-label: &traefik-label
 
 services:
   nexus:
-    image: sonatype/nexus3:3.40.1
+    image: sonatype/nexus3:3.41.0
     container_name: nexus
     labels:
       <<: *traefik-label
