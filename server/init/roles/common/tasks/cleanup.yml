@@ -1,2 +1,2 @@
 - name: cleahup
-  file: path={{ inventory_dir }} state=absent
+  file: path={{ inventory_dir|basename }} state=absent
