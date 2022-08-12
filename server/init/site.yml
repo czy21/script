@@ -46,36 +46,48 @@
   tags:
     - '{{ param_role_name }}'
 
+- name: k8s
+  hosts: all
+  vars_files:
+    - "vars/env.yml"
+    - "vars/main.yml"
+  vars:
+    param_role_name: k8s
+  pre_tasks:
+    - include_tasks: roles/common/tasks/copy-template.yml
+  roles:
+    - '{{ param_role_name }}'
+  post_tasks:
+    - include_tasks: roles/common/tasks/cleanup.yml
+  tags:
+    - '{{ param_role_name }}'
+
 - name: k8s-master
   hosts: master
   vars_files:
     - "vars/env.yml"
     - "vars/main.yml"
+    - "roles/k8s/vars/main.yml"
   vars:
-    param_k8s_role: master
     param_role_name: k8s
-  pre_tasks:
+  tasks:
     - include_tasks: roles/common/tasks/copy-template.yml
-  roles:
-    - '{{ param_role_name }}'
-  post_tasks:
+    - include_tasks: roles/k8s/tasks/master.yml
     - include_tasks: roles/common/tasks/cleanup.yml
   tags:
-    - '{{ param_role_name }}-{{ param_k8s_role }}'
+    - 'k8s-master'
 
-- name: k8s-node
+- name: k8s-worker
   hosts: node
   vars_files:
     - "vars/env.yml"
     - "vars/main.yml"
+    - "roles/k8s/vars/main.yml"
   vars:
-    param_k8s_role: node
     param_role_name: k8s
-  pre_tasks:
+  tasks:
     - include_tasks: roles/common/tasks/copy-template.yml
-  roles:
-    - '{{ param_role_name }}'
-  post_tasks:
+    - include_tasks: roles/k8s/tasks/worker.yml
     - include_tasks: roles/common/tasks/cleanup.yml
   tags:
-    - '{{ param_role_name }}-{{ param_k8s_role }}'
+    - 'k8s-worker'

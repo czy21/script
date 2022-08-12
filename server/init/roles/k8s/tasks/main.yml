@@ -56,5 +56,3 @@
     sudo chown root:root /usr/local/bin/helm && sudo chmod +x /usr/local/bin/helm
     sudo ln -s /usr/local/bin/helm /usr/bin/helm
     helm completion bash | sudo tee /etc/bash_completion.d/helm > /dev/null
-
-- include_tasks: "{{ param_k8s_role }}.yml"
