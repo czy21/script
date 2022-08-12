@@ -1,16 +1,16 @@
 ingress-nginx:
   controller:
     image:
-      registry: {{ param_registry_proxy_url }}
+      registry: '{{ param_registry_proxy_url }}' # registry.k8s.io
     ingressClassResource:
       default: true
-    service:
-      type: NodePort
-      nodePorts:
-        http: 80
-        https: 443
+    hostNetwork: true
     podAnnotations:
       prometheus.io/port: "10254"
       prometheus.io/scrape: "true"
     metrics:
       enabled: true
+    admissionWebhooks:
+      patch:
+        image:
+          registry: '{{ param_registry_proxy_url }}'
