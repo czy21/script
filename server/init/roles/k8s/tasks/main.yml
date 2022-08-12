@@ -1,4 +1,12 @@
-- name: containerd ensure config dir
+- name: crictl install
+  become: yes
+  shell: |
+    sudo wget -c https://github.com/kubernetes-sigs/cri-tools/releases/download/v{{ param_k8s_version }}/crictl-v{{ param_k8s_version }}-linux-amd64.tar.gz -O - | sudo tar -xz -C /usr/local/bin
+    sudo chown root:root /usr/local/bin/crictl
+    sudo chmod +x /usr/local/bin/crictl
+    sudo ln -s /usr/local/bin/crictl /usr/bin/crictl
+
+- name: containerd state /etc/containerd
   become: yes
   file: path=/etc/containerd state=directory
 
@@ -9,6 +17,18 @@
 - name: containerd install
   become: yes
   shell: bash {{ param_remote_role_path }}/containerd-{{ ansible_distribution | lower}}.sh
+
+- name: crio registries.conf state
+  become: yes
+  file: path=/etc/containers state=directory
+
+- name: crio registries.conf init
+  become: yes
+  template: src=crio-registries.conf dest=/etc/containers/registries.conf
+
+- name: crio install
+  become: yes
+  shell: bash {{ param_remote_role_path }}/crio-{{ ansible_distribution | lower}}.sh
 
 - name: k8s create iptables
   become: yes
