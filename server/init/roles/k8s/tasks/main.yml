@@ -6,11 +6,11 @@
     sudo chmod +x /usr/local/bin/crictl
     sudo ln -s /usr/local/bin/crictl /usr/bin/crictl
 
-- name: containerd state /etc/containerd
+- name: containerd /etc/containerd state
   become: yes
   file: path=/etc/containerd state=directory
 
-- name: containerd config init
+- name: containerd config.toml init
   become: yes
   template: src=containerd-config.toml dest=/etc/containerd/config.toml
 
@@ -18,7 +18,7 @@
   become: yes
   shell: bash {{ param_remote_role_path }}/containerd-{{ ansible_distribution | lower}}.sh
 
-- name: crio registries.conf state
+- name: crio /etc/containers state
   become: yes
   file: path=/etc/containers state=directory
 
