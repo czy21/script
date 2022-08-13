@@ -1,3 +1,0 @@
-- name: copy hosts
-  become: yes
-  template: src={{ ansible_distribution | lower}} dest=/etc/hosts
