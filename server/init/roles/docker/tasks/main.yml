@@ -1,4 +1,4 @@
-- name: create dir
+- name: docker create systemd
   become: yes
   shell: |-
     sudo mkdir -p /etc/systemd/system/docker.service.d/
@@ -8,10 +8,10 @@
     ExecStart=/usr/bin/dockerd
     EOF
 
-- name: create daemon
+- name: docker init /etc/docker/daemon.json
   become: yes
   template: src=daemon.json dest=/etc/docker/
 
-- name: install
+- name: docker install
   shell: |-
     bash {{ param_remote_role_path }}/{{ ansible_distribution | lower}}.sh
