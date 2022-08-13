@@ -1,3 +1,7 @@
+- name: hosts init
+  become: yes
+  template: src=hosts-init-{{ ansible_distribution | lower}} dest=/etc/hosts
+
 - name: crictl install
   become: yes
   shell: |
@@ -6,29 +10,17 @@
     sudo chmod +x /usr/local/bin/crictl
     sudo ln -s /usr/local/bin/crictl /usr/bin/crictl
 
-- name: containerd /etc/containerd state
-  become: yes
-  file: path=/etc/containerd state=directory
-
-- name: containerd config.toml init
-  become: yes
-  template: src=containerd-config.toml dest=/etc/containerd/config.toml
-
-- name: containerd install
-  become: yes
-  shell: bash {{ param_remote_role_path }}/containerd-{{ ansible_distribution | lower}}.sh
-
-- name: crio /etc/containers state
+- name: crio state /etc/containers
   become: yes
   file: path=/etc/containers state=directory
 
-- name: crio registries.conf init
+- name: crio init /etc/containers/registries.conf
   become: yes
-  template: src=crio-registries.conf dest=/etc/containers/registries.conf
+  template: src=crio-init-registries.conf dest=/etc/containers/registries.conf
 
 - name: crio install
   become: yes
-  shell: bash {{ param_remote_role_path }}/crio-{{ ansible_distribution | lower}}.sh
+  shell: bash {{ param_remote_role_path }}/crio-install-{{ ansible_distribution | lower}}.sh
 
 - name: k8s create iptables
   become: yes
@@ -47,7 +39,7 @@
     sudo sysctl --system
 
 - name: k8s install
-  shell: bash {{ param_remote_role_path }}/k8s-{{ ansible_distribution | lower}}.sh && kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
+  shell: bash {{ param_remote_role_path }}/k8s-install-{{ ansible_distribution | lower}}.sh && kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
 
 - name: helm install
   become: yes

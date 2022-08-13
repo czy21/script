@@ -1,0 +1,11 @@
+- name: containerd state /etc/containerd
+  become: yes
+  file: path=/etc/containerd state=directory
+
+- name: containerd init /etc/containerd/config.toml
+  become: yes
+  template: src=config.toml dest=/etc/containerd/config.toml
+
+- name: containerd install
+  become: yes
+  shell: bash {{ param_remote_role_path }}/{{ ansible_distribution | lower}}.sh
