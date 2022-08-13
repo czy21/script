@@ -13,5 +13,6 @@
   template: src=daemon.json dest=/etc/docker/
 
 - name: docker install
+  become: yes
   shell: |-
     bash {{ param_remote_role_path }}/{{ ansible_distribution | lower}}.sh
