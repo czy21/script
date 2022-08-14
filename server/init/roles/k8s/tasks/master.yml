@@ -1,7 +1,5 @@
 - name: kubeadm init
   become: yes
-  shell: kubeadm init --config {{ param_remote_role_path }}/k8s-init-config.yml
-
-- name: export admin.conf
-  become: yes
-  shell: sudo -i eval 'if [ -z ${KUBECONFIG} ];then echo 'export KUBECONFIG=/etc/kubernetes/admin.conf' >> ~/.bashrc; fi;'
+  shell: |
+    sudo kubeadm init --config {{ param_remote_role_path }}/k8s-init-config.yml
+    sudo -i eval 'if [ -z ${KUBECONFIG} ];then echo 'export KUBECONFIG=/etc/kubernetes/admin.conf' >> ~/.bashrc; fi;'
