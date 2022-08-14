@@ -1,5 +1,10 @@
 http:
   routers:
+    raw-proxy:
+      rule: "Host(`nexus.cluster.com`) && PathPrefix(`/repository/raw-proxy`)"
+      service: nexus@docker
+      middlewares:
+        - raw-proxy
     apt-proxy:
       rule: "Host(`nexus.cluster.com`) && PathPrefix(`/repository/apt-proxy`)"
       service: nexus@docker
@@ -17,6 +22,10 @@ http:
       redirectScheme:
         scheme: https
         permanent: true
+    raw-proxy:
+      replacePathRegex:
+        regex: "^/repository/raw-proxy/(.*)"
+        replacement: "/repository/raw-proxy-${1}/"
     apt-proxy:
       replacePathRegex:
         regex: "^/repository/apt-proxy/(.*)"
