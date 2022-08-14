@@ -24,11 +24,11 @@ http:
         permanent: true
     raw-proxy:
       replacePathRegex:
-        regex: "^/repository/raw-proxy/(.*)"
+        regex: "^/repository/raw-proxy/(.*)/"
         replacement: "/repository/raw-proxy-${1}/"
     apt-proxy:
       replacePathRegex:
-        regex: "^/repository/apt-proxy/(.*)"
+        regex: "^/repository/apt-proxy/(.*)/"
         replacement: "/repository/apt-proxy-${1}/"
     yum-proxy-centos:
       replacePathRegex:
