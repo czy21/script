@@ -16,7 +16,9 @@
     sudo mkdir -p /etc/containers/
     sudo cat {{ param_remote_role_path }}/crio-init-registries.conf > /etc/containers/registries.conf
     bash {{ param_remote_role_path }}/crio-install-{{ ansible_distribution | lower}}.sh
-    sudo sed -i.bak -e 's|registry.k8s.io|{{ param_registry_proxy_url }}|g' -e 's|^# \(pause_image = \)|\1|g' /etc/crio/crio.conf
+    sudo sed -i.bak \
+    -e 's|registry.k8s.io|{{ param_registry_proxy_url }}|g' \ 
+    -e 's|^# \(pause_image = \)|\1|g' /etc/crio/crio.conf
     sudo systemctl daemon-reload && sudo systemctl restart crio && sudo systemctl enable crio
 
 - name: k8s install
