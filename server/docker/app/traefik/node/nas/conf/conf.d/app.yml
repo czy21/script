@@ -6,8 +6,7 @@ http:
       middlewares:
         - raw-proxy
         - apt-proxy
-        - yum-proxy-centos
-        - yum-proxy-centos-vault
+        - yum-proxy
 
   middlewares:
     https-redirect:
@@ -22,11 +21,7 @@ http:
       replacePathRegex:
         regex: "^/repository/apt-proxy/(.*)/"
         replacement: "/repository/apt-proxy-${1}/"
-    yum-proxy-centos:
+    yum-proxy:
       replacePathRegex:
-        regex: "^/repository/yum-proxy/centos/(.*)"
-        replacement: "/repository/yum-proxy-centos/$1"
-    yum-proxy-centos-vault:
-      replacePathRegex:
-        regex: "^/repository/yum-proxy/centos-vault/(.*)"
-        replacement: "/repository/yum-proxy-centos-vault/$1"
+        regex: "^/repository/yum-proxy/(.*)/"
+        replacement: "/repository/yum-proxy-$1/"
