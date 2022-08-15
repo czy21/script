@@ -6,12 +6,10 @@ sudo yum install -y yum-utils
 sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 
 # override docker repo
-sudo sed -i.bak -e "s,^baseurl=https://download.docker.com,baseurl=http://{{ param_mirror_raw }}/docker-ce,g" /etc/yum.repos.d/docker-ce.repo
+sudo sed -i.bak -e "s|https://download.docker.com|http://{{ param_mirror_raw }}/docker-ce|g" /etc/yum.repos.d/docker-ce.repo
 
-sudo yum -y install docker-ce docker-ce-cli containerd.io
-sudo systemctl daemon-reload
-sudo systemctl restart docker
-sudo systemctl enable docker
+sudo yum -y install docker-ce-{{ param_docker_version }} docker-ce-cli-{{ param_docker_version }} containerd.io-{{ param_containerd_version }}
+sudo systemctl daemon-reload && sudo systemctl restart docker && sudo systemctl enable docker
 
 # docker compose
 sudo curl -L "https://github.com/docker/compose/releases/download/{{ param_compose_version }}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
