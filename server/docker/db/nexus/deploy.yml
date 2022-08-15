@@ -25,6 +25,6 @@ services:
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/nexus-data/
     environment:
-      INSTALL4J_ADD_VM_PARAMS: -Xms2703M -Xmx2703M -XX:MaxDirectMemorySize=2703M
+      INSTALL4J_ADD_VM_PARAMS: -Xms128m -Xmx512m -XX:MaxDirectMemorySize=512m
       NEXUS_SECURITY_INITIAL_PASSWORD: "{{ param_manage_password }}"
     restart: always
