@@ -11,7 +11,6 @@ repo_gpgcheck=1
 gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
 exclude=kubelet kubeadm kubectl
 EOF
-sudo sed -i.bak \
--e "s|https://packages.cloud.google.com|http://{{ param_mirror_raw }}/kubernetes|g" /etc/yum.repos.d/kubernetes.repo
+sudo sed -i.bak -e "s|https://packages.cloud.google.com|http://{{ param_mirror_raw }}/kubernetes|g" /etc/yum.repos.d/kubernetes.repo
 sudo yum install -y kubelet-{{ param_k8s_version }} kubeadm-{{ param_k8s_version }} kubectl-{{ param_k8s_version }} --disableexcludes=kubernetes
 sudo systemctl enable --now kubelet
