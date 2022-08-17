@@ -32,28 +32,21 @@ showmount -e [host]
 [host]:/volume1/ubuntu /volume1 nfs defaults 0 0
 ```
 
-### join cluster
+### k8s
 ```shell
+# get join command on master node
+sudo kubeadm token create --print-join-command
+
 # allow master scheduling
 kubectl taint nodes --all node-role.kubernetes.io/control-plane- node-role.kubernetes.io/master-
 
 # deny master scheduling
 kubectl taint node [master host] node-role.kubernetes.io/master="":NoSchedule
 
-# get join command on master node
-sudo kubeadm token create --print-join-command
-```
-### kubectl for non-root user
-```shell
-mkdir -p $HOME/.kube && sudo cp --force /etc/kubernetes/admin.conf $HOME/.kube/config && sudo chown $(id -u):$(id -g) $HOME/.kube/config
-```
-
-### add label to node
-```shell
+# add label to node
 kubectl label nodes k8s-nodeX slave=X
-```
-### show label
-```shell
+
+# show node label
 kubectl get node --show-labels
 ```
 
