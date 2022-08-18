@@ -32,7 +32,8 @@ spec:
         - --storage.tsdb.retention.time=7d
         - --web.enable-lifecycle
         ports:
-        - containerPort: 9090
+        - name: http
+          containerPort: 9090
         volumeMounts:
         - name: conf
           mountPath: /etc/prometheus/prometheus.yml
