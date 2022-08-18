@@ -1,3 +1,3 @@
 apiVersion: v2
-name: istio
+name: httpbin
 version: 0.1.0
