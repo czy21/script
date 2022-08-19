@@ -1,12 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: istio
+spec:
+  controller: istio.io/ingress-controller
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  annotations:
-    nginx.ingress.kubernetes.io/proxy-body-size: '0'
   name: ingress
   namespace: {{ .Release.Namespace }}
 spec:
+  ingressClassName: istio
   rules:
   - host: prom-{{ .Values.param_cluster_name }}.cluster.com
     http:
