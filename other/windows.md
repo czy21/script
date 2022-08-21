@@ -24,3 +24,9 @@ wsl --install --distribution ubuntu-20.04
 
 # 安装git bash时 使用外部openssh
 ```
+
+```shell
+# 去除TPM检查
+REG ADD HKLM\SYSTEM\Setup\LabConfig /v BypassTPMCheck /t REG_DWORD /d 1
+REG ADD HKLM\SYSTEM\Setup\LabConfig /v BypassSecureBootCheck /t REG_DWORD /d 1
+```
