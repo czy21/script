@@ -1,0 +1,79 @@
+version: "3.9"
+
+x-common: &common
+  privileged: true
+  user: root
+  restart: always
+
+x-traefik-portal-label: &traefik-portal-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}-portal.rule: Host(`harbor.cluster.com`)
+  traefik.http.routers.{{ param_role_name }}-portal.service: {{ param_role_name }}-portal
+  traefik.http.services.{{ param_role_name }}-portal.loadbalancer.server.port: 8080
+
+x-traefik-core-label: &traefik-core-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}-core.rule: Host(`harbor.cluster.com`) && PathPrefix(`/{c|api|chartrepo|v2|service}/`)
+  traefik.http.routers.{{ param_role_name }}-core.service: {{ param_role_name }}-core
+  traefik.http.services.{{ param_role_name }}-core.loadbalancer.server.port: 8080
+
+services:
+  harbor-registry:
+    image: goharbor/registry-photon:v2.5.3
+    container_name: harbor-registry
+    <<: *common
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/data/registry:/storage:z
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/registry/:/etc/registry/:z
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/secret/registry/root.crt:/etc/registry/root.crt
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/shared/trust-certificates:/harbor_cust_cert
+  harbor-registryctl:
+    image: goharbor/harbor-registryctl:v2.5.3
+    container_name: harbor-registryctl
+    env_file:
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/registryctl/env
+    <<: *common
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/data/registry:/storage:z
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/registry/:/etc/registry/:z
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/registryctl/config.yml:/etc/registryctl/config.yml
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/shared/trust-certificates:/harbor_cust_cert
+  harbor-core:
+    image: goharbor/harbor-core:v2.5.3
+    container_name: harbor-core
+    labels:
+      <<: *traefik-core-label
+    env_file:
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/core/env
+    <<: *common
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/data/ca_download/:/etc/core/ca/:z
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/data/:z
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/core/certificates/:/etc/core/certificates/:z
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/core/app.conf:/etc/core/app.conf
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/secret/core/private_key.pem:/etc/core/private_key.pem
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/secret/keys/secretkey:/etc/core/key
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/shared/trust-certificates:/harbor_cust_cert
+    depends_on:
+      - harbor-registry
+  harbor-portal:
+    image: goharbor/harbor-portal:v2.5.3
+    container_name: harbor-portal
+    labels:
+      <<: *traefik-portal-label
+    <<: *common
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/portal/nginx.conf:/etc/nginx/nginx.conf
+
+  harbor-jobservice:
+    image: goharbor/harbor-jobservice:v2.5.3
+    container_name: harbor-jobservice
+    env_file:
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/jobservice/env
+    <<: *common
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/data/job_logs:/var/log/jobs:z
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/jobservice/config.yml:/etc/jobservice/config.yml
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/shared/trust-certificates:/harbor_cust_cert
+    depends_on:
+      - harbor-core
