@@ -6,7 +6,7 @@ sudo sed -i.bak "s,\(ca.archive\|jp.archive\|us.archive\|archive\|security\).ubu
 sudo NEEDRESTART_SUSPEND=1 apt remove needrestart -y && sudo apt autoclean -y && sudo apt autoremove -y
 
 sudo apt -y update
-sudo apt -y install wget vim git network-manager nfs-common make gcc iputils-ping
+sudo apt -y install wget vim git network-manager nfs-common make gcc iputils-ping bash-completion
 
 # postgres repo
 #sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
