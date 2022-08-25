@@ -5,18 +5,22 @@ x-common: &common
   user: root
   restart: always
 
-
-x-traefik-portal-label: &traefik-portal-label
+x-traefik-label: &traefik-label
   traefik.enable: true
-  traefik.http.routers.{{ param_role_name }}-portal.rule: Host(`{{ param_db_harbor_hostname }}`)
-  traefik.http.routers.{{ param_role_name }}-portal.service: {{ param_role_name }}-portal
-  traefik.http.services.{{ param_role_name }}-portal.loadbalancer.server.port: 8080
+  traefik.http.routers.{{ param_role_name }}.rule: Host(`{{ param_db_harbor_hostname }}`)
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 8080
+#x-traefik-portal-label: &traefik-portal-label
+#  traefik.enable: true
+#  traefik.http.routers.{{ param_role_name }}-portal.rule: Host(`{{ param_db_harbor_hostname }}`)
+#  traefik.http.routers.{{ param_role_name }}-portal.service: {{ param_role_name }}-portal
+#  traefik.http.services.{{ param_role_name }}-portal.loadbalancer.server.port: 8080
 #
-x-traefik-core-label: &traefik-core-label
-  traefik.enable: true
-  traefik.http.routers.{{ param_role_name }}-core.rule: Host(`{{ param_db_harbor_hostname }}`) && PathPrefix(`/{target:c|api|chartrepo|v2|service}/`)
-  traefik.http.routers.{{ param_role_name }}-core.service: {{ param_role_name }}-core
-  traefik.http.services.{{ param_role_name }}-core.loadbalancer.server.port: 8080
+#x-traefik-core-label: &traefik-core-label
+#  traefik.enable: true
+#  traefik.http.routers.{{ param_role_name }}-core.rule: Host(`{{ param_db_harbor_hostname }}`) && PathPrefix(`/{target:c|api|chartrepo|v2|service}/`)
+#  traefik.http.routers.{{ param_role_name }}-core.service: {{ param_role_name }}-core
+#  traefik.http.services.{{ param_role_name }}-core.loadbalancer.server.port: 8080
 
 services:
   log:
@@ -37,6 +41,8 @@ services:
     image: goharbor/registry-photon:v{{ param_db_harbor_version }}
     container_name: registry
     <<: *common
+    expose:
+      - "5000"
     volumes:
       - /data/registry:/storage:z
       - {{ param_docker_data }}/{{ param_role_name }}/data/common/config/registry/:/etc/registry/:z
@@ -79,8 +85,8 @@ services:
     image: goharbor/harbor-core:v{{ param_db_harbor_version }}
     container_name: harbor-core
     <<: *common
-    labels:
-      <<: *traefik-core-label
+    expose:
+      - "8080"
     env_file:
       - {{ param_docker_data }}/{{ param_role_name }}/data/common/config/core/env
     volumes:
@@ -111,8 +117,8 @@ services:
     image: goharbor/harbor-portal:v{{ param_db_harbor_version }}
     container_name: harbor-portal
     <<: *common
-    labels:
-      <<: *traefik-portal-label
+    expose:
+      - "8080"
     volumes:
       - type: bind
         source: {{ param_docker_data }}/{{ param_role_name }}/data/common/config/portal/nginx.conf
@@ -146,3 +152,26 @@ services:
       options:
         syslog-address: "tcp://localhost:1514"
         tag: "jobservice"
+  nginx:
+    image: goharbor/nginx-photon:v{{ param_db_harbor_version }}
+    container_name: harbor-nginx
+    <<: *common
+    labels:
+      <<: *traefik-label
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/data/common/config/nginx:/etc/nginx
+      - type: bind
+        source: {{ param_docker_data }}/{{ param_role_name }}/data/common/config/shared/trust-certificates
+        target: /harbor_cust_cert
+    expose:
+      - "8080"
+    depends_on:
+      - registry
+      - core
+      - portal
+      - log
+    logging:
+      driver: "syslog"
+      options:
+        syslog-address: "tcp://localhost:1514"
+        tag: "proxy"
