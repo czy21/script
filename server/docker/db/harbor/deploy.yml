@@ -5,22 +5,22 @@ x-common: &common
   user: root
   restart: always
 
-x-traefik-label: &traefik-label
+x-traefik-portal-label: &traefik-portal-label
   traefik.enable: true
-  traefik.http.routers.{{ param_role_name }}.rule: Host(`{{ param_db_harbor_hostname }}`)
-  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
-  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 8080
-#x-traefik-portal-label: &traefik-portal-label
-#  traefik.enable: true
-#  traefik.http.routers.{{ param_role_name }}-portal.rule: Host(`{{ param_db_harbor_hostname }}`)
-#  traefik.http.routers.{{ param_role_name }}-portal.service: {{ param_role_name }}-portal
-#  traefik.http.services.{{ param_role_name }}-portal.loadbalancer.server.port: 8080
-#
-#x-traefik-core-label: &traefik-core-label
-#  traefik.enable: true
-#  traefik.http.routers.{{ param_role_name }}-core.rule: Host(`{{ param_db_harbor_hostname }}`) && PathPrefix(`/{target:c|api|chartrepo|v2|service}/`)
-#  traefik.http.routers.{{ param_role_name }}-core.service: {{ param_role_name }}-core
-#  traefik.http.services.{{ param_role_name }}-core.loadbalancer.server.port: 8080
+  traefik.http.routers.{{ param_role_name }}-portal.rule: Host(`{{ param_db_harbor_hostname }}`)
+  traefik.http.routers.{{ param_role_name }}-portal.service: {{ param_role_name }}-portal
+  traefik.http.services.{{ param_role_name }}-portal.loadbalancer.server.port: 8080
+
+x-traefik-core-label: &traefik-core-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}-core.rule: Host(`{{ param_db_harbor_hostname }}`) && PathPrefix(`/{target:c|api|chartrepo|service}/`)
+  traefik.http.routers.{{ param_role_name }}-core.service: {{ param_role_name }}-core
+  traefik.http.services.{{ param_role_name }}-core.loadbalancer.server.port: 8080
+  traefik.http.middlewares.header-proto-https.headers.customrequestheaders.X-Forwarded-Proto: https
+  traefik.http.routers.{{ param_role_name }}-v2.rule: Host(`{{ param_db_harbor_hostname }}`) && PathPrefix(`/v2/`)
+  traefik.http.routers.{{ param_role_name }}-v2.service: {{ param_role_name }}-v2
+  traefik.http.services.{{ param_role_name }}-v2.loadbalancer.server.port: 8080
+  traefik.http.routers.{{ param_role_name }}-v2.middlewares: header-proto-https
 
 services:
   log:
@@ -28,15 +28,11 @@ services:
     container_name: harbor-log
     <<: *common
     volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/log/harbor/:/var/log/docker/:z
-      - type: bind
-        source: {{ param_docker_data }}/{{ param_role_name }}/data/common/config/log/logrotate.conf
-        target: /etc/logrotate.d/logrotate.conf
-      - type: bind
-        source: {{ param_docker_data }}/{{ param_role_name }}/data/common/config/log/rsyslog_docker.conf
-        target: /etc/rsyslog.d/rsyslog_docker.conf
+      - {{ param_docker_data }}/{{ param_role_name }}/log/harbor/:/var/log/docker/
+      - {{ param_docker_data }}/{{ param_role_name }}/data/common/config/log/logrotate.conf:/etc/logrotate.d/logrotate.conf
+      - {{ param_docker_data }}/{{ param_role_name }}/data/common/config/log/rsyslog_docker.conf:/etc/rsyslog.d/rsyslog_docker.conf
     ports:
-      - 127.0.0.1:1514:10514
+      - "127.0.0.1:1514:10514"
   registry:
     image: goharbor/registry-photon:v{{ param_db_harbor_version }}
     container_name: registry
@@ -44,14 +40,10 @@ services:
     expose:
       - "5000"
     volumes:
-      - /data/registry:/storage:z
-      - {{ param_docker_data }}/{{ param_role_name }}/data/common/config/registry/:/etc/registry/:z
-      - type: bind
-        source: {{ param_docker_data }}/{{ param_role_name }}/data/secret/registry/root.crt
-        target: /etc/registry/root.crt
-      - type: bind
-        source: {{ param_docker_data }}/{{ param_role_name }}/data/common/config/shared/trust-certificates
-        target: /harbor_cust_cert
+      - {{ param_docker_data }}/{{ param_role_name }}/data/registry/:/storage/
+      - {{ param_docker_data }}/{{ param_role_name }}/data/common/config/registry/:/etc/registry/
+      - {{ param_docker_data }}/{{ param_role_name }}/data/secret/registry/root.crt:/etc/registry/root.crt
+      - {{ param_docker_data }}/{{ param_role_name }}/data/common/config/shared/trust-certificates:/harbor_cust_cert
     depends_on:
       - log
     logging:
@@ -66,14 +58,10 @@ services:
     env_file:
       - {{ param_docker_data }}/{{ param_role_name }}/data/common/config/registryctl/env
     volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/data/registry:/storage:z
-      - {{ param_docker_data }}/{{ param_role_name }}/data/common/config/registry/:/etc/registry/:z
-      - type: bind
-        source: {{ param_docker_data }}/{{ param_role_name }}/data/common/config/registryctl/config.yml
-        target: /etc/registryctl/config.yml
-      - type: bind
-        source: {{ param_docker_data }}/{{ param_role_name }}/data/common/config/shared/trust-certificates
-        target: /harbor_cust_cert
+      - {{ param_docker_data }}/{{ param_role_name }}/data/registry/:/storage/
+      - {{ param_docker_data }}/{{ param_role_name }}/data/common/config/registry/:/etc/registry/
+      - {{ param_docker_data }}/{{ param_role_name }}/data/common/config/registryctl/config.yml:/etc/registryctl/config.yml
+      - {{ param_docker_data }}/{{ param_role_name }}/data/common/config/shared/trust-certificates:/harbor_cust_cert
     depends_on:
       - log
     logging:
@@ -85,26 +73,20 @@ services:
     image: goharbor/harbor-core:v{{ param_db_harbor_version }}
     container_name: harbor-core
     <<: *common
+    labels:
+      <<: *traefik-core-label
     expose:
       - "8080"
     env_file:
       - {{ param_docker_data }}/{{ param_role_name }}/data/common/config/core/env
     volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/data/ca_download/:/etc/core/ca/:z
-      - /data/:/data/:z
-      - {{ param_docker_data }}/{{ param_role_name }}/data/common/config/core/certificates/:/etc/core/certificates/:z
-      - type: bind
-        source: {{ param_docker_data }}/{{ param_role_name }}/data/common/config/core/app.conf
-        target: /etc/core/app.conf
-      - type: bind
-        source: {{ param_docker_data }}/{{ param_role_name }}/data/secret/core/private_key.pem
-        target: /etc/core/private_key.pem
-      - type: bind
-        source: {{ param_docker_data }}/{{ param_role_name }}/data/secret/keys/secretkey
-        target: /etc/core/key
-      - type: bind
-        source: {{ param_docker_data }}/{{ param_role_name }}/data/common/config/shared/trust-certificates
-        target: /harbor_cust_cert
+      - {{ param_docker_data }}/{{ param_role_name }}/data/ca_download/:/etc/core/ca/
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/data/
+      - {{ param_docker_data }}/{{ param_role_name }}/data/common/config/core/certificates/:/etc/core/certificates/
+      - {{ param_docker_data }}/{{ param_role_name }}/data/common/config/core/app.conf:/etc/core/app.conf
+      - {{ param_docker_data }}/{{ param_role_name }}/data/secret/core/private_key.pem:/etc/core/private_key.pem
+      - {{ param_docker_data }}/{{ param_role_name }}/data/secret/keys/secretkey:/etc/core/key
+      - {{ param_docker_data }}/{{ param_role_name }}/data/common/config/shared/trust-certificates:/harbor_cust_cert
     depends_on:
       - log
       - registry
@@ -117,12 +99,12 @@ services:
     image: goharbor/harbor-portal:v{{ param_db_harbor_version }}
     container_name: harbor-portal
     <<: *common
+    labels:
+      <<: *traefik-portal-label
     expose:
       - "8080"
     volumes:
-      - type: bind
-        source: {{ param_docker_data }}/{{ param_role_name }}/data/common/config/portal/nginx.conf
-        target: /etc/nginx/nginx.conf
+      - {{ param_docker_data }}/{{ param_role_name }}/data/common/config/portal/nginx.conf:/etc/nginx/nginx.conf
     depends_on:
       - log
     logging:
@@ -138,13 +120,9 @@ services:
     env_file:
       - {{ param_docker_data }}/{{ param_role_name }}/data/common/config/jobservice/env
     volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/data/job_logs:/var/log/jobs:z
-      - type: bind
-        source: {{ param_docker_data }}/{{ param_role_name }}/data/common/config/jobservice/config.yml
-        target: /etc/jobservice/config.yml
-      - type: bind
-        source: {{ param_docker_data }}/{{ param_role_name }}/data/common/config/shared/trust-certificates
-        target: /harbor_cust_cert
+      - {{ param_docker_data }}/{{ param_role_name }}/data/job_logs/:/var/log/jobs/
+      - {{ param_docker_data }}/{{ param_role_name }}/data/common/config/jobservice/config.yml:/etc/jobservice/config.yml
+      - {{ param_docker_data }}/{{ param_role_name }}/data/common/config/shared/trust-certificates:/harbor_cust_cert
     depends_on:
       - core
     logging:
@@ -152,26 +130,3 @@ services:
       options:
         syslog-address: "tcp://localhost:1514"
         tag: "jobservice"
-  nginx:
-    image: goharbor/nginx-photon:v{{ param_db_harbor_version }}
-    container_name: harbor-nginx
-    <<: *common
-    labels:
-      <<: *traefik-label
-    volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/data/common/config/nginx:/etc/nginx
-      - type: bind
-        source: {{ param_docker_data }}/{{ param_role_name }}/data/common/config/shared/trust-certificates
-        target: /harbor_cust_cert
-    expose:
-      - "8080"
-    depends_on:
-      - registry
-      - core
-      - portal
-      - log
-    logging:
-      driver: "syslog"
-      options:
-        syslog-address: "tcp://localhost:1514"
-        tag: "proxy"
