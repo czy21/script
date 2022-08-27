@@ -5,18 +5,17 @@ metadata:
   name: ingress
   namespace: {{ .Release.Namespace }}
   annotations:
-    kubesphere.io/creator: admin
     nginx.ingress.kubernetes.io/proxy-body-size: '0'
 spec:
   ingressClassName: nginx
   rules:
-    - host: dev-app.cluster.com
+    - host: demo-{{ .Values.param_cluster_name }}.cluster.com
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: erp-operation-react
+                name: demo-operation-react
                 port:
                   number: 80
