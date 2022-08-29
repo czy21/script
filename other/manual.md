@@ -21,3 +21,16 @@ mv rui.crt rui.crt.bak && mv rui.key rui.key.bak
 scp rui.* <host>:/etc/vmware/ssl/
 /etc/init.d/hostd restart && /etc/init.d/vpxa restart
 ```
+# 直通usb键鼠
+```shell
+# list usb device
+lsusb
+# vi /etc/vmware/config
+
+usb.generic.allowHID = "TRUE"
+usb.quirks.device0 = "0x1bcf:0x08b8 allow"
+usb.quirks.device1 = "0x04d9:0x1702 allow"
+
+# vi /bootbank/boot.cfg
+CONFIG./USB/quirks=0x1bcf:0x08b8::0xffff:UQ_KBD_IGNORE:0x04d9:0x1702::0xffff:UQ_KBD_IGNORE
+```
