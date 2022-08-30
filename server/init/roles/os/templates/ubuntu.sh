@@ -23,7 +23,6 @@ sudo sed -i -r \
 -e 's/^\s*PasswordAuthentication\s+\w+/#\0/' \
 -e 's/^\s*ClientAliveInterval\s+\w+/#\0/' /etc/ssh/sshd_config
 
-
 sudo -u root bash -c 'echo "
 UseDNS no
 PermitRootLogin yes
