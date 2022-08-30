@@ -37,9 +37,9 @@ http:
         replacement: "/repository/yum-proxy-$1/"
     registry-hosted:
       replacePathRegex:
-        regex: "^/(.*)"
-        replacement: "/repository/docker-hosted/$1"
+        regex: "^/"
+        replacement: "/repository/docker-hosted/"
     registry-proxy-group:
       replacePathRegex:
-        regex: "^/(.*)"
-        replacement: "/repository/docker-proxy-group/$1"
+        regex: "^/"
+        replacement: "/repository/docker-proxy-group/"
