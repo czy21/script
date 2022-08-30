@@ -10,7 +10,7 @@ sudo yum -y install ansible
 ```shell
 sudo apt install software-properties-common
 sudo add-apt-repository --yes --update ppa:ansible/ansible
-sudo apt install ansible
+sudo apt install ansible -y
 sudo sed -ir 's/^#\(host_key_checking\)/\1/' /etc/ansible/ansible.cfg
 ```
 ## debian 11
