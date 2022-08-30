@@ -9,7 +9,7 @@ x-traefik-label: &traefik-label
 services:
 
   traefik:
-    image: traefik:v2.8.0
+    image: traefik:v2.8.3
     container_name: traefik
     labels:
       <<: *traefik-label
