@@ -1,7 +1,7 @@
 http:
   routers:
-    proxy:
-      rule: "Host(`nexus.cluster.com`)"
+    nexus-repository:
+      rule: "Host(`nexus.cluster.com`) && PathPrefix(`/repository`) "
       service: nexus@docker
       middlewares:
         - raw-proxy
