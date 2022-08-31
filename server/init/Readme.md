@@ -37,7 +37,13 @@ sudo -u root bash -c 'echo "
 username=<username>
 password=<password>
 " >> /etc/smb/dsm-passwd'
-echo '//dsm.cluster.com/public/ubun12   /volume1   cifs    credentials=/etc/smb/dsm-passwd    0 0' >> /etc/fstab
+echo '//dsm.cluster.com/public/ubun12   /volume2   cifs    credentials=/etc/smb/dsm-passwd    0 0' >> /etc/fstab
+```
+
+### docker
+```shell
+# allow user exec docker
+sudo usermod -aG docker $USER
 ```
 
 ### k8s
