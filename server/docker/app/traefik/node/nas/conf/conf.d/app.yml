@@ -1,12 +1,22 @@
 http:
   routers:
-    proxy:
-      rule: "Host(`nexus.cluster.com`)"
+    nexus-repository:
+      rule: "Host(`nexus.cluster.com`) && PathPrefix(`/repository`) "
       service: nexus@docker
       middlewares:
         - raw-proxy
         - apt-proxy
         - yum-proxy
+    registry:
+      rule: "Host(`registry.cluster.com`)"
+      service: nexus@docker
+      middlewares:
+        - registry-hosted
+    registry-proxy:
+      rule: "Host(`registry-proxy.cluster.com`)"
+      service: nexus@docker
+      middlewares:
+        - registry-proxy-group
 
   middlewares:
     https-redirect:
@@ -25,3 +35,11 @@ http:
       replacePathRegex:
         regex: "^/repository/yum-proxy/(.*)/"
         replacement: "/repository/yum-proxy-$1/"
+    registry-hosted:
+      replacePathRegex:
+        regex: "^/"
+        replacement: "/repository/docker-hosted/"
+    registry-proxy-group:
+      replacePathRegex:
+        regex: "^/"
+        replacement: "/repository/docker-proxy-group/"
