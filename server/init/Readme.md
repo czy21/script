@@ -30,6 +30,14 @@ sed -i -r "s/^\s*PermitRootLogin\s+\w+/PermitRootLogin yes/;" /etc/ssh/sshd_conf
 showmount -e [host]
 # vim fstab append
 [host]:/volume1/ubuntu /volume1 nfs defaults 0 0
+
+# smb mount
+sudo mkdir -p /etc/smb
+sudo -u root bash -c 'echo "
+username=<username>
+password=<password>
+" >> /etc/smb/dsm-passwd'
+echo '//dsm.cluster.com/public/ubun12   /volume1   cifs    credentials=/etc/smb/dsm-passwd    0 0' >> /etc/fstab
 ```
 
 ### k8s
