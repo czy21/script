@@ -8,9 +8,9 @@ sudo yum -y install ansible
 ```
 ## ubuntu
 ```shell
-sudo apt install software-properties-common
+sudo apt install software-properties-common -y
 sudo add-apt-repository --yes --update ppa:ansible/ansible
-sudo apt install ansible
+sudo apt install ansible -y
 sudo sed -ir 's/^#\(host_key_checking\)/\1/' /etc/ansible/ansible.cfg
 ```
 ## debian 11
@@ -30,6 +30,20 @@ sed -i -r "s/^\s*PermitRootLogin\s+\w+/PermitRootLogin yes/;" /etc/ssh/sshd_conf
 showmount -e [host]
 # vim fstab append
 [host]:/volume1/ubuntu /volume1 nfs defaults 0 0
+
+# smb mount
+sudo mkdir -p /etc/smb
+sudo -u root bash -c 'echo "
+username=<username>
+password=<password>
+" >> /etc/smb/dsm-passwd'
+//[host]/public/ubun12   /volume2   cifs   credentials=/etc/smb/dsm-passwd,gid=1000,uid=1000    0 0
+```
+
+### docker
+```shell
+# allow user exec docker
+sudo usermod -aG docker $USER
 ```
 
 ### k8s

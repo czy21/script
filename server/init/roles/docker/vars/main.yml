@@ -6,4 +6,4 @@ param_insecure_registries:
   - "{{ param_registry_proxy_url }}"
 param_containerd_version: 1.6.7
 param_docker_version: 20.10.9
-param_compose_version: v2.8.0
+param_compose_version: v2.10.2
