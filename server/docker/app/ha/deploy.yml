@@ -17,8 +17,6 @@ services:
       <<: *traefik-label
     expose:
       - "8123"
-    ports:
-      - "8123:8123"
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/configuration.yaml:/config/configuration.yaml
       - {{ param_docker_data }}/{{ param_role_name }}/conf/automations.yaml:/config/automations.yaml
