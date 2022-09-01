@@ -3,11 +3,10 @@
 default_config:
 
 homeassistant:
-  auth_providers:
-    - type: homeassistant
-    - type: trusted_networks
-      trusted_networks:
-        - 0.0.0.0/0
+  name: Home
+  latitude: 31.23
+  longitude: 121.47
+  time_zone: Asia/Shanghai
 
 http:
   use_x_forwarded_for: true
