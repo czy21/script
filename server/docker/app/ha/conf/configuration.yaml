@@ -1,12 +1,18 @@
 
 # Loads default set of integrations. Do not remove.
 default_config:
+
+homeassistant:
+  auth_providers:
+    - type: homeassistant
+    - type: trusted_networks
+      trusted_networks:
+        - 0.0.0.0/0
+
 http:
   use_x_forwarded_for: true
   trusted_proxies:
     - 0.0.0.0/0
-  ip_ban_enabled: true
-  login_attempts_threshold: 5
 
 recorder:
   db_url: sqlite:////data/ha.db
