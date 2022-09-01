@@ -7,6 +7,10 @@ http:
     - 0.0.0.0/0
   ip_ban_enabled: true
   login_attempts_threshold: 5
+
+recorder:
+  db_url: sqlite:////data/ha.db
+
 # Text to speech
 tts:
   - platform: google_translate
