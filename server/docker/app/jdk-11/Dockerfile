@@ -1,4 +1,4 @@
-FROM openjdk:11-slim
+FROM openjdk:11.0.16-jdk-bullseye
 WORKDIR /app
 
 ENV JAR=/app/api.jar
