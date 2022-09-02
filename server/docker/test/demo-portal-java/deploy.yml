@@ -1,0 +1,22 @@
+version: "3.9"
+
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}.rule: Host(`{{ param_role_name }}.cluster.com`)
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 8080
+
+services:
+  {{ param_role_name }}:
+    image: registry.cluster.com/library/demo-portal:master
+    pull_policy: always
+    labels:
+      <<: *traefik-label
+    container_name: {{ param_role_name }}
+    pull_policy: always
+    privileged: true
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/:/app/conf/
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/app/data/
+    environment:
+      APP_ARGS: -Xms128m -Xmx512m -XX:MetaspaceSize=256m -XX:MaxMetaspaceSize=256m

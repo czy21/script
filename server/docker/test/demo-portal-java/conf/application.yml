@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: demo-portal
+  config:
+    import: optional:consul:consul.cluster.com:80
+  cloud:
+    consul:
+      config:
+        format: YAML
+        prefixes:
+          - "dev-demo-common"
+          - "dev-demo-portal"
