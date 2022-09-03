@@ -1,9 +1,9 @@
 version: "3.9"
 
 services:
-  ha:
+  homeassistant:
     image: homeassistant/home-assistant:stable
-    container_name: ha
+    container_name: homeassistant
     privileged: true
     user: root
     expose:

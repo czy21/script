@@ -14,6 +14,7 @@ http:
     - 0.0.0.0/0
 
 recorder:
+  db_url: mysql://{{ param_db_mysql_username }}:{{ param_db_mysql_password }}@192.168.2.9/homeassistant?charset=utf8mb4
   purge_interval: 3
   purge_keep_days: 7
 
