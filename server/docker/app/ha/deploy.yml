@@ -9,6 +9,7 @@ services:
     expose:
       - "8123"
     volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/:/config/
-      - {{ param_docker_data }}/{{ param_role_name }}/data/:/data/
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/config/
     restart: always
+
+
