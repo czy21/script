@@ -11,5 +11,3 @@ services:
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/config/
     restart: always
-
-

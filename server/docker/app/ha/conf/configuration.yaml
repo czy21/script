@@ -13,6 +13,10 @@ http:
   trusted_proxies:
     - 0.0.0.0/0
 
+recorder:
+  purge_interval: 3
+  purge_keep_days: 7
+
 # Text to speech
 tts:
   - platform: google_translate
