@@ -9,11 +9,6 @@ services:
     expose:
       - "8123"
     volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/configuration.yaml:/config/configuration.yaml
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/automations.yaml:/config/automations.yaml
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/scenes.yaml:/config/scenes.yaml
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/scripts.yaml:/config/scripts.yaml
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/:/config/
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/data/
     restart: always
-
-
