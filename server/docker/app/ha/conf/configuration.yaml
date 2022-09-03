@@ -13,9 +13,6 @@ http:
   trusted_proxies:
     - 0.0.0.0/0
 
-recorder:
-  db_url: sqlite:////data/ha.db
-
 # Text to speech
 tts:
   - platform: google_translate
