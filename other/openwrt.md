@@ -1,8 +1,11 @@
 ```shell
 # ubuntu 22.04
 sudo apt install -y build-essential gawk gcc-multilib flex git gettext libncurses5-dev libssl-dev python3-distutils zlib1g-dev unzip qemu-utils rsync file
-echo -e '\nsrc-git helloworld https://github.com/fw876/helloworld' >> feeds.conf.default
-echo -e '\nsrc-link plugin /home/opsor/openwrt-plugin' >> feeds.conf.default
+echo "
+src-git helloworld https://github.com/fw876/helloworld
+src-link plugin /volume2/openwrt-plugin
+" >> feeds.conf.default
+
 rm -rf ./tmp && rm -rf .config
 ./scripts/feeds update -a && ./scripts/feeds install -a
 pkgName=plugin && ./scripts/feeds update ${pkgName} && ./scripts/feeds install -a -p ${pkgName}
