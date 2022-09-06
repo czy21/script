@@ -55,3 +55,18 @@ Kernel modules > USB Support:
   kmod-usb-dwc2
   kmod-usb-net-cdc-ether
 ```
+
+```shell
+luci-app-dawn           # 分布式AP管理程序
+luci-app-diag-core      # core诊断工具
+luci-app-minidlna       # 多媒体共享
+luci-app-mjpg-streamer  # 摄像头采集
+luci-app-mosquitto      # MQTT 消息队列
+luci-app-mwan3          # 多播负载均衡
+luci-app-nlbwmon        # 网络带宽监视器
+luci-app-nut            # ups 管理
+luci-app-ocserv         # OpenConnect VPN服务
+luci-app-openwisp       # AP管理
+luci-app-opkg           
+luci-app-radicale2      # 日历 联系人同步
+```
