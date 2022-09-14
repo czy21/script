@@ -50,8 +50,10 @@ spec:
         image: {{ .Values.param_registry_repo }}/{{ .Values.param_registry_dir }}/{{ .Release.Name }}:{{ .Values.param_release_version }}
         imagePullPolicy: Always
         ports:
-          - containerPort: 80
-          - containerPort: 443
+          - name: http
+            containerPort: 80
+          - name: https
+            containerPort: 443
         env:
           - name: TZ
             value: Asia/Shanghai
