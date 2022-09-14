@@ -23,7 +23,7 @@ apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
   name: kiali
-  namespace: ops
+  namespace: istio-system
 spec:
   hosts:
     - "kiali-{{ .Values.param_cluster_name }}.cluster.com"

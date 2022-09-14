@@ -1,25 +1,26 @@
+{{- if .Values.component.jaeger }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}
+  name: jaeger
   namespace: {{ .Release.Namespace }}
   labels:
-    app: {{ .Release.Name }}
+    app: jaeger
 spec:
   selector:
     matchLabels:
-      app: {{ .Release.Name }}
+      app: jaeger
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}
+        app: jaeger
       annotations:
         sidecar.istio.io/inject: "false"
         prometheus.io/scrape: "true"
         prometheus.io/port: "14269"
     spec:
       containers:
-        - name: {{ .Release.Name }}
+        - name: jaeger
           image: "jaegertracing/all-in-one:1.35"
           env:
             - name: BADGER_EPHEMERAL
@@ -53,12 +54,12 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimName: data-{{ .Release.Name }}
+            claimName: data-jaeger
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: data-{{ .Release.Name }}
+  name: data-jaeger
   namespace: {{ .Release.Namespace }}
 spec:
   accessModes:
@@ -66,3 +67,67 @@ spec:
   resources:
     requests:
       storage: 50Gi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tracing
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: jaeger
+spec:
+  type: ClusterIP
+  ports:
+    - name: http-query
+      port: 80
+      protocol: TCP
+      targetPort: 16686
+    # Note: Change port name if you add '--query.grpc.tls.enabled=true'
+    - name: grpc-query
+      port: 16685
+      protocol: TCP
+      targetPort: 16685
+  selector:
+    app: jaeger
+---
+# Jaeger implements the Zipkin API. To support swapping out the tracing backend, we use a Service named Zipkin.
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    name: zipkin
+  name: zipkin
+  namespace: {{ .Release.Namespace }}
+spec:
+  ports:
+    - port: 9411
+      targetPort: 9411
+      name: http-query
+  selector:
+    app: jaeger
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jaeger-collector
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: jaeger
+spec:
+  type: ClusterIP
+  ports:
+  - name: jaeger-collector-http
+    port: 14268
+    targetPort: 14268
+    protocol: TCP
+  - name: jaeger-collector-grpc
+    port: 14250
+    targetPort: 14250
+    protocol: TCP
+  - port: 9411
+    targetPort: 9411
+    name: http-zipkin
+  selector:
+    app: jaeger
+{{- end}}
