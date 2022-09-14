@@ -53,12 +53,12 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimName: data-{{ .Release.Namespace }}
+            claimName: data-{{ .Release.Name }}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: data-{{ .Release.Namespace }}
+  name: data-{{ .Release.Name }}
   namespace: {{ .Release.Namespace }}
 spec:
   accessModes:
