@@ -21,7 +21,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.param_app_name }}-{{ .Values.param_app_version }}
+  name: {{ .Release.Name }}
   namespace: {{ .Release.Namespace }}
   annotations:
     helm.sh/revision: "{{ .Release.Revision }}"
