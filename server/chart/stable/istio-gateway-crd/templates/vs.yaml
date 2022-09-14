@@ -18,3 +18,4 @@ spec:
         host: demo-operation-react
         port:
           number: 80
+        subset: v1
