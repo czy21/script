@@ -2,3 +2,9 @@ istiod:
   pilot:
     env:
       PILOT_HTTP10: true
+  global:
+    tracer:
+      zipkin:
+        # Host:Port for reporting trace data in zipkin format. If not specified, will default to
+        # zipkin service (port 9411) in the same namespace as the other istio components.
+        address: http://zipkin.ops.svc:9411
