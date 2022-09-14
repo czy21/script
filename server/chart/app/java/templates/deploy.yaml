@@ -53,6 +53,10 @@ spec:
             - name: http
               containerPort: 8080
           env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
             - name: TZ
               value: Asia/Shanghai
             - name: APP_ARGS

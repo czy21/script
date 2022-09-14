@@ -1,0 +1,4 @@
+istiod:
+  pilot:
+    env:
+      PILOT_HTTP10: true
