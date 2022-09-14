@@ -12,5 +12,20 @@ spec:
       name: http
       protocol: HTTP
     hosts:
-      - "kiali-{{ .Values.param_cluster_name }}.cluster.com"
       - "prom-{{ .Values.param_cluster_name }}.cluster.com"
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: gateway
+  namespace: istio-system
+spec:
+  selector:
+    istio: gateway
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+      - "kiali-{{ .Values.param_cluster_name }}.cluster.com"

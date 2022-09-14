@@ -4,5 +4,5 @@ version: 0.1.0
 
 dependencies:
   - name: gateway
-    version: 1.14.3
+    version: 1.15.0
     repository: "https://istio-release.storage.googleapis.com/charts"

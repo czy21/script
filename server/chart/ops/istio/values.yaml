@@ -2,9 +2,17 @@ istiod:
   pilot:
     env:
       PILOT_HTTP10: true
-  global:
-    tracer:
-      zipkin:
-        # Host:Port for reporting trace data in zipkin format. If not specified, will default to
-        # zipkin service (port 9411) in the same namespace as the other istio components.
-        address: http://zipkin.ops.svc:9411
+component:
+  jaeger: true
+  kiali: true
+
+kiali-server:
+  auth:
+    strategy: anonymous
+  deployment:
+    image_name: {{ param_registry_proxy_url | default("quay.io") }}/kiali/kiali
+  external_services:
+    prometheus:
+      url: http://prometheus.ops.svc:9090
+    grafana:
+      enable: false
