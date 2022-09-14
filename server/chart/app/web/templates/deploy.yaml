@@ -1,58 +1,58 @@
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: {{ .Release.Name }}
-  namespace: {{ .Release.Namespace }}
-  annotations:
-    helm.sh/revision: "{{ .Release.Revision }}"
-spec:
-  selector:
-    app: {{ .Release.Name }}
-  type: ClusterIP
-  ports:
-    - name: http
-      port: 80
-      targetPort: 80
-    - name: https
-      port: 443
-      targetPort: 443
+{{/*---*/}}
+{{/*apiVersion: v1*/}}
+{{/*kind: Service*/}}
+{{/*metadata:*/}}
+{{/*  name: {{ .Values.param_app_name }}*/}}
+{{/*  namespace: {{ .Release.Namespace }}*/}}
+{{/*  annotations:*/}}
+{{/*    helm.sh/revision: "{{ .Release.Revision }}"*/}}
+{{/*spec:*/}}
+{{/*  selector:*/}}
+{{/*    app: {{ .Values.param_app_name }}*/}}
+{{/*  type: ClusterIP*/}}
+{{/*  ports:*/}}
+{{/*    - name: http*/}}
+{{/*      port: 80*/}}
+{{/*      targetPort: 80*/}}
+{{/*    - name: https*/}}
+{{/*      port: 443*/}}
+{{/*      targetPort: 443*/}}
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}
+  name: {{ .Values.param_app_name }}-{{ .Values.param_app_version }}
   namespace: {{ .Release.Namespace }}
   annotations:
     helm.sh/revision: "{{ .Release.Revision }}"
   labels:
-    app: {{ .Release.Name }}
-    version: v1
+    app: {{ .Values.param_app_name }}
+    version: {{ .Values.param_app_version }}
 spec:
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: {{ .Release.Name }}
-      version: v1
+      app: {{ .Values.param_app_name }}
+      version: {{ .Values.param_app_version }}
   template:
     metadata:
       annotations:
         helm.sh/revision: "{{ .Release.Revision }}"
       labels:
-        app: {{ .Release.Name }}
-        version: v1
+        app: {{ .Values.param_app_name }}
+        version: {{ .Values.param_app_version }}
     spec:
       volumes:
       - name: nginx-conf
         configMap:
-          name: {{ .Release.Name }}
+          name: {{ .Values.param_app_name }}
           items:
           - key: nginx.conf
             path: nginx.conf
       containers:
-      - name: {{ .Release.Name }}
-        image: {{ .Values.param_registry_repo }}/{{ .Values.param_registry_dir }}/{{ .Release.Name }}:{{ .Values.param_release_version }}
+      - name: {{ .Values.param_app_name }}
+        image: "{{ .Values.param_registry_repo }}/{{ .Values.param_registry_dir }}/{{ .Values.param_image_name }}:{{ .Values.param_image_version }}"
         imagePullPolicy: Always
         ports:
           - name: http

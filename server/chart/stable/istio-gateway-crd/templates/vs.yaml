@@ -19,3 +19,16 @@ spec:
         port:
           number: 80
         subset: v1
+      weight: 60
+    - destination:
+        host: demo-operation-react
+        port:
+          number: 80
+        subset: v2
+      weight: 20
+    - destination:
+        host: demo-operation-react
+        port:
+          number: 80
+        subset: v3
+      weight: 20
