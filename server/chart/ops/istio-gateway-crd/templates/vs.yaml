@@ -2,6 +2,26 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
+  name: k8s-web
+  namespace: ops
+spec:
+  hosts:
+    - "k8s-web-{{ .Values.param_cluster_name }}.cluster.com"
+  gateways:
+    - gateway
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        port:
+          number: 8080
+        host: k8s-dashboard
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
   name: prometheus
   namespace: ops
 spec:
