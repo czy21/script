@@ -3,4 +3,6 @@ dashboard:
     externalPort: 8080
   protocolHttp: true
   serviceAccount:
-    name: kubernetes-dashboard
+    name: k8s-dashboard
+  extraArgs:
+    - --enable-skip-login
