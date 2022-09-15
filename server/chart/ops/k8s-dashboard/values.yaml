@@ -1,0 +1,6 @@
+dashboard:
+  service:
+    externalPort: 8080
+  protocolHttp: true
+  serviceAccount:
+    name: kubernetes-dashboard
