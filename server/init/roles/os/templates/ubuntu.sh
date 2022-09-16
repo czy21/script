@@ -32,3 +32,7 @@ ClientAliveInterval 30
 
 public_key="set -e;cd;mkdir -p .ssh;chmod 700 .ssh;echo {{ param_ssh_public_key }} > .ssh/authorized_keys;chmod 644 .ssh/authorized_keys"
 sudo -u {{ param_user_ops }} bash -c "${public_key}"
+
+
+sudo swapoff -a
+sudo sed -i -r "s|^/swap.img|#\0|" /etc/fstab
