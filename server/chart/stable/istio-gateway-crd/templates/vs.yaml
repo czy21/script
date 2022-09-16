@@ -8,7 +8,7 @@ spec:
   hosts:
     - "demo-{{ .Values.param_cluster_name }}.cluster.com"
   gateways:
-    - gateway
+    - ops/gateway
   http:
   - match:
     - uri:
