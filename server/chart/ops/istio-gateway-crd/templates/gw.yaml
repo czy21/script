@@ -12,31 +12,13 @@ spec:
         name: http
         protocol: HTTP
       hosts:
-        - "prom-{{ .Values.param_cluster_name }}.cluster.com"
-        - "k8s-web-{{ .Values.param_cluster_name }}.cluster.com"
+        - "*"
     - port:
         number: 443
         name: https
         protocol: HTTPS
       hosts:
-        - "prom-{{ .Values.param_cluster_name }}.cluster.com"
-        - "k8s-web-{{ .Values.param_cluster_name }}.cluster.com"
+        - "*"
       tls:
         mode: SIMPLE
-        credentialName: cluster-secret
----
-apiVersion: networking.istio.io/v1alpha3
-kind: Gateway
-metadata:
-  name: gateway
-  namespace: istio-system
-spec:
-  selector:
-    istio: ingressgateway
-  servers:
-    - port:
-        number: 80
-        name: http
-        protocol: HTTP
-      hosts:
-        - "kiali-{{ .Values.param_cluster_name }}.cluster.com"
+        credentialName: cluster.com-secret
