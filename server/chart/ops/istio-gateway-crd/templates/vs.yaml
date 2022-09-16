@@ -8,7 +8,7 @@ spec:
   hosts:
     - "k8s-web-{{ .Values.param_cluster_name }}.cluster.com"
   gateways:
-    - gateway
+    - ops/gateway
   http:
   - match:
     - uri:
@@ -28,7 +28,7 @@ spec:
   hosts:
     - "prom-{{ .Values.param_cluster_name }}.cluster.com"
   gateways:
-    - gateway
+    - ops/gateway
   http:
   - match:
     - uri:
@@ -48,7 +48,7 @@ spec:
   hosts:
     - "kiali-{{ .Values.param_cluster_name }}.cluster.com"
   gateways:
-    - gateway
+    - ops/gateway
   http:
   - match:
     - uri:
