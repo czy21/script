@@ -5,7 +5,7 @@ metadata:
   namespace: db
 spec:
   selector:
-    istio: gateway
+    istio: ingressgateway
   servers:
   - port:
       number: 80
