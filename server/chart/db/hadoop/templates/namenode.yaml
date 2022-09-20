@@ -2,11 +2,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: hadoop-namenode
+  name: {{ .Release.Name }}-namenode
   namespace: {{ .Release.Namespace }}
 spec:
   selector:
-    app: hadoop-namenode
+    app: {{ .Release.Name }}-namenode
   type: NodePort
   ports:
   - name: rpc
@@ -20,41 +20,41 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: hadoop-namenode
+  name: {{ .Release.Name }}-namenode
   namespace: {{ .Release.Namespace }}
 spec:
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: hadoop-namenode
+      app: {{ .Release.Name }}-namenode
   template:
     metadata:
       labels:
-        app: hadoop-namenode
+        app: {{ .Release.Name }}-namenode
     spec:
       volumes:
       - name: hadoop-env
         configMap:
-          name: hadoop
+          name: {{ .Release.Name }}
           items:
           - key: hadoop-env.sh
             path: hadoop-env.sh
       - name: core-site
         configMap:
-          name: hadoop
+          name: {{ .Release.Name }}
           items:
           - key: core-site.xml
             path: core-site.xml
       - name: hdfs-site
         configMap:
-          name: hadoop
+          name: {{ .Release.Name }}
           items:
           - key: hdfs-site.xml
             path: hdfs-site.xml
       - name: hadoop-data
         persistentVolumeClaim:
-          claimName: data-hadoop-namenode
+          claimName: data-{{ .Release.Name }}-namenode
       containers:
       - name: hadoop
         image: {{ .Values.param_registry_url }}/{{ .Values.param_registry_dir }}/hadoop
@@ -86,7 +86,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: data-hadoop-namenode
+  name: data-{{ .Release.Name }}-namenode
   namespace: {{ .Release.Namespace }}
 spec:
   accessModes:

@@ -1,13 +1,12 @@
 FROM openjdk:8-jdk
 
 # hadoop
-ENV HADOOP_VERSION=3.3.4
-ENV HADOOP_TGZ_URL=https://archive.apache.org/dist/hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz
+ENV HADOOP_VERSION=3.2.3
 ENV HADOOP_HOME=/opt/hadoop
 ENV PATH=$HADOOP_HOME/bin:$PATH
 RUN set -ex; \
     mkdir -p $HADOOP_HOME $HADOOP_HOME/hdfs/name/ $HADOOP_HOME/hdfs/data/; \
-    wget -nv -O $HADOOP_HOME/src.tgz $HADOOP_TGZ_URL; \
+    wget -nv -O $HADOOP_HOME/src.tgz https://archive.apache.org/dist/hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz; \
     tar -xf $HADOOP_HOME/src.tgz --strip-components=1 -C $HADOOP_HOME; \
     rm $HADOOP_HOME/src.tgz; \
     chown -R root:root $HADOOP_HOME;
@@ -15,13 +14,12 @@ RUN set -ex; \
 RUN rm -rf $HADOOP_HOME/share/doc/;
 
 # hbase
-ENV HBASE_VERSION=2.5.0
-ENV HBASE_TGZ_URL=https://archive.apache.org/dist/hbase/${HBASE_VERSION}/hbase-${HBASE_VERSION}-bin.tar.gz
+ENV HBASE_VERSION=2.3.6
 ENV HBASE_HOME=/opt/hbase
 ENV PATH=$HBASE_HOME/bin:$PATH
 RUN set -ex; \
     mkdir -p $HBASE_HOME; \
-    wget -nv -O $HBASE_HOME/src.tgz $HBASE_TGZ_URL; \
+    wget -nv -O $HBASE_HOME/src.tgz https://archive.apache.org/dist/hbase/${HBASE_VERSION}/hbase-${HBASE_VERSION}-bin.tar.gz; \
     tar -xf $HBASE_HOME/src.tgz --strip-components=1 -C $HBASE_HOME; \
     rm $HBASE_HOME/src.tgz; \
     chown -R root:root $HBASE_HOME;
