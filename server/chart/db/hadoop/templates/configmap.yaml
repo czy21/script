@@ -2,10 +2,10 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: hadoop
+  name: {{ .Release.Name }}
   namespace: {{ .Release.Namespace }}
   labels:
-    app: hadoop
+    app: {{ .Release.Name }}
 data:
   hadoop-env.sh: |
     export HDFS_DATANODE_USER=root

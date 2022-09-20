@@ -2,35 +2,35 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: hadoop-datanode
+  name: {{ .Release.Name }}-datanode
   namespace: {{ .Release.Namespace }}
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: hadoop-datanode
-  serviceName: hadoop-datanode
+      app: {{ .Release.Name }}-datanode
+  serviceName: {{ .Release.Name }}-datanode
   template:
     metadata:
       labels:
-        app: hadoop-datanode
+        app: {{ .Release.Name }}-datanode
     spec:
       volumes:
       - name: hadoop-env
         configMap:
-          name: hadoop
+          name: {{ .Release.Name }}
           items:
           - key: hadoop-env.sh
             path: hadoop-env.sh
       - name: core-site
         configMap:
-          name: hadoop
+          name: {{ .Release.Name }}
           items:
           - key: core-site.xml
             path: core-site.xml
       - name: hdfs-site
         configMap:
-          name: hadoop
+          name: {{ .Release.Name }}
           items:
           - key: hdfs-site.xml
             path: hdfs-site.xml
