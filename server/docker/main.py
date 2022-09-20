@@ -12,7 +12,6 @@ def invoke(role_title: str, role_path: pathlib.Path, role_env: dict, args: argpa
     role_name = role_path.name
     role_conf_path = role_path.joinpath("conf")
     role_deploy_file = role_path.joinpath("deploy.yml")
-    role_docker_file = role_path.joinpath("Dockerfile")
     role_init_sh = role_path.joinpath("init.sh")
 
     target_app_path = pathlib.Path(role_env.get("param_docker_data")).joinpath(role_name)
@@ -73,12 +72,13 @@ def invoke(role_title: str, role_path: pathlib.Path, role_env: dict, args: argpa
             _cmds.append(share.echo_action(role_title, "down", role_deploy_file.as_posix()))
             _cmds.append(docker_compose_cmd("down --remove-orphans"))
 
-    if args.build_file == "Dockerfile":
+    if args.build_file.startswith("Dockerfile"):
+        role_docker_file = role_path.joinpath(args.build_file)
         registry_url = role_env['param_registry_url']
         registry_dir = role_env['param_registry_dir']
         _cmds.append(share.echo_action(role_title, "build", role_docker_file.as_posix()))
         if role_docker_file.exists():
-            docker_image_tag = "/".join([str(p).strip("/") for p in [registry_url, registry_dir, role_name]])
+            docker_image_tag = "/".join([str(p).strip("/") for p in [registry_url, registry_dir, role_name + ("-" + args.tag if args.tag else "")]])
             _cmds.append("docker build --tag {0} --file {1} {2}".format(docker_image_tag, role_docker_file.as_posix(), role_path.as_posix()))
             _cmds.append("docker push {0}".format(docker_image_tag))
     _cmd_str = collection_util.flat_to_str(_cmds, delimiter=" && ")
@@ -89,4 +89,5 @@ if __name__ == '__main__':
     root_path = pathlib.Path(__file__).parent
     installer = share.Installer(root_path, invoke, role_deep=2)
     installer.arg_parser.add_argument('--recreate', action="store_true")
+    installer.arg_parser.add_argument('-t', '--tag')
     installer.run(base_deploy_file=root_path.joinpath("deploy.yml"))
