@@ -43,6 +43,20 @@ data:
             <name>dfs.namenode.datanode.registration.ip-hostname-check</name>
             <value>false</value>
         </property>
+
+        <property>
+         <name>dfs.webhdfs.enabled</name>
+         <value>true</value>
+        </property>
+        <property>
+         <name>dfs.permissions.superusergroup</name>
+         <value>staff</value>
+        </property>
+        <property>
+         <name>dfs.permissions.enabled</name>
+         <value>false</value>
+        </property>
+
         <property>
             <name>dfs.replication</name>
             <value>1</value>
