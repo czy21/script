@@ -1,3 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-datanode
+  namespace: {{ .Release.Namespace }}
+spec:
+  clusterIP: None
+  selector:
+    app: {{ .Release.Name }}-datanode
+  ports:
+  - name: dfs
+    port: 9000
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -34,6 +46,12 @@ spec:
           items:
           - key: hdfs-site.xml
             path: hdfs-site.xml
+      - name: workers
+        configMap:
+          name: {{ .Release.Name }}
+          items:
+            - key: workers
+              path: workers
       containers:
       - name: hadoop
         image: {{ .Values.param_registry_url }}/{{ .Values.param_registry_dir }}/hadoop
@@ -58,6 +76,9 @@ spec:
         - name: data
           mountPath: /opt/hadoop/logs/
           subPath: logs
+        - name: workers
+          mountPath: /opt/hadoop/etc/hadoop/workers
+          subPath: workers
         env:
         - name: HADOOP_NODE_TYPE
           value: datanode
