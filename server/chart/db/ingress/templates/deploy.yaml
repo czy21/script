@@ -49,4 +49,14 @@ spec:
               name: hadoop-namenode
               port:
                 number: 9870
+  - host: hbase-web.cluster.com
+    http:
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: hbase-master
+              port:
+                number: 16010
 ---
