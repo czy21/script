@@ -39,4 +39,14 @@ spec:
               name: pulsar-proxy
               port:
                 number: 80
+  - host: hadoop-web.cluster.com
+    http:
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: hadoop-namenode
+              port:
+                number: 9870
 ---
