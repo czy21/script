@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: hbase
+  name: {{ .Release.Name }}
   namespace: {{ .Release.Namespace }}
   labels:
-    app: hbase
+    app: {{ .Release.Name }}
 data:
   hbase-env.sh: |
     export JAVA_HOME=/usr/local/openjdk-8
@@ -21,7 +21,7 @@ data:
       </property>
       <property>
         <name>hbase.rootdir</name>
-        <value>hdfs://hadoop-master.big-data:9000/hbase</value>
+        <value>hdfs://{{ .Values.hdfs_address }}/hbase</value>
       </property>
       <property>
         <name>hbase.tmp.dir</name>
@@ -29,7 +29,7 @@ data:
       </property>
       <property>
         <name>hbase.zookeeper.quorum</name>
-        <value>zk-cs.default.svc</value>
+        <value>{{ .Values.zk_address }}</value>
       </property>
       <property>
           <name>hbase.regionserver.restart.on.zk.expire</name>
