@@ -2,10 +2,10 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
+  name: ingress
+  namespace: db
   annotations:
     nginx.ingress.kubernetes.io/proxy-body-size: '0'
-  name: ingress
-  namespace: {{ .Release.Namespace }}
 spec:
   ingressClassName: nginx
   rules:
@@ -39,24 +39,4 @@ spec:
               name: pulsar-proxy
               port:
                 number: 80
-  - host: hadoop-web.cluster.com
-    http:
-      paths:
-        - path: /
-          pathType: Prefix
-          backend:
-            service:
-              name: hadoop-namenode
-              port:
-                number: 9870
-  - host: hbase-web.cluster.com
-    http:
-      paths:
-        - path: /
-          pathType: Prefix
-          backend:
-            service:
-              name: hbase-master
-              port:
-                number: 16010
 ---
