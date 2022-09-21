@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: admin-basic-auth
+  namespace: {{ .Release.Namespace }}
+data:
+  auth: YWRtaW46eS1iYXNoNS45QjdSemNYV2Y1WnNGUGVWR3BXYnpLcEdCTGJST1UyCg==
