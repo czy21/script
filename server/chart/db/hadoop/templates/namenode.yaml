@@ -7,7 +7,7 @@ metadata:
 spec:
   selector:
     app: {{ .Release.Name }}-namenode
-  type: NodePort
+  clusterIP: None
   ports:
   - name: rpc
     port: 9000
@@ -15,7 +15,6 @@ spec:
   - name: http
     port: 9870
     targetPort: 9870
-    nodePort: 9870
 ---
 apiVersion: apps/v1
 kind: Deployment
