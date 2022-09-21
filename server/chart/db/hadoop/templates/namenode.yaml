@@ -52,9 +52,16 @@ spec:
           items:
           - key: hdfs-site.xml
             path: hdfs-site.xml
+      - name: workers
+        configMap:
+          name: {{ .Release.Name }}
+          items:
+            - key: workers
+              path: workers
       - name: hadoop-data
         persistentVolumeClaim:
           claimName: data-{{ .Release.Name }}-namenode
+
       containers:
       - name: hadoop
         image: {{ .Values.param_registry_url }}/{{ .Values.param_registry_dir }}/hadoop
@@ -79,6 +86,9 @@ spec:
         - name: hadoop-data
           mountPath: /opt/hadoop/logs/
           subPath: logs
+        - name: workers
+          mountPath: /opt/hadoop/etc/hadoop/workers
+          subPath: workers
         env:
         - name: HADOOP_NODE_TYPE
           value: namenode
