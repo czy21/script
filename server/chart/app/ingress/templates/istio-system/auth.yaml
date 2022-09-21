@@ -4,19 +4,14 @@ kind: Ingress
 metadata:
   name: ingress
   namespace: istio-system
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: '0'
+    nginx.ingress.kubernetes.io/auth-type: basic
+    nginx.ingress.kubernetes.io/auth-secret: ops/admin-basic-auth
+    nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required - admin'
 spec:
   rules:
     - host: kiali-{{ .Values.param_cluster_name }}.cluster.com
-      http:
-        paths:
-        - pathType: Prefix
-          path: /
-          backend:
-            service:
-              name: istio-ingressgateway
-              port:
-                number: 80
-    - host: demo-{{ .Values.param_cluster_name }}.cluster.com
       http:
         paths:
         - pathType: Prefix
