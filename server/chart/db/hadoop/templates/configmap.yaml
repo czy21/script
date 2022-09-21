@@ -39,12 +39,13 @@ data:
             <name>dfs.datanode.data.dir</name>
             <value>file:///opt/hadoop/hdfs/data</value>
         </property>
+        <property>
+            <name>dfs.namenode.datanode.registration.ip-hostname-check</name>
+            <value>false</value>
+        </property>
 
         <property>
             <name>dfs.replication</name>
             <value>1</value>
         </property>
     </configuration>
-  workers: |
-    hadoop-datanode-0.hadoop-datanode.db.svc.cluster.local
-    hadoop-datanode-1.hadoop-datanode.db.svc.cluster.local
