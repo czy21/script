@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<yandex>
+    <listen_host>0.0.0.0</listen_host>
+    <mysql_port>9004</mysql_port>
+</yandex>
