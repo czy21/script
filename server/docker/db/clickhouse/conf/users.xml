@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<yandex>
+    <users>
+        <default>
+            <password>{{ param_db_password }}</password>
+        </default>
+    </users>
+    <profiles>
+      <max_partitions_per_insert_block>2000</max_partitions_per_insert_block>
+    </profiles>
+</yandex>

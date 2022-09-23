@@ -72,7 +72,7 @@ def invoke(role_title: str, role_path: pathlib.Path, role_env: dict, args: argpa
             _cmds.append(share.echo_action(role_title, "down", role_deploy_file.as_posix()))
             _cmds.append(docker_compose_cmd("down --remove-orphans"))
 
-    if args.build_file.startswith("Dockerfile"):
+    if args.build_file and args.build_file.startswith("Dockerfile"):
         role_docker_file = role_path.joinpath(args.build_file)
         registry_url = role_env['param_registry_url']
         registry_dir = role_env['param_registry_dir']
