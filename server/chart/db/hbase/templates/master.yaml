@@ -2,58 +2,55 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: hbase-master
+  name: {{ .Release.Name }}-master
   namespace: {{ .Release.Namespace }}
 spec:
   selector:
-    app: hbase-master
-  type: NodePort
+    app: {{ .Release.Name }}-master
   ports:
   - name: '16000'
     port: 16000
     targetPort: 16000
-    nodePort: 16000
   - name: '16010'
     port: 16010
     targetPort: 16010
-    nodePort: 16010
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: hbase-master
+  name: {{ .Release.Name }}-master
   namespace: {{ .Release.Namespace }}
 spec:
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: hbase-master
+      app: {{ .Release.Name }}-master
   template:
     metadata:
       labels:
-        app: hbase-master
+        app: {{ .Release.Name }}-master
     spec:
       hostname: master
-      subdomain: hbase-master
+      subdomain: {{ .Release.Name }}-master
       volumes:
       - name: hbase-env
         configMap:
-          name: hbase
+          name: {{ .Release.Name }}
           items:
           - key: hbase-env.sh
             path: hbase-env.sh
       - name: hbase-site
         configMap:
-          name: hbase
+          name: {{ .Release.Name }}
           items:
           - key: hbase-site.xml
             path: hbase-site.xml
       - name: hbase-data
         persistentVolumeClaim:
-          claimName: data-hbase-master
+          claimName: data-{{ .Release.Name }}-master
       containers:
-      - name: hbase-master
+      - name: hbase
         image: {{ .Values.param_registry_url }}/{{ .Values.param_registry_dir }}/hbase
         imagePullPolicy: Always
         ports:
@@ -76,7 +73,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: data-hbase-master
+  name: data-{{ .Release.Name }}-master
   namespace: {{ .Release.Namespace }}
 spec:
   accessModes:
