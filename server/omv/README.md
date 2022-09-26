@@ -13,4 +13,7 @@ async,no_root_squash,insecure_locks
 
 # pull
 rsync --archive rsync://[user]@[host]:[remote_path] [local_path] --verbose
+
+# btrfs filesystem repair; cause force shutdown
+btrfsck --repair /dev/sdb1
 ```
