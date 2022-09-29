@@ -9,8 +9,8 @@
                 <replica>
                     <host>{{ param_role_name }}-{{ i }}</host>
                     <port>9000</port>
-                    <user>{{ param_db_clickhouse_username }}</user>
-                    <password>{{ param_db_clickhouse_password }}</password>
+                    <user>{{ param_db_ch_username }}</user>
+                    <password>{{ param_db_ch_password }}</password>
                 </replica>
             </shard>
             {%- endfor %}
