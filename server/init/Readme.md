@@ -51,6 +51,11 @@ sudo usermod -aG docker $USER
 
 # ubuntu cri-dockerd
 wget https://github.com/Mirantis/cri-dockerd/releases/download/v0.2.5/cri-dockerd_0.2.5.3-0.ubuntu-$(lsb_release -c -s)_amd64.deb -O cri-dockerd.deb && sudo dpkg -i cri-dockerd.deb && rm -rf cri-dockerd.deb
+
+# remote access with daemon.json
+{
+  "hosts": ["unix:///var/run/docker.sock", "tcp://127.0.0.1:2375"]
+}
 ```
 
 ### k8s
