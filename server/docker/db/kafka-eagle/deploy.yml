@@ -9,6 +9,7 @@ x-traefik-label: &traefik-label
 services:
   kafka-eagle:
     image: {{ param_registry_url }}/{{ param_registry_dir }}/kafka-eagle
+    pull_policy: always
     container_name: kafka-eagle
     labels:
       <<: *traefik-label
@@ -19,6 +20,4 @@ services:
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/system-config.properties:/opt/kafka-eagle/conf/system-config.properties
       - {{ param_docker_data }}/{{ param_role_name }}/logs/:/opt/kafka-eagle/logs/
-
-
-
+    restart: always
