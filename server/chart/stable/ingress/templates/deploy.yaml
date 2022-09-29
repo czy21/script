@@ -16,6 +16,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: demo-operation-react
+                name: istio-ingressgateway
                 port:
                   number: 80
