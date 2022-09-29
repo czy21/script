@@ -4,7 +4,7 @@
     "default_policy": "deny",
     "enable_token_persistence": true,
     "tokens": {
-      "master": "b0bc3475-ea2c-c1ed-4c0b-f8de1dc04784"
+      "initial_management": "b0bc3475-ea2c-c1ed-4c0b-f8de1dc04784"
     }
   }
 }

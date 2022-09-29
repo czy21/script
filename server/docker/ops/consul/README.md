@@ -10,6 +10,12 @@ sudo yum -y install consul
 consul kv export > bak.json
 # restore
 cat bak.json | consul kv import -token <token_value> -
+# create policy
+consul acl policy create -name <policy_name> -rules 'key_prefix "" { policy = "read" }'
+# create token 
+consul acl token create -secret=<secretId> -token <token_value> -policy-name <policy_name>
+# deregister service_id
+curl --header "X-Consul-Token: <token>" -X PUT http://<hostname>/v1/agent/service/deregister/:service_id
 # get bootstrap token
 kubectl get secrets/consul-bootstrap-acl-token -n ops --template='{{.data.token | base64decode }}'
 # exec container
