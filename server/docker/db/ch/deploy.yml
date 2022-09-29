@@ -23,7 +23,7 @@ services:
       - '{{ param_docker_data }}/{{ param_role_name }}/log/{{ i }}:/var/log/'
     environment:
       CLICKHOUSE_DB: default
-      CLICKHOUSE_USER: {{ param_db_clickhouse_username }}
-      CLICKHOUSE_PASSWORD: {{ param_db_clickhouse_password }}
+      CLICKHOUSE_USER: {{ param_db_ch_username }}
+      CLICKHOUSE_PASSWORD: {{ param_db_ch_password }}
       CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
   {%- endfor %}
