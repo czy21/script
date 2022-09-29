@@ -9,6 +9,7 @@ RUN mkdir -p $KAFKA_HOME
 #COPY ___temp/kafka_${KAFKA_VERSION}.tgz $KAFKA_HOME/src.tgz
 RUN wget -nv -O $KAFKA_HOME/src.tgz $KAFKA_TGZ_URL;
 RUN tar -xf $KAFKA_HOME/src.tgz --strip-components=1 -C $KAFKA_HOME && rm $KAFKA_HOME/src.tgz && chown -R root:root $KAFKA_HOME
+RUN rm -rf $KAFKA_HOME/site-docs
 
 WORKDIR $KAFKA_HOME
 
