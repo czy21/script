@@ -6,9 +6,10 @@ services:
     {% set j=i-1 %}
     {% set svc_port=j+9092 %}
     {% set jmx_port=j+9999 %}
-  kafka{{ i }}:
+  {{ param_role_name }}-{{ i }}:
     image: {{ param_registry_url }}/{{ param_registry_dir }}/kafka
-    container_name: kafka{{ i }}
+    pull_policy: always
+    container_name: {{ param_role_name }}-{{ i }}
     privileged: true
     user: root
     ports:
@@ -18,9 +19,9 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/logs/{{ i }}:/logs/
     environment:
       KAFKA_SERVER_broker.id: {{ i }}
-      KAFKA_SERVER_listeners: PLAINTEXT://kafka{{ i }}:{{ svc_port }}
+      KAFKA_SERVER_listeners: PLAINTEXT://{{ param_role_name }}-{{ i }}:{{ svc_port }}
       KAFKA_SERVER_advertised.listeners: PLAINTEXT://{{ param_mq_kafka_cluster_host_ip }}:{{ svc_port }}
-      KAFKA_SERVER_zookeeper.connect: {{ param_mq_kafka_cluster_zk_servers }}/{{ param_mq_kafka_cluster_zk_root_path }}/{{ param_mq_kafka_cluster_id }}
+      KAFKA_SERVER_zookeeper.connect: {{ param_mq_kafka_cluster_zk_servers }}/{{ param_mq_kafka_cluster_zk_root_path }}/{{ param_mq_kafka_cluster_name }}
       JMX_PORT: {{ jmx_port }}
       KAFKA_HEAP_OPTS: -Xms256M -Xmx512M
 
