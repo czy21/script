@@ -18,12 +18,16 @@ services:
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/logs/{{ i }}:/logs/
     environment:
+      JMX_PORT: {{ jmx_port }}
+      KAFKA_HEAP_OPTS: -Xms256M -Xmx512M
       KAFKA_SERVER_broker.id: {{ i }}
       KAFKA_SERVER_listeners: PLAINTEXT://{{ param_role_name }}-{{ i }}:{{ svc_port }}
       KAFKA_SERVER_advertised.listeners: PLAINTEXT://{{ param_mq_kafka_cluster_host_ip }}:{{ svc_port }}
       KAFKA_SERVER_zookeeper.connect: {{ param_mq_kafka_cluster_zk_servers }}/{{ param_mq_kafka_cluster_zk_root_path }}/{{ param_mq_kafka_cluster_name }}
-      JMX_PORT: {{ jmx_port }}
-      KAFKA_HEAP_OPTS: -Xms256M -Xmx512M
+      KAFKA_SERVER_log.retention.hours: 720
+      KAFKA_SERVER_log.roll.hours: 4
+      KAFKA_SERVER_log.retention.bytes: 1073741824 # 1G
+      KAFKA_SERVER_log.segment.bytes: 1073741824
     restart: always
   {% endfor %}
 
