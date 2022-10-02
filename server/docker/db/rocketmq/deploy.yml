@@ -1,0 +1,52 @@
+version: "3.9"
+
+x-rocketmq-common: &rocketmq-common
+  image: apache/rocketmq:{{ param_mq_rocket_version }}
+  privileged: true
+  user: root
+  restart: always
+
+x-traefik-web-label: &traefik-web-label
+  traefik.enable: true
+  traefik.http.routers.rocketmq-web.rule: Host(`rocketmq.cluster.com`)
+  traefik.http.routers.rocketmq-web.service: rocketmq-web
+  traefik.http.services.rocketmq-web.loadbalancer.server.port: 8080
+
+services:
+  rocketmq-namesrv:
+    <<: *rocketmq-common
+    container_name: rocketmq-namesrv
+    ports:
+      - "9876:9876"
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/namesrv/logs/:/logs/
+    command: sh mqnamesrv
+  {%- for i in range(param_mq_rocket_cluster_replicas | int) %}
+    {%- set j = i + 1 %}
+  rocketmq-broker-{{ j }}:
+    <<: *rocketmq-common
+    container_name: rocketmq-broker-{{ j }}
+    hostname: rocketmq-broker-{{ j }}
+    ports:
+      - 10909:10909
+      - 10911:10911
+      - 10912:10912
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/broker/{{ j }}/logs/:/home/rocketmq/logs/
+      - {{ param_docker_data }}/{{ param_role_name }}/broker/{{ j }}/store/:/home/rocketmq/store/
+    command: sh mqbroker -n rocketmq-namesrv:9876
+    depends_on:
+      - rocketmq-namesrv
+  {%- endfor %}
+  rocketmq-dashboard:
+    image: apacherocketmq/rocketmq-dashboard
+    container_name: rocketmq-dashboard
+    labels:
+      <<: *traefik-web-label
+    privileged: true
+    user: root
+    expose:
+      - "8080"
+    environment:
+      JAVA_OPTS: -Drocketmq.namesrv.addr=rocketmq-namesrv:9876
+    restart: always
