@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM ubuntu:jammy
 
 RUN sed -i.bak "s,\(ca.archive\|archive\|security\).ubuntu.com,{{ param_mirror_apt }},g" /etc/apt/sources.list
 RUN apt-get update
