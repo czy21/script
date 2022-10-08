@@ -13,11 +13,18 @@ x-traefik-web-label: &traefik-web-label
   traefik.http.services.rocketmq-web.loadbalancer.server.port: 8080
 
 services:
+  rocketmq-setup:
+    image: ubuntu:22.04
+    container_name: rocketmq-setup
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/:/conf/
+      - {{ param_docker_data }}/{{ param_role_name }}/broker/conf/:/data/conf/
+    command: bash /conf/setup.sh
   rocketmq-namesrv:
     <<: *rocketmq-common
     container_name: rocketmq-namesrv
-    ports:
-      - "9876:9876"
+    expose:
+      - 9876
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/namesrv/logs/:/logs/
     command: sh mqnamesrv
@@ -27,15 +34,19 @@ services:
     <<: *rocketmq-common
     container_name: rocketmq-broker-{{ j }}
     hostname: rocketmq-broker-{{ j }}
-    ports:
-      - 10909:10909
-      - 10911:10911
-      - 10912:10912
+    expose:
+      - 10909
+      - 10911
+      - 10912
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/broker/{{ j }}/logs/:/home/rocketmq/logs/
       - {{ param_docker_data }}/{{ param_role_name }}/broker/{{ j }}/store/:/home/rocketmq/store/
-    command: sh mqbroker -n rocketmq-namesrv:9876
+      - {{ param_docker_data }}/{{ param_role_name }}/broker/conf/:/data/conf/
+    environment:
+      - NAMESRV_ADDR=rocketmq-namesrv:9876
+    command: sh mqbroker -c /data/conf/{{ j }}/broker.conf
     depends_on:
+      - rocketmq-setup
       - rocketmq-namesrv
   {%- endfor %}
   rocketmq-dashboard:
