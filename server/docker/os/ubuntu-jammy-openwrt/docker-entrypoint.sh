@@ -1,6 +1,7 @@
 #!/bin/bash
-set -e
 
 service ssh start
+
+chmod 777 /data
 
 exec "$@"
