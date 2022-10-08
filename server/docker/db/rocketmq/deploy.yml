@@ -24,6 +24,8 @@ services:
   rocketmq-namesrv:
     <<: *rocketmq-common
     container_name: rocketmq-namesrv
+    ports:
+      - "9876:9876"
     expose:
       - 9876
     volumes:
@@ -43,9 +45,7 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/broker/{{ j }}/logs/:/home/rocketmq/logs/
       - {{ param_docker_data }}/{{ param_role_name }}/broker/{{ j }}/store/:/home/rocketmq/store/
       - {{ param_docker_data }}/{{ param_role_name }}/broker/:/data/
-    environment:
-      - NAMESRV_ADDR=rocketmq-namesrv:9876
-    command: sh mqbroker -c /data/{{ j }}/broker.conf
+    command: sh mqbroker -n rocketmq-namesrv:9876 -c /data/{{ j }}/broker.conf
     depends_on:
       - rocketmq-setup
       - rocketmq-namesrv
