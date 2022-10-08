@@ -45,7 +45,7 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/broker/:/data/
     environment:
       - NAMESRV_ADDR=rocketmq-namesrv:9876
-    command: sh mqbroker -c /data/conf/{{ j }}/broker.conf
+    command: sh mqbroker -c /data/{{ j }}/broker.conf
     depends_on:
       - rocketmq-setup
       - rocketmq-namesrv
