@@ -6,10 +6,7 @@ import requests
 
 
 def get_session(sid):
-    r = requests.post(url="http://127.0.0.1:6650/pulsar/put",
-                      json={
-                          "name": "{0}".format(str(sid))
-                      })
+    r = requests.get(url="http://demo-dev.cluster.com/api/demo-portal/test/lbTest")
     print(r.json())
 
 
@@ -18,7 +15,7 @@ if __name__ == '__main__':
     start_time = datetime.now()
 
     p = Pool(multiprocessing.cpu_count() * 2)
-    for f in range(0, 20000):
+    for f in range(0, 10000):
         p.apply_async(get_session, args=(str(f + 1),))
     p.close()
     p.join()
