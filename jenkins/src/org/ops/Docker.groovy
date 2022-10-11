@@ -17,9 +17,9 @@ def build() {
                     ? StringUtils.join("-", env.param_project_name, env.param_project_module)
                     : env.param_release_name
     )
-    env.param_docker_context = env.param_docker_context == null
-            ? env.param_project_context
-            : PathUtils.ofPath(env.param_project_root, env.param_docker_context)
+    env.param_docker_context = StringUtils.isNull(env.param_docker_context)
+                            ? env.param_project_context
+                            : PathUtils.ofPath(env.param_project_root, env.param_docker_context)
     env.param_docker_file = PathUtils.ofPath(env.param_docker_context, "Dockerfile")
 
     def tool = [
