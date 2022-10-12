@@ -1,13 +1,15 @@
 version: "3.9"
 
-x-common: &common
-  image: clickhouse/clickhouse-server:22.8
+x-app-common: &app-common
+  image: clickhouse/clickhouse-server:{{ param_db_ch_version }}
 
 services:
   {%- for i in range(1,param_db_ch_cluster_replicas | int + 1) %}
-  {{ param_role_name }}-{{ i }}:
-    <<: *common
-    container_name: {{ param_role_name }}-{{ i }}
+  {%- set node_name = '-'.join([param_db_ch_cluster_name,i|string]) %}
+  {{ node_name }}:
+    <<: *app-common
+    container_name: {{ node_name }}
+    hostname: {{ node_name }}
     expose:
       - "8123"
       - "9000"
