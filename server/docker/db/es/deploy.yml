@@ -1,8 +1,8 @@
 version: "3.9"
 
-{%- set es_setup_name = param_db_es_cluster_name + '-setup' %}
+{%- set setup_name = param_db_es_cluster_name + '-setup' %}
 
-x-es-common: &es-common
+x-app-common: &app-common
   image: elasticsearch:{{ param_db_es_version }}
 
 x-traefik-es-label: &traefik-es-label
@@ -18,9 +18,9 @@ x-traefik-kb-label: &traefik-kb-label
   traefik.http.services.{{ param_db_es_kb_name }}.loadbalancer.server.port: 5601
 
 services:
-  {{ es_setup_name }}:
-    <<: *es-common
-    container_name: {{ es_setup_name }}
+  {{ setup_name }}:
+    <<: *app-common
+    container_name: {{ setup_name }}
     command: sh ./setup.sh
     user: "0"
     working_dir: /usr/share/elasticsearch
@@ -34,30 +34,30 @@ services:
       interval: 1s
       timeout: 5s
       retries: 120
-  {% set es_node_names=[] %}
+  {% set node_names=[] %}
   {%- for i in range(1,param_db_es_cluster_replicas | int + 1) %}
-    {%- set es_node_name = param_db_es_cluster_name + '-' + i | string %}
-    {{- es_node_names.append(es_node_name) or '' }}
-  {{ es_node_name }}:
-    <<: *es-common
-    container_name: {{ es_node_name }}
-    hostname: {{ es_node_name }}
+    {%- set node_name = param_db_es_cluster_name + '-' + i | string %}
+    {{- node_names.append(node_name) or '' }}
+    {%- set seed_hosts=[] %}
+    {%- set initial_master_nodes=[] %}
+    {%- for t in range(1,param_db_es_cluster_replicas | int + 1) %}
+       {%- set t_node_name = '-'.join([param_db_es_cluster_name,t|string]) %}
+      {%- if t_node_name != node_name %}
+        {{- seed_hosts.append(t_node_name) or '' }}
+      {%- endif %}
+      {{- initial_master_nodes.append(t_node_name) or '' }}
+    {%- endfor %}
+  {{ node_name }}:
+    <<: *app-common
+    container_name: {{ node_name }}
+    hostname: {{ node_name }}
     labels:
       <<: *traefik-es-label
     expose:
       - "9200"
     environment:
-      node.name: {{ es_node_name }}
+      node.name: {{ node_name }}
       cluster.name: {{ param_db_es_cluster_name }}
-      {%- set seed_hosts=[] %}
-      {%- set initial_master_nodes=[] %}
-      {%- for t in range(1,param_db_es_cluster_replicas | int + 1) %}
-         {%- set t_es_node_name = '-'.join([param_db_es_cluster_name,t|string]) %}
-        {%- if t_es_node_name != es_node_name %}
-          {{- seed_hosts.append(t_es_node_name) or '' }}
-        {%- endif %}
-        {{- initial_master_nodes.append(t_es_node_name) or '' }}
-      {%- endfor %}
       discovery.seed_hosts: {{ seed_hosts | join(',') }}
       cluster.initial_master_nodes: {{ initial_master_nodes | join(',') }}
       bootstrap.memory_lock: "true"
@@ -68,8 +68,8 @@ services:
       xpack.security.transport.ssl.enabled: true
       xpack.security.transport.ssl.verification_mode: certificate
       xpack.security.transport.ssl.certificate_authorities: {{ param_db_es_target_cert_path }}/ca/ca.crt
-      xpack.security.transport.ssl.certificate: {{ param_db_es_target_cert_path }}/{{ es_node_name }}/{{ es_node_name }}.crt
-      xpack.security.transport.ssl.key: {{ param_db_es_target_cert_path }}/{{ es_node_name }}/{{ es_node_name }}.key
+      xpack.security.transport.ssl.certificate: {{ param_db_es_target_cert_path }}/{{ node_name }}/{{ node_name }}.crt
+      xpack.security.transport.ssl.key: {{ param_db_es_target_cert_path }}/{{ node_name }}/{{ node_name }}.key
       xpack.security.authc.realms.file.file1.order: 0
       xpack.monitoring.collection.enabled: true
     volumes:
@@ -83,7 +83,7 @@ services:
         hard: -1
     depends_on:
     {%- if i == 1 %}
-      {{ es_setup_name }}:
+      {{ setup_name }}:
         condition: service_healthy
     {%- else %}
       - {{ param_db_es_cluster_name + '-' + (i|int-1) | string }}
