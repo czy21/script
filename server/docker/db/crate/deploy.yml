@@ -3,6 +3,12 @@ version: "3.9"
 x-app-common: &app-common
   image: crate:{{ param_db_crate_version }}
 
+x-traefik-web-label: &traefik-web-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_db_crate_cluster_name }}.rule: Host(`crate-web.cluster.com`)
+  traefik.http.routers.{{ param_db_crate_cluster_name }}.service: {{ param_db_crate_cluster_name }}
+  traefik.http.services.{{ param_db_crate_cluster_name }}.loadbalancer.server.port: 4200
+
 services:
   {% set node_names=[] %}
   {%- for i in range(1,param_db_crate_cluster_replicas | int + 1) %}
@@ -21,6 +27,8 @@ services:
     <<: *app-common
     container_name: {{ node_name }}
     hostname: {{ node_name }}
+    labels:
+      <<: *traefik-web-label
     expose:
       - "4200"
     ports:
