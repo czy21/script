@@ -6,7 +6,7 @@ x-app-common: &app-common
 services:
   {% set node_names=[] %}
   {%- for i in range(1,param_db_crate_cluster_replicas | int + 1) %}
-    {%- set node_name = param_db_crate_cluster_name + '-' + i | string %}
+    {%- set node_name = '-'.join([param_db_crate_cluster_name,i|string]) %}
     {{- node_names.append(node_name) or '' }}
     {%- set seed_hosts=[] %}
     {%- set initial_master_nodes=[] %}
