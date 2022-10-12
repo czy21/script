@@ -33,6 +33,7 @@ services:
       - "4200"
     ports:
       - '{{ (param_db_crate_cluster_start_port | int) + i-1 }}:4200'
+      - '{{ (param_db_crate_cluster_crate_start_port | int) + i-1 }}:5432'
     volumes:
       - {{ param_docker_data }}/{{ param_db_crate_cluster_name }}/data/{{ i }}/:/data/
     command:
