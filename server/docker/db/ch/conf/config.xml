@@ -4,7 +4,7 @@
     <mysql_port>9004</mysql_port>
     <remote_servers>
         <cluster>
-            {%- for i in range(1,param_db_clickhouse_cluster_replicas | int + 1) %}
+            {%- for i in range(1,param_db_ch_cluster_replicas | int + 1) %}
             <shard>
                 <replica>
                     <host>{{ param_role_name }}-{{ i }}</host>

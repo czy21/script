@@ -1,17 +1,42 @@
 version: "3.9"
 
+x-app-common: &app-common
+  image: crate:{{ param_db_crate_version }}
+
 services:
-  crate:
-    image: crate:4.8.1
-    container_name: crate
-    privileged: true
-    user: root
+  {% set node_names=[] %}
+  {%- for i in range(1,param_db_crate_cluster_replicas | int + 1) %}
+    {%- set node_name = param_db_crate_cluster_name + '-' + i | string %}
+    {{- node_names.append(node_name) or '' }}
+    {%- set seed_hosts=[] %}
+    {%- set initial_master_nodes=[] %}
+    {%- for t in range(1,param_db_crate_cluster_replicas | int + 1) %}
+       {%- set t_node_name = '-'.join([param_db_crate_cluster_name,t|string]) %}
+      {%- if t_node_name != node_name %}
+        {{- seed_hosts.append(t_node_name) or '' }}
+      {%- endif %}
+      {{- initial_master_nodes.append(t_node_name) or '' }}
+    {%- endfor %}
+  {{ node_name }}:
+    <<: *app-common
+    container_name: {{ node_name }}
+    hostname: {{ node_name }}
     expose:
       - "4200"
-      - "5432"
     ports:
-      - "4200:4200"
+      - '{{ (param_db_crate_cluster_start_port | int) + i-1 }}:4200'
     volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/data/:/data
-    command: -Cdiscovery.type=single-node
-    restart: always
+      - {{ param_docker_data }}/{{ param_db_crate_cluster_name }}/data/{{ i }}/:/data/
+    command:
+      - "crate"
+      - "-Ccluster.name={{ param_db_crate_cluster_name }}"
+      - "-Cnode.name={{ node_name }}"
+      - "-Cnode.data=true"
+      - "-Cnetwork.host=_site_"
+      - "-Cdiscovery.seed_hosts={{ seed_hosts | join(',') }}"
+      - "-Ccluster.initial_master_nodes={{ initial_master_nodes | join(',') }}"
+      - "-Cgateway.expected_data_nodes={{ param_db_crate_cluster_replicas }}"
+      - "-Cgateway.recover_after_data_nodes={{ (param_db_crate_cluster_replicas | int)-1 }}"
+    environment:
+      CRATE_HEAP_SIZE: 2g
+  {%- endfor %}
