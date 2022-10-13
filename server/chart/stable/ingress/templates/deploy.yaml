@@ -6,6 +6,7 @@ metadata:
   namespace: istio-system
   annotations:
     nginx.ingress.kubernetes.io/proxy-body-size: '0'
+    nginx.ingress.kubernetes.io/proxy-next-upstream: 'off'
 spec:
   ingressClassName: nginx
   rules:
