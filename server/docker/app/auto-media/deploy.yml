@@ -1,11 +1,19 @@
 version: "3.9"
 
+x-traefik--qbittorrent-label: &traefik-qbittorrent-label
+  traefik.enable: true
+  traefik.http.routers.qbittorrent.rule: Host(`qb.cluster.com`)
+  traefik.http.routers.qbittorrent.service: qbittorrent
+  traefik.http.services.qbittorrent.loadbalancer.server.port: 8080
+
 services:
   qbittorrent:
-    image: linuxserver/qbittorrent
+    image: linuxserver/qbittorrent:4.4.5
     container_name: qbittorrent
+    labels:
+      <<: *traefik-qbittorrent-label
     volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/qbittorrent/:/config/
+      - {{ param_docker_data }}/{{ param_role_name }}/data/qbittorrent/:/config/
       - {{ param_public_path }}/media/:/media/
     environment:
       PUID: 1000
@@ -18,7 +26,7 @@ services:
     image: linuxserver/jackett
     container_name: jackett
     volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/jackett/:/config/
+      - {{ param_docker_data }}/{{ param_role_name }}/data/jackett/:/config/
     environment:
       PUID: 1000
       PGID: 1000
@@ -30,7 +38,7 @@ services:
     image: linuxserver/radarr
     container_name: radarr
     volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/radarr/:/config/
+      - {{ param_docker_data }}/{{ param_role_name }}/data/radarr/:/config/
       - {{ param_public_path }}/media/:/media/
     environment:
       PUID: 1000
@@ -42,7 +50,7 @@ services:
     image: linuxserver/sonarr
     container_name: sonarr
     volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/sonarr/:/config/
+      - {{ param_docker_data }}/{{ param_role_name }}/data/sonarr/:/config/
       - {{ param_public_path }}/media/:/media/
     environment:
       PUID: 1000
