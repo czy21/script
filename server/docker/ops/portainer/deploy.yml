@@ -2,17 +2,21 @@ version: "3.9"
 
 x-traefik-label: &traefik-label
   traefik.enable: true
-  traefik.http.routers.{{ param_role_name }}.rule: Host(`portainer-{{ param_cluster_name }}.cluster.com`)
+  traefik.http.routers.{{ param_role_name }}.rule: Host(`portainer.cluster.com`)
   traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
   traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 9000
 
 services:
   portainer:
-    image: portainer/portainer-ce:linux-amd64-2.11.0-alpine
+    image: portainer/portainer-ce:2.15.1-alpine
     container_name: portainer
     labels:
       <<: *traefik-label
     privileged: true
+    expose:
+      - "9000"
+      - "8000"
+      - "9443"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - {{ param_docker_data }}/{{ param_role_name }}/data:/data/
