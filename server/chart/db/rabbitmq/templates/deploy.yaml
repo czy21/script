@@ -7,7 +7,8 @@ spec:
   replicas: 2
   rabbitmq:
     additionalConfig: |
-      load_definitions = /var/lib/rabbitmq/definitions.json
+      default_user={{ .Values.param_mq_rabbit_username }}
+      default_pass={{ .Values.param_mq_rabbit_password }}
   override:
     service:
       spec:
@@ -25,20 +26,3 @@ spec:
             port: 15692
             targetPort: 15692
             nodePort: 15692
-    statefulSet:
-      spec:
-        template:
-          spec:
-            containers:
-            - name: rabbitmq
-              volumeMounts:
-              - name: definitions
-                mountPath: /var/lib/rabbitmq/definitions.json
-                subPath: definitions.json
-            volumes:
-            - name: definitions
-              configMap:
-                name: {{ .Release.Name }}
-                items:
-                - key: definitions.json
-                  path: definitions.json
