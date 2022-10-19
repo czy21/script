@@ -33,4 +33,5 @@ services:
       GITEA__service__DISABLE_REGISTRATION: true
       GITEA__repository__DEFAULT_REPO_UNITS: repo.code,repo.releases
       GITEA__repository__DISABLED_REPO_UNITS: repo.issues, repo.ext_issues, repo.pulls, repo.wiki, repo.ext_wiki
+      GITEA__packages__ENABLED: "true"
     restart: always
