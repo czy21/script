@@ -9,7 +9,7 @@ x-traefik-label: &traefik-label
 services:
 
   cadvisor:
-    image: {{ param_registry_proxy_url | default("gcr.io") }}/cadvisor/cadvisor
+    image: '{{ param_registry_proxy_url }}/cadvisor/cadvisor' # gcr.io/cadvisor/cadvisor
     container_name: cadvisor
     labels:
       <<: *traefik-label
