@@ -17,5 +17,3 @@ services:
       placement:
         constraints:
           - 'node.platform.os == linux'
-
-
