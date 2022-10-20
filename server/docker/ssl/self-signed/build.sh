@@ -4,7 +4,12 @@ tmp_generate={{ param_role_path }}/___temp/generate
 tmp_demo_ca={{ param_role_path }}/___temp/demoCA
 tmp_ca={{ param_role_path }}/___temp/ca
 
-mkdir -p ${tmp_generate} ${tmp_demo_ca}/{certs,newcerts,crl,private}
+mkdir -p \
+${tmp_generate} \
+${tmp_demo_ca}/certs \
+${tmp_demo_ca}/newcerts \
+${tmp_demo_ca}/crl \
+${tmp_demo_ca}/private
 
 touch ${tmp_demo_ca}/index.txt
 echo "01" > ${tmp_demo_ca}/serial
