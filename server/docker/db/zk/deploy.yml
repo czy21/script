@@ -1,10 +1,16 @@
 version: "3.9"
 
+{%- set zk_servers=[] %}
+{%- for i in range(1,param_db_zk_cluster_replicas | int + 1) %}
+  {{ zk_servers.append("server.{0}=zk-{0}:2888:3888;2181".format(i|string)) or '' }}
+{%- endfor %}
+
 services:
-  {% for i in range(1,param_db_zk_cluster_replicas | int + 1) %}
-  zk{{ i }}:
-    image: zookeeper
-    container_name: zk{{ i }}
+  {%- for i in range(1,param_db_zk_cluster_replicas | int + 1) %}
+  {%- set node_name = "zk-{0}".format(i|string) %}
+  {{ node_name }}:
+    image: zookeeper:3.8.0
+    container_name: {{ node_name }}
     ports:
       - 218{{ i }}:2181
     volumes:
@@ -14,12 +20,8 @@ services:
     environment:
       ZOO_MY_ID: {{ i }}
       ZOO_TICK_TIME: 60000
-      {% set zk_servers=[] %}
-      {% for t in range(1,param_db_zk_cluster_replicas | int + 1) %}
-        {{ zk_servers.append("server.{0}=zk{0}:2888:3888;2181".format(t|string)) or '' }}
-      {% endfor %}
       ZOO_SERVERS: {{ zk_servers | join(' ') }}
-
-  {% endfor %}
+    restart: always
+  {%- endfor %}
 
 
