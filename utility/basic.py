@@ -23,7 +23,7 @@ def execute(cmd, func=print_default, func_param=None, encoding="utf-8"):
     input_exec = str(input("Are you sure you want to execute (y/n)?").strip())
     if input_exec != "y":
         return
-    with subprocess.Popen(["sh", "-c", cmd], stdout=subprocess.PIPE, encoding=encoding) as proc:
+    with subprocess.Popen(cmd, stdout=subprocess.PIPE, encoding=encoding, shell=True) as proc:
         func(iter(proc.stdout.readline, ''), proc, func_param)
         proc.stdout.close()
         proc.wait()
