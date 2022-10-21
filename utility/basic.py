@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import logging
+import os
 import subprocess
 import sys
 
@@ -23,7 +24,7 @@ def execute(cmd, func=print_default, func_param=None, encoding="utf-8"):
     input_exec = str(input("Are you sure you want to execute (y/n)?").strip())
     if input_exec != "y":
         return
-    with subprocess.Popen(["sh", "-c", cmd], stdout=subprocess.PIPE, encoding=encoding, shell=True) as proc:
+    with subprocess.Popen(["sh", "-c", cmd], stdout=subprocess.PIPE, encoding=encoding, shell=os.name == 'nt') as proc:
         func(iter(proc.stdout.readline, ''), proc, func_param)
         proc.stdout.close()
         proc.wait()
