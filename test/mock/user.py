@@ -10,7 +10,7 @@ def write_csv(items, file):
 
 
 def write_sql(items, file):
-    file.write("insert into customer(name,id_num,phone_no) values" + ",".join(["('{0}','{1}','{2}')".format(t["name"], t["id_num"], t["phone_no"]) for t in items]) + ";\n")
+    file.write("insert into customer(name,gender,id_num,phone_no) values" + ",".join(["('{0}','{1}','{2}','{3}')".format(t["name"], t["gender"], t["id_num"], t["phone_no"]) for t in items]) + ";\n")
 
 
 def generate(total: int):
@@ -24,8 +24,9 @@ def generate(total: int):
             for _ in range(0, total):
                 user = {
                     "name": fake.name(),
+                    "gender": int(fake.boolean()),
                     "id_num": fake.ssn(min_age=18, max_age=60),
-                    "phone_no": fake.phone_number()
+                    "phone_no": fake.phone_number(),
                 }
                 data.append(user)
                 if data.__len__() >= 100:
