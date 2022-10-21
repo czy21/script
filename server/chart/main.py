@@ -5,7 +5,10 @@ import pathlib
 import share
 import yaml
 
-from utility import collection as collection_util, file as file_util
+from utility import (
+    collection as collection_util,
+    file as file_util
+)
 
 
 def invoke(role_title: str, role_path: pathlib.Path, role_env: dict, args: argparse.Namespace, **kwargs):
@@ -28,7 +31,13 @@ def invoke(role_title: str, role_path: pathlib.Path, role_env: dict, args: argpa
         _cmds.append(share.echo_action(role_title, "push"))
         _cmds.append("helm plugin list | if [ -z \"$(grep -w nexus-push)\" ];then helm plugin install --version master https://github.com/sonatype-nexus-community/helm-nexus-push.git;fi")
         _cmds.append("helm repo   list | if [ -z \"$(grep -w {0})\" ];then helm repo add {0} {1};fi".format(helm_repo_name, helm_repo_url))
-        _cmds.append("helm package {0} --destination {0} | sed 's/Successfully packaged chart and saved it to: //g' | xargs helm nexus-push {1}  --username {2} --password {3}".format(role_path, helm_repo_name, helm_username, helm_password))
+        _cmds.append(
+            "helm package {0} --destination {0} | sed 's/Successfully packaged chart and saved it to: //g' | xargs helm nexus-push {1}  --username {2} --password {3}".format(
+                role_path, helm_repo_name,
+                helm_username,
+                helm_password
+            )
+        )
 
     else:
         _action = args.action
@@ -56,7 +65,7 @@ def invoke(role_title: str, role_path: pathlib.Path, role_env: dict, args: argpa
             _cmds.append('helm dep up {0}'.format(role_path.as_posix()))
             _cmds.append(collection_util.flat_to_str(helm_cmd))
     _cmd_str = collection_util.flat_to_str(_cmds, delimiter=" && ")
-    share.run_cmd(_cmd_str)
+    share.execute(_cmd_str)
 
 
 if __name__ == '__main__':

@@ -3,7 +3,9 @@ import pathlib
 
 import share
 
-from utility import collection as collection_util
+from utility import (
+    collection as collection_util
+)
 
 
 def uci_bak_config_section_cmd(config_name, kind: str, section: str, output_file: pathlib.Path):
@@ -63,7 +65,7 @@ def invoke(role_title: str, role_path: pathlib.Path, role_env: dict, **kwargs):
             _bak_cmds.append(uci_bak_config_section_cmd(role_name, _kind, _section, role_bak_script_uci))
         _cmds.append(share.echo_action(role_title, "backup"))
         _cmds.append(_bak_cmds)
-    share.run_cmd(collection_util.flat_to_str(_cmds, delimiter=" && "))
+    share.execute(collection_util.flat_to_str(_cmds, delimiter=" && "))
 
 
 if __name__ == '__main__':

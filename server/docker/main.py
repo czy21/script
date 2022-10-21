@@ -4,7 +4,10 @@ import pathlib
 
 import share
 
-from utility import collection as collection_util, file as file_util
+from utility import (
+    collection as collection_util,
+    file as file_util
+)
 
 
 def invoke(role_title: str, role_path: pathlib.Path, role_env: dict, args: argparse.Namespace, **kwargs):
@@ -27,7 +30,7 @@ def invoke(role_title: str, role_path: pathlib.Path, role_env: dict, args: argpa
     if role_node_path.exists():
         if role_node_target_path:
             role_node_deploy_file = role_node_target_path.joinpath("deploy.yml")
-            share.run_cmd(collection_util.flat_to_str([
+            share.execute(collection_util.flat_to_str([
                 share.echo_action(role_title, "copy node", cluster_name),
                 "find {0} -maxdepth 1 ! -path {0} ! -name deploy.yml -exec cp -rv -t {1}/".format(role_node_target_path.as_posix(), role_path.as_posix()) + " {} \\;"
             ], delimiter=" && "))
@@ -82,7 +85,7 @@ def invoke(role_title: str, role_path: pathlib.Path, role_env: dict, args: argpa
             _cmds.append("docker build --tag {0} --file {1} {2}".format(docker_image_tag, role_docker_file.as_posix(), role_path.as_posix()))
             _cmds.append("docker push {0}".format(docker_image_tag))
     _cmd_str = collection_util.flat_to_str(_cmds, delimiter=" && ")
-    share.run_cmd(_cmd_str)
+    share.execute(_cmd_str)
 
 
 if __name__ == '__main__':
