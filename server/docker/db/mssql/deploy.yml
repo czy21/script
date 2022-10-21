@@ -3,7 +3,7 @@ version: "3.9"
 services:
 
   mssql:
-    image: {{ param_registry_proxy_url | default("mcr.microsoft.com") }}/mssql/server:2019-latest
+    image: "mssql/server:2022-latest" # mcr.microsoft.com/mssql/server:2022-latest
     container_name: mssql
     privileged: true
     user: root
@@ -11,10 +11,10 @@ services:
       - "1433:1433"
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/var/opt/mssql/
-
     environment:
       TZ: Asia/Shanghai
       ACCEPT_EULA: Y
       MSSQL_SA_PASSWORD: {{ param_db_mssql_password }}
       MSSQL_COLLATION: Chinese_PRC_CI_AS
+    restart: always
 
