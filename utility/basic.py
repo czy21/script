@@ -18,19 +18,21 @@ def print_default(msg_lines, proc: subprocess.Popen, func_param) -> None:
             logger.info(line)
 
 
-def execute(cmd, func=print_default, func_param=None, encoding="utf-8", is_input=True, is_log=False):
+def execute(cmd, func=print_default, func_param=None, encoding="utf-8", is_input=True, is_return=True):
     logger.debug(cmd)
     if is_input:
         input_exec = str(input("Are you sure you want to execute (y/n)?").strip())
         if input_exec != "y":
             return
     is_shell = os.name == 'nt'
-    if is_log:
+    if is_return:
         with subprocess.Popen(["sh", "-c", cmd], stdout=subprocess.PIPE, encoding=encoding, shell=is_shell) as proc:
             func(iter(proc.stdout.readline, ''), proc, func_param)
+            ret = proc.stdout.read()
             proc.stdout.close()
             proc.wait()
             if proc.returncode != 0:
                 sys.exit(0)
+            return ret
     else:
         subprocess.Popen(["sh", "-c", cmd], shell=is_shell).wait()

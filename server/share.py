@@ -1,13 +1,10 @@
 import argparse
 import json
 import logging
-import os
 import pathlib
-import subprocess
 import sys
 
 import yaml
-
 from utility import (
     collection as collection_util,
     file as file_util,
@@ -80,9 +77,8 @@ def select_role(root_path: pathlib.Path, deep: int = 1, exclude_rules=None, args
     return get_dir_dict(app_path, exclude_rules=exclude_rules, select_tip="role num(example:1 2 3)")
 
 
-def run_cmd(cmd, is_log: bool = False):
-    logger.debug(cmd)
-    basic_util.execute(cmd, is_input=False, is_log=is_log)
+def execute(cmd, is_return: bool = False):
+    return basic_util.execute(cmd, is_input=False, is_return=is_return)
 
 
 def loop_roles(root_path: pathlib.Path,
@@ -122,7 +118,7 @@ def loop_roles(root_path: pathlib.Path,
             build_file = role_path.joinpath(file_name)
             if args.build_file == file_name:
                 if build_file.exists():
-                    run_cmd(collection_util.flat_to_str([
+                    execute(collection_util.flat_to_str([
                         echo_action(role_title, file_name, build_file.as_posix()),
                         "sh {0} {1}".format(build_file.as_posix(), " ".join(args.build_args))
                     ], delimiter="&&"))
@@ -130,7 +126,7 @@ def loop_roles(root_path: pathlib.Path,
         build_target("build.sh")
         if role_func:
             role_func(role_title=role_title, role_path=role_path, role_env=role_env, args=args, **kwargs)
-        run_cmd("mkdir -p {1} && cp -r {0}/* {1}".format(role_path, tmp_path.joinpath(args.namespace).joinpath(role_name)))
+        execute("mkdir -p {1} && cp -r {0}/* {1}".format(role_path, tmp_path.joinpath(args.namespace).joinpath(role_name)))
 
 
 class Installer:

@@ -6,7 +6,12 @@ import pathlib
 import share
 import yaml
 
-from utility import collection as collection_util, file as file_util, yaml as yaml_util, log as log_util
+from utility import (
+    collection as collection_util,
+    file as file_util,
+    yaml as yaml_util,
+    log as log_util
+)
 
 logger = logging.getLogger()
 
@@ -53,4 +58,4 @@ if __name__ == '__main__':
     if args.debug:
         ansible_playbook_cmd.append("--verbose")
     _cmds.append(collection_util.flat_to_str(ansible_playbook_cmd))
-    share.run_cmd(collection_util.flat_to_str(_cmds, delimiter=" && "), is_log=False)
+    share.execute(collection_util.flat_to_str(_cmds, delimiter=" && "), is_return=False)
