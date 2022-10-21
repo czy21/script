@@ -81,7 +81,7 @@ def run_cmd(cmd, is_log: bool = False):
             if proc.returncode != 0:
                 sys.exit(0)
     else:
-        subprocess.Popen(cmd, shell=True).wait()
+        subprocess.Popen(["sh", "-c", cmd], shell=True).wait()
 
 
 def loop_roles(root_path: pathlib.Path,
