@@ -26,11 +26,4 @@ def join_path(first: str, *more) -> str:
     p = pathlib.Path(first)
     for m in more:
         p = p.joinpath(m)
-    return p.absolute().resolve().as_posix()
-
-
-def join_no_resolve(first: str, *more):
-    p = pathlib.Path(first)
-    for m in more:
-        p = p.joinpath(m)
-    return os.path.abspath(p.as_posix())
+    return os.path.abspath(p.as_posix()).replace("\\", "/")
