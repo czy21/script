@@ -27,13 +27,13 @@ param_main_db_pgsql_user = ""
 param_main_db_pgsql_pass = ""
 param_main_db_pgsql_file_path = ""
 
-# cksql
-param_main_db_cksql_name = ""
-param_main_db_cksql_host = ""
-param_main_db_cksql_port = ""
-param_main_db_cksql_user = ""
-param_main_db_cksql_pass = ""
-param_main_db_cksql_file_path = ""
+# chsql
+param_main_db_chsql_name = ""
+param_main_db_chsql_host = ""
+param_main_db_chsql_port = ""
+param_main_db_chsql_user = ""
+param_main_db_chsql_pass = ""
+param_main_db_chsql_file_path = ""
 
 # mssql
 param_main_db_mssql_name = ""
