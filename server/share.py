@@ -1,13 +1,22 @@
 import argparse
 import json
 import logging
+import os
 import pathlib
 import subprocess
 import sys
 
 import yaml
 
-from utility import collection as collection_util, file as file_util, regex as regex_util, template as template_util, yaml as yaml_util, log as log_util
+from utility import (
+    collection as collection_util,
+    file as file_util,
+    regex as regex_util,
+    template as template_util,
+    yaml as yaml_util,
+    log as log_util,
+    basic as basic_util
+)
 
 logger = logging.getLogger()
 
@@ -73,15 +82,7 @@ def select_role(root_path: pathlib.Path, deep: int = 1, exclude_rules=None, args
 
 def run_cmd(cmd, is_log: bool = False):
     logger.debug(cmd)
-    if is_log:
-        with subprocess.Popen(["sh", "-c", cmd], stdout=subprocess.PIPE, encoding="utf-8", shell=True) as proc:
-            logger.info(proc.stdout.read())
-            proc.stdout.close()
-            proc.wait()
-            if proc.returncode != 0:
-                sys.exit(0)
-    else:
-        subprocess.Popen(["sh", "-c", cmd], shell=True).wait()
+    basic_util.execute(cmd, is_input=False, is_log=is_log)
 
 
 def loop_roles(root_path: pathlib.Path,
