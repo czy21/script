@@ -35,7 +35,7 @@ def exec_file():
     env_stem = env_path.parent.stem
 
     log_file = os.environ.run_args.log_file
-    log_util.init_logger(file=env_path.joinpath("../", log_file).absolute() if log_file is not None else None)
+    log_util.init_logger(file=env_path.joinpath("../", log_file).resolve().absolute() if log_file is not None else None)
 
     # empty source log
     default_path_module = importlib.import_module("domain.default.path")
