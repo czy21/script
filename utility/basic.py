@@ -18,7 +18,15 @@ def print_default(msg_lines, proc: subprocess.Popen, func_param) -> None:
             logger.info(line)
 
 
-def execute(cmd, func=print_default, func_param=None, encoding="utf-8", is_input=True, is_return=True, shell=os.name == 'nt'):
+def execute(
+        cmd,
+        func=print_default,
+        func_param=None,
+        encoding="utf-8",
+        is_input=True,
+        is_return=True,
+        shell=os.name == 'nt'
+):
     logger.debug(cmd)
     if is_input:
         input_exec = str(input("Are you sure you want to execute (y/n)?").strip())
