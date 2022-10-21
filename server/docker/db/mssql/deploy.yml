@@ -17,4 +17,8 @@ services:
       MSSQL_SA_PASSWORD: {{ param_db_mssql_password }}
       MSSQL_COLLATION: Chinese_PRC_CI_AS
     restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 8G
 
