@@ -4,8 +4,6 @@ import os
 import subprocess
 import sys
 
-from colorama import Fore
-
 logger = logging.getLogger()
 
 
@@ -20,21 +18,19 @@ def print_default(msg_lines, proc: subprocess.Popen, func_param) -> None:
             logger.info(line)
 
 
-def execute(cmd, func=print_default, func_param=None, encoding="utf-8"):
-    input_exec = str(input("Are you sure you want to execute (y/n)?").strip())
-    if input_exec != "y":
-        return
-    with subprocess.Popen(["sh", "-c", cmd], stdout=subprocess.PIPE, encoding=encoding, shell=os.name == 'nt') as proc:
-        func(iter(proc.stdout.readline, ''), proc, func_param)
-        proc.stdout.close()
-        proc.wait()
-        if proc.returncode != 0:
-            sys.exit(0)
-
-
-if __name__ == '__main__':
-    cmd1 = "java --version"
-    cmd2 = "mysql --version"
-    execute(cmd1)
-    execute(cmd2)
-    print("sss")
+def execute(cmd, func=print_default, func_param=None, encoding="utf-8", is_input=True, is_log=False):
+    logger.debug(cmd)
+    if is_input:
+        input_exec = str(input("Are you sure you want to execute (y/n)?").strip())
+        if input_exec != "y":
+            return
+    is_shell = os.name == 'nt'
+    if is_log:
+        with subprocess.Popen(["sh", "-c", cmd], stdout=subprocess.PIPE, encoding=encoding, shell=is_shell) as proc:
+            func(iter(proc.stdout.readline, ''), proc, func_param)
+            proc.stdout.close()
+            proc.wait()
+            if proc.returncode != 0:
+                sys.exit(0)
+    else:
+        subprocess.Popen(["sh", "-c", cmd], shell=is_shell).wait()
