@@ -30,8 +30,6 @@ def execute(cmd, func=print_default, func_param=None, encoding="utf-8", is_input
             ret = proc.stdout.read()
             proc.stdout.close()
             proc.wait()
-            if proc.returncode != 0:
-                sys.exit(0)
             return ret
     else:
         subprocess.Popen(["sh", "-c", cmd], shell=shell).wait()
