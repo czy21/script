@@ -7,7 +7,6 @@ import logging
 import os
 import pathlib
 import sys
-from pathlib import Path
 
 import yaml
 
@@ -28,14 +27,14 @@ def exec_file():
     parser.add_argument('--cmd')
     args = parser.parse_args()
     param_iter = iter(args.param)
-    param_input_dict = dict(zip(param_iter, param_iter))
+    param_input: dict = dict(zip(param_iter, param_iter))
     os.environ.__setattr__("run_args", args)
 
-    env_path = Path(args.env).resolve()
+    env_path = pathlib.Path(args.env).resolve()
     env_stem = env_path.parent.stem
 
     log_file = os.environ.run_args.log_file
-    log_util.init_logger(file=env_path.joinpath("../", log_file).resolve().absolute() if log_file is not None else None)
+    log_util.init_logger(file=env_path.parent.joinpath(log_file).resolve() if log_file is not None else None)
 
     # empty source log
     default_path_module = importlib.import_module("domain.default.path")
@@ -47,7 +46,7 @@ def exec_file():
     env_output_yaml = pathlib.Path(getattr(default_path_module, "output")).joinpath("env.yaml")
 
     if args.init:
-        env_common_mod.__dict__.update(dict({k: v for k, v in env_pwd_mod.__dict__.items() if k.startswith("param")}).items(), **param_input_dict)
+        env_common_mod.__dict__.update(dict({k: v for k, v in env_pwd_mod.__dict__.items() if k.startswith("param")}).items(), **param_input)
         default_common_mod.__dict__.update(dict({k: v for k, v in env_common_mod.__dict__.items() if k.startswith("param")}))
         default_common_param = dict({k: v for k, v in default_common_mod.__dict__.items() if k.startswith("param")})
         file_util.write_text(env_output_yaml, yaml.dump(default_common_param))
