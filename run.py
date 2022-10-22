@@ -17,7 +17,7 @@ sys.path.append(pathlib.Path(__file__).parent.parent.as_posix())
 logger = logging.getLogger()
 
 
-def exec_file():
+def execute():
     parser = argparse.ArgumentParser()
     parser.add_argument('--param', nargs="+", default=[])
     parser.add_argument('--init', action="store_true")
@@ -57,4 +57,4 @@ def exec_file():
 
 
 if __name__ == '__main__':
-    exec_file()
+    execute()
