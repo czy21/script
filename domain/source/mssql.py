@@ -39,7 +39,7 @@ def get_basic_param(host, port, user, password, db_name) -> str:
         "-S {0},{1}".format(host, port),
         "-U " + user,
         "-P " + password,
-        "-f 65001 -b"
+        "-f 65001 -b -r -j"
     ]
     if db_name:
         param.append("-d " + db_name)
