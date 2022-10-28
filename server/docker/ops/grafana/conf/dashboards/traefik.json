@@ -173,7 +173,7 @@
       "pluginVersion": "8.5.2",
       "targets": [
         {
-          "expr": "sum(increase(traefik_service_requests_total{instance=~\"$node\",code=\"404\",protocol=~\"$protocol\"}[$interval]))",
+          "expr": "sum(increase(traefik_service_requests_total{instance=~\"$node\",code=\"404\",protocol=~\"$protocol\",service=~\"$service\"}[$interval]))",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "",
@@ -218,7 +218,7 @@
       "strokeWidth": 1,
       "targets": [
         {
-          "expr": "topk(5, sum(traefik_service_requests_total{instance=~\"$node\",protocol=~\"$protocol\"}) by (code))",
+          "expr": "topk(5, sum(traefik_service_requests_total{instance=~\"$node\",protocol=~\"$protocol\",service=~\"$service\"}) by (code))",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "",
@@ -355,7 +355,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(traefik_service_request_duration_seconds_sum{instance=~\"$node\",protocol=~\"$protocol\"}) / sum(traefik_entrypoint_requests_total{instance=~\"$node\",protocol=~\"$protocol\"}) * 1000",
+          "expr": "sum(traefik_service_request_duration_seconds_sum{instance=~\"$node\",protocol=~\"$protocol\",service=~\"$service\"}) / sum(traefik_entrypoint_requests_total{instance=~\"$node\",protocol=~\"$protocol\"}) * 1000",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "Average response time (ms)",
@@ -449,7 +449,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(increase(traefik_service_requests_total{instance=~\"$node\",code=\"404\",method=\"GET\",protocol=~\"$protocol\"}[$interval])) by (service)",
+          "expr": "sum(increase(traefik_service_requests_total{instance=~\"$node\",code=\"404\",method=\"GET\",protocol=~\"$protocol\",service=~\"$service\"}[$interval])) by (service)",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -544,7 +544,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(rate(traefik_service_requests_total{instance=~\"$node\"}[$interval]))",
+          "expr": "sum(rate(traefik_service_requests_total{instance=~\"$node\",service=~\"$service\"}[$interval]))",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "Total requests",
@@ -730,7 +730,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(rate(traefik_service_requests_total{instance=~\"$node\",protocol=~\"http|https\"}[$interval])) by (service)",
+          "expr": "sum(rate(traefik_service_requests_total{instance=~\"$node\",protocol=~\"http|https\",service=~\"$service\"}[$interval])) by (service)",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -920,7 +920,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(traefik_service_open_connections{instance=~\"$node\"}) by (method)",
+          "expr": "sum(traefik_service_open_connections{instance=~\"$node\",service=~\"$service\"}) by (method)",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "",
@@ -1010,7 +1010,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(increase(traefik_service_requests_total{instance=~\"$node\",protocol=~\"$protocol\"}[$interval])) by (code)",
+          "expr": "sum(increase(traefik_service_requests_total{instance=~\"$node\",protocol=~\"$protocol\",service=~\"$service\"}[$interval])) by (code)",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "",
@@ -1116,6 +1116,29 @@
           "text": "All",
           "value": "$__all"
         },
+        "definition": "label_values(traefik_service_requests_total{instance=~\"$node\"}, service)",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Service:",
+        "multi": true,
+        "name": "service",
+        "options": [],
+        "query": {
+          "query": "label_values(traefik_service_requests_total{instance=~\"$node\"}, service)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "All",
+          "value": "$__all"
+        },
         "datasource": {
           "type": "prometheus",
           "uid": "P047DE0F543C7E359"
@@ -1123,7 +1146,7 @@
         "definition": "label_values(traefik_service_requests_total, protocol)",
         "hide": 0,
         "includeAll": true,
-        "label": "Service:",
+        "label": "Protocol:",
         "multi": true,
         "name": "protocol",
         "options": [],
