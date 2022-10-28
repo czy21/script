@@ -999,12 +999,6 @@
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
-      "seriesOverrides": [
-        {
-          "alias": "/^[^234].*/",
-          "transform": "negative-Y"
-        }
-      ],
       "spaceLength": 10,
       "stack": false,
       "steppedLine": false,
