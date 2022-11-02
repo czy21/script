@@ -61,7 +61,7 @@ services:
       discovery.seed_hosts: {{ seed_hosts | join(',') }}
       cluster.initial_master_nodes: {{ initial_master_nodes | join(',') }}
       bootstrap.memory_lock: "true"
-      ES_JAVA_OPTS: -Xms512m -Xmx512m
+      ES_JAVA_OPTS: -Xms4g -Xmx4g
       ELASTIC_PASSWORD: {{ param_db_es_password }}
       xpack.security.enabled: true
       xpack.security.http.ssl.enabled: false
