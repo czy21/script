@@ -20,3 +20,10 @@ sudo mv /var/packages/CodecPack/target/bin/ffmpeg41 /var/packages/CodecPack/targ
 
 ln /var/packages/ffmpeg/target/bin/ffmpeg /var/packages/CodecPack/target/bin/ffmpeg41
 ```
+
+```shell
+# active backup for business 激活
+https://host:5001/webapi/auth.cgi?api=SYNO.API.Auth&version=3&method=login&account=username&passwd=password&format= cookie
+
+https://host.cluster.com:5001/webapi/entry.cgi?api=SYNO.ActiveBackup.Activation&method=set&version=1&activated=true&serial_number="serialNumber"
+```
