@@ -1,5 +1,6 @@
 # linux
 ```
+jenkins             # ci/cd share library pipeline template
 server
 ├── chart           # k8s app
 ├── docker          # docker app
