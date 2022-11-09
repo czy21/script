@@ -10,3 +10,14 @@ server
 ├── rpi             # 树莓派
 └── syno            # 群晖
 ```
+# grafana monitor
+![avatar](./static/grafana-dir.png)
+
+# docker container
+![avatar](./static/docker-ps.png)
+
+
+
+
+
+
