@@ -12,14 +12,9 @@ server
 ```
 # grafana
 ![avatar](./static/grafana-dashboard.png)
-
 # docker
 ![avatar](./static/docker.png)
-
-# node
-![avatar](./static/grafana-node.png)
-
 # k8s
-
-
+![avatar](./static/grafana-k8s.png)
 # jvm
+![avatar](./static/grafana-jvm.png)
