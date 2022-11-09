@@ -1,4 +1,4 @@
-# linux
+# linux(Centos8 Stream,Ubuntu 22.04)
 ```
 jenkins             # ci/cd share library pipeline template
 server
@@ -16,8 +16,10 @@ server
 # docker
 ![avatar](./static/docker.png)
 
-# linux node
+# node
+![avatar](./static/grafana-node.png)
 
 # k8s
+
 
 # jvm
