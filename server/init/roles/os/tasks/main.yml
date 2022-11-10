@@ -6,6 +6,6 @@
   shell: |-
     timedatectl set-timezone Asia/Shanghai
     bash {{ param_remote_role_path }}/prepare.sh
-#- name: install
-#  shell: |-
-#    bash {{ param_remote_role_path }}/{{ ansible_distribution | lower}}.sh
+- name: install
+  shell: |-
+    bash {{ param_remote_role_path }}/{{ ansible_distribution | lower}}.sh
