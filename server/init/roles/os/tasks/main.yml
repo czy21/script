@@ -1,7 +1,3 @@
-#- name: os install
-#  shell: |-
-#    timedatectl set-timezone Asia/Shanghai
-#    bash {{ param_remote_role_path }}/{{ ansible_distribution | lower}}.sh
 - name: prepare
   shell: |-
     timedatectl set-timezone Asia/Shanghai
