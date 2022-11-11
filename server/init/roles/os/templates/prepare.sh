@@ -17,7 +17,7 @@ if [ "centos" == ${os_distribution} ]; then
             repo_section_types=("Debug" "Source")
             repo_private="/etc/yum.repos.d/centos-private.repo"
             echo -n "" > ${repo_private}
-            for s in ${repo_sections[@]}; do
+            for s in ${repo_sections[*]}; do
                 sl=$(echo "$s" | tr "[:upper:]" "[:lower:]")
                 s_baseurl="http://{{ param_mirror_yum }}/centos-stream/\$stream/$s/\$basearch/os/"
                 s_enabled="0"
@@ -32,7 +32,7 @@ if [ "centos" == ${os_distribution} ]; then
                   enabled=${s_enabled}
                   gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
                 " | sed -r 's|^[ \t]*||g' >> ${repo_private}
-                for t in ${repo_section_types[@]}; do
+                for t in ${repo_section_types[*]}; do
                   tl=$(echo "$t" | tr "[:upper:]" "[:lower:]")
                   tl=${sl}"-"${tl}
                   t_baseurl="http://{{ param_mirror_yum }}/centos-stream/\$stream/$s"
