@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-yum clean all && yum --refresh makecache
+yum clean all && yum --refresh makecache -v
 
 yum -y install wget vim nfs-utils bash-completion git
 dnf -y install python39

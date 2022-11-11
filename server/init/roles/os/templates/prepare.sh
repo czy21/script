@@ -13,7 +13,7 @@ if [ "centos" == ${os_distribution} ]; then
             if [ -f "/etc/yum.repos.d/addons.repo" ];then
               mv /etc/yum.repos.d/centos-addons.repo /etc/yum.repos.d/centos-addons.repo.bak
             fi
-            repo_sections=("BaseOS" "AppStream" "CRB" "HighAvailability" "NFV" "RT")
+            repo_sections=("BaseOS" "AppStream" "CRB" "HighAvailability" "NFV" "RT" "ResilientStorage")
             repo_section_types=("Debug" "Source")
             repo_private="/etc/yum.repos.d/centos-private.repo"
             echo -n "" > ${repo_private}
@@ -52,6 +52,26 @@ if [ "centos" == ${os_distribution} ]; then
                 " | sed -r 's|^[ \t]*||g' >> ${repo_private}
                 done
             done
+                echo -n "
+                  [extras-common]
+                  name=CentOS Stream \$releasever - Extras packages
+                  metalink=https://mirrors.centos.org/metalink?repo=centos-extras-sig-extras-common-\$stream&arch=\$basearch&protocol=https,http
+                  gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-SIG-Extras-SHA512
+                  gpgcheck=1
+                  repo_gpgcheck=0
+                  metadata_expire=6h
+                  countme=1
+                  enabled=1
+
+                  [extras-common-source]
+                  name=CentOS Stream \$releasever - Extras packages - Source
+                  metalink=https://mirrors.centos.org/metalink?repo=centos-extras-sig-extras-common-source-\$stream&arch=source&protocol=https,http
+                  gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-SIG-Extras-SHA512
+                  gpgcheck=1
+                  repo_gpgcheck=0
+                  metadata_expire=6h
+                  enabled=0
+                " | sed -r 's|^[ \t]*||g' >> ${repo_private}
             ;;
         *)
           sed -i.bak \
