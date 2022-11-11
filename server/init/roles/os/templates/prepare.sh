@@ -81,3 +81,9 @@ if [ "centos" == "${os_distribution}" ]; then
     esac
 fi
 
+echo -n "
+UseDNS no
+PermitRootLogin yes
+PasswordAuthentication no
+ClientAliveInterval 30
+" > /etc/ssh/sshd_config.d/99-custom.conf
