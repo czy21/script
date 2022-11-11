@@ -4,7 +4,7 @@ set -e
 os_distribution="{{ ansible_distribution | lower}}"
 os_major_version="{{ ansible_distribution_major_version | lower }}"
 
-if [ "centos" == ${os_distribution} ]; then
+if [ "centos" == "${os_distribution}" ]; then
     case ${os_major_version} in
         "9")
             if [ -f "/etc/yum.repos.d/centos.repo" ];then
@@ -15,8 +15,8 @@ if [ "centos" == ${os_distribution} ]; then
             fi
             repo_sections=("BaseOS" "AppStream" "CRB" "HighAvailability" "NFV" "RT" "ResilientStorage")
             repo_section_types=("Debug" "Source")
-            repo_private="/etc/yum.repos.d/centos-private.repo"
-            echo -n "" > ${repo_private}
+            repo_proxy="/etc/yum.repos.d/centos-proxy.repo"
+            echo -n "" > ${repo_proxy}
             for s in ${repo_sections[*]}; do
                 sl=$(echo "$s" | tr "[:upper:]" "[:lower:]")
                 s_baseurl="http://{{ param_mirror_yum }}/centos-stream/\$stream/$s/\$basearch/os/"
@@ -31,7 +31,7 @@ if [ "centos" == ${os_distribution} ]; then
                   gpgcheck=1
                   enabled=${s_enabled}
                   gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
-                " | sed -r 's|^[ \t]*||g' >> ${repo_private}
+                " | sed -r 's|^[ \t]*||g' >> ${repo_proxy}
                 for t in ${repo_section_types[*]}; do
                   tl=$(echo "$t" | tr "[:upper:]" "[:lower:]")
                   tl=${sl}"-"${tl}
@@ -49,7 +49,7 @@ if [ "centos" == ${os_distribution} ]; then
                   gpgcheck=1
                   enabled=0
                   gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
-                " | sed -r 's|^[ \t]*||g' >> ${repo_private}
+                " | sed -r 's|^[ \t]*||g' >> ${repo_proxy}
                 done
             done
                 echo -n "
@@ -71,7 +71,7 @@ if [ "centos" == ${os_distribution} ]; then
                   repo_gpgcheck=0
                   metadata_expire=6h
                   enabled=0
-                " | sed -r 's|^[ \t]*||g' >> ${repo_private}
+                " | sed -r 's|^[ \t]*||g' >> ${repo_proxy}
             ;;
         *)
           sed -i.bak \
