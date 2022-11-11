@@ -3,8 +3,6 @@ set -e
 
 echo -n "%sudo   ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers.d/99-custom
 
-sed -i.bak "s,\(ca.archive\|jp.archive\|us.archive\|archive\|security\).ubuntu.com,{{ param_mirror_apt }},g" /etc/apt/sources.list
-
 NEEDRESTART_SUSPEND=1 apt remove needrestart -y && apt autoclean -y && apt autoremove -y
 
 apt -y update
