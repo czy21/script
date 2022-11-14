@@ -1,7 +1,7 @@
 - name: create role path
   file: path={{ param_remote_role_path }} state=directory
 
-- name: copy role templates
+- name: copy role template
   template: src={{ item }} dest={{ param_remote_role_path }}
   with_fileglob:
     - "roles/{{ param_role_name }}/templates/*"
