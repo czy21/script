@@ -1,2 +1,2 @@
-- name: cleanup
+- name: clean
   file: path={{ inventory_dir|basename }} state=absent

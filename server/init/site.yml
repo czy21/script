@@ -6,11 +6,11 @@
   vars:
     param_role_name: os
   pre_tasks:
-    - include_tasks: roles/common/tasks/copy-template.yml
+    - include_tasks: roles/common/tasks/copy.yml
   roles:
     - '{{ param_role_name }}'
   post_tasks:
-    - include_tasks: roles/common/tasks/cleanup.yml
+    - include_tasks: roles/common/tasks/clean.yml
   tags:
     - '{{ param_role_name }}'
 
@@ -22,11 +22,11 @@
   vars:
     param_role_name: containerd
   pre_tasks:
-    - include_tasks: roles/common/tasks/copy-template.yml
+    - include_tasks: roles/common/tasks/copy.yml
   roles:
     - '{{ param_role_name }}'
   post_tasks:
-    - include_tasks: roles/common/tasks/cleanup.yml
+    - include_tasks: roles/common/tasks/clean.yml
   tags:
     - '{{ param_role_name }}'
 
@@ -38,11 +38,11 @@
   vars:
     param_role_name: docker
   pre_tasks:
-    - include_tasks: roles/common/tasks/copy-template.yml
+    - include_tasks: roles/common/tasks/copy.yml
   roles:
     - '{{ param_role_name }}'
   post_tasks:
-    - include_tasks: roles/common/tasks/cleanup.yml
+    - include_tasks: roles/common/tasks/clean.yml
   tags:
     - '{{ param_role_name }}'
 
@@ -54,11 +54,11 @@
   vars:
     param_role_name: k8s
   pre_tasks:
-    - include_tasks: roles/common/tasks/copy-template.yml
+    - include_tasks: roles/common/tasks/copy.yml
   roles:
     - '{{ param_role_name }}'
   post_tasks:
-    - include_tasks: roles/common/tasks/cleanup.yml
+    - include_tasks: roles/common/tasks/clean.yml
   tags:
     - '{{ param_role_name }}'
 
@@ -71,9 +71,9 @@
   vars:
     param_role_name: k8s
   tasks:
-    - include_tasks: roles/common/tasks/copy-template.yml
+    - include_tasks: roles/common/tasks/copy.yml
     - include_tasks: roles/k8s/tasks/master.yml
-    - include_tasks: roles/common/tasks/cleanup.yml
+    - include_tasks: roles/common/tasks/clean.yml
   tags:
     - 'k8s-master'
 
@@ -86,8 +86,8 @@
   vars:
     param_role_name: k8s
   tasks:
-    - include_tasks: roles/common/tasks/copy-template.yml
+    - include_tasks: roles/common/tasks/copy.yml
     - include_tasks: roles/k8s/tasks/worker.yml
-    - include_tasks: roles/common/tasks/cleanup.yml
+    - include_tasks: roles/common/tasks/clean.yml
   tags:
     - 'k8s-worker'
