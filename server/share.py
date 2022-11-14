@@ -3,8 +3,10 @@ import json
 import logging
 import pathlib
 import sys
+import operator
 
 import yaml
+
 from utility import (
     collection as collection_util,
     file as file_util,
@@ -129,6 +131,12 @@ def loop_roles(root_path: pathlib.Path,
         execute("mkdir -p {1} && cp -r {0}/* {1}".format(role_path, tmp_path.joinpath(args.namespace).joinpath(role_name)))
 
 
+class SortingHelpFormatter(argparse.HelpFormatter):
+    def add_arguments(self, actions):
+        actions = sorted(actions, key=operator.attrgetter('option_strings'))
+        super(SortingHelpFormatter, self).add_arguments(actions)
+
+
 class Installer:
     def __init__(self, root_path: pathlib.Path, role_func=None, role_deep: int = 1) -> None:
         self.root_path: pathlib.Path = root_path
@@ -139,7 +147,7 @@ class Installer:
         self.role_func = role_func
         self.role_deep: int = role_deep
         self.usage_name = pathlib.Path(__file__).name
-        self.arg_parser: argparse.ArgumentParser = argparse.ArgumentParser(usage="{0} [command]".format(self.usage_name))
+        self.arg_parser: argparse.ArgumentParser = argparse.ArgumentParser(formatter_class=SortingHelpFormatter)
         self.set_common_argument(self.arg_parser)
         self.__command_parser = self.arg_parser.add_subparsers(title="commands", metavar="", dest="command")
         self.__init_install_parser()
@@ -156,30 +164,37 @@ class Installer:
         parser.add_argument('--file')
         parser.add_argument('-n', '--namespace')
         parser.add_argument('-p', '--param', nargs="+", default=[])
-        parser.add_argument('--debug', action="store_true")
+        parser.add_argument('--debug', action="store_true", help=" enable verbose output")
         parser.add_argument('--dry-run', action="store_true", help="only print not submit")
 
+    @staticmethod
+    def __get_command_parser_common_attr():
+        return {
+            "help": "",
+            "formatter_class": SortingHelpFormatter
+        }
+
     def __init_install_parser(self):
-        install_parser = self.__command_parser.add_parser("install", help="", usage="{0} install".format(self.usage_name))
+        install_parser = self.__command_parser.add_parser("install", **self.__get_command_parser_common_attr())
         self.set_common_argument(install_parser)
         install_parser.add_argument('--recreate', action="store_true")
 
     def __init_delete_parser(self):
-        delete_parser = self.__command_parser.add_parser("delete", help="", usage="{0} delete".format(self.usage_name))
+        delete_parser = self.__command_parser.add_parser("delete", **self.__get_command_parser_common_attr())
         self.set_common_argument(delete_parser)
 
     def __init_build_parser(self):
-        build_parser = self.__command_parser.add_parser("build", help="", usage="{0} build".format(self.usage_name))
+        build_parser = self.__command_parser.add_parser("build", **self.__get_command_parser_common_attr())
         self.set_common_argument(build_parser)
         build_parser.add_argument('--build-args', nargs="+", default=[])
         build_parser.add_argument('--tag')
 
     def __init_backup_parser(self):
-        backup_parser = self.__command_parser.add_parser("backup", help="", usage="{0} backup".format(self.usage_name))
+        backup_parser = self.__command_parser.add_parser("backup", **self.__get_command_parser_common_attr())
         self.set_common_argument(backup_parser)
 
     def __init_push_parser(self):
-        push_parser = self.__command_parser.add_parser("push", help="", usage="{0} push".format(self.usage_name))
+        push_parser = self.__command_parser.add_parser("push", **self.__get_command_parser_common_attr())
         self.set_common_argument(push_parser)
 
     def run(self, **kwargs):
@@ -208,3 +223,7 @@ class Installer:
             args=args,
             **kwargs
         )
+
+
+# if __name__ == '__main__':
+#     Installer(pathlib.Path(__file__).parent).run()
