@@ -168,33 +168,33 @@ class Installer:
         parser.add_argument('--dry-run', action="store_true", help="only print not submit")
 
     @staticmethod
-    def __get_command_parser_common_attr():
+    def __get_sub_parser_common_attr():
         return {
             "help": "",
             "formatter_class": SortingHelpFormatter
         }
 
     def __init_install_parser(self):
-        install_parser = self.__command_parser.add_parser("install", **self.__get_command_parser_common_attr())
+        install_parser = self.__command_parser.add_parser("install", **self.__get_sub_parser_common_attr())
         self.set_common_argument(install_parser)
         install_parser.add_argument('--recreate', action="store_true")
 
     def __init_delete_parser(self):
-        delete_parser = self.__command_parser.add_parser("delete", **self.__get_command_parser_common_attr())
+        delete_parser = self.__command_parser.add_parser("delete", **self.__get_sub_parser_common_attr())
         self.set_common_argument(delete_parser)
 
     def __init_build_parser(self):
-        build_parser = self.__command_parser.add_parser("build", **self.__get_command_parser_common_attr())
+        build_parser = self.__command_parser.add_parser("build", **self.__get_sub_parser_common_attr())
         self.set_common_argument(build_parser)
         build_parser.add_argument('--build-args', nargs="+", default=[])
         build_parser.add_argument('--tag')
 
     def __init_backup_parser(self):
-        backup_parser = self.__command_parser.add_parser("backup", **self.__get_command_parser_common_attr())
+        backup_parser = self.__command_parser.add_parser("backup", **self.__get_sub_parser_common_attr())
         self.set_common_argument(backup_parser)
 
     def __init_push_parser(self):
-        push_parser = self.__command_parser.add_parser("push", **self.__get_command_parser_common_attr())
+        push_parser = self.__command_parser.add_parser("push", **self.__get_sub_parser_common_attr())
         self.set_common_argument(push_parser)
 
     def run(self, **kwargs):
@@ -223,7 +223,6 @@ class Installer:
             args=args,
             **kwargs
         )
-
 
 # if __name__ == '__main__':
 #     Installer(pathlib.Path(__file__).parent).run()
