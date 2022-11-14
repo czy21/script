@@ -140,30 +140,47 @@ class Installer:
         self.role_deep: int = role_deep
         self.usage_name = pathlib.Path(__file__).name
         self.arg_parser: argparse.ArgumentParser = argparse.ArgumentParser(usage="{0} [command]".format(self.usage_name))
-
-        def set_global_argument(parser: argparse.ArgumentParser):
-            parser.add_argument('-p', '--param', nargs="+", default=[])
-            parser.add_argument('-n', '--namespace')
-            parser.add_argument('--debug', action="store_true")
-            parser.add_argument('--dry-run', action="store_true", help="only print not submit")
-            parser.add_argument('--file')
-
-        set_global_argument(self.arg_parser)
-        parser_command = self.arg_parser.add_subparsers(title="commands", metavar="", dest="command")
-        self.parser_install = parser_command.add_parser("install", help="", usage="{0} install".format(self.usage_name))
-        set_global_argument(self.parser_install)
-        self.parser_delete = parser_command.add_parser("delete", help="", usage="{0} delete".format(self.usage_name))
-        set_global_argument(self.parser_delete)
-        self.parser_build = parser_command.add_parser("build", help="", usage="{0} build".format(self.usage_name))
-        set_global_argument(self.parser_build)
-        self.parser_build.add_argument('--build-args', nargs="+", default=[])
-        self.parser_backup = parser_command.add_parser("backup", help="", usage="{0} backup".format(self.usage_name))
-        set_global_argument(self.parser_backup)
-        self.parser_push = parser_command.add_parser("push", help="", usage="{0} push".format(self.usage_name))
-        set_global_argument(self.parser_push)
+        self.set_common_argument(self.arg_parser)
+        self.__command_parser = self.arg_parser.add_subparsers(title="commands", metavar="", dest="command")
+        self.__init_install_parser()
+        self.__init_delete_parser()
+        self.__init_build_parser()
+        self.__init_backup_parser()
+        self.__init_push_parser()
 
         log_util.init_logger(file=root_path.joinpath("___temp/share.log"))
         self.tmp_path.mkdir(exist_ok=True)
+
+    @staticmethod
+    def set_common_argument(parser: argparse.ArgumentParser):
+        parser.add_argument('--file')
+        parser.add_argument('-n', '--namespace')
+        parser.add_argument('-p', '--param', nargs="+", default=[])
+        parser.add_argument('--debug', action="store_true")
+        parser.add_argument('--dry-run', action="store_true", help="only print not submit")
+
+    def __init_install_parser(self):
+        self.install_parser = self.__command_parser.add_parser("install", help="", usage="{0} install".format(self.usage_name))
+        self.set_common_argument(self.install_parser)
+        self.install_parser.add_argument('--recreate', action="store_true")
+
+    def __init_delete_parser(self):
+        self.delete_parser = self.__command_parser.add_parser("delete", help="", usage="{0} delete".format(self.usage_name))
+        self.set_common_argument(self.delete_parser)
+
+    def __init_build_parser(self):
+        self.build_parser = self.__command_parser.add_parser("build", help="", usage="{0} build".format(self.usage_name))
+        self.set_common_argument(self.build_parser)
+        self.build_parser.add_argument('--build-args', nargs="+", default=[])
+        self.build_parser.add_argument('--tag')
+
+    def __init_backup_parser(self):
+        self.backup_parser = self.__command_parser.add_parser("backup", help="", usage="{0} backup".format(self.usage_name))
+        self.set_common_argument(self.backup_parser)
+
+    def __init_push_parser(self):
+        self.push_parser = self.__command_parser.add_parser("push", help="", usage="{0} push".format(self.usage_name))
+        self.set_common_argument(self.push_parser)
 
     def run(self, **kwargs):
         args: argparse.Namespace = self.arg_parser.parse_args()
