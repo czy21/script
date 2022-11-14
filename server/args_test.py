@@ -1,14 +1,12 @@
 import argparse
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--param', nargs="+", default=[])
-    parser_command = parser.add_subparsers(title="Command", metavar="", dest="command")
-    parser_install = parser_command.add_parser("install", help="install role")
-    parser_install.add_argument('--param', nargs="+", default=[])
-    parser_install.add_argument('--file', type=str)
-    parser_command.add_parser("delete", help="delete role")
+    parser = argparse.ArgumentParser(add_help=False)
+    parser.add_argument('--p1')
+    parser.add_argument('-h', '--help', help="hahaha")
 
-    args = parser.parse_args()
-
-    print(args)
+    parser_1 = argparse.ArgumentParser(parents=[parser], usage="haha")
+    parser_1.add_argument('--a1')
+    print(parser_1.parse_args())
+    # args = parser.parse_args()
+    # print(args)
