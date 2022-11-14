@@ -3,6 +3,7 @@ import json
 import logging
 import pathlib
 import sys
+import typing
 
 import yaml
 
@@ -131,10 +132,60 @@ def loop_roles(root_path: pathlib.Path,
         execute("mkdir -p {1} && cp -r {0}/* {1}".format(role_path, tmp_path.joinpath(args.namespace).joinpath(role_name)))
 
 
-class SortingHelpFormatter(argparse.HelpFormatter):
-    def add_arguments(self, actions):
-        actions = sorted(actions, key=lambda a: a.dest)
-        super(SortingHelpFormatter, self).add_arguments(actions)
+class CustomHelpFormatter(argparse.HelpFormatter):
+    def add_arguments(self, actions: typing.Iterable[argparse.Action]) -> None:
+        super().add_arguments(sorted(actions, key=lambda a: a.dest))
+
+    def _format_args(self, action: argparse.Action, default_metavar: str) -> str:
+        # get_metavar = self._metavar_formatter(action, default_metavar)
+        # if action.nargs is None:
+        #     result = '%s' % get_metavar(1)
+        # elif action.nargs == argparse.OPTIONAL:
+        #     result = '[%s]' % get_metavar(1)
+        # elif action.nargs == argparse.ZERO_OR_MORE:
+        #     metavar = get_metavar(1)
+        #     if len(metavar) == 2:
+        #         result = '[%s [%s ...]]' % metavar
+        #     else:
+        #         result = '[%s ...]' % metavar
+        # elif action.nargs == argparse.ONE_OR_MORE:
+        #     result = '%s [%s ...]' % get_metavar(2)
+        # elif action.nargs == argparse.REMAINDER:
+        #     result = '...'
+        # elif action.nargs == argparse.PARSER:
+        #     result = '%s ...' % get_metavar(1)
+        # elif action.nargs == argparse.SUPPRESS:
+        #     result = ''
+        # else:
+        #     try:
+        #         formats = ['%s' for _ in range(action.nargs)]
+        #     except TypeError:
+        #         raise ValueError("invalid nargs value") from None
+        #     result = ' '.join(formats) % get_metavar(action.nargs)
+        return ''
+
+    def _format_action_invocation(self, action: argparse.Action) -> str:
+        if not action.option_strings:
+            default = self._get_default_metavar_for_positional(action)
+            metavar, = self._metavar_formatter(action, default)(1)
+            return metavar
+
+        else:
+            parts = []
+
+            # if the Optional doesn't take a value, format is:
+            #    -s, --long
+            if action.nargs == 0:
+                parts.extend(action.option_strings)
+
+            # if the Optional takes a value, format is:
+            #    -s ARGS, --long ARGS
+            else:
+                default = self._get_default_metavar_for_optional(action)
+                args_string = self._format_args(action, default)
+                for option_string in action.option_strings:
+                    parts.append('%s %s' % (option_string, args_string))
+        return ', '.join(t.strip() for t in parts)
 
 
 class Installer:
@@ -147,7 +198,7 @@ class Installer:
         self.role_func = role_func
         self.role_deep: int = role_deep
         self.usage_name = pathlib.Path(__file__).name
-        self.arg_parser: argparse.ArgumentParser = argparse.ArgumentParser(formatter_class=SortingHelpFormatter)
+        self.arg_parser: argparse.ArgumentParser = argparse.ArgumentParser(formatter_class=CustomHelpFormatter)
         self.set_common_argument(self.arg_parser)
         self.__command_parser = self.arg_parser.add_subparsers(title="commands", metavar="", dest="command")
         self.__init_install_parser()
@@ -163,7 +214,7 @@ class Installer:
     def set_common_argument(parser: argparse.ArgumentParser):
         parser.add_argument('--file')
         parser.add_argument('-n', '--namespace')
-        parser.add_argument('-p', '--param', nargs="+", default=[])
+        parser.add_argument('-p', '--param', nargs="+", default=[], metavar=('', 'key1=val1 key2=val2'))
         parser.add_argument('--debug', action="store_true", help=" enable verbose output")
         parser.add_argument('--dry-run', action="store_true", help="only print not submit")
 
@@ -171,7 +222,7 @@ class Installer:
     def __get_sub_parser_common_attr():
         return {
             "help": "",
-            "formatter_class": SortingHelpFormatter
+            "formatter_class": CustomHelpFormatter
         }
 
     def __init_install_parser(self):
@@ -224,5 +275,6 @@ class Installer:
             **kwargs
         )
 
-# if __name__ == '__main__':
-#     Installer(pathlib.Path(__file__).parent).run()
+
+if __name__ == '__main__':
+    Installer(pathlib.Path(__file__).parent).run()
