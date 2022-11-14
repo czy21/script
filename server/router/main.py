@@ -33,7 +33,7 @@ def invoke(role_title: str, role_path: pathlib.Path, role_env: dict, **kwargs):
 
     _cmds = []
 
-    if args.install:
+    if args.command == "install":
         for c in role_env.get("param_config"):
             _kind: str = c.get("kind")
             _section: str = c.get("section")
@@ -52,7 +52,7 @@ def invoke(role_title: str, role_path: pathlib.Path, role_env: dict, **kwargs):
                 ], delimiter=" | ")
                 _cmds.append("({0};cat {1};echo;) | cat | uci batch".format(_section_del_cmd, role_restore_script_uci.as_posix()))
             _cmds.append("uci commit {0}".format(role_name))
-    if args.action == "backup":
+    if args.command == "backup":
         role_bak_path = role_path.joinpath("___temp")
         role_bak_script_uci = role_bak_path.joinpath("{0}.uci.bak".format(role_name))
         _bak_cmds = [

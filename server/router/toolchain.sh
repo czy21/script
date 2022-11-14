@@ -1,7 +1,6 @@
 #!/bin/bash
 
-# bash toolchain.sh -h user@host
-# -a [ install | backup ]
+# bash toolchain.sh -h user@host install
 
 while getopts "h:" opt
 do

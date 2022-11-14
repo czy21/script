@@ -1,12 +1,7 @@
 #!/bin/bash
 
-# bash toolchain.sh -h user@host -i
-# -i # exec init.sh and start compose.yaml
-# -d # docker-compose down
-# -b build_file
-# -a str
-# -n namespace
-# -p param_cluster_name test|nas|dsm
+# bash toolchain.sh -h user@host install
+# -h show help
 
 while getopts "h:" opt
 do

@@ -45,7 +45,7 @@ def invoke(role_title: str, role_path: pathlib.Path, role_env: dict, args: argpa
         role_project_name = role_env.get("param_role_project_name")
         return 'sudo docker-compose --project-name {0} {1} {2}'.format(role_project_name if role_project_name else role_name, " ".join(["--file {0}".format(t) for t in role_deploy_files]), option)
 
-    if args.install:
+    if args.command == "install":
         if role_conf_path.exists():
             target_role_conf_path = target_app_path.joinpath("conf")
             if target_role_conf_path.exists() and target_app_path.name == role_name:
@@ -70,13 +70,13 @@ def invoke(role_title: str, role_path: pathlib.Path, role_env: dict, args: argpa
             if args.recreate:
                 up_args.append("--force-recreate")
             _cmds.append(docker_compose_cmd(collection_util.flat_to_str(up_args)))
-    if args.delete:
+    if args.command == "delete":
         if role_deploy_file.exists():
             _cmds.append(share.echo_action(role_title, "down", role_deploy_file.as_posix()))
             _cmds.append(docker_compose_cmd("down --remove-orphans"))
 
-    if args.build_file and args.build_file.startswith("Dockerfile"):
-        role_docker_file = role_path.joinpath(args.build_file)
+    if args.command == "build" and args.file and args.file.startswith("Dockerfile"):
+        role_docker_file = role_path.joinpath(args.file)
         registry_url = role_env['param_registry_url']
         registry_dir = role_env['param_registry_dir']
         _cmds.append(share.echo_action(role_title, "build", role_docker_file.as_posix()))

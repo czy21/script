@@ -1,11 +1,7 @@
 #!/bin/bash
 
-# bash toolchain.sh -h user@host
-# -i # helm install
-# -d # helm delete
-# -b build_file
-# -a push
-# -n namespace
+# bash toolchain.sh -h user@host install
+# -h show help
 # -p param_cluster_name dev|ops
 #    param_ks_role host|member
 #    param_ks_jwt  str
