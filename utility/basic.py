@@ -25,19 +25,21 @@ def execute(
         encoding="utf-8",
         is_input=True,
         is_return=True,
-        shell=os.name == 'nt'
+        shell=os.name == 'nt',
+        dry_run=False
 ):
-    logger.debug(cmd)
+    logger.info(cmd)
     if is_input:
         input_exec = str(input("Are you sure you want to execute (y/n)?").strip())
         if input_exec != "y":
             return
-    if is_return:
-        with subprocess.Popen(["sh", "-c", cmd], stdout=subprocess.PIPE, encoding=encoding, shell=shell) as proc:
-            func(iter(proc.stdout.readline, ''), proc, func_param)
-            ret = proc.stdout.read()
-            proc.stdout.close()
-            proc.wait()
-            return ret
-    else:
-        subprocess.Popen(["sh", "-c", cmd], shell=shell).wait()
+    if not dry_run:
+        if is_return:
+            with subprocess.Popen(["sh", "-c", cmd], stdout=subprocess.PIPE, encoding=encoding, shell=shell) as proc:
+                func(iter(proc.stdout.readline, ''), proc, func_param)
+                ret = proc.stdout.read()
+                proc.stdout.close()
+                proc.wait()
+                return ret
+        else:
+            subprocess.Popen(["sh", "-c", cmd], shell=shell).wait()

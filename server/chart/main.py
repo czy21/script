@@ -65,7 +65,7 @@ def invoke(role_title: str, role_path: pathlib.Path, role_env: dict, args: argpa
             _cmds.append('helm dep up {0}'.format(role_path.as_posix()))
             _cmds.append(collection_util.flat_to_str(helm_cmd))
     _cmd_str = collection_util.flat_to_str(_cmds, delimiter=" && ")
-    share.execute(_cmd_str)
+    share.execute(_cmd_str, dry_run=args.dry_run)
 
 
 if __name__ == '__main__':

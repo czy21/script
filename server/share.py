@@ -77,8 +77,8 @@ def select_role(root_path: pathlib.Path, deep: int = 1, exclude_rules=None, args
     return get_dir_dict(app_path, exclude_rules=exclude_rules, select_tip="role num(example:1 2 3)")
 
 
-def execute(cmd, is_return: bool = False):
-    return basic_util.execute(cmd, is_input=False, is_return=is_return)
+def execute(cmd, is_return: bool = False, dry_run=False):
+    return basic_util.execute(cmd, is_input=False, is_return=is_return, dry_run=dry_run)
 
 
 def loop_roles(root_path: pathlib.Path,
@@ -152,6 +152,7 @@ class Installer:
         self.arg_parser.add_argument('-a', '--action', type=str, required=False)
         self.arg_parser.add_argument('-n', '--namespace')
         self.arg_parser.add_argument('--debug', action="store_true")
+        self.arg_parser.add_argument('--dry-run', action="store_true")
 
         args: argparse.Namespace = self.arg_parser.parse_args()
         logger.info("args: {0}".format(args))
