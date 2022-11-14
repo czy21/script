@@ -91,6 +91,4 @@ def invoke(role_title: str, role_path: pathlib.Path, role_env: dict, args: argpa
 if __name__ == '__main__':
     root_path = pathlib.Path(__file__).parent
     installer = share.Installer(root_path, invoke, role_deep=2)
-    installer.arg_parser.add_argument('--recreate', action="store_true")
-    installer.arg_parser.add_argument('-t', '--tag')
     installer.run(base_deploy_file=root_path.joinpath("deploy.yml"))
