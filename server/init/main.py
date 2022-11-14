@@ -30,6 +30,7 @@ if __name__ == '__main__':
     parser.add_argument('-u', '--user', type=str, default=env_dict["param_user_ops"])
     parser.add_argument('--step', action="store_true")
     parser.add_argument('--debug', action="store_true")
+    parser.add_argument('--dry-run', action="store_true")
     args = parser.parse_args()
     if args.debug:
         logger.setLevel(logging.DEBUG)
@@ -60,4 +61,4 @@ if __name__ == '__main__':
     if args.debug:
         ansible_playbook_cmd.append("--verbose")
     _cmds.append(collection_util.flat_to_str(ansible_playbook_cmd))
-    share.execute(collection_util.flat_to_str(_cmds, delimiter=" && "), is_return=False)
+    share.execute(collection_util.flat_to_str(_cmds, delimiter=" && "), is_return=False, dry_run=args.dry_run)

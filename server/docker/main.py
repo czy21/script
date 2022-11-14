@@ -33,7 +33,7 @@ def invoke(role_title: str, role_path: pathlib.Path, role_env: dict, args: argpa
             share.execute(collection_util.flat_to_str([
                 share.echo_action(role_title, "copy node", cluster_name),
                 "find {0} -maxdepth 1 ! -path {0} ! -name deploy.yml -exec cp -rv -t {1}/".format(role_node_target_path.as_posix(), role_path.as_posix()) + " {} \\;"
-            ], delimiter=" && "))
+            ], delimiter=" && "), dry_run=args.dry_run)
 
     def docker_compose_cmd(option):
         role_deploy_files = [
@@ -85,7 +85,7 @@ def invoke(role_title: str, role_path: pathlib.Path, role_env: dict, args: argpa
             _cmds.append("docker build --tag {0} --file {1} {2}".format(docker_image_tag, role_docker_file.as_posix(), role_path.as_posix()))
             _cmds.append("docker push {0}".format(docker_image_tag))
     _cmd_str = collection_util.flat_to_str(_cmds, delimiter=" && ")
-    share.execute(_cmd_str)
+    share.execute(_cmd_str, dry_run=args.dry_run)
 
 
 if __name__ == '__main__':
