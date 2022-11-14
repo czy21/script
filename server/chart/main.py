@@ -23,7 +23,7 @@ def invoke(role_title: str, role_path: pathlib.Path, role_env: dict, args: argpa
 
     _cmds = []
 
-    if args.action == "push":
+    if args.command == "push":
         helm_repo_name = role_env.get("param_helm_repo_name")
         helm_repo_url = role_env.get("param_helm_repo_url")
         helm_username = role_env.get("param_helm_username")
@@ -40,25 +40,25 @@ def invoke(role_title: str, role_path: pathlib.Path, role_env: dict, args: argpa
         )
 
     else:
-        _action = args.action
+        _command = args.command
         _extension = ""
-        if args.delete:
+        if args.command == "delete":
             _cmds.append([
                 share.echo_action(role_title, "delete"),
                 "helm delete {0} {1}".format(role_name, "" if args.ignore_namespace else "--namespace {0}".format(args.namespace))
             ])
         else:
-            if args.install:
+            if args.command == "install":
                 _cmds.append(share.echo_action(role_title, "install"))
-                _action = "upgrade --install"
+                _command = "upgrade --install"
             helm_cmd = [
-                "helm {0} {1} {2} --values {3}".format(_action, role_name, role_path.as_posix(), role_values_override_file)
+                "helm {0} {1} {2} --values {3}".format(_command, role_name, role_path.as_posix(), role_values_override_file)
             ]
             if not args.ignore_namespace:
                 helm_cmd.append("--namespace {0}".format(args.namespace))
             if args.create_namespace:
                 helm_cmd.append("--create-namespace")
-            if _action == "template":
+            if _command == "template":
                 _cmds.append(share.echo_action(role_title, "template"))
                 helm_cmd.append("> {0}".format(temp_all_in_one_path))
 

@@ -116,7 +116,7 @@ def loop_roles(root_path: pathlib.Path,
 
         def build_target(file_name: str):
             build_file = role_path.joinpath(file_name)
-            if args.build_file == file_name:
+            if args.file == file_name:
                 if build_file.exists():
                     execute(collection_util.flat_to_str([
                         echo_action(role_title, file_name, build_file.as_posix()),
@@ -138,22 +138,34 @@ class Installer:
         self.jinja2ignore_file: pathlib.Path = root_path.joinpath(".jinja2ignore")
         self.role_func = role_func
         self.role_deep: int = role_deep
-        self.arg_parser: argparse.ArgumentParser = argparse.ArgumentParser()
+        self.usage_name = pathlib.Path(__file__).name
+        self.arg_parser: argparse.ArgumentParser = argparse.ArgumentParser(usage="{0} [command]".format(self.usage_name))
+
+        def set_global_argument(parser: argparse.ArgumentParser):
+            parser.add_argument('-p', '--param', nargs="+", default=[])
+            parser.add_argument('-n', '--namespace')
+            parser.add_argument('--debug', action="store_true")
+            parser.add_argument('--dry-run', action="store_true", help="only print not submit")
+            parser.add_argument('--file')
+
+        set_global_argument(self.arg_parser)
+        parser_command = self.arg_parser.add_subparsers(title="commands", metavar="", dest="command")
+        self.parser_install = parser_command.add_parser("install", help="", usage="{0} install".format(self.usage_name))
+        set_global_argument(self.parser_install)
+        self.parser_delete = parser_command.add_parser("delete", help="", usage="{0} delete".format(self.usage_name))
+        set_global_argument(self.parser_delete)
+        self.parser_build = parser_command.add_parser("build", help="", usage="{0} build".format(self.usage_name))
+        set_global_argument(self.parser_build)
+        self.parser_build.add_argument('--build-args', nargs="+", default=[])
+        self.parser_backup = parser_command.add_parser("backup", help="", usage="{0} backup".format(self.usage_name))
+        set_global_argument(self.parser_backup)
+        self.parser_push = parser_command.add_parser("push", help="", usage="{0} push".format(self.usage_name))
+        set_global_argument(self.parser_push)
 
         log_util.init_logger(file=root_path.joinpath("___temp/share.log"))
         self.tmp_path.mkdir(exist_ok=True)
 
     def run(self, **kwargs):
-        self.arg_parser.add_argument('-p', '--param', nargs="+", default=[])
-        self.arg_parser.add_argument('-i', '--install', action="store_true")
-        self.arg_parser.add_argument('-d', '--delete', action="store_true")
-        self.arg_parser.add_argument('-b', '--build-file', nargs='?', const="build.sh")
-        self.arg_parser.add_argument('--build-args', nargs="+", default=[])
-        self.arg_parser.add_argument('-a', '--action', type=str, required=False)
-        self.arg_parser.add_argument('-n', '--namespace')
-        self.arg_parser.add_argument('--debug', action="store_true")
-        self.arg_parser.add_argument('--dry-run', action="store_true")
-
         args: argparse.Namespace = self.arg_parser.parse_args()
         logger.info("args: {0}".format(args))
         if args.debug:
