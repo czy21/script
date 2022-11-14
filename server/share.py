@@ -3,7 +3,6 @@ import json
 import logging
 import pathlib
 import sys
-import operator
 
 import yaml
 
@@ -22,15 +21,20 @@ logger = logging.getLogger()
 
 def dfs_dir(path: pathlib.Path, deep=1, exclude_rules: list = None) -> list:
     ret = []
-    _include_dirs = []
-    for p in list(filter(lambda a: a.is_dir(), sorted(path.iterdir()))):
-        _rules = regex_util.match_rules(exclude_rules, p.as_posix(), ".jinia2ignore {0}".format(dfs_dir.__name__))
-        if not any([r["isMatch"] for r in _rules]):
-            _include_dirs.append(p)
-    for p in _include_dirs:
+    _dirs = get_match_dirs(exclude_rules, list(filter(lambda a: a.is_dir(), sorted(path.iterdir()))))
+    for p in _dirs:
         ret.append({"path": p, "deep": deep})
         ret += dfs_dir(p, deep + 1, exclude_rules)
     return ret
+
+
+def get_match_dirs(rules, items):
+    _dirs = []
+    for p in items:
+        _rules = regex_util.match_rules(rules, p.as_posix(), ".jinia2ignore {0}".format(dfs_dir.__name__))
+        if not any([r["isMatch"] for r in _rules]):
+            _dirs.append(p)
+    return _dirs
 
 
 def echo_action(role, content, exec_file=None) -> str:
@@ -41,12 +45,8 @@ def echo_action(role, content, exec_file=None) -> str:
 
 
 def get_dir_dict(root_path: pathlib.Path, exclude_rules: list = None, select_tip="", col_num=5) -> dict:
-    _include_dirs = []
-    for p in list(filter(lambda a: a.is_dir(), sorted(root_path.iterdir()))):
-        _rules = regex_util.match_rules(exclude_rules, p.as_posix(), ".jinia2ignore {0}".format(get_dir_dict.__name__))
-        if not any([r["isMatch"] for r in _rules]):
-            _include_dirs.append(p)
-    dir_dict: dict = {str(i): t for i, t in enumerate(_include_dirs, start=1)}
+    _dirs = get_match_dirs(exclude_rules, list(filter(lambda a: a.is_dir(), sorted(root_path.iterdir()))))
+    dir_dict: dict = {str(i): t for i, t in enumerate(_dirs, start=1)}
     collection_util.print_grid(["{0}.{1}".format(str(k), v.name) for k, v in dir_dict.items()], col_num=col_num)
     logger.info("\nplease select {0}:".format(select_tip))
     dir_nums = input().strip().split()
@@ -133,7 +133,7 @@ def loop_roles(root_path: pathlib.Path,
 
 class SortingHelpFormatter(argparse.HelpFormatter):
     def add_arguments(self, actions):
-        actions = sorted(actions, key=operator.attrgetter('option_strings'))
+        actions = sorted(actions, key=lambda a: a.dest)
         super(SortingHelpFormatter, self).add_arguments(actions)
 
 
