@@ -1,17 +1,16 @@
-- name: hosts init
+- name: hosts install
   become: yes
   shell: |
-    sudo cat {{ param_remote_role_path }}/hosts-init-{{ ansible_distribution | lower}} > /etc/hosts
+    sudo cat {{ param_remote_role_path }}/hosts-{{ ansible_distribution | lower}} > /etc/hosts
 
 - name: crio install
   become: yes
   shell: |
     sudo mkdir -p /etc/containers/
-    sudo cat {{ param_remote_role_path }}/crio-init-registries.conf > /etc/containers/registries.conf
+    sudo cat {{ param_remote_role_path }}/crio-registries.conf > /etc/containers/registries.conf
     curl https://raw.githubusercontent.com/cri-o/cri-o/main/scripts/get | sudo PREFIX=/usr bash -s -- -t v{{ param_crio_version }}
-    sudo sed -i.bak \
-    -e 's|registry.k8s.io|{{ param_registry_proxy_url }}|g' \ 
-    -e 's|^# \(pause_image = \)|\1|g' /etc/crio/crio.conf
+    sudo sed -i 's|/usr/local/bin/crio|/usr/bin/crio|g' /usr/lib/systemd/system/crio.service
+    sudo cat {{ param_remote_role_path }}/crio.conf > /etc/crio/crio.conf.d/99-custom.conf
     sudo systemctl daemon-reload && sudo systemctl restart crio && sudo systemctl enable crio
 
 - name: k8s install
@@ -30,7 +29,7 @@
     EOF
     
     sudo sysctl --system
-    bash {{ param_remote_role_path }}/k8s-install-{{ ansible_distribution | lower}}.sh && kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
+    bash {{ param_remote_role_path }}/k8s-{{ ansible_distribution | lower}}.sh && kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
 
 - name: helm install
   become: yes
