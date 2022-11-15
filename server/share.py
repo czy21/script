@@ -249,18 +249,15 @@ class Installer:
 
     def run(self, **kwargs):
         args: argparse.Namespace = self.arg_parser.parse_args()
+        args.param = {k: v for t in args.param for (k, v) in t.items()}
         logger.info("args: {0}".format(args))
         if args.debug:
             logger.setLevel(logging.DEBUG)
-        # select role
         selected_roles = select_role(self.root_path, self.role_deep, args=args)
         logger.info("namespace: {0}; selected roles: {1}".format(args.namespace, ",".join(["{0}.{1}".format(k, v.name) for k, v in selected_roles.items()])))
         global_env = yaml_util.load(self.env_file) if self.env_file and self.env_file.exists() else {}
-        # inject input param
-        global_env.update({k: v for t in args.param for (k, v) in t.items()})
-        # global env_dict finished
+        global_env.update(args.param)
         global_jinja2ignore_rules = file_util.read_text(self.jinja2ignore_file).split("\n") if self.jinja2ignore_file and self.jinja2ignore_file.exists() else []
-        # loop selected_role_dict
         loop_roles(
             root_path=self.root_path,
             tmp_path=self.tmp_path,
