@@ -1,6 +1,7 @@
 import argparse
 import json
 import logging
+import os
 import pathlib
 import sys
 import typing
@@ -132,36 +133,15 @@ def loop_roles(root_path: pathlib.Path,
         execute("mkdir -p {1} && cp -r {0}/* {1}".format(role_path, tmp_path.joinpath(args.namespace).joinpath(role_name)))
 
 
-class CustomHelpFormatter(argparse.HelpFormatter):
+class CustomHelpFormatter(argparse.MetavarTypeHelpFormatter):
     def add_arguments(self, actions: typing.Iterable[argparse.Action]) -> None:
-        super().add_arguments(sorted(actions, key=lambda a: a.dest))
+        for a in sorted(actions, key=lambda i: i.dest[0:1]):
+            self.add_argument(a)
 
     def _format_args(self, action: argparse.Action, default_metavar: str) -> str:
-        # get_metavar = self._metavar_formatter(action, default_metavar)
-        # if action.nargs is None:
-        #     result = '%s' % get_metavar(1)
-        # elif action.nargs == argparse.OPTIONAL:
-        #     result = '[%s]' % get_metavar(1)
-        # elif action.nargs == argparse.ZERO_OR_MORE:
-        #     metavar = get_metavar(1)
-        #     if len(metavar) == 2:
-        #         result = '[%s [%s ...]]' % metavar
-        #     else:
-        #         result = '[%s ...]' % metavar
-        # elif action.nargs == argparse.ONE_OR_MORE:
-        #     result = '%s [%s ...]' % get_metavar(2)
-        # elif action.nargs == argparse.REMAINDER:
-        #     result = '...'
-        # elif action.nargs == argparse.PARSER:
-        #     result = '%s ...' % get_metavar(1)
-        # elif action.nargs == argparse.SUPPRESS:
-        #     result = ''
-        # else:
-        #     try:
-        #         formats = ['%s' for _ in range(action.nargs)]
-        #     except TypeError:
-        #         raise ValueError("invalid nargs value") from None
-        #     result = ' '.join(formats) % get_metavar(action.nargs)
+        return default_metavar
+
+    def _format_actions_usage(self, actions, groups) -> str:
         return ''
 
     def _format_action_invocation(self, action: argparse.Action) -> str:
@@ -169,23 +149,28 @@ class CustomHelpFormatter(argparse.HelpFormatter):
             default = self._get_default_metavar_for_positional(action)
             metavar, = self._metavar_formatter(action, default)(1)
             return metavar
-
         else:
             parts = []
-
-            # if the Optional doesn't take a value, format is:
-            #    -s, --long
             if action.nargs == 0:
                 parts.extend(action.option_strings)
-
-            # if the Optional takes a value, format is:
-            #    -s ARGS, --long ARGS
             else:
                 default = self._get_default_metavar_for_optional(action)
                 args_string = self._format_args(action, default)
+                args_prefix = next(filter(lambda a: a.startswith("--"), action.option_strings), None)
                 for option_string in action.option_strings:
-                    parts.append('%s %s' % (option_string, args_string))
+                    if option_string == args_prefix:
+                        parts.append('%s %s' % (args_prefix, args_string))
+                    else:
+                        parts.append(option_string)
         return ', '.join(t.strip() for t in parts)
+
+    def _get_default_metavar_for_optional(self, action: argparse.Action) -> str:
+        if action.type:
+            return action.type.__name__
+
+    def _get_default_metavar_for_positional(self, action: argparse.Action) -> str:
+        if action.type:
+            return action.type.__name__
 
 
 class Installer:
@@ -198,7 +183,7 @@ class Installer:
         self.role_func = role_func
         self.role_deep: int = role_deep
         self.usage_name = pathlib.Path(__file__).name
-        self.arg_parser: argparse.ArgumentParser = argparse.ArgumentParser(formatter_class=CustomHelpFormatter)
+        self.arg_parser: argparse.ArgumentParser = argparse.ArgumentParser(formatter_class=CustomHelpFormatter, usage='%(prog)s [command] [options]')
         self.set_common_argument(self.arg_parser)
         self.__command_parser = self.arg_parser.add_subparsers(title="commands", metavar="", dest="command")
         self.__init_install_parser()
@@ -212,41 +197,44 @@ class Installer:
 
     @staticmethod
     def set_common_argument(parser: argparse.ArgumentParser):
-        parser.add_argument('--file')
-        parser.add_argument('-n', '--namespace')
-        parser.add_argument('-p', '--param', nargs="+", default=[], metavar=('', 'key1=val1 key2=val2'))
-        parser.add_argument('--debug', action="store_true", help=" enable verbose output")
+        parser.add_argument('--file', type=str)
+        parser.add_argument('-n', '--namespace', type=str)
+        parser.add_argument('-p', '--param', nargs="+", default=[], type=list, help="key1=val1 key2=val2 ...")
+        parser.add_argument('--debug', action="store_true", help="enable verbose output")
         parser.add_argument('--dry-run', action="store_true", help="only print not submit")
 
     @staticmethod
-    def __get_sub_parser_common_attr():
+    def __get_sub_parser_common_attr(name):
         return {
+            "prog": "{0} {1}".format(os.path.basename(sys.argv[0]), name),
+            "name": name,
+            "usage": "%(prog)s [options]",
+            "formatter_class": CustomHelpFormatter,
             "help": "",
-            "formatter_class": CustomHelpFormatter
         }
 
     def __init_install_parser(self):
-        install_parser = self.__command_parser.add_parser("install", **self.__get_sub_parser_common_attr())
-        self.set_common_argument(install_parser)
-        install_parser.add_argument('--recreate', action="store_true")
+        parser = self.__command_parser.add_parser(**self.__get_sub_parser_common_attr("install"))
+        self.set_common_argument(parser)
+        parser.add_argument('--recreate', action="store_true")
 
     def __init_delete_parser(self):
-        delete_parser = self.__command_parser.add_parser("delete", **self.__get_sub_parser_common_attr())
-        self.set_common_argument(delete_parser)
+        parser = self.__command_parser.add_parser(**self.__get_sub_parser_common_attr("delete"))
+        self.set_common_argument(parser)
 
     def __init_build_parser(self):
-        build_parser = self.__command_parser.add_parser("build", **self.__get_sub_parser_common_attr())
-        self.set_common_argument(build_parser)
-        build_parser.add_argument('--build-args', nargs="+", default=[])
-        build_parser.add_argument('--tag')
+        parser = self.__command_parser.add_parser(**self.__get_sub_parser_common_attr("build"))
+        self.set_common_argument(parser)
+        parser.add_argument('--build-args', nargs="+", default=[])
+        parser.add_argument('--tag')
 
     def __init_backup_parser(self):
-        backup_parser = self.__command_parser.add_parser("backup", **self.__get_sub_parser_common_attr())
-        self.set_common_argument(backup_parser)
+        parser = self.__command_parser.add_parser(**self.__get_sub_parser_common_attr("backup"))
+        self.set_common_argument(parser)
 
     def __init_push_parser(self):
-        push_parser = self.__command_parser.add_parser("push", **self.__get_sub_parser_common_attr())
-        self.set_common_argument(push_parser)
+        parser = self.__command_parser.add_parser(**self.__get_sub_parser_common_attr("push"))
+        self.set_common_argument(parser)
 
     def run(self, **kwargs):
         args: argparse.Namespace = self.arg_parser.parse_args()
