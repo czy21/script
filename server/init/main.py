@@ -22,13 +22,13 @@ if __name__ == '__main__':
 
     private_key = pathlib.Path(__file__).parent.joinpath("___temp/private-key").as_posix()
     ansible_hosts = pathlib.Path(__file__).parent.joinpath("ansible-hosts").as_posix()
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-p', '--param', nargs="+", default=[])
-    parser.add_argument('-i', '--inventory', required=True)
-    parser.add_argument('-t', '--tag', required=True)
-    parser.add_argument('-k', '--ask-pass', action="store_true")
-    parser.add_argument('-u', '--user', type=str, default=env_dict["param_user_ops"])
-    parser.add_argument('--step', action="store_true")
+    parser = argparse.ArgumentParser(formatter_class=share.CustomHelpFormatter)
+    parser.add_argument('-p', '--param', nargs="+", default=[], type=lambda s: dict({share.split_kv_str(s)}), help="k1=v1 k2=v2")
+    parser.add_argument('-i', '--inventory', required=True, type=str)
+    parser.add_argument('-t', '--tag', required=True, type=str, help="t1,t2")
+    parser.add_argument('-k', '--ask-pass', action="store_true", help="ask for connection password")
+    parser.add_argument('-u', '--user', default=env_dict["param_user_ops"], type=str, help="connect as this user (default=[param_user_ops])")
+    parser.add_argument('--no-step', action="store_true")
     parser.add_argument('--debug', action="store_true")
     parser.add_argument('--dry-run', action="store_true")
     args = parser.parse_args()
@@ -52,11 +52,10 @@ if __name__ == '__main__':
         "--flush-cache"
     ]
     if args.param:
-        param_extra_iter = iter(args.param)
-        ansible_playbook_cmd.append("-e \"{0}\"".format(" ".join(["{0}={1}".format(k, v) for k, v in dict(zip(param_extra_iter, param_extra_iter)).items()])))
+        ansible_playbook_cmd.append("-e \"{0}\"".format(args.param))
     if args.user:
         ansible_playbook_cmd.append("--user {0}".format(args.user))
-    if args.step:
+    if not args.no_step:
         ansible_playbook_cmd.append("--step")
     if args.debug:
         ansible_playbook_cmd.append("--verbose")
