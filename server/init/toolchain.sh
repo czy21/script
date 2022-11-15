@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# bash toolchain.sh -h user@host -i [inventory_name] -t [tags]
-# -i site | general
+# bash toolchain.sh -h user@host -f [inventory_file] -t [tags]
+# -f deploy.yml | general.yml
 # -t [tags within inventory_file]
-#    site: os | docker | hosts | k8s-master | k8s-node
-#    general: prune | k8s-reset
+#    deploy: os | docker | k8s | k8s-master | k8s-worker
+#    general: prune | machine
 
 while getopts "h:" opt
 do
