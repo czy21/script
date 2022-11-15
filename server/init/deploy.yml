@@ -14,22 +14,6 @@
   tags:
     - '{{ param_role_name }}'
 
-- name: containerd
-  hosts: all
-  vars_files:
-    - "vars/env.yml"
-    - "vars/main.yml"
-  vars:
-    param_role_name: containerd
-  pre_tasks:
-    - include_tasks: roles/common/tasks/copy.yml
-  roles:
-    - '{{ param_role_name }}'
-  post_tasks:
-    - include_tasks: roles/common/tasks/clean.yml
-  tags:
-    - '{{ param_role_name }}'
-
 - name: docker
   hosts: all
   vars_files:
