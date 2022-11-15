@@ -42,6 +42,8 @@ if __name__ == '__main__':
         "ANSIBLE_SUDO_PASS=0",
         "ANSIBLE_HOST_KEY_CHECKING=0",
         "ANSIBLE_FORCE_COLOR=1",
+        "ANSIBLE_STDOUT_CALLBACK=yaml",
+        "ANSIBLE_LOG_PATH={0}".format(pathlib.Path(__file__).parent.joinpath("___temp/ansible.log").as_posix()),
         "ansible-playbook",
         "--ssh-common-args \'-o StrictHostKeyChecking=no\'",
         "--ssh-extra-args \'-o StrictHostKeyChecking=no\'",
