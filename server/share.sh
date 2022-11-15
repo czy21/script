@@ -21,12 +21,12 @@ function upload_exec_py() {
   ${scp_cmd} ${book_source}/../requirements.txt ${book_source}/../env.yaml ${book_source}/../share.py ${utility} $host:${book_target}
 
   local args=""
-  local exec_cmd=""
-  exec_cmd+="if [ ! -f ${PYTHON_EXEC} ];then python3 -m venv ${PYTHON_HOME} --without-pip --system-site-packages && wget -nv -O - https://bootstrap.pypa.io/get-pip.py | ${PYTHON_EXEC};fi && "
+  local cmd=""
+  cmd+="if [ ! -f ${PYTHON_EXEC} ];then python3 -m venv ${PYTHON_HOME} --without-pip --system-site-packages && wget -nv -O - https://bootstrap.pypa.io/get-pip.py | ${PYTHON_EXEC};fi && "
   for ((i=1;i<="$#";i++));do
     item=${!i}
     if [ "-r" == ${item} ]; then
-        exec_cmd+="${PYTHON_EXEC} -m pip install -r \$HOME/${book_target}/requirements.txt && "
+        cmd+="${PYTHON_EXEC} -m pip install -r \$HOME/${book_target}/requirements.txt && "
         shift 1
         continue
     fi
@@ -35,8 +35,8 @@ function upload_exec_py() {
     fi
     args+=" ${item}"
   done
-  exec_cmd+="${PYTHON_EXEC} -B \$HOME/${book_target}/main.py ${args}"
-  ${ssh_cmd} ${exec_cmd} && ${scp_cmd} $host:${book_target_temp_path}/ ${book_source}/
+  cmd+="${PYTHON_EXEC} -B \$HOME/${book_target}/main.py ${args}"
+  ${ssh_cmd} ${cmd} && ${scp_cmd} $host:${book_target_temp_path}/ ${book_source}/
   if [ ${is_debug} == false ]; then
     ${ssh_cmd} ${del_cmd}
   fi
