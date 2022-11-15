@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import logging
 import os
 import pathlib
 
@@ -28,7 +29,6 @@ def exec() -> None:
     ]
     basic_param_str = list_util.flat_to_str(get_main_db_param_dict(), extra_param_dict)
     command = "cypher-shell" + basic_param_str
-    logger.info(basic_util.action_formatter(exec.__name__, command))
     neo4j_msg = [elem.replace("\"", '') for elem in os.popen(command).readlines() if elem != "msg\n"]
     db_util.print_ql_msg(neo4j_msg)
 
@@ -48,5 +48,4 @@ def recreate() -> None:
     ]
     basic_param_str = list_util.flat_to_str(get_main_db_param_dict(), extra_param_dict)
     command = "cypher-shell" + basic_param_str
-    logger.info(basic_util.action_formatter(recreate.__name__, command))
     basic_util.execute(command)

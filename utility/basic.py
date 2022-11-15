@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
+import inspect
 import logging
 import os
+import pathlib
 import subprocess
-import sys
 
 logger = logging.getLogger()
 
@@ -28,7 +29,11 @@ def execute(
         shell=os.name == 'nt',
         dry_run=False
 ):
-    logger.info(cmd)
+    stack_last = inspect.stack()[1]
+    stack_file = stack_last.filename
+    stack_line = stack_last.lineno
+    stack_func = stack_last.function
+    logger.info("{0}\n{1}".format("{0} line: {1} func: {2}".format(pathlib.Path(stack_file).as_posix(), str(stack_line), stack_func), cmd))
     if is_input:
         input_exec = str(input("Are you sure you want to execute (y/n)?").strip())
         if input_exec != "y":

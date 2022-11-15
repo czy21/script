@@ -1,20 +1,15 @@
 #!/usr/bin/env python3
-import inspect
 import logging
 import pathlib
 
 from domain.db_meta import chsql as chsql_meta
 from domain.default import common as default_common
 from domain.default import path as default_path
-from utility import db as db_util, collection as list_util, basic as basic_util, log
+from utility import db as db_util, collection as list_util, basic as basic_util
 
 logger = logging.getLogger()
 
 chsql_cmd = "mysql"
-
-
-def __get_function_name():
-    return inspect.stack()[1][3]
 
 
 def assemble() -> None:
@@ -27,7 +22,6 @@ def recreate() -> None:
                                    default_common.param_main_db_chsql_user,
                                    default_common.param_main_db_chsql_pass,
                                    default_common.param_main_db_name)
-    logger.info(basic_util.action_formatter(__get_function_name(), command))
     basic_util.execute(command)
 
 
@@ -57,7 +51,6 @@ def execute() -> None:
         "< " + default_path.output_db_all_in_one_chsql
     ]
     command = list_util.flat_to_str(chsql_cmd, get_main_db_param_dict(), extra_param_dict)
-    logger.info(basic_util.action_formatter(__get_function_name(), command))
     basic_util.execute(command, db_util.print_ql_msg)
 
 
