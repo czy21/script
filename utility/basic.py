@@ -33,7 +33,7 @@ def execute(
     stack_file = stack_last.filename
     stack_line = stack_last.lineno
     stack_func = stack_last.function
-    logger.info("{0}\n{1}".format("{0} line: {1} func: {2}".format(pathlib.Path(stack_file).as_posix(), str(stack_line), stack_func), cmd))
+    logger.info("%s\n%s" % ("{0} line: {1} func: {2}".format(pathlib.Path(stack_file).as_posix(), str(stack_line), stack_func), cmd))
     if is_input:
         input_exec = str(input("Are you sure you want to execute (y/n)?").strip())
         if input_exec != "y":
