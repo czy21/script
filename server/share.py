@@ -30,6 +30,14 @@ def dfs_dir(path: pathlib.Path, deep=1, exclude_rules: list = None) -> list:
     return ret
 
 
+def split_kv_str(kv_str) -> (str, str):
+    for i in range(len(kv_str)):
+        if kv_str[i] == "=":
+            k = ''.join(kv_str[0:i])
+            v = ''.join(kv_str[i + 1:])
+            return k, v
+
+
 def get_match_dirs(rules, items):
     _dirs = []
     for p in items:
@@ -139,7 +147,10 @@ class CustomHelpFormatter(argparse.MetavarTypeHelpFormatter):
             self.add_argument(a)
 
     def _format_args(self, action: argparse.Action, default_metavar: str) -> str:
-        return default_metavar
+        result = default_metavar
+        if action.nargs == argparse.ONE_OR_MORE:
+            result = list.__name__
+        return result
 
     def _format_actions_usage(self, actions, groups) -> str:
         return ''
@@ -199,7 +210,7 @@ class Installer:
     def set_common_argument(parser: argparse.ArgumentParser):
         parser.add_argument('--file', type=str)
         parser.add_argument('-n', '--namespace', type=str)
-        parser.add_argument('-p', '--param', nargs="+", default=[], type=list, help="key1=val1 key2=val2 ...")
+        parser.add_argument('-p', '--param', nargs="+", default=[], type=lambda s: dict({split_kv_str(s)}), help="k1=v1 k2=v2")
         parser.add_argument('--debug', action="store_true", help="enable verbose output")
         parser.add_argument('--dry-run', action="store_true", help="only print not submit")
 
@@ -245,9 +256,8 @@ class Installer:
         selected_roles = select_role(self.root_path, self.role_deep, args=args)
         logger.info("namespace: {0}; selected roles: {1}".format(args.namespace, ",".join(["{0}.{1}".format(k, v.name) for k, v in selected_roles.items()])))
         global_env = yaml_util.load(self.env_file) if self.env_file and self.env_file.exists() else {}
-        # read input param
-        param_extra_iter = iter(args.param)
-        global_env.update(dict(zip(param_extra_iter, param_extra_iter)))
+        # inject input param
+        global_env.update({k: v for t in args.param for (k, v) in t.items()})
         # global env_dict finished
         global_jinja2ignore_rules = file_util.read_text(self.jinja2ignore_file).split("\n") if self.jinja2ignore_file and self.jinja2ignore_file.exists() else []
         # loop selected_role_dict
