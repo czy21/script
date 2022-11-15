@@ -1,14 +1,10 @@
 #!/usr/bin/env python3
-import inspect
+import logging
 
 from domain.default import common as default_common
-from utility import basic as basic_util, collection as list_util, path as path_util, log
+from utility import basic as basic_util, collection as list_util, path as path_util
 
 logger = logging.getLogger()
-
-
-def __get_function_name():
-    return inspect.stack()[1][3]
 
 
 def build_api():
@@ -23,7 +19,6 @@ def build_api():
             build_method,
             "-x test"
         ])
-    logger.info(basic_util.action_formatter(__get_function_name(), build_command))
     basic_util.execute(build_command)
 
 
@@ -40,5 +35,4 @@ def build_plugin(publish_task=None):
         command = list_util.flat_to_str(command, publish_task)
     else:
         command = list_util.flat_to_str(command, "publishAllPublicationsToBuildRepository")
-    logger.info(basic_util.action_formatter(__get_function_name(), command))
     basic_util.execute(command)

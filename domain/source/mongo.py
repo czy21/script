@@ -1,17 +1,13 @@
 #!/usr/bin/env python3
-import inspect
+import logging
 import pathlib
 
 from domain.db_meta import mongo as mongo_meta
 from domain.default import common as default_common
 from domain.default import path as default_path
-from utility import db as db_util, collection as list_util, basic as basic_util, log
+from utility import db as db_util, collection as list_util, basic as basic_util
 
 logger = logging.getLogger()
-
-
-def __get_function_name():
-    return inspect.stack()[1][3]
 
 
 def assemble() -> None:
@@ -24,7 +20,6 @@ def recreate() -> None:
                                    default_common.param_main_db_mongo_user,
                                    default_common.param_main_db_mongo_pass,
                                    default_common.param_main_db_name)
-    logger.info(basic_util.action_formatter(__get_function_name(), command))
     basic_util.execute(command)
 
 
@@ -45,7 +40,6 @@ def execute() -> None:
         default_path.output_db_all_in_one_mongo
     ]
     command = list_util.flat_to_str("mongo", get_main_db_uri(), extra_param)
-    logger.info(basic_util.action_formatter(__get_function_name(), command))
     basic_util.execute(command, db_util.print_ql_msg)
 
 
@@ -62,9 +56,8 @@ def get_recreate_command(host, port, user, password, db_name) -> str:
 
 def backup_gz() -> None:
     command = list_util.flat_to_str("mongodump",
-                                         "--uri=" + get_main_db_uri(),
-                                         "--archive=" + default_path.output_db_bak_gz_mongo,
-                                         "--gzip"
-                                         )
-    logger.info(basic_util.action_formatter(__get_function_name(), command))
+                                    "--uri=" + get_main_db_uri(),
+                                    "--archive=" + default_path.output_db_bak_gz_mongo,
+                                    "--gzip"
+                                    )
     basic_util.execute(command)

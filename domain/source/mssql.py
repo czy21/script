@@ -1,23 +1,16 @@
 #!/usr/bin/env python3
-import inspect
 import logging
-import os
 import pathlib
 from pathlib import Path
-from textwrap import wrap
 
 from domain.db_meta import mssql as mssql_meta
 from domain.default import common as default_common
 from domain.default import path as default_path
-from utility import db as db_util, collection as list_util, basic as basic_util, path as path_util, log
+from utility import db as db_util, collection as list_util, basic as basic_util
 
 logger = logging.getLogger()
 
 mssql_cmd = "sqlcmd"
-
-
-def __get_function_name():
-    return inspect.stack()[1][3]
 
 
 def assemble() -> None:
@@ -30,7 +23,6 @@ def recreate() -> None:
                                    default_common.param_main_db_mssql_user,
                                    default_common.param_main_db_mssql_pass,
                                    default_common.param_main_db_name)
-    logger.info(basic_util.action_formatter(__get_function_name(), command))
     basic_util.execute(command)
 
 
@@ -60,7 +52,6 @@ def execute() -> None:
         "-i \"{0}\"".format(Path(default_path.output_db_all_in_one_mssql).__fspath__())
     ]
     command = list_util.flat_to_str(mssql_cmd, get_main_db_param_dict(), extra_param_dict)
-    logger.info(basic_util.action_formatter(__get_function_name(), command))
     basic_util.execute(command, db_util.print_ql_msg)
 
 
