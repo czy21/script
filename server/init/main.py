@@ -22,21 +22,19 @@ if __name__ == '__main__':
 
     private_key = pathlib.Path(__file__).parent.joinpath("___temp/private-key").as_posix()
     ansible_hosts = pathlib.Path(__file__).parent.joinpath("ansible-hosts").as_posix()
-    parser = argparse.ArgumentParser(formatter_class=share.CustomHelpFormatter)
-    parser.add_argument('-p', '--param', nargs="+", default=[], type=lambda s: dict({share.split_kv_str(s)}), help="k1=v1 k2=v2")
-    parser.add_argument('-i', '--inventory', required=True, type=str)
+    parser = argparse.ArgumentParser(formatter_class=share.CustomHelpFormatter, conflict_handler="resolve")
+    share.Installer.set_common_argument(parser)
+    parser.add_argument('-f', '--file', required=True, type=str, help="inventory file")
     parser.add_argument('-t', '--tag', required=True, type=str, help="t1,t2")
     parser.add_argument('-k', '--ask-pass', action="store_true", help="ask for connection password")
     parser.add_argument('-u', '--user', default=env_dict["param_user_ops"], type=str, help="connect as this user (default=[param_user_ops])")
     parser.add_argument('--check', action="store_true", help="don't make any changes")
     parser.add_argument('--no-step', action="store_true", help="disable one-step-at-a-time")
-    parser.add_argument('--debug', action="store_true")
-    parser.add_argument('--dry-run', action="store_true", help="only print not submit")
     args = parser.parse_args()
     if args.debug:
         logger.setLevel(logging.DEBUG)
 
-    ansible_inventory_file = pathlib.Path(__file__).parent.joinpath(args.inventory + ".yml").as_posix()
+    ansible_inventory_file = pathlib.Path(__file__).parent.joinpath(args.file).as_posix()
     ansible_log_file = pathlib.Path(__file__).parent.joinpath("___temp/ansible.log").as_posix()
     _cmds = ["chmod 600 {0}".format(private_key)]
     ansible_playbook_cmd = [

@@ -2,8 +2,8 @@
 
 # bash toolchain.sh -h user@host install
 # -h show help
-# -p param_cluster_name dev|ops
-#    param_ks_role host|member
+# -p param_cluster_name [dev | ops]
+#    param_ks_role [host | member]
 #    param_ks_jwt  str
 # --ignore-namespace
 # --create-namespace
