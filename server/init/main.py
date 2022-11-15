@@ -28,6 +28,7 @@ if __name__ == '__main__':
     parser.add_argument('-t', '--tag', required=True, type=str, help="t1,t2")
     parser.add_argument('-k', '--ask-pass', action="store_true", help="ask for connection password")
     parser.add_argument('-u', '--user', default=env_dict["param_user_ops"], type=str, help="connect as this user (default=[param_user_ops])")
+    parser.add_argument('--check', action="store_true")
     parser.add_argument('--no-step', action="store_true")
     parser.add_argument('--debug', action="store_true")
     parser.add_argument('--dry-run', action="store_true")
@@ -36,14 +37,15 @@ if __name__ == '__main__':
         logger.setLevel(logging.DEBUG)
 
     ansible_inventory_file = pathlib.Path(__file__).parent.joinpath(args.inventory + ".yml").as_posix()
-
+    ansible_log_file = pathlib.Path(__file__).parent.joinpath("___temp/ansible.log").as_posix()
     _cmds = ["chmod 600 {0}".format(private_key)]
     ansible_playbook_cmd = [
         "ANSIBLE_SUDO_PASS=0",
         "ANSIBLE_HOST_KEY_CHECKING=0",
         "ANSIBLE_FORCE_COLOR=1",
         "ANSIBLE_STDOUT_CALLBACK=yaml",
-        "ANSIBLE_LOG_PATH={0}".format(pathlib.Path(__file__).parent.joinpath("___temp/ansible.log").as_posix()),
+        "ANSIBLE_CHECK_MODE_MARKERS=yes",
+        "ANSIBLE_LOG_PATH={0}".format(ansible_log_file),
         "ansible-playbook",
         "--ssh-common-args \'-o StrictHostKeyChecking=no\'",
         "--ssh-extra-args \'-o StrictHostKeyChecking=no\'",
@@ -61,5 +63,8 @@ if __name__ == '__main__':
         ansible_playbook_cmd.append("--step")
     if args.debug:
         ansible_playbook_cmd.append("--verbose")
+    if args.check:
+        ansible_playbook_cmd.append("--check")
+    _cmds.append("echo -n '' > {0}".format(ansible_log_file))
     _cmds.append(collection_util.flat_to_str(ansible_playbook_cmd))
     share.execute(collection_util.flat_to_str(_cmds, delimiter=" && "), is_return=False, dry_run=args.dry_run)
