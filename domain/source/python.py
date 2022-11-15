@@ -1,14 +1,10 @@
 #!/usr/bin/env python3
-import inspect
+import logging
 
 from domain.default import common as default_common
-from utility import basic as basic_util, collection as list_util, log
+from utility import basic as basic_util, collection as list_util
 
 logger = logging.getLogger()
-
-
-def __get_function_name():
-    return inspect.stack()[1][3]
 
 
 def build_api():
@@ -17,5 +13,4 @@ def build_api():
         default_common.param_api_root_project_path + "/*",
         default_common.param_api_output_path
     ])
-    logger.info(basic_util.action_formatter(__get_function_name(), command))
     basic_util.execute(command)

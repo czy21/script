@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import inspect
 import logging
 import pathlib
 
@@ -13,10 +12,6 @@ logger = logging.getLogger()
 mysql_cmd = "mysql"
 
 
-def __get_function_name():
-    return inspect.stack()[1][3]
-
-
 def assemble() -> None:
     db_util.assemble_ql(pathlib.Path(default_common.param_main_db_mysql_file_path), pathlib.Path(default_path.output_db_all_in_one_mysql), mysql_meta, "sql")
 
@@ -27,7 +22,6 @@ def recreate() -> None:
                                    default_common.param_main_db_mysql_user,
                                    default_common.param_main_db_mysql_pass,
                                    default_common.param_main_db_name)
-    logger.info(basic_util.action_formatter(__get_function_name(), command))
     basic_util.execute(command)
 
 
@@ -57,7 +51,6 @@ def execute() -> None:
         "< " + default_path.output_db_all_in_one_mysql
     ]
     command = list_util.flat_to_str([mysql_cmd, get_main_db_param_dict(), extra_param_dict])
-    logger.info(basic_util.action_formatter(__get_function_name(), command))
     basic_util.execute(command, db_util.print_ql_msg)
 
 
@@ -100,7 +93,6 @@ def backup_db() -> None:
                                         "--compress",
                                         default_common.param_main_db_bak_name,
                                     ]))
-    logger.info(basic_util.action_formatter(__get_function_name(), command))
     basic_util.execute(command)
 
 
@@ -119,7 +111,6 @@ def backup_sql() -> None:
                                     " > ",
                                     default_path.output_db_bak_sql_mysql
                                     )
-    logger.info(basic_util.action_formatter(__get_function_name(), command))
     basic_util.execute(command)
 
 
@@ -136,7 +127,6 @@ def backup_gz() -> None:
                                     "| gzip > ",
                                     default_path.output_db_bak_gz_mysql
                                     )
-    logger.info(basic_util.action_formatter(__get_function_name(), command))
     basic_util.execute(command)
 
 
@@ -157,5 +147,4 @@ def restore_gz() -> None:
                                                         default_common.param_main_db_mysql_pass,
                                                         default_common.param_main_db_name)
                                     ]))
-    logger.info(basic_util.action_formatter(__get_function_name(), command))
     basic_util.execute(command)
