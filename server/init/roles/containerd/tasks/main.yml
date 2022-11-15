@@ -1,6 +1,0 @@
-- name: containerd install
-  become: yes
-  shell: |
-    sudo mkdir -p /etc/containerd/
-    sudo cat {{ param_remote_role_path }}/config.toml > /etc/containerd/config.toml
-    bash {{ param_remote_role_path }}/{{ ansible_distribution | lower}}.sh
