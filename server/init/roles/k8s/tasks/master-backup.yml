@@ -1,2 +1,0 @@
-- name: k8s backup
-  shell: echo 'k8s backup'
