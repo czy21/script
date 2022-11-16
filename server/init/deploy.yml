@@ -55,11 +55,24 @@
   vars:
     param_role_name: k8s
   tasks:
-    - include_tasks: roles/common/tasks/copy.yml
-    - include_tasks: roles/k8s/tasks/master.yml
-    - include_tasks: roles/common/tasks/clean.yml
-  tags:
-    - 'k8s-master'
+    - block:
+        - include_tasks: roles/common/tasks/copy.yml
+        - include_tasks: roles/k8s/tasks/master-init.yml
+        - include_tasks: roles/common/tasks/clean.yml
+      tags:
+        - 'k8s-master-init'
+    - block:
+        - include_tasks: roles/common/tasks/copy.yml
+        - include_tasks: roles/k8s/tasks/master-backup.yml
+        - include_tasks: roles/common/tasks/clean.yml
+      tags:
+        - 'k8s-master-backup'
+    - block:
+        - include_tasks: roles/common/tasks/copy.yml
+        - include_tasks: roles/k8s/tasks/master-restore.yml
+        - include_tasks: roles/common/tasks/clean.yml
+      tags:
+        - 'k8s-master-restore'
 
 - name: k8s-worker
   hosts: worker
