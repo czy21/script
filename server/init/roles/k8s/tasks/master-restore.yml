@@ -1,0 +1,2 @@
+- name: k8s restore
+  shell: echo 'k8s restore'
