@@ -26,14 +26,17 @@ def execute(
         encoding="utf-8",
         is_input=True,
         is_return=True,
+        stack_index=1,
         shell=os.name == 'nt',
         dry_run=False
 ):
-    stack_last = inspect.stack()[1]
-    stack_file = stack_last.filename
-    stack_line = stack_last.lineno
-    stack_func = stack_last.function
-    logger.info("%s\n%s" % ("{0} line: {1} func: {2}".format(pathlib.Path(stack_file).as_posix(), str(stack_line), stack_func), cmd))
+    stack = inspect.stack()
+    stack_logs = []
+    if len(stack) - 1 >= stack_index:
+        stack_item = stack[stack_index]
+        stack_logs.append("{0} line: {1} func: {2}".format(pathlib.Path(stack_item.filename).as_posix(), str(stack_item.lineno), stack_item.function))
+    stack_logs.append(cmd)
+    logger.info("\n".join(stack_logs))
     if is_input:
         input_exec = str(input("Are you sure you want to execute (y/n)?").strip())
         if input_exec != "y":
