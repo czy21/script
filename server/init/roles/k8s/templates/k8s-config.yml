@@ -18,3 +18,14 @@ dns:
 apiServer:
   extraArgs:
     service-node-port-range: "1-65535"
+etcd:
+{% if 'external' == param_etcd_model %}
+  external:
+    endpoints:
+    {% for t in param_etcd_external_endpoints %}
+- "{{ t }}"
+    {% endfor -%}
+    caFile: "{{ param_etcd_external_ca_file }}"
+    certFile: "{{ param_etcd_external_cert_file }}"
+    keyFile: "{{ param_etcd_external_key_file }}"
+{%- endif %}
