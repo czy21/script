@@ -90,18 +90,18 @@ def select_role(root_path: pathlib.Path, deep: int = 1, exclude_rules=None, args
 
 
 def execute(cmd, is_return: bool = False, dry_run=False):
-    return basic_util.execute(cmd, is_input=False, is_return=is_return, dry_run=dry_run)
+    return basic_util.execute(cmd, is_input=False, is_return=is_return, stack_index=2, dry_run=dry_run)
 
 
 def loop_roles(root_path: pathlib.Path,
                tmp_path: pathlib.Path,
                bak_path: pathlib.Path,
                roles: dict,
-               role_func,
-               global_env,
+               role_func: typing.Callable[..., None],
+               global_env: dict,
                args: argparse.Namespace,
                jinja2ignore_rules: list,
-               **kwargs):
+               **kwargs) -> None:
     for k, v in roles.items():
         role_num = k
         role_path: pathlib.Path = v
@@ -185,15 +185,18 @@ class CustomHelpFormatter(argparse.MetavarTypeHelpFormatter):
 
 
 class Installer:
-    def __init__(self, root_path: pathlib.Path, role_func=None, role_deep: int = 1) -> None:
+    def __init__(self,
+                 root_path: pathlib.Path,
+                 role_func: typing.Callable[..., None] = None,
+                 role_deep: int = 1
+                 ) -> None:
         self.root_path: pathlib.Path = root_path
         self.tmp_path: pathlib.Path = root_path.joinpath("___temp")
         self.bak_path: pathlib.Path = self.tmp_path.joinpath("bak")
         self.env_file: pathlib.Path = root_path.joinpath("env.yaml")
         self.jinja2ignore_file: pathlib.Path = root_path.joinpath(".jinja2ignore")
-        self.role_func = role_func
+        self.role_func: typing.Callable[..., None] = role_func
         self.role_deep: int = role_deep
-        self.usage_name = pathlib.Path(__file__).name
         self.arg_parser: argparse.ArgumentParser = argparse.ArgumentParser(formatter_class=CustomHelpFormatter, usage='%(prog)s [command] [options]')
         self.set_common_argument(self.arg_parser)
         self.__command_parser = self.arg_parser.add_subparsers(title="commands", metavar="", dest="command")
