@@ -42,9 +42,7 @@
     param_role_name: k8s
   tasks:
     - block:
-        - include_tasks: roles/common/tasks/copy.yml
         - become: yes
           shell: kubeadm join 192.168.2.25:6443 --token 1nk6u8.rx29jnazce7k2bdv --discovery-token-ca-cert-hash sha256:8697700c2ce96f42f04c80db32937a3c9ed0b621dfe4be3ed9c139d30c8c20fc
-        - include_tasks: roles/common/tasks/clean.yml
       tags:
         - 'k8s-worker-join'
