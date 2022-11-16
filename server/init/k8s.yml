@@ -1,0 +1,49 @@
+- name: k8s-master
+  hosts: master
+  vars_files:
+    - "vars/env.yml"
+    - "vars/main.yml"
+    - "roles/k8s/vars/main.yml"
+  vars:
+    param_role_name: k8s
+  tasks:
+    - block:
+        - include_tasks: roles/common/tasks/copy.yml
+        - become: yes
+          shell:
+            sudo kubeadm init --config {{ param_remote_role_path }}/k8s-config.yml
+            sudo -i eval 'if [ -z ${KUBECONFIG} ];then echo 'export KUBECONFIG=/etc/kubernetes/admin.conf' >> ~/.bashrc; fi;'
+            sudo -u {{ param_user_ops }} bash -c "set -e;cd;mkdir -p .kube && sudo cp --force /etc/kubernetes/admin.conf .kube/config && sudo chown {{ param_user_ops }}:{{ param_user_ops }} .kube/config"
+        - include_tasks: roles/common/tasks/clean.yml
+      tags:
+        - 'k8s-master-init'
+    - block:
+        - include_tasks: roles/common/tasks/copy.yml
+        - become: yes
+          shell: echo backup
+        - include_tasks: roles/common/tasks/clean.yml
+      tags:
+        - 'k8s-master-backup'
+    - block:
+        - include_tasks: roles/common/tasks/copy.yml
+        - become: yes
+          shell: echo restore
+        - include_tasks: roles/common/tasks/clean.yml
+      tags:
+        - 'k8s-master-restore'
+
+- name: k8s-worker
+  hosts: worker
+  vars_files:
+    - "vars/env.yml"
+    - "vars/main.yml"
+    - "roles/k8s/vars/main.yml"
+  vars:
+    param_role_name: k8s
+  tasks:
+    - block:
+        - include_tasks: roles/common/tasks/copy.yml
+        - include_tasks: roles/k8s/tasks/worker-join.yml
+        - include_tasks: roles/common/tasks/clean.yml
+      tags:
+        - 'k8s-worker-join'

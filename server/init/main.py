@@ -60,7 +60,7 @@ if __name__ == '__main__':
     if not args.no_step:
         ansible_playbook_cmd.append("--step")
     if args.debug:
-        ansible_playbook_cmd.append("--verbose")
+        ansible_playbook_cmd.append("-vv")
     if args.check:
         ansible_playbook_cmd.append("--check")
     _cmds.append("echo -n '' > {0}".format(ansible_log_file))
