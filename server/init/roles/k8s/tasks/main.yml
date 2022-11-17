@@ -8,17 +8,18 @@
   become: yes
   shell: sudo cat {{ param_remote_role_path }}/hosts-{{ ansible_distribution | lower}} > /etc/hosts
   tags:
-    - 'k8s-init'
+    - 'k8s-init-etcd'
+    - 'k8s-init-kube'
 
-- name: master init
-  become: yes
-  shell: |-
-    sudo kubeadm init --config {{ param_remote_role_path }}/k8s-config.yml
-    sudo -i eval 'if [ -z ${KUBECONFIG} ];then echo 'export KUBECONFIG=/etc/kubernetes/admin.conf' >> ~/.bashrc; fi;'
-    sudo -u {{ param_user_ops }} bash -c "set -e;cd;mkdir -p .kube && sudo cp --force /etc/kubernetes/admin.conf .kube/config && sudo chown {{ param_user_ops }}:{{ param_user_ops }} .kube/config"
-  when: "'master' in group_names"
+- name: etcd init
+  import_tasks: init-etcd.yml
   tags:
-    - 'k8s-init'
+    - 'k8s-init-etcd'
+
+- name: kubeadm init
+  import_tasks: init-kube.yml
+  tags:
+    - 'k8s-init-kube'
 
 - name: worker join
   become: yes
@@ -52,23 +53,24 @@
   tags:
     - 'k8s-backup'
 
-- name: push backup
-  copy: src=___temp/{{ param_k8s_backup_name }}.tar.gz dest={{ param_remote_role_path }}/
-  when: "'master' in group_names"
-  tags:
-    - 'k8s-restore'
+#- name: push backup
+#  copy: src=___temp/{{ param_k8s_backup_name }}.tar.gz dest={{ param_remote_role_path }}/
+#  when: "'master' in group_names"
+#  tags:
+#    - 'k8s-restore'
 
 - name: master restore
   shell: |
-    sudo tar -zxvf {{ param_remote_role_path }}/{{ param_k8s_backup_name }}.tar.gz --strip-components 1 -C /
-    etcd_pod_name=$(kubectl -n kube-system get pod -o 'name' | grep 'etcd')
-    kubectl -n kube-system exec -it ${etcd_pod_name} -- \
-      etcdctl \
-        --endpoints="https://127.0.0.1:2379" \
-        --cert="/etc/kubernetes/pki/etcd/server.crt" \
-        --key="/etc/kubernetes/pki/etcd/server.key" \
-        --cacert="/etc/kubernetes/pki/etcd/ca.crt" \
-        snapshot restore /var/lib/etcd/etcd.db.bak
+    echo 'restore'
+    # sudo tar -zxvf {{ param_remote_role_path }}/{{ param_k8s_backup_name }}.tar.gz --strip-components 1 -C /
+    # etcd_pod_name=$(kubectl -n kube-system get pod -o 'name' | grep 'etcd')
+    # kubectl -n kube-system exec -it ${etcd_pod_name} -- \
+    #   etcdctl \
+    #     --endpoints="https://127.0.0.1:2379" \
+    #     --cert="/etc/kubernetes/pki/etcd/server.crt" \
+    #     --key="/etc/kubernetes/pki/etcd/server.key" \
+    #     --cacert="/etc/kubernetes/pki/etcd/ca.crt" \
+    #     snapshot restore /var/lib/etcd/etcd.db.bak
   when: "'master' in group_names"
   tags:
     - 'k8s-restore'
