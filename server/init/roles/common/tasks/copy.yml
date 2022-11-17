@@ -1,5 +1,4 @@
-- name: mk role path
-  file: path={{ param_remote_role_path }} state=directory
+- import_tasks: mk.yml
 
 - name: cp role template
   template: src={{ item }} dest={{ param_remote_role_path }}
