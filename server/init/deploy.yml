@@ -39,13 +39,15 @@
     param_role_name: k8s
     param_k8s_backup_name: '{{ param_backup_prefix }}-k8s'
   pre_tasks:
+    - import_tasks: roles/common/tasks/mk.yml
+      tags:
+        - 'k8s-backup'
+        - 'k8s-restore'
     - import_tasks: roles/common/tasks/copy.yml
       tags:
         - '{{ param_role_name }}'
         - 'k8s-init'
         - 'k8s-join'
-#        - 'k8s-backup'
-#        - 'k8s-restore'
   roles:
     - '{{ param_role_name }}'
   post_tasks:
@@ -54,5 +56,5 @@
         - '{{ param_role_name }}'
         - 'k8s-init'
         - 'k8s-join'
-        - 'k8s-backup'
-        - 'k8s-restore'
+#        - 'k8s-backup'
+#        - 'k8s-restore'
