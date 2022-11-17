@@ -38,10 +38,20 @@
   vars:
     param_role_name: k8s
   pre_tasks:
-    - include_tasks: roles/common/tasks/copy.yml
+    - import_tasks: roles/common/tasks/copy.yml
+      tags:
+        - '{{ param_role_name }}'
+        - 'k8s-init'
+        - 'k8s-join'
+        - 'k8s-backup'
+        - 'k8s-restore'
   roles:
     - '{{ param_role_name }}'
   post_tasks:
-    - include_tasks: roles/common/tasks/clean.yml
-  tags:
-    - '{{ param_role_name }}'
+    - import_tasks: roles/common/tasks/clean.yml
+      tags:
+        - '{{ param_role_name }}'
+        - 'k8s-init'
+        - 'k8s-join'
+        - 'k8s-backup'
+        - 'k8s-restore'

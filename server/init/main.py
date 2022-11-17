@@ -34,7 +34,7 @@ if __name__ == '__main__':
     if args.debug:
         logger.setLevel(logging.DEBUG)
 
-    ansible_inventory_file = pathlib.Path(__file__).parent.joinpath(args.file).as_posix()
+    ansible_inventory_file = pathlib.Path(__file__).parent.joinpath("{0}.yml".format(args.file)).as_posix()
     ansible_log_file = pathlib.Path(__file__).parent.joinpath("___temp/ansible.log").as_posix()
     _cmds = ["chmod 600 {0}".format(private_key)]
     ansible_playbook_cmd = [

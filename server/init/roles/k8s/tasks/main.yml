@@ -1,40 +1,42 @@
-- name: hosts install
+- name: k8s
   become: yes
-  shell: |
-    sudo cat {{ param_remote_role_path }}/hosts-{{ ansible_distribution | lower}} > /etc/hosts
+  import_tasks: install.yml
+  tags:
+    - '{{ param_role_name }}'
 
-- name: crio install
+- name: hosts init
   become: yes
-  shell: |
-    sudo mkdir -p /etc/containers/
-    sudo cat {{ param_remote_role_path }}/crio-registries.conf > /etc/containers/registries.conf
-    curl https://raw.githubusercontent.com/cri-o/cri-o/main/scripts/get | sudo PREFIX=/usr bash -s -- -t v{{ param_crio_version }}
-    sudo sed -i 's|/usr/local/bin/crio|/usr/bin/crio|g' /usr/lib/systemd/system/crio.service
-    sudo cat {{ param_remote_role_path }}/crio.conf > /etc/crio/crio.conf.d/99-custom.conf
-    sudo systemctl daemon-reload && sudo systemctl restart crio && sudo systemctl enable crio
+  shell: sudo cat {{ param_remote_role_path }}/hosts-{{ ansible_distribution | lower}} > /etc/hosts
+  tags:
+    - 'k8s-init'
 
-- name: k8s install
+- name: master init
   become: yes
-  shell: |
-    sudo cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
-    overlay
-    br_netfilter
-    ip_tables
-    EOF
+  shell: |-
+    sudo kubeadm init --config {{ param_remote_role_path }}/k8s-config.yml
+    sudo -i eval 'if [ -z ${KUBECONFIG} ];then echo 'export KUBECONFIG=/etc/kubernetes/admin.conf' >> ~/.bashrc; fi;'
+    sudo -u {{ param_user_ops }} bash -c "set -e;cd;mkdir -p .kube && sudo cp --force /etc/kubernetes/admin.conf .kube/config && sudo chown {{ param_user_ops }}:{{ param_user_ops }} .kube/config"
+  when: "'master' in group_names"
+  tags:
+    - 'k8s-init'
 
-    sudo cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
-    net.bridge.bridge-nf-call-iptables  = 1
-    net.bridge.bridge-nf-call-ip6tables = 1
-    net.ipv4.ip_forward                 = 1
-    EOF
-    
-    sudo sysctl --system
-    bash {{ param_remote_role_path }}/k8s-{{ ansible_distribution | lower}}.sh && kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
-
-- name: helm install
+- name: worker join
   become: yes
-  shell: |
-    sudo wget -O - https://get.helm.sh/helm-v3.9.0-linux-amd64.tar.gz | sudo tar -zxf - --strip-components 1 -C /usr/local/bin/ linux-amd64/helm
-    sudo chown root:root /usr/local/bin/helm && sudo chmod +x /usr/local/bin/helm
-    sudo ln -sf /usr/local/bin/helm /usr/bin/helm
-    helm completion bash | sudo tee /etc/bash_completion.d/helm > /dev/null
+  shell: kubeadm join 192.168.2.25:6443 --token 1nk6u8.rx29jnazce7k2bdv --discovery-token-ca-cert-hash sha256:8697700c2ce96f42f04c80db32937a3c9ed0b621dfe4be3ed9c139d30c8c20fc
+  when: "'worker' in group_names"
+  tags:
+    - 'k8s-join'
+
+- name: master backup
+  become: yes
+  shell: echo 'backup'
+  when: "'master' in group_names"
+  tags:
+    - 'k8s-backup'
+
+- name: master restore
+  become: yes
+  shell: echo 'restore'
+  when: "'master' in group_names"
+  tags:
+    - 'k8s-restore'
