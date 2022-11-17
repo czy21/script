@@ -2,5 +2,5 @@
 ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
 
 {% for t in vars['param_hosts'] %}
-{{ t }}
+{{ t.ip }} {{ t.name }}
 {% endfor %}
