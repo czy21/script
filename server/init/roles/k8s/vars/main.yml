@@ -7,9 +7,9 @@ param_cri_socket: "" # use docker as cri: unix:///var/run/cri-dockerd.sock
 
 param_etcd_model: "external" # local | external
 param_etcd_external_endpoints:
-  - "https://192.168.2.25:2380"
-  - "https://192.168.2.26:2380"
-  - "https://192.168.2.27:2380"
+  - "https://192.168.2.25:2379"
+  - "https://192.168.2.26:2379"
+  - "https://192.168.2.27:2379"
 param_etcd_external_ca_file: "/etc/kubernetes/pki/etcd/ca.crt"
-param_etcd_external_cert_file: "/etc/kubernetes/pki/etcd/server.crt"
-param_etcd_external_key_file: "/etc/kubernetes/pki/etcd/server.key"
+param_etcd_external_cert_file: "/etc/kubernetes/pki/apiserver-etcd-client.crt"
+param_etcd_external_key_file: "/etc/kubernetes/pki/apiserver-etcd-client.key"
