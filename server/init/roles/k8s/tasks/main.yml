@@ -28,8 +28,28 @@
     - 'k8s-join'
 
 - name: master backup
-  become: yes
-  shell: echo 'backup'
+  shell: |
+    bak_path={{ param_remote_role_path }}/{{ param_k8s_backup_name }}
+    mkdir -p ${bak_path}
+    sudo cp --parents -r /etc/kubernetes/ ${bak_path}/
+    etcd_pod_name=$(kubectl -n kube-system get pod -o 'name' | grep 'etcd')
+    kubectl -n kube-system exec -it ${etcd_pod_name} -- \
+      etcdctl \
+        --endpoints="https://127.0.0.1:2379" \
+        --cert="/etc/kubernetes/pki/etcd/server.crt" \
+        --key="/etc/kubernetes/pki/etcd/server.key" \
+        --cacert="/etc/kubernetes/pki/etcd/ca.crt" \
+        snapshot save /var/lib/etcd/etcd.db.bak
+    sudo cp --parents /var/lib/etcd/etcd.db.bak ${bak_path}/
+    uid=$(id -u)
+    sudo chown -R ${uid}:${uid} ${bak_path}
+    sudo bash -c "cd {{ param_remote_role_path }};tar -zcvf {{ param_k8s_backup_name }}.tar.gz {{ param_k8s_backup_name }}"
+  when: "'master' in group_names"
+  tags:
+    - 'k8s-backup'
+
+- name: fetch backup
+  fetch: src={{ param_remote_role_path }}/{{ param_k8s_backup_name }}.tar.gz dest=___temp/{{ param_k8s_backup_name }}.tar.gz flat=yes
   when: "'master' in group_names"
   tags:
     - 'k8s-backup'
