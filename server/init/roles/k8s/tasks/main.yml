@@ -41,6 +41,7 @@
         snapshot save /var/lib/etcd/etcd.db.bak
     sudo cp --parents -rv /etc/kubernetes/ /var/lib/kubelet/ /var/lib/etcd/etcd.db.bak ${bak_path}/
     sh -c 'cd {{ param_remote_role_path }} && sudo tar -pzcvf {{ param_k8s_backup_name }}.tar.gz {{ param_k8s_backup_name }}'
+    sudo rm -rf ${bak_path}
   when: "'master' in group_names"
   tags:
     - 'k8s-backup'
@@ -58,9 +59,16 @@
     - 'k8s-restore'
 
 - name: master restore
-  become: yes
   shell: |
     sudo tar -zxvf {{ param_remote_role_path }}/{{ param_k8s_backup_name }}.tar.gz --strip-components 1 -C /
+    etcd_pod_name=$(kubectl -n kube-system get pod -o 'name' | grep 'etcd')
+    kubectl -n kube-system exec -it ${etcd_pod_name} -- \
+      etcdctl \
+        --endpoints="https://127.0.0.1:2379" \
+        --cert="/etc/kubernetes/pki/etcd/server.crt" \
+        --key="/etc/kubernetes/pki/etcd/server.key" \
+        --cacert="/etc/kubernetes/pki/etcd/ca.crt" \
+        snapshot restore /var/lib/etcd/etcd.db.bak
   when: "'master' in group_names"
   tags:
     - 'k8s-restore'
