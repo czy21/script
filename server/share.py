@@ -214,6 +214,8 @@ class Installer:
         parser.add_argument('-f', '--file', type=str)
         parser.add_argument('-n', '--namespace', type=str)
         parser.add_argument('-p', '--param', nargs="+", default=[], type=lambda s: dict({split_kv_str(s)}), help="k1=v1 k2=v2")
+        parser.add_argument('--ignore-namespace', action="store_true")
+        parser.add_argument('--create-namespace', action="store_true")
         parser.add_argument('--debug', action="store_true", help="enable verbose output")
         parser.add_argument('--dry-run', action="store_true", help="only print not submit")
 
