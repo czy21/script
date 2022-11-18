@@ -17,10 +17,6 @@ networking:
 dns:
   imageRepository: "{{ param_registry_proxy_url }}/coredns"
 apiServer:
-  certSANs:
-    {% for t in vars['param_hosts'] %}
-  - "{{ t.name }}"
-    {% endfor -%}
   extraArgs:
     service-node-port-range: "1-65535"
 etcd:
