@@ -10,6 +10,7 @@ apiVersion: kubeadm.k8s.io/v1beta3
 kind: ClusterConfiguration
 kubernetesVersion: "v{{ param_k8s_version }}"
 imageRepository: "{{ param_registry_proxy_url }}"
+controlPlaneEndpoint: "{{ param_hosts[0].name }}"
 networking:
   serviceSubnet: "{{ param_k8s_svc_network_cidr }}"
   podSubnet: "{{ param_k8s_pod_network_cidr }}"

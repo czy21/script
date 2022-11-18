@@ -1,8 +1,18 @@
+
+- name: etcd of kubelet push
+  copy: src=___temp/cluster.tar.gz dest={{ param_remote_role_path }}/
+  when: inventory_hostname == play_hosts[0]
+
+- name: etcd config extract
+  shell: |
+    tar -zxvf {{ param_remote_role_path }}/cluster.tar.gz -C {{ param_remote_role_path }}
+    sudo mkdir -p /etc/kubernetes/
+    sudo cp -r {{ param_remote_role_path }}/cluster/node/192.168.2.31/pki/ /etc/kubernetes/
+  when: inventory_hostname == play_hosts[0]
+
 - name: kubeadm init
   shell: |
     sudo kubeadm init --config {{ param_remote_role_path }}/k8s-config.yml --upload-certs
     sudo -i eval 'if [ -z ${KUBECONFIG} ];then echo 'export KUBECONFIG=/etc/kubernetes/admin.conf' >> ~/.bashrc; fi;'
     sudo -u {{ param_user_ops }} bash -c "set -e;cd;mkdir -p .kube && sudo cp --force /etc/kubernetes/admin.conf .kube/config && sudo chown {{ param_user_ops }}:{{ param_user_ops }} .kube/config"
-    sudo -i eval 'if [ -z ${KUBECONFIG} ];then echo 'export KUBECONFIG=/etc/kubernetes/admin.conf' >> ~/.bashrc; fi;'
-    sudo -u {{ param_user_ops }} bash -c "set -e;cd;mkdir -p .kube && sudo cp --force /etc/kubernetes/admin.conf .kube/config && sudo chown {{ param_user_ops }}:{{ param_user_ops }} .kube/config"
-  run_once: true
+  when: inventory_hostname == play_hosts[0]

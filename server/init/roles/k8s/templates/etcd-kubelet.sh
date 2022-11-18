@@ -30,6 +30,7 @@ nodeRegistration:
 apiVersion: "kubeadm.k8s.io/v1beta3"
 kind: ClusterConfiguration
 kubernetesVersion: "v{{ param_k8s_version }}"
+imageRepository: "{{ param_registry_proxy_url }}"
 etcd:
     local:
         serverCertSANs:
