@@ -38,6 +38,7 @@
   vars:
     param_role_name: k8s
     param_k8s_backup_name: '{{ param_backup_prefix }}-k8s'
+    param_k8s_etcd_cluster_name: 'etcd'
   pre_tasks:
     - import_tasks: roles/common/tasks/mk.yml
       tags:
@@ -55,6 +56,6 @@
     - import_tasks: roles/common/tasks/clean.yml
       tags:
         - '{{ param_role_name }}'
-        - 'k8s-init-etcd'
-        - 'k8s-init-kube'
+#        - 'k8s-init-etcd'
+#        - 'k8s-init-kube'
         - 'k8s-join'
