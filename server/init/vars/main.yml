@@ -16,4 +16,5 @@ param_hosts:
 #  - ip: 192.168.2.33
 #    name: k8s-node-33
 
+
 param_backup_prefix: '{{ inventory_hostname }}-backup'

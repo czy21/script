@@ -1,31 +1,35 @@
 #!/bin/bash
 set -e
 
-CLUSTER=${HOME}/{{ param_remote_role_path }}/cluster
-PKI=${CLUSTER}/pki
-NODE=${CLUSTER}/node
-mkdir -p ${PKI} ${NODE}
+# {%- set initial_nodes=[] %}
+# {% for t in vars['param_hosts'] %}
+#  {{- initial_nodes.append('{0}=https://{1}:2380'.format(t.name,t.ip)) or '' }}
+# {% endfor %}
+
+HOSTS=({{ param_hosts | join(' ', attribute='ip') }})
+NAMES=({{ param_hosts | join(' ', attribute='name') }})
+CLUSTER="{{ initial_nodes | join(',') }}"
+
+DIR=${HOME}/{{ param_remote_role_path }}/{{ param_k8s_etcd_cluster_name }}
+PKI=${DIR}/pki
+mkdir -p ${PKI}
 sudo kubeadm init phase certs etcd-ca --kubernetes-version {{ param_k8s_version }}
-{% for t in vars['param_hosts'] %}
-  IP={{ t.ip }}
-  NAME={{ t.name }}
-  IP_DIR=${NODE}/${IP}
-  KUBEADM_CFG=${IP_DIR}/kubeadm-config.yaml
-  mkdir -p ${IP_DIR}
-  {%- set initial_nodes=[] %}
-  {% for t in vars['param_hosts'] %}
-     {{- initial_nodes.append('{0}=https://{1}:2380'.format(t.name,t.ip)) or '' }}
-  {% endfor %}
+
+for i in "${!HOSTS[@]}"; do
+  HOST=${HOSTS[$i]}
+  NAME=${NAMES[$i]}
+  HOST_DIR=${DIR}/${HOST}
+  KUBEADM_CFG=${HOST_DIR}/kubeadm-config.yaml
+  mkdir -p ${HOST_DIR}
   cat << EOF > ${KUBEADM_CFG}
 ---
 apiVersion: "kubeadm.k8s.io/v1beta3"
 kind: InitConfiguration
 nodeRegistration:
     name: ${NAME}
+    criSocket: "{{ param_cri_socket }}"
 localAPIEndpoint:
-    advertiseAddress: ${IP}
-nodeRegistration:
-  criSocket: ""
+    advertiseAddress: ${HOST}
 ---
 apiVersion: "kubeadm.k8s.io/v1beta3"
 kind: ClusterConfiguration
@@ -34,25 +38,32 @@ imageRepository: "{{ param_registry_proxy_url }}"
 etcd:
     local:
         serverCertSANs:
-        - "${IP}"
+        - "${HOST}"
         peerCertSANs:
-        - "${IP}"
+        - "${HOST}"
         extraArgs:
             initial-cluster: {{ initial_nodes | join(',') }}
             initial-cluster-state: new
             name: ${NAME}
-            listen-peer-urls: https://${IP}:2380
-            listen-client-urls: https://${IP}:2379
-            advertise-client-urls: https://${IP}:2379
-            initial-advertise-peer-urls: https://${IP}:2380
+            listen-peer-urls: https://${HOST}:2380
+            listen-client-urls: https://${HOST}:2379
+            advertise-client-urls: https://${HOST}:2379
+            initial-advertise-peer-urls: https://${HOST}:2380
 EOF
    sudo kubeadm init phase certs etcd-server --config=${KUBEADM_CFG}
    sudo kubeadm init phase certs etcd-peer --config=${KUBEADM_CFG}
    sudo kubeadm init phase certs etcd-healthcheck-client --config=${KUBEADM_CFG}
    sudo kubeadm init phase certs apiserver-etcd-client --config=${KUBEADM_CFG}
-   sudo cp -R /etc/kubernetes/pki ${IP_DIR}
+   sudo cp -R /etc/kubernetes/pki ${HOST_DIR}
    sudo find /etc/kubernetes/pki -not -name ca.crt -not -name ca.key -type f -delete
-{% endfor %}
+   if [ $i == 0 ]; then
+     sudo cp -R ${HOST_DIR}/pki ${DIR}
+   else
+     sudo find ${HOST_DIR}/pki -name ca.key -type f -delete
+   fi
+   uid=$(id -u)
+   sudo chown -R ${uid}:${uid} ${DIR}
+done
 
-sh -c 'cd {{ param_remote_role_path }} && sudo tar -pzcvf cluster.tar.gz cluster'
-sudo rm -rf ${CLUSTER}
+sh -c 'cd {{ param_remote_role_path }} && tar -pzcvf {{ param_k8s_etcd_cluster_name }}.tar.gz {{ param_k8s_etcd_cluster_name }}'
+rm -rf ${DIR}

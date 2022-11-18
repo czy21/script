@@ -3,9 +3,9 @@ param_k8s_version: 1.24.8
 param_crio_version: 1.24.3
 param_k8s_svc_network_cidr: 10.1.0.0/16
 param_k8s_pod_network_cidr: 10.2.0.0/16
-param_cri_socket: "" # use docker as cri: unix:///var/run/cri-dockerd.sock
+param_cri_socket: "unix:///var/run/crio/crio.sock" # use docker as cri: unix:///var/run/cri-dockerd.sock
 
-param_etcd_model: "external" # local | external
+param_etcd_mode: "external" # local | external
 param_etcd_external_endpoints:
   - "https://192.168.2.31:2379"
   - "https://192.168.2.32:2379"

@@ -3,24 +3,24 @@
   when: inventory_hostname == play_hosts[0]
 
 - name: etcd of kubelet fetch
-  fetch: src={{ param_remote_role_path }}/cluster.tar.gz dest=___temp/cluster.tar.gz flat=yes
+  fetch: src={{ param_remote_role_path }}/{{ param_k8s_etcd_cluster_name }}.tar.gz dest=___temp/{{ param_k8s_etcd_cluster_name }}.tar.gz flat=yes
   when: inventory_hostname == play_hosts[0]
 
 - name: etcd of kubelet push
-  copy: src=___temp/cluster.tar.gz dest={{ param_remote_role_path }}/
+  copy: src=___temp/{{ param_k8s_etcd_cluster_name }}.tar.gz dest={{ param_remote_role_path }}/
 
-- name: etcd init
+- name: etcd of kubelet init
   become: yes
   shell: |
     sudo mkdir -p /etc/systemd/system/kubelet.service.d/
     sudo cat << EOF > /etc/systemd/system/kubelet.service.d/20-etcd-service-manager.conf
     [Service]
     ExecStart=
-    ExecStart=/usr/bin/kubelet --address=127.0.0.1 --pod-manifest-path=/etc/kubernetes/manifests --container-runtime=remote --cgroup-driver=systemd --container-runtime-endpoint=unix:///var/run/crio/crio.sock
+    ExecStart=/usr/bin/kubelet --address=127.0.0.1 --pod-manifest-path=/etc/kubernetes/manifests --container-runtime=remote --cgroup-driver=systemd --container-runtime-endpoint={{ param_cri_socket }}
     Restart=always
     EOF
-    tar -zxvf {{ param_remote_role_path }}/cluster.tar.gz -C {{ param_remote_role_path }}
+    tar -zxvf {{ param_remote_role_path }}/{{ param_k8s_etcd_cluster_name }}.tar.gz -C {{ param_remote_role_path }}
     sudo mkdir -p /etc/kubernetes/
-    sudo cp -r {{ param_remote_role_path }}/cluster/node/{{ inventory_hostname }}/pki/ /etc/kubernetes/
+    sudo cp -r {{ param_remote_role_path }}/{{ param_k8s_etcd_cluster_name }}/{{ inventory_hostname }}/pki/ /etc/kubernetes/
     sudo systemctl daemon-reload && sudo systemctl restart kubelet && sudo systemctl status kubelet
-    sudo kubeadm init phase etcd local --config={{ param_remote_role_path }}/cluster/node/{{ inventory_hostname }}/kubeadm-config.yaml
+    sudo kubeadm init phase etcd local --config={{ param_remote_role_path }}/{{ param_k8s_etcd_cluster_name }}/{{ inventory_hostname }}/kubeadm-config.yaml
