@@ -20,7 +20,7 @@ apiServer:
   extraArgs:
     service-node-port-range: "1-65535"
 etcd:
-{% if 'external' == param_etcd_model %}
+{% if 'external' == param_etcd_mode %}
   external:
     endpoints:
     {% for t in param_etcd_external_endpoints %}
