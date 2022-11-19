@@ -1,0 +1,10 @@
+- name: etcd init cert
+  shell: bash {{ param_remote_role_path }}/etcd-kubelet.sh
+  when: inventory_hostname == play_hosts[0]
+
+- name: etcd pull cert
+  synchronize:
+    src: "{{ inventory_dir }}/{{ role_name }}/{{ param_k8s_etcd_cluster_name }}"
+    dest: "___temp/"
+    mode: pull
+  when: inventory_hostname == play_hosts[0]

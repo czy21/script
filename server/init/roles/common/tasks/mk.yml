@@ -1,2 +1,2 @@
-- name: mk role path
+- name: mkdir
   file: path={{ param_remote_role_path }} state=directory
