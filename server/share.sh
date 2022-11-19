@@ -17,6 +17,7 @@ function upload_exec_py() {
   local ssh_cmd="ssh ${ssh_opt} ${host}"
   local scp_cmd="scp ${ssh_opt} -rqC"
 
+  ${ssh_cmd} ${del_cmd}
   ${scp_cmd} ${book_source} $host:
   ${scp_cmd} ${book_source}/../requirements.txt ${book_source}/../env.yaml ${book_source}/../share.py ${utility} $host:${book_target}
 
