@@ -47,8 +47,9 @@
     - import_tasks: roles/common/tasks/copy.yml
       tags:
         - '{{ param_role_name }}'
+        - 'k8s-init-etcd-cert'
         - 'k8s-init-etcd'
-        - 'k8s-init-kube'
+#        - 'k8s-init-kube'
         - 'k8s-join'
   roles:
     - '{{ param_role_name }}'
@@ -56,6 +57,7 @@
     - import_tasks: roles/common/tasks/clean.yml
       tags:
         - '{{ param_role_name }}'
-#        - 'k8s-init-etcd'
+        - 'k8s-init-etcd-cert'
+        - 'k8s-init-etcd'
 #        - 'k8s-init-kube'
         - 'k8s-join'

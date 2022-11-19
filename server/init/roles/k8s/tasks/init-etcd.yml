@@ -1,13 +1,5 @@
-- name: etcd of kubelet prepare
-  shell: bash {{ param_remote_role_path }}/etcd-kubelet.sh
-  when: inventory_hostname == play_hosts[0]
-
-- name: etcd of kubelet fetch
-  fetch: src={{ param_remote_role_path }}/{{ param_k8s_etcd_cluster_name }}.tar.gz dest=___temp/{{ param_k8s_etcd_cluster_name }}.tar.gz flat=yes
-  when: inventory_hostname == play_hosts[0]
-
-- name: etcd of kubelet push
-  copy: src=___temp/{{ param_k8s_etcd_cluster_name }}.tar.gz dest={{ param_remote_role_path }}/
+- name: etcd push cert
+  synchronize: src=___temp/{{ param_k8s_etcd_cluster_name }} dest={{ inventory_dir }}/{{ role_name }}/
 
 - name: etcd of kubelet init
   become: yes
@@ -19,7 +11,6 @@
     ExecStart=/usr/bin/kubelet --address=127.0.0.1 --pod-manifest-path=/etc/kubernetes/manifests --container-runtime=remote --cgroup-driver=systemd --container-runtime-endpoint={{ param_cri_socket }}
     Restart=always
     EOF
-    tar -zxvf {{ param_remote_role_path }}/{{ param_k8s_etcd_cluster_name }}.tar.gz -C {{ param_remote_role_path }}
     sudo mkdir -p /etc/kubernetes/
     sudo cp -r {{ param_remote_role_path }}/{{ param_k8s_etcd_cluster_name }}/{{ inventory_hostname }}/pki/ /etc/kubernetes/
     sudo systemctl daemon-reload && sudo systemctl restart kubelet && sudo systemctl status kubelet
