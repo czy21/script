@@ -5,7 +5,7 @@ echo -n "%wheel  ALL=(ALL)       ALL" > /etc/sudoers.d/99-custom
 
 yum clean all && yum --refresh makecache -v
 
-yum -y install wget vim nfs-utils bash-completion git jq
+yum -y install wget vim nfs-utils bash-completion git jq rsync
 dnf -y install python39
 
 useradd -m {{ param_user_ops }} && usermod -aG wheel {{ param_user_ops }} && passwd -d {{ param_user_ops }}
