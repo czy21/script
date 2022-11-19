@@ -11,6 +11,11 @@
     - 'k8s-init-etcd'
     - 'k8s-init-kube'
 
+- name: ha init
+  import_tasks: init-ha.yml
+  tags:
+    - 'k8s-init-ha'
+
 - name: etcd init cert
   import_tasks: init-etcd-cert.yml
   tags:
