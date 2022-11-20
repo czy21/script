@@ -1,8 +1,6 @@
 #!/bin/bash
 set -e
 
-IPV4S=({{ param_ansible_host_ipv4s | join(' ') }})
-HOSTS=({{ param_ansbile_host_names | join(' ') }})
 LEAD_IPV4="{{ param_ansible_lead_ipv4 }}"
 HOST_IPV4="{{ param_ansible_host_ipv4 }}"
 
