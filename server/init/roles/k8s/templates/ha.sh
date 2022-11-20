@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e
 
-LEAD_IPV4="{{ param_ansible_lead_ipv4 }}"
 HOST_IPV4="{{ param_ansible_host_ipv4 }}"
+LEAD_IPV4="{{ param_ansible_lead_ipv4 }}"
 
 STATE="BACKUP"
 INTERFACE="{{ param_iface }}"
@@ -11,7 +11,7 @@ PRIORITY=50
 AUTH_PASS=42
 APISERVER_VIP=${LEADER_IP}
 
-if [ ${LEAD_IPV4} == ${HOST_IPV4} ];then
+if [ "${LEAD_IPV4}" == "${HOST_IPV4}" ];then
   STATE="MASTER"
   PRIORITY=100
 fi
