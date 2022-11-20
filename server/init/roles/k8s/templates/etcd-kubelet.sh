@@ -1,9 +1,9 @@
 #!/bin/bash
 set -e
 
-IPV4S=({{ param_hosts | join(' ', attribute='ip') }})
-HOSTS=({{ param_hosts | join(' ', attribute='name') }})
-CLUSTER="{{ param_ansible_host_ipv4s|zip(param_ansbile_host_names)|map('format','{0}=https://{1}:2380')|join(',') }}"
+IPV4S=({{ param_ansible_host_ipv4s | join(' ') }})
+NAMES=({{ param_ansbile_host_names | join(' ') }})
+CLUSTER="{{ param_ansible_host_ipv4s|zip(param_ansbile_host_names)|map('reverse')|map('format','{0}=https://{1}:2380')|join(',') }}"
 
 DIR=${HOME}/{{ param_remote_role_path }}/{{ param_k8s_etcd_cluster_name }}
 PKI=${DIR}/pki
@@ -12,7 +12,7 @@ kubeadm init phase certs etcd-ca --kubernetes-version {{ param_k8s_version }} --
 
 for i in "${!IPV4S[@]}"; do
   IPV4=${IPV4S[$i]}
-  NAME=${HOSTS[$i]}
+  NAME=${NAMES[$i]}
   IPV4_DIR=${DIR}/${IPV4}
   KUBE_CFG=${IPV4_DIR}/kubeadm-config.yaml
   mkdir -p ${IPV4_DIR}
