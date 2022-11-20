@@ -29,12 +29,15 @@ scrape_configs:
         - '{job="spring"}'
         - '{job=~"k8s-.*"}'
     static_configs:
-      - targets: ['prom-dev.cluster.com']
-        labels:
-          origin_prometheus: dev
       - targets: ['prom-nas.cluster.com']
         labels:
           origin_prometheus: nas
+      - targets: ['prom-dev.cluster.com']
+        labels:
+          origin_prometheus: dev
+      - targets: ['prom-test.cluster.com']
+        labels:
+          origin_prometheus: test
 
   - job_name: node
     static_configs:

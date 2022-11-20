@@ -3,7 +3,10 @@
     "list": [
       {
         "builtIn": 1,
-        "datasource": "-- Grafana --",
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
         "enable": true,
         "hide": true,
         "iconColor": "rgba(0, 211, 255, 1)",
@@ -25,13 +28,16 @@
   "fiscalYearStartMonth": 0,
   "gnetId": 4701,
   "graphTooltip": 1,
-  "id": 1,
-  "iteration": 1643202036113,
+  "id": 6,
   "links": [],
   "liveNow": false,
   "panels": [
     {
       "collapsed": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P047DE0F543C7E359"
+      },
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -40,6 +46,15 @@
       },
       "id": 125,
       "panels": [],
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "refId": "A"
+        }
+      ],
       "title": "Quick Facts",
       "type": "row"
     },
@@ -101,10 +116,14 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "9.2.2",
       "targets": [
         {
-          "expr": "process_uptime_seconds{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "process_uptime_seconds{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "",
@@ -174,10 +193,14 @@
         "text": {},
         "textMode": "value"
       },
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "9.2.2",
       "targets": [
         {
-          "expr": "process_start_time_seconds{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}*1000",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "process_start_time_seconds{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}*1000",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "",
@@ -255,10 +278,14 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "9.2.2",
       "targets": [
         {
-          "expr": "sum(jvm_memory_used_bytes{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\", area=\"heap\"})*100/sum(jvm_memory_max_bytes{namespace=\"$namespace\",application=\"$application\",instance=\"$instance\", area=\"heap\"})",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "sum(jvm_memory_used_bytes{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\", area=\"heap\"})*100/sum(jvm_memory_max_bytes{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\",instance=\"$instance\", area=\"heap\"})",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "",
@@ -345,10 +372,14 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "9.2.2",
       "targets": [
         {
-          "expr": "sum(jvm_memory_used_bytes{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\", area=\"nonheap\"})*100/sum(jvm_memory_max_bytes{namespace=\"$namespace\",application=\"$application\",instance=\"$instance\", area=\"nonheap\"})",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "sum(jvm_memory_used_bytes{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\", area=\"nonheap\"})*100/sum(jvm_memory_max_bytes{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\",instance=\"$instance\", area=\"nonheap\"})",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "",
@@ -361,6 +392,10 @@
     },
     {
       "collapsed": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P047DE0F543C7E359"
+      },
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -369,6 +404,15 @@
       },
       "id": 126,
       "panels": [],
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "refId": "A"
+        }
+      ],
       "title": "I/O Overview",
       "type": "row"
     },
@@ -408,7 +452,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "9.2.2",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -418,7 +462,11 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(rate(http_server_requests_seconds_count{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}[1m]))",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "sum(rate(http_server_requests_seconds_count{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}[1m]))",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "HTTP",
@@ -495,7 +543,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "9.2.2",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -505,7 +553,11 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(rate(http_server_requests_seconds_count{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\", status=~\"5..\"}[1m]))",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "sum(rate(http_server_requests_seconds_count{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\", status=~\"5..\"}[1m]))",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "HTTP - 5xx",
@@ -579,7 +631,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "9.2.2",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -589,7 +641,11 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(rate(http_server_requests_seconds_sum{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\", status!~\"5..\"}[1m]))/sum(rate(http_server_requests_seconds_count{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\", status!~\"5..\"}[1m]))",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "sum(rate(http_server_requests_seconds_sum{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\", status!~\"5..\"}[1m]))/sum(rate(http_server_requests_seconds_count{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\", status!~\"5..\"}[1m]))",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 1,
@@ -597,7 +653,11 @@
           "refId": "A"
         },
         {
-          "expr": "max(http_server_requests_seconds_max{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\", status!~\"5..\"})",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "max(http_server_requests_seconds_max{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\", status!~\"5..\"})",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 1,
@@ -674,7 +734,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "9.2.2",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -684,7 +744,11 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "tomcat_threads_busy_threads{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "tomcat_threads_busy_threads{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 2,
@@ -692,7 +756,11 @@
           "refId": "A"
         },
         {
-          "expr": "tomcat_threads_current_threads{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "tomcat_threads_current_threads{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 2,
@@ -700,7 +768,11 @@
           "refId": "B"
         },
         {
-          "expr": "tomcat_threads_config_max_threads{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "tomcat_threads_config_max_threads{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 2,
@@ -708,7 +780,11 @@
           "refId": "C"
         },
         {
-          "expr": "jetty_threads_busy{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "jetty_threads_busy{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 2,
@@ -716,7 +792,11 @@
           "refId": "D"
         },
         {
-          "expr": "jetty_threads_current{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "jetty_threads_current{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 2,
@@ -724,7 +804,11 @@
           "refId": "E"
         },
         {
-          "expr": "jetty_threads_config_max{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "jetty_threads_config_max{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 2,
@@ -765,6 +849,10 @@
     },
     {
       "collapsed": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P047DE0F543C7E359"
+      },
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -773,6 +861,15 @@
       },
       "id": 127,
       "panels": [],
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "refId": "A"
+        }
+      ],
       "title": "JVM Memory",
       "type": "row"
     },
@@ -818,7 +915,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "9.2.2",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -828,7 +925,11 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(jvm_memory_used_bytes{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\", area=\"heap\"})",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "sum(jvm_memory_used_bytes{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\", area=\"heap\"})",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "used",
@@ -837,7 +938,11 @@
           "step": 2400
         },
         {
-          "expr": "sum(jvm_memory_committed_bytes{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\", area=\"heap\"})",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "sum(jvm_memory_committed_bytes{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\", area=\"heap\"})",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "committed",
@@ -845,7 +950,11 @@
           "step": 2400
         },
         {
-          "expr": "sum(jvm_memory_max_bytes{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\", area=\"heap\"})",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "sum(jvm_memory_max_bytes{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\", area=\"heap\"})",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "max",
@@ -933,7 +1042,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "9.2.2",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -943,7 +1052,11 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(jvm_memory_used_bytes{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\", area=\"nonheap\"})",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "sum(jvm_memory_used_bytes{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\", area=\"nonheap\"})",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -953,7 +1066,11 @@
           "step": 2400
         },
         {
-          "expr": "sum(jvm_memory_committed_bytes{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\", area=\"nonheap\"})",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "sum(jvm_memory_committed_bytes{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\", area=\"nonheap\"})",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "committed",
@@ -961,7 +1078,11 @@
           "step": 2400
         },
         {
-          "expr": "sum(jvm_memory_max_bytes{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\", area=\"nonheap\"})",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "sum(jvm_memory_max_bytes{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\", area=\"nonheap\"})",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "max",
@@ -1050,7 +1171,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "9.2.2",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -1060,7 +1181,11 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(jvm_memory_used_bytes{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"})",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "sum(jvm_memory_used_bytes{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"})",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "used",
@@ -1069,7 +1194,11 @@
           "step": 2400
         },
         {
-          "expr": "sum(jvm_memory_committed_bytes{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"})",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "sum(jvm_memory_committed_bytes{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"})",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "committed",
@@ -1077,7 +1206,11 @@
           "step": 2400
         },
         {
-          "expr": "sum(jvm_memory_max_bytes{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"})",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "sum(jvm_memory_max_bytes{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"})",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "max",
@@ -1166,7 +1299,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.3",
+      "pluginVersion": "9.2.2",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -1176,7 +1309,11 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "process_memory_vss_bytes{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "process_memory_vss_bytes{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
           "hide": true,
           "intervalFactor": 2,
@@ -1186,21 +1323,33 @@
           "step": 2400
         },
         {
-          "expr": "process_memory_rss_bytes{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "process_memory_rss_bytes{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "rss",
           "refId": "B"
         },
         {
-          "expr": "process_memory_swap_bytes{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "process_memory_swap_bytes{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "swap",
           "refId": "C"
         },
         {
-          "expr": "process_memory_rss_bytes{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"} + process_memory_swap_bytes{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "process_memory_rss_bytes{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"} + process_memory_swap_bytes{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "total",
@@ -1248,6 +1397,10 @@
     },
     {
       "collapsed": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P047DE0F543C7E359"
+      },
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -1256,6 +1409,15 @@
       },
       "id": 128,
       "panels": [],
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "refId": "A"
+        }
+      ],
       "title": "JVM Misc",
       "type": "row"
     },
@@ -1311,7 +1473,11 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "system_cpu_usage{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "system_cpu_usage{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 1,
@@ -1321,7 +1487,11 @@
           "step": 2400
         },
         {
-          "expr": "process_cpu_usage{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "process_cpu_usage{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 1,
@@ -1329,7 +1499,11 @@
           "refId": "B"
         },
         {
-          "expr": "avg_over_time(process_cpu_usage{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}[1h])",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "avg_over_time(process_cpu_usage{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}[1h])",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 1,
@@ -1430,7 +1604,11 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "system_load_average_1m{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "system_load_average_1m{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "system-1m",
@@ -1439,7 +1617,11 @@
           "step": 2400
         },
         {
-          "expr": "system_cpu_count{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "system_cpu_count{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "cpus",
@@ -1538,7 +1720,11 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "jvm_threads_live_threads{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "jvm_threads_live_threads{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "live",
@@ -1547,7 +1733,11 @@
           "step": 2400
         },
         {
-          "expr": "jvm_threads_daemon_threads{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "jvm_threads_daemon_threads{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "daemon",
@@ -1556,7 +1746,11 @@
           "step": 2400
         },
         {
-          "expr": "jvm_threads_peak_threads{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "jvm_threads_peak_threads{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "peak",
@@ -1564,7 +1758,11 @@
           "step": 2400
         },
         {
-          "expr": "process_threads{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "process_threads{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -1667,7 +1865,11 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "jvm_threads_states_threads{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "jvm_threads_states_threads{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "",
@@ -1776,7 +1978,11 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "increase(logback_events_total{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}[1m])",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "increase(logback_events_total{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}[1m])",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -1877,7 +2083,11 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "process_files_open_files{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "process_files_open_files{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 2,
@@ -1887,7 +2097,11 @@
           "step": 2400
         },
         {
-          "expr": "process_files_max_files{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "process_files_max_files{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 2,
@@ -1938,6 +2152,10 @@
     },
     {
       "collapsed": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P047DE0F543C7E359"
+      },
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -1947,6 +2165,15 @@
       "id": 129,
       "panels": [],
       "repeat": "persistence_counts",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "refId": "A"
+        }
+      ],
       "title": "JVM Memory Pools (Heap)",
       "type": "row"
     },
@@ -2006,7 +2233,11 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "jvm_memory_used_bytes{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\", id=~\"$jvm_memory_pool_heap\"}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "jvm_memory_used_bytes{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\", id=~\"$jvm_memory_pool_heap\"}",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -2017,7 +2248,11 @@
           "step": 1800
         },
         {
-          "expr": "jvm_memory_committed_bytes{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\", id=~\"$jvm_memory_pool_heap\"}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "jvm_memory_committed_bytes{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\", id=~\"$jvm_memory_pool_heap\"}",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -2028,7 +2263,11 @@
           "step": 1800
         },
         {
-          "expr": "jvm_memory_max_bytes{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\", id=~\"$jvm_memory_pool_heap\"}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "jvm_memory_max_bytes{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\", id=~\"$jvm_memory_pool_heap\"}",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -2079,6 +2318,10 @@
     },
     {
       "collapsed": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P047DE0F543C7E359"
+      },
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -2087,6 +2330,15 @@
       },
       "id": 130,
       "panels": [],
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "refId": "A"
+        }
+      ],
       "title": "JVM Memory Pools (Non-Heap)",
       "type": "row"
     },
@@ -2146,7 +2398,11 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "jvm_memory_used_bytes{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\", id=~\"$jvm_memory_pool_nonheap\"}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "jvm_memory_used_bytes{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\", id=~\"$jvm_memory_pool_nonheap\"}",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -2157,7 +2413,11 @@
           "step": 1800
         },
         {
-          "expr": "jvm_memory_committed_bytes{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\", id=~\"$jvm_memory_pool_nonheap\"}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "jvm_memory_committed_bytes{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\", id=~\"$jvm_memory_pool_nonheap\"}",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -2168,7 +2428,11 @@
           "step": 1800
         },
         {
-          "expr": "jvm_memory_max_bytes{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\", id=~\"$jvm_memory_pool_nonheap\"}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "jvm_memory_max_bytes{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\", id=~\"$jvm_memory_pool_nonheap\"}",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -2219,6 +2483,10 @@
     },
     {
       "collapsed": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P047DE0F543C7E359"
+      },
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -2227,6 +2495,15 @@
       },
       "id": 131,
       "panels": [],
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "refId": "A"
+        }
+      ],
       "title": "Garbage Collection",
       "type": "row"
     },
@@ -2276,7 +2553,11 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(jvm_gc_pause_seconds_count{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}[1m])",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "rate(jvm_gc_pause_seconds_count{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}[1m])",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 1,
@@ -2362,7 +2643,11 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(jvm_gc_pause_seconds_sum{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}[1m])/rate(jvm_gc_pause_seconds_count{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}[1m])",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "rate(jvm_gc_pause_seconds_sum{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}[1m])/rate(jvm_gc_pause_seconds_count{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}[1m])",
           "format": "time_series",
           "hide": false,
           "instant": false,
@@ -2371,7 +2656,11 @@
           "refId": "A"
         },
         {
-          "expr": "jvm_gc_pause_seconds_max{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "jvm_gc_pause_seconds_max{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
           "hide": false,
           "instant": false,
@@ -2458,7 +2747,11 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(jvm_gc_memory_allocated_bytes_total{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}[1m])",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "rate(jvm_gc_memory_allocated_bytes_total{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}[1m])",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -2466,7 +2759,11 @@
           "refId": "A"
         },
         {
-          "expr": "rate(jvm_gc_memory_promoted_bytes_total{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}[1m])",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "rate(jvm_gc_memory_promoted_bytes_total{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}[1m])",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -2507,6 +2804,10 @@
     },
     {
       "collapsed": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P047DE0F543C7E359"
+      },
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -2515,6 +2816,15 @@
       },
       "id": 132,
       "panels": [],
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "refId": "A"
+        }
+      ],
       "title": "Classloading",
       "type": "row"
     },
@@ -2570,7 +2880,11 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "jvm_classes_loaded_classes{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "jvm_classes_loaded_classes{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "loaded",
@@ -2669,7 +2983,11 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "delta(jvm_classes_loaded_classes{namespace=\"$namespace\",application=\"$application\",instance=\"$instance\"}[1m])",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "delta(jvm_classes_loaded_classes{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\",instance=\"$instance\"}[1m])",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -2720,6 +3038,10 @@
     },
     {
       "collapsed": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P047DE0F543C7E359"
+      },
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -2728,6 +3050,15 @@
       },
       "id": 133,
       "panels": [],
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "refId": "A"
+        }
+      ],
       "title": "Buffer Pools",
       "type": "row"
     },
@@ -2783,7 +3114,11 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "jvm_buffer_memory_used_bytes{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\", id=\"direct\"}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "jvm_buffer_memory_used_bytes{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\", id=\"direct\"}",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "used",
@@ -2792,7 +3127,11 @@
           "step": 2400
         },
         {
-          "expr": "jvm_buffer_total_capacity_bytes{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\", id=\"direct\"}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "jvm_buffer_total_capacity_bytes{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\", id=\"direct\"}",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "capacity",
@@ -2891,7 +3230,11 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "jvm_buffer_count_buffers{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\", id=\"direct\"}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "jvm_buffer_count_buffers{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\", id=\"direct\"}",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "count",
@@ -2991,7 +3334,11 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "jvm_buffer_memory_used_bytes{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\", id=\"mapped\"}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "jvm_buffer_memory_used_bytes{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\", id=\"mapped\"}",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "used",
@@ -3000,7 +3347,11 @@
           "step": 2400
         },
         {
-          "expr": "jvm_buffer_total_capacity_bytes{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\", id=\"mapped\"}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "jvm_buffer_total_capacity_bytes{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\", id=\"mapped\"}",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "capacity",
@@ -3099,7 +3450,11 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "jvm_buffer_count_buffers{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\", id=\"mapped\"}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P047DE0F543C7E359"
+          },
+          "expr": "jvm_buffer_count_buffers{origin_prometheus=~\"$origin_prometheus\",namespace=\"$namespace\",application=\"$application\", instance=\"$instance\", id=\"mapped\"}",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "count",
@@ -3149,17 +3504,49 @@
     }
   ],
   "refresh": "30s",
-  "schemaVersion": 34,
+  "schemaVersion": 37,
   "style": "dark",
   "tags": [],
   "templating": {
     "list": [
       {
+        "current": {
+          "selected": true,
+          "text": "dev",
+          "value": "dev"
+        },
         "datasource": {
           "type": "prometheus",
           "uid": "P047DE0F543C7E359"
         },
-        "definition": "",
+        "definition": "label_values(jvm_memory_used_bytes,origin_prometheus)",
+        "hide": 0,
+        "includeAll": false,
+        "label": "数据源",
+        "multi": false,
+        "name": "origin_prometheus",
+        "options": [],
+        "query": {
+          "query": "label_values(jvm_memory_used_bytes,origin_prometheus)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "stable",
+          "value": "stable"
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "P047DE0F543C7E359"
+        },
+        "definition": "label_values(jvm_memory_used_bytes{origin_prometheus=~\"$origin_prometheus\",job=\"spring\"}, namespace)",
         "hide": 0,
         "includeAll": false,
         "label": "Namespace",
@@ -3167,8 +3554,8 @@
         "name": "namespace",
         "options": [],
         "query": {
-          "query": "label_values(jvm_memory_used_bytes{job=\"spring\"}, namespace)",
-          "refId": "nas-namespace-Variable-Query"
+          "query": "label_values(jvm_memory_used_bytes{origin_prometheus=~\"$origin_prometheus\",job=\"spring\"}, namespace)",
+          "refId": "StandardVariableQuery"
         },
         "refresh": 2,
         "regex": "",
@@ -3180,11 +3567,16 @@
         "useTags": false
       },
       {
+        "current": {
+          "selected": false,
+          "text": "demo-portal",
+          "value": "demo-portal"
+        },
         "datasource": {
           "type": "prometheus",
           "uid": "P047DE0F543C7E359"
         },
-        "definition": "",
+        "definition": "label_values(jvm_memory_used_bytes{origin_prometheus=~\"$origin_prometheus\",namespace=~\"$namespace\"},application)",
         "hide": 0,
         "includeAll": false,
         "label": "Application",
@@ -3192,8 +3584,8 @@
         "name": "application",
         "options": [],
         "query": {
-          "query": "label_values(application)",
-          "refId": "nas-application-Variable-Query"
+          "query": "label_values(jvm_memory_used_bytes{origin_prometheus=~\"$origin_prometheus\",namespace=~\"$namespace\"},application)",
+          "refId": "StandardVariableQuery"
         },
         "refresh": 2,
         "regex": "",
@@ -3206,11 +3598,16 @@
       },
       {
         "allFormat": "glob",
+        "current": {
+          "selected": false,
+          "text": "10.2.162.164:8080",
+          "value": "10.2.162.164:8080"
+        },
         "datasource": {
           "type": "prometheus",
           "uid": "P047DE0F543C7E359"
         },
-        "definition": "",
+        "definition": "label_values(jvm_memory_used_bytes{origin_prometheus=~\"$origin_prometheus\",namespace=~\"$namespace\",application=~\"$application\"}, instance)",
         "hide": 0,
         "includeAll": false,
         "label": "Instance",
@@ -3219,8 +3616,8 @@
         "name": "instance",
         "options": [],
         "query": {
-          "query": "label_values(jvm_memory_used_bytes{namespace=\"$namespace\",application=\"$application\"}, instance)",
-          "refId": "nas-instance-Variable-Query"
+          "query": "label_values(jvm_memory_used_bytes{origin_prometheus=~\"$origin_prometheus\",namespace=~\"$namespace\",application=~\"$application\"}, instance)",
+          "refId": "StandardVariableQuery"
         },
         "refresh": 2,
         "regex": "",
@@ -3233,11 +3630,16 @@
       },
       {
         "allFormat": "glob",
+        "current": {
+          "selected": false,
+          "text": "All",
+          "value": "$__all"
+        },
         "datasource": {
           "type": "prometheus",
           "uid": "P047DE0F543C7E359"
         },
-        "definition": "",
+        "definition": "label_values(jvm_memory_used_bytes{origin_prometheus=~\"$origin_prometheus\",namespace=~\"$namespace\",application=~\"$application\", instance=~\"$instance\", area=\"heap\"},id)",
         "hide": 0,
         "includeAll": true,
         "label": "JVM Memory Pools Heap",
@@ -3246,8 +3648,8 @@
         "name": "jvm_memory_pool_heap",
         "options": [],
         "query": {
-          "query": "label_values(jvm_memory_used_bytes{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\", area=\"heap\"},id)",
-          "refId": "nas-jvm_memory_pool_heap-Variable-Query"
+          "query": "label_values(jvm_memory_used_bytes{origin_prometheus=~\"$origin_prometheus\",namespace=~\"$namespace\",application=~\"$application\", instance=~\"$instance\", area=\"heap\"},id)",
+          "refId": "StandardVariableQuery"
         },
         "refresh": 1,
         "regex": "",
@@ -3260,11 +3662,16 @@
       },
       {
         "allFormat": "glob",
+        "current": {
+          "selected": false,
+          "text": "All",
+          "value": "$__all"
+        },
         "datasource": {
           "type": "prometheus",
           "uid": "P047DE0F543C7E359"
         },
-        "definition": "",
+        "definition": "label_values(jvm_memory_used_bytes{origin_prometheus=~\"$origin_prometheus\",namespace=~\"$namespace\",application=~\"$application\", instance=~\"$instance\", area=\"nonheap\"},id)",
         "hide": 0,
         "includeAll": true,
         "label": "JVM Memory Pools Non-Heap",
@@ -3273,8 +3680,8 @@
         "name": "jvm_memory_pool_nonheap",
         "options": [],
         "query": {
-          "query": "label_values(jvm_memory_used_bytes{namespace=\"$namespace\",application=\"$application\", instance=\"$instance\", area=\"nonheap\"},id)",
-          "refId": "nas-jvm_memory_pool_nonheap-Variable-Query"
+          "query": "label_values(jvm_memory_used_bytes{origin_prometheus=~\"$origin_prometheus\",namespace=~\"$namespace\",application=~\"$application\", instance=~\"$instance\", area=\"nonheap\"},id)",
+          "refId": "StandardVariableQuery"
         },
         "refresh": 1,
         "regex": "",
@@ -3288,7 +3695,7 @@
     ]
   },
   "time": {
-    "from": "now-30m",
+    "from": "now-5m",
     "to": "now"
   },
   "timepicker": {
@@ -3320,6 +3727,6 @@
   "timezone": "browser",
   "title": "jvm",
   "uid": "jvm",
-  "version": 1,
+  "version": 2,
   "weekStart": ""
 }
