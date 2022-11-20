@@ -1,12 +1,12 @@
-#- name: etcd archive push
-#  copy: src=___temp/{{ param_k8s_etcd_cluster_name }}.tar.gz dest={{ param_remote_role_path }}/
-#  when: inventory_hostname == play_hosts[0]
-#
-#- name: etcd archive extract
-#  shell: |
-#    tar -zxvf {{ param_remote_role_path }}/{{ param_k8s_etcd_cluster_name }}.tar.gz -C {{ param_remote_role_path }}
-#    sudo mkdir -p /etc/kubernetes/ && sudo cp -r {{ param_remote_role_path }}/{{ param_k8s_etcd_cluster_name }}/pki/ /etc/kubernetes/
-#  when: inventory_hostname == play_hosts[0]
+- name: etcd push cert
+  synchronize: src=___temp/{{ param_k8s_etcd_cluster_name }} dest={{ inventory_dir }}/{{ role_name }}/
+  when: inventory_hostname == play_hosts[0] and param_etcd_mode == "external"
+
+- name: etcd archive extract
+  shell: |
+    echo 'aa'
+    # sudo cp -r {{ param_remote_role_path }}/{{ param_k8s_etcd_cluster_name }}/pki/ /etc/kubernetes/
+  when: inventory_hostname == play_hosts[0] and param_etcd_mode == "external"
 
 - name: kubeadm init
   shell: |

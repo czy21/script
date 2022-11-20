@@ -1,25 +1,31 @@
 #!/bin/bash
 set -e
 
-HOSTS=({{ param_hosts | join(' ', attribute='ip') }})
-NAMES=({{ param_hosts | join(' ', attribute='name') }})
+IPV4S=({{ param_ansible_host_ipv4s | join(' ') }})
+HOSTS=({{ param_ansbile_host_names | join(' ') }})
+LEAD_IPV4="{{ param_ansible_lead_ipv4 }}"
+HOST_IPV4="{{ param_ansible_host_ipv4 }}"
 
-for i in "${!HOSTS[@]}"; do
-  HOST=${HOSTS[$i]}
-  NAME=${NAMES[$i]}
-  STATE="BACKUP"
-  if [ ${HOST} == ${HOSTS[0]} ]; then
-    STATE="MASTER"
-  fi
+STATE="BACKUP"
+INTERFACE="{{ param_iface }}"
+ROUTER_ID=51
+PRIORITY=50
+AUTH_PASS=42
+APISERVER_VIP=${LEADER_IP}
 
-  sudo cat << EOF > /etc/keepalived/keepalived.conf
+if [ ${LEAD_IPV4} == ${HOST_IPV4} ];then
+  STATE="MASTER"
+  PRIORITY=100
+fi
+
+sudo bash -c "cat > /etc/keepalived/keepalived.conf" << EOF
 ! /etc/keepalived/keepalived.conf
 ! Configuration File for keepalived
 global_defs {
     router_id LVS_DEVEL
 }
 vrrp_script check_apiserver {
-  script "/etc/keepalived/check_apiserver.sh"
+  script \"/etc/keepalived/check_apiserver.sh\"
   interval 3
   weight -2
   fall 10
@@ -43,4 +49,76 @@ vrrp_instance VI_1 {
     }
 }
 EOF
-done
+
+APISERVER_VIP=${LEAD_IPV4}
+APISERVER_DST_PORT=16433
+APISERVER_SRC_PORT=6443
+sudo bash -c "cat > /etc/keepalived/check_apiserver.sh" << EOF
+#!/bin/sh
+
+errorExit() {
+    echo "*** $*" 1>&2
+    exit 1
+}
+
+curl --silent --max-time 2 --insecure https://localhost:${APISERVER_DST_PORT}/ -o /dev/null || errorExit "Error GET https://localhost:${APISERVER_DST_PORT}/"
+if ip addr | grep -q ${APISERVER_VIP}; then
+    curl --silent --max-time 2 --insecure https://${APISERVER_VIP}:${APISERVER_DST_PORT}/ -o /dev/null || errorExit "Error GET https://${APISERVER_VIP}:${APISERVER_DST_PORT}/"
+fi
+EOF
+
+sudo bash -c "cat > /etc/haproxy/haproxy.cfg" << EOF
+# /etc/haproxy/haproxy.cfg
+#---------------------------------------------------------------------
+# Global settings
+#---------------------------------------------------------------------
+global
+    log /dev/log local0
+    log /dev/log local1 notice
+    daemon
+
+#---------------------------------------------------------------------
+# common defaults that all the 'listen' and 'backend' sections will
+# use if not designated in their block
+#---------------------------------------------------------------------
+defaults
+    mode                    http
+    log                     global
+    option                  httplog
+    option                  dontlognull
+    option http-server-close
+    option forwardfor       except 127.0.0.0/8
+    option                  redispatch
+    retries                 1
+    timeout http-request    10s
+    timeout queue           20s
+    timeout connect         5s
+    timeout client          20s
+    timeout server          20s
+    timeout http-keep-alive 10s
+    timeout check           10s
+
+#---------------------------------------------------------------------
+# apiserver frontend which proxys to the control plane nodes
+#---------------------------------------------------------------------
+frontend apiserver
+    bind *:${APISERVER_DST_PORT}
+    mode tcp
+    option tcplog
+    default_backend apiserver
+
+#---------------------------------------------------------------------
+# round robin balancing for apiserver
+#---------------------------------------------------------------------
+backend apiserver
+    option httpchk GET /healthz
+    http-check expect status 200
+    mode tcp
+    option ssl-hello-chk
+    balance     roundrobin
+{% for t in param_ansible_hosts %}
+        server {{ t['name'] }} {{ t['ip'] }}:${APISERVER_SRC_PORT} check
+{% endfor %}
+EOF
+
+sudo systemctl restart haproxy keepalived
