@@ -1,26 +1,21 @@
 #!/bin/bash
 set -e
 
-# {%- set initial_nodes=[] %}
-# {% for t in vars['param_hosts'] %}
-#  {{- initial_nodes.append('{0}=https://{1}:2380'.format(t.name,t.ip)) or '' }}
-# {% endfor %}
-
-HOSTS=({{ param_hosts | join(' ', attribute='ip') }})
-NAMES=({{ param_hosts | join(' ', attribute='name') }})
-CLUSTER="{{ initial_nodes | join(',') }}"
+IPV4S=({{ param_hosts | join(' ', attribute='ip') }})
+HOSTS=({{ param_hosts | join(' ', attribute='name') }})
+CLUSTER="{{ param_ansible_host_ipv4s|zip(param_ansbile_host_names)|map('format','{0}=https://{1}:2380')|join(',') }}"
 
 DIR=${HOME}/{{ param_remote_role_path }}/{{ param_k8s_etcd_cluster_name }}
 PKI=${DIR}/pki
 mkdir -p ${PKI}
 kubeadm init phase certs etcd-ca --kubernetes-version {{ param_k8s_version }} --cert-dir ${PKI}
 
-for i in "${!HOSTS[@]}"; do
-  HOST=${HOSTS[$i]}
-  NAME=${NAMES[$i]}
-  HOST_DIR=${DIR}/${HOST}
-  KUBE_CFG=${HOST_DIR}/kubeadm-config.yaml
-  mkdir -p ${HOST_DIR}
+for i in "${!IPV4S[@]}"; do
+  IPV4=${IPV4S[$i]}
+  NAME=${HOSTS[$i]}
+  IPV4_DIR=${DIR}/${IPV4}
+  KUBE_CFG=${IPV4_DIR}/kubeadm-config.yaml
+  mkdir -p ${IPV4_DIR}
   cat << EOF > ${KUBE_CFG}
 ---
 apiVersion: "kubeadm.k8s.io/v1beta3"
@@ -29,7 +24,7 @@ nodeRegistration:
   name: ${NAME}
   criSocket: "{{ param_cri_socket }}"
 localAPIEndpoint:
-  advertiseAddress: ${HOST}
+  advertiseAddress: ${IPV4}
 ---
 apiVersion: "kubeadm.k8s.io/v1beta3"
 kind: ClusterConfiguration
@@ -39,27 +34,27 @@ certificatesDir: "${PKI}"
 etcd:
   local:
     serverCertSANs:
-      - "${HOST}"
+      - "${IPV4}"
     peerCertSANs:
-      - "${HOST}"
+      - "${IPV4}"
     extraArgs:
-      initial-cluster: {{ initial_nodes | join(',') }}
+      initial-cluster: "${CLUSTER}"
       initial-cluster-state: new
       name: ${NAME}
-      listen-peer-urls: https://${HOST}:2380
-      listen-client-urls: https://${HOST}:2379
-      advertise-client-urls: https://${HOST}:2379
-      initial-advertise-peer-urls: https://${HOST}:2380
+      listen-peer-urls: https://${IPV4}:2380
+      listen-client-urls: https://${IPV4}:2379
+      advertise-client-urls: https://${IPV4}:2379
+      initial-advertise-peer-urls: https://${IPV4}:2380
 EOF
    kubeadm init phase certs etcd-server --config=${KUBE_CFG}
    kubeadm init phase certs etcd-peer --config=${KUBE_CFG}
    kubeadm init phase certs etcd-healthcheck-client --config=${KUBE_CFG}
    kubeadm init phase certs apiserver-etcd-client --config=${KUBE_CFG}
    find ${DIR} -name kubeadm-config.yaml -type f -exec sed -i '/certificatesDir/d' {} \;
-   cp -R ${PKI} ${HOST_DIR}
+   cp -R ${PKI} ${IPV4_DIR}
    find ${PKI} -not -name ca.crt -not -name ca.key -type f -delete
-   if [ ${HOST} != ${HOSTS[0]} ]; then
-     find ${HOST_DIR}/pki -name ca.key -type f -delete
+   if [ ${IPV4} != ${IPV4S[0]} ]; then
+     find ${IPV4_DIR}/pki -name ca.key -type f -delete
    fi
 done
-cp -R ${DIR}/${HOSTS[0]}/pki ${DIR}
+cp -R ${DIR}/${IPV4S[0]}/pki ${DIR}

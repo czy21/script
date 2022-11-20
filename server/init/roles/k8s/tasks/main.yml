@@ -8,8 +8,7 @@
   become: yes
   shell: sudo cat {{ param_remote_role_path }}/hosts-{{ ansible_distribution | lower}} > /etc/hosts
   tags:
-    - 'k8s-init-etcd'
-    - 'k8s-init-kube'
+    - 'k8s-init-host'
 
 - name: ha init
   import_tasks: init-ha.yml
