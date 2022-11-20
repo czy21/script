@@ -64,10 +64,10 @@ wget https://github.com/Mirantis/cri-dockerd/releases/download/v0.2.5/cri-docker
 sudo kubeadm token create --print-join-command
 
 # allow master scheduling
-kubectl taint nodes --all node-role.kubernetes.io/control-plane- node-role.kubernetes.io/master-
+kubectl taint node --selector='node-role.kubernetes.io/control-plane' node-role.kubernetes.io/control-plane- node-role.kubernetes.io/master-
 
 # deny master scheduling
-kubectl taint node [master host] node-role.kubernetes.io/master="":NoSchedule
+kubectl taint node --selector='node-role.kubernetes.io/control-plane' node-role.kubernetes.io/control-plane="":NoSchedule node-role.kubernetes.io/master="":NoSchedule
 
 # add label to node
 kubectl label nodes k8s-nodeX slave=X

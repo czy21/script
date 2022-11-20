@@ -44,9 +44,7 @@
     - name: machine shutdown
       shell: shutdown -h now
     - name: kubeadm reset
-      shell: sudo kubeadm reset --force --ignore-preflight-errors all
-    - name: install rsync
-      shell: sudo yum -y install rsync
+      shell: sudo kubeadm reset --force --ignore-preflight-errors all && sudo reboot
 
   tags:
     - machine
