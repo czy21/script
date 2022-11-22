@@ -40,12 +40,14 @@
   pre_tasks:
     - import_tasks: roles/common/tasks/copy.yml
       tags:
+        - "ha"
         - "ha-init"
   roles:
     - '{{ param_role_name }}'
   post_tasks:
     - import_tasks: roles/common/tasks/clean.yml
       tags:
+        - "ha"
         - "ha-init"
 - name: k8s
   hosts: all
