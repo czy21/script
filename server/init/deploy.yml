@@ -48,9 +48,9 @@
       tags:
         - '{{ param_role_name }}'
         - 'k8s-init-host'
+        - 'k8s-init-ha'
         - 'k8s-init-etcd-cert'
         - 'k8s-init-etcd'
-        - 'k8s-init-ha'
         - 'k8s-init-kube'
         - 'k8s-join'
   roles:
@@ -60,8 +60,8 @@
       tags:
         - '{{ param_role_name }}'
         - 'k8s-init-host'
+        - 'k8s-init-ha'
         - 'k8s-init-etcd-cert'
         - 'k8s-init-etcd'
-        - 'k8s-init-ha'
         - 'k8s-init-kube'
         - 'k8s-join'
