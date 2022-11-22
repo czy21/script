@@ -5,7 +5,9 @@ param_k8s_svc_network_cidr: 10.1.0.0/16
 param_k8s_pod_network_cidr: 10.2.0.0/16
 param_cri_socket: "unix:///var/run/crio/crio.sock" # use docker as cri: unix:///var/run/cri-dockerd.sock
 
-param_k8s_control_plane_endpoint: "{{ param_ansible_lead_ipv4 }}:16433"
+param_k8s_ha_api_server: k8s-vip1
+param_k8s_ha_api_server_port: 16433
+param_k8s_control_plane_endpoint: "{{ param_k8s_ha_api_server }}:{{ param_k8s_ha_api_server_port }}"
 param_etcd_mode: "local" # local | external
 param_etcd_external_endpoints:
   - "https://192.168.2.31:2379"
