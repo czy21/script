@@ -4,8 +4,8 @@
     - 'ha'
 
 - name: init
-  shell: |
-    sudo bash -c "cat > /etc/haproxy/haproxy.cfg" < {{ param_remote_role_path }}/haproxy.cfg
+  become: yes
+  template: src=haproxy.cfg.j2 dest=/etc/haproxy/haproxy.cfg
   tags:
     - 'ha-init'
 
