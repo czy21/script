@@ -114,8 +114,21 @@ backend apiserver
     option ssl-hello-chk
     balance     roundrobin
 {% for t in param_ansible_hosts %}
-        server {{ t['name'] }} {{ t['ip'] }}:${APISERVER_SRC_PORT} check
+      server {{ t['name'] }} {{ t['ip'] }}:${APISERVER_SRC_PORT} check
 {% endfor %}
+#---------------------------------------------------------------------
+# web stats
+#---------------------------------------------------------------------
+frontend stats
+  stats   enable
+  bind    *:5000
+  mode    http
+  option  httplog
+  log     global
+  maxconn 10
+  stats   refresh 30s
+  stats   uri /stats
+  stats   realm haproxy
+  stats   auth admin:{{ param_manage_password }}
+  stats   admin if TRUE
 EOF
-
-sudo systemctl restart haproxy keepalived

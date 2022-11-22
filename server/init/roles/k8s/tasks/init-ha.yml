@@ -1,1 +1,1 @@
-- shell: bash {{ param_remote_role_path }}/ha.sh
+- shell: sudo rm -rf /etc/haproxy/conf.d/* && bash {{ param_remote_role_path }}/ha.sh && sudo systemctl restart haproxy keepalived
