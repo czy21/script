@@ -30,6 +30,23 @@
   tags:
     - '{{ param_role_name }}'
 
+- name: haproxy
+  hosts: all
+  vars_files:
+    - "vars/env.yml"
+    - "vars/main.yml"
+  vars:
+    param_role_name: haproxy
+  pre_tasks:
+    - import_tasks: roles/common/tasks/copy.yml
+      tags:
+        - "ha-init"
+  roles:
+    - '{{ param_role_name }}'
+  post_tasks:
+    - import_tasks: roles/common/tasks/clean.yml
+      tags:
+        - "ha-init"
 - name: k8s
   hosts: all
   vars_files:
