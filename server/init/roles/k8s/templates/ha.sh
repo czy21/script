@@ -10,6 +10,8 @@ ROUTER_ID=51
 PRIORITY=50
 AUTH_PASS=42
 APISERVER_VIP=${LEADER_IP}
+APISERVER_SRC_PORT=6443
+APISERVER_DST_PORT=16433
 
 if [ "${LEAD_IPV4}" == "${HOST_IPV4}" ];then
   STATE="MASTER"
@@ -48,9 +50,6 @@ vrrp_instance VI_1 {
 }
 EOF
 
-APISERVER_VIP=${LEAD_IPV4}
-APISERVER_DST_PORT=16433
-APISERVER_SRC_PORT=6443
 sudo bash -c "cat > /etc/keepalived/check_apiserver.sh" << EOF
 #!/bin/sh
 
