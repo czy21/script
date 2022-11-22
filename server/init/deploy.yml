@@ -49,13 +49,13 @@
       tags:
         - "ha"
         - "ha-init"
-- name: k8s
+- name: kubernetes
   hosts: all
   vars_files:
     - "vars/env.yml"
     - "vars/main.yml"
   vars:
-    param_role_name: k8s
+    param_role_name: kubernetes
     param_k8s_backup_name: '{{ param_backup_prefix }}-k8s'
     param_k8s_etcd_cluster_name: 'etcd'
   pre_tasks:
