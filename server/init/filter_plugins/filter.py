@@ -3,5 +3,5 @@ class FilterModule(object):
 
     def filters(self):
         return {
-            'format': lambda val, pattern: pattern.format(*val),
+            'format_args': lambda value, pattern: pattern.format(*value),
         }
