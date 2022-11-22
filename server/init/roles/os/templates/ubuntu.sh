@@ -6,7 +6,7 @@ echo -n "%sudo   ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers.d/99-custom
 NEEDRESTART_SUSPEND=1 apt remove needrestart -y && apt autoclean -y && apt autoremove -y
 
 apt -y update
-apt -y install wget vim git network-manager nfs-common make gcc iputils-ping bash-completion systemd-timesyncd rsync
+apt -y install wget vim git network-manager nfs-common make gcc iputils-ping bash-completion systemd-timesyncd rsync netcat
 
 # postgres repo
 #sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'

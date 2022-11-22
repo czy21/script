@@ -1,0 +1,15 @@
+- name: install
+  shell: bash {{ param_remote_role_path }}/ha-{{ ansible_distribution | lower}}.sh
+  tags:
+    - 'ha'
+
+- name: init
+  shell: |
+    sudo bash -c "cat > /etc/haproxy/haproxy.cfg" < {{ param_remote_role_path }}/haproxy.cfg
+  tags:
+    - 'ha-init'
+
+- name: restart
+  shell: sudo systemctl restart keepalived haproxy
+  tags:
+    - 'ha-init'
