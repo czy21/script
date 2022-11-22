@@ -119,7 +119,7 @@ backend apiserver
 #---------------------------------------------------------------------
 # web stats
 #---------------------------------------------------------------------
-frontend stats
+listen status
   stats   enable
   bind    *:5000
   mode    http
