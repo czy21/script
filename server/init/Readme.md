@@ -63,6 +63,11 @@ wget https://github.com/Mirantis/cri-dockerd/releases/download/v0.2.5/cri-docker
 # get join command on master node
 sudo kubeadm token create --print-join-command
 
+# get certificate-key will be deleted in two hours
+sudo kubeadm init phase upload-certs --upload-certs
+# join master as master: [join-command] --control-plane --certificate-key [certificate-key]
+# join master as worker: [join-command]
+
 # allow master scheduling
 kubectl taint node --selector='node-role.kubernetes.io/control-plane' node-role.kubernetes.io/control-plane- node-role.kubernetes.io/master-
 
