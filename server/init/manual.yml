@@ -34,17 +34,25 @@
     - name: passwd -d
       shell: passwd -d {{item}}
       with_items: '{{param_users}}'
-
     - name: restart docker
       shell: systemctl daemon-reload;systemctl restart docker
-
     - name: machine reboot
       shell: reboot
-
     - name: machine shutdown
       shell: shutdown -h now
     - name: kubeadm reset
       shell: sudo kubeadm reset --force --ignore-preflight-errors all && sudo reboot
-
   tags:
     - machine
+
+- name: manual
+  hosts: all
+  remote_user: opsor
+  vars_files:
+    - "vars/main.yml"
+  become: yes
+  tasks:
+    - name: cmd
+      shell: echo 'a'
+  tags:
+    - manual

@@ -13,11 +13,11 @@ param_ansible_lead_ipv4: "{{ param_ansible_host_ipv4s[0] }}"
 
 param_hosts:
   - ip: 192.168.2.25
-    name: k8s-node-25 k8s-vip1
+    name: k8s-node-25
   - ip: 192.168.2.26
-    name: k8s-node-26 k8s-vip1
+    name: k8s-node-26
   - ip: 192.168.2.27
-    name: k8s-node-27 k8s-vip1
+    name: k8s-node-27
   - ip: 192.168.2.31
     name: k8s-node-31
   - ip: 192.168.2.32
