@@ -1,6 +1,6 @@
 ---
 param_remote_path: "{{ inventory_dir|basename }}"
-param_remote_role_path: "{{ (inventory_dir|basename,param_role_name) | path_join }}"
+param_remote_role_path: "{{ (param_remote_path,param_role_name) | path_join }}"
 param_ssh_public_key: "" # ssh-rsa XXX
 
 param_iface: "{{ ansible_default_ipv4.interface }}"
