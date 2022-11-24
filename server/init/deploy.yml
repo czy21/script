@@ -1,86 +1,51 @@
 - name: os
   hosts: all
-  vars_files:
-    - "vars/env.yml"
-    - "vars/main.yml"
+  vars_files: ["vars/env.yml","vars/main.yml"]
   vars:
     param_role_name: os
   pre_tasks:
     - include_tasks: roles/common/tasks/copy.yml
-  roles:
-    - '{{ param_role_name }}'
+  roles: ['{{ param_role_name }}']
   post_tasks:
     - include_tasks: roles/common/tasks/clean.yml
-  tags:
-    - '{{ param_role_name }}'
+  tags: ['{{ param_role_name }}']
 
 - name: docker
   hosts: all
-  vars_files:
-    - "vars/env.yml"
-    - "vars/main.yml"
+  vars_files: ["vars/env.yml","vars/main.yml"]
   vars:
     param_role_name: docker
   pre_tasks:
     - include_tasks: roles/common/tasks/copy.yml
-  roles:
-    - '{{ param_role_name }}'
+  roles: ['{{ param_role_name }}']
   post_tasks:
     - include_tasks: roles/common/tasks/clean.yml
-  tags:
-    - '{{ param_role_name }}'
+  tags: ['{{ param_role_name }}']
 
 - name: haproxy
   hosts: all
-  vars_files:
-    - "vars/env.yml"
-    - "vars/main.yml"
+  vars_files: ["vars/env.yml","vars/main.yml"]
   vars:
     param_role_name: haproxy
   pre_tasks:
     - import_tasks: roles/common/tasks/copy.yml
-      tags:
-        - "ha"
-        - "ha-init"
-  roles:
-    - '{{ param_role_name }}'
+      tags: ["ha","ha-init"]
+  roles: ['{{ param_role_name }}']
   post_tasks:
     - import_tasks: roles/common/tasks/clean.yml
-      tags:
-        - "ha"
-        - "ha-init"
+      tags: ["ha","ha-init"]
+
 - name: kubernetes
   hosts: all
-  vars_files:
-    - "vars/env.yml"
-    - "vars/main.yml"
+  vars_files: ["vars/env.yml","vars/main.yml"]
   vars:
     param_role_name: kubernetes
     param_k8s_backup_name: '{{ param_backup_prefix }}-k8s'
     param_k8s_etcd_cluster_name: 'etcd'
   pre_tasks:
-    - import_tasks: roles/common/tasks/mk.yml
-      tags:
-        - 'k8s-backup'
-        - 'k8s-restore'
     - import_tasks: roles/common/tasks/copy.yml
-      tags:
-        - '{{ param_role_name }}'
-        - 'k8s-init-host'
-        - 'k8s-init-ha'
-        - 'k8s-init-etcd-cert'
-        - 'k8s-init-etcd'
-        - 'k8s-init-kube'
-        - 'k8s-join'
-  roles:
-    - '{{ param_role_name }}'
+      tags: ['k8s','k8s-init-host','k8s-init-ha','k8s-init-etcd-cert','k8s-init-etcd','k8s-init-kube','k8s-join']
+  roles: ['{{ param_role_name }}']
   post_tasks:
     - import_tasks: roles/common/tasks/clean.yml
-      tags:
-        - '{{ param_role_name }}'
-        - 'k8s-init-host'
-        - 'k8s-init-ha'
-        - 'k8s-init-etcd-cert'
-        - 'k8s-init-etcd'
-        - 'k8s-init-kube'
-        - 'k8s-join'
+      tags: ['k8s','k8s-init-host','k8s-init-ha','k8s-init-etcd-cert','k8s-init-etcd','k8s-init-kube','k8s-join']
