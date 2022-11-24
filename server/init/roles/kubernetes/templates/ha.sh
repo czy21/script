@@ -9,9 +9,9 @@ INTERFACE="{{ param_iface }}"
 ROUTER_ID=51
 PRIORITY=50
 AUTH_PASS=42
-APISERVER_VIP={{ param_k8s_ha_api_server }}
+APISERVER_VIP={{ param_k8s_ha_api_server_vip }}
 APISERVER_SRC_PORT=6443
-APISERVER_DST_PORT={{ param_k8s_ha_api_server_port }}
+APISERVER_DST_PORT={{ param_k8s_ha_api_server_dst_port }}
 
 if [ "${LEAD_IPV4}" == "${HOST_IPV4}" ];then
   STATE="MASTER"
