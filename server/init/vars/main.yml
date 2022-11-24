@@ -12,6 +12,12 @@ param_ansible_hosts: "{{ dict(param_ansible_host_ipv4s|zip(param_ansbile_host_na
 param_ansible_lead_ipv4: "{{ param_ansible_host_ipv4s[0] }}"
 
 param_hosts:
+#  - ip: 192.168.2.21
+#    name: k8s-node-21
+#  - ip: 192.168.2.22
+#    name: k8s-node-22
+#  - ip: 192.168.2.23
+#    name: k8s-node-23
   - ip: 192.168.2.25
     name: k8s-node-25
   - ip: 192.168.2.26
