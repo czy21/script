@@ -5,4 +5,4 @@ metadata:
   name: admin-basic-auth
   namespace: {{ .Release.Namespace }}
 data:
-  auth: YWRtaW46eS1iYXNoNS45QjdSemNYV2Y1WnNGUGVWR3BXYnpLcEdCTGJST1UyCg==
+  auth: YWRtaW46JGFwcjEkS1ZPekRmTjUkZ01SZ2cvTUhISkR0WHN2enA1MXF0MQo=
