@@ -1,4 +1,5 @@
 import argparse
+import itertools
 import json
 import logging
 import os
@@ -68,12 +69,16 @@ def echo_action(role, content, exec_file=None) -> str:
     return 'echo "' + c + '"'
 
 
-def get_dir_dict(path: pathlib.Path, exclude_rules: list = None, select_tip="", col_num=5) -> dict:
+def get_dir_dict(path: pathlib.Path, exclude_rules: list = None, select_tip="", col_num=5, args: argparse.Namespace = None) -> dict:
     _dirs = get_match_dirs(exclude_rules, list(filter(lambda a: a.is_dir(), sorted(path.iterdir()))))
     dir_dict: dict = {str(i): t for i, t in enumerate(_dirs, start=1)}
     collection_util.print_grid(["{0}.{1}".format(str(k), v.name) for k, v in dir_dict.items()], col_num=col_num, msg=path.as_posix())
     logger.info("\nplease select {0}:".format(select_tip))
-    dir_nums = input().strip().split()
+    dir_nums = []
+    if args.all_namespaces or args.all_roles:
+        dir_nums.extend(dir_dict.keys())
+    else:
+        dir_nums.extend(input().strip().split())
     return dict((t, dir_dict[t]) for t in dir_nums if t in dir_dict.keys())
 
 
@@ -87,17 +92,20 @@ def select_namespace(root_path: pathlib.Path, deep: int = 1, exclude_rules=None,
     while deep > deep_index:
         role_dict = {str(i): p for i, p in enumerate(map(lambda a: a["path"], filter(lambda a: a["deep"] == deep_index, flat_dirs)), start=1)}
         collection_util.print_grid(["{0}.{1}".format(k, v.name) for k, v in role_dict.items()], col_num=5, msg=next(iter(role_dict.items()))[1].parent.as_posix())
-        logger.info("\nplease select options(example:1 2 ...)")
-        selected = input().strip()
-        if selected == '':
-            sys.exit()
-        app_paths = [role_dict[t] for t in selected.split()]
+        if args.all_namespaces:
+            app_paths = list(role_dict.values())
+        else:
+            logger.info("\nplease select options(example:1 2 ...)")
+            selected = input().strip()
+            if selected == '':
+                sys.exit()
+            app_paths = [role_dict[t] for t in selected.split()]
         deep_index += 1
     namespaces = [
         Namespace(args.namespace if args.namespace else p.name,
                   [Role("%s.%s" % (next(filter(lambda t: t["path"] == p, flat_dirs), None)["key"], rk),
                         rv.name,
-                        rv, p) for rk, rv in get_dir_dict(p, exclude_rules=exclude_rules, select_tip="role num(example:1 2 ...)").items()])
+                        rv, p) for rk, rv in get_dir_dict(p, exclude_rules=exclude_rules, select_tip="role num(example:1 2 ...)", args=args).items()])
         for p in app_paths
     ]
     return namespaces
@@ -155,9 +163,15 @@ def loop_namespaces(root_path: pathlib.Path,
             if role_func:
                 role_func(role_title=role_title, role_path=role_path, role_env=role_env, namespace=namespace, args=args, **kwargs)
                 tmp_path.joinpath(namespace).joinpath(role_name)
+    dir_roles = {k: list(v) for k, v in itertools.groupby(collection_util.flat([n.roles for n in namespaces]), key=lambda r1: r1.parent_path)}
     _cmds = [
-        "mkdir -p {0}".format(" ".join([tmp_path.joinpath(r.parent_path.name).as_posix() for n in namespaces for r in n.roles])),
-        ["cp -r {0} {1}".format(r.path.as_posix(), tmp_path.joinpath(r.parent_path.name).as_posix()) for n in namespaces for r in n.roles]
+        [
+            "`mkdir -p {0} && cd {1} && cp -r {2} {3}`".format(tmp_path.joinpath(k.name).as_posix(),
+                                                               k.as_posix(),
+                                                               " ".join([nr.name for nr in v]),
+                                                               tmp_path.joinpath(k.name).as_posix())
+            for k, v in dir_roles.items()
+        ]
     ]
     _cmd_str = collection_util.flat_to_str(_cmds, delimiter=" && ")
     execute(_cmd_str)
@@ -236,6 +250,8 @@ class Installer:
         parser.add_argument('-f', '--file', type=str)
         parser.add_argument('-n', '--namespace', type=str)
         parser.add_argument('-p', '--param', nargs="+", default=[], type=lambda s: dict({split_kv_str(s)}), help="k1=v1 k2=v2")
+        parser.add_argument('--all-roles', action="store_true")
+        parser.add_argument('--all-namespaces', action="store_true")
         parser.add_argument('--ignore-namespace', action="store_true")
         parser.add_argument('--create-namespace', action="store_true")
         parser.add_argument('--debug', action="store_true", help="enable verbose output")
