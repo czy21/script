@@ -22,10 +22,11 @@ logger = logging.getLogger()
 
 
 class Role:
-    def __init__(self, key, name, path):
-        self.key = key
-        self.name = name
-        self.path = path
+    def __init__(self, key: str, name: str, path: pathlib.Path, parent_path: pathlib.Path):
+        self.key: str = key
+        self.name: str = name
+        self.path: pathlib.Path = path
+        self.parent_path: pathlib.Path = parent_path
 
 
 class Namespace:
@@ -96,7 +97,7 @@ def select_namespace(root_path: pathlib.Path, deep: int = 1, exclude_rules=None,
         Namespace(args.namespace if args.namespace else p.name,
                   [Role("%s.%s" % (next(filter(lambda t: t["path"] == p, flat_dirs), None)["key"], rk),
                         rv.name,
-                        rv) for rk, rv in get_dir_dict(p, exclude_rules=exclude_rules, select_tip="role num(example:1 2 ...)").items()])
+                        rv, p) for rk, rv in get_dir_dict(p, exclude_rules=exclude_rules, select_tip="role num(example:1 2 ...)").items()])
         for p in app_paths
     ]
     return namespaces
@@ -153,7 +154,13 @@ def loop_namespaces(root_path: pathlib.Path,
             build_target("build.sh")
             if role_func:
                 role_func(role_title=role_title, role_path=role_path, role_env=role_env, namespace=namespace, args=args, **kwargs)
-            execute("mkdir -p {1} && cp -r {0}/* {1}".format(role_path, tmp_path.joinpath(namespace).joinpath(role_name)))
+                tmp_path.joinpath(namespace).joinpath(role_name)
+    _cmds = [
+        "mkdir -p {0}".format(" ".join([tmp_path.joinpath(r.parent_path.name).as_posix() for n in namespaces for r in n.roles])),
+        ["cp -r {0} {1}".format(r.path.as_posix(), tmp_path.joinpath(r.parent_path.name).as_posix()) for n in namespaces for r in n.roles]
+    ]
+    _cmd_str = collection_util.flat_to_str(_cmds, delimiter=" && ")
+    execute(_cmd_str)
 
 
 class CustomHelpFormatter(argparse.MetavarTypeHelpFormatter):
