@@ -11,7 +11,7 @@ from utility import (
 )
 
 
-def invoke(role_title: str, role_path: pathlib.Path, role_env: dict, args: argparse.Namespace, **kwargs):
+def invoke(role_title: str, role_path: pathlib.Path, role_env: dict, namespace: str, args: argparse.Namespace, **kwargs):
     role_name = role_path.name
     role_values_override_file = role_path.joinpath("values.override.yaml")
 
@@ -45,7 +45,7 @@ def invoke(role_title: str, role_path: pathlib.Path, role_env: dict, args: argpa
         if args.command == "delete":
             _cmds.append([
                 share.echo_action(role_title, "delete"),
-                "helm delete {0} {1}".format(role_name, "" if args.ignore_namespace else "--namespace {0}".format(args.namespace))
+                "helm delete {0} {1}".format(role_name, "" if args.ignore_namespace else "--namespace {0}".format(namespace))
             ])
         else:
             if args.command == "install":
@@ -55,7 +55,7 @@ def invoke(role_title: str, role_path: pathlib.Path, role_env: dict, args: argpa
                 "helm {0} {1} {2} --values {3}".format(_command, role_name, role_path.as_posix(), role_values_override_file)
             ]
             if not args.ignore_namespace:
-                helm_cmd.append("--namespace {0}".format(args.namespace))
+                helm_cmd.append("--namespace {0}".format(namespace))
             if args.create_namespace:
                 helm_cmd.append("--create-namespace")
             if _command == "template":

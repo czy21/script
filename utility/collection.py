@@ -36,7 +36,7 @@ def dict_render(data: dict) -> dict:
     return data
 
 
-def print_grid(items: list, col_num: int = 0):
+def print_grid(items: list, col_num: int = 0, msg: str = ""):
     rows = [list(t) for t in itertools.zip_longest(*[iter(items)] * col_num, fillvalue='')]
     col_lens = [len(max([t[p] for t in rows for p in range(col_num) if p == i], key=len, default='')) for i in range(col_num)]
-    logger.info("\n".join(["", *["".join([str(t[p]).ljust(col_lens[o] + 2) for p in range(col_num) for o in range(col_num) if p == o]) for t in rows]]))
+    logger.info(msg + "\n".join(["", *["".join([str(t[p]).ljust(col_lens[o] + 2) for p in range(col_num) for o in range(col_num) if p == o]) for t in rows]]))
