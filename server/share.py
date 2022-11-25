@@ -21,12 +21,25 @@ from utility import (
 logger = logging.getLogger()
 
 
-def dfs_dir(path: pathlib.Path, deep=1, exclude_rules: list = None) -> list:
+class Role:
+    def __init__(self, key, name, path):
+        self.key = key
+        self.name = name
+        self.path = path
+
+
+class Namespace:
+    def __init__(self, name: str, roles: list[Role]):
+        self.name = name
+        self.roles = roles
+
+
+def dfs_dir(path: pathlib.Path, deep=1, exclude_rules: list = None, parent_key: str = "") -> list:
     ret = []
     _dirs = get_match_dirs(exclude_rules, list(filter(lambda a: a.is_dir(), sorted(path.iterdir()))))
-    for p in _dirs:
-        ret.append({"path": p, "deep": deep})
-        ret += dfs_dir(p, deep + 1, exclude_rules)
+    for i, p in enumerate(_dirs, start=1):
+        ret.append({"path": p, "deep": deep, "key": ".".join([parent_key, str(i)]) if parent_key != "" else str(i)})
+        ret += dfs_dir(p, deep + 1, exclude_rules, str(i))
     return ret
 
 
@@ -54,91 +67,93 @@ def echo_action(role, content, exec_file=None) -> str:
     return 'echo "' + c + '"'
 
 
-def get_dir_dict(root_path: pathlib.Path, exclude_rules: list = None, select_tip="", col_num=5) -> dict:
-    _dirs = get_match_dirs(exclude_rules, list(filter(lambda a: a.is_dir(), sorted(root_path.iterdir()))))
+def get_dir_dict(path: pathlib.Path, exclude_rules: list = None, select_tip="", col_num=5) -> dict:
+    _dirs = get_match_dirs(exclude_rules, list(filter(lambda a: a.is_dir(), sorted(path.iterdir()))))
     dir_dict: dict = {str(i): t for i, t in enumerate(_dirs, start=1)}
-    collection_util.print_grid(["{0}.{1}".format(str(k), v.name) for k, v in dir_dict.items()], col_num=col_num)
+    collection_util.print_grid(["{0}.{1}".format(str(k), v.name) for k, v in dir_dict.items()], col_num=col_num, msg=path.as_posix())
     logger.info("\nplease select {0}:".format(select_tip))
     dir_nums = input().strip().split()
     return dict((t, dir_dict[t]) for t in dir_nums if t in dir_dict.keys())
 
 
-def select_role(root_path: pathlib.Path, deep: int = 1, exclude_rules=None, args: argparse.Namespace = None):
+def select_namespace(root_path: pathlib.Path, deep: int = 1, exclude_rules=None, args: argparse.Namespace = None) -> list[Namespace]:
     exclude_rules = exclude_rules if exclude_rules else []
     exclude_rules.extend(["___temp", "utility"])
     flat_dirs = dfs_dir(root_path, exclude_rules=exclude_rules)
 
-    app_path = root_path
     deep_index = 1
-
+    app_paths: list[pathlib.Path] = []
     while deep > deep_index:
         role_dict = {str(i): p for i, p in enumerate(map(lambda a: a["path"], filter(lambda a: a["deep"] == deep_index, flat_dirs)), start=1)}
-        collection_util.print_grid(["{0}.{1}".format(k, v.name) for k, v in role_dict.items()], col_num=5)
-        logger.info("\nplease select one option(example:1)")
+        collection_util.print_grid(["{0}.{1}".format(k, v.name) for k, v in role_dict.items()], col_num=5, msg=next(iter(role_dict.items()))[1].parent.as_posix())
+        logger.info("\nplease select options(example:1 2 ...)")
         selected = input().strip()
-        logger.info("namespace: {0}".format(selected))
         if selected == '':
             sys.exit()
-        if selected not in role_dict.keys():
-            logger.error("{0} not exist".format(selected))
-            sys.exit()
-        app_path = role_dict[selected]
-        deep_index = deep_index + 1
-    if args.namespace is None:
-        args.namespace = app_path.name
-    return get_dir_dict(app_path, exclude_rules=exclude_rules, select_tip="role num(example:1 2 3)")
+        app_paths = [role_dict[t] for t in selected.split()]
+        deep_index += 1
+    namespaces = [
+        Namespace(args.namespace if args.namespace else p.name,
+                  [Role("%s.%s" % (next(filter(lambda t: t["path"] == p, flat_dirs), None)["key"], rk),
+                        rv.name,
+                        rv) for rk, rv in get_dir_dict(p, exclude_rules=exclude_rules, select_tip="role num(example:1 2 ...)").items()])
+        for p in app_paths
+    ]
+    return namespaces
 
 
 def execute(cmd, is_return: bool = False, dry_run=False):
     return basic_util.execute(cmd, is_input=False, is_return=is_return, stack_index=2, dry_run=dry_run)
 
 
-def loop_roles(root_path: pathlib.Path,
-               tmp_path: pathlib.Path,
-               bak_path: pathlib.Path,
-               roles: dict,
-               role_func: typing.Callable[..., None],
-               global_env: dict,
-               args: argparse.Namespace,
-               jinja2ignore_rules: list,
-               **kwargs) -> None:
-    for k, v in roles.items():
-        role_num = k
-        role_path: pathlib.Path = v
-        role_name = role_path.name
-        role_title = ".".join([role_num, role_name])
-        role_env_file = role_path.joinpath("env.yaml")
-        role_env = {
-            **global_env,
-            **{
-                "param_role_name": role_name,
-                "param_role_path": role_path.as_posix(),
-                "param_role_title": role_title
+def loop_namespaces(root_path: pathlib.Path,
+                    tmp_path: pathlib.Path,
+                    bak_path: pathlib.Path,
+                    namespaces: list[Namespace],
+                    role_func: typing.Callable[..., None],
+                    global_env: dict,
+                    args: argparse.Namespace,
+                    jinja2ignore_rules: list,
+                    **kwargs) -> None:
+    for n in namespaces:
+        namespace = n.name
+        for r in n.roles:
+            role_key = r.key
+            role_name = r.name
+            role_path: pathlib.Path = r.path
+            role_title = "%s.%s" % (role_key, role_name)
+            role_env_file = role_path.joinpath("env.yaml")
+            role_env = {
+                **global_env,
+                **{
+                    "param_role_name": role_name,
+                    "param_role_path": role_path.as_posix(),
+                    "param_role_title": role_title
+                }
             }
-        }
-        if role_env_file and role_env_file.exists():
-            role_env.update(yaml_util.load(template_util.Template(file_util.read_text(role_env_file)).render(**role_env)))
-            file_util.write_text(role_env_file, yaml.dump(role_env))
-        logger.debug("{0} params: {1}".format(role_name, json.dumps(role_env, indent=1)))
-        # write jinja2 template
-        for t in filter(lambda f: f.is_file(), role_path.rglob("*")):
-            _rules = regex_util.match_rules([*jinja2ignore_rules, pathlib.Path(role_name).joinpath("env.yaml").as_posix()], t.as_posix(), ".jinia2ignore {0}".format(loop_roles.__name__))
-            if not any([r["isMatch"] for r in _rules]):
-                file_util.write_text(t, template_util.Template(file_util.read_text(t)).render(**role_env))
+            if role_env_file and role_env_file.exists():
+                role_env.update(yaml_util.load(template_util.Template(file_util.read_text(role_env_file)).render(**role_env)))
+                file_util.write_text(role_env_file, yaml.dump(role_env))
+            logger.debug("{0} params: {1}".format(role_name, json.dumps(role_env, indent=1)))
+            # write jinja2 template
+            for t in filter(lambda f: f.is_file(), role_path.rglob("*")):
+                _rules = regex_util.match_rules([*jinja2ignore_rules, pathlib.Path(role_name).joinpath("env.yaml").as_posix()], t.as_posix(), ".jinia2ignore {0}".format(loop_namespaces.__name__))
+                if not any([r["isMatch"] for r in _rules]):
+                    file_util.write_text(t, template_util.Template(file_util.read_text(t)).render(**role_env))
 
-        def build_target(file_name: str):
-            build_file = role_path.joinpath(file_name)
-            if args.file == file_name:
-                if build_file.exists():
-                    execute(collection_util.flat_to_str([
-                        echo_action(role_title, file_name, build_file.as_posix()),
-                        "sh {0} {1}".format(build_file.as_posix(), " ".join(args.build_args))
-                    ], delimiter="&&"))
+            def build_target(file_name: str):
+                build_file = role_path.joinpath(file_name)
+                if args.file == file_name:
+                    if build_file.exists():
+                        execute(collection_util.flat_to_str([
+                            echo_action(role_title, file_name, build_file.as_posix()),
+                            "sh {0} {1}".format(build_file.as_posix(), " ".join(args.build_args))
+                        ], delimiter="&&"))
 
-        build_target("build.sh")
-        if role_func:
-            role_func(role_title=role_title, role_path=role_path, role_env=role_env, args=args, **kwargs)
-        execute("mkdir -p {1} && cp -r {0}/* {1}".format(role_path, tmp_path.joinpath(args.namespace).joinpath(role_name)))
+            build_target("build.sh")
+            if role_func:
+                role_func(role_title=role_title, role_path=role_path, role_env=role_env, namespace=namespace, args=args, **kwargs)
+            execute("mkdir -p {1} && cp -r {0}/* {1}".format(role_path, tmp_path.joinpath(namespace).joinpath(role_name)))
 
 
 class CustomHelpFormatter(argparse.MetavarTypeHelpFormatter):
@@ -258,16 +273,17 @@ class Installer:
         logger.info("args: {0}".format(args))
         if args.debug:
             logger.setLevel(logging.DEBUG)
-        selected_roles = select_role(self.root_path, self.role_deep, args=args)
-        logger.info("namespace: {0}; selected roles: {1}".format(args.namespace, ",".join(["{0}.{1}".format(k, v.name) for k, v in selected_roles.items()])))
+        selected_namespaces = select_namespace(self.root_path, self.role_deep, args=args)
+        for n in selected_namespaces:
+            logger.info("namespace: {0}; roles: {1}".format(n.name, ",".join(["%s.%s" % (r.key, r.name) for r in n.roles])))
         global_env = yaml_util.load(self.env_file) if self.env_file and self.env_file.exists() else {}
         global_env.update(args.param)
         global_jinja2ignore_rules = file_util.read_text(self.jinja2ignore_file).split("\n") if self.jinja2ignore_file and self.jinja2ignore_file.exists() else []
-        loop_roles(
+        loop_namespaces(
             root_path=self.root_path,
             tmp_path=self.tmp_path,
             bak_path=self.bak_path,
-            roles=selected_roles,
+            namespaces=selected_namespaces,
             role_func=self.role_func,
             global_env=global_env,
             jinja2ignore_rules=global_jinja2ignore_rules,
@@ -277,4 +293,7 @@ class Installer:
 
 
 if __name__ == '__main__':
-    Installer(pathlib.Path(__file__).parent).run()
+    log_util.init_logger(file=pathlib.Path(__file__).parent.joinpath("___temp/share.log"))
+    logger.setLevel(logging.DEBUG)
+    select_namespace(pathlib.Path(__file__).parent.joinpath("docker"), deep=2)
+    # Installer(pathlib.Path(__file__).parent).run()

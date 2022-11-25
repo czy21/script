@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import argparse
 import pathlib
 
 import share
@@ -26,8 +27,7 @@ def uci_bak_config_section_cmd(config_name, kind: str, section: str, output_file
     return collection_util.flat_to_str(_uci_cmd, delimiter=" | ") + " >> {0}".format(output_file)
 
 
-def invoke(role_title: str, role_path: pathlib.Path, role_env: dict, **kwargs):
-    args = kwargs["args"]
+def invoke(role_title: str, role_path: pathlib.Path, role_env: dict, namespace: str, args: argparse.Namespace, **kwargs):
     role_name = role_path.name
     role_restore_script_uci = role_path.joinpath("___temp/restore").joinpath("{0}.uci".format(role_name))
 

@@ -10,7 +10,7 @@ from utility import (
 )
 
 
-def invoke(role_title: str, role_path: pathlib.Path, role_env: dict, args: argparse.Namespace, **kwargs):
+def invoke(role_title: str, role_path: pathlib.Path, role_env: dict, namespace: str, args: argparse.Namespace, **kwargs):
     cluster_name = role_env.get("param_cluster_name")
     role_name = role_path.name
     role_conf_path = role_path.joinpath("conf")

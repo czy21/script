@@ -10,8 +10,8 @@ services:
     user: root
     ports:
       - "5380:5380"
-      - "5301:53/tcp"
-      - "5301:53/udp"
+      - "5302:53/tcp"
+      - "5302:53/udp"
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/etc/dns/config
     environment:
