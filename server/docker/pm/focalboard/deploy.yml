@@ -1,0 +1,26 @@
+version: "3.9"
+
+{%- set app_host = "fb.cluster.com" %}
+
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}.rule: Host(`{{ app_host }}`)
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 8000
+
+services:
+
+  focalboard:
+    image: mattermost/focalboard:7.5.2
+    container_name: focalboard
+    hostname: focalboard
+    expose:
+      - "8000"
+      - "9092"
+    labels:
+      <<: *traefik-label
+    privileged: true
+    user: root
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/data/
+    restart: always
