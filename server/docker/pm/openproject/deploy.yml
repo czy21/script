@@ -1,0 +1,31 @@
+version: "3.9"
+
+{%- set app_host = "op.cluster.com" %}
+
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}.rule: Host(`{{ app_host }}`)
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 80
+
+services:
+
+  op-app:
+    image: openproject/community:12.3.3
+    container_name: op-app
+    hostname: op-app
+    expose:
+      - "80"
+    labels:
+      <<: *traefik-label
+    privileged: true
+    user: root
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/data/pgdata/:/var/openproject/pgdata
+      - {{ param_docker_data }}/{{ param_role_name }}/data/assets/:/var/openproject/assets
+    environment:
+      DATABASE_URL: "postgresql://{{ param_db_pgsql_username }}:{{ param_db_pgsql_password }}@{{ param_db_pgsql_host }}:{{ param_db_pgsql_port }}/openproject?sslmode=disable"
+      OPENPROJECT_SECRET_KEY_BASE: secret
+      OPENPROJECT_HOST__NAME: "{{ app_host }}"
+      OPENPROJECT_HTTPS: false
+    restart: always
