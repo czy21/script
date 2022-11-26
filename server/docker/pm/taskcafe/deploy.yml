@@ -1,0 +1,31 @@
+version: "3.9"
+
+{%- set app_host = "tc.cluster.com" %}
+
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}.rule: Host(`{{ app_host }}`)
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 3333
+
+services:
+
+  taskcafe:
+    image: taskcafe/taskcafe:0.3.6
+    container_name: taskcafe
+    hostname: taskcafe
+    expose:
+      - "3333"
+    labels:
+      <<: *traefik-label
+    privileged: true
+    user: root
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/data/
+    environment:
+      TASKCAFE_DATABASE_HOST: "{{ param_db_pgsql_host }}"
+      TASKCAFE_DATABASE_USER: "{{ param_db_pgsql_username }}"
+      TASKCAFE_DATABASE_PASSWORD: "{{ param_db_pgsql_password }}"
+      TASKCAFE_DATABASE_NAME: "taskcafe"
+      TASKCAFE_MIGRATE: true
+    restart: always
