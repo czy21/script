@@ -21,8 +21,8 @@ services:
     privileged: true
     user: root
     volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/data/data/:/opt/youtrack/data
-      - {{ param_docker_data }}/{{ param_role_name }}/data/conf/:/opt/youtrack/conf
-      - {{ param_docker_data }}/{{ param_role_name }}/data/logs/:/opt/youtrack/logs
-      - {{ param_docker_data }}/{{ param_role_name }}/data/backups/:/opt/youtrack/backups
+      - {{ param_docker_data }}/{{ param_role_name }}/data/data/:/opt/youtrack/data/
+      - {{ param_docker_data }}/{{ param_role_name }}/data/conf/:/opt/youtrack/conf/
+      - {{ param_docker_data }}/{{ param_role_name }}/data/logs/:/opt/youtrack/logs/
+      - {{ param_docker_data }}/{{ param_role_name }}/data/backups/:/opt/youtrack/backups/
     restart: always
