@@ -1,0 +1,29 @@
+version: "3.9"
+
+{%- set app_host = "wekan.cluster.com" %}
+
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}.rule: Host(`{{ app_host }}`)
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 8080
+
+services:
+
+  wekan:
+    image: wekanteam/wekan:v6.58
+    container_name: wekan
+    hostname: wekan
+    expose:
+      - "8080"
+    labels:
+      <<: *traefik-label
+    privileged: true
+    user: root
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/data/
+    environment:
+      MONGO_URL: mongodb://{{ param_db_mongo_username }}:{{ param_db_mongo_password }}@{{ param_db_mongo_host }}:{{ param_db_mongo_port }}/wekan?authSource={{ param_db_mongo_username }}
+      WRITABLE_PATH: /data
+      ROOT_URL: http://{{ app_host }}
+    restart: always

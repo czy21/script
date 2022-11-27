@@ -1,0 +1,28 @@
+version: "3.9"
+
+{%- set app_host = "youtrack.cluster.com" %}
+
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}.rule: Host(`{{ app_host }}`)
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 8080
+
+services:
+
+  youtrack:
+    image: jetbrains/youtrack:2022.3.63553
+    container_name: youtrack
+    hostname: youtrack
+    expose:
+      - "8080"
+    labels:
+      <<: *traefik-label
+    privileged: true
+    user: root
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/data/data/:/opt/youtrack/data
+      - {{ param_docker_data }}/{{ param_role_name }}/data/conf/:/opt/youtrack/conf
+      - {{ param_docker_data }}/{{ param_role_name }}/data/logs/:/opt/youtrack/logs
+      - {{ param_docker_data }}/{{ param_role_name }}/data/backups/:/opt/youtrack/backups
+    restart: always
