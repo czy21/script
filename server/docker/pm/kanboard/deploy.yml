@@ -1,0 +1,32 @@
+version: "3.9"
+
+{%- set app_host = "kanboard.cluster.com" %}
+
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}.rule: Host(`{{ app_host }}`)
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 80
+
+services:
+
+  kanboard:
+    image: kanboard/kanboard:v1.2.25
+    container_name: kanboard
+    hostname: kanboard
+    expose:
+      - "80"
+    labels:
+      <<: *traefik-label
+    privileged: true
+    user: root
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/data/data/:/var/www/app/data/
+      - {{ param_docker_data }}/{{ param_role_name }}/data/plugins/:/var/www/app/plugins/
+      - {{ param_docker_data }}/{{ param_role_name }}/data/ssl/:/etc/nginx/ssl/
+    environment:
+      DATABASE_URL: mysql://{{ param_db_mysql_username }}:{{ param_db_mysql_password }}@{{ param_db_mysql_host }}:{{ param_db_mysql_port }}/kanboard
+      PLUGIN_INSTALLER: true
+      LOG_DRIVER: stdout
+      ENABLE_URL_REWRITE: false
+    restart: always
