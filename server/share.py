@@ -165,13 +165,8 @@ def loop_namespaces(root_path: pathlib.Path,
                 tmp_path.joinpath(namespace).joinpath(role_name)
     dir_roles = {k: list(v) for k, v in itertools.groupby(collection_util.flat([n.roles for n in namespaces]), key=lambda r1: r1.parent_path)}
     _cmds = [
-        [
-            "`mkdir -p {0} && cd {1} && cp -r {2} {3}`".format(tmp_path.joinpath(k.name).as_posix(),
-                                                               k.as_posix(),
-                                                               " ".join([nr.name for nr in v]),
-                                                               tmp_path.joinpath(k.name).as_posix())
-            for k, v in dir_roles.items()
-        ]
+        "`mkdir -p {0} && cd {1} && cp -r {2} {0}`".format(tmp_path.joinpath(k.name).as_posix(), k.as_posix(), " ".join([nr.name for nr in v]))
+        for k, v in dir_roles.items()
     ]
     _cmd_str = collection_util.flat_to_str(_cmds, delimiter=" && ")
     execute(_cmd_str)
