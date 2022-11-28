@@ -152,21 +152,18 @@ def loop_namespaces(root_path: pathlib.Path,
 
             def build_target(file_name: str):
                 build_file = role_path.joinpath(file_name)
-                if args.file == file_name:
-                    if build_file.exists():
-                        execute(collection_util.flat_to_str([
-                            echo_action(role_title, file_name, build_file.as_posix()),
-                            "sh {0} {1}".format(build_file.as_posix(), " ".join(args.build_args))
-                        ], delimiter="&&"))
+                if args.file == file_name and build_file.exists():
+                    execute(collection_util.flat_to_str([
+                        echo_action(role_title, file_name, build_file.as_posix()),
+                        "sh {0} {1}".format(build_file.as_posix(), " ".join(args.build_args))
+                    ], delimiter="&&"))
 
             build_target("build.sh")
             if role_func:
                 role_func(role_title=role_title, role_path=role_path, role_env=role_env, namespace=namespace, args=args, **kwargs)
-                tmp_path.joinpath(namespace).joinpath(role_name)
-    dir_roles = {k: list(v) for k, v in itertools.groupby(collection_util.flat([n.roles for n in namespaces]), key=lambda r1: r1.parent_path)}
     _cmds = [
-        "`mkdir -p {0} && cd {1} && cp -r {2} {0}`".format(tmp_path.joinpath(k.name).as_posix(), k.as_posix(), " ".join([nr.name for nr in v]))
-        for k, v in dir_roles.items()
+        "`mkdir -p {0} && cd {1} && cp -r {2} {0}`".format(tmp_path.joinpath(k.name).as_posix(), k.as_posix(), " ".join([r.name for r in v]))
+        for k, v in itertools.groupby(collection_util.flat([n.roles for n in namespaces]), key=lambda r1: r1.parent_path)
     ]
     _cmd_str = collection_util.flat_to_str(_cmds, delimiter=" && ")
     execute(_cmd_str)
