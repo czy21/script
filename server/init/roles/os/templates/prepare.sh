@@ -82,7 +82,7 @@ if [ "centos" == "${os_distribution}" ]; then
 fi
 
 if [ "ubuntu" == "${os_distribution}" ]; then
-  sed -i.bak "s,\(ca.archive\|jp.archive\|us.archive\|archive\|security\).ubuntu.com,{{ param_mirror_apt }},g" /etc/apt/sources.list
+  sed -i.bak "s,\(http\|https\)://.*.ubuntu.com,http://{{ param_mirror_apt }},g" /etc/apt/sources.list
 fi
 
 echo -n "
