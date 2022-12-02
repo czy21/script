@@ -1,6 +1,6 @@
 ## esxi build
 ```powershell
-Install-Module -Name VMware.PowerCLI
+Install-Module -Name VMware.PowerCLI -RequiredVersion 12.4.0.18633274
 Set-ExecutionPolicy RemoteSigned
 
 $esxiOfflineBundle = "C:\Users\bruce\Desktop\esxi\VMware-ESXi-7.0U3d-19482537-depot.zip"
