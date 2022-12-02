@@ -1,6 +1,6 @@
 ## esxi build
 ```powershell
-Install-Module -Name VMware.PowerCLI
+Install-Module -Name VMware.PowerCLI -RequiredVersion 12.0.0.15947286
 Set-ExecutionPolicy RemoteSigned
 
 $esxiOfflineBundle = "C:\Users\bruce\Desktop\esxi\VMware-ESXi-7.0U3d-19482537-depot.zip"
@@ -14,7 +14,7 @@ Add-EsxSoftwarePackage -ImageProfile $newImageProfileName -SoftwarePackage "net-
 Export-EsxImageProfile -ImageProfile $newImageProfileName -ExportToIso -FilePath "C:\Users\bruce\Desktop\esxi\$newImageProfileName.iso"
 
 # use script
-.\ESXi-Customizer-PS-v2.6.0.ps1 -izip .\VMware-ESXi-7.0U2-17630552-depot.zip -pkgDir C:\Users\bruce\Desktop\esxi\pkg\
+.\ESXi-Customizer-PS-v2.6.0.ps1 -izip .\VMware-ESXi-7.0U3d-19482537-depot.zip -pkgDir .\pkg\
 ```
 
 ```powershell
