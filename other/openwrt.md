@@ -1,9 +1,9 @@
 ```shell
 # ubuntu 22.04
-sudo apt install -y build-essential gawk gcc-multilib flex git gettext libncurses5-dev libssl-dev python3-distutils zlib1g-dev unzip qemu-utils rsync file
+sudo apt install -y build-essential clang flex g++ gawk gcc-multilib gettext git libncurses5-dev libssl-dev python3-distutils rsync unzip zlib1g-dev qemu-utils file
 echo "
-src-git helloworld https://github.com/fw876/helloworld
-src-link plugin /volume2/openwrt-plugin
+src-git plugin http://gitea.cluster.com/czyhome/openwrt-plugin.git
+#src-link plugin /volume2/openwrt-plugin
 " >> feeds.conf.default
 
 rm -rf ./tmp && rm -rf .config
