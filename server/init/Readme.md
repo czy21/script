@@ -1,7 +1,10 @@
 # ansible install and config on server
-## centos
+# linux
 ```shell
 sudo hostnamectl set-hostname --static [hostname]
+```
+## centos
+```shell
 sudo yum -y install epel-release 
 sudo yum -y update
 sudo yum -y install ansible
@@ -38,16 +41,11 @@ sudo sed -ir 's/^#\(host_key_checking\)/\1/' /etc/ansible/ansible.cfg
 ## mount
 ```shell
 showmount -e [host]
-# vim fstab append
+# nfs in /etc/fstab
 [host]:/volume1/ubuntu /volume1 nfs defaults 0 0
 
-# smb mount
-sudo mkdir -p /etc/smb
-sudo -u root bash -c 'echo "
-username=<username>
-password=<password>
-" >> /etc/smb/dsm-passwd'
-//[host]/public/ubun12   /volume2   cifs   credentials=/etc/smb/dsm-passwd,gid=1000,uid=1000    0 0
+# smb in /etc/fstab
+//<host>/public/ubun12   /volume2   cifs   user=<username>,pass=<password>,gid=1000,uid=1000    0 0
 ```
 
 ### docker
