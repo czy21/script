@@ -6,27 +6,33 @@ sudo yum -y install epel-release
 sudo yum -y update
 sudo yum -y install ansible
 ```
-## ubuntu
+## ubuntu pre-installed
 ```shell
-sudo apt install software-properties-common -y
-sudo add-apt-repository --yes --update ppa:ansible/ansible
-sudo apt install ansible -y
-sudo sed -ir 's/^#\(host_key_checking\)/\1/' /etc/ansible/ansible.cfg
-```
-## debian 11
-```bash
-echo 'deb http://ppa.launchpad.net/ansible/ansible/ubuntu focal main' > /etc/apt/sources.list.d/ansible.list
-sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367
-sudo apt install ansible
-```
-## ubuntu pre-installed 
-```shell
+# desktop 
+sudo apt install openssh-server
 passwd
 sed -i -r "s/^\s*PermitRootLogin\s+\w+/PermitRootLogin yes/;" /etc/ssh/sshd_config
+
+sudo apt install software-properties-common
+sudo add-apt-repository ppa:deadsnakes/ppa --yes --update
+sudo apt install python3.10 -y
 
 # set ntp server
 vim /etc/systemd/timesyncd.conf
 [Time] NTP=ntp.aliyun.com
+```
+## ansible
+```bash
+# debian 11
+echo 'deb http://ppa.launchpad.net/ansible/ansible/ubuntu focal main' > /etc/apt/sources.list.d/ansible.list
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367
+sudo apt install ansible
+
+# ubuntu
+sudo apt install software-properties-common -y
+sudo add-apt-repository ppa:ansible/ansible --yes --update
+sudo apt install ansible -y
+sudo sed -ir 's/^#\(host_key_checking\)/\1/' /etc/ansible/ansible.cfg
 ```
 
 ## mount
