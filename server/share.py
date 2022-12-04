@@ -88,6 +88,16 @@ def select_namespace(root_path: pathlib.Path, deep: int = 1, exclude_rules=None,
     flat_dirs = dfs_dir(root_path, exclude_rules=exclude_rules)
 
     deep_index = 1
+    namespaces = []
+    if deep == deep_index:
+        _root_path = pathlib.Path(root_path)
+        namespaces.extend([
+            Namespace(args.namespace if args.namespace else _root_path.name,
+                      [Role("%s.%s" % ("", rk),
+                            rv.name,
+                            rv, _root_path) for rk, rv in get_dir_dict(_root_path, exclude_rules=exclude_rules, select_tip="role num(example:1 2 ...)", args=args).items()])
+        ])
+        return namespaces
     app_paths: list[pathlib.Path] = []
     while deep > deep_index:
         role_dict = {str(i): p for i, p in enumerate(map(lambda a: a["path"], filter(lambda a: a["deep"] == deep_index, flat_dirs)), start=1)}
@@ -101,13 +111,13 @@ def select_namespace(root_path: pathlib.Path, deep: int = 1, exclude_rules=None,
                 sys.exit()
             app_paths = [role_dict[t] for t in selected.split()]
         deep_index += 1
-    namespaces = [
+    namespaces.extend([
         Namespace(args.namespace if args.namespace else p.name,
                   [Role("%s.%s" % (next(filter(lambda t: t["path"] == p, flat_dirs), None)["key"], rk),
                         rv.name,
                         rv, p) for rk, rv in get_dir_dict(p, exclude_rules=exclude_rules, select_tip="role num(example:1 2 ...)", args=args).items()])
         for p in app_paths
-    ]
+    ])
     return namespaces
 
 
