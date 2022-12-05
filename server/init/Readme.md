@@ -13,7 +13,8 @@ sed -i -r "s/^\s*PermitRootLogin\s+\w+/PermitRootLogin yes/;" /etc/ssh/sshd_conf
 
 # set ntp server
 vim /etc/systemd/timesyncd.conf
-[Time] NTP=ntp.aliyun.com
+[Time]
+NTP=ntp.aliyun.com
 ```
 ## ansible
 ```bash
