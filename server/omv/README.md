@@ -8,12 +8,7 @@ sudo apt update && sudo apt upgrade -y
 sudo apt install -y vim curl apparmor apparmor-utils python3-venv
 wget -O - https://github.com/OpenMediaVault-Plugin-Developers/packages/raw/master/install | bash
 
-# nfs option
-async,no_root_squash,insecure_locks
-
-# pull
-rsync --archive rsync://[user]@[host]:[remote_path] [local_path] --verbose
-
-# btrfs filesystem repair; cause force shutdown
+# nfs option: async,no_root_squash,insecure_locks
+# btrfs filesystem repair; cause poweroff
 btrfsck --repair /dev/sdb1
 ```
