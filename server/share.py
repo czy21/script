@@ -40,8 +40,9 @@ def dfs_dir(path: pathlib.Path, deep=1, exclude_rules: list = None, parent_key: 
     ret = []
     _dirs = get_match_dirs(exclude_rules, list(filter(lambda a: a.is_dir(), sorted(path.iterdir()))))
     for i, p in enumerate(_dirs, start=1):
-        ret.append({"path": p, "deep": deep, "key": ".".join([parent_key, str(i)]) if parent_key != "" else str(i)})
-        ret += dfs_dir(p, deep + 1, exclude_rules, str(i))
+        key = ".".join([parent_key, str(i)]) if parent_key != "" else str(i)
+        ret.append({"path": p, "deep": deep, "key": key})
+        ret += dfs_dir(p, deep + 1, exclude_rules, key)
     return ret
 
 
