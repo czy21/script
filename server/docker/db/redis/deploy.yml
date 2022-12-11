@@ -29,6 +29,7 @@ services:
       REDIS_ARGS: |-
         --requirepass {{ param_db_redis_password }}
         --appendonly yes
+        --ignore-warnings ARM64-COW-BUG
   redis-exporter-{{ param_db_redis_port }}:
     image: oliver006/redis_exporter:alpine
     labels:
