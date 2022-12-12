@@ -11,6 +11,9 @@ showmount -e [host]
 # nfs in /etc/fstab
 [host]:/volume1/ubuntu /volume1 nfs defaults 0 0
 
+# nfs command line
+sudo mount -t nfs <nfs_server>:/<nfs_path> /<local_path>
+
 # smb in /etc/fstab
 //<host>/public/ubun12   /volume2   cifs   user=<username>,pass=<password>,gid=1000,uid=1000    0 0
 
