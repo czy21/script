@@ -15,6 +15,9 @@ sed -i -r "s/^\s*PermitRootLogin\s+\w+/PermitRootLogin yes/;" /etc/ssh/sshd_conf
 vim /etc/systemd/timesyncd.conf
 [Time]
 NTP=ntp.aliyun.com
+
+# mDNS
+# sudo apt install avahi-daemon -y 
 ```
 ## ansible
 ```bash
