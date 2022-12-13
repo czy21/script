@@ -29,3 +29,8 @@
   import_tasks: init-kube.yml
   tags:
     - 'k8s-init-kube'
+
+- name: kubeadm join
+  import_tasks: join-kube.yml
+  tags:
+    - 'k8s-join'
