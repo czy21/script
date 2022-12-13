@@ -2,7 +2,7 @@
   become: yes
   import_tasks: install.yml
   tags:
-    - '{{ param_role_name }}'
+    - 'k8s'
 
 - name: hosts init
   become: yes
