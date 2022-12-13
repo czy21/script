@@ -1,7 +1,10 @@
 velero:
+  image:
+    repository: velero/velero
+    tag: v1.10.0
   initContainers:
    - name: velero-plugin-for-aws
-     image: velero/velero-plugin-for-aws:v1.5.2
+     image: velero/velero-plugin-for-aws:v1.6.0
      imagePullPolicy: IfNotPresent
      volumeMounts:
        - mountPath: /target
@@ -15,9 +18,8 @@ velero:
   configuration:
     provider: aws
     backupStorageLocation:
-      name: backup
-      bucket: velero-backup-storage-k8s-1
+      bucket: velero-migration-k8s-1
       config:
-        region: us-east-1
+        region: minio
         s3Url: http://{{ param_db_minio_host }}
         s3ForcePathStyle: true
