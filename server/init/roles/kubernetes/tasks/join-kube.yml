@@ -1,0 +1,11 @@
+- name: kubeadm master join
+  shell: |
+    sudo kubeadm join k8s-vip:16433 --token ctoflr.oyy3ci2sx9dnry3w --discovery-token-ca-cert-hash sha256:a4ce62e88b0447b8da8b1895157cb9e2268bccddbc669d4780b58befecf2b05a --control-plane --certificate-key c8fe01656a54e7e6252bcbe076b7b4186f4512cc4015fd62be53a31b4899d566
+    sudo -i eval 'if [ -z ${KUBECONFIG} ];then echo 'export KUBECONFIG=/etc/kubernetes/admin.conf' >> ~/.bashrc; fi;'
+    sudo -u {{ param_user_ops }} bash -c "set -e;cd;mkdir -p .kube && sudo cp --force /etc/kubernetes/admin.conf .kube/config && sudo chown {{ param_user_ops }}:{{ param_user_ops }} .kube/config"
+  when: '"master" in group_names'
+
+- name: kubeadm worker join
+  shell: |
+    sudo kubeadm join k8s-vip:16433 --token 9is2p7.r06243mwsf97jwf6 --discovery-token-ca-cert-hash sha256:a4ce62e88b0447b8da8b1895157cb9e2268bccddbc669d4780b58befecf2b05a
+  when: '"worker" in group_names'
