@@ -1,5 +1,6 @@
 .DS_Store
 README.md
 ___temp/
+build/
 templates/
 Chart.yaml
