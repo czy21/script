@@ -59,7 +59,7 @@ def get_match_dirs(rules, items):
     _dirs = []
     for p in items:
         _rules = regex_util.match_rules(rules, p.as_posix(), ".jinia2ignore {0}".format(dfs_dir.__name__))
-        if not any([r["isMatch"] for r in _rules]):
+        if not any(_rules.values()):
             _dirs.append(p)
     return _dirs
 
@@ -164,7 +164,7 @@ def loop_namespaces(root_path: pathlib.Path,
             # write jinja2 template
             for t in filter(lambda f: f.is_file(), role_output_path.rglob("*")):
                 _rules = regex_util.match_rules([*jinja2ignore_rules, role_output_path.joinpath("env.yaml").as_posix()], t.as_posix(), ".jinia2ignore {0}".format(loop_namespaces.__name__))
-                if not any([r["isMatch"] for r in _rules]):
+                if not any(_rules.values()):
                     file_util.write_text(t, template_util.Template(file_util.read_text(t)).render(**role_env))
 
             def build_target(file_name: str):
