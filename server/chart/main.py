@@ -11,13 +11,15 @@ from utility import (
 )
 
 
-def invoke(role_title: str, role_path: pathlib.Path, role_env: dict, namespace: str, args: argparse.Namespace, **kwargs):
-    role_name = role_path.name
-    role_values_override_file = role_path.joinpath("values.override.yaml")
-
-    temp_all_in_one_path = role_path.joinpath("___temp/deploy.yaml")
-    temp_all_in_one_path.parent.mkdir(parents=True, exist_ok=True)
-    temp_all_in_one_path.touch()
+def invoke(role_title: str,
+           role_name: str,
+           role_path: pathlib.Path,
+           role_output_path: pathlib.Path,
+           role_env: dict,
+           namespace: str,
+           args: argparse.Namespace,
+           **kwargs):
+    role_values_override_file = role_output_path.joinpath("values.override.yaml")
 
     file_util.write_text(role_values_override_file, yaml.dump(role_env))
 
@@ -33,7 +35,7 @@ def invoke(role_title: str, role_path: pathlib.Path, role_env: dict, namespace: 
         _cmds.append("helm repo   list | if [ -z \"$(grep -w {0})\" ];then helm repo add {0} {1};fi".format(helm_repo_name, helm_repo_url))
         _cmds.append(
             "helm package {0} --destination {0} | sed 's/Successfully packaged chart and saved it to: //g' | xargs helm nexus-push {1}  --username {2} --password {3}".format(
-                role_path, helm_repo_name,
+                role_output_path, helm_repo_name,
                 helm_username,
                 helm_password
             )
@@ -52,17 +54,14 @@ def invoke(role_title: str, role_path: pathlib.Path, role_env: dict, namespace: 
                 _cmds.append(share.echo_action(role_title, "install"))
                 _command = "upgrade --install"
             helm_cmd = [
-                "helm {0} {1} {2} --values {3}".format(_command, role_name, role_path.as_posix(), role_values_override_file)
+                "helm {0} {1} {2} --values {3}".format(_command, role_name, role_output_path.as_posix(), role_values_override_file)
             ]
             if not args.ignore_namespace:
                 helm_cmd.append("--namespace {0}".format(namespace))
             if args.create_namespace:
                 helm_cmd.append("--create-namespace")
-            if _command == "template":
-                _cmds.append(share.echo_action(role_title, "template"))
-                helm_cmd.append("> {0}".format(temp_all_in_one_path))
 
-            _cmds.append('helm dep up {0}'.format(role_path.as_posix()))
+            _cmds.append('helm dep up {0}'.format(role_output_path.as_posix()))
             _cmds.append(collection_util.flat_to_str(helm_cmd))
     _cmd_str = collection_util.flat_to_str(_cmds, delimiter=" && ")
     share.execute(_cmd_str, dry_run=args.dry_run)

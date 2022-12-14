@@ -2,6 +2,7 @@
 import os
 import pathlib
 import re
+import shutil
 
 
 def dfs_dir(t_path: str, pattern: re = None) -> list:
@@ -27,3 +28,17 @@ def join_path(first: str, *more) -> str:
     for m in more:
         p = p.joinpath(m)
     return os.path.abspath(p.as_posix()).replace("\\", "/")
+
+
+def merge_dir(src: pathlib.Path, dst: pathlib.Path, ignore_pattern: list[str]):
+    resources: dict[pathlib.Path, pathlib.Path] = {
+        r: dst.joinpath(r.relative_to(src))
+        for r in src.rglob("*")
+        if not any([re.search(p, r.as_posix()) for p in ignore_pattern])
+    }
+    for k, v in resources.items():
+        if k.is_dir():
+            v.mkdir(parents=True, exist_ok=True)
+    for k, v in resources.items():
+        if k.is_file():
+            shutil.copyfile(k, v)
