@@ -11,26 +11,26 @@
     - 'k8s-init-host'
 
 - name: ha init
-  import_tasks: init-ha.yml
+  import_tasks: ha-init.yml
   tags:
     - 'k8s-init-ha'
 
 - name: etcd init cert
-  import_tasks: init-etcd-cert.yml
+  import_tasks: etcd-init-cert.yml
   tags:
     - 'k8s-init-etcd-cert'
 
 - name: etcd init
-  import_tasks: init-etcd.yml
+  import_tasks: etcd-init.yml
   tags:
     - 'k8s-init-etcd'
 
 - name: kubeadm init
-  import_tasks: init-kube.yml
+  import_tasks: kube-init.yml
   tags:
     - 'k8s-init-kube'
 
 - name: kubeadm join
-  import_tasks: join-kube.yml
+  import_tasks: kube-join.yml
   tags:
     - 'k8s-join'
