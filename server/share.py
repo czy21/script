@@ -4,6 +4,7 @@ import json
 import logging
 import os
 import pathlib
+import shutil
 import sys
 import typing
 
@@ -141,8 +142,12 @@ def loop_namespaces(root_path: pathlib.Path,
             role_key = r.key
             role_name = r.name
             role_path: pathlib.Path = r.path
+            role_build_path = role_path.joinpath("build")
+            role_build_path.mkdir(parents=True, exist_ok=True)
+            role_output_path = role_build_path.joinpath("output")
+            shutil.rmtree(role_output_path, ignore_errors=True)
             role_title = "%s.%s" % (role_key, role_name)
-            role_env_file = role_path.joinpath("env.yaml")
+            role_env_output_file = role_output_path.joinpath("env.yaml")
             role_env = {
                 **global_env,
                 **{
@@ -151,18 +156,18 @@ def loop_namespaces(root_path: pathlib.Path,
                     "param_role_title": role_title
                 }
             }
-            if role_env_file and role_env_file.exists():
-                role_env.update(yaml_util.load(template_util.Template(file_util.read_text(role_env_file)).render(**role_env)))
-                file_util.write_text(role_env_file, yaml.dump(role_env))
+            if role_env_output_file and role_env_output_file.exists():
+                role_env.update(yaml_util.load(template_util.Template(file_util.read_text(role_env_output_file)).render(**role_env)))
+                file_util.write_text(role_env_output_file, yaml.dump(role_env))
             logger.debug("{0} params: {1}".format(role_name, json.dumps(role_env, indent=1)))
             # write jinja2 template
-            for t in filter(lambda f: f.is_file(), role_path.rglob("*")):
-                _rules = regex_util.match_rules([*jinja2ignore_rules, pathlib.Path(role_name).joinpath("env.yaml").as_posix()], t.as_posix(), ".jinia2ignore {0}".format(loop_namespaces.__name__))
+            for t in filter(lambda f: f.is_file(), role_output_path.rglob("*")):
+                _rules = regex_util.match_rules([t.joinpath("env.yaml").as_posix()], t.as_posix(), ".jinia2ignore {0}".format(loop_namespaces.__name__))
                 if not any([r["isMatch"] for r in _rules]):
                     file_util.write_text(t, template_util.Template(file_util.read_text(t)).render(**role_env))
 
             def build_target(file_name: str):
-                build_file = role_path.joinpath(file_name)
+                build_file = role_output_path.joinpath(file_name)
                 if args.file == file_name and build_file.exists():
                     execute(collection_util.flat_to_str([
                         echo_action(role_title, file_name, build_file.as_posix()),
@@ -170,8 +175,8 @@ def loop_namespaces(root_path: pathlib.Path,
                     ], delimiter="&&"))
 
             build_target("build.sh")
-            if role_func:
-                role_func(role_title=role_title, role_path=role_path, role_env=role_env, namespace=namespace, args=args, **kwargs)
+            # if role_func:
+            #     role_func(role_title=role_title, role_path=role_path, role_env=role_env, namespace=namespace, args=args, **kwargs)
     _cmds = [
         "`mkdir -p {0} && cd {1} && cp -r {2} {0}`".format(tmp_path.joinpath(k.name).as_posix(), k.as_posix(), " ".join([r.name for r in v]))
         for k, v in itertools.groupby(collection_util.flat([n.roles for n in namespaces]), key=lambda r1: r1.parent_path)
