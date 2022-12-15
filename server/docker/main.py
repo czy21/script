@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
+
 import argparse
 import pathlib
 
 import share
-
 from utility import (
     collection as collection_util,
     path as path_util
