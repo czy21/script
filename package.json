@@ -1,0 +1,8 @@
+{
+  "name": "script",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "doc-serve": "sh -c '$HOME/.python3/Scripts/python3 -m mkdocs serve'"
+  }
+}
