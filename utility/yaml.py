@@ -1,5 +1,4 @@
 import pathlib
-import types
 from typing import Union
 
 import yaml
