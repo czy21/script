@@ -27,3 +27,34 @@ https://host:5001/webapi/auth.cgi?api=SYNO.API.Auth&version=3&method=login&accou
 
 https://host.cluster.com:5001/webapi/entry.cgi?api=SYNO.ActiveBackup.Activation&method=set&version=1&activated=true&serial_number="serialNumber"
 ```
+# nginx
+```text
+# /etc/nginx/conf.d/http.app.conf
+server {
+    listen       80;
+    listen      443 ssl http2;
+    server_name  *.cluster.com;
+
+    client_max_body_size 0;
+    chunked_transfer_encoding off;
+
+    include /usr/syno/etc/www/certificate/ReverseProxy_e2a8ddc0-8d6c-46ba-b700-60e874332cb5/cert.conf*;
+    include /usr/syno/etc/security-profile/tls-profile/config/ReverseProxy_e2a8ddc0-8d6c-46ba-b700-60e874332cb5.conf*;
+
+    location / {
+
+        proxy_set_header Host                $host;
+        proxy_set_header X-Real-IP           $remote_addr;
+        proxy_set_header X-Forwarded-For     $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto   $scheme;
+
+        proxy_pass http://127.0.0.1:8080;
+    }
+}
+
+server {
+    listen       80;
+    server_name  alist.cluster.com;
+    return       301 https://$server_name$request_uri;
+}
+```

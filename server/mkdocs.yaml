@@ -1,4 +1,0 @@
-site_name: server
-theme: readthedocs
-nav:
-  - Home: index.md
