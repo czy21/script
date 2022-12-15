@@ -3,6 +3,12 @@
 # upload sh_file and execute it
 # -r install requirement.txt
 
+shopt -s expand_aliases
+
+if [ -f $(which gtar) ];then
+  alias tar='gtar'
+fi
+
 function upload_exec_py() {
   local PYTHON_HOME="\$HOME/.python3"
   local PYTHON_EXEC="${PYTHON_HOME}/bin/python3"
