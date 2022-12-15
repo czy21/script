@@ -1,5 +1,4 @@
 ```shell
-
 sudo update-rc.d ssh enable
 sudo sed -i.bak 's|http.kali.org|nexus.cluster.com/repository/apt-proxy|g' /etc/apt/sources.list
 wget -O - https://gitlab.com/kalilinux/build-scripts/kali-wsl-chroot/-/raw/master/xfce4.sh | sudo bash

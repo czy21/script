@@ -1,3 +1,10 @@
+#
+```nginx
+# 单域名 path区分多SPA应用 example: conf/app.conf
+# SPA config 
+#       publicPath: /admin/
+#       router basename: /admin/
+
 server {
     listen       80;
     server_name  app-dev.cluster.com;
@@ -31,3 +38,4 @@ server {
         proxy_set_header  Connection       $http_connection;
     }
 }
+```
