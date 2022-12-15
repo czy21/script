@@ -174,6 +174,7 @@ def loop_namespaces(root_path: pathlib.Path,
                         echo_action(role_title, name, build_file.as_posix()),
                         "sh {0} {1}".format(build_file.as_posix(), " ".join(args.build_args))
                     ], delimiter="&&"))
+
             build_target("build.sh")
             if role_func:
                 role_func(role_title=role_title, role_name=role_name, role_path=role_path, role_output_path=role_output_path, role_env=role_env, namespace=namespace, args=args, **kwargs)
@@ -255,9 +256,11 @@ class Installer:
 
     @staticmethod
     def set_common_argument(parser: argparse.ArgumentParser):
+
         parser.add_argument('-f', '--file', type=str)
         parser.add_argument('-n', '--namespace', type=str)
         parser.add_argument('-p', '--param', nargs="+", default=[], type=lambda s: dict({split_kv_str(s)}), help="k1=v1 k2=v2")
+        parser.add_argument('--env-file', type=str)
         parser.add_argument('--all-roles', action="store_true")
         parser.add_argument('--all-namespaces', action="store_true")
         parser.add_argument('--ignore-namespace', action="store_true")
@@ -308,6 +311,8 @@ class Installer:
         for n in selected_namespaces:
             logger.info("namespace: {0}; roles: {1}".format(n.name, ",".join(["%s.%s" % (r.key, r.name) for r in n.roles])))
         global_env = yaml_util.load(self.env_file) if self.env_file and self.env_file.exists() else {}
+        if args.env_file:
+            global_env.update(yaml_util.load(pathlib.Path(args.env_file)))
         global_env.update(args.param)
         global_jinja2ignore_rules = file_util.read_text(self.jinja2ignore_file).split("\n") if self.jinja2ignore_file and self.jinja2ignore_file.exists() else []
         loop_namespaces(
