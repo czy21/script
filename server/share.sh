@@ -17,8 +17,8 @@ function upload_exec_py() {
   local ssh_cmd="ssh ${ssh_opt} ${host}"
   local scp_cmd="scp ${ssh_opt} -rqC"
 
-  ${scp_cmd} ${book_source} $host:
-  ${scp_cmd} ${book_source}/../requirements.txt ${book_source}/../env.yaml ${book_source}/../share.py ${utility} $host:${book_target}
+  tar cf - -C ${book_source} . | ${ssh_cmd} "mkdir -p ${book_target};tar xf - -C ${book_target}"
+  ${scp_cmd} ${book_source}/../{requirements.txt,env.yaml,share.py} ${utility} $host:${book_target}
 
   local args=""
   local cmd=""
