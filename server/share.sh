@@ -20,7 +20,6 @@ function upload_exec_py() {
   local del_cmd="rm -rf \$HOME/${dst_name}"
   local ssh_opt="-o StrictHostKeyChecking=no"
   local ssh_cmd="ssh ${ssh_opt} ${host}"
-  local scp_cmd="scp ${ssh_opt} -rq"
 
   tar -zcf - --exclude="__pycache__" \
   -C ${src_path} . \
