@@ -5,7 +5,7 @@
 
 shopt -s expand_aliases
 
-if [ -f $(which gtar) ];then
+if [ -n "$(type -p gtar)" ];then
   alias tar='gtar'
 fi
 
