@@ -16,11 +16,11 @@ function upload_exec_py() {
   local ssh_cmd="ssh ${ssh_opt} ${host}"
   local scp_cmd="scp ${ssh_opt} -rq"
 
-  tar -cf - --exclude="__pycache__" \
+  tar -zcf - --exclude="__pycache__" \
   -C ${src_path} . \
   -C $(realpath ${utility_path}/../) ./$(basename ${utility_path}) \
   -C $(realpath ${src_path}/../) ./requirements.txt ./env.yaml ./share.py \
-   | ${ssh_cmd} "mkdir -p ${dst_name};tar -xf - -C ${dst_name}"
+   | ${ssh_cmd} "mkdir -p ${dst_name};tar -zxf - -C ${dst_name}"
 
   local args=""
   local cmd=""
@@ -35,6 +35,7 @@ function upload_exec_py() {
     args+=" ${item}"
   done
   cmd+="${PYTHON_EXEC} -B \$HOME/${dst_name}/main.py ${args}"
-  ${ssh_cmd} ${cmd} && ${scp_cmd} $host:${dst_name}/${tmp_name} ${src_path}/
+  ${ssh_cmd} ${cmd}
+  ${ssh_cmd} "tar -zcf - -C ${dst_name} ${tmp_name}" | tar -zxf - -C ${src_path}
   ${ssh_cmd} ${del_cmd}
 }
