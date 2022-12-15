@@ -1,0 +1,5 @@
+site_name: script
+docs_dir: doc
+theme: readthedocs
+nav:
+  - Home: public/index.md
