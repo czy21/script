@@ -167,14 +167,13 @@ def loop_namespaces(root_path: pathlib.Path,
                 if not any(_rules.values()):
                     file_util.write_text(t, template_util.Template(file_util.read_text(t)).render(**role_env))
 
-            def build_target(file_name: str):
-                build_file = role_output_path.joinpath(file_name)
-                if args.file == file_name and build_file.exists():
+            def build_target(name: str):
+                build_file = role_output_path.joinpath(name)
+                if args.file == name and build_file.exists():
                     execute(collection_util.flat_to_str([
-                        echo_action(role_title, file_name, build_file.as_posix()),
+                        echo_action(role_title, name, build_file.as_posix()),
                         "sh {0} {1}".format(build_file.as_posix(), " ".join(args.build_args))
                     ], delimiter="&&"))
-
             build_target("build.sh")
             if role_func:
                 role_func(role_title=role_title, role_name=role_name, role_path=role_path, role_output_path=role_output_path, role_env=role_env, namespace=namespace, args=args, **kwargs)
