@@ -1,5 +1,5 @@
 site_name: script
-docs_dir: doc
+docs_dir: doc/public/
 theme: readthedocs
 nav:
-  - Home: public/index.md
+  - Home: index.md
