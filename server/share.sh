@@ -7,21 +7,19 @@ function upload_exec_py() {
   local PYTHON_HOME="\$HOME/.python3"
   local PYTHON_EXEC="${PYTHON_HOME}/bin/python3"
   local PIP_EXEC="${PYTHON_HOME}/bin/pip3"
-  local is_debug=false
-  local book_source=$(pwd)
-  local book_target=$(basename ${book_source})
-  local book_target_temp_path=${book_target}/___temp
-  local utility=$(cd ${book_source}/../../utility; pwd)
-  local del_cmd="rm -rf \$HOME/${book_target}"
+  local src_path=$(pwd)
+  local dst_name=$(basename ${src_path})
+  local tmp_name=___temp
+  local utility_path=$(realpath ${src_path}/../../utility)
+  local del_cmd="rm -rf \$HOME/${dst_name}"
   local ssh_opt="-o StrictHostKeyChecking=no"
   local ssh_cmd="ssh ${ssh_opt} ${host}"
-  local scp_cmd="scp ${ssh_opt} -rqC"
 
   tar cf - --exclude="__pycache__" \
-  -C ${book_source} . \
-  -C $(realpath ${utility}/../) ./utility \
-  -C $(realpath ${book_source}/../) ./requirements.txt ./env.yaml ./share.py \
-   | ${ssh_cmd} "mkdir -p ${book_target};tar xf - -C ${book_target}"
+  -C ${src_path} . \
+  -C $(realpath ${utility_path}/../) ./$(basename ${utility_path}) \
+  -C $(realpath ${src_path}/../) ./requirements.txt ./env.yaml ./share.py \
+   | ${ssh_cmd} "mkdir -p ${dst_name};tar xf - -C ${dst_name}"
 
   local args=""
   local cmd=""
@@ -29,18 +27,14 @@ function upload_exec_py() {
   for ((i=1;i<="$#";i++));do
     item=${!i}
     if [ "-r" == ${item} ]; then
-        cmd+="${PYTHON_EXEC} -m pip install -r \$HOME/${book_target}/requirements.txt && "
+        cmd+="${PYTHON_EXEC} -m pip install -r \$HOME/${dst_name}/requirements.txt && "
         shift 1
         continue
     fi
-    if [ "--debug" == ${item} ]; then
-      is_debug=true
-    fi
     args+=" ${item}"
   done
-  cmd+="${PYTHON_EXEC} -B \$HOME/${book_target}/main.py ${args}"
-  ${ssh_cmd} ${cmd} && ${scp_cmd} $host:${book_target_temp_path}/ ${book_source}/
-  if [ ${is_debug} == false ]; then
-    ${ssh_cmd} ${del_cmd}
-  fi
+  cmd+="${PYTHON_EXEC} -B \$HOME/${dst_name}/main.py ${args}"
+  ${ssh_cmd} ${cmd}
+  ${ssh_cmd} "tar cf - -C ${dst_name} ${tmp_name}" | tar xf - -C ${src_path}
+  ${ssh_cmd} ${del_cmd}
 }
