@@ -3,7 +3,7 @@ version: "3.9"
 services:
 
   nginx:
-    image: nginx:1.23.1-alpine
+    image: nginx:1.23.3-alpine
     container_name: nginx
     privileged: true
     user: root
@@ -12,5 +12,3 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/conf.d/:/etc/nginx/conf.d/
       - {{ param_docker_data }}/{{ param_role_name }}/conf/cert/:/etc/nginx/cert/
     restart: always
-
-
