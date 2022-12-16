@@ -3,10 +3,6 @@ import itertools
 import logging
 import typing
 
-import pydash
-
-from utility import template as template_util
-
 logger = logging.getLogger()
 
 
@@ -27,13 +23,6 @@ def flat_dict(data: dict) -> dict:
         else:
             ret[k] = v
     return ret
-
-
-def dict_render(data: dict) -> dict:
-    for k, v in flat_dict(data).items():
-        if isinstance(v, str):
-            pydash.set_(data, k, template_util.Template(v).render(**data))
-    return data
 
 
 def print_grid(items: list, col_num: int = 0, msg: str = ""):
