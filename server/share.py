@@ -160,7 +160,6 @@ def loop_namespaces(root_path: pathlib.Path,
             if role_env_output_file and role_env_output_file.exists():
                 role_env.update(yaml_util.load(template_util.Template(file_util.read_text(role_env_output_file)).render(**role_env)))
                 file_util.write_text(role_env_output_file, yaml.dump(role_env))
-            logger.debug("{0} params: {1}".format(role_name, json.dumps(role_env, indent=1)))
             # write jinja2 template
             for t in filter(lambda f: f.is_file(), role_output_path.rglob("*")):
                 _rules = regex_util.match_rules([*jinja2ignore_rules, role_output_path.joinpath("env.yaml").as_posix()], t.as_posix(), ".jinia2ignore {0}".format(loop_namespaces.__name__))
