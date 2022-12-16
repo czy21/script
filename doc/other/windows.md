@@ -26,7 +26,9 @@ wsl --install --distribution ubuntu-20.04
 ```
 
 ```shell
-# 去除TPM检查
+# install shift+F10
 REG ADD HKLM\SYSTEM\Setup\LabConfig /v BypassTPMCheck /t REG_DWORD /d 1
 REG ADD HKLM\SYSTEM\Setup\LabConfig /v BypassSecureBootCheck /t REG_DWORD /d 1
+# init shift+F10
+OOBE\BYPASSNRO
 ```
