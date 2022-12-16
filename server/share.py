@@ -1,6 +1,5 @@
 import argparse
 import itertools
-import json
 import logging
 import os
 import pathlib
@@ -148,13 +147,10 @@ def loop_namespaces(root_path: pathlib.Path,
             shutil.rmtree(role_output_path, ignore_errors=True)
             role_title = "%s.%s" % (role_key, role_name)
             role_env_output_file = role_output_path.joinpath("env.yaml")
-            role_env = {
-                **global_env,
-                **{
-                    "param_role_name": role_name,
-                    "param_role_path": role_path.as_posix(),
-                    "param_role_title": role_title
-                }
+            role_env = global_env | args.param | {
+                "param_role_name": role_name,
+                "param_role_path": role_path.as_posix(),
+                "param_role_title": role_title
             }
             shutil.copytree(role_path, role_output_path, dirs_exist_ok=True, ignore=shutil.ignore_patterns("___temp", "build"))
             if role_env_output_file and role_env_output_file.exists():
@@ -309,10 +305,9 @@ class Installer:
         selected_namespaces = select_namespace(self.root_path, self.role_deep, args=args)
         for n in selected_namespaces:
             logger.info("namespace: {0}; roles: {1}".format(n.name, ",".join(["%s.%s" % (r.key, r.name) for r in n.roles])))
-        global_env = yaml_util.load(self.env_file) if self.env_file and self.env_file.exists() else {}
-        if args.env_file:
-            global_env.update(yaml_util.load(pathlib.Path(args.env_file)))
-        global_env.update(args.param)
+        global_env = {}
+        global_env |= yaml_util.load(self.env_file) if self.env_file and self.env_file.exists() else {}
+        global_env |= yaml_util.load(pathlib.Path(args.env_file)) if args.env_file else {}
         global_jinja2ignore_rules = file_util.read_text(self.jinja2ignore_file).split("\n") if self.jinja2ignore_file and self.jinja2ignore_file.exists() else []
         loop_namespaces(
             root_path=self.root_path,
