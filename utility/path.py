@@ -3,6 +3,8 @@ import os
 import pathlib
 import re
 import shutil
+import typing
+
 from utility import (
     regex as regex_util
 )
@@ -26,7 +28,7 @@ def dfs_dir(t_path: str, pattern: re = None) -> list:
     return ret
 
 
-def join_path(first: str, *more) -> str:
+def join_path(first: typing.Union[str, pathlib.Path], *more) -> str:
     p = pathlib.Path(first)
     for m in more:
         p = p.joinpath(m)
