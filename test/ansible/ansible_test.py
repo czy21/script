@@ -1,4 +1,4 @@
-from ansible.utils import vars
+import ansible.cli.playbook
 
 if __name__ == '__main__':
     a1 = {
@@ -18,5 +18,5 @@ if __name__ == '__main__':
     c = vars.combine_vars(
         a1, b1
     )
-    a1 |= b1
+    ansible.cli.playbook.PlaybookCLI(args={}).run()
     print("a")
