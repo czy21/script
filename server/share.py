@@ -126,61 +126,6 @@ def execute(cmd, is_return: bool = False, dry_run=False):
     return basic_util.execute(cmd, is_input=False, is_return=is_return, stack_index=2, dry_run=dry_run)
 
 
-def loop_namespaces(root_path: pathlib.Path,
-                    tmp_path: pathlib.Path,
-                    bak_path: pathlib.Path,
-                    namespaces: list[Namespace],
-                    role_func: typing.Callable[..., None],
-                    global_env: dict,
-                    args: argparse.Namespace,
-                    jinja2ignore_rules: list,
-                    **kwargs) -> None:
-    for n in namespaces:
-        namespace = n.name
-        for r in n.roles:
-            role_key = r.key
-            role_name = r.name
-            role_path: pathlib.Path = r.path
-            role_build_path = role_path.joinpath("build")
-            role_build_path.mkdir(parents=True, exist_ok=True)
-            role_output_path = role_build_path.joinpath("output")
-            shutil.rmtree(role_output_path, ignore_errors=True)
-            role_title = "%s.%s" % (role_key, role_name)
-            role_env_output_file = role_output_path.joinpath("env.yaml")
-            role_env = global_env | args.param | {
-                "param_role_name": role_name,
-                "param_role_path": role_path.as_posix(),
-                "param_role_title": role_title
-            }
-            shutil.copytree(role_path, role_output_path, dirs_exist_ok=True, ignore=shutil.ignore_patterns("___temp", "build"))
-            if role_env_output_file and role_env_output_file.exists():
-                role_env.update(yaml_util.load(template_util.Template(file_util.read_text(role_env_output_file)).render(**role_env)))
-                file_util.write_text(role_env_output_file, yaml.dump(role_env))
-            # write jinja2 template
-            for t in filter(lambda f: f.is_file(), role_output_path.rglob("*")):
-                _rules = regex_util.match_rules([*jinja2ignore_rules, role_output_path.joinpath("env.yaml").as_posix()], t.as_posix(), ".jinja2ignore {0}".format(loop_namespaces.__name__))
-                if not any(_rules.values()):
-                    file_util.write_text(t, template_util.Template(file_util.read_text(t)).render(**role_env))
-
-            def build_target(name: str):
-                build_file = role_output_path.joinpath(name)
-                if args.file == name and build_file.exists():
-                    execute(collection_util.flat_to_str([
-                        echo_action(role_title, name, build_file.as_posix()),
-                        "sh {0} {1}".format(build_file.as_posix(), " ".join(args.build_args))
-                    ], delimiter="&&"))
-
-            build_target("build.sh")
-            if role_func:
-                role_func(role_title=role_title, role_name=role_name, role_path=role_path, role_output_path=role_output_path, role_env=role_env, namespace=namespace, args=args, **kwargs)
-    _cmds = [
-        "`mkdir -p {0} && cd {1} && cp -r {2} {0}`".format(tmp_path.joinpath(k.name).as_posix(), k.as_posix(), " ".join([r.name for r in v]))
-        for k, v in itertools.groupby(collection_util.flat([n.roles for n in namespaces]), key=lambda r1: r1.parent_path)
-    ]
-    _cmd_str = collection_util.flat_to_str(_cmds, delimiter=" && ")
-    execute(_cmd_str)
-
-
 class CustomHelpFormatter(argparse.MetavarTypeHelpFormatter):
     def add_arguments(self, actions: typing.Iterable[argparse.Action]) -> None:
         for a in sorted(actions, key=lambda i: i.dest[0:1]):
@@ -255,7 +200,7 @@ class Installer:
         parser.add_argument('-f', '--file', type=str)
         parser.add_argument('-n', '--namespace', type=str)
         parser.add_argument('-p', '--param', nargs="+", default=[], type=lambda s: dict({split_kv_str(s)}), help="k1=v1 k2=v2")
-        parser.add_argument('--env-file', type=str)
+        parser.add_argument('--env-file', nargs="+", default=[], help="file1 file2")
         parser.add_argument('--all-roles', action="store_true")
         parser.add_argument('--all-namespaces', action="store_true")
         parser.add_argument('--ignore-namespace', action="store_true")
@@ -296,23 +241,87 @@ class Installer:
         parser = self.__command_parser.add_parser(**self.__get_sub_parser_common_attr("push"))
         self.set_common_argument(parser)
 
+    def __load_env_file(self, args: argparse.Namespace) -> dict:
+        d = {}
+        env_file_paths: list[pathlib.Path] = []
+        if self.env_file:
+            env_file_paths.append(self.env_file)
+        for ef in args.env_file:
+            ef = pathlib.Path(ef)
+            if not ef.is_absolute():
+                ef = pathlib.Path.cwd().joinpath(ef)
+            if ef not in env_file_paths:
+                env_file_paths.append(ef)
+        for t in env_file_paths:
+            if t.exists():
+                logger.debug("load env_file: %s" % t.as_posix())
+                d |= yaml_util.load(t)
+        return d
+
+    def __loop_namespaces(self,
+                          namespaces: list[Namespace],
+                          role_func: typing.Callable[..., None],
+                          global_env: dict,
+                          args: argparse.Namespace,
+                          jinja2ignore_rules: list,
+                          **kwargs) -> None:
+        for n in namespaces:
+            namespace = n.name
+            for r in n.roles:
+                role_key = r.key
+                role_name = r.name
+                role_path: pathlib.Path = r.path
+                role_build_path = role_path.joinpath("build")
+                role_build_path.mkdir(parents=True, exist_ok=True)
+                role_output_path = role_build_path.joinpath("output")
+                shutil.rmtree(role_output_path, ignore_errors=True)
+                role_title = "%s.%s" % (role_key, role_name)
+                role_env_output_file = role_output_path.joinpath("env.yaml")
+                shutil.copytree(role_path, role_output_path, dirs_exist_ok=True, ignore=shutil.ignore_patterns("___temp", "build"))
+                role_env = global_env | args.param | {
+                    "param_role_name": role_name,
+                    "param_role_path": role_path.as_posix(),
+                    "param_role_title": role_title
+                }
+                if role_env_output_file and role_env_output_file.exists():
+                    role_env |= yaml_util.load(template_util.Template(file_util.read_text(role_env_output_file)).render(**role_env))
+                    file_util.write_text(role_env_output_file, yaml.dump(role_env))
+                # write jinja2 template
+                for t in filter(lambda f: f.is_file(), role_output_path.rglob("*")):
+                    _rules = regex_util.match_rules([*jinja2ignore_rules, role_output_path.joinpath("env.yaml").as_posix()], t.as_posix(), ".jinja2ignore {0}".format(self.__loop_namespaces.__name__))
+                    if not any(_rules.values()):
+                        file_util.write_text(t, template_util.Template(file_util.read_text(t)).render(**role_env))
+
+                def build_target(name: str):
+                    build_file = role_output_path.joinpath(name)
+                    if args.file == name and build_file.exists():
+                        execute(collection_util.flat_to_str([
+                            echo_action(role_title, name, build_file.as_posix()),
+                            "sh {0} {1}".format(build_file.as_posix(), " ".join(args.build_args))
+                        ], delimiter="&&"))
+
+                build_target("build.sh")
+                if role_func:
+                    role_func(role_title=role_title, role_name=role_name, role_path=role_path, role_output_path=role_output_path, role_env=role_env, namespace=namespace, args=args, **kwargs)
+        _cmds = [
+            "`mkdir -p {0} && cd {1} && cp -r {2} {0}`".format(self.tmp_path.joinpath(k.name).as_posix(), k.as_posix(), " ".join([r.name for r in v]))
+            for k, v in itertools.groupby(collection_util.flat([n.roles for n in namespaces]), key=lambda r1: r1.parent_path)
+        ]
+        _cmd_str = collection_util.flat_to_str(_cmds, delimiter=" && ")
+        execute(_cmd_str)
+
     def run(self, **kwargs):
         args: argparse.Namespace = self.arg_parser.parse_args()
         args.param = {k: v for t in args.param for (k, v) in t.items()}
         logger.info("args: {0}".format(args))
         if args.debug:
             logger.setLevel(logging.DEBUG)
+        global_env = self.__load_env_file(args)
+        global_jinja2ignore_rules = file_util.read_text(self.jinja2ignore_file).split("\n") if self.jinja2ignore_file and self.jinja2ignore_file.exists() else []
         selected_namespaces = select_namespace(self.root_path, self.role_deep, args=args)
         for n in selected_namespaces:
             logger.info("namespace: {0}; roles: {1}".format(n.name, ",".join(["%s.%s" % (r.key, r.name) for r in n.roles])))
-        global_env = {}
-        global_env |= yaml_util.load(self.env_file) if self.env_file and self.env_file.exists() else {}
-        global_env |= yaml_util.load(pathlib.Path(args.env_file)) if args.env_file else {}
-        global_jinja2ignore_rules = file_util.read_text(self.jinja2ignore_file).split("\n") if self.jinja2ignore_file and self.jinja2ignore_file.exists() else []
-        loop_namespaces(
-            root_path=self.root_path,
-            tmp_path=self.tmp_path,
-            bak_path=self.bak_path,
+        self.__loop_namespaces(
             namespaces=selected_namespaces,
             role_func=self.role_func,
             global_env=global_env,
