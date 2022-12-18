@@ -7,6 +7,8 @@ import sys
 import typing
 from enum import Enum
 
+import yaml
+
 from utility import (
     collection as collection_util,
     file as file_util,
@@ -308,6 +310,7 @@ class Installer:
                 if role_env_output_file and role_env_output_file.exists():
                     role_env |= yaml_util.load(
                         template_util.Template(file_util.read_text(role_env_output_file)).render(**role_env))
+                    file_util.write_text(role_env_output_file, yaml.dump(role_env))
                 # process template
                 for t in filter(lambda f: f.is_file(), role_output_path.rglob("*")):
                     _rules = regex_util.match_rules(
