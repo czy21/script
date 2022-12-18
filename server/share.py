@@ -88,7 +88,7 @@ def get_dir_dict(path: pathlib.Path, exclude_rules: list = None, select_tip="", 
 
 def select_namespace(root_path: pathlib.Path, deep: int = 1, exclude_rules=None, args: argparse.Namespace = None) -> list[Namespace]:
     exclude_rules = exclude_rules if exclude_rules else []
-    exclude_rules.extend(["___temp", "utility"])
+    exclude_rules.extend(["___temp", "build", "utility"])
     flat_dirs = dfs_dir(root_path, exclude_rules=exclude_rules)
 
     deep_index = 1
@@ -290,7 +290,6 @@ class Installer:
                 # process env
                 if role_env_output_file and role_env_output_file.exists():
                     role_env |= yaml_util.load(template_util.Template(file_util.read_text(role_env_output_file)).render(**role_env))
-                    file_util.write_text(role_env_output_file, yaml.dump(role_env))
                 # process template
                 for t in filter(lambda f: f.is_file(), role_output_path.rglob("*")):
                     _rules = regex_util.match_rules(
