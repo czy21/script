@@ -298,8 +298,7 @@ class Installer:
                 role_output_path = role_build_path.joinpath("output")
                 shutil.rmtree(role_output_path, ignore_errors=True)
                 role_env_output_file = role_output_path.joinpath("env.yaml")
-                shutil.copytree(role_path, role_output_path, dirs_exist_ok=True,
-                                ignore=shutil.ignore_patterns("___temp", "build"))
+                shutil.copytree(role_path, role_output_path, dirs_exist_ok=True, ignore=shutil.ignore_patterns("___temp", "build"))
                 role_env = global_env | args.param | {
                     "param_role_name": role_name,
                     "param_role_path": role_path.as_posix(),
@@ -324,7 +323,7 @@ class Installer:
                     if args.target == "build.sh":
                         target_file = role_output_path.joinpath(args.target)
                         if target_file.exists():
-                            _cmds.append(echo_action(role_title, args.target, target_file.as_posix()))
+                            _cmds.append(echo_action(role_title, Command.build.value, target_file.as_posix()))
                             _cmds.append("sh {0} {1}".format(target_file.as_posix(), " ".join(args.build_args)))
                     if args.target == "doc":
                         logger.info("build doc")
