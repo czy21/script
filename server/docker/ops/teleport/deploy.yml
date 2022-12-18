@@ -1,0 +1,23 @@
+version: "3.9"
+
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}.rule: Host(`teleport.cluster.com`)
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 80
+
+services:
+  teleport:
+    image: public.ecr.aws/gravitational/teleport-lab:10
+    container_name: teleport
+    hostname: teleport
+    labels:
+      <<: *traefik-label
+    entrypoint: /bin/sh
+    command: -c "/usr/bin/dumb-init teleport start -d -c /etc/teleport.d/teleport.yaml --insecure --insecure-no-tls"
+    expose:
+      - "80"
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/data/empty/:/teleport/
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/teleport.yaml:/etc/teleport.d/teleport.yaml
+      - {{ param_docker_data }}/{{ param_role_name }}/data/data/:/var/lib/teleport
