@@ -1,5 +1,4 @@
 import argparse
-import itertools
 import logging
 import os
 import pathlib
@@ -57,7 +56,11 @@ def split_kv_str(kv_str) -> (str, str):
 def get_match_dirs(rules, items):
     _dirs = []
     for p in items:
-        _rules = regex_util.match_rules(rules, p.as_posix(), ".jinja2ignore {0}".format(dfs_dir.__name__))
+        _rules = regex_util.match_rules(
+            rules,
+            p.as_posix(),
+            ".jinja2ignore {0}".format(dfs_dir.__name__)
+        )
         if not any(_rules.values()):
             _dirs.append(p)
     return _dirs
@@ -172,7 +175,7 @@ class CustomHelpFormatter(argparse.MetavarTypeHelpFormatter):
 class Installer:
     def __init__(self,
                  root_path: pathlib.Path,
-                 role_func: typing.Callable[..., None] = None,
+                 role_func: typing.Callable[..., list[str]] = None,
                  role_deep: int = 1
                  ) -> None:
         self.root_path: pathlib.Path = root_path
@@ -181,7 +184,7 @@ class Installer:
         self.bak_path: pathlib.Path = self.tmp_path.joinpath("bak")
         self.env_file: pathlib.Path = root_path.joinpath("env.yaml")
         self.jinja2ignore_file: pathlib.Path = root_path.joinpath(".jinja2ignore")
-        self.role_func: typing.Callable[..., None] = role_func
+        self.role_func: typing.Callable[..., list[str]] = role_func
         self.role_deep: int = role_deep
         self.arg_parser: argparse.ArgumentParser = argparse.ArgumentParser(formatter_class=CustomHelpFormatter, usage='%(prog)s [command] [options]')
         self.set_common_argument(self.arg_parser)
@@ -261,7 +264,7 @@ class Installer:
 
     def __loop_namespaces(self,
                           namespaces: list[Namespace],
-                          role_func: typing.Callable[..., None],
+                          role_func: typing.Callable[..., list[str]],
                           global_env: dict,
                           args: argparse.Namespace,
                           jinja2ignore_rules: list,
@@ -284,33 +287,35 @@ class Installer:
                     "param_role_path": role_path.as_posix(),
                     "param_role_title": role_title
                 }
+                # process env
                 if role_env_output_file and role_env_output_file.exists():
                     role_env |= yaml_util.load(template_util.Template(file_util.read_text(role_env_output_file)).render(**role_env))
                     file_util.write_text(role_env_output_file, yaml.dump(role_env))
-                # write jinja2 template
+                # process template
                 for t in filter(lambda f: f.is_file(), role_output_path.rglob("*")):
-                    _rules = regex_util.match_rules([*jinja2ignore_rules, role_output_path.joinpath("env.yaml").as_posix()], t.as_posix(), ".jinja2ignore {0}".format(self.__loop_namespaces.__name__))
+                    _rules = regex_util.match_rules(
+                        [*jinja2ignore_rules, role_output_path.joinpath("env.yaml").as_posix()],
+                        t.as_posix(),
+                        ".jinja2ignore {0}".format(self.__loop_namespaces.__name__)
+                    )
                     if not any(_rules.values()):
                         file_util.write_text(t, template_util.Template(file_util.read_text(t)).render(**role_env))
+                # collect command
                 _cmds = []
                 if args.command == "build" and args.target == "build.sh":
                     target_file = role_output_path.joinpath(args.target)
                     if target_file.exists():
-                        execute(collection_util.flat_to_str([
-                            echo_action(role_title, args.target, target_file.as_posix()),
-                            "sh {0} {1}".format(target_file.as_posix(), " ".join(args.build_args))
-                        ], delimiter="&&"))
-                role_func(role_title=role_title,
-                          role_name=role_name,
-                          role_path=role_path,
-                          role_output_path=role_output_path,
-                          role_env=role_env,
-                          namespace=namespace,
-                          cmds=_cmds,
-                          args=args,
-                          **kwargs)
-                _cmd_str = collection_util.flat_to_str(_cmds, delimiter=" && ")
-                execute(_cmd_str, dry_run=args.dry_run)
+                        _cmds.append(echo_action(role_title, args.target, target_file.as_posix()))
+                        _cmds.append("sh {0} {1}".format(target_file.as_posix(), " ".join(args.build_args)))
+                _cmds.extend(role_func(role_title=role_title,
+                                       role_name=role_name,
+                                       role_path=role_path,
+                                       role_output_path=role_output_path,
+                                       role_env=role_env,
+                                       namespace=namespace,
+                                       args=args,
+                                       **kwargs))
+                execute(collection_util.flat_to_str(_cmds, delimiter=" && "), dry_run=args.dry_run)
                 cp_role_build_to_tmp_cmd = "mkdir -p {0} && cp -r {1} {0}".format(
                     self.build_path.joinpath(role_path.relative_to(self.root_path)).as_posix(),
                     role_build_path.as_posix())

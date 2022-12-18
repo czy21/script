@@ -10,15 +10,14 @@ from utility import (
 )
 
 
-def invoke(role_title: str,
-           role_name: str,
-           role_path: pathlib.Path,
-           role_output_path: pathlib.Path,
-           role_env: dict,
-           namespace: str,
-           cmds: list[str],
-           args: argparse.Namespace,
-           **kwargs):
+def get_cmds(role_title: str,
+             role_name: str,
+             role_path: pathlib.Path,
+             role_output_path: pathlib.Path,
+             role_env: dict,
+             namespace: str,
+             args: argparse.Namespace,
+             **kwargs):
     role_node_name = role_env.get("param_cluster_name")
     role_conf_path = role_output_path.joinpath("conf")
     role_deploy_file = role_output_path.joinpath("deploy.yml")
@@ -36,6 +35,7 @@ def invoke(role_title: str,
         path_util.merge_dir(role_output_path, role_node_target_path, ["node", "deploy.yml"])
         role_node_target_conf_path = role_node_target_path.joinpath("conf")
         role_node_target_deploy_file = role_node_target_path.joinpath("deploy.yml")
+    cmds = []
 
     def docker_compose_cmd(option):
         role_deploy_files = [
@@ -79,9 +79,10 @@ def invoke(role_title: str,
             docker_image_tag = "/".join([str(p).strip("/") for p in [registry_url, registry_dir, role_name + ("-" + args.tag if args.tag else "")]])
             cmds.append("docker build --tag {0} --file {1} {2}".format(docker_image_tag, target_file.as_posix(), role_output_path.as_posix()))
             cmds.append("docker push {0}".format(docker_image_tag))
+    return cmds
 
 
 if __name__ == '__main__':
     root_path = pathlib.Path(__file__).parent
-    installer = share.Installer(root_path, invoke, role_deep=2)
+    installer = share.Installer(root_path, get_cmds, role_deep=2)
     installer.run(base_deploy_file=root_path.joinpath("deploy.yml"))

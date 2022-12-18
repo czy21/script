@@ -11,20 +11,18 @@ from utility import (
 )
 
 
-def invoke(role_title: str,
-           role_name: str,
-           role_path: pathlib.Path,
-           role_output_path: pathlib.Path,
-           role_env: dict,
-           namespace: str,
-           args: argparse.Namespace,
-           **kwargs):
+def get_cmds(role_title: str,
+             role_name: str,
+             role_path: pathlib.Path,
+             role_output_path: pathlib.Path,
+             role_env: dict,
+             namespace: str,
+             args: argparse.Namespace,
+             **kwargs) -> list[str]:
     role_values_override_file = role_output_path.joinpath("values.override.yaml")
-
     file_util.write_text(role_values_override_file, yaml.dump(role_env))
 
     _cmds = []
-
     if args.command == "push":
         helm_repo_name = role_env.get("param_helm_repo_name")
         helm_repo_url = role_env.get("param_helm_repo_url")
@@ -63,11 +61,10 @@ def invoke(role_title: str,
 
             _cmds.append('helm dep up {0}'.format(role_output_path.as_posix()))
             _cmds.append(collection_util.flat_to_str(helm_cmd))
-    _cmd_str = collection_util.flat_to_str(_cmds, delimiter=" && ")
-    share.execute(_cmd_str, dry_run=args.dry_run)
+    return _cmds
 
 
 if __name__ == '__main__':
     root_path = pathlib.Path(__file__).parent
-    installer = share.Installer(root_path, invoke, role_deep=2)
+    installer = share.Installer(root_path, get_cmds, role_deep=2)
     installer.run()
