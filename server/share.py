@@ -86,8 +86,7 @@ def get_dir_dict(path: pathlib.Path, exclude_rules: list = None, select_tip="", 
                  args: argparse.Namespace = None) -> dict:
     _dirs = get_match_dirs(exclude_rules, list(filter(lambda a: a.is_dir(), sorted(path.iterdir()))))
     dir_dict: dict = {str(i): t for i, t in enumerate(_dirs, start=1)}
-    collection_util.print_grid(["{0}.{1}".format(str(k), v.name) for k, v in dir_dict.items()], col_num=col_num,
-                               msg=path.as_posix())
+    collection_util.print_grid(["{0}.{1}".format(str(k), v.name) for k, v in dir_dict.items()], col_num=col_num, msg=path.as_posix())
     logger.info("\nplease select {0}:".format(select_tip))
     dir_nums = []
     if args.all_namespaces or args.all_roles:
@@ -119,8 +118,7 @@ def select_namespace(root_path: pathlib.Path, deep: int = 1, exclude_rules=None,
     while deep > deep_index:
         role_dict = {str(i): p for i, p in
                      enumerate(map(lambda a: a["path"], filter(lambda a: a["deep"] == deep_index, flat_dirs)), start=1)}
-        collection_util.print_grid(["{0}.{1}".format(k, v.name) for k, v in role_dict.items()], col_num=5,
-                                   msg=next(iter(role_dict.items()))[1].parent.as_posix())
+        collection_util.print_grid(["{0}.{1}".format(k, v.name) for k, v in role_dict.items()], col_num=5, msg=next(iter(role_dict.items()))[1].parent.as_posix())
         if args.all_namespaces:
             app_paths = list(role_dict.values())
         else:
