@@ -37,7 +37,7 @@ def get_cmds(role_title: str,
              **kwargs) -> list[str]:
     role_restore_script_uci = role_path.joinpath("___temp/restore").joinpath("{0}.uci".format(role_name))
     _cmds = []
-    if args.command == "install":
+    if args.command == share.Command.install.value:
         for c in role_env.get("param_config"):
             _kind: str = c.get("kind")
             _section: str = c.get("section")
@@ -56,7 +56,7 @@ def get_cmds(role_title: str,
                 ], delimiter=" | ")
                 _cmds.append("({0};cat {1};echo;) | cat | uci batch".format(_section_del_cmd, role_restore_script_uci.as_posix()))
             _cmds.append("uci commit {0}".format(role_name))
-    if args.command == "backup":
+    if args.command == share.Command.backup.value:
         role_bak_path = role_path.joinpath("___temp")
         role_bak_script_uci = role_bak_path.joinpath("{0}.uci.bak".format(role_name))
         _bak_cmds = [
@@ -67,7 +67,7 @@ def get_cmds(role_title: str,
             _kind: str = c.get("kind")
             _section: str = c.get("section")
             _bak_cmds.append(uci_bak_config_section_cmd(role_name, _kind, _section, role_bak_script_uci))
-        _cmds.append(share.echo_action(role_title, "backup"))
+        _cmds.append(share.echo_action(role_title, share.Command.backup.value))
         _cmds.append(_bak_cmds)
     return _cmds
 
