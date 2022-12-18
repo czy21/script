@@ -28,14 +28,15 @@ def get_cmds(role_title: str,
     if param_role_target_path:
         target_app_path = pathlib.Path(param_role_target_path)
     role_node_path = role_output_path.joinpath("node")
-    role_node_target_path = next(filter(lambda a: a.is_dir and str(a.name) == role_node_name, role_node_path.glob("*")), None) if role_node_path.exists() else None
+    role_node_target_path = next(filter(lambda a: a.is_dir and str(a.name) == role_node_name, role_node_path.glob("*")),
+                                 None) if role_node_path.exists() else None
     role_node_target_deploy_file = None
     role_node_target_conf_path = None
     if role_node_target_path:
         path_util.merge_dir(role_output_path, role_node_target_path, ["node", "deploy.yml"])
         role_node_target_conf_path = role_node_target_path.joinpath("conf")
         role_node_target_deploy_file = role_node_target_path.joinpath("deploy.yml")
-    cmds = []
+    _cmds = []
 
     def docker_compose_cmd(option):
         role_deploy_files = [
@@ -45,41 +46,49 @@ def get_cmds(role_title: str,
         if role_node_target_deploy_file and role_node_target_deploy_file.exists():
             role_deploy_files.append(role_node_target_deploy_file)
         role_project_name = role_env.get("param_role_project_name")
-        return 'sudo docker-compose --project-name {0} {1} {2}'.format(role_project_name if role_project_name else role_name, " ".join(["--file {0}".format(t) for t in role_deploy_files]), option)
+        return 'sudo docker-compose --project-name {0} {1} {2}'.format(
+            role_project_name if role_project_name else role_name,
+            " ".join(["--file {0}".format(t) for t in role_deploy_files]), option)
 
-    if args.command == "install":
+    if args.command == share.Command.install.value:
         if role_conf_path.exists() or (role_node_target_conf_path and role_node_target_conf_path.exists()):
-            cmds.append(share.echo_action(role_title, "copy conf"))
-            cmds.append('sudo mkdir -p {1} && sudo cp -rv {0} {1}'.format(
+            _cmds.append(share.echo_action(role_title, "copy conf"))
+            _cmds.append('sudo mkdir -p {1} && sudo cp -rv {0} {1}'.format(
                 role_node_target_conf_path if role_node_target_conf_path and role_node_target_conf_path.exists() else role_conf_path.as_posix(),
                 target_app_path.as_posix())
             )
         if role_init_sh.exists():
-            cmds.append(share.echo_action(role_title, "init", role_init_sh.as_posix()))
-            cmds.append("bash {}".format(role_init_sh.as_posix()))
+            _cmds.append(share.echo_action(role_title, "init", role_init_sh.as_posix()))
+            _cmds.append("bash {}".format(role_init_sh.as_posix()))
         if role_deploy_file.exists():
-            cmds.append(share.echo_action(role_title, "deploy"))
+            _cmds.append(share.echo_action(role_title, share.Command.install.value))
             if args.debug:
-                cmds.append(docker_compose_cmd("config"))
+                _cmds.append(docker_compose_cmd("config"))
             up_args = ["up --detach --build --remove-orphans"]
             if args.recreate:
                 up_args.append("--force-recreate")
-            cmds.append(docker_compose_cmd(collection_util.flat_to_str(up_args)))
-    if args.command == "delete":
+            _cmds.append(docker_compose_cmd(collection_util.flat_to_str(up_args)))
+    if args.command == share.Command.delete.value:
         if role_deploy_file.exists():
-            cmds.append(share.echo_action(role_title, "down", role_deploy_file.as_posix()))
-            cmds.append(docker_compose_cmd("down --remove-orphans"))
+            _cmds.append(share.echo_action(role_title, share.Command.delete.value, role_deploy_file.as_posix()))
+            _cmds.append(docker_compose_cmd("down --remove-orphans"))
 
-    if args.command == "build" and args.target.startswith("Dockerfile"):
+    if args.command == share.Command.build.value and args.target.startswith("Dockerfile"):
         target_file = role_output_path.joinpath(args.target)
-        cmds.append(share.echo_action(role_title, "build", target_file.as_posix()))
+        _cmds.append(share.echo_action(role_title, share.Command.build.value, target_file.as_posix()))
         registry_url = role_env['param_registry_url']
         registry_dir = role_env['param_registry_dir']
         if target_file.exists():
-            docker_image_tag = "/".join([str(p).strip("/") for p in [registry_url, registry_dir, role_name + ("-" + args.tag if args.tag else "")]])
-            cmds.append("docker build --tag {0} --file {1} {2}".format(docker_image_tag, target_file.as_posix(), role_output_path.as_posix()))
-            cmds.append("docker push {0}".format(docker_image_tag))
-    return cmds
+            docker_image_tag = "/".join([
+                str(p).strip("/")
+                for p in [
+                    registry_url, registry_dir,
+                    role_name + ("-" + args.tag if args.tag else "")
+                ]
+            ])
+            _cmds.append("docker build --tag {0} --file {1} {2}".format(docker_image_tag, target_file.as_posix(), role_output_path.as_posix()))
+            _cmds.append("docker push {0}".format(docker_image_tag))
+    return _cmds
 
 
 if __name__ == '__main__':

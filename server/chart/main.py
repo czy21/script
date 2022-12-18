@@ -23,7 +23,7 @@ def get_cmds(role_title: str,
     file_util.write_text(role_values_override_file, yaml.dump(role_env))
 
     _cmds = []
-    if args.command == "push":
+    if args.command == share.Command.push.value:
         helm_repo_name = role_env.get("param_helm_repo_name")
         helm_repo_url = role_env.get("param_helm_repo_url")
         helm_username = role_env.get("param_helm_username")
@@ -42,14 +42,14 @@ def get_cmds(role_title: str,
     else:
         _command = args.command
         _extension = ""
-        if args.command == "delete":
+        if args.command == share.Command.delete.value:
             _cmds.append([
-                share.echo_action(role_title, "delete"),
+                share.echo_action(role_title, share.Command.delete.value),
                 "helm delete {0} {1}".format(role_name, "" if args.ignore_namespace else "--namespace {0}".format(namespace))
             ])
         else:
-            if args.command == "install":
-                _cmds.append(share.echo_action(role_title, "install"))
+            if args.command == share.Command.install.value:
+                _cmds.append(share.echo_action(role_title, share.Command.install.value))
                 _command = "upgrade --install"
             helm_cmd = [
                 "helm {0} {1} {2} --values {3}".format(_command, role_name, role_output_path.as_posix(), role_values_override_file)
