@@ -27,18 +27,16 @@ def uci_bak_config_section_cmd(config_name, kind: str, section: str, output_file
     return collection_util.flat_to_str(_uci_cmd, delimiter=" | ") + " >> {0}".format(output_file)
 
 
-def invoke(role_title: str,
-           role_name: str,
-           role_path: pathlib.Path,
-           role_output_path: pathlib.Path,
-           role_env: dict,
-           namespace: str,
-           args: argparse.Namespace,
-           **kwargs):
+def get_cmds(role_title: str,
+             role_name: str,
+             role_path: pathlib.Path,
+             role_output_path: pathlib.Path,
+             role_env: dict,
+             namespace: str,
+             args: argparse.Namespace,
+             **kwargs) -> list[str]:
     role_restore_script_uci = role_path.joinpath("___temp/restore").joinpath("{0}.uci".format(role_name))
-
     _cmds = []
-
     if args.command == "install":
         for c in role_env.get("param_config"):
             _kind: str = c.get("kind")
@@ -71,9 +69,9 @@ def invoke(role_title: str,
             _bak_cmds.append(uci_bak_config_section_cmd(role_name, _kind, _section, role_bak_script_uci))
         _cmds.append(share.echo_action(role_title, "backup"))
         _cmds.append(_bak_cmds)
-    share.execute(collection_util.flat_to_str(_cmds, delimiter=" && "), dry_run=args.dry_run)
+    return _cmds
 
 
 if __name__ == '__main__':
-    installer = share.Installer(pathlib.Path(__file__).parent, invoke)
+    installer = share.Installer(pathlib.Path(__file__).parent, get_cmds)
     installer.run()
