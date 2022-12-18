@@ -176,6 +176,7 @@ class Installer:
                  role_deep: int = 1
                  ) -> None:
         self.root_path: pathlib.Path = root_path
+        self.build_path: pathlib.Path = root_path.joinpath("build")
         self.tmp_path: pathlib.Path = root_path.joinpath("___temp")
         self.bak_path: pathlib.Path = self.tmp_path.joinpath("bak")
         self.env_file: pathlib.Path = root_path.joinpath("env.yaml")
@@ -191,13 +192,12 @@ class Installer:
         self.__init_backup_parser()
         self.__init_push_parser()
 
-        log_util.init_logger(file=root_path.joinpath("___temp/share.log"))
+        log_util.init_logger(file=self.build_path.joinpath("share.log"))
         self.tmp_path.mkdir(exist_ok=True)
+        self.build_path.mkdir(exist_ok=True)
 
     @staticmethod
     def set_common_argument(parser: argparse.ArgumentParser):
-
-        parser.add_argument('-f', '--file', type=str)
         parser.add_argument('-n', '--namespace', type=str)
         parser.add_argument('-p', '--param', nargs="+", default=[], type=lambda s: dict({split_kv_str(s)}), help="k1=v1 k2=v2")
         parser.add_argument('--env-file', nargs="+", default=[], help="file1 file2")
@@ -230,6 +230,7 @@ class Installer:
     def __init_build_parser(self):
         parser = self.__command_parser.add_parser(**self.__get_sub_parser_common_attr("build"))
         self.set_common_argument(parser)
+        parser.add_argument("--target", type=str, default="build.sh")
         parser.add_argument('--build-args', nargs="+", default=[])
         parser.add_argument('--tag')
 
@@ -291,24 +292,29 @@ class Installer:
                     _rules = regex_util.match_rules([*jinja2ignore_rules, role_output_path.joinpath("env.yaml").as_posix()], t.as_posix(), ".jinja2ignore {0}".format(self.__loop_namespaces.__name__))
                     if not any(_rules.values()):
                         file_util.write_text(t, template_util.Template(file_util.read_text(t)).render(**role_env))
-
-                def build_target(name: str):
-                    build_file = role_output_path.joinpath(name)
-                    if args.file == name and build_file.exists():
+                _cmds = []
+                if args.command == "build" and args.target == "build.sh":
+                    target_file = role_output_path.joinpath(args.target)
+                    if target_file.exists():
                         execute(collection_util.flat_to_str([
-                            echo_action(role_title, name, build_file.as_posix()),
-                            "sh {0} {1}".format(build_file.as_posix(), " ".join(args.build_args))
+                            echo_action(role_title, args.target, target_file.as_posix()),
+                            "sh {0} {1}".format(target_file.as_posix(), " ".join(args.build_args))
                         ], delimiter="&&"))
-
-                build_target("build.sh")
-                if role_func:
-                    role_func(role_title=role_title, role_name=role_name, role_path=role_path, role_output_path=role_output_path, role_env=role_env, namespace=namespace, args=args, **kwargs)
-        _cmds = [
-            "`mkdir -p {0} && cd {1} && cp -r {2} {0}`".format(self.tmp_path.joinpath(k.name).as_posix(), k.as_posix(), " ".join([r.name for r in v]))
-            for k, v in itertools.groupby(collection_util.flat([n.roles for n in namespaces]), key=lambda r1: r1.parent_path)
-        ]
-        _cmd_str = collection_util.flat_to_str(_cmds, delimiter=" && ")
-        execute(_cmd_str)
+                role_func(role_title=role_title,
+                          role_name=role_name,
+                          role_path=role_path,
+                          role_output_path=role_output_path,
+                          role_env=role_env,
+                          namespace=namespace,
+                          cmds=_cmds,
+                          args=args,
+                          **kwargs)
+                _cmd_str = collection_util.flat_to_str(_cmds, delimiter=" && ")
+                execute(_cmd_str, dry_run=args.dry_run)
+                cp_role_build_to_tmp_cmd = "mkdir -p {0} && cp -r {1} {0}".format(
+                    self.build_path.joinpath(role_path.relative_to(self.root_path)).as_posix(),
+                    role_build_path.as_posix())
+                execute(cp_role_build_to_tmp_cmd)
 
     def run(self, **kwargs):
         args: argparse.Namespace = self.arg_parser.parse_args()
