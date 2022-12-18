@@ -352,8 +352,7 @@ class Installer:
         global_jinja2ignore_rules = file_util.read_text(self.jinja2ignore_file).split("\n") if self.jinja2ignore_file and self.jinja2ignore_file.exists() else []
         selected_namespaces = select_namespace(self.root_path, self.role_deep, args=args)
         for n in selected_namespaces:
-            logger.info(
-                "namespace: {0}; roles: {1}".format(n.name, ",".join(["%s.%s" % (r.key, r.name) for r in n.roles])))
+            logger.info("namespace: {0}; roles: {1}".format(n.name, ",".join(["%s.%s" % (r.key, r.name) for r in n.roles])))
         self.__loop_namespaces(
             namespaces=selected_namespaces,
             role_func=self.role_func,
