@@ -16,12 +16,13 @@ function upload_exec_py() {
   local src_path=$(pwd)
   local dst_name=$(basename ${src_path})
   local tmp_name=___temp
+  local build_name=build
   local utility_path=$(realpath ${src_path}/../../utility)
   local del_cmd="rm -rf \$HOME/${dst_name}"
   local ssh_opt="-o StrictHostKeyChecking=no"
   local ssh_cmd="ssh ${ssh_opt} ${host}"
 
-  tar -zcf - --exclude="__pycache__" \
+  tar -zcf - --exclude="__pycache__" --exclude="${build_name}" \
   -C ${src_path} . \
   -C $(realpath ${utility_path}/../) ./$(basename ${utility_path}) \
   -C $(realpath ${src_path}/../) ./requirements.txt ./env.yaml ./share.py \
@@ -41,6 +42,6 @@ function upload_exec_py() {
   done
   cmd+="${PYTHON_EXEC} -B \$HOME/${dst_name}/main.py ${args}"
   ${ssh_cmd} ${cmd}
-  ${ssh_cmd} "tar -zcf - -C ${dst_name} ${tmp_name}" | tar -zxf - --touch -C ${src_path}
+  ${ssh_cmd} "tar -zcf - -C ${dst_name} ${tmp_name} ${build_name}" | tar -zxf - --touch -C ${src_path}
   ${ssh_cmd} ${del_cmd}
 }

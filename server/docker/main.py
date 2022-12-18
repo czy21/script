@@ -16,6 +16,7 @@ def invoke(role_title: str,
            role_output_path: pathlib.Path,
            role_env: dict,
            namespace: str,
+           cmds: list[str],
            args: argparse.Namespace,
            **kwargs):
     role_node_name = role_env.get("param_cluster_name")
@@ -27,7 +28,6 @@ def invoke(role_title: str,
     param_role_target_path = role_env.get("param_role_target_path")
     if param_role_target_path:
         target_app_path = pathlib.Path(param_role_target_path)
-    _cmds = []
     role_node_path = role_output_path.joinpath("node")
     role_node_target_path = next(filter(lambda a: a.is_dir and str(a.name) == role_node_name, role_node_path.glob("*")), None) if role_node_path.exists() else None
     role_node_target_deploy_file = None
@@ -49,38 +49,36 @@ def invoke(role_title: str,
 
     if args.command == "install":
         if role_conf_path.exists() or (role_node_target_conf_path and role_node_target_conf_path.exists()):
-            _cmds.append(share.echo_action(role_title, "copy conf"))
-            _cmds.append('sudo mkdir -p {1} && sudo cp -rv {0} {1}'.format(
+            cmds.append(share.echo_action(role_title, "copy conf"))
+            cmds.append('sudo mkdir -p {1} && sudo cp -rv {0} {1}'.format(
                 role_node_target_conf_path if role_node_target_conf_path and role_node_target_conf_path.exists() else role_conf_path.as_posix(),
                 target_app_path.as_posix())
             )
         if role_init_sh.exists():
-            _cmds.append(share.echo_action(role_title, "init", role_init_sh.as_posix()))
-            _cmds.append("bash {}".format(role_init_sh.as_posix()))
+            cmds.append(share.echo_action(role_title, "init", role_init_sh.as_posix()))
+            cmds.append("bash {}".format(role_init_sh.as_posix()))
         if role_deploy_file.exists():
-            _cmds.append(share.echo_action(role_title, "deploy"))
+            cmds.append(share.echo_action(role_title, "deploy"))
             if args.debug:
-                _cmds.append(docker_compose_cmd("config"))
+                cmds.append(docker_compose_cmd("config"))
             up_args = ["up --detach --build --remove-orphans"]
             if args.recreate:
                 up_args.append("--force-recreate")
-            _cmds.append(docker_compose_cmd(collection_util.flat_to_str(up_args)))
+            cmds.append(docker_compose_cmd(collection_util.flat_to_str(up_args)))
     if args.command == "delete":
         if role_deploy_file.exists():
-            _cmds.append(share.echo_action(role_title, "down", role_deploy_file.as_posix()))
-            _cmds.append(docker_compose_cmd("down --remove-orphans"))
+            cmds.append(share.echo_action(role_title, "down", role_deploy_file.as_posix()))
+            cmds.append(docker_compose_cmd("down --remove-orphans"))
 
-    if args.command == "build" and args.file and args.file.startswith("Dockerfile"):
-        role_docker_file = role_output_path.joinpath(args.file)
+    if args.command == "build" and args.target.startswith("Dockerfile"):
+        target_file = role_output_path.joinpath(args.target)
+        cmds.append(share.echo_action(role_title, "build", target_file.as_posix()))
         registry_url = role_env['param_registry_url']
         registry_dir = role_env['param_registry_dir']
-        _cmds.append(share.echo_action(role_title, "build", role_docker_file.as_posix()))
-        if role_docker_file.exists():
+        if target_file.exists():
             docker_image_tag = "/".join([str(p).strip("/") for p in [registry_url, registry_dir, role_name + ("-" + args.tag if args.tag else "")]])
-            _cmds.append("docker build --tag {0} --file {1} {2}".format(docker_image_tag, role_docker_file.as_posix(), role_output_path.as_posix()))
-            _cmds.append("docker push {0}".format(docker_image_tag))
-    _cmd_str = collection_util.flat_to_str(_cmds, delimiter=" && ")
-    share.execute(_cmd_str, dry_run=args.dry_run)
+            cmds.append("docker build --tag {0} --file {1} {2}".format(docker_image_tag, target_file.as_posix(), role_output_path.as_posix()))
+            cmds.append("docker push {0}".format(docker_image_tag))
 
 
 if __name__ == '__main__':

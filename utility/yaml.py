@@ -12,11 +12,10 @@ def join_tag(loader: FullLoader, node):
     return args[0].join([args[i] for i in range(len(args)) if i != 0])
 
 
-yaml.add_constructor('!join', join_tag)
-yaml.add_constructor('!decrypt', lambda loader, node: safe_util.decrypt(*loader.construct_sequence(node, deep=True)))
-yaml.add_constructor('!htpasswd', lambda loader, node: safe_util.htpasswd(*loader.construct_sequence(node, deep=True)))
-yaml.add_constructor("!join_path", lambda loader, node: path_util.join_path(*loader.construct_sequence(node, deep=True)))
-
-
 def load(stream: Union[str, pathlib.Path]) -> dict:
-    return yaml.full_load(stream if isinstance(stream, str) else file_util.read_text(stream))
+    loader1 = FullLoader
+    yaml.add_constructor('!join', join_tag, loader1)
+    yaml.add_constructor('!decrypt', lambda loader, node: safe_util.decrypt(*loader.construct_sequence(node, deep=True)), loader1)
+    yaml.add_constructor('!htpasswd', lambda loader, node: safe_util.htpasswd(*loader.construct_sequence(node, deep=True)), loader1)
+    yaml.add_constructor("!join_path", lambda loader, node: path_util.join_path(*loader.construct_sequence(node, deep=True)), loader1)
+    return yaml.load(stream if isinstance(stream, str) else file_util.read_text(stream), loader1)
