@@ -34,8 +34,8 @@ services:
       retries: 3
       start_period: 90s
     volumes:
-      - {{ param_ops_jms_data }}/core/data:/opt/jumpserver/data
-      - {{ param_ops_jms_data }}/core/logs:/opt/jumpserver/logs
+      - {{ param_docker_data }}/{{ param_role_name }}/data/core/data:/opt/jumpserver/data
+      - {{ param_docker_data }}/{{ param_role_name }}/data/core/logs:/opt/jumpserver/logs
     expose:
       - "8080"
 
@@ -69,8 +69,8 @@ services:
       retries: 3
       start_period: 30s
     volumes:
-      - {{ param_ops_jms_data }}/core/data:/opt/jumpserver/data
-      - {{ param_ops_jms_data }}/core/logs:/opt/jumpserver/logs
+      - {{ param_docker_data }}/{{ param_role_name }}/data/core/data:/opt/jumpserver/data
+      - {{ param_docker_data }}/{{ param_role_name }}/data/core/logs:/opt/jumpserver/logs
 
   jms-koko:
     image: jumpserver/koko:{{ param_ops_jms_version }}
@@ -94,7 +94,7 @@ services:
       retries: 3
       start_period: 10s
     volumes:
-      - {{ param_ops_jms_data }}/koko/data:/opt/koko/data
+      - {{ param_docker_data }}/{{ param_role_name }}/data/koko/data:/opt/koko/data
     expose:
       - "22"
     ports:
@@ -120,7 +120,7 @@ services:
       retries: 3
       start_period: 10s
     volumes:
-      - {{ param_ops_jms_data }}/lion/data:/opt/lion/data
+      - {{ param_docker_data }}/{{ param_role_name }}/data/lion/data:/opt/lion/data
 
   jms-magnus:
     image: jumpserver/magnus:{{ param_ops_jms_version }}
@@ -142,7 +142,7 @@ services:
       retries: 3
       start_period: 10s
     volumes:
-      - {{ param_ops_jms_data }}/magnus/data:/opt/magnus/data
+      - {{ param_docker_data }}/{{ param_role_name }}/data/magnus/data:/opt/magnus/data
     ports:
       - 30000-30100:30000-30100
 
@@ -164,7 +164,8 @@ services:
       retries: 3
       start_period: 10s
     volumes:
-      - {{ param_ops_jms_data }}/core/data:/opt/jumpserver/data
-      - {{ param_ops_jms_data }}/nginx/data/logs:/var/log/nginx
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/nginx.conf:/etc/nginx/nginx.conf
+      - {{ param_docker_data }}/{{ param_role_name }}/data/core/data:/opt/jumpserver/data
+      - {{ param_docker_data }}/{{ param_role_name }}/data/nginx/data/logs:/var/log/nginx
     labels:
       <<: *traefik-label
