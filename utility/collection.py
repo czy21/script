@@ -3,6 +3,10 @@ import itertools
 import logging
 import typing
 
+import pydash
+
+import template
+
 logger = logging.getLogger()
 
 
@@ -17,12 +21,20 @@ def flat_dict(data: dict) -> dict:
     ret = {}
     for k, v in data.items():
         if isinstance(v, list):
-            ret.update(flat_dict({"{0}{1}".format(k, "[" + str(i) + "]"): t for i, t in enumerate(v)}))
+            ret |= flat_dict({"{0}{1}".format(k, "[" + str(i) + "]"): t for i, t in enumerate(v)})
         elif isinstance(v, dict):
-            ret.update(flat_dict({"{0}.{1}".format(k, vk): vv for vk, vv in v.items()}))
+            ret |= flat_dict({"{0}.{1}".format(k, vk): vv for vk, vv in v.items()})
         else:
             ret[k] = v
     return ret
+
+
+def dict_render(data: dict) -> dict:
+    d = data.copy()
+    for k, v in flat_dict(d).items():
+        if isinstance(v, str) and v.__contains__("{{"):
+            pydash.set_(d, k, template.Template(v).render(**d))
+    return d
 
 
 def print_grid(items: list, col_num: int = 0, msg: str = ""):
