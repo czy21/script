@@ -5,7 +5,7 @@ x-app-common: &app-common
 
 services:
   {%- for i in range(1,param_db_ch_cluster_replicas | int + 1) %}
-  {%- set node_name = '-'.join([param_db_ch_cluster_name,i|string]) %}
+  {%- set node_name = '-'.join([param_role_project_name,i|string]) %}
   {{ node_name }}:
     <<: *app-common
     container_name: {{ node_name }}
@@ -18,11 +18,11 @@ services:
     ports:
       - '{{ (param_db_ch_cluster_start_port | int) + i-1 }}:8123'
     volumes:
-      - '{{ param_docker_data }}/{{ param_db_ch_cluster_name }}/conf/config.xml:/etc/clickhouse-server/config.d/config.xml'
-      - '{{ param_docker_data }}/{{ param_db_ch_cluster_name }}/conf/users.xml:/etc/clickhouse-server/users.d/users.xml'
-      - '{{ param_docker_data }}/{{ param_db_ch_cluster_name }}/data/{{ i }}:/var/lib/clickhouse/'
-      - '{{ param_docker_data }}/{{ param_db_ch_cluster_name }}/data/{{ i }}/data/:/var/lib/clickhouse/data/'
-      - '{{ param_docker_data }}/{{ param_db_ch_cluster_name }}/log/{{ i }}:/var/log/'
+      - '{{ param_docker_data }}/{{ param_role_project_name }}/conf/config.xml:/etc/clickhouse-server/config.d/config.xml'
+      - '{{ param_docker_data }}/{{ param_role_project_name }}/conf/users.xml:/etc/clickhouse-server/users.d/users.xml'
+      - '{{ param_docker_data }}/{{ param_role_project_name }}/data/{{ i }}:/var/lib/clickhouse/'
+      - '{{ param_docker_data }}/{{ param_role_project_name }}/data/{{ i }}/data/:/var/lib/clickhouse/data/'
+      - '{{ param_docker_data }}/{{ param_role_project_name }}/log/{{ i }}:/var/log/'
     environment:
       CLICKHOUSE_DB: default
       CLICKHOUSE_USER: {{ param_db_ch_username }}
