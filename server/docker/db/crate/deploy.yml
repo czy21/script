@@ -5,19 +5,19 @@ x-app-common: &app-common
 
 x-traefik-web-label: &traefik-web-label
   traefik.enable: true
-  traefik.http.routers.{{ param_db_crate_cluster_name }}.rule: Host(`crate-web.cluster.com`)
-  traefik.http.routers.{{ param_db_crate_cluster_name }}.service: {{ param_db_crate_cluster_name }}
-  traefik.http.services.{{ param_db_crate_cluster_name }}.loadbalancer.server.port: 4200
+  traefik.http.routers.{{ param_role_project_name }}.rule: Host(`crate-web.cluster.com`)
+  traefik.http.routers.{{ param_role_project_name }}.service: {{ param_role_project_name }}
+  traefik.http.services.{{ param_role_project_name }}.loadbalancer.server.port: 4200
 
 services:
   {% set node_names=[] %}
   {%- for i in range(1,param_db_crate_cluster_replicas | int + 1) %}
-    {%- set node_name = '-'.join([param_db_crate_cluster_name,i|string]) %}
+    {%- set node_name = '-'.join([param_role_project_name,i|string]) %}
     {{- node_names.append(node_name) or '' }}
     {%- set seed_hosts=[] %}
     {%- set initial_master_nodes=[] %}
     {%- for t in range(1,param_db_crate_cluster_replicas | int + 1) %}
-       {%- set t_node_name = '-'.join([param_db_crate_cluster_name,t|string]) %}
+       {%- set t_node_name = '-'.join([param_role_project_name,t|string]) %}
       {%- if t_node_name != node_name %}
         {{- seed_hosts.append(t_node_name) or '' }}
       {%- endif %}
@@ -35,10 +35,10 @@ services:
       - '{{ (param_db_crate_cluster_start_port | int) + i-1 }}:4200'
       - '{{ (param_db_crate_cluster_crate_start_port | int) + i-1 }}:5432'
     volumes:
-      - {{ param_docker_data }}/{{ param_db_crate_cluster_name }}/data/{{ i }}/:/data/
+      - {{ param_docker_data }}/{{ param_role_project_name }}/data/{{ i }}/:/data/
     command:
       - "crate"
-      - "-Ccluster.name={{ param_db_crate_cluster_name }}"
+      - "-Ccluster.name={{ param_role_project_name }}"
       - "-Cnode.name={{ node_name }}"
       - "-Cnode.data=true"
       - "-Cnetwork.host=_site_"

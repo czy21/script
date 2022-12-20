@@ -3,7 +3,7 @@ version: "3.9"
 {%- set etcd_clusters=[] %}
 {%- set pi=namespace(value=param_db_etcd_cluster_start_port) %}
 {%- for i in range(1,param_db_etcd_cluster_replicas | int + 1) %}
-  {%- set n = '-'.join([param_db_etcd_cluster_name,i|string]) %}
+  {%- set n = '-'.join([param_role_project_name,i|string]) %}
   {%- set p2 = pi.value + 1 %}
   {%- set pi.value = p2 + 1 %}
   {{- etcd_clusters.append('{0}=http://{1}:{2}'.format(n,param_db_etcd_host,p2)) or '' }}
@@ -11,12 +11,12 @@ version: "3.9"
 services:
 {%- set pi=namespace(value=param_db_etcd_cluster_start_port) %}
 {%- for i in range(1,param_db_etcd_cluster_replicas | int + 1) %}
-    {%- set n = '-'.join([param_db_etcd_cluster_name,i|string]) %}
+    {%- set n = '-'.join([param_role_project_name,i|string]) %}
     {%- set p1 = pi.value %}
     {%- set p2 = p1 + 1 %}
     {%- set pi.value = p2 + 1 %}
   {{ n }}:
-    image: coreos/etcd:v3.5.5 # quay.io/coreos/etcd
+    image: coreos/etcd:v{{ param_db_etcd_version }} # quay.io/coreos/etcd
     container_name: {{ n }}
     hostname: {{ n }}
     privileged: true
@@ -26,12 +26,12 @@ services:
       - "{{ p1 }}:{{ p1 }}"
       - "{{ p2 }}:{{ p2 }}"
     volumes:
-      - {{ param_docker_data }}/{{ param_db_etcd_cluster_name }}/data/{{ i }}/:/data/
+      - {{ param_docker_data }}/{{ param_role_project_name }}/data/{{ i }}/:/data/
     command: etcd
       --data-dir=/data/etcd --name {{ n }}
       --advertise-client-urls http://{{ param_db_etcd_host }}:{{ p1 }} --listen-client-urls http://0.0.0.0:{{ p1 }}
       --initial-advertise-peer-urls http://{{ param_db_etcd_host }}:{{ p2 }} --listen-peer-urls http://0.0.0.0:{{ p2 }}
       --initial-cluster {{ etcd_clusters | join(',') }}
-      --initial-cluster-state new --initial-cluster-token {{ param_db_etcd_cluster_name }}
+      --initial-cluster-state new --initial-cluster-token {{ param_role_project_name }}
     restart: always
 {%- endfor %}
