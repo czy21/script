@@ -1,15 +1,15 @@
 version: "3.9"
 
-{%- set setup_name = param_db_es_cluster_name + '-setup' %}
+{%- set setup_name = param_role_project_name + '-setup' %}
 
 x-app-common: &app-common
   image: elasticsearch:{{ param_db_es_version }}
 
 x-traefik-es-label: &traefik-es-label
   traefik.enable: true
-  traefik.http.routers.{{ param_db_es_cluster_name }}.rule: Host(`{{ param_db_es_host }}`)
-  traefik.http.routers.{{ param_db_es_cluster_name }}.service: {{ param_db_es_cluster_name }}
-  traefik.http.services.{{ param_db_es_cluster_name }}.loadbalancer.server.port: 9200
+  traefik.http.routers.{{ param_role_project_name }}.rule: Host(`{{ param_db_es_host }}`)
+  traefik.http.routers.{{ param_role_project_name }}.service: {{ param_role_project_name }}
+  traefik.http.services.{{ param_role_project_name }}.loadbalancer.server.port: 9200
 
 x-traefik-kb-label: &traefik-kb-label
   traefik.enable: true
@@ -25,10 +25,10 @@ services:
     user: "0"
     working_dir: /usr/share/elasticsearch
     volumes:
-      - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/conf/setup.sh:/usr/share/elasticsearch/setup.sh
-      - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/conf/instance.yml/:/usr/share/elasticsearch/config/instance.yml
-      - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/cert/:{{ param_db_es_target_cert_path }}/
-      - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/data/:/usr/share/elasticsearch/data/
+      - {{ param_docker_data }}/{{ param_role_project_name }}/conf/setup.sh:/usr/share/elasticsearch/setup.sh
+      - {{ param_docker_data }}/{{ param_role_project_name }}/conf/instance.yml/:/usr/share/elasticsearch/config/instance.yml
+      - {{ param_docker_data }}/{{ param_role_project_name }}/cert/:{{ param_db_es_target_cert_path }}/
+      - {{ param_docker_data }}/{{ param_role_project_name }}/data/:/usr/share/elasticsearch/data/
     healthcheck:
       test: ["CMD-SHELL", "[ -f {{ param_db_es_target_cert_path }}/{{ param_db_es_first_node_name }}/{{ param_db_es_first_node_name }}.crt ]"]
       interval: 1s
@@ -36,12 +36,12 @@ services:
       retries: 120
   {% set node_names=[] %}
   {%- for i in range(1,param_db_es_cluster_replicas | int + 1) %}
-    {%- set node_name = '-'.join([param_db_es_cluster_name,i|string]) %}
+    {%- set node_name = '-'.join([param_role_project_name,i|string]) %}
     {{- node_names.append(node_name) or '' }}
     {%- set seed_hosts=[] %}
     {%- set initial_master_nodes=[] %}
     {%- for t in range(1,param_db_es_cluster_replicas | int + 1) %}
-       {%- set t_node_name = '-'.join([param_db_es_cluster_name,t|string]) %}
+       {%- set t_node_name = '-'.join([param_role_project_name,t|string]) %}
       {%- if t_node_name != node_name %}
         {{- seed_hosts.append(t_node_name) or '' }}
       {%- endif %}
@@ -57,7 +57,7 @@ services:
       - "9200"
     environment:
       node.name: {{ node_name }}
-      cluster.name: {{ param_db_es_cluster_name }}
+      cluster.name: {{ param_role_project_name }}
       discovery.seed_hosts: {{ seed_hosts | join(',') }}
       cluster.initial_master_nodes: {{ initial_master_nodes | join(',') }}
       bootstrap.memory_lock: "true"
@@ -73,10 +73,10 @@ services:
       xpack.security.authc.realms.file.file1.order: 0
       xpack.monitoring.collection.enabled: true
     volumes:
-      - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/conf/users:/usr/share/elasticsearch/config/users
-      - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/conf/users_roles:/usr/share/elasticsearch/config/users_roles
-      - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/data/{{ i }}/:/usr/share/elasticsearch/data/
-      - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/cert/:{{ param_db_es_target_cert_path }}/
+      - {{ param_docker_data }}/{{ param_role_project_name }}/conf/users:/usr/share/elasticsearch/config/users
+      - {{ param_docker_data }}/{{ param_role_project_name }}/conf/users_roles:/usr/share/elasticsearch/config/users_roles
+      - {{ param_docker_data }}/{{ param_role_project_name }}/data/{{ i }}/:/usr/share/elasticsearch/data/
+      - {{ param_docker_data }}/{{ param_role_project_name }}/cert/:{{ param_db_es_target_cert_path }}/
     ulimits:
       memlock:
         soft: -1
@@ -86,7 +86,7 @@ services:
       {{ setup_name }}:
         condition: service_healthy
     {%- else %}
-      - {{ param_db_es_cluster_name + '-' + (i|int-1) | string }}
+      - {{ param_role_project_name + '-' + (i|int-1) | string }}
     {%- endif %}
     healthcheck:
       test: ["CMD-SHELL","curl -s http://localhost:9200 | grep -q 'missing authentication credentials'"]
@@ -102,7 +102,7 @@ services:
     expose:
       - "5601"
     volumes:
-      - {{ param_docker_data }}/{{ param_db_es_cluster_name }}/conf/kibana.yml:/usr/share/kibana/config/kibana.yml
+      - {{ param_docker_data }}/{{ param_role_project_name }}/conf/kibana.yml:/usr/share/kibana/config/kibana.yml
     healthcheck:
       test: ["CMD-SHELL","curl -s -I http://localhost:5601 | grep -q 'HTTP/1.1 302 Found'"]
       interval: 10s
