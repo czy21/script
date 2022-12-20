@@ -3,9 +3,9 @@
     <listen_host>0.0.0.0</listen_host>
     <mysql_port>9004</mysql_port>
     <remote_servers>
-        <{{ param_db_ch_cluster_name }}>
+        <{{ param_role_project_name }}>
             {%- for i in range(1,param_db_ch_cluster_replicas | int + 1) %}
-            {%- set node_name = '-'.join([param_db_ch_cluster_name,i|string]) %}
+            {%- set node_name = '-'.join([param_role_project_name,i|string]) %}
             <shard>
                 <replica>
                     <host>{{ node_name }}</host>
@@ -15,7 +15,7 @@
                 </replica>
             </shard>
             {%- endfor %}
-        </{{ param_db_ch_cluster_name }}>
+        </{{ param_role_project_name }}>
     </remote_servers>
 
     <zookeeper>
