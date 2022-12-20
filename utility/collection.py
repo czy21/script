@@ -29,10 +29,14 @@ def flat_dict(data: dict) -> dict:
     return ret
 
 
-def dict_render(data: dict) -> dict:
+def dict_render(data: dict,
+                key_filter_func: typing.Callable[[any], bool] = None,
+                val_filter_func: typing.Callable[[any], bool] = None) -> dict:
     d = data.copy()
     for k, v in flat_dict(d).items():
-        if isinstance(v, str) and v.__contains__("{{"):
+        if (key_filter_func is None and val_filter_func is None) \
+                or (key_filter_func is not None and key_filter_func(k)) \
+                or (val_filter_func is not None and val_filter_func(v)):
             pydash.set_(d, k, template.Template(v).render(**d))
     return d
 
