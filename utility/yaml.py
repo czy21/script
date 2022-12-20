@@ -9,7 +9,7 @@ from utility import file as file_util, safe as safe_util, path as path_util
 
 def join_tag(loader: FullLoader, node):
     args = loader.construct_sequence(node, deep=True)
-    return args[0].join([args[i] for i in range(len(args)) if i != 0])
+    return args[0].join(args[1:])
 
 
 def load(stream: Union[str, pathlib.Path]) -> dict:
