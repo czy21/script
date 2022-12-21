@@ -8,7 +8,7 @@ x-traefik-label: &traefik-label
 
 services:
   geode:
-    image: bitnami/geode:1.15.1
+    image: apachegeode/geode:1.15.1
     pull_policy: always
     container_name: geode
     hostname: geode
@@ -16,12 +16,7 @@ services:
       <<: *traefik-label
     expose:
       - "7070"
-    ports:
-      - "7070:7070"
-#    volumes:
-#      - {{ param_docker_data }}/{{ param_role_name }}/data/:/bitnami/geode/
-    environment:
-      GEODE_ENABLE_SECURITY: yes
-      GEODE_SECURITY_USERNAME: "{{ param_manage_username }}"
-      GEODE_SECURITY_PASSWORD: "{{ param_manage_password }}"
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/data/
+    command: gfsh start server --name=server1
     restart: always
