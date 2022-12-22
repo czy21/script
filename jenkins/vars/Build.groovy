@@ -21,7 +21,7 @@ def call() {
         }
         parameters {
             gitParameter branchFilter: 'origin/(.*)', name: 'param_branch', type: 'PT_BRANCH', defaultValue: 'master', useRepository: "${env.param_git_repository_url}"
-            choice choices: ['', 'java', 'go', 'web', 'shell'], name: 'param_code_type'
+            choice choices: [env.param_code_type, 'java', 'go', 'web', 'shell'], name: 'param_code_type'
         }
         stages {
             stage('clone') {
