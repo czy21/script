@@ -8,7 +8,6 @@ import typing
 from enum import Enum
 
 import yaml
-
 from utility import (
     collection as collection_util,
     file as file_util,
@@ -46,7 +45,7 @@ class Command(Enum):
 
 def dfs_dir(path: pathlib.Path, deep=1, exclude_rules: list = None, parent_key: str = "") -> list:
     ret = []
-    _dirs = get_match_dirs(exclude_rules, list(filter(lambda a: a.is_dir(), sorted(path.iterdir()))))
+    _dirs = get_match_dirs(exclude_rules, filter(lambda a: a.is_dir(), sorted(path.iterdir())))
     for i, p in enumerate(_dirs, start=1):
         key = ".".join([parent_key, str(i)]) if parent_key != "" else str(i)
         ret.append({"path": p, "deep": deep, "key": key})
@@ -106,12 +105,10 @@ def select_namespace(root_path: pathlib.Path, deep: int = 1, exclude_rules=None,
     if deep == deep_index:
         _root_path = pathlib.Path(root_path)
         namespaces.extend([
-            Namespace(args.namespace if args.namespace else _root_path.name,
-                      [Role("%s.%s" % ("", rk),
-                            rv.name,
-                            rv, _root_path) for rk, rv in
-                       get_dir_dict(_root_path, exclude_rules=exclude_rules, select_tip="role num(example:1 2 ...)",
-                                    args=args).items()])
+            Namespace(args.namespace if args.namespace else _root_path.name, [
+                Role("%s.%s" % ("", rk), rv.name, rv, _root_path)
+                for rk, rv in get_dir_dict(_root_path, exclude_rules=exclude_rules, select_tip="role num(example:1 2 ...)", args=args).items()
+            ])
         ])
         return namespaces
     app_paths: list[pathlib.Path] = []
@@ -218,8 +215,7 @@ class Installer:
     @staticmethod
     def set_common_argument(parser: argparse.ArgumentParser):
         parser.add_argument('-n', '--namespace', type=str)
-        parser.add_argument('-p', '--param', nargs="+", default=[], type=lambda s: dict({split_kv_str(s)}),
-                            help="k1=v1 k2=v2")
+        parser.add_argument('-p', '--param', nargs="+", default=[], type=lambda s: dict({split_kv_str(s)}), help="k1=v1 k2=v2")
         parser.add_argument('--env-file', nargs="+", default=[], help="file1 file2")
         parser.add_argument('--all-roles', action="store_true")
         parser.add_argument('--all-namespaces', action="store_true")
