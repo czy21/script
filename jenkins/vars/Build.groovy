@@ -2,7 +2,6 @@
 import org.ops.Docker
 import org.ops.util.PathUtils
 
-
 def call() {
     pipeline {
         agent any
@@ -45,15 +44,19 @@ def call() {
             stage('build') {
                 steps {
                     script {
-                        configFileProvider([configFile(fileId: "${env.param_global_env_file_id}", variable: 'param')]) {
-                            param = load "${param}"
-                            param.each { k, v ->
-                                if (env.getProperty(k) == null) {
-                                    env.setProperty(k, v)
+                        if (params.param_code_type != "") {
+                            configFileProvider([configFile(fileId: "${env.param_global_env_file_id}", variable: 'param')]) {
+                                param = load "${param}"
+                                param.each { k, v ->
+                                    if (env.getProperty(k) == null) {
+                                        env.setProperty(k, v)
+                                    }
                                 }
                             }
+                            new Docker().build()
+                        } else {
+                            echo 'param_code_type is empty'
                         }
-                        new Docker().build()
                     }
                 }
             }
