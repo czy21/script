@@ -6,7 +6,7 @@ ks-installer:
     authentication:
       jwtSecret: "{{ param_ks_jwt }}"
     multicluster:
-      clusterRole: {{ param_ks_role | default("none") }}
+      clusterRole: {{ param_ks_role | default("none") }} # host | member | none
     common:
       es:
         logMaxAge: 7
