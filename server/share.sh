@@ -26,7 +26,7 @@ function upload_exec_py() {
   -C ${src_path} . \
   -C $(realpath ${utility_path}/../) ./$(basename ${utility_path}) \
   -C $(realpath ${src_path}/../) ./requirements.txt ./env.yaml ./share.py \
-   | ${ssh_cmd} "mkdir -p ${dst_name};tar -zxf - --touch -C ${dst_name}"
+   | ${ssh_cmd} "mkdir -p ${dst_name};tar -zxf - -C ${dst_name}"
 
   local args=""
   local cmd=""
@@ -42,6 +42,6 @@ function upload_exec_py() {
   done
   cmd+="${PYTHON_EXEC} -B \$HOME/${dst_name}/main.py ${args}"
   ${ssh_cmd} ${cmd}
-  ${ssh_cmd} "tar -zcf - -C ${dst_name} ${tmp_name} ${build_name}" | tar -zxf - --touch -C ${src_path}
+  ${ssh_cmd} "tar -zcf - -C ${dst_name} ${tmp_name} ${build_name}" | tar -zxf - -C ${src_path}
   ${ssh_cmd} ${del_cmd}
 }
