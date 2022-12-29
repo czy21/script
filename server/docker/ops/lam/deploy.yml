@@ -1,0 +1,27 @@
+version: "3.9"
+
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}.rule: Host(`lam.cluster.com`)
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 80
+
+services:
+
+  lam:
+    image: ldapaccountmanager/lam:stable
+    pull_policy: always
+    container_name: lam
+    labels:
+      <<: *traefik-label
+    privileged: true
+    user: root
+    expose:
+      - "80"
+    ports:
+      - "8089:80"
+    volumes:
+      - "{{ param_docker_data }}/{{ param_role_name }}/conf/lam.conf:/var/lib/ldap-account-manager/config/lam.conf"
+    environment:
+      LAM_SKIP_PRECONFIGURE: true
+    restart: always
