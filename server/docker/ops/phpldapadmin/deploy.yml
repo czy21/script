@@ -20,7 +20,7 @@ services:
       - "80"
     ports:
       - "8089:80"
-    environment:
-      PHPLDAPADMIN_HTTPS: false
-      PHPLDAPADMIN_LDAP_HOSTS: "#PYTHON2BASH:['192.168.2.12','192.168.2.16']"
+    volumes:
+      - "{{ param_docker_data }}/{{ param_role_name }}/conf/config.yaml:/container/environment/99-default/default.yaml"
+      - "{{ param_docker_data }}/{{ param_role_name }}/data/:/var/www/phpldapadmin/"
     restart: always
