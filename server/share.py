@@ -289,6 +289,8 @@ class Installer:
                 role_name = r.name
                 role_path: pathlib.Path = r.path
                 role_title = "%s.%s" % (role_key, role_name)
+                role_temp_path = role_path.joinpath("___temp")
+                role_temp_path.mkdir(parents=True, exist_ok=True)
                 role_build_path = role_path.joinpath("build")
                 role_build_path.mkdir(parents=True, exist_ok=True)
                 role_output_path = role_build_path.joinpath("output")
@@ -298,7 +300,9 @@ class Installer:
                 role_env = global_env | args.param | {
                     "param_role_name": role_name,
                     "param_role_path": role_path.as_posix(),
-                    "param_role_title": role_title
+                    "param_role_title": role_title,
+                    "param_role_build_path": role_build_path.as_posix(),
+                    "param_role_temp_path": role_temp_path.as_posix()
                 }
                 # process env
                 if role_env_output_file and role_env_output_file.exists():
@@ -333,10 +337,14 @@ class Installer:
                                        args=args,
                                        **kwargs))
                 execute(collection_util.flat_to_str(_cmds, delimiter=" && "), dry_run=args.dry_run)
-                cp_role_build_to_tmp_cmd = "mkdir -p {0} && cp -r {1} {0}".format(
-                    self.build_path.joinpath(role_path.relative_to(self.root_path)).as_posix(),
-                    role_build_path.as_posix())
-                execute(cp_role_build_to_tmp_cmd)
+
+                def cp_role_to_root(src: pathlib.Path, dst: pathlib.Path):
+                    return "mkdir -p {0} && cp -r {1} {0}".format(dst.joinpath(role_path.relative_to(self.root_path)).as_posix(), src.as_posix())
+
+                execute(collection_util.flat_to_str([
+                    cp_role_to_root(role_build_path, self.build_path),
+                    cp_role_to_root(role_temp_path, self.tmp_path)
+                ], delimiter=" && "))
 
     def run(self, **kwargs):
         args: argparse.Namespace = self.arg_parser.parse_args()
@@ -345,6 +353,7 @@ class Installer:
         if args.debug:
             logger.setLevel(logging.DEBUG)
         global_env = self.__load_env_file(args)
+        global_env["param_command"] = args.command
         global_jinja2ignore_rules = file_util.read_text(self.jinja2ignore_file).split("\n") if self.jinja2ignore_file and self.jinja2ignore_file.exists() else []
         selected_namespaces = select_namespace(self.root_path, self.role_deep, args=args)
         for n in selected_namespaces:
