@@ -35,40 +35,47 @@ def get_cmds(role_title: str,
              namespace: str,
              args: argparse.Namespace,
              **kwargs) -> list[str]:
-    role_restore_script_uci = role_path.joinpath("___temp/restore").joinpath("{0}.uci".format(role_name))
+    role_script_uci = role_path.joinpath("___temp").joinpath("{0}.uci".format(role_name))
+    role_init_sh = role_output_path.joinpath("init.sh")
+    param_uci_config = role_env.get("param_uci_config")
     _cmds = []
+    if role_init_sh.exists():
+        _cmds.append(share.echo_action(role_title, "init", role_init_sh.as_posix()))
+        _cmds.append("bash {}".format(role_init_sh.as_posix()))
     if args.command == share.Command.install.value:
-        for c in role_env.get("param_config"):
-            _kind: str = c.get("kind")
-            _section: str = c.get("section")
-            if _section is None:
-                _cmds.append("while uci -q delete {0}.@{1}[0]; do :; done".format(role_name, _kind))
-                _cmds.append("cat {0} | uci batch".format(role_restore_script_uci.as_posix()))
-            else:
-                _section_del_cmd = collection_util.flat_to_str([
-                    "uci show {0}".format(role_name),
-                    "grep '^{0}.{1}\\(.*\\)={2}'".format(role_name, "@{0}".format(_kind) if _section is None else _section, _kind),
-                    collection_util.flat_to_str([
-                        "sed",
-                        "-e 's|={0}|\\1|g'".format(_kind),
-                        "-e 's|^{0}|delete \\0|g'".format(role_name)
-                    ]),
-                ], delimiter=" | ")
-                _cmds.append("({0};cat {1};echo;) | cat | uci batch".format(_section_del_cmd, role_restore_script_uci.as_posix()))
-            _cmds.append("uci commit {0}".format(role_name))
+        if param_uci_config:
+            for c in param_uci_config:
+                _kind: str = c.get("kind")
+                _section: str = c.get("section")
+                if _section is None:
+                    _cmds.append("while uci -q delete {0}.@{1}[0]; do :; done".format(role_name, _kind))
+                    _cmds.append("cat {0} | uci batch".format(role_script_uci.as_posix()))
+                else:
+                    _section_del_cmd = collection_util.flat_to_str([
+                        "uci show {0}".format(role_name),
+                        "grep '^{0}.{1}\\(.*\\)={2}'".format(role_name, "@{0}".format(_kind) if _section is None else _section, _kind),
+                        collection_util.flat_to_str([
+                            "sed",
+                            "-e 's|={0}|\\1|g'".format(_kind),
+                            "-e 's|^{0}|delete \\0|g'".format(role_name)
+                        ]),
+                    ], delimiter=" | ")
+                    _cmds.append("({0};cat {1};echo;) | cat | uci batch".format(_section_del_cmd, role_script_uci.as_posix()))
+                _cmds.append("uci commit {0}".format(role_name))
     if args.command == share.Command.backup.value:
         role_bak_path = role_path.joinpath("___temp")
         role_bak_script_uci = role_bak_path.joinpath("{0}.uci.bak".format(role_name))
-        _bak_cmds = [
-            "mkdir -p {0}".format(role_bak_path.as_posix()),
-            "cat /dev/null > {0}".format(role_bak_script_uci)
-        ]
-        for c in role_env.get("param_config"):
-            _kind: str = c.get("kind")
-            _section: str = c.get("section")
-            _bak_cmds.append(uci_bak_config_section_cmd(role_name, _kind, _section, role_bak_script_uci))
-        _cmds.append(share.echo_action(role_title, share.Command.backup.value))
-        _cmds.append(_bak_cmds)
+        if param_uci_config:
+            _bak_cmds = [
+                "mkdir -p {0}".format(role_bak_path.as_posix()),
+                "cat /dev/null > {0}".format(role_bak_script_uci)
+            ]
+            for c in param_uci_config:
+                _kind: str = c.get("kind")
+                _section: str = c.get("section")
+                _bak_cmds.append(uci_bak_config_section_cmd(role_name, _kind, _section, role_bak_script_uci))
+            _cmds.append(share.echo_action(role_title, share.Command.backup.value))
+            _cmds.append(_bak_cmds)
     return _cmds
 
 
