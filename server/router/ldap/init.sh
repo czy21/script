@@ -22,5 +22,6 @@ if [ "backup" == "${param_command}" ];then
 fi
 
 if [ "restore" == "${param_command}" ];then
-  echo "还原"
+  slapadd -F /etc/openldap/slapd.d -b cn=config -l ${param_bak_config_ldif_file}
+  slapadd -F /etc/openldap/slapd.d -b dc="{{ param_ldap_domain }}",dc=com -l ${param_bak_domain_ldif_file}
 fi
