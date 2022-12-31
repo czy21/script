@@ -35,14 +35,17 @@ def get_cmds(role_title: str,
              namespace: str,
              args: argparse.Namespace,
              **kwargs) -> list[str]:
-    role_script_uci = role_path.joinpath("___temp").joinpath("{0}.uci".format(role_name))
+    role_script_uci = role_path.joinpath("___temp").joinpath("script.uci")
+    role_bak_script_uci = role_path.joinpath("___temp").joinpath("script.uci.bak")
+    if args.command == share.Command.restore.value:
+        role_script_uci = role_bak_script_uci
     role_init_sh = role_output_path.joinpath("init.sh")
     param_uci_config = role_env.get("param_uci_config")
     _cmds = []
     if role_init_sh.exists():
         _cmds.append(share.echo_action(role_title, "init", role_init_sh.as_posix()))
         _cmds.append("bash {}".format(role_init_sh.as_posix()))
-    if args.command == share.Command.install.value:
+    if args.command in [share.Command.install.value, share.Command.restore.value]:
         if param_uci_config:
             for c in param_uci_config:
                 _kind: str = c.get("kind")
@@ -63,11 +66,9 @@ def get_cmds(role_title: str,
                     _cmds.append("({0};cat {1};echo;) | cat | uci batch".format(_section_del_cmd, role_script_uci.as_posix()))
                 _cmds.append("uci commit {0}".format(role_name))
     if args.command == share.Command.backup.value:
-        role_bak_path = role_path.joinpath("___temp")
-        role_bak_script_uci = role_bak_path.joinpath("{0}.uci.bak".format(role_name))
         if param_uci_config:
             _bak_cmds = [
-                "mkdir -p {0}".format(role_bak_path.as_posix()),
+                "mkdir -p {0}".format(role_bak_script_uci.parent.as_posix()),
                 "cat /dev/null > {0}".format(role_bak_script_uci)
             ]
             for c in param_uci_config:
