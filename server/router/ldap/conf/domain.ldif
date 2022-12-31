@@ -1,0 +1,6 @@
+dn: dc={{ param_ldap_domain }},dc=com
+dc: {{ param_ldap_domain }}
+o: {{ param_ldap_domain }}
+objectclass: top
+objectclass: dcObject
+objectclass: organization
