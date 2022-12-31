@@ -1,0 +1,14 @@
+dn: olcDatabase={1}mdb,cn=config
+changetype: modify
+replace: olcSuffix
+olcSuffix: dc={{ param_ldap_domain }},dc=com
+
+dn: olcDatabase={1}mdb,cn=config
+changetype: modify
+replace: olcRootDN
+olcRootDN: cn=admin,dc={{ param_ldap_domain }},dc=com
+
+dn: olcDatabase={1}mdb,cn=config
+changetype: modify
+replace: olcRootPW
+olcRootPW: {SSHA}w9g8YjPiphKbTeuTC0xTcVyrH6I6XXBe
