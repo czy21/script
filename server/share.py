@@ -39,6 +39,7 @@ class Command(Enum):
     install = "install"
     delete = "delete"
     backup = "backup"
+    restore = "restore"
     build = "build"
     push = "push"
 
@@ -206,6 +207,7 @@ class Installer:
         self.__init_delete_parser()
         self.__init_build_parser()
         self.__init_backup_parser()
+        self.__init_restore_parser()
         self.__init_push_parser()
 
         log_util.init_logger(file=self.build_path.joinpath("share.log"))
@@ -252,6 +254,10 @@ class Installer:
 
     def __init_backup_parser(self):
         parser = self.__command_parser.add_parser(**self.__get_sub_parser_common_attr(Command.backup.value))
+        self.set_common_argument(parser)
+
+    def __init_restore_parser(self):
+        parser = self.__command_parser.add_parser(**self.__get_sub_parser_common_attr(Command.restore.value))
         self.set_common_argument(parser)
 
     def __init_push_parser(self):
@@ -302,6 +308,7 @@ class Installer:
                     "param_role_path": role_path.as_posix(),
                     "param_role_title": role_title,
                     "param_role_build_path": role_build_path.as_posix(),
+                    "param_role_output_path": role_output_path.as_posix(),
                     "param_role_temp_path": role_temp_path.as_posix()
                 }
                 # process env
