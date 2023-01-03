@@ -1,0 +1,32 @@
+version: "3.9"
+
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}.rule: Host(`freeipa.cluster.com`)
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 80
+
+services:
+
+  freeipa:
+    image: freeipa/freeipa-server:centos-9-stream-4.10.0
+    pull_policy: always
+    container_name: freeipa
+    hostname: freeipa.cluster.com
+    labels:
+      <<: *traefik-label
+    privileged: true
+    user: root
+    ports:
+      - "389:389"
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/data/
+      - {{ param_docker_data }}/{{ param_role_name }}/run/:/run/
+      - {{ param_docker_data }}/{{ param_role_name }}/tmp/:/tmp/
+      - {{ param_docker_data }}/{{ param_role_name }}/log/://var/log/journal/
+    command: ipa-server-install -U -r CLUSTER.COM --no-ntp
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=0
+    environment:
+      PASSWORD: "{{ param_manage_password }}"
+    restart: always
