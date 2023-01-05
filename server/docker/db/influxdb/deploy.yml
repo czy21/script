@@ -1,0 +1,23 @@
+version: "3.9"
+
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}.rule: Host(`influxdb.cluster.com`)
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 8086
+
+services:
+
+  influxdb:
+    image: influxdb:2.6.1
+    container_name: influxdb
+    labels:
+      <<: *traefik-label
+    privileged: true
+    user: root
+    expose:
+      - "8086"
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/:/etc/influxdb2/
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/var/lib/influxdb2/
+    restart: always
