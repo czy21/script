@@ -7,13 +7,13 @@ domain_ldif_file="{{ param_role_output_path }}/conf/domain.ldif"
 config_ldif_bak_file="{{ param_role_temp_path }}/config.ldif.bak"
 domain_ldif_bak_file="{{ param_role_temp_path }}/domain.ldif.bak"
 config_ldif_etc_file="${ldap_etc_path}/slapd.d/cn=config/olcDatabase={0}config.ldif"
-db_ldif_etc_file="${ldap_etc_path}/slapd.d/cn=config/olcDatabase={1}mdb.ldif"
+mdb_ldif_etc_file="${ldap_etc_path}/slapd.d/cn=config/olcDatabase={1}mdb.ldif"
 if [ "install" == "${param_command}" ];then
   if [ ! -f "${config_ldif_etc_file}" ]; then
       mkdir -p ${ldap_etc_path}/slapd.d && slaptest -f ${ldap_etc_path}/slapd.conf -F ${ldap_etc_path}/slapd.d
   fi
   sed -i 's|^olcAccess.*|olcAccess: {0}to * by dn.exact=gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth manage by * none|g' ${config_ldif_etc_file}
-  sed -i 's|^olcDbDirectory.*|olcDbDirectory: /volume1/storage/docker-data/openldap/data|g' ${db_ldif_etc_file}
+  sed -i 's|^olcDbDirectory.*|olcDbDirectory: {{ param_ldap_data }}|g' ${mdb_ldif_etc_file}
   ldapadd -Y EXTERNAL -H ldapi:/// -f ${config_ldif_file}
   ldapadd -x -D cn=admin,dc="{{ param_ldap_domain }}",dc=com -W -f ${domain_ldif_file}
   find ${ldap_etc_path}/schema/ -regex '.*\(cosine\|nis\|inetorgperson\|log\).ldif' -exec ldapadd -Y EXTERNAL -H ldapi:/// -f {} \;
