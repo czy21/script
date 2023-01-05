@@ -325,7 +325,9 @@ class Installer:
                     if not any(_rules.values()):
                         file_util.write_text(t, template_util.Template(file_util.read_text(t)).render(**role_env))
                 # collect command
-                _cmds = []
+                _cmds = [
+                    echo_action(role_title, args.command)
+                ]
                 if args.command == Command.build.value:
                     if args.target == "build.sh":
                         target_file = role_output_path.joinpath(args.target)

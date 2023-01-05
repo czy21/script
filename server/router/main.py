@@ -48,7 +48,6 @@ def get_cmds(role_title: str,
     param_uci_config = role_env.get("param_uci_config")
     _cmds = []
     if role_init_sh.exists():
-        _cmds.append(share.echo_action(role_title, "init", role_init_sh.as_posix()))
         _cmds.append("bash {}".format(role_init_sh.as_posix()))
     if args.command in [share.Command.install.value, share.Command.restore.value]:
         if param_uci_config:
@@ -72,7 +71,6 @@ def get_cmds(role_title: str,
                 _cmds.append("uci commit {0}".format(role_name))
     if args.command == share.Command.backup.value:
         if param_uci_config:
-            _cmds.append(share.echo_action(role_title, share.Command.backup.value))
             for c in param_uci_config:
                 _kind: str = c.get("type")
                 _section: str = c.get("section")
