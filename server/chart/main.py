@@ -28,7 +28,6 @@ def get_cmds(role_title: str,
         helm_repo_url = role_env.get("param_helm_repo_url")
         helm_username = role_env.get("param_helm_username")
         helm_password = role_env.get("param_helm_password")
-        _cmds.append(share.echo_action(role_title, "push"))
         _cmds.append("helm plugin list | if [ -z \"$(grep -w nexus-push)\" ];then helm plugin install --version master https://github.com/sonatype-nexus-community/helm-nexus-push.git;fi")
         _cmds.append("helm repo   list | if [ -z \"$(grep -w {0})\" ];then helm repo add {0} {1};fi".format(helm_repo_name, helm_repo_url))
         _cmds.append(
@@ -44,12 +43,10 @@ def get_cmds(role_title: str,
         _extension = ""
         if args.command == share.Command.delete.value:
             _cmds.append([
-                share.echo_action(role_title, share.Command.delete.value),
                 "helm delete {0} {1}".format(role_name, "" if args.ignore_namespace else "--namespace {0}".format(namespace))
             ])
         else:
             if args.command == share.Command.install.value:
-                _cmds.append(share.echo_action(role_title, share.Command.install.value))
                 _command = "upgrade --install"
             helm_cmd = [
                 "helm {0} {1} {2} --values {3}".format(_command, role_name, role_output_path.as_posix(), role_values_override_file)

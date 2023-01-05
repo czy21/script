@@ -52,16 +52,13 @@ def get_cmds(role_title: str,
 
     if args.command == share.Command.install.value:
         if role_conf_path.exists() or (role_node_target_conf_path and role_node_target_conf_path.exists()):
-            _cmds.append(share.echo_action(role_title, "copy conf"))
             _cmds.append('sudo mkdir -p {1} && sudo cp -rv {0} {1}'.format(
                 role_node_target_conf_path if role_node_target_conf_path and role_node_target_conf_path.exists() else role_conf_path.as_posix(),
                 target_app_path.as_posix())
             )
         if role_init_sh.exists():
-            _cmds.append(share.echo_action(role_title, "init", role_init_sh.as_posix()))
             _cmds.append("bash {}".format(role_init_sh.as_posix()))
         if role_deploy_file.exists():
-            _cmds.append(share.echo_action(role_title, share.Command.install.value))
             if args.debug:
                 _cmds.append(docker_compose_cmd("config"))
             up_args = ["up --detach --build --remove-orphans"]
@@ -70,12 +67,10 @@ def get_cmds(role_title: str,
             _cmds.append(docker_compose_cmd(collection_util.flat_to_str(up_args)))
     if args.command == share.Command.delete.value:
         if role_deploy_file.exists():
-            _cmds.append(share.echo_action(role_title, share.Command.delete.value, role_deploy_file.as_posix()))
             _cmds.append(docker_compose_cmd("down --remove-orphans"))
 
     if args.command == share.Command.build.value and args.target.startswith("Dockerfile"):
         target_file = role_output_path.joinpath(args.target)
-        _cmds.append(share.echo_action(role_title, share.Command.build.value, target_file.as_posix()))
         registry_url = role_env['param_registry_url']
         registry_dir = role_env['param_registry_dir']
         if target_file.exists():
