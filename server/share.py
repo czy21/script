@@ -107,7 +107,7 @@ def select_namespace(root_path: pathlib.Path, deep: int = 1, exclude_rules=None,
         _root_path = pathlib.Path(root_path)
         namespaces.extend([
             Namespace(args.namespace if args.namespace else _root_path.name, [
-                Role("%s.%s" % ("", rk), rv.name, rv, _root_path)
+                Role(rk, rv.name, rv, _root_path)
                 for rk, rv in get_dir_dict(_root_path, exclude_rules=exclude_rules, select_tip="role num(example:1 2 ...)", args=args).items()
             ])
         ])

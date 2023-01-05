@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 import pathlib
+import re
 
 import share
 
@@ -9,20 +10,24 @@ from utility import (
 )
 
 
-def uci_bak_config_section_cmd(config_name, kind: str, section: str, output_file: pathlib.Path):
+def format_config(config_type: str, config_section):
+    return "@{0}".format(config_type) if config_section is None else config_section
+
+
+def uci_bak_config_cmd(name, kind: str, section: str, output_file: pathlib.Path):
     _uci_cmd = [
-        "uci show {0}".format(config_name),
-        "grep '{0}.{1}'".format(config_name, "@{0}".format(kind) if section is None else section)
+        "uci show {0}".format(name),
+        "grep -E '{0}.{1}'".format(name, format_config(kind, section))
     ]
     _sed_cmd = [
         "sed"
     ]
     if section is None:
         _sed_cmd.append("-e 's|\\[.*\\]|[-1]|g'")
-        _sed_cmd.append("-e 's|^{0}.{1}|set \\0|g'".format(config_name, "@{0}".format(kind) if section is None else section))
-        _sed_cmd.append("-e 's|.*={1}|add {0} {1}|g'".format(config_name, kind))
+        _sed_cmd.append("-e 's|^{0}.{1}|set \\0|g'".format(name, format_config(kind, section)))
+        _sed_cmd.append("-e 's|.*={1}|add {0} {1}|g'".format(name, kind))
     else:
-        _sed_cmd.append("-e 's|^{0}|set \\0|g'".format(config_name))
+        _sed_cmd.append("-e 's|^{0}|set \\0|g'".format(name))
     _uci_cmd.append(collection_util.flat_to_str(_sed_cmd))
     return collection_util.flat_to_str(_uci_cmd, delimiter=" | ") + " >> {0}".format(output_file)
 
@@ -36,9 +41,9 @@ def get_cmds(role_title: str,
              args: argparse.Namespace,
              **kwargs) -> list[str]:
     role_script_uci = role_path.joinpath("___temp").joinpath("script.uci")
-    role_bak_script_uci = role_path.joinpath("___temp").joinpath("script.uci.bak")
+    role_script_uci_bak = role_path.joinpath("___temp").joinpath("script.uci.bak")
     if args.command == share.Command.restore.value:
-        role_script_uci = role_bak_script_uci
+        role_script_uci = role_script_uci_bak
     role_init_sh = role_output_path.joinpath("init.sh")
     param_uci_config = role_env.get("param_uci_config")
     _cmds = []
@@ -48,7 +53,7 @@ def get_cmds(role_title: str,
     if args.command in [share.Command.install.value, share.Command.restore.value]:
         if param_uci_config:
             for c in param_uci_config:
-                _kind: str = c.get("kind")
+                _kind: str = c.get("type")
                 _section: str = c.get("section")
                 if _section is None:
                     _cmds.append("while uci -q delete {0}.@{1}[0]; do :; done".format(role_name, _kind))
@@ -56,7 +61,7 @@ def get_cmds(role_title: str,
                 else:
                     _section_del_cmd = collection_util.flat_to_str([
                         "uci show {0}".format(role_name),
-                        "grep '^{0}.{1}\\(.*\\)={2}'".format(role_name, "@{0}".format(_kind) if _section is None else _section, _kind),
+                        "grep -E '^{0}.{1}={2}'".format(role_name, format_config(_kind, _section), _kind),
                         collection_util.flat_to_str([
                             "sed",
                             "-e 's|={0}|\\1|g'".format(_kind),
@@ -67,16 +72,12 @@ def get_cmds(role_title: str,
                 _cmds.append("uci commit {0}".format(role_name))
     if args.command == share.Command.backup.value:
         if param_uci_config:
-            _bak_cmds = [
-                "mkdir -p {0}".format(role_bak_script_uci.parent.as_posix()),
-                "cat /dev/null > {0}".format(role_bak_script_uci)
-            ]
-            for c in param_uci_config:
-                _kind: str = c.get("kind")
-                _section: str = c.get("section")
-                _bak_cmds.append(uci_bak_config_section_cmd(role_name, _kind, _section, role_bak_script_uci))
             _cmds.append(share.echo_action(role_title, share.Command.backup.value))
-            _cmds.append(_bak_cmds)
+            for c in param_uci_config:
+                _kind: str = c.get("type")
+                _section: str = c.get("section")
+                _cmds.append(uci_bak_config_cmd(role_name, _kind, _section, role_script_uci_bak))
+
     return _cmds
 
 
