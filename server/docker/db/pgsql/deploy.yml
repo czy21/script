@@ -14,7 +14,7 @@ services:
     command: -c config_file=/etc/postgresql/postgresql.conf
     environment:
       TZ: Asia/Shanghai
-      POSTGRES_PASSWORD: {{ param_db_pgsql_password }}
+      POSTGRES_PASSWORD: "{{ param_db_pgsql_password }}"
     restart: always
   pgsql-exporter-{{ param_db_pgsql_port }}:
     image: prometheuscommunity/postgres-exporter
