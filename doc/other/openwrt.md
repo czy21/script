@@ -1,6 +1,6 @@
 ```shell
 # ubuntu 22.04
-sudo apt install -y build-essential clang flex g++ gawk gcc-multilib gettext git libncurses5-dev libssl-dev python3-distutils rsync unzip zlib1g-dev qemu-utils file
+sudo apt install -y build-essential clang flex g++ gawk gcc-multilib gettext git libncurses5-dev libssl-dev python3-distutils rsync unzip zlib1g-dev file wget qemu-utils
 echo "
 src-git helloworld https://github.com/fw876/helloworld
 src-git plugin http://gitea.cluster.com/czyhome/openwrt-plugin.git
