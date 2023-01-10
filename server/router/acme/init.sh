@@ -11,5 +11,5 @@ if [ "backup" == "${param_command}" ];then
 fi
 
 if [ "restore" == "${param_command}" ];then
-  echo ''
+  cp -r {{ param_role_temp_path }}/acme-bak/* ${acme_etc_path}
 fi
