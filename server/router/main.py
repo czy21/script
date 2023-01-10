@@ -31,7 +31,7 @@ def uci_bak_config_cmd(name, kind: str, section: str, output_file: pathlib.Path)
     _uci_cmd.append(collection_util.flat_to_str(_sed_cmd))
     _uci_cmd.append("while IFS='=' read -r k v;do "
                     "IFS=\" \"; vl=0;for e in $v;do let vl+=1;done;"
-                    "if [ \"$vl\" -gt 1 ];then for e in $v;do echo $k=$e|sed 's|^set|add_list|g';done;else echo $k=$v;fi;"
+                    "if [ \"$vl\" -gt 1 ];then for e in $v;do echo $k=$e|sed 's|^set|add_list|g';done;elif [ -z $v ];then echo $k;else echo $k=$v;fi;"
                     "done")
     return collection_util.flat_to_str(_uci_cmd, delimiter=" | ") + " > {0}".format(output_file)
 
