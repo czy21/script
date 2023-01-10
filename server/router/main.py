@@ -29,7 +29,11 @@ def uci_bak_config_cmd(name, kind: str, section: str, output_file: pathlib.Path)
     else:
         _sed_cmd.append("-e 's|^{0}|set \\0|g'".format(name))
     _uci_cmd.append(collection_util.flat_to_str(_sed_cmd))
-    return collection_util.flat_to_str(_uci_cmd, delimiter=" | ") + " >> {0}".format(output_file)
+    _uci_cmd.append("while IFS='=' read -r k v;do "
+                    "IFS=\" \"; vl=0;for e in $v;do let vl+=1;done;"
+                    "if [ \"$vl\" -gt 1 ];then for e in $v;do echo $k=$e|sed 's|^set|add_list|g';done;else echo $k=$v;fi;"
+                    "done")
+    return collection_util.flat_to_str(_uci_cmd, delimiter=" | ") + " > {0}".format(output_file)
 
 
 def get_cmds(role_title: str,
