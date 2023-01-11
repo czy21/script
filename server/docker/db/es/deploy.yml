@@ -56,6 +56,7 @@ services:
     expose:
       - "9200"
     environment:
+      ES_JAVA_OPTS: -Xms4g -Xmx4g
       node.name: {{ node_name }}
       cluster.name: {{ param_role_project_name }}
       cluster.initial_master_nodes: {{ initial_master_nodes | join(',') }}
