@@ -58,10 +58,9 @@ services:
     environment:
       node.name: {{ node_name }}
       cluster.name: {{ param_role_project_name }}
-      discovery.seed_hosts: {{ seed_hosts | join(',') }}
       cluster.initial_master_nodes: {{ initial_master_nodes | join(',') }}
+      discovery.seed_hosts: {{ seed_hosts | join(',') }}
       bootstrap.memory_lock: "true"
-      ES_JAVA_OPTS: -Xms4g -Xmx4g
       ELASTIC_PASSWORD: {{ param_db_es_password }}
       xpack.security.enabled: true
       xpack.security.http.ssl.enabled: false
@@ -77,12 +76,16 @@ services:
       - {{ param_docker_data }}/{{ param_role_project_name }}/conf/users_roles:/usr/share/elasticsearch/config/users_roles
       - {{ param_docker_data }}/{{ param_role_project_name }}/data/{{ i }}/:/usr/share/elasticsearch/data/
       - {{ param_docker_data }}/{{ param_role_project_name }}/cert/:{{ param_db_es_target_cert_path }}/
+    deploy:
+      resources:
+        limits:
+          memory: {{ param_db_es_deploy_limit_memory }}
     ulimits:
       memlock:
         soft: -1
         hard: -1
     depends_on:
-    {%- if i == 1 %}
+    {%- if node_name == param_db_es_first_node_name %}
       {{ setup_name }}:
         condition: service_healthy
     {%- else %}
