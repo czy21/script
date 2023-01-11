@@ -103,6 +103,11 @@ services:
       - "5601"
     volumes:
       - {{ param_docker_data }}/{{ param_role_project_name }}/conf/kibana.yml:/usr/share/kibana/config/kibana.yml
+    depends_on:
+    {%- for n in node_names %}
+      {{ n }}:
+        condition: service_healthy
+    {%- endfor %}
     healthcheck:
       test: ["CMD-SHELL","curl -s -I http://localhost:5601 | grep -q 'HTTP/1.1 302 Found'"]
       interval: 10s
