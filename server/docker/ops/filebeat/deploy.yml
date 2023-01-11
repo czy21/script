@@ -3,7 +3,7 @@ version: "3.9"
 services:
 
   filebeat:
-    image: elastic/filebeat:7.17.4
+    image: elastic/filebeat:8.6.0
     container_name: filebeat
     privileged: true
     user: root
