@@ -19,6 +19,6 @@ rm -rf ${cert_path}/ca.zip ${cert_path}/cert.zip
 chown -R root:root ${cert_path}
 
 echo "Waiting for Elasticsearch availability";
-until curl -s http://{{ param_db_es_cluster_name + '-1' }}:9200 | grep -q "missing authentication credentials"; do sleep 30; done;
+until curl -s http://{{ param_db_es_first_node_name }}:9200 | grep -q "missing authentication credentials"; do sleep 30; done;
 
 echo "All done!";
