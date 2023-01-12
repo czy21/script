@@ -33,7 +33,7 @@ def uci_bak_config_cmd(name, kind: str, section: str, output_file: pathlib.Path)
                     "IFS=\" \"; vl=0;for e in $v;do let vl+=1;done;"
                     "if [ \"$vl\" -gt 1 ];then for e in $v;do echo $k=$e|sed 's|^set|add_list|g';done;elif [ -z $v ];then echo $k;else echo $k=$v;fi;"
                     "done")
-    return collection_util.flat_to_str(_uci_cmd, delimiter=" | ") + " > {0}".format(output_file)
+    return collection_util.flat_to_str(_uci_cmd, delimiter=" | ") + " >> {0}".format(output_file)
 
 
 def get_cmds(role_title: str,
@@ -75,6 +75,9 @@ def get_cmds(role_title: str,
                 _cmds.append("uci commit {0}".format(role_name))
     if args.command == share.Command.backup.value:
         if param_uci_config:
+            _bak_cmds = [
+                "cat /dev/null > {0}".format(role_script_uci_bak)
+            ]
             for c in param_uci_config:
                 _kind: str = c.get("type")
                 _section: str = c.get("section")
