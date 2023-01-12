@@ -19,7 +19,7 @@ function upload_exec_py() {
   local build_name=build
   local utility_path=$(realpath ${src_path}/../../utility)
   local del_cmd="rm -rf \$HOME/${dst_name}"
-  local ssh_opt="-o StrictHostKeyChecking=no"
+  local ssh_opt="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
   local ssh_cmd="ssh ${ssh_opt} ${host}"
 
   tar -zcf - --exclude="__pycache__" --exclude="${build_name}" \
