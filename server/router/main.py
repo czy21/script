@@ -75,9 +75,7 @@ def get_cmds(role_title: str,
                 _cmds.append("uci commit {0}".format(role_name))
     if args.command == share.Command.backup.value:
         if param_uci_config:
-            _cmds = [
-                "cat /dev/null > {0}".format(role_script_uci_bak)
-            ]
+            _cmds.append("cat /dev/null > {0}".format(role_script_uci_bak))
             for c in param_uci_config:
                 _kind: str = c.get("type")
                 _section: str = c.get("section")
