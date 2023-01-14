@@ -6,7 +6,7 @@ RUN chmod +x /docker-entrypoint.sh
 RUN sed -i.bak "s,\(ca.archive\|archive\|security\).ubuntu.com,{{ param_mirror_apt }},g" /etc/apt/sources.list
 RUN apt-get update
 
-RUN apt install -y sudo net-tools wget vim git bash-completion make gcc
+RUN apt install -y sudo wget vim git bash-completion make gcc
 RUN wget -O - https://raw.githubusercontent.com/friendlyarm/build-env-on-ubuntu-bionic/master/install.sh | bash
 RUN apt-get clean
 
