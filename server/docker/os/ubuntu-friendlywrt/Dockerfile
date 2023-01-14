@@ -6,6 +6,7 @@ RUN apt-get update
 RUN apt install -y sudo net-tools wget vim git bash-completion make gcc
 RUN wget -O - https://raw.githubusercontent.com/friendlyarm/build-env-on-ubuntu-bionic/master/install.sh | bash
 RUN apt-get clean
+
 RUN useradd -m {{ param_user_ops }} -d /home/{{ param_user_ops }} -s /bin/bash;passwd -d {{ param_user_ops }};
 RUN groupadd wheel
 RUN echo '%wheel ALL=(ALL:ALL)  NOPASSWD:ALL' >> /etc/sudoers
@@ -15,8 +16,6 @@ RUN su {{ param_user_ops }} bash -c 'git config --global user.email "you@example
 COPY docker-entrypoint.sh /
 RUN chmod +x /docker-entrypoint.sh
 
+USER {{ param_user_ops }}
 WORKDIR /data
-
-VOLUME ["/data"]
-EXPOSE 22
 ENTRYPOINT ["/docker-entrypoint.sh"]
