@@ -1,10 +1,10 @@
 version: "3.9"
 
 services:
-  ubuntu-friendlywrt:
+  {{ param_role_name }}:
     image: registry.cluster.com/library/{{ param_role_name }}
-    container_name: ubuntu-friendlywrt
-    hostname: ubuntu-friendlywrt
+    container_name: {{ param_role_name }}
+    hostname: {{ param_role_name }}
     tty: true
     expose:
       - "22"
