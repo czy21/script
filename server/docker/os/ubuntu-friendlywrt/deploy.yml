@@ -1,0 +1,14 @@
+version: "3.9"
+
+services:
+  ubuntu-friendlywrt:
+    image: registry.cluster.com/library/{{ param_role_name }}
+    container_name: ubuntu-friendlywrt
+    hostname: ubuntu-friendlywrt
+    tty: true
+    expose:
+      - "22"
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/data/
+    command: /bin/bash
+    restart: always
