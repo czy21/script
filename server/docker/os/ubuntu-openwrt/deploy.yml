@@ -1,14 +1,14 @@
 version: "3.9"
 
 services:
-  {{ param_role_name }}:
+  ubuntu-openwrt:
     image: registry.cluster.com/library/{{ param_role_name }}
-    container_name: {{ param_role_name }}
-    hostname: {{ param_role_name }}
+    container_name: ubuntu-openwrt
+    hostname: ubuntu-openwrt
     tty: true
     expose:
       - "22"
     volumes:
-      - /volume2/openwrt/:/data/
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/data/
     command: /bin/bash
     restart: always
