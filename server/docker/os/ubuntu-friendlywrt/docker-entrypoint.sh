@@ -1,3 +1,3 @@
 #!/bin/bash
-sudo chown 1000:1000 /data
+sudo chmod 777 /data
 exec "$@"
