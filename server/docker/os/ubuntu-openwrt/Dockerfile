@@ -6,7 +6,7 @@ RUN chmod +x /docker-entrypoint.sh
 RUN sed -i.bak "s,\(ca.archive\|archive\|security\).ubuntu.com,{{ param_mirror_apt }},g" /etc/apt/sources.list
 RUN apt-get update
 
-RUN apt install -y sudo net-tools wget vim git bash-completion make gcc
+RUN apt install -y sudo wget vim git bash-completion make gcc
 RUN apt install -y build-essential clang flex g++ gawk gcc-multilib gettext git libncurses5-dev libssl-dev python3-distutils rsync unzip zlib1g-dev file wget qemu-utils
 RUN apt-get clean
 
