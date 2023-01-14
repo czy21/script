@@ -14,7 +14,7 @@ http:
     - 0.0.0.0/0
 
 recorder:
-  db_url: postgresql://{{ param_db_pgsql_username }}:{{ param_db_pgsql_password }}@192.168.2.2:5432/homeassistant
+  db_url: postgresql://{{ param_db_pgsql_username }}:{{ param_db_pgsql_password }}@{{ param_db_pgsql_host }}:{{ param_db_pgsql_port }}/homeassistant
   purge_keep_days: 180
 
 # Text to speech
