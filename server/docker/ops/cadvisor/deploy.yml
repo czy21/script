@@ -9,12 +9,14 @@ x-traefik-label: &traefik-label
 services:
 
   cadvisor:
-    image: '{{ param_registry_proxy_url }}/cadvisor/cadvisor' # gcr.io/cadvisor/cadvisor
+    image: '{{ param_registry_proxy_url }}/cadvisor/cadvisor:v0.47.1' # gcr.io/cadvisor/cadvisor:v0.47.1
     container_name: cadvisor
     labels:
       <<: *traefik-label
     privileged: true
     user: root
+    devices:
+      - dev/kmsg
     volumes:
       - /:/rootfs:ro
       - /var/run:/var/run:ro
