@@ -74,15 +74,12 @@ def get_cmds(role_title: str,
         registry_url = role_env['param_registry_url']
         registry_dir = role_env['param_registry_dir']
         if target_file.exists():
-            docker_image_tag = "/".join([
+            image_tag = "/".join([
                 str(p).strip("/")
-                for p in [
-                    registry_url, registry_dir,
-                    role_name + ("-" + args.tag if args.tag else "")
-                ]
+                for p in [registry_url, registry_dir, (role_name + ":" + args.tag if args.tag else role_name)]
             ])
-            _cmds.append("docker build --tag {0} --file {1} {2}".format(docker_image_tag, target_file.as_posix(), role_output_path.as_posix()))
-            _cmds.append("docker push {0}".format(docker_image_tag))
+            _cmds.append("docker build --tag {0} --file {1} {2}".format(image_tag, target_file.as_posix(), role_output_path.as_posix()))
+            _cmds.append("docker push {0}".format(image_tag))
     return _cmds
 
 
