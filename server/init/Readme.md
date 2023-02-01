@@ -90,7 +90,7 @@ sudo systemctl daemon-reload && sudo systemctl restart kubelet
 # guide: https://velero.io/docs/v1.10/migration-case/
 velero -n ops backup-location get
 # create  backup on cluster_src
-velero -n ops backup create <BACKUP_NAME>
+velero -n ops backup create <BACKUP_NAME> --exclude-namespaces kube-system,calico-system,calico-apiserver
 # restore backup on cluster_dst
 velero -n ops restore create --from-backup <BACKUP_NAME>
 ```
