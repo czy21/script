@@ -1,4 +1,4 @@
 .DS_Store
 README.md
 ___temp/
-grafana/build/output/conf/dashboards/
+grafana/conf/dashboards/
