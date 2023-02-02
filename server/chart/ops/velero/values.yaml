@@ -18,7 +18,7 @@ velero:
   configuration:
     provider: aws
     backupStorageLocation:
-      bucket: velero-migration-k8s-1
+      bucket: velero
       config:
         region: minio
         s3Url: http://{{ param_db_minio_host }}
