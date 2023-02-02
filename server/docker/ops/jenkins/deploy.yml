@@ -12,6 +12,8 @@ services:
     image: jenkins/jenkins:2.389-jdk11
     pull_policy: always
     container_name: jenkins
+    privileged: true
+    user: root
     labels:
       <<: *traefik-label
     ports:
