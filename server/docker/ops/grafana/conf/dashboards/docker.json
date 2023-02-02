@@ -26,7 +26,7 @@
   "fiscalYearStartMonth": 0,
   "gnetId": 13946,
   "graphTooltip": 0,
-  "id": 17,
+  "id": 21,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -673,7 +673,7 @@
       "description": "",
       "fieldConfig": {
         "defaults": {
-          "links": []
+          "custom": {}
         },
         "overrides": []
       },
@@ -705,10 +705,11 @@
       "linewidth": 2,
       "nullPointMode": "connected",
       "options": {
-        "alertThreshold": true
+        "alertThreshold": true,
+        "dataLinks": []
       },
       "percentage": false,
-      "pluginVersion": "9.2.2",
+      "pluginVersion": "7.3.3",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -772,7 +773,7 @@
       "description": "",
       "fieldConfig": {
         "defaults": {
-          "links": []
+          "custom": {}
         },
         "overrides": []
       },
@@ -805,10 +806,11 @@
       "linewidth": 2,
       "nullPointMode": "connected",
       "options": {
-        "alertThreshold": true
+        "alertThreshold": true,
+        "dataLinks": []
       },
       "percentage": false,
-      "pluginVersion": "9.2.2",
+      "pluginVersion": "7.3.3",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -1103,13 +1105,9 @@
       {
         "allValue": ".*",
         "current": {
-          "selected": true,
-          "text": [
-            "All"
-          ],
-          "value": [
-            "$__all"
-          ]
+          "selected": false,
+          "text": "All",
+          "value": "$__all"
         },
         "datasource": {
           "type": "prometheus",
@@ -1140,10 +1138,10 @@
         "current": {
           "selected": true,
           "text": [
-            "All"
+            "cadvisor-nas.cluster.com:80"
           ],
           "value": [
-            "$__all"
+            "cadvisor-nas.cluster.com:80"
           ]
         },
         "datasource": {
@@ -1204,10 +1202,7 @@
       {
         "allValue": "",
         "current": {
-          "selected": true,
-          "text": [
-            "All"
-          ],
+          "text": "All",
           "value": [
             "$__all"
           ]
@@ -1250,7 +1245,6 @@
           }
         ],
         "query": "unsum,instance,image,container_label_restartcount,device",
-        "queryValue": "",
         "skipUrlSync": false,
         "type": "custom"
       }
