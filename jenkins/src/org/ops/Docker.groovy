@@ -45,9 +45,8 @@ def build() {
             java : {
                 toolMap.get("java").call()
                 return StringUtils.format(
-                        "chmod +x {0}/gradlew && {0}/gradlew --no-daemon --gradle-user-home {1} --init-script {2} --build-file {0}/build.gradle {3} -x test --refresh-dependencies",
+                        "chmod +x {0}/gradlew && {0}/gradlew --no-daemon --init-script {1} --build-file {0}/build.gradle {2} -x test --refresh-dependencies",
                         env.param_project_root,
-                        env.param_gradle_user_home,
                         PathUtils.ofPath("${env.WORKSPACE}", ".jenkins/init.gradle"),
                         ["clean", "build"].collect { t -> StringUtils.join(":", env.param_project_module, t) }.join(" ")
                 )
