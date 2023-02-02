@@ -14,8 +14,6 @@ services:
     container_name: jenkins
     labels:
       <<: *traefik-label
-    privileged: true
-    user: root
     ports:
       - "50000:50000"
     volumes:
