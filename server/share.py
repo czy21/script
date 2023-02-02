@@ -301,6 +301,7 @@ class Installer:
                 role_build_path.mkdir(parents=True, exist_ok=True)
                 role_output_path = role_build_path.joinpath("output")
                 shutil.rmtree(role_output_path, ignore_errors=True)
+                role_env_file = role_path.joinpath("env.yaml")
                 role_env_output_file = role_output_path.joinpath("env.yaml")
                 role_env = global_env | args.param | {
                     "param_role_name": role_name,
@@ -311,13 +312,11 @@ class Installer:
                     "param_role_temp_path": role_temp_path.as_posix()
                 }
                 # process env
-                if role_env_output_file and role_env_output_file.exists():
-                    role_env |= yaml_util.load(template_util.Template(file_util.read_text(role_env_output_file)).render(**role_env))
+                if role_env_file and role_env_file.exists():
+                    role_env |= yaml_util.load(template_util.Template(file_util.read_text(role_env_file)).render(**role_env))
                     file_util.write_text(role_env_output_file, yaml.dump(role_env))
                 # process template
-                for t in filter(lambda f: f.is_file(), role_path.rglob("*")):
-                    if any(regex_util.match_rules(["___temp", "build"], t.as_posix()).values()):
-                        continue
+                for t in filter(lambda f: f.is_file() and not any(regex_util.match_rules(["___temp", "build"], f.as_posix()).values()), role_path.rglob("*")):
                     _rules = regex_util.match_rules(
                         [*jinja2ignore_rules, role_output_path.joinpath("env.yaml").as_posix()],
                         t.as_posix(),
