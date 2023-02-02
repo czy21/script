@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   rabbitmq:
-    image: rabbitmq:3-management
+    image: rabbitmq:3.9.28-management-alpine
     container_name: rabbitmq
     privileged: true
     user: root
@@ -10,10 +10,7 @@ services:
       - "5672:5672"
       - "15672:15672"
     volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/:/etc/rabbitmq/
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/var/lib/rabbitmq/
     environment:
       RABBITMQ_DEFAULT_USER: admin
-      RABBITMQ_DEFAULT_PASS: {{ param_db_password }}
-
-
+      RABBITMQ_DEFAULT_PASS: "{{ param_db_password }}"

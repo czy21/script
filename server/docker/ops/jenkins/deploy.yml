@@ -9,7 +9,7 @@ x-traefik-label: &traefik-label
 services:
 
   jenkins:
-    image: jenkins/jenkins:2.388-jdk11
+    image: jenkins/jenkins:2.389-jdk11
     pull_policy: always
     container_name: jenkins
     labels:
