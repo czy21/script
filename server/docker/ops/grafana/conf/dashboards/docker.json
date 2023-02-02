@@ -1113,7 +1113,7 @@
           "type": "prometheus",
           "uid": "P047DE0F543C7E359"
         },
-        "definition": "label_values(container_cpu_user_seconds_total{job=\"$job\",from=\"docker\"}, name)",
+        "definition": "label_values(container_cpu_user_seconds_total{job=\"$job\"}, name)",
         "hide": 0,
         "includeAll": true,
         "label": "name",
@@ -1121,7 +1121,7 @@
         "name": "name",
         "options": [],
         "query": {
-          "query": "label_values(container_cpu_user_seconds_total{job=\"$job\",from=\"docker\"}, name)",
+          "query": "label_values(container_cpu_user_seconds_total{job=\"$job\"}, name)",
           "refId": "nas-name-Variable-Query"
         },
         "refresh": 2,
