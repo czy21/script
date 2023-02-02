@@ -44,7 +44,6 @@ def build() {
     def cmdMap = [
             java : {
                 toolMap.get("java").call()
-                configFileProvider([configFile(fileId: "init.gradle", targetLocation: '.jenkins/init.gradle')]) {}
                 return StringUtils.format(
                         "chmod +x {0}/gradlew && {0}/gradlew --no-daemon --gradle-user-home {1} --init-script .jenkins/init.gradle --build-file {0}/build.gradle {3} -x test --refresh-dependencies",
                         env.param_project_root,
@@ -79,7 +78,9 @@ def build() {
     ]
     build_cmd = cmdMap.get(env.param_code_type).call()
     new Common().writeParamToYaml()
-    sh "${build_cmd}"
+    configFileProvider([configFile(fileId: "init.gradle", targetLocation: '.jenkins/init.gradle')]) {
+        sh "${build_cmd}"
+    }
     configFileProvider([configFile(fileId: "docker-config", targetLocation: '.jenkins/docker/config.json')]) {
         sh "docker build --tag ${env.param_release_name}:${env.param_release_version} --file ${env.param_docker_file} ${env.param_docker_context}"
         sh "docker --config .jenkins/docker/ push ${env.param_release_name}:${env.param_release_version}"
