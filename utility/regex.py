@@ -7,7 +7,7 @@ logger = logging.getLogger()
 
 
 def is_match(pattern: str, name: str):
-    return bool(re.search(pattern, name))
+    return bool(re.compile(pattern).search(name))
 
 
 def match_rules(rules: list[str], text: str, name: str = "") -> dict[str, bool]:
