@@ -20,8 +20,6 @@ services:
       - "50000:50000"
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/var/jenkins_home/
-      - {{ param_docker_data }}/{{ param_role_name }}/backup/:/backup/
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/:/conf/
       - /var/run/docker.sock:/var/run/docker.sock
       - /usr/bin/docker:/usr/bin/docker
     environment:
