@@ -7,7 +7,6 @@ def call() {
         agent any
         environment {
             param_gradle_user_home = "/var/jenkins_home/tools/gradle"
-            param_gradle_init_file = "/conf/init.gradle"
             param_go_mod_cache = "/var/jenkins_home/tools/go/pkg/mod"
             param_go_cache = "/var/jenkins_home/tools/go/cache/go-build"
             param_yarn_cache = "/var/jenkins_home/tools/yarn/cache"
