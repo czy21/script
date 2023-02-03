@@ -82,10 +82,21 @@ def build() {
         configFile(fileId: "init.gradle", targetLocation: '.jenkins/init.gradle'),
         configFile(fileId: "docker-config", targetLocation: '.jenkins/docker/config.json')
     ]) {
-        docker_build_cmd = "docker build --tag ${env.param_release_name}:${env.param_release_version} --file ${env.param_docker_file} ${env.param_docker_context}"
-        docker_push_cmd  = StringUtils.format("docker --config {0} push ${env.param_release_name}:${env.param_release_version}",PathUtils.ofPath("${env.WORKSPACE}", ".jenkins/docker/")
-        )
-        sh "${build_cmd} && ${docker_build_cmd} && ${docker_push_cmd}"
+//         docker_build_cmd = "sudo docker build --tag ${env.param_release_name}:${env.param_release_version} --file ${env.param_docker_file} ${env.param_docker_context}"
+//         docker_push_cmd  = StringUtils.format("sudo docker --config {0} push ${env.param_release_name}:${env.param_release_version}",
+//                                               PathUtils.ofPath("${env.WORKSPACE}", ".jenkins/docker/")
+//         )
+        sh "${build_cmd}"
+        step([
+          $class: 'DockerBuilderPublisher', cleanImages: true,
+          cleanupWithJenkinsJobDelete: false,
+          dockerFileDirectory: "${env.param_docker_context}",
+          fromRegistry: [credentialsId: 'docker-registry', url: 'registry.cluster.com'],
+          noCache: true,
+          pull: true,
+          pushCredentialsId: 'docker-registry',
+          pushOnSuccess: false, tagsString: "${env.param_release_name}:${env.param_release_version}"
+        ])
     }
 }
 
