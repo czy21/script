@@ -25,7 +25,7 @@ def deploy() {
     ]
     chartMap.get(env.param_code_type).call()
     new Common().writeParamToYaml()
-    withKubeConfig([credentialsId: env.param_kube_credential, serverUrl: env.param_kube_server]) {
+    withKubeConfig([credentialsId: env.param_kube_credential]) {
         helm_cmd = StringUtils.format(
                 "helm upgrade --install {0} {1} --version {2} --namespace {3} --repo {4} --values .jenkins/param.yaml --output yaml",
                 env.param_release_name,
