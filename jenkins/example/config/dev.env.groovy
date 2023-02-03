@@ -1,6 +1,5 @@
 param=[:]
 param.param_kube_credential = 'k8s-config-dev'
-param.param_kube_server = 'https://192.168.2.21:6443'
 
 param.param_helm_repo = 'http://nexus.cluster.com/repository/helm-hosted/'
 param.param_helm_java_chart_name = "java-template"
