@@ -90,12 +90,12 @@ def build() {
           $class: 'DockerBuilderPublisher', cleanImages: true,
           cleanupWithJenkinsJobDelete: false,
           cloud: 'docker',
-          dockerFileDirectory: '${env.param_docker_context}',
+          dockerFileDirectory: "${env.param_docker_context}",
           fromRegistry: [credentialsId: 'docker-registry', url: 'registry.cluster.com'],
           noCache: true,
           pull: true,
           pushCredentialsId: 'docker-registry',
-          pushOnSuccess: false, tagsString: '${env.param_release_name}:${env.param_release_version}'])
+          pushOnSuccess: false, tagsString: "${env.param_release_name}:${env.param_release_version}"])
         sh "${build_cmd} && ${docker_build_cmd} && ${docker_push_cmd}"
     }
 }
