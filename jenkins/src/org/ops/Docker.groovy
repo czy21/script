@@ -48,7 +48,7 @@ def build() {
                         "chmod +x {0}/gradlew && {0}/gradlew --no-daemon --gradle-user-home {1} --init-script {2} --build-file {0}/build.gradle {3} -x test --refresh-dependencies",
                         env.param_project_root,
                         env.param_gradle_user_home,
-                        PathUtils.ofPath("${env.WORKSPACE}", ".jenkins/init.gradle")
+                        PathUtils.ofPath("${env.WORKSPACE}", ".jenkins/init.gradle"),
                         ["clean", "build"].collect { t -> StringUtils.join(":", env.param_project_module, t) }.join(" ")
                 )
             },
@@ -82,8 +82,8 @@ def build() {
         sh "${build_cmd}"
     }
     configFileProvider([configFile(fileId: "docker-config", targetLocation: '.jenkins/docker/config.json')]) {
-        sh "docker build --tag ${env.param_release_name}:${env.param_release_version} --file ${env.param_docker_file} ${env.param_docker_context}"
-        sh "docker --config .jenkins/docker/ push ${env.param_release_name}:${env.param_release_version}"
+        sh "sudo docker build --tag ${env.param_release_name}:${env.param_release_version} --file ${env.param_docker_file} ${env.param_docker_context}"
+        sh "sudo docker --config .jenkins/docker/ push ${env.param_release_name}:${env.param_release_version}"
     }
 }
 
