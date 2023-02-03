@@ -1,7 +1,7 @@
 FROM busybox:1.35.0 as builder
 USER root
 
-RUN wget -O - https://get.helm.sh/helm-v3.9.0-linux-amd64.tar.gz | tar -zxf - --strip-components 1 -C /root linux-amd64/helm
+RUN wget -O - https://get.helm.sh/helm-v3.11.0-linux-amd64.tar.gz | tar -zxf - --strip-components 1 -C /root linux-amd64/helm
 
 FROM jenkins/inbound-agent:4.10-3-alpine-jdk11
 USER root
