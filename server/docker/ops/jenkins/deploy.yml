@@ -9,11 +9,10 @@ x-traefik-label: &traefik-label
 services:
 
   jenkins:
-    image: jenkins/jenkins:2.389-jdk11
+    image: registry.cluster.com/library/jenkins
     pull_policy: always
     container_name: jenkins
     privileged: true
-    user: root
     working_dir: /var/jenkins_home/
     labels:
       <<: *traefik-label
