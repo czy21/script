@@ -86,6 +86,7 @@ def build() {
 //         docker_push_cmd  = StringUtils.format("sudo docker --config {0} push ${env.param_release_name}:${env.param_release_version}",
 //                                               PathUtils.ofPath("${env.WORKSPACE}", ".jenkins/docker/")
 //         )
+        sh "${build_cmd}"
         step([
           $class: 'DockerBuilderPublisher', cleanImages: true,
           cleanupWithJenkinsJobDelete: false,
@@ -96,7 +97,6 @@ def build() {
           pull: true,
           pushCredentialsId: 'docker-registry',
           pushOnSuccess: false, tagsString: "${env.param_release_name}:${env.param_release_version}"])
-        sh "${build_cmd} && ${docker_build_cmd} && ${docker_push_cmd}"
     }
 }
 
