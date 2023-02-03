@@ -4,12 +4,12 @@ version: 0.1.0
 
 dependencies:
   - name: base
-    version: 1.15.0
+    version: 1.16.2
     repository: "https://istio-release.storage.googleapis.com/charts"
   - name: istiod
-    version: 1.15.0
+    version: 1.16.2
     repository: "https://istio-release.storage.googleapis.com/charts"
   - name: kiali-server
-    version: 1.56.0
+    version: 1.63.2
     repository: "https://kiali.org/helm-charts"
     condition: component.kiali
