@@ -22,6 +22,7 @@ services:
       - "50000:50000"
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/var/jenkins_home/
+      - /var/run/docker.sock:/var/run/docker.sock
     environment:
       JENKINS_UC: https://mirrors.aliyun.com/jenkins/updates/update-center.json
       JENKINS_UC_EXPERIMENTAL: https://mirrors.aliyun.com/jenkins/updates/experimental/update-center.json
