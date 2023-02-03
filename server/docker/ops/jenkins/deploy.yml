@@ -9,19 +9,19 @@ x-traefik-label: &traefik-label
 services:
 
   jenkins:
-    image: registry.cluster.com/library/jenkins
+    image: jenkins/jenkins:2.389-jdk11
     pull_policy: always
     container_name: jenkins
     privileged: true
+    user: root
     working_dir: /var/jenkins_home/
     labels:
       <<: *traefik-label
     ports:
+      - "8091:8080"
       - "50000:50000"
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/var/jenkins_home/
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /usr/bin/docker:/usr/bin/docker
     environment:
       JENKINS_UC: https://mirrors.aliyun.com/jenkins/updates/update-center.json
       JENKINS_UC_EXPERIMENTAL: https://mirrors.aliyun.com/jenkins/updates/experimental/update-center.json
