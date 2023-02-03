@@ -6,9 +6,10 @@ def call() {
     pipeline {
         agent any
         environment {
-            param_go_mod_cache = "/var/jenkins_home/tools/go/pkg/mod"
-            param_go_cache = "/var/jenkins_home/tools/go/cache/go-build"
-            param_yarn_cache = "/var/jenkins_home/tools/yarn/cache"
+            param_gradle_user_home = PathUtils.ofPath("${env.PWD}",".gradle")
+            param_go_mod_cache = PathUtils.ofPath("${env.PWD}","go/pkg/mod")
+            param_go_cache =     PathUtils.ofPath("${env.PWD}",".go/cache/go-build")
+            param_yarn_cache =   PathUtils.ofPath("${env.PWD}","yarn/cache")
             param_project_root = PathUtils.ofPath("${env.WORKSPACE}", "${env.param_project_root}")
             param_project_name = "${env.param_project_name}"
             param_project_module = "${env.param_project_module}"
