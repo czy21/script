@@ -8,7 +8,7 @@ def call() {
         environment {
             param_gradle_user_home = PathUtils.ofPath("${env.PWD}",".gradle")
             param_go_mod_cache = PathUtils.ofPath("${env.PWD}","go/pkg/mod")
-            param_go_cache =     PathUtils.ofPath("${env.PWD}",".go/cache/go-build")
+            param_go_cache =     PathUtils.ofPath("${env.PWD}","go/cache/go-build")
             param_yarn_cache =   PathUtils.ofPath("${env.PWD}","yarn/cache")
             param_project_root = PathUtils.ofPath("${env.WORKSPACE}", "${env.param_project_root}")
             param_project_name = "${env.param_project_name}"
