@@ -28,7 +28,7 @@ def build() {
                 env.PATH = "${JAVA_HOME}/bin:${PATH}"
             },
             go  : {
-                env.GO_HOME = "${tool 'go-v1.19.2'}"
+                env.GO_HOME = "${tool 'go-v1.20'}"
                 env.GOPROXY = env.param_go_proxy
                 env.GOCACHE = env.param_go_cache
                 env.GOSUMDB = "off"
@@ -37,7 +37,7 @@ def build() {
                 env.PATH = "${GO_HOME}/bin:${PATH}"
             },
             web : {
-                env.NODEJS_HOME = "${tool 'node-v16.14.0'}"
+                env.NODEJS_HOME = "${tool 'node-v18.14.0'}"
                 env.PATH = "${NODEJS_HOME}/bin:${PATH}"
             }
     ]
