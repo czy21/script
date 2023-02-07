@@ -33,7 +33,6 @@ def build() {
                 env.GOSUMDB = "off"
                 env.CGO_ENABLED = "0"
                 env.PATH = "${GO_HOME}/bin:${PATH}"
-                sh 'go env'
             },
             web : {
                 env.NODEJS_HOME = "${tool 'node-v18.14.0'}"
@@ -44,7 +43,7 @@ def build() {
             java : {
                 toolMap.get("java").call()
                 return StringUtils.format(
-                        "chmod +x {0}/gradlew && {0}/gradlew --no-daemon --gradle-user-home {1} --init-script {2} --build-file {0}/build.gradle {3} -x test --refresh-dependencies",
+                        "chmod +x {0}/gradlew && {0}/gradlew --no-daemon --init-script {2} --build-file {0}/build.gradle {3} -x test --refresh-dependencies",
                         env.param_project_root,
                         env.param_gradle_user_home,
                         PathUtils.ofPath("${env.WORKSPACE}", ".jenkins/init.gradle"),
@@ -61,7 +60,7 @@ def build() {
             web  : {
                 toolMap.get("web").call()
                 yarn_cmd = StringUtils.format(
-                        "yarn --cwd {0} --registry {1} --cache-folder {2}",
+                        "yarn --cwd {0} --registry {1}",
                         env.param_project_context,
                         env.param_npm_repo,
                         env.param_yarn_cache
@@ -76,18 +75,18 @@ def build() {
             }
     ]
     build_cmd = cmdMap.get(env.param_code_type).call()
-//     new Common().writeParamToYaml()
-//     env.DOCKER_HOME = "${tool 'docker'}"
-//     configFileProvider([
-//             configFile(fileId: "init.gradle", targetLocation: '.jenkins/init.gradle'),
-//             configFile(fileId: "docker-config", targetLocation: '.jenkins/docker/config.json')
-//     ]) {
-//         docker_image_tag = "${env.param_release_name}:${env.param_release_version}"
-//         docker_config_dir = PathUtils.ofPath("${env.WORKSPACE}", ".jenkins/docker/")
-//         docker_build_cmd = "sudo ${DOCKER_HOME}/bin/docker build --tag ${docker_image_tag} --file ${env.param_docker_file} ${env.param_docker_context}"
-//         docker_push_cmd = "sudo ${DOCKER_HOME}/bin/docker --config ${docker_config_dir} push ${docker_image_tag}"
-//         sh "${build_cmd} && ${docker_build_cmd} && ${docker_push_cmd}"
-//     }
+    new Common().writeParamToYaml()
+    env.DOCKER_HOME = "${tool 'docker'}"
+    configFileProvider([
+            configFile(fileId: "init.gradle", targetLocation: '.jenkins/init.gradle'),
+            configFile(fileId: "docker-config", targetLocation: '.jenkins/docker/config.json')
+    ]) {
+        docker_image_tag = "${env.param_release_name}:${env.param_release_version}"
+        docker_config_dir = PathUtils.ofPath("${env.WORKSPACE}", ".jenkins/docker/")
+        docker_build_cmd = "sudo ${DOCKER_HOME}/bin/docker build --tag ${docker_image_tag} --file ${env.param_docker_file} ${env.param_docker_context}"
+        docker_push_cmd = "sudo ${DOCKER_HOME}/bin/docker --config ${docker_config_dir} push ${docker_image_tag}"
+        sh "${build_cmd} && ${docker_build_cmd} && ${docker_push_cmd}"
+    }
 }
 
 return this

@@ -6,8 +6,6 @@ def call() {
     pipeline {
         agent any
         environment {
-            param_gradle_user_home = PathUtils.ofPath("${env.PWD}",".gradle")
-            param_yarn_cache =   PathUtils.ofPath("${env.PWD}","yarn/cache")
             param_project_root = PathUtils.ofPath("${env.WORKSPACE}", "${env.param_project_root}")
             param_project_name = "${env.param_project_name}"
             param_project_module = "${env.param_project_module}"
