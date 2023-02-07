@@ -7,7 +7,6 @@ def call() {
         agent any
         environment {
             param_gradle_user_home = PathUtils.ofPath("${env.PWD}",".gradle")
-            param_go_user_home = PathUtils.ofPath("${env.PWD}","go")
             param_yarn_cache =   PathUtils.ofPath("${env.PWD}","yarn/cache")
             param_project_root = PathUtils.ofPath("${env.WORKSPACE}", "${env.param_project_root}")
             param_project_name = "${env.param_project_name}"
