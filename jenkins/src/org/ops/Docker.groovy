@@ -34,7 +34,7 @@ def build() {
                 env.GOSUMDB = "off"
                 env.CGO_ENABLED = "0"
                 env.PATH = "${GO_HOME}/bin:${PATH}"
-                go env
+                sh 'go env'
             },
             web : {
                 env.NODEJS_HOME = "${tool 'node-v18.14.0'}"
