@@ -27,5 +27,12 @@ static def format(String pattern, Object... arguments) {
     return MessageFormat.format(pattern, arguments)
 }
 
+static def defaultIfEmpty(String str, String defaultStr) {
+     return isEmpty(str) ? defaultStr : str;
+}
+
+static def defaultIfNull(String str, String defaultStr) {
+    return isNull(str) ? defaultStr : str;
+}
 
 return this
