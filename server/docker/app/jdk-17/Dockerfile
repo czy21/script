@@ -1,4 +1,4 @@
-FROM openjdk:17.0.2-jdk
+FROM openjdk:17.0.2-jdk-bullseye
 WORKDIR /app
 
 ENV JAR=/app/api.jar
