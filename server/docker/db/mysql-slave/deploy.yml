@@ -2,9 +2,9 @@ version: "3.9"
 
 services:
 
-  mysql:
+  mysql-slave:
     image: mysql:8.0.31
-    container_name: mysql
+    container_name: mysql-slave
     privileged: true
     user: root
     ports:
@@ -17,21 +17,16 @@ services:
              --collation-server=utf8mb4_unicode_ci
              --max_connections=10000
              --log-bin=mysql-bin
-             --binlog-ignore-db=sys
-             --binlog-ignore-db=mysql
-             --binlog-ignore-db=information_schema
-             --binlog-ignore-db=performance_schema
-             --binlog_format=STATEMENT
-             --expire_logs_days=7
+             --server-id=2
     environment:
       TZ: Asia/Shanghai
       MYSQL_ALLOW_EMPTY_PASSWORD: 0
       MYSQL_ROOT_PASSWORD: {{ param_db_mysql_password }}
     restart: always
 
-  mysql-exporter-{{ param_db_mysql_port }}:
+  mysql-slave-exporter-{{ param_db_mysql_port }}:
     image: prom/mysqld-exporter
-    container_name: mysql-exporter-{{ param_db_mysql_port }}
+    container_name: mysql-slave-exporter-{{ param_db_mysql_port }}
     environment:
       DATA_SOURCE_NAME: "{{ param_db_mysql_username }}:{{ param_db_mysql_password }}@(mysql:{{ param_db_mysql_port }})/"
     restart: always
