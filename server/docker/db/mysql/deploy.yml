@@ -11,9 +11,9 @@ services:
       - "3306:3306"
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/var/lib/mysql/
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/conf.d/mysql.cnf:/etc/mysql/conf.d/mysql.cnf
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/conf.d/:/etc/mysql/conf.d/
     command: --default-authentication-plugin=mysql_native_password 
-             --character-set-server=utf8mb4 
+             --character-set-server=utf8mb4
              --collation-server=utf8mb4_unicode_ci
              --skip-log-bin
              --max_connections=10000
