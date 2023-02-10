@@ -11,9 +11,8 @@ RUN wget -O - https://raw.githubusercontent.com/friendlyarm/build-env-on-ubuntu-
 RUN apt-get clean
 
 RUN useradd -m {{ param_user_ops }} -d /home/{{ param_user_ops }} -s /bin/bash;passwd -d {{ param_user_ops }};
-RUN groupadd wheel
-RUN echo '%wheel ALL=(ALL:ALL)  NOPASSWD:ALL' >> /etc/sudoers
-RUN usermod -aG wheel {{ param_user_ops }}
+RUN echo -n "%sudo   ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers.d/99-custom
+RUN usermod -aG sudo {{ param_user_ops }}
 USER {{ param_user_ops }}
 WORKDIR /data
 RUN git config --global user.email "you@example.com" && git config --global user.name "{{ param_user_ops }}"
