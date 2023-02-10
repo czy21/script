@@ -46,19 +46,11 @@ def build() {
             },
             go   : {
                 toolMap.get("go").call()
-                return StringUtils.format(
-                        "cd {0};go build -o build main.go;",
-                        env.param_project_context
-                )
+                return StringUtils.format("cd {0};go build -o build main.go;", env.param_project_context)
             },
             web  : {
                 toolMap.get("web").call()
-                yarn_cmd = StringUtils.format(
-                        "yarn --cwd {0} --registry {1}",
-                        env.param_project_context,
-                        env.param_npm_repo,
-                        env.param_yarn_cache
-                )
+                yarn_cmd = StringUtils.format("yarn --cwd {0} --registry {1}", env.param_project_context, env.param_npm_repo)
                 return StringUtils.format("{0} install --no-lockfile --update-checksums && {0} --ignore-engines build", yarn_cmd)
             },
             shell: {
