@@ -3,8 +3,8 @@
 env.param_env_name="dev"
 env.param_global_env_file_id="dev.env"
 env.param_release_namespace="stable"
-env.param_release_name="erp-portal"
-env.param_data_claim_name="data-erp"
+env.param_release_name="demo-portal"
+env.param_data_claim_name="data-demo"
 env.param_release_version="master"
 env.param_code_type="java"
 
