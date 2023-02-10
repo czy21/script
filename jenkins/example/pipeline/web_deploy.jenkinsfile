@@ -3,10 +3,13 @@
 env.param_env_name="dev"
 env.param_global_env_file_id="dev.env"
 env.param_release_namespace="stable"
-env.param_release_name="erp-operation-react"
+env.param_app_name = "demo-operation-vue"
+env.param_release_name = env.param_app_name
+env.param_image_name = env.param_app_name
+env.param_image_version="master"
 env.param_release_version="master"
-env.param_data_claim_name="data-erp"
-env.param_backend_url="http://erp-gateway.stable.svc:8080"
+env.param_data_claim_name="data-demo"
+env.param_backend_url="http://demo-gateway.stable.svc:8080"
 env.param_code_type="web"
 
 Deploy()
