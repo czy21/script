@@ -11,7 +11,8 @@ services:
   nacos:
     image: nacos/nacos-server:v2.2.0
     pull_policy: always
-    container_name: {{ param_role_name }}
+    container_name: "{{ param_role_name }}"
+    hostname: "{{ param_role_name }}"
     privileged: true
     user: root
     labels:
@@ -20,11 +21,11 @@ services:
       PREFER_HOST_MODE: hostname
       MODE: standalone
       SPRING_DATASOURCE_PLATFORM: mysql
-      MYSQL_SERVICE_HOST: {{ param_db_mysql_host }}
+      MYSQL_SERVICE_HOST: "{{ param_db_mysql_host }}"
       MYSQL_SERVICE_DB_NAME: nacos
-      MYSQL_SERVICE_PORT: {{ param_db_mysql_port }}
-      MYSQL_SERVICE_USER: {{ param_db_mysql_username }}
-      MYSQL_SERVICE_PASSWORD: {{ param_db_mysql_password }}
+      MYSQL_SERVICE_PORT: "{{ param_db_mysql_port }}"
+      MYSQL_SERVICE_USER: "{{ param_db_mysql_username }}"
+      MYSQL_SERVICE_PASSWORD: "{{ param_db_mysql_password }}"
       MYSQL_SERVICE_DB_PARAM: characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&serverTimezone=UTC
 
 
