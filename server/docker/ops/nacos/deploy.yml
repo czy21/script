@@ -1,17 +1,21 @@
 version: "3.9"
 
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}.rule: Host(`nacos.cluster.com`)
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 8848
+
 services:
 
   nacos:
-    image: nacos/nacos-server:2.0.3
+    image: nacos/nacos-server:v2.2.0
+    pull_policy: always
     container_name: {{ param_role_name }}
     privileged: true
     user: root
-    ports:
-      - "8848:8848"
-    volumes:
-       - {{ param_docker_data }}/{{ param_role_name }}/conf/:/home/nacos/init.d/
-
+    labels:
+      <<: *traefik-label
     environment:
       PREFER_HOST_MODE: hostname
       MODE: standalone
