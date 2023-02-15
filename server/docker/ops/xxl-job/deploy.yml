@@ -26,5 +26,3 @@ services:
         --spring.datasource.password={{ param_db_mysql_password }}
         --server.servlet.context-path=/
       "
-
-
