@@ -9,7 +9,7 @@ x-traefik-label: &traefik-label
 services:
 
   consul:
-    image: consul:1.14.3
+    image: consul:1.15.0
     container_name: consul
     labels:
       <<: *traefik-label
