@@ -4,7 +4,7 @@ x-flink-common: &flink-common
   image: {{ param_registry_url }}/{{ param_registry_dir }}/flink
   privileged: true
   user: root
-
+  pull_policy: always
 
 x-traefik-jmr-label: &traefik-jmr-label
   traefik.enable: true
@@ -26,8 +26,7 @@ services:
     labels:
       <<: *traefik-jmr-label
     volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/data/jar/:/data/jar/
-      - {{ param_docker_data }}/{{ param_role_name }}/data/completed-jobs/:/data/completed-jobs/
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/data/
       - {{ param_docker_data }}/{{ param_role_name }}/log/jmr/:/opt/flink/log/
     environment:
       FLINK_PROPERTIES: |
@@ -35,7 +34,7 @@ services:
         parallelism.default: 2
         jobmanager.archive.fs.dir: file:///data/completed-jobs
         web.upload.dir: /data/jar
-    command: jobmanager.sh start-foreground
+    command: jobmanager
 
   {% for i in range(1,param_bd_flink_cluster_tmr_replicas | int+1) %}
   flink-tmr{{i}}:
@@ -48,7 +47,7 @@ services:
       FLINK_PROPERTIES: |
         jobmanager.rpc.address: flink-jmr
         parallelism.default: 2
-    command: taskmanager.sh start-foreground
+    command: taskmanager
   {% endfor %}
 
   flink-his:
@@ -57,7 +56,7 @@ services:
     labels:
       <<: *traefik-his-label
     volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/data/completed-jobs/:/data/completed-jobs/
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/data/
       - {{ param_docker_data }}/{{ param_role_name }}/log/his/:/opt/flink/log/
     environment:
       FLINK_PROPERTIES: |
@@ -65,7 +64,7 @@ services:
         historyserver.web.port: 8081
         historyserver.archive.fs.dir: file:///data/completed-jobs
         historyserver.archive.fs.refresh-interval: 10000
-    command: historyserver.sh start-foreground
+    command: history-server
 
 
 

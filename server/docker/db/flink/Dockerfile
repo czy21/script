@@ -1,7 +1,3 @@
-FROM flink:1.14.4-scala_2.11-java11
-
+FROM flink:1.16.1-scala_2.12-java11
 RUN chown -R root:root .
-
-COPY docker-entrypoint.sh /
-RUN chmod +x /docker-entrypoint.sh
-ENTRYPOINT ["/docker-entrypoint.sh"]
+RUN sed -i 's|exec $(drop_privs_cmd) ||g' /docker-entrypoint.sh
