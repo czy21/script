@@ -1,0 +1,19 @@
+version: "3.9"
+
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}.rule: Host(`adminer.cluster.com`)
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 8080
+
+services:
+
+  adminer:
+    image: adminer:4-standalone
+    pull_policy: always
+    container_name: adminer
+    labels:
+      <<: *traefik-label
+    privileged: true
+    user: root
+    restart: always
