@@ -20,7 +20,6 @@ services:
     ports:
       - "8848:8848"
       - "9848:9848"
-      - "9555:9555"
     environment:
       PREFER_HOST_MODE: hostname
       MODE: standalone
