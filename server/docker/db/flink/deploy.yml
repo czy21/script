@@ -27,7 +27,7 @@ services:
       <<: *traefik-jmr-label
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/data/
-      - {{ param_docker_data }}/{{ param_role_name }}/log/jmr/:/opt/flink/log/
+      - {{ param_docker_data }}/{{ param_role_name }}/log/:/opt/flink/log/
     environment:
       FLINK_PROPERTIES: |
         jobmanager.rpc.address: flink-jmr
@@ -37,12 +37,12 @@ services:
     command: jobmanager
 
   {% for i in range(1,param_bd_flink_cluster_tmr_replicas | int+1) %}
-  flink-tmr{{i}}:
+  flink-tmr-{{i}}:
     <<: *flink-common
-    container_name: flink-tmr{{i}}
+    container_name: flink-tmr-{{i}}
     hostname: flink-tmr{{i}}
     volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/log/tmr/{{i}}:/opt/flink/log/
+      - {{ param_docker_data }}/{{ param_role_name }}/log/:/opt/flink/log/
     environment:
       FLINK_PROPERTIES: |
         jobmanager.rpc.address: flink-jmr
@@ -53,11 +53,12 @@ services:
   flink-his:
     <<: *flink-common
     container_name: flink-his
+    hostname: flink-his
     labels:
       <<: *traefik-his-label
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/data/
-      - {{ param_docker_data }}/{{ param_role_name }}/log/his/:/opt/flink/log/
+      - {{ param_docker_data }}/{{ param_role_name }}/log/:/opt/flink/log/
     environment:
       FLINK_PROPERTIES: |
         historyserver.web.address: flink-his
