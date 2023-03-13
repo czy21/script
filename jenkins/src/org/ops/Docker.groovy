@@ -34,7 +34,7 @@ def build() {
             },
             dotnet: {
                 env.DOTNET_HOME = "${tool 'net7.0-linux-64'}"
-                env.PATH = "${DOTNET_HOME}/bin:${PATH}"
+                env.PATH = "${DOTNET_HOME}:${PATH}"
             }
     ]
     def cmdMap = [
@@ -59,7 +59,7 @@ def build() {
             },
             dotnet: {
                 toolMap.get("dotnet").call()
-                return StringUtils.format("dotnet publish -r linux-x64 -p:PublishSingleFile=true --self-contained false {0} -o {0}/build", env.param_project_root)
+                return StringUtils.format("dotnet publish -c Release -o {0}/build", env.param_project_root)
             },
             shell : {
                 if (StringUtils.isNotEmpty(env.param_tools)) {
