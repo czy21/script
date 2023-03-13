@@ -1,3 +1,3 @@
 #!/bin/bash
 
-exec ${API_FILE}
+${API_FILE}
