@@ -1,3 +1,3 @@
 #!/bin/bash
 
-dotnet ${DLL}
+exec ${API_FILE}
