@@ -80,7 +80,7 @@ def build() {
     ]) {
         docker_image_tag = "${env.param_release_name}:${env.param_release_version}"
         docker_config_dir = PathUtils.ofPath("${env.WORKSPACE}", ".jenkins/docker/")
-        docker_build_cmd = "sudo ${DOCKER_HOME}/bin/docker build --tag ${docker_image_tag} --file ${env.param_docker_file} ${env.param_docker_context}"
+        docker_build_cmd = "sudo ${DOCKER_HOME}/bin/docker build --tag ${docker_image_tag} --file ${env.param_docker_file} ${env.param_docker_context} --pull"
         docker_push_cmd = "sudo ${DOCKER_HOME}/bin/docker --config ${docker_config_dir} push ${docker_image_tag}"
         sh "${build_cmd} && ${docker_build_cmd} && ${docker_push_cmd}"
     }

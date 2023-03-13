@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/dotnet/aspnet:7.0
 WORKDIR /app
 
-ENV DLL=/app/api.dll
+ENV API_FILE=/app/api
 
 COPY docker-entrypoint.sh /
 RUN chmod +x /docker-entrypoint.sh
