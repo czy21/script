@@ -35,7 +35,6 @@ def build() {
             dotnet: {
                 env.DOTNET_HOME = "${tool 'net7.0-linux-64'}"
                 env.DOTNET_SYSTEM_GLOBALIZATION_INVARIANT = 1
-                env.DOTNET_CLI_TELEMETRY_OPTOUT = 1
                 env.PATH = "${DOTNET_HOME}:${PATH}"
             }
     ]
@@ -61,7 +60,7 @@ def build() {
             },
             dotnet: {
                 toolMap.get("dotnet").call()
-                return StringUtils.format("dotnet publish -c Release -p:AssemblyName=api -o {0}/build", env.param_project_root)
+                return StringUtils.format("dotnet publish -c Release -p:AssemblyName=api {0} -o {0}/build", env.param_project_root)
             },
             shell : {
                 if (StringUtils.isNotEmpty(env.param_tools)) {
