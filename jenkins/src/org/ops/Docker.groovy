@@ -60,7 +60,7 @@ def build() {
             },
             dotnet: {
                 toolMap.get("dotnet").call()
-                return StringUtils.format("dotnet publish -c Release -p:AssemblyName=api {0} -o {0}/build", env.param_project_root)
+                return StringUtils.format("rm -rf {0}/build && dotnet publish -c Release -p:AssemblyName=api {0} -o {0}/build", env.param_project_root)
             },
             shell : {
                 if (StringUtils.isNotEmpty(env.param_tools)) {
