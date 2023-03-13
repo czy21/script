@@ -35,6 +35,7 @@ def build() {
             dotnet: {
                 env.DOTNET_HOME = "${tool 'net7.0-linux-64'}"
                 env.DOTNET_SYSTEM_GLOBALIZATION_INVARIANT = 1
+                env.DOTNET_CLI_TELEMETRY_OPTOUT = 1
                 env.PATH = "${DOTNET_HOME}:${PATH}"
             }
     ]
