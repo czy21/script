@@ -17,24 +17,28 @@ def build() {
     env.param_release_version = StringUtils.defaultIfEmpty(env.param_release_version, params.param_branch)
 
     def toolMap = [
-            java: {
+            java  : {
                 env.JAVA_HOME = "${tool 'jdk-17'}"
                 env.PATH = "${JAVA_HOME}/bin:${PATH}"
             },
-            go  : {
+            go    : {
                 env.GO_HOME = "${tool 'go-v1.20'}"
                 env.GOPROXY = env.param_go_proxy
                 env.GOSUMDB = "off"
                 env.CGO_ENABLED = "0"
                 env.PATH = "${GO_HOME}/bin:${PATH}"
             },
-            web : {
+            web   : {
                 env.NODEJS_HOME = "${tool 'node-v18.14.0'}"
                 env.PATH = "${NODEJS_HOME}/bin:${PATH}"
+            },
+            dotnet: {
+                env.DOTNET_HOME = "${tool 'net7.0-linux-64'}"
+                env.PATH = "${DOTNET_HOME}/bin:${PATH}"
             }
     ]
     def cmdMap = [
-            java : {
+            java  : {
                 toolMap.get("java").call()
                 return StringUtils.format(
                         "chmod +x {0}/gradlew && {0}/gradlew --init-script {2} --build-file {0}/build.gradle {3} -x test --refresh-dependencies",
@@ -44,16 +48,20 @@ def build() {
                         ["clean", "build"].collect { t -> StringUtils.join(":", env.param_project_module, t) }.join(" ")
                 )
             },
-            go   : {
+            go    : {
                 toolMap.get("go").call()
                 return StringUtils.format("cd {0};go build -o build main.go;", env.param_project_context)
             },
-            web  : {
+            web   : {
                 toolMap.get("web").call()
                 yarn_cmd = StringUtils.format("yarn --cwd {0} --registry {1}", env.param_project_context, env.param_npm_repo)
                 return StringUtils.format("{0} install --no-lockfile --update-checksums && {0} --ignore-engines build", yarn_cmd)
             },
-            shell: {
+            dotnet: {
+                toolMap.get("dotnet").call()
+                return StringUtils.format("dotnet publish -r linux-x64 -p:PublishSingleFile=true --self-contained false {0} -o {0}/build", env.param_project_root)
+            },
+            shell : {
                 if (StringUtils.isNotEmpty(env.param_tools)) {
                     env.param_tools.split(",").each { toolMap.get(it).call() }
                 }
