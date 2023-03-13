@@ -1,3 +1,3 @@
 #!/bin/bash
 
-dotnet -jar ${DLL}
+dotnet ${DLL}
