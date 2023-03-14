@@ -1,0 +1,27 @@
+version: "3.9"
+
+x-app-common: &app-common
+  image: cassandra:{{ param_db_cassandra_version }}
+
+x-traefik-cassandra-label: &traefik-cassandra-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_project_name }}.rule: Host(`{{ param_db_cassandra_host }}`)
+  traefik.http.routers.{{ param_role_project_name }}.service: {{ param_role_project_name }}
+  traefik.http.services.{{ param_role_project_name }}.loadbalancer.server.port: 7000
+
+services:
+  {%- for i in range(1,param_db_cassandra_cluster_replicas | int + 1) %}
+    {%- set node_name = '-'.join([param_role_project_name,i|string]) %}
+  {{ node_name }}:
+    <<: *app-common
+    container_name: {{ node_name }}
+    hostname: {{ node_name }}
+    labels:
+      <<: *traefik-cassandra-label
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_project_name }}/data/{{ i }}/:/var/lib/cassandra/
+    {%- if node_name != param_db_cassandra_first_node_name %}
+    environment:
+      CASSANDRA_SEEDS: {{ param_db_cassandra_first_node_name }}
+    {%- endif %}
+  {%- endfor %}

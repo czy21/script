@@ -1,0 +1,14 @@
+version: "3.9"
+
+services:
+
+  jaeger-collector:
+    image: jaegertracing/jaeger-collector:1.42.0
+    pull_policy: always
+    container_name: jaeger-collector
+    environment:
+      SPAN_STORAGE_TYPE: elasticsearch
+      ES_SERVER_URLS: http://{{ param_db_es_host }}:{{ param_db_es_port }}
+      ES_USERNAME: "{{ param_db_es_username }}"
+      ES_PASSWORD: "{{ param_db_es_password }}"
+    restart: always
