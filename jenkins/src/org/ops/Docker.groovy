@@ -40,8 +40,9 @@ def build() {
             dotnet: {
                 sdkMap.get("dotnet").call()
                 return StringUtils.format(
-                        "rm -rf {0}/build && dotnet publish -c Release -p:PublishSingleFile=true --self-contained false {0} -o {0}/build",
-                        env.param_project_root
+                        "rm -rf {0}/build && dotnet restore --configfile {1} && dotnet publish -c Release -p:PublishSingleFile=true --self-contained false {0} -o {0}/build",
+                        env.param_project_root,
+                        PathUtils.ofPath("${env.WORKSPACE}", ".jenkins/nuget.config")
                 )
             },
             shell : {
@@ -56,6 +57,7 @@ def build() {
     env.DOCKER_HOME = "${tool 'docker'}"
     configFileProvider([
             configFile(fileId: "init.gradle", targetLocation: '.jenkins/init.gradle'),
+            configFile(fileId: "nuget.config", targetLocation: '.jenkins/nuget.config'),
             configFile(fileId: "docker-config", targetLocation: '.jenkins/docker/config.json')
     ]) {
         docker_image_tag = "${env.param_release_name}:${env.param_release_version}"
