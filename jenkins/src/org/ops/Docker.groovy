@@ -40,7 +40,7 @@ def build() {
             dotnet: {
                 sdkMap.get("dotnet").call()
                 return StringUtils.format(
-                        "rm -rf {0}/build && dotnet publish --configfile {1} -c Release -p:PublishSingleFile=true --self-contained false {0} -o {0}/build",
+                        "rm -rf {0}/build && dotnet publish --configfile {1} -c Release -p:AssemblyName=api,PublishSingleFile=true --self-contained false {0} -o {0}/build",
                         env.param_project_root,
                         PathUtils.ofPath("${env.WORKSPACE}", ".jenkins/nuget.config")
                 )
