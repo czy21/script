@@ -62,7 +62,8 @@ def build() {
                 toolMap.get("dotnet").call()
                 return StringUtils.format(
                         "rm -rf {0}/build && dotnet publish -c Release -p:AssemblyName=api,PublishSingleFile=true --self-contained false {0} -o {0}/build",
-                        env.param_project_root)
+                        env.param_project_root
+                )
             },
             shell : {
                 if (StringUtils.isNotEmpty(env.param_tools)) {
