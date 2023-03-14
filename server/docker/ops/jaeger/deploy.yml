@@ -1,14 +1,80 @@
 version: "3.9"
 
 services:
+  jaeger-remote-storage:
+    image: jaegertracing/jaeger-remote-storage
+    environment:
+      - SPAN_STORAGE_TYPE=memory
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:17270/ || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+    restart: always
 
   jaeger-collector:
     image: jaegertracing/jaeger-collector:1.42.0
     pull_policy: always
     container_name: jaeger-collector
     environment:
-      SPAN_STORAGE_TYPE: elasticsearch
-      ES_SERVER_URLS: http://{{ param_db_es_host }}:{{ param_db_es_port }}
-      ES_USERNAME: "{{ param_db_es_username }}"
-      ES_PASSWORD: "{{ param_db_es_password }}"
+      SPAN_STORAGE_TYPE: kafka
+      KAFKA_PRODUCER_BROKERS: "{{ param_db_host }}:9092,{{ param_db_host }}:9093"
+    command:
+      - "--collector.otlp.enabled=true"
+      - "--log-level=debug"
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:14269/ || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
     restart: always
+
+  jaeger-ingester:
+    image: jaegertracing/jaeger-ingester
+    command:
+      - "--grpc-storage.server=jaeger-remote-storage:17271"
+      - "--log-level=debug"
+    environment:
+      SPAN_STORAGE_TYPE: grpc-plugin
+      KAFKA_CONSUMER_BROKERS: "{{ param_db_host }}:9092,{{ param_db_host }}:9093"
+    depends_on:
+      jaeger-remote-storage:
+        condition: service_healthy
+      jaeger-collector:
+        condition: service_healthy
+
+  jaeger-agent:
+    image: jaegertracing/jaeger-agent
+    command:
+      - "--reporter.grpc.host-port=jaeger-collector:14250"
+      - "--log-level=debug"
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:14271/ || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+    restart: always
+    depends_on:
+      jaeger-collector:
+        condition: service_healthy
+
+  jaeger-query:
+    image: jaegertracing/jaeger-query
+    command:
+      - "--grpc-storage.server=jaeger-remote-storage:17271"
+      - "--log-level=debug"
+    environment:
+      - SPAN_STORAGE_TYPE=grpc-plugin
+      - JAEGER_AGENT_HOST=jaeger-agent
+    ports:
+      - "16686:16686"
+      - "16687"
+    restart: on-failure
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:16687/ || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+    depends_on:
+      jaeger-remote-storage:
+        condition: service_healthy
