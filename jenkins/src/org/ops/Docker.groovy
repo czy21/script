@@ -45,7 +45,7 @@ def build() {
                         "chmod +x {0}/gradlew && {0}/gradlew --init-script {2} --build-file {0}/build.gradle {3} -x test --refresh-dependencies",
                         env.param_project_root,
                         env.param_gradle_user_home,
-                        PathUtils.ofPath("${env.WORKSPACE}", "$CONFIG_FILE_GRADLE"),
+                        PathUtils.ofPath("${env.WORKSPACE}", "${CONFIG_FILE_GRADLE}"),
                         ["clean", "build"].collect { t -> StringUtils.join(":", env.param_project_module, t) }.join(" ")
                 )
             },
@@ -63,7 +63,7 @@ def build() {
                 return StringUtils.format(
                         "rm -rf {0}/build && dotnet publish --configfile {1} -c Release -p:AssemblyName=api,PublishSingleFile=true --self-contained false {0} -o {0}/build",
                         env.param_project_root,
-                        PathUtils.ofPath("${env.WORKSPACE}", "$CONFIG_FILE_NUGET")
+                        PathUtils.ofPath("${env.WORKSPACE}", "${CONFIG_FILE_NUGET}")
                 )
             },
             shell : {
@@ -73,14 +73,14 @@ def build() {
                 return StringUtils.format("chmod +x {0};{0}", PathUtils.ofPath(env.param_project_root, env.param_project_shell_file))
             }
     ]
-    build_cmd = cmdMap.get(env.param_code_type).call()
-    common.writeParamToYaml()
     env.DOCKER_HOME = "${tool 'docker'}"
     configFileProvider([
             configFile(fileId: "init.gradle",  variable: 'CONFIG_FILE_GRADLE'),
             configFile(fileId: "nuget.config", variable: 'CONFIG_FILE_NUGET'),
             configFile(fileId: "docker-config", targetLocation: '.jenkins/docker/config.json')
     ]) {
+        build_cmd = cmdMap.get(env.param_code_type).call()
+        common.writeParamToYaml()
         docker_image_tag = "${env.param_release_name}:${env.param_release_version}"
         docker_config_dir = PathUtils.ofPath("${env.WORKSPACE}", ".jenkins/docker/")
         docker_build_cmd = "sudo ${DOCKER_HOME}/bin/docker build --tag ${docker_image_tag} --file ${env.param_docker_file} ${env.param_docker_context} --pull"
