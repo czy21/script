@@ -3,7 +3,7 @@ version: "3.9"
 services:
 
   filebeat:
-    image: elastic/filebeat:8.6.0
+    image: elastic/filebeat:7.17.9
     container_name: filebeat
     privileged: true
     user: root
@@ -12,9 +12,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - {{ param_docker_root }}/containers/:/var/lib/docker/containers:ro
     environment:
-      ELASTICSEARCH_HOSTS: {{ param_db_es_host }}:{{ param_db_es_port }}
-      ELASTICSEARCH_USERNAME: {{ param_db_es_username }}
-      ELASTICSEARCH_PASSWORD: {{ param_db_es_password }}
+      ELASTICSEARCH_HOSTS: "{{ param_db_es_host }}:{{ param_db_es_port }}"
+      ELASTICSEARCH_USERNAME: "{{ param_db_es_username }}"
+      ELASTICSEARCH_PASSWORD: "{{ param_db_es_password }}"
     restart: always
-
-
