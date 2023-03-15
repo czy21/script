@@ -21,7 +21,7 @@ services:
     environment:
       TZ: Asia/Shanghai
       MYSQL_ALLOW_EMPTY_PASSWORD: 0
-      MYSQL_ROOT_PASSWORD: {{ param_db_mysql_password }}
+      MYSQL_ROOT_PASSWORD: "{{ param_db_mysql_password }}"
     restart: always
 
   mysql-exporter-{{ param_db_mysql_port }}:
