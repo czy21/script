@@ -11,8 +11,7 @@ def writeParamToYaml() {
             param.put(k, null)
         }
     }
-    param = CollectionUtils.sortMapByKey(param)
-    writeYaml file: '.jenkins/param.yaml', data: param, charset: 'UTF-8', overwrite: true
+    writeYaml file: '.jenkins/param.yaml', data: CollectionUtils.sortMapByKey(param), charset: 'UTF-8', overwrite: true
 }
 
 return this
