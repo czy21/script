@@ -73,8 +73,6 @@ def build() {
                 return StringUtils.format("chmod +x {0};{0}", PathUtils.ofPath(env.param_project_root, env.param_project_shell_file))
             }
     ]
-    env.DOCKER_HOME = "${tool 'docker'}"
-    docker_cli="${DOCKER_HOME}/bin/docker"
     configFileProvider([
             configFile(fileId: "gradle.config",  variable: 'CONFIG_FILE_GRADLE'),
             configFile(fileId: "nuget.config",   variable: 'CONFIG_FILE_NUGET'),
@@ -82,6 +80,8 @@ def build() {
     ]) {
         build_cmd = cmdMap.get(env.param_code_type).call()
         common.writeParamToYaml()
+        env.DOCKER_HOME = "${tool 'docker'}"
+        docker_cli="${DOCKER_HOME}/bin/docker"
         docker_config_dir = PathUtils.ofPath("${env.WORKSPACE}", ".jenkins/docker/")
         docker_image_tag = "${env.param_release_name}:${env.param_release_version}"
         docker_build_cmd = "sudo ${docker_cli} build --tag ${docker_image_tag} --file ${env.param_docker_file} ${env.param_docker_context} --pull"
