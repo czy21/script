@@ -1,80 +1,58 @@
 version: "3.9"
 
+x-db-common: &db-common
+  SPAN_STORAGE_TYPE: elasticsearch
+  ES_SERVER_URLS: http://{{ param_db_es_host }}:{{ param_db_es_port }}
+  ES_USERNAME: "{{ param_db_es_username }}"
+  ES_PASSWORD: "{{ param_db_es_password }}"
+
+x-traefik-collector-label: &traefik-collector-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}-collector.rule: Host(`jaeger-collector.cluster.com`)
+  traefik.http.routers.{{ param_role_name }}-collector.service: {{ param_role_name }}-collector
+  traefik.http.services.{{ param_role_name }}-collector.loadbalancer.server.port: 14250
+
+x-traefik-query-label: &traefik-query-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}-query.rule: Host(`jaeger-query.cluster.com`)
+  traefik.http.routers.{{ param_role_name }}-query.service: {{ param_role_name }}-query
+  traefik.http.services.{{ param_role_name }}-query.loadbalancer.server.port: 16686
+
 services:
-  jaeger-remote-storage:
-    image: jaegertracing/jaeger-remote-storage
-    environment:
-      - SPAN_STORAGE_TYPE=memory
-    healthcheck:
-      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:17270/ || exit 1"]
-      interval: 5s
-      timeout: 5s
-      retries: 3
-    restart: always
 
-  jaeger-collector:
-    image: jaegertracing/jaeger-collector:1.42.0
-    pull_policy: always
-    container_name: jaeger-collector
+  {% for i in range(1,param_ops_jaeger_cluster_collector_replicas | int+1) %}
+  jaeger-collector-{{ i }}:
+    image: jaegertracing/jaeger-collector:{{ param_ops_jaeger_version }}
+    container_name: jaeger-collector-{{ i }}
+    hostname: jaeger-collector-{{ i }}
+    labels:
+      <<: *traefik-collector-label
+    expose:
+      - "14250"
     environment:
-      SPAN_STORAGE_TYPE: kafka
-      KAFKA_PRODUCER_BROKERS: "{{ param_db_host }}:9092,{{ param_db_host }}:9093"
-    command:
-      - "--collector.otlp.enabled=true"
-      - "--log-level=debug"
-    healthcheck:
-      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:14269/ || exit 1"]
-      interval: 5s
-      timeout: 5s
-      retries: 3
+      <<: *db-common
     restart: always
-
-  jaeger-ingester:
-    image: jaegertracing/jaeger-ingester
-    command:
-      - "--grpc-storage.server=jaeger-remote-storage:17271"
-      - "--log-level=debug"
-    environment:
-      SPAN_STORAGE_TYPE: grpc-plugin
-      KAFKA_CONSUMER_BROKERS: "{{ param_db_host }}:9092,{{ param_db_host }}:9093"
-    depends_on:
-      jaeger-remote-storage:
-        condition: service_healthy
-      jaeger-collector:
-        condition: service_healthy
+  {% endfor %}
 
   jaeger-agent:
-    image: jaegertracing/jaeger-agent
-    command:
-      - "--reporter.grpc.host-port=jaeger-collector:14250"
-      - "--log-level=debug"
-    healthcheck:
-      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:14271/ || exit 1"]
-      interval: 5s
-      timeout: 5s
-      retries: 3
+    image: jaegertracing/jaeger-agent:{{ param_ops_jaeger_version }}
+    pull_policy: always
+    container_name: jaeger-agent
+    ports:
+      - "5778:5778"
+      - "6831:6831/udp"
+    environment:
+      REPORTER_GRPC_HOST_PORT: jaeger-collector.cluster.com:80
     restart: always
-    depends_on:
-      jaeger-collector:
-        condition: service_healthy
 
   jaeger-query:
-    image: jaegertracing/jaeger-query
-    command:
-      - "--grpc-storage.server=jaeger-remote-storage:17271"
-      - "--log-level=debug"
+    image: jaegertracing/jaeger-query:{{ param_ops_jaeger_version }}
+    pull_policy: always
+    container_name: jaeger-query
+    labels:
+      <<: *traefik-query-label
+    expose:
+      - "16686"
     environment:
-      - SPAN_STORAGE_TYPE=grpc-plugin
-      - JAEGER_AGENT_HOST=jaeger-agent
-    ports:
-      - "16686:16686"
-      - "16687"
-    restart: on-failure
-    healthcheck:
-      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:16687/ || exit 1"]
-      interval: 5s
-      timeout: 5s
-      retries: 3
-    depends_on:
-      jaeger-remote-storage:
-        condition: service_healthy
+      <<: *db-common
+    restart: always

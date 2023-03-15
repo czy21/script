@@ -29,3 +29,8 @@ entryPoints:
 metrics:
   prometheus:
     entryPoint: metrics
+
+#tracing:
+#  jaeger:
+#    samplingServerURL: http://jaeger-agent.cluster.com:5778/sampling
+#    localAgentHostPort: jaeger-agent.cluster.com:6831
