@@ -1,3 +1,8 @@
 static void main(String[] args) {
-    println("1,2,3,4".split(","))
+    def a=[
+            java:{
+                println("aaa")
+            }
+    ]
+    a.get("java").call()
 }
