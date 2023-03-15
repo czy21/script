@@ -79,9 +79,9 @@ def build() {
             configFile(fileId: "docker.config", targetLocation: '.jenkins/docker/config.json')
     ]) {
         build_cmd = cmdMap.get(env.param_code_type).call()
-        common.writeParamToYaml()
         env.DOCKER_HOME = "${tool 'docker'}"
         docker_cli="${DOCKER_HOME}/bin/docker"
+        common.writeParamToYaml()
         docker_config_dir = PathUtils.ofPath("${env.WORKSPACE}", ".jenkins/docker/")
         docker_image_tag = "${env.param_release_name}:${env.param_release_version}"
         docker_build_cmd = "sudo ${docker_cli} build --tag ${docker_image_tag} --file ${env.param_docker_file} ${env.param_docker_context} --pull"
