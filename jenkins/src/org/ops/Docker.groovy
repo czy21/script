@@ -77,7 +77,7 @@ def build() {
     configFileProvider([
             configFile(fileId: "init.gradle",  variable: 'CONFIG_FILE_GRADLE'),
             configFile(fileId: "nuget.config", variable: 'CONFIG_FILE_NUGET'),
-            configFile(fileId: "docker-config", targetLocation: '.jenkins/docker/config.json')
+            configFile(fileId: "docker.config", targetLocation: '.jenkins/docker/config.json')
     ]) {
         build_cmd = cmdMap.get(env.param_code_type).call()
         common.writeParamToYaml()
