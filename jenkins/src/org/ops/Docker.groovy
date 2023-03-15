@@ -16,7 +16,28 @@ def build() {
             StringUtils.defaultIfEmpty(env.param_release_name, StringUtils.join("-", env.param_project_name, env.param_project_module))
     )
     env.param_release_version = StringUtils.defaultIfEmpty(env.param_release_version, params.param_branch)
-    def sdkMap = common.getSDKMap()
+    def sdkMap = [
+            java  : {
+                env.JAVA_HOME = "${tool 'jdk-17'}"
+                env.PATH = "${JAVA_HOME}/bin:${PATH}"
+            },
+            go    : {
+                env.GO_HOME = "${tool 'go-v1.20'}"
+                env.GOPROXY = env.param_go_proxy
+                env.GOSUMDB = "off"
+                env.CGO_ENABLED = "0"
+                env.PATH = "${GO_HOME}/bin:${PATH}"
+            },
+            web   : {
+                env.NODEJS_HOME = "${tool 'node-v18.14.0'}"
+                env.PATH = "${NODEJS_HOME}/bin:${PATH}"
+            },
+            dotnet: {
+                env.DOTNET_HOME = "${tool 'net7.0-linux-64'}"
+                env.DOTNET_SYSTEM_GLOBALIZATION_INVARIANT = 1
+                env.PATH = "${DOTNET_HOME}:${PATH}"
+            }
+    ]
     def cmdMap = [
             java  : {
                 sdkMap.get("java").call()
