@@ -45,7 +45,7 @@ def build() {
                         "chmod +x {0}/gradlew && {0}/gradlew --init-script {2} --build-file {0}/build.gradle {3} -x test --refresh-dependencies",
                         env.param_project_root,
                         env.param_gradle_user_home,
-                        PathUtils.ofPath("${env.WORKSPACE}", "${CONFIG_FILE_GRADLE}"),
+                        PathUtils.ofPath("${env.WORKSPACE}", "$CONFIG_FILE_GRADLE"),
                         ["clean", "build"].collect { t -> StringUtils.join(":", env.param_project_module, t) }.join(" ")
                 )
             },
@@ -63,7 +63,7 @@ def build() {
                 return StringUtils.format(
                         "rm -rf {0}/build && dotnet publish --configfile {1} -c Release -p:AssemblyName=api,PublishSingleFile=true --self-contained false {0} -o {0}/build",
                         env.param_project_root,
-                        PathUtils.ofPath("${env.WORKSPACE}", "${CONFIG_FILE_NUGET}")
+                        PathUtils.ofPath("${env.WORKSPACE}", "$CONFIG_FILE_NUGET")
                 )
             },
             shell : {
