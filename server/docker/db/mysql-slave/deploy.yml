@@ -21,13 +21,13 @@ services:
     environment:
       TZ: Asia/Shanghai
       MYSQL_ALLOW_EMPTY_PASSWORD: 0
-      MYSQL_ROOT_PASSWORD: {{ param_db_mysql_password }}
+      MYSQL_ROOT_PASSWORD: "{{ param_db_mysql_password }}"
     restart: always
 
   mysql-slave-exporter-{{ param_db_mysql_port }}:
     image: prom/mysqld-exporter
     container_name: mysql-slave-exporter-{{ param_db_mysql_port }}
     environment:
-      DATA_SOURCE_NAME: "{{ param_db_mysql_username }}:{{ param_db_mysql_password }}@(mysql:{{ param_db_mysql_port }})/"
+      DATA_SOURCE_NAME: "root:{{ param_db_mysql_password }}@(mysql-slave:3306)/"
     restart: always
 
