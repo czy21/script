@@ -4,7 +4,7 @@ package org.ops.util
 import java.text.MessageFormat
 
 static def isNull(String str) {
-    return str == null || "null".equals(str)
+    return str == null || "null" == str
 }
 
 static def isNotNull(String str) {
