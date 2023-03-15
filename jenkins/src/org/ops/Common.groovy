@@ -6,12 +6,14 @@ import org.ops.util.StringUtils
 
 def writeParamToYaml() {
     Map<String, Object> param = readProperties text: sh(script: 'env | grep \'^param_\'', returnStdout: true).trim()
-    param.each {
-        if (it.getValue() in String && StringUtils.isNull(it.getValue() as String)) {
-            param.put(it.getKey(), null)
+    param.each { k, v ->
+        if (v in String && StringUtils.isNull(v as String)) {
+            param.put(k, null)
         }
+        return
     }
-    writeYaml file: '.jenkins/param.yaml', data: CollectionUtils.sortMapByKey(param), charset: 'UTF-8', overwrite: true
+    param = CollectionUtils.sortMapByKey(param)
+    writeYaml file: '.jenkins/param.yaml', data: param, charset: 'UTF-8', overwrite: true
 }
 
 return this
