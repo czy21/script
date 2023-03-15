@@ -1,7 +1,7 @@
 static void main(String[] args) {
-    def a=[
-            java:{
-                println("aaa")
+    def a = [
+            java: {
+                
             }
     ]
     a.get("java").call()
