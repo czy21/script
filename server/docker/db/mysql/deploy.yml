@@ -16,14 +16,8 @@ services:
              --character-set-server=utf8mb4
              --collation-server=utf8mb4_unicode_ci
              --max_connections=10000
-             --log-bin=mysql-bin
-             --binlog-ignore-db=sys
-             --binlog-ignore-db=mysql
-             --binlog-ignore-db=information_schema
-             --binlog-ignore-db=performance_schema
-             --binlog_format=STATEMENT
-             --expire_logs_days=7
              --transaction-isolation=READ-COMMITTED
+             --skip-log-bin
     environment:
       TZ: Asia/Shanghai
       MYSQL_ALLOW_EMPTY_PASSWORD: 0
