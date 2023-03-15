@@ -23,6 +23,7 @@ services:
              --binlog-ignore-db=performance_schema
              --binlog_format=STATEMENT
              --expire_logs_days=7
+             --transaction-isolation=READ-COMMITTED
     environment:
       TZ: Asia/Shanghai
       MYSQL_ALLOW_EMPTY_PASSWORD: 0

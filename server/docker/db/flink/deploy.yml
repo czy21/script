@@ -35,6 +35,7 @@ services:
         jobmanager.archive.fs.dir: file:///data/completed-jobs
         web.upload.dir: /data/jar
     command: jobmanager
+    restart: always
 
   {% for i in range(1,param_bd_flink_cluster_tmr_replicas | int+1) %}
   flink-tmr-{{i}}:
@@ -48,6 +49,7 @@ services:
         jobmanager.rpc.address: flink-jmr
         parallelism.default: 2
     command: taskmanager
+    restart: always
   {% endfor %}
 
   flink-his:
@@ -66,6 +68,7 @@ services:
         historyserver.archive.fs.dir: file:///data/completed-jobs
         historyserver.archive.fs.refresh-interval: 10000
     command: history-server
+    restart: always
 
 
 
