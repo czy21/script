@@ -1,6 +1,6 @@
 plugins {
     id 'groovy'
-    id 'io.spring.dependency-management' version "1.0.11.RELEASE"
+    id 'io.spring.dependency-management' version "1.1.0"
 }
 
 group 'org.ops'
@@ -14,10 +14,10 @@ repositories {
 
 dependencyManagement {
     imports {
-        mavenBom "io.jenkins.tools.bom:bom-2.346.x:1451.v15f1fdb_772a_f"
+        mavenBom "io.jenkins.tools.bom:bom-2.387.x:1887.vda_d0ddb_c15c4"
     }
     dependencies {
-        dependency "org.apache.groovy:groovy:4.0.3"
+        dependency "org.apache.groovy:groovy:4.0.10"
     }
 }
 
