@@ -15,6 +15,5 @@ services:
       <<: *traefik-label
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/appsettings.json:/app/appsettings.json
-      - {{ param_docker_data }}/{{ param_role_name }}/data/:/app/data
-    environment:
-      APP_CONF: /app/conf
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/data/
+    restart: always
