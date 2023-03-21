@@ -1,6 +1,5 @@
 version: "3.9"
 
-
 services:
   {% for i in range(1,param_mq_kafka_cluster_replicas | int + 1) %}
     {% set j=i-1 %}
