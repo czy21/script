@@ -1,3 +1,3 @@
 #!/bin/bash
 
-${API_FILE}
+dotnet ${API_FILE}
