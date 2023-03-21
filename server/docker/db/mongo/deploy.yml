@@ -3,7 +3,7 @@ version: "3.9"
 services:
 
   mongo:
-    image: mongo:4.4.6
+    image: mongo:4.4.19
     container_name: mongo
     privileged: true
     user: root
@@ -14,8 +14,6 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/:/data/configdb/
     environment:
       TZ: Asia/Shanghai
-      MONGO_INITDB_ROOT_USERNAME: {{ param_db_mongo_username }}
-      MONGO_INITDB_ROOT_PASSWORD: {{ param_db_mongo_password }}
+      MONGO_INITDB_ROOT_USERNAME: "{{ param_db_mongo_username }}"
+      MONGO_INITDB_ROOT_PASSWORD: "{{ param_db_mongo_password }}"
     restart: always
-
-
