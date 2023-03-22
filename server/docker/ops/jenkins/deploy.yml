@@ -17,7 +17,6 @@ services:
     labels:
       <<: *traefik-label
     ports:
-      - "8091:8080"
       - "50000:50000"
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/var/jenkins_home/
