@@ -9,7 +9,7 @@ x-traefik-label: &traefik-label
 services:
 
   freeipa:
-    image: freeipa/freeipa-server:centos-9-stream-4.10.0
+    image: freeipa/freeipa-server:centos-9-stream-4.10.1
     pull_policy: always
     container_name: freeipa
     hostname: freeipa.cluster.com
