@@ -10,11 +10,11 @@ def call() {
             param_project_name = "${env.param_project_name}"
             param_project_module = "${env.param_project_module}"
             param_git_repository_url = "${env.param_git_repository_url}"
-            param_git_credential_id = "${env.param_git_credential_id}"
             param_global_env_file_id = "${env.param_global_env_file_id}"
             param_code_type = "${env.param_code_type}"
         }
         parameters {
+            credentials credentialType: 'com.cloudbees.plugins.credentials.common.StandardCredentials', defaultValue: 'opsor', name: 'param_git_credential_id', required: false
             gitParameter branchFilter: 'origin/(.*)', name: 'param_branch', type: 'PT_BRANCH', defaultValue: 'master', useRepository: "${env.param_git_repository_url}"
         }
         stages {
@@ -29,7 +29,7 @@ def call() {
                                           [$class: 'SubmoduleOption', disableSubmodules: false, parentCredentials: true, recursiveSubmodules: true, reference: '', trackingSubmodules: false]
                                   ],
                                   userRemoteConfigs: [
-                                          [credentialsId: "${env.param_git_credential_id}", url: "${env.param_git_repository_url}"]
+                                          [credentialsId: "${params.param_git_credential_id}", url: "${env.param_git_repository_url}"]
                                   ]
                         ])
                     }
