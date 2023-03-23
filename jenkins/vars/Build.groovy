@@ -13,8 +13,12 @@ def call() {
             param_global_env_file_id = "${env.param_global_env_file_id}"
             param_code_type = "${env.param_code_type}"
         }
+        input {
+            parameters {
+                credentials credentialType: 'com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey', defaultValue: 'opsor', name: 'param_git_ssh_private_id', required: false
+            }
+        }
         parameters {
-            credentials credentialType: 'com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey', defaultValue: 'opsor', name: 'param_git_ssh_private_id', required: false
             gitParameter branchFilter: 'origin/(.*)', name: 'param_git_branch', type: 'PT_BRANCH', defaultValue: 'master', useRepository: "${env.param_git_repository_url}"
         }
         stages {
