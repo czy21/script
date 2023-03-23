@@ -15,7 +15,7 @@ def build() {
             env.param_registry_dir,
             StringUtils.defaultIfEmpty(env.param_release_name, StringUtils.join("-", env.param_project_name, env.param_project_module))
     )
-    env.param_release_version = StringUtils.defaultIfEmpty(env.param_release_version, params.param_branch)
+    env.param_release_version = StringUtils.defaultIfEmpty(env.param_release_version, params.param_git_branch)
     def sdkMap = [
             java  : {
                 env.JAVA_HOME = "${tool 'jdk-17'}"

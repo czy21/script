@@ -14,8 +14,8 @@ def call() {
             param_code_type = "${env.param_code_type}"
         }
         parameters {
-            credentials credentialType: 'com.cloudbees.plugins.credentials.common.StandardCredentials', defaultValue: 'opsor', name: 'param_git_credential_id', required: false
-            gitParameter branchFilter: 'origin/(.*)', name: 'param_branch', type: 'PT_BRANCH', defaultValue: 'master', useRepository: "${env.param_git_repository_url}"
+            credentials credentialType: 'com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey', defaultValue: 'opsor', name: 'param_git_ssh_private_id', required: false
+            gitParameter branchFilter: 'origin/(.*)', name: 'param_git_branch', type: 'PT_BRANCH', defaultValue: 'master', useRepository: "${env.param_git_repository_url}"
         }
         stages {
             stage('clone') {
@@ -23,13 +23,13 @@ def call() {
                     script {
                         checkout([$class           : 'GitSCM',
                                   branches         : [
-                                          [name: "${params.param_branch}"]
+                                          [name: "${params.param_git_branch}"]
                                   ],
                                   extensions       : [
                                           [$class: 'SubmoduleOption', disableSubmodules: false, parentCredentials: true, recursiveSubmodules: true, reference: '', trackingSubmodules: false]
                                   ],
                                   userRemoteConfigs: [
-                                          [credentialsId: "${params.param_git_credential_id}", url: "${env.param_git_repository_url}"]
+                                          [credentialsId: "${params.param_git_ssh_private_id}", url: "${env.param_git_repository_url}"]
                                   ]
                         ])
                     }
