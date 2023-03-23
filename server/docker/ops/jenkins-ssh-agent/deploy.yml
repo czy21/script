@@ -15,5 +15,5 @@ services:
       - /var/run/:/var/run/
       - /tmp/:/tmp/
     environment:
-      JENKINS_AGENT_SSH_PUBKEY: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDaoAT1rbc0xsUDM26qon2ykGOTsSlL65rSiDQtcoWs5mdPRvaLsA3rrCEQ+nbaTR+0wIfw49JQ/bFYCjXiakYMjFLjuns/6kPmQEIsvGVU64HqvfRwZmr08OVM26nt64rfxcr3aRWZYs0Rs8DtZ6xerb7z+lqUWwhCEQIwXiKjp/PpcxwXtQUtzO5ZhjBHtzriXRW6C9qLHN9z1+UiPyJH97ieBIR6FfzPHArcR6V4bKaVVWbQu2ROGevvCgs0OMbmOMm6Rb1DGKDt7I7tWSUHimD2PR5b/QpiW9d4eX+HmXsMUceIOj3BJU2X8WsP+YDVFFPHmXlJyvMHEErIUTj/r743C9adcBrSOBNIhNStWgEMIVoCpmvYswZlVm7a+4IPN/9RuyG7xceo2xvFPVGIhusydFK1tvqYS59P8kkMXINXK0JXfetmIKPNzBUrIqPYusupSIPHiFE+KVf0EqRvnf/ArOhnK340oR3wmrEZc5RVXMtepB4FRIQBSW0i9H0= meditrusthealth\zhaoyu.chen@SHMX-DZ2109-139
+      JENKINS_AGENT_SSH_PUBKEY: 
     restart: always
