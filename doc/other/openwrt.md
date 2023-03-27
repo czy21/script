@@ -70,6 +70,6 @@ luci-app-ocserv         # OpenConnect VPN服务
 luci-app-openwisp       # AP管理
 luci-app-opkg           
 luci-app-radicale2      # 日历 联系人同步
-luci-app-ksmbd          # smb server 
+luci-app-ksmbd          # smb server
 luci-app-nfs            # nfs server
 ```

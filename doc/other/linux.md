@@ -5,6 +5,15 @@ sudo apt install xrdp
 
 # pull
 rsync --archive --delete --progress --verbose rsync://<username>@<host>:<remote_path> <local_path>
+```
+# Mount
+```shell
+# get device name
+fdisk -l
+# get device uuid
+blkid /dev/sdb1
+# disk in /etc/fstab
+/dev/disk/by-uuid/[uuid] /volume1 ext4 defaults 0 0
 
 # show nfs
 showmount -e [host]
