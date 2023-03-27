@@ -1,7 +1,6 @@
 ---
 param_remote_path: "{{ inventory_dir|basename }}"
 param_remote_role_path: "{{ (param_remote_path,param_role_name) | path_join }}"
-param_ssh_public_key: "" # ssh-rsa XXX
 
 param_iface: "{{ ansible_default_ipv4.interface }}"
 param_ansible_host_ipv4s: "{{ ansible_play_hosts | map('extract', hostvars, 'ansible_' + param_iface) | map(attribute='ipv4') | map(attribute='address') | unique }}"
