@@ -31,6 +31,3 @@ services:
       MYSQL_SERVICE_PASSWORD: "{{ param_db_mysql_password }}"
       MYSQL_SERVICE_DB_PARAM: characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&serverTimezone=UTC
     restart: always
-
-
-
