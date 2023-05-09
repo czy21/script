@@ -1,22 +1,3 @@
-{{/*---*/}}
-{{/*apiVersion: v1*/}}
-{{/*kind: Service*/}}
-{{/*metadata:*/}}
-{{/*  name: {{ .Values.param_app_name }}*/}}
-{{/*  namespace: {{ .Release.Namespace }}*/}}
-{{/*  annotations:*/}}
-{{/*    helm.sh/revision: "{{ .Release.Revision }}"*/}}
-{{/*spec:*/}}
-{{/*  selector:*/}}
-{{/*    app: {{ .Values.param_app_name }}*/}}
-{{/*  type: ClusterIP*/}}
-{{/*  ports:*/}}
-{{/*    - name: http*/}}
-{{/*      port: 80*/}}
-{{/*      targetPort: 80*/}}
-{{/*    - name: https*/}}
-{{/*      port: 443*/}}
-{{/*      targetPort: 443*/}}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -43,13 +24,6 @@ spec:
         app: {{ .Values.param_app_name }}
         version: {{ .Values.param_app_version }}
     spec:
-      volumes:
-      - name: nginx-conf
-        configMap:
-          name: {{ .Values.param_app_name }}
-          items:
-          - key: nginx.conf
-            path: nginx.conf
       containers:
       - name: {{ .Values.param_app_name }}
         image: "{{ .Values.param_registry_repo }}/{{ .Values.param_registry_dir }}/{{ .Values.param_image_name }}:{{ .Values.param_image_version }}"
@@ -62,7 +36,3 @@ spec:
         env:
           - name: TZ
             value: Asia/Shanghai
-        volumeMounts:
-          - name: nginx-conf
-            mountPath: /etc/nginx/nginx.conf
-            subPath: nginx.conf
