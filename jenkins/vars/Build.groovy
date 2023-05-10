@@ -50,6 +50,13 @@ def call() {
                     }
                 }
             }
+            stage('docker-build') {
+                steps {
+                    script {
+                        new Docker().dockerBuild()
+                    }
+                }
+            }
         }
     }
 }
