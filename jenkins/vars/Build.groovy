@@ -50,10 +50,20 @@ def call() {
                     }
                 }
             }
-            stage('docker-build') {
+            stage('dockerBuild') {
                 steps {
                     script {
                         new Docker().dockerBuild()
+                    }
+                }
+            }
+            stage('dockerDeploy') {
+                when {
+                    environment(name: "param_docker_deploy", value: "true")
+                }
+                steps {
+                    script {
+                        sh "echo dockerDeploy t1 "
                     }
                 }
             }
