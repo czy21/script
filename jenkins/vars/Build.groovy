@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 import org.ops.Common
-import org.ops.Docker
+import org.ops.Builder
 import org.ops.util.PathUtils
 
 def call() {
@@ -39,15 +39,15 @@ def call() {
             stage('build') {
                 steps {
                     script {
-                        new Common().loadEnv()
-                        new Docker().build()
+                        new Common().loadParam()
+                        new Builder().build()
                     }
                 }
             }
             stage('dockerBuild') {
                 steps {
                     script {
-                        new Docker().dockerBuild()
+                        new Builder().dockerBuild()
                     }
                 }
             }

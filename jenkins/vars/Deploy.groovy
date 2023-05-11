@@ -23,7 +23,7 @@ def call() {
             stage('deploy') {
                 steps {
                     script {
-                        new Common().loadEnv()
+                        new Common().loadParam()
                         new Kubernetes().deploy()
                     }
                 }
