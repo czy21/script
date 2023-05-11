@@ -1,5 +1,6 @@
 #!/usr/bin/env groovy
 import org.ops.Kubernetes
+import org.ops.Common
 
 def call() {
     pipeline {
@@ -22,14 +23,7 @@ def call() {
             stage('deploy') {
                 steps {
                     script {
-                        configFileProvider([configFile(fileId: "${env.param_global_env_file_id}", variable: 'param')]) {
-                            param = load "${param}"
-                            param.each { k, v ->
-                                if (env.getProperty(k) == null) {
-                                    env.setProperty(k, v)
-                                }
-                            }
-                        }
+                        new Common().loadEnv()
                         new Kubernetes().deploy()
                     }
                 }
