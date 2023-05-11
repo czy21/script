@@ -1,4 +1,6 @@
 #!/usr/bin/env groovy
+import org.ops.Common
+import org.ops.Builder
 import org.ops.Docker
 import org.ops.util.PathUtils
 
@@ -38,32 +40,15 @@ def call() {
             stage('build') {
                 steps {
                     script {
-                        configFileProvider([configFile(fileId: "${env.param_global_env_file_id}", variable: 'param')]) {
-                            param = load "${param}"
-                            param.each { k, v ->
-                                if (env.getProperty(k) == null) {
-                                    env.setProperty(k, v)
-                                }
-                            }
-                        }
-                        new Docker().build()
+                        new Common().loadParam()
+                        new Builder().build()
                     }
                 }
             }
             stage('dockerBuild') {
                 steps {
                     script {
-                        new Docker().dockerBuild()
-                    }
-                }
-            }
-            stage('dockerDeploy') {
-                when {
-                    environment(name: "param_docker_deploy", value: "true")
-                }
-                steps {
-                    script {
-                        sh "echo dockerDeploy t1 "
+                        new Docker().build()
                     }
                 }
             }
