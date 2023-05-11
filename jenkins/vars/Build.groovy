@@ -1,6 +1,7 @@
 #!/usr/bin/env groovy
 import org.ops.Common
 import org.ops.Builder
+import org.ops.Docker
 import org.ops.util.PathUtils
 
 def call() {
@@ -47,7 +48,7 @@ def call() {
             stage('dockerBuild') {
                 steps {
                     script {
-                        new Builder().dockerBuild()
+                        new Docker().build()
                     }
                 }
             }
