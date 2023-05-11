@@ -59,18 +59,21 @@ def build() {
             },
             web   : {
                 sdkMap.get("web").call()
-                yarn_cmd = StringUtils.format("yarn --cwd {0} --registry {1}", env.param_project_context, env.param_npm_repo)
-                cmd = StringUtils.format("{0} install --no-lockfile --update-checksums && {0} --ignore-engines build", yarn_cmd)
+                cmd = StringUtils.format("{0} install --no-lockfile --update-checksums && {0} --ignore-engines build",
+                        StringUtils.format("yarn --cwd {0} --registry {1}", env.param_project_context, env.param_npm_repo)
+                )
                 sh "${cmd}"
             },
             dotnet: {
                 sdkMap.get("dotnet").call()
-                configFileProvider([configFile(fileId: "nuget.config", variable: 'CONFIG_FILE_NUGET')]) {}
-                return StringUtils.format(
-                        "rm -rf {0}/build && dotnet publish --configfile {1} -c Release {0} -o {0}/build",
-                        env.param_project_root,
-                        "${CONFIG_FILE_NUGET}"
-                )
+                configFileProvider([configFile(fileId: "nuget.config", variable: 'CONFIG_FILE_NUGET')]) {
+                    cmd = StringUtils.format(
+                            "rm -rf {0}/build && dotnet publish --configfile {1} -c Release {0} -o {0}/build",
+                            env.param_project_root,
+                            "${CONFIG_FILE_NUGET}"
+                    )
+                    sh "${cmd}"
+                }
             },
             shell : {
                 if (StringUtils.isNotEmpty(env.param_tools)) {
