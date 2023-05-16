@@ -1,0 +1,25 @@
+version: "3.9"
+
+{%- set app_host = "archery.cluster.com" %}
+
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}.rule: Host(`{{ app_host }}`)
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 9123
+
+services:
+
+  archery:
+    image:  hhyo/archery:v1.9.1
+    container_name: archery
+    labels:
+      <<: *traefik-label
+    privileged: true
+    expose:
+      - "9123"
+    user: root
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/data/
+    environment:
+    restart: always
