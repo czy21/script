@@ -41,6 +41,16 @@ def build() {
     def cmdMap = [
             java  : {
                 sdkMap.get("java").call()
+                if ("mvn" == env.param_java_build_tool) {
+                    env.MAVEN_HOME = "${tool 'mvn-3.9'}"
+                    configFileProvider([configFile(fileId: "mvn.config", variable: 'CONFIG_FILE_MVN')]) {
+                        cmd = StringUtils.format(
+                                "mvn clean install -f {0}/pom.xml -s {1} -U -e -Dmaven.test.skip=true",
+                                env.param_project_root,
+                                "${CONFIG_FILE_MVN}")
+                        sh "${cmd}"
+                    }
+                }
                 configFileProvider([configFile(fileId: "gradle.config", variable: 'CONFIG_FILE_GRADLE')]) {
                     cmd = StringUtils.format(
                             "chmod +x {0}/gradlew && {0}/gradlew --init-script {2} --build-file {0}/build.gradle {3} -x test --refresh-dependencies",
