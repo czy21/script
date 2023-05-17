@@ -16,10 +16,15 @@ services:
     labels:
       <<: *traefik-label
     privileged: true
+    ports:
+      - "7443:443"
+      - "7080:80"
     expose:
       - "80"
       - "443"
-    user: root
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/var/lib/rancher
+      - {{ param_docker_data }}/{{ param_role_name }}/log/:/var/log/
     command:
       - --no-cacerts
     restart: always
