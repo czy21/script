@@ -11,7 +11,7 @@ x-traefik-label: &traefik-label
 services:
 
   archery:
-    image:  hhyo/archery:v1.9.1
+    image: hhyo/archery:v1.9.1
     container_name: archery
     labels:
       <<: *traefik-label
@@ -22,4 +22,10 @@ services:
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/data/
     environment:
+      NGINX_PORT: "9123"
+      DEBUG: false
+      DATABASE_URL: mysql://{{ param_db_mysql_username }}:{{ param_db_mysql_password }}@{{ param_db_mysql_host }}:{{ param_db_mysql_port }}/archery
+      CACHE_URL: redis://{{ param_db_redis_host }}:{{ param_db_redis_port }}/0?PASSWORD={{ param_db_redis_password }}
+      CSRF_TRUSTED_ORIGINS: http://127.0.0.1:9123
+      ENABLE_LDAP: false
     restart: always
