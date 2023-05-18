@@ -17,5 +17,5 @@ param_etcd_external_ca_file: "/etc/kubernetes/pki/etcd/ca.crt"
 param_etcd_external_cert_file: "/etc/kubernetes/pki/apiserver-etcd-client.crt"
 param_etcd_external_key_file: "/etc/kubernetes/pki/apiserver-etcd-client.key"
 
-param_helm_version: 3.9.0
+param_helm_version: 3.12.0
 param_velero_version: 1.10.0

@@ -26,7 +26,7 @@
 
 - name: helm install
   shell: |
-    sudo wget -O - https://get.helm.sh/helm-v${{ param_helm_version }}-linux-amd64.tar.gz | sudo tar -zxf - --strip-components 1 -C /usr/local/bin/ linux-amd64/helm
+    sudo wget -O - https://get.helm.sh/helm-v{{ param_helm_version }}-linux-amd64.tar.gz | sudo tar -zxf - --strip-components 1 -C /usr/local/bin/ linux-amd64/helm
     sudo chown root:root /usr/local/bin/helm && sudo chmod +x /usr/local/bin/helm
     sudo ln -sf /usr/local/bin/helm /usr/bin/helm
     helm completion bash | sudo tee /etc/bash_completion.d/helm > /dev/null
