@@ -1,0 +1,9 @@
+rancher:
+  global:
+    cattle:
+      psp:
+        enabled: false
+  hostname: rancher-test.cluster.com
+  bootstrapPassword: {{ param_manage_password }}
+  debug: true
+  # addLocal: false
