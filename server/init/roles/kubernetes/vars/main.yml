@@ -1,6 +1,6 @@
 ---
-param_k8s_version: 1.27.0
-param_crio_version: 1.27.0
+param_k8s_version: 1.25.3
+param_crio_version: 1.25.3
 param_k8s_svc_network_cidr: 10.1.0.0/16
 param_k8s_pod_network_cidr: 10.2.0.0/16
 param_cri_socket: "unix:///var/run/crio/crio.sock" # use docker as cri: unix:///var/run/cri-dockerd.sock
