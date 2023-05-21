@@ -2,7 +2,7 @@
   shell: |
     sudo mkdir -p /etc/containers/
     sudo cat {{ param_remote_role_path }}/crio-registries.conf > /etc/containers/registries.conf
-    curl https://raw.githubusercontent.com/cri-o/cri-o/main/scripts/get | sudo PREFIX=/usr bash -s -- -t v{{ param_crio_version }}
+    curl https://raw.githubusercontent.com/cri-o/cri-o/v{{ param_crio_version }}/scripts/get | sudo PREFIX=/usr bash -s -- -t v{{ param_crio_version }}
     sudo sed -i 's|/usr/local/bin/crio|/usr/bin/crio|g' /usr/lib/systemd/system/crio.service
     sudo cat {{ param_remote_role_path }}/crio.conf > /etc/crio/crio.conf.d/99-custom.conf
     sudo systemctl daemon-reload && sudo systemctl restart crio && sudo systemctl enable crio
