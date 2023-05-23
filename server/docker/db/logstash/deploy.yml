@@ -4,6 +4,7 @@ services:
   logstash:
     image: logstash:7.17.10
     container_name: logstash
+    hostname: logstash
     privileged: true
     user: root
     volumes:
