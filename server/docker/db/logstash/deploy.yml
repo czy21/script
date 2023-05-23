@@ -7,6 +7,8 @@ services:
     privileged: true
     user: root
     volumes:
-      - {{ param_docker_data }}/app/log/:/app/log/
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/usr/share/logstash/data/
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/logstash.yml:/usr/share/logstash/config/logstash.yml
       - {{ param_docker_data }}/{{ param_role_name }}/conf/pipeline/:/usr/share/logstash/pipeline/
+      - {{ param_docker_data }}/app/log/:/app/log/
     restart: always
