@@ -1,0 +1,5 @@
+http.host: "0.0.0.0"
+xpack.monitoring.enabled: true
+xpack.monitoring.elasticsearch.username: {{ param_db_es_username }}
+xpack.monitoring.elasticsearch.password: {{ param_db_es_password }}
+xpack.monitoring.elasticsearch.hosts: [ "http://es-1-1:9200" ]
