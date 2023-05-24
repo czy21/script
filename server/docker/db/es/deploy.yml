@@ -71,6 +71,7 @@ services:
       xpack.security.transport.ssl.certificate: {{ param_db_es_target_cert_path }}/{{ node_name }}/{{ node_name }}.crt
       xpack.security.transport.ssl.key: {{ param_db_es_target_cert_path }}/{{ node_name }}/{{ node_name }}.key
       xpack.security.authc.realms.file.file1.order: 0
+      xpack.security.authc.realms.native.realm1.order: 1
       xpack.monitoring.collection.enabled: true
     volumes:
       - {{ param_docker_data }}/{{ param_role_project_name }}/conf/users:/usr/share/elasticsearch/config/users
