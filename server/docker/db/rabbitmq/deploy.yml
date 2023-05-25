@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   rabbitmq:
-    image: {{ param_registry_url }}/{{ param_registry_dir }}/rabbitmq
+    image: rabbitmq:3.11.16-management-alpine
     container_name: rabbitmq
     privileged: true
     user: root
@@ -12,6 +12,7 @@ services:
     ports:
       - "5672:5672"
     volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/enabled_plugins:/etc/rabbitmq/enabled_plugins
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/var/lib/rabbitmq/
     environment:
       RABBITMQ_DEFAULT_USER: admin
