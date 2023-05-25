@@ -9,6 +9,8 @@ spec:
     additionalConfig: |
       default_user={{ .Values.param_mq_rabbit_username }}
       default_pass={{ .Values.param_mq_rabbit_password }}
+    additionalPlugins:
+      - "rabbitmq_mqtt"
   override:
     service:
       spec:
