@@ -9,8 +9,10 @@ services:
     expose:
       - "5672"
       - "15672"
+      - "1883"
     ports:
       - "5672:5672"
+      - "1883:1883"
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/enabled_plugins:/etc/rabbitmq/enabled_plugins
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/var/lib/rabbitmq/
