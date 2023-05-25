@@ -1,7 +1,7 @@
 ## Cluster Install
 ```shell
 # instann operator
-kubectl apply -f "https://github.com/rabbitmq/cluster-operator/releases/download/v2.0.0/cluster-operator.yml"
+kubectl apply -f "https://github.com/rabbitmq/cluster-operator/releases/download/v2.2.0/cluster-operator.yml"
 
 # get default username
 kubectl -n db get secret rabbitmq-default-user -o jsonpath="{.data.username}" | base64 --decode
