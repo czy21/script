@@ -2,13 +2,15 @@ version: "3.9"
 
 services:
   rabbitmq:
-    image: rabbitmq:3.9.28-management-alpine
+    image: rabbitmq:3.11.16-management-alpine
     container_name: rabbitmq
     privileged: true
     user: root
+    expose:
+      - "5672"
+      - "15672"
     ports:
       - "5672:5672"
-      - "15672:15672"
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/var/lib/rabbitmq/
     environment:
