@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   rabbitmq:
-    image: rabbitmq:3.11.16-management-alpine
+    image: {{ param_registry_url }}/{{ param_registry_dir }}/rabbitmq
     container_name: rabbitmq
     privileged: true
     user: root
