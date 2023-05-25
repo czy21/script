@@ -22,11 +22,11 @@ function upload_exec_py() {
   local ssh_opt="-o StrictHostKeyChecking=no"
   local ssh_cmd="ssh ${ssh_opt} ${host}"
 
-  tar -zcf - --exclude="__pycache__" --exclude="${build_name}" \
+  tar -cf - --exclude="__pycache__" --exclude="${build_name}" \
   -C ${src_path} . \
   -C $(realpath ${utility_path}/../) ./$(basename ${utility_path}) \
   -C $(realpath ${src_path}/../) ./requirements.txt ./env.yaml ./share.py \
-   | ${ssh_cmd} "mkdir -p ${dst_name};tar -zxf - -C ${dst_name}"
+   | ${ssh_cmd} "mkdir -p ${dst_name};tar -xf - -C ${dst_name}"
 
   local args=""
   local cmd=""
