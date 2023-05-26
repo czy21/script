@@ -1,7 +1,7 @@
 ks-installer:
   image:
     repository: {{ param_registry_proxy_url }}/kubesphere/ks-installer
-    tag: v3.3.1
+    tag: v3.3.2
   cc:
     authentication:
       jwtSecret: "{{ param_ks_jwt }}"
