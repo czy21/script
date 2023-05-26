@@ -1,13 +1,14 @@
 ---
-param_k8s_version: 1.25.3
-param_crio_version: 1.25.3
+param_k8s_version: 1.27.0
+param_crio_version: 1.27.0
+param_k8s_pause_version: 3.9
 param_k8s_svc_network_cidr: 10.1.0.0/16
 param_k8s_pod_network_cidr: 10.2.0.0/16
 param_cri_socket: "unix:///var/run/crio/crio.sock" # use docker as cri: unix:///var/run/cri-dockerd.sock
 
 param_k8s_ha_api_server_vip: 192.168.2.30
 param_k8s_ha_api_server_dst_port: 16433
-param_k8s_control_plane_endpoint: "k8s-vip:{{ param_k8s_ha_api_server_dst_port }}" # single master => ""
+param_k8s_control_plane_endpoint: "k8s-vip:{{ param_k8s_ha_api_server_dst_port }}" # multi master: k8s-vip:{{ param_k8s_ha_api_server_dst_port }}
 param_etcd_mode: "local" # local | external
 param_etcd_external_endpoints:
   - "https://192.168.2.31:2379"
