@@ -3,7 +3,9 @@ rancher:
     cattle:
       psp:
         enabled: false
-  hostname: rancher-test.cluster.com
+  hostname: rancher-{{ param_cluster_name }}.cluster.com
   bootstrapPassword: {{ param_manage_password }}
-  debug: true
-  # addLocal: false
+  ingress:
+    ingressClassName: "nginx"
+  tls: external
+  debug: false
