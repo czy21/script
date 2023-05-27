@@ -1,8 +1,4 @@
 rancher:
-  global:
-    cattle:
-      psp:
-        enabled: false
   hostname: rancher-{{ param_cluster_name }}.cluster.com
   bootstrapPassword: {{ param_manage_password }}
   ingress:
