@@ -11,7 +11,7 @@ x-traefik-label: &traefik-label
 services:
 
   rancher:
-    image: rancher/rancher:v2.6.13-head
+    image: rancher/rancher:v2.7-head
     container_name: rancher
     labels:
       <<: *traefik-label
