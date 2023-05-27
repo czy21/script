@@ -1,17 +1,17 @@
 version: "3.9"
 
-{%- set gitea_host = "rancher.cluster.com" %}
+{%- set host = "rancher-test.cluster.com" %}
 
 x-traefik-label: &traefik-label
   traefik.enable: true
-  traefik.http.routers.{{ param_role_name }}.rule: Host(`{{ gitea_host }}`)
+  traefik.http.routers.{{ param_role_name }}.rule: Host(`{{ host }}`)
   traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
   traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 80
 
 services:
 
   rancher:
-    image: rancher/rancher:v2.7-head
+    image: rancher/rancher:v2.6.13-head
     container_name: rancher
     labels:
       <<: *traefik-label
@@ -23,6 +23,8 @@ services:
       - "80"
       - "443"
     volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/cni/:/var/lib/cni/
+      - {{ param_docker_data }}/{{ param_role_name }}/kubelet/:/var/lib/kubelet/
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/var/lib/rancher
       - {{ param_docker_data }}/{{ param_role_name }}/log/:/var/log/
     command:
