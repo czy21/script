@@ -39,12 +39,12 @@ spec:
         helm.sh/revision: "{{ .Release.Revision }}"
     spec:
       volumes:
-        - name: conf
-          configMap:
-            name: {{ .Release.Name }}
         - name: data
           persistentVolumeClaim:
             claimName: {{ .Values.param_data_claim_name }}
+        - name: log
+          persistentVolumeClaim:
+            claimName: {{ .Values.param_log_claim_name }}
       containers:
         - name: {{ .Release.Name }}
           image: {{ .Values.param_registry_repo }}/{{ .Values.param_registry_dir }}/{{ .Release.Name }}:{{ .Values.param_release_version }}
@@ -62,11 +62,12 @@ spec:
             - name: JAVA_OPS
               value: {{ .Values.param_app_args }}
           volumeMounts:
-            - name: conf
-              mountPath: /app/conf/
             - name: data
               mountPath: /app/data/
               subPath: data
+            - name: log
+              mountPath: /app/log/
+              subPath: log
 #          readinessProbe:
 #            httpGet:
 #              path: /actuator/health

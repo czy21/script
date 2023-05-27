@@ -1,3 +1,3 @@
 #!/bin/bash
 
-java ${APP_ARGS} -jar ${JAR} --spring.config.location=file:/app/conf/
+java ${APP_ARGS} -jar ${JAR} --spring.config.additional-location=/app/conf/
