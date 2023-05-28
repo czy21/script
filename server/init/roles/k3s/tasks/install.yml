@@ -1,0 +1,1 @@
+shell: curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server" INSTALL_K3S_SKIP_SELINUX_RPM=true K3S_KUBECONFIG_MODE="644" sh -s - --flannel-backend none --docker
