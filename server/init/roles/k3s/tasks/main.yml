@@ -1,0 +1,5 @@
+- name: k3s
+  become: yes
+  import_tasks: install.yml
+  tags:
+    - 'k3s'
