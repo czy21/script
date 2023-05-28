@@ -32,3 +32,9 @@ REG ADD HKLM\SYSTEM\Setup\LabConfig /v BypassSecureBootCheck /t REG_DWORD /d 1
 # init shift+F10
 OOBE\BYPASSNRO
 ```
+
+```shell
+# powershell active win server 2022 datacenter
+DISM /online /Get-CurrentEdition
+DISM /online /Set-Edition:ServerDatacenter /ProductKey:WX4NM-KYWYW-QJJR4-XV3QB-6VM33 /AcceptEula
+```
