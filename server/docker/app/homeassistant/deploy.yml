@@ -11,3 +11,6 @@ services:
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/config/
     restart: always
+    networks:
+      macvlan10:
+        ipv4_address: 192.168.2.17
