@@ -1,6 +1,6 @@
 networks:
   default:
     name: local
-#  macvlan100:
+#  macvlan10:
 #    external:
-#      name: macvlan100
+#      name: macvlan10
