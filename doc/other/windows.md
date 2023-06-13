@@ -20,7 +20,7 @@ Export-EsxImageProfile -ImageProfile $newImageProfileName -ExportToIso -FilePath
 ```powershell
 # 程序和功能开启 虚拟机平台;windows 子系统
 wsl --list --online # list onine distribution
-wsl --install --distribution ubuntu-20.04
+wsl --install --distribution ubuntu-22.04
 
 # 安装git bash时 使用外部openssh
 ```
