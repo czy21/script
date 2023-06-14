@@ -2,9 +2,8 @@ version: "3.9"
 
 x-traefik-label: &traefik-label
   traefik.enable: true
-  traefik.http.routers.{{ param_role_name }}.rule: Host(`gbc.czy21.com`)
-  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
-  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 5071
+  traefik.http.routers.{{ param_role_name }}-build-cache.service: {{ param_role_name }}-build-cache
+  traefik.http.services.{{ param_role_name }}-build-cache.loadbalancer.server.port: 5071
 
 services:
 

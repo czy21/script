@@ -1,10 +1,7 @@
 version: "3.9"
 
-{%- set host = "rancher-test.czy21.com" %}
-
 x-traefik-label: &traefik-label
   traefik.enable: true
-  traefik.http.routers.{{ param_role_name }}.rule: Host(`{{ host }}`)
   traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
   traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 80
 

@@ -1,10 +1,7 @@
 version: "3.9"
 
-{%- set app_host = "gitlab.czy21.com" %}
-
 x-traefik-label: &traefik-label
   traefik.enable: true
-  traefik.http.routers.{{ param_role_name }}.rule: Host(`{{ app_host }}`)
   traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
   traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 80
 
@@ -27,6 +24,6 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/log/:/var/log/gitlab/
     environment:
       GITLAB_OMNIBUS_CONFIG: |
-        external_url 'http://{{ app_host }}'
+        external_url 'http://gitlab.czy21.com'
       GITLAB_ROOT_PASSWORD: "{{ param_manage_password }}"
     shm_size: 256m

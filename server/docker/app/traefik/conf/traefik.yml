@@ -2,6 +2,7 @@ providers:
   docker:
     endpoint: "unix:///var/run/docker.sock"
     exposedByDefault: false
+    defaultRule: ""
   file:
     directory: /etc/traefik/conf.d/
     watch: true

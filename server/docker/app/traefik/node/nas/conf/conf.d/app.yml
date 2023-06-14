@@ -1,6 +1,9 @@
 http:
   routers:
     nexus:
+      rule: Host(`nexus.czy21.com`)
+      service: nexus@docker
+    nexus-repository:
       rule: "Host(`nexus.czy21.com`) && PathPrefix(`/repository`)"
       service: nexus@docker
       middlewares:
@@ -17,6 +20,81 @@ http:
       service: nexus@docker
       middlewares:
         - registry-proxy-group
+    grafana:
+      rule: "Host(`grafana.czy21.com`)"
+      service: grafana@docker
+    ndisk:
+      rule: "Host(`ndisk.czy21.com`)"
+      service: ndisk@docker
+    qbittorrent:
+      rule: "Host(`qb.czy21.com`)"
+      service: qbittorrent@docker
+    flink-jmr:
+      rule: Host(`flink-jmr.czy21.com`)
+      service: flink-jmr@docker
+    flink-his:
+      rule: Host(`flink-his.czy21.com`)
+      service: flink-his@docker
+    es:
+      rule: Host(`es.czy21.com`)
+      service: es-1@docker
+    kb:
+      rule: Host(`kb.czy21.com`)
+      service: es-1-kb@docker
+    influxdb:
+      rule: Host(`influxdb.czy21.com`)
+      service: influxdb@docker
+    kafka-eagle:
+      rule: Host(`ke.czy21.com`)
+      service: kafka-eagle@docker
+    minio:
+      rule: Host(`minio.czy21.com`)
+      service: minio-api@docker
+    minio-web:
+      rule: Host(`minio-web.czy21.com`)
+      service: minio-web@docker
+    adminer:
+      rule: Host(`adminer.czy21.com`)
+      service: adminer@docker
+    consul:
+      rule: Host(`consul.czy21.com`)
+      service: consul@docker
+    gitea:
+      rule: Host(`gitea.czy21.com`)
+      service: gitea@docker
+    gradle-build-cache:
+      rule: Host(`gbc.czy21.com`)
+      service: gradle-build-cache@docker
+    jenkins:
+      rule: Host(`jenkins.czy21.com`)
+      service: jenkins@docker
+    jms:
+      rule: Host(`jms.czy21.com`)
+      service: jms@docker
+    nacos:
+      rule: Host(`nacos.czy21.com`)
+      service: nacos@docker
+    phpldapadmin:
+      rule: Host(`pla.czy21.com`)
+      service: phpldapadmin@docker
+    portainer:
+      rule: Host(`portainer.czy21.com`)
+      service: portainer@docker
+    redis-exporter:
+      rule: "Host(`redis-exporter-{{ param_cluster_name }}.czy21.com`)"
+      service: redis-exporter@docker
+    prometheus:
+      rule: "Host(`prom-{{ param_cluster_name }}.czy21.com`)"
+      service: prometheus@docker
+    youtrack:
+      rule: "Host(`youtrack.czy21.com`)"
+      service: youtrack@docker
+#    pulsar-proxy:
+#      rule: Host(`pulsar-proxy.czy21.com`)
+#      service: pulsar-proxy@docker
+#    pulsar-manager:
+#      rule: Host(`pulsar-web.czy21.com`)
+#      service: pulsar-manager@docker
 
   middlewares:
     https-redirect:

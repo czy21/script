@@ -8,13 +8,11 @@ x-db-common: &db-common
 
 x-traefik-collector-label: &traefik-collector-label
   traefik.enable: true
-  traefik.http.routers.{{ param_role_name }}-collector.rule: Host(`jaeger-collector.czy21.com`)
   traefik.http.routers.{{ param_role_name }}-collector.service: {{ param_role_name }}-collector
   traefik.http.services.{{ param_role_name }}-collector.loadbalancer.server.port: 14250
 
 x-traefik-query-label: &traefik-query-label
   traefik.enable: true
-  traefik.http.routers.{{ param_role_name }}-query.rule: Host(`jaeger-query.czy21.com`)
   traefik.http.routers.{{ param_role_name }}-query.service: {{ param_role_name }}-query
   traefik.http.services.{{ param_role_name }}-query.loadbalancer.server.port: 16686
 
