@@ -248,7 +248,7 @@ class Installer:
     def __init_build_parser(self):
         parser = self.__command_parser.add_parser(**self.__get_sub_parser_common_attr(Command.build.value))
         self.set_common_argument(parser)
-        parser.add_argument("--target", type=str, default="manual.sh")
+        parser.add_argument("--target", type=str, default="build.sh")
         parser.add_argument('--build-args', nargs="+", default=[])
         parser.add_argument('--tag')
         parser.add_argument('--push', action="store_true")
@@ -317,13 +317,12 @@ class Installer:
                     role_env |= yaml_util.load(template_util.Template(file_util.read_text(role_env_file)).render(**role_env))
                     file_util.write_text(role_env_output_file, yaml.dump(role_env))
                 # process template
-                for t in filter(lambda f: f.is_file() and not any(regex_util.match_rules(["___temp", "build"], f.as_posix()).values()), role_path.rglob("*")):
+                for t in filter(lambda f: f.is_file() and not any(regex_util.match_rules(["___temp/", "build/"], f.as_posix()).values()), role_path.rglob("*")):
                     _rules = regex_util.match_rules(
                         [*jinja2ignore_rules, role_output_path.joinpath("env.yaml").as_posix()],
                         t.as_posix(),
                         ".jinja2ignore {0}".format(self.__loop_namespaces.__name__)
                     )
-
                     file_util.write_text(
                         role_output_path.joinpath(t.relative_to(role_path)),
                         file_util.read_text(t) if any(_rules.values()) else template_util.Template(file_util.read_text(t)).render(**role_env)
@@ -334,7 +333,7 @@ class Installer:
                     echo_action(role_title, args.command)
                 ]
                 if args.command == Command.build.value:
-                    if args.target == "manual.sh":
+                    if args.target == "build.sh":
                         target_file = role_output_path.joinpath(args.target)
                         if target_file.exists():
                             _cmds.append(echo_action(role_title, Command.build.value, target_file.as_posix()))
