@@ -10,7 +10,7 @@ metadata:
     nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required - admin'
 spec:
   rules:
-    - host: k8s-web-{{ .Values.param_cluster_name }}.czy21.com
+    - host: k8s-web-{{ .Values.param_cluster_name }}.czy21-internal.com
       http:
         paths:
         - pathType: Prefix

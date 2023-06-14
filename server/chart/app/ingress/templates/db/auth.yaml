@@ -12,7 +12,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: hadoop-web.czy21.com
+    - host: hadoop-web.czy21-internal.com
       http:
         paths:
           - path: /
@@ -22,7 +22,7 @@ spec:
                 name: hadoop-namenode
                 port:
                   number: 9870
-    - host: hbase-web.czy21.com
+    - host: hbase-web.czy21-internal.com
       http:
         paths:
           - path: /
