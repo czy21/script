@@ -3,6 +3,6 @@ extendedKeyUsage = serverAuth, clientAuth
 subjectAltName=@alt_names
 
 [ alt_names ]
-DNS.1=*.czy21.com
+DNS.1=*.{{ param_ssl_generate_domain }}
 IP.1=192.168.2.10
 IP.2=192.168.2.20

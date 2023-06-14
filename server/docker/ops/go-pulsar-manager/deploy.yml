@@ -8,7 +8,7 @@ x-traefik-label: &traefik-label
 services:
 
   go-pulsar-manager:
-    image: registry.czy21.com/library/go-pulsar-manager:master
+    image: registry.czy21-internal.com/library/go-pulsar-manager:master
     container_name: go-pulsar-manager
     labels:
       <<: *traefik-label

@@ -1138,10 +1138,10 @@
         "current": {
           "selected": true,
           "text": [
-            "cadvisor-nas.czy21.com:80"
+            "cadvisor-nas.czy21-internal.com:80"
           ],
           "value": [
-            "cadvisor-nas.czy21.com:80"
+            "cadvisor-nas.czy21-internal.com:80"
           ]
         },
         "datasource": {
