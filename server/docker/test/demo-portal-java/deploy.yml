@@ -2,13 +2,13 @@ version: "3.9"
 
 x-traefik-label: &traefik-label
   traefik.enable: true
-  traefik.http.routers.{{ param_role_name }}.rule: Host(`{{ param_role_name }}.cluster.com`)
+  traefik.http.routers.{{ param_role_name }}.rule: Host(`{{ param_role_name }}.czy21.com`)
   traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
   traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 8080
 
 services:
   {{ param_role_name }}:
-    image: registry.cluster.com/library/demo-portal:master
+    image: registry.czy21.com/library/demo-portal:master
     pull_policy: always
     labels:
       <<: *traefik-label

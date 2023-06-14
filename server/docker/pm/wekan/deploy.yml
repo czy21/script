@@ -1,6 +1,6 @@
 version: "3.9"
 
-{%- set app_host = "wekan.cluster.com" %}
+{%- set app_host = "wekan.czy21.com" %}
 
 x-traefik-label: &traefik-label
   traefik.enable: true

@@ -3,6 +3,6 @@ datasources:
   - name: nas
     type: prometheus
     access: proxy
-    url: http://prom-nas.cluster.com
+    url: http://prom-nas.czy21.com
     isDefault: true
     editable: false

@@ -1,19 +1,19 @@
 http:
   routers:
     nexus:
-      rule: "Host(`nexus.cluster.com`) && PathPrefix(`/repository`)"
+      rule: "Host(`nexus.czy21.com`) && PathPrefix(`/repository`)"
       service: nexus@docker
       middlewares:
         - raw-proxy
         - apt-proxy
         - yum-proxy
     registry:
-      rule: "Host(`registry.cluster.com`)"
+      rule: "Host(`registry.czy21.com`)"
       service: nexus@docker
       middlewares:
         - registry-hosted
     registry-proxy:
-      rule: "Host(`registry-proxy.cluster.com`)"
+      rule: "Host(`registry-proxy.czy21.com`)"
       service: nexus@docker
       middlewares:
         - registry-proxy-group

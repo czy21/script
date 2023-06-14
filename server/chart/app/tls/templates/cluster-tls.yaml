@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Secret
 type: kubernetes.io/tls
 metadata:
-  name: cluster.com-secret
+  name: czy21.com-secret
   namespace: {{ .Release.Namespace }}
 data:
   tls.crt: |

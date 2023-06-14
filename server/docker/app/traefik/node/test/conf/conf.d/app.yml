@@ -1,5 +1,5 @@
 http:
   routers:
     web:
-      rule: "Host(`web-{{ param_cluster_name }}.cluster.com`)"
+      rule: "Host(`web-{{ param_cluster_name }}.czy21.com`)"
       service: web@docker

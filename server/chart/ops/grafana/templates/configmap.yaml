@@ -14,7 +14,7 @@ data:
     - name: ops
       type: prometheus
       access: proxy
-      url: http://prometheus-ops.cluster.com
+      url: http://prometheus-ops.czy21.com
   dashboard.yaml: |
     apiVersion: 1
     providers:

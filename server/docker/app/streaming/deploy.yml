@@ -2,7 +2,7 @@ version: "3.9"
 
 x-traefik--qbittorrent-label: &traefik-qbittorrent-label
   traefik.enable: true
-  traefik.http.routers.qbittorrent.rule: Host(`qb.cluster.com`)
+  traefik.http.routers.qbittorrent.rule: Host(`qb.czy21.com`)
   traefik.http.routers.qbittorrent.service: qbittorrent
   traefik.http.services.qbittorrent.loadbalancer.server.port: 8080
 

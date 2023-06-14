@@ -2,7 +2,7 @@ spring:
   application:
     name: demo-portal
   config:
-    import: optional:consul:consul.cluster.com:80
+    import: optional:consul:consul.czy21.com:80
   cloud:
     consul:
       config:

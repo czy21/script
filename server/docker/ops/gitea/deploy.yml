@@ -1,6 +1,6 @@
 version: "3.9"
 
-{%- set gitea_host = "gitea.cluster.com" %}
+{%- set gitea_host = "gitea.czy21.com" %}
 
 x-traefik-label: &traefik-label
   traefik.enable: true

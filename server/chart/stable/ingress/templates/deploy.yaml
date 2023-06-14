@@ -10,7 +10,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: demo-{{ .Values.param_cluster_name }}.cluster.com
+    - host: demo-{{ .Values.param_cluster_name }}.czy21.com
       http:
         paths:
           - path: /

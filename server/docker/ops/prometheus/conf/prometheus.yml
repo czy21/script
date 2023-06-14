@@ -29,13 +29,13 @@ scrape_configs:
         - '{job="spring"}'
         - '{job=~"k8s-.*"}'
     static_configs:
-      - targets: ['prom-nas.cluster.com']
+      - targets: ['prom-nas.czy21.com']
         labels:
           origin_prometheus: nas
-      - targets: ['prom-dev.cluster.com']
+      - targets: ['prom-dev.czy21.com']
         labels:
           origin_prometheus: dev
-      - targets: ['prom-test.cluster.com']
+      - targets: ['prom-test.czy21.com']
         labels:
           origin_prometheus: test
 
@@ -50,8 +50,8 @@ scrape_configs:
 
   - job_name: cadvisor
     static_configs:
-      - targets: ['cadvisor-nas.cluster.com']
-      - targets: ['cadvisor-base.cluster.com']
+      - targets: ['cadvisor-nas.czy21.com']
+      - targets: ['cadvisor-base.czy21.com']
 
   - job_name: mysql
     static_configs:
@@ -66,18 +66,18 @@ scrape_configs:
   - job_name: redis
     static_configs:
       - targets:
-          - 'redis-exporter-base.cluster.com'
-          - 'redis-exporter-nas.cluster.com'
+          - 'redis-exporter-base.czy21.com'
+          - 'redis-exporter-nas.czy21.com'
 
   - job_name: minio
     metrics_path: /minio/v2/metrics/cluster
     scheme: http
     static_configs:
-    - targets: ['minio.cluster.com']
+    - targets: ['minio.czy21.com']
 
   - job_name: traefik
     metrics_path: /metrics
     scheme: http
     static_configs:
-      - targets: ['traefik-nas.cluster.com']
-      - targets: ['traefik-base.cluster.com']
+      - targets: ['traefik-nas.czy21.com']
+      - targets: ['traefik-base.czy21.com']

@@ -22,4 +22,3 @@ services:
     environment:
       DATA_SOURCE_NAME: "postgresql://{{ param_db_pgsql_username }}:{{ param_db_pgsql_password }}@pgsql:{{ param_db_pgsql_port }}/postgres?sslmode=disable"
     restart: always
-

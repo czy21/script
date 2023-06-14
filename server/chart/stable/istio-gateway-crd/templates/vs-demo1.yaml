@@ -6,7 +6,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
 spec:
   hosts:
-    - "demo1-{{ .Values.param_cluster_name }}.cluster.com"
+    - "demo1-{{ .Values.param_cluster_name }}.czy21.com"
   gateways:
     - ops/gateway
   http:

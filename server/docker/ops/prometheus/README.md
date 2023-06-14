@@ -1,3 +1,3 @@
 ```shell
-curl -X POST http://prom-nas.cluster.com/-/reload
+curl -X POST http://prom-nas.czy21.com/-/reload
 ```
