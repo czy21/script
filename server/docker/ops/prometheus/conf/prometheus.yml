@@ -44,9 +44,6 @@ scrape_configs:
       - targets: ['192.168.2.18:9100']
         labels:
           origin_prometheus: nas
-      - targets: ['192.168.2.9:9100']
-        labels:
-          origin_prometheus: base
 
   - job_name: cadvisor
     static_configs:
