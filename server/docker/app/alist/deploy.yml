@@ -2,14 +2,13 @@ version: "3.9"
 
 x-traefik-label: &traefik-label
   traefik.enable: true
-  traefik.http.routers.{{ param_role_name }}.rule: `alist.czy21.com`)
   traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
   traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 5244
 
 services:
 
   alist:
-    image: registry.czy21.com/library/alist # xhofe/alist:v2.6.1
+    image: registry.czy21-internal.com/library/alist # xhofe/alist:v2.6.1
     container_name: alist
     labels:
       <<: *traefik-label

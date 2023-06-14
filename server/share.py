@@ -248,7 +248,7 @@ class Installer:
     def __init_build_parser(self):
         parser = self.__command_parser.add_parser(**self.__get_sub_parser_common_attr(Command.build.value))
         self.set_common_argument(parser)
-        parser.add_argument("--target", type=str, default="build.sh")
+        parser.add_argument("--target", type=str, default="manual.sh")
         parser.add_argument('--build-args', nargs="+", default=[])
         parser.add_argument('--tag')
         parser.add_argument('--push', action="store_true")
@@ -334,7 +334,7 @@ class Installer:
                     echo_action(role_title, args.command)
                 ]
                 if args.command == Command.build.value:
-                    if args.target == "build.sh":
+                    if args.target == "manual.sh":
                         target_file = role_output_path.joinpath(args.target)
                         if target_file.exists():
                             _cmds.append(echo_action(role_title, Command.build.value, target_file.as_posix()))

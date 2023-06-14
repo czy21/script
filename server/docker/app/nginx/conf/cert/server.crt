@@ -7,7 +7,7 @@ Certificate:
         Validity
             Not Before: Jul  5 08:07:31 2022 GMT
             Not After : Jul  5 08:07:31 2023 GMT
-        Subject: C=CN, ST=SH, O=Home, OU=IT, CN=server.czy21.com
+        Subject: C=CN, ST=SH, O=Home, OU=IT, CN=server.czy21-internal.com
         Subject Public Key Info:
             Public Key Algorithm: rsaEncryption
                 Public-Key: (4096 bit)
@@ -54,7 +54,7 @@ Certificate:
             X509v3 Extended Key Usage: 
                 TLS Web Server Authentication, TLS Web Client Authentication
             X509v3 Subject Alternative Name: 
-                DNS:*.czy21.com
+                DNS:*.czy21-internal.com
             X509v3 Subject Key Identifier: 
                 B0:85:6E:EA:80:D8:23:3E:21:D0:BD:9E:90:FD:02:8B:03:9C:26:64
             X509v3 Authority Key Identifier: 

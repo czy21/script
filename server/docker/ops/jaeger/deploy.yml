@@ -40,7 +40,7 @@ services:
       - "5778:5778"
       - "6831:6831/udp"
     environment:
-      REPORTER_GRPC_HOST_PORT: jaeger-collector.czy21.com:80
+      REPORTER_GRPC_HOST_PORT: jaeger-collector.czy21-internal.com:80
     restart: always
 
   jaeger-query:
