@@ -15,10 +15,8 @@ x-minio-common: &minio-common
 
 x-traefik-label: &traefik-label
   traefik.enable: true
-  traefik.http.routers.{{ param_role_name }}-api.rule: Host(`minio.czy21.com`)
   traefik.http.routers.{{ param_role_name }}-api.service: {{ param_role_name }}-api
   traefik.http.services.{{ param_role_name }}-api.loadbalancer.server.port: 9000
-  traefik.http.routers.{{ param_role_name }}-web.rule: Host(`minio-web.czy21.com`)
   traefik.http.routers.{{ param_role_name }}-web.service: {{ param_role_name }}-web
   traefik.http.services.{{ param_role_name }}-web.loadbalancer.server.port: 9001
 

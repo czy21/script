@@ -7,13 +7,11 @@ x-app-common: &app-common
 
 x-traefik-es-label: &traefik-es-label
   traefik.enable: true
-  traefik.http.routers.{{ param_role_project_name }}.rule: Host(`{{ param_db_es_host }}`)
   traefik.http.routers.{{ param_role_project_name }}.service: {{ param_role_project_name }}
   traefik.http.services.{{ param_role_project_name }}.loadbalancer.server.port: 9200
 
 x-traefik-kb-label: &traefik-kb-label
   traefik.enable: true
-  traefik.http.routers.{{ param_db_es_kb_name }}.rule: Host(`{{ param_db_kb_host }}`)
   traefik.http.routers.{{ param_db_es_kb_name }}.service: {{ param_db_es_kb_name }}
   traefik.http.services.{{ param_db_es_kb_name }}.loadbalancer.server.port: 5601
 

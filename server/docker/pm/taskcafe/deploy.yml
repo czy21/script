@@ -1,10 +1,7 @@
 version: "3.9"
 
-{%- set app_host = "tc.czy21.com" %}
-
 x-traefik-label: &traefik-label
   traefik.enable: true
-  traefik.http.routers.{{ param_role_name }}.rule: Host(`{{ app_host }}`)
   traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
   traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 3333
 

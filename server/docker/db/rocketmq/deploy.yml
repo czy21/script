@@ -8,7 +8,6 @@ x-rocketmq-common: &rocketmq-common
 
 x-traefik-web-label: &traefik-web-label
   traefik.enable: true
-  traefik.http.routers.rocketmq-web.rule: Host(`rocketmq.czy21.com`)
   traefik.http.routers.rocketmq-web.service: rocketmq-web
   traefik.http.services.rocketmq-web.loadbalancer.server.port: 8080
 
