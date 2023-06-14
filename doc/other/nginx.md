@@ -7,7 +7,7 @@
 
 server {
     listen       80;
-    server_name  app-dev.cluster.com;
+    server_name  app-dev.czy21.com;
     
     location ^~/erp/ {
         proxy_pass http://127.0.0.1:8080/;

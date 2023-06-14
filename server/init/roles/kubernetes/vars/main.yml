@@ -8,7 +8,7 @@ param_cri_socket: "unix:///var/run/crio/crio.sock" # use docker as cri: unix:///
 
 param_k8s_ha_api_server_vip: 192.168.2.30
 param_k8s_ha_api_server_dst_port: 16433
-param_k8s_control_plane_endpoint: "" # multi master: k8s-vip-dev.cluster.com:{{ param_k8s_ha_api_server_dst_port }}
+param_k8s_control_plane_endpoint: "" # multi master: k8s-vip-dev.czy21.com:{{ param_k8s_ha_api_server_dst_port }}
 param_etcd_mode: "local" # local | external
 param_etcd_external_endpoints:
   - "https://192.168.2.31:2379"

@@ -16,7 +16,7 @@ def test1():
 
 
 def test2():
-    r = requests.get(url="http://demo-dev.cluster.com/api/demo-portal/test/lbTest")
+    r = requests.get(url="http://demo-dev.czy21.com/api/demo-portal/test/lbTest")
 
 
 if __name__ == '__main__':

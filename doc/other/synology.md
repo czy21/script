@@ -25,7 +25,7 @@ ln /var/packages/ffmpeg/target/bin/ffmpeg /var/packages/CodecPack/target/bin/ffm
 # active backup for business 激活
 https://host:5001/webapi/auth.cgi?api=SYNO.API.Auth&version=3&method=login&account=username&passwd=password&format= cookie
 
-https://host.cluster.com:5001/webapi/entry.cgi?api=SYNO.ActiveBackup.Activation&method=set&version=1&activated=true&serial_number="serialNumber"
+https://host.czy21.com:5001/webapi/entry.cgi?api=SYNO.ActiveBackup.Activation&method=set&version=1&activated=true&serial_number="serialNumber"
 ```
 # nginx
 ```text
@@ -33,7 +33,7 @@ https://host.cluster.com:5001/webapi/entry.cgi?api=SYNO.ActiveBackup.Activation&
 server {
     listen       80;
     listen      443 ssl http2;
-    server_name  *.cluster.com;
+    server_name  *.czy21.com;
 
     client_max_body_size 0;
     chunked_transfer_encoding off;
@@ -54,7 +54,7 @@ server {
 
 server {
     listen       80;
-    server_name  alist.cluster.com;
+    server_name  alist.czy21.com;
     return       301 https://$server_name$request_uri;
 }
 ```

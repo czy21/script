@@ -13,7 +13,7 @@ def call() {
                   spec:
                     containers:
                     - name: jnlp
-                      image: 'registry.cluster.com/library/jenkins-inbound-agent'
+                      image: 'registry.czy21.com/library/jenkins-inbound-agent'
                       securityContext:
                         runAsUser: 0
         '''

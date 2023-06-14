@@ -6,7 +6,7 @@ import requests
 
 
 def get_session(sid):
-    r = requests.get(url="http://demo-dev.cluster.com/api/demo-portal/test/lbTest")
+    r = requests.get(url="http://demo-dev.czy21.com/api/demo-portal/test/lbTest")
     print(r.json())
 
 
