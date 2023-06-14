@@ -7,7 +7,7 @@ x-traefik-label: &traefik-label
 
 services:
   {{ param_role_name }}:
-    image: registry.czy21.com/library/learning-dotnet-portal:master
+    image: registry.czy21-internal.com/library/learning-dotnet-portal:master
     container_name: {{ param_role_name }}
     pull_policy: always
     labels:

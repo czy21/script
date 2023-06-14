@@ -11,7 +11,7 @@ services:
     image: freeipa/freeipa-server:centos-9-stream-4.10.1
     pull_policy: always
     container_name: freeipa
-    hostname: freeipa.czy21.com
+    hostname: freeipa.czy21-internal.com
     labels:
       <<: *traefik-label
     privileged: true
@@ -23,7 +23,7 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/run/:/run/
       - {{ param_docker_data }}/{{ param_role_name }}/tmp/:/tmp/
       - {{ param_docker_data }}/{{ param_role_name }}/log/://var/log/journal/
-    command: ipa-server-install -U -r czy21.com --no-ntp
+    command: ipa-server-install -U -r czy21-internal.com --no-ntp
     sysctls:
       - net.ipv6.conf.all.disable_ipv6=0
     environment:

@@ -24,6 +24,6 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/log/:/var/log/gitlab/
     environment:
       GITLAB_OMNIBUS_CONFIG: |
-        external_url 'http://gitlab.czy21.com'
+        external_url 'http://gitlab.czy21-internal.com'
       GITLAB_ROOT_PASSWORD: "{{ param_manage_password }}"
     shm_size: 256m

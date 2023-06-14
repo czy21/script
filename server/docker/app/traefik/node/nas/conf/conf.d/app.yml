@@ -1,99 +1,99 @@
 http:
   routers:
     nexus:
-      rule: Host(`nexus.czy21.com`)
+      rule: Host(`nexus.czy21-internal.com`)
       service: nexus@docker
     nexus-repository:
-      rule: "Host(`nexus.czy21.com`) && PathPrefix(`/repository`)"
+      rule: "Host(`nexus.czy21-internal.com`) && PathPrefix(`/repository`)"
       service: nexus@docker
       middlewares:
         - raw-proxy
         - apt-proxy
         - yum-proxy
     registry:
-      rule: "Host(`registry.czy21.com`)"
+      rule: "Host(`registry.czy21-internal.com`)"
       service: nexus@docker
       middlewares:
         - registry-hosted
     registry-proxy:
-      rule: "Host(`registry-proxy.czy21.com`)"
+      rule: "Host(`registry-proxy.czy21-internal.com`)"
       service: nexus@docker
       middlewares:
         - registry-proxy-group
     grafana:
-      rule: "Host(`grafana.czy21.com`)"
+      rule: "Host(`grafana.czy21-internal.com`)"
       service: grafana@docker
     ndisk:
-      rule: "Host(`ndisk.czy21.com`)"
+      rule: Host(`ndisk.czy21-internal.com`)
       service: ndisk@docker
     qbittorrent:
-      rule: "Host(`qb.czy21.com`)"
+      rule: Host(`qb.czy21-internal.com`)
       service: qbittorrent@docker
     flink-jmr:
-      rule: Host(`flink-jmr.czy21.com`)
+      rule: Host(`flink-jmr.czy21-internal.com`)
       service: flink-jmr@docker
     flink-his:
-      rule: Host(`flink-his.czy21.com`)
+      rule: Host(`flink-his.czy21-internal.com`)
       service: flink-his@docker
     es:
-      rule: Host(`es.czy21.com`)
+      rule: Host(`es.czy21-internal.com`)
       service: es-1@docker
     kb:
-      rule: Host(`kb.czy21.com`)
+      rule: Host(`kb.czy21-internal.com`)
       service: es-1-kb@docker
     influxdb:
-      rule: Host(`influxdb.czy21.com`)
+      rule: Host(`influxdb.czy21-internal.com`)
       service: influxdb@docker
     kafka-eagle:
-      rule: Host(`ke.czy21.com`)
+      rule: Host(`ke.czy21-internal.com`)
       service: kafka-eagle@docker
     minio:
-      rule: Host(`minio.czy21.com`)
+      rule: Host(`minio.czy21-internal.com`)
       service: minio-api@docker
     minio-web:
-      rule: Host(`minio-web.czy21.com`)
+      rule: Host(`minio-web.czy21-internal.com`)
       service: minio-web@docker
     adminer:
-      rule: Host(`adminer.czy21.com`)
+      rule: Host(`adminer.czy21-internal.com`)
       service: adminer@docker
     consul:
-      rule: Host(`consul.czy21.com`)
+      rule: Host(`consul.czy21-internal.com`)
       service: consul@docker
     gitea:
-      rule: Host(`gitea.czy21.com`)
+      rule: Host(`gitea.czy21-internal.com`)
       service: gitea@docker
     gradle-build-cache:
-      rule: Host(`gbc.czy21.com`)
+      rule: Host(`gbc.czy21-internal.com`)
       service: gradle-build-cache@docker
     jenkins:
-      rule: Host(`jenkins.czy21.com`)
+      rule: Host(`jenkins.czy21-internal.com`)
       service: jenkins@docker
     jms:
-      rule: Host(`jms.czy21.com`)
+      rule: Host(`jms.czy21-internal.com`)
       service: jms@docker
     nacos:
-      rule: Host(`nacos.czy21.com`)
+      rule: Host(`nacos.czy21-internal.com`)
       service: nacos@docker
     phpldapadmin:
-      rule: Host(`pla.czy21.com`)
+      rule: Host(`pla.czy21-internal.com`)
       service: phpldapadmin@docker
     portainer:
-      rule: Host(`portainer.czy21.com`)
+      rule: Host(`portainer.czy21-internal.com`)
       service: portainer@docker
     redis-exporter:
-      rule: "Host(`redis-exporter-{{ param_cluster_name }}.czy21.com`)"
+      rule: "Host(`redis-exporter-{{ param_cluster_name }}.czy21-internal.com`)"
       service: redis-exporter@docker
     prometheus:
-      rule: "Host(`prom-{{ param_cluster_name }}.czy21.com`)"
+      rule: "Host(`prom-{{ param_cluster_name }}.czy21-internal.com`)"
       service: prometheus@docker
     youtrack:
-      rule: "Host(`youtrack.czy21.com`)"
+      rule: "Host(`youtrack.czy21-internal.com`)"
       service: youtrack@docker
 #    pulsar-proxy:
-#      rule: Host(`pulsar-proxy.czy21.com`)
+#      rule: Host(`pulsar-proxy.czy21-internal.com`)
 #      service: pulsar-proxy@docker
 #    pulsar-manager:
-#      rule: Host(`pulsar-web.czy21.com`)
+#      rule: Host(`pulsar-web.czy21-internal.com`)
 #      service: pulsar-manager@docker
 
   middlewares:
