@@ -5,7 +5,6 @@ x-app-common: &app-common
 
 x-traefik-cassandra-label: &traefik-cassandra-label
   traefik.enable: true
-  traefik.http.routers.{{ param_role_project_name }}.rule: Host(`{{ param_db_cassandra_host }}`)
   traefik.http.routers.{{ param_role_project_name }}.service: {{ param_role_project_name }}
   traefik.http.services.{{ param_role_project_name }}.loadbalancer.server.port: 7000
 

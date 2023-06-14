@@ -5,7 +5,6 @@ x-app-common: &app-common
 
 x-traefik-web-label: &traefik-web-label
   traefik.enable: true
-  traefik.http.routers.{{ param_role_project_name }}.rule: Host(`crate-web.czy21.com`)
   traefik.http.routers.{{ param_role_project_name }}.service: {{ param_role_project_name }}
   traefik.http.services.{{ param_role_project_name }}.loadbalancer.server.port: 4200
 
