@@ -53,6 +53,6 @@
   become: yes
   tasks:
     - name: cmd
-      shell: echo 'a'
+      shell: sudo reboot
   tags:
     - manual

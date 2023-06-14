@@ -11,7 +11,7 @@ metadata:
     nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required - admin'
 spec:
   rules:
-    - host: kiali-{{ .Values.param_cluster_name }}.czy21.com
+    - host: kiali-{{ .Values.param_cluster_name }}.czy21-internal.com
       http:
         paths:
         - pathType: Prefix

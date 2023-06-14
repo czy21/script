@@ -12,7 +12,7 @@ spec:
       name: http
       protocol: HTTP
     hosts:
-      - "httpbin-test.czy21.com"
+      - "httpbin-test.czy21-internal.com"
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
@@ -21,7 +21,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
 spec:
   hosts:
-    - "httpbin-test.czy21.com"
+    - "httpbin-test.czy21-internal.com"
   gateways:
     - {{ .Release.Name }}-gateway
   http:
