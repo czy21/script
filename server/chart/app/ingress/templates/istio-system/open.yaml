@@ -6,7 +6,7 @@ metadata:
   namespace: istio-system
 spec:
   rules:
-    - host: demo-{{ .Values.param_cluster_name }}.czy21.com
+    - host: demo-{{ .Values.param_cluster_name }}.czy21-internal.com
       http:
         paths:
         - pathType: Prefix

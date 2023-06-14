@@ -6,7 +6,7 @@ metadata:
   namespace: ops
 spec:
   rules:
-    - host: prom-{{ .Values.param_cluster_name }}.czy21.com
+    - host: prom-{{ .Values.param_cluster_name }}.czy21-internal.com
       http:
         paths:
         - pathType: Prefix

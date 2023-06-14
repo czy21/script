@@ -15,9 +15,9 @@ trusted-host=mirrors.aliyun.com
 ```
 ```ini
 [global]
-index-url = http://nexus.czy21.com/repository/pypi-proxy/simple/
+index-url = http://nexus.czy21-internal.com/repository/pypi-proxy/simple/
 [install]
-trusted-host=nexus.czy21.com
+trusted-host=nexus.czy21-internal.com
 ```
 
 ```bash

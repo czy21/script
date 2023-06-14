@@ -6,7 +6,7 @@ metadata:
   namespace: istio-system
 spec:
   hosts:
-    - "kiali-{{ .Values.param_cluster_name }}.czy21.com"
+    - "kiali-{{ .Values.param_cluster_name }}.czy21-internal.com"
   gateways:
     - ops/gateway
   http:

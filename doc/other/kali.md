@@ -1,6 +1,6 @@
 ```shell
 sudo update-rc.d ssh enable
-sudo sed -i.bak 's|http.kali.org|nexus.czy21.com/repository/apt-proxy|g' /etc/apt/sources.list
+sudo sed -i.bak 's|http.kali.org|nexus.czy21-internal.com/repository/apt-proxy|g' /etc/apt/sources.list
 wget -O - https://gitlab.com/kalilinux/build-scripts/kali-wsl-chroot/-/raw/master/xfce4.sh | sudo bash
 sudo update-rc.d xrdp enable
 
