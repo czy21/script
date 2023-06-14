@@ -8,13 +8,13 @@ x-db-common: &db-common
 
 x-traefik-collector-label: &traefik-collector-label
   traefik.enable: true
-  traefik.http.routers.{{ param_role_name }}-collector.rule: Host(`jaeger-collector.cluster.com`)
+  traefik.http.routers.{{ param_role_name }}-collector.rule: Host(`jaeger-collector.czy21.com`)
   traefik.http.routers.{{ param_role_name }}-collector.service: {{ param_role_name }}-collector
   traefik.http.services.{{ param_role_name }}-collector.loadbalancer.server.port: 14250
 
 x-traefik-query-label: &traefik-query-label
   traefik.enable: true
-  traefik.http.routers.{{ param_role_name }}-query.rule: Host(`jaeger-query.cluster.com`)
+  traefik.http.routers.{{ param_role_name }}-query.rule: Host(`jaeger-query.czy21.com`)
   traefik.http.routers.{{ param_role_name }}-query.service: {{ param_role_name }}-query
   traefik.http.services.{{ param_role_name }}-query.loadbalancer.server.port: 16686
 
@@ -42,7 +42,7 @@ services:
       - "5778:5778"
       - "6831:6831/udp"
     environment:
-      REPORTER_GRPC_HOST_PORT: jaeger-collector.cluster.com:80
+      REPORTER_GRPC_HOST_PORT: jaeger-collector.czy21.com:80
     restart: always
 
   jaeger-query:

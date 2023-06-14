@@ -32,5 +32,5 @@ metrics:
 
 #tracing:
 #  jaeger:
-#    samplingServerURL: http://jaeger-agent.cluster.com:5778/sampling
-#    localAgentHostPort: jaeger-agent.cluster.com:6831
+#    samplingServerURL: http://jaeger-agent.czy21.com:5778/sampling
+#    localAgentHostPort: jaeger-agent.czy21.com:6831

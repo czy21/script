@@ -1,7 +1,7 @@
 http:
   routers:
     metrics:
-      rule: "Host(`traefik-{{ param_cluster_name }}.cluster.com`) && PathPrefix(`/metrics`)"
+      rule: "Host(`traefik-{{ param_cluster_name }}.czy21.com`) && PathPrefix(`/metrics`)"
       service: prometheus@internal
 #  middlewares:
 #    https-redirect:

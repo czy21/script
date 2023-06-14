@@ -1,6 +1,6 @@
 version: "3.9"
 
-{%- set host = "rancher-test.cluster.com" %}
+{%- set host = "rancher-test.czy21.com" %}
 
 x-traefik-label: &traefik-label
   traefik.enable: true

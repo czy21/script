@@ -9,7 +9,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: rabbitmq.cluster.com
+  - host: rabbitmq.czy21.com
     http:
       paths:
       - pathType: Prefix
@@ -19,7 +19,7 @@ spec:
             name: rabbitmq
             port:
               number: 15672
-  - host: pulsar-web.cluster.com
+  - host: pulsar-web.czy21.com
     http:
       paths:
         - path: /
@@ -29,7 +29,7 @@ spec:
               name: pulsar-manager
               port:
                 number: 9527
-  - host: pulsar-proxy.cluster.com
+  - host: pulsar-proxy.czy21.com
     http:
       paths:
         - path: /

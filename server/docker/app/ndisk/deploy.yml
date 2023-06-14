@@ -2,14 +2,14 @@ version: "3.9"
 
 x-traefik-label: &traefik-label
   traefik.enable: true
-  traefik.http.routers.{{ param_role_name }}.rule: Host(`ndisk.cluster.com`)
+  traefik.http.routers.{{ param_role_name }}.rule: Host(`ndisk.czy21.com`)
   traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
   traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 8080
 
 services:
 
   ndisk:
-    image: registry.cluster.com/library/ndisk:latest
+    image: registry.czy21.com/library/ndisk:latest
     pull_policy: always
     container_name: ndisk
     labels:

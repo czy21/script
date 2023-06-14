@@ -1,4 +1,4 @@
-FROM registry.cluster.com/library/hadoop-base
+FROM registry.czy21.com/library/hadoop-base
 
 COPY docker-entrypoint.sh /
 RUN chmod +x /docker-entrypoint.sh

@@ -2,14 +2,14 @@ version: "3.9"
 
 x-traefik-label: &traefik-label
   traefik.enable: true
-  traefik.http.routers.{{ param_role_name }}.rule: Host(`go-pulsar-manager.cluster.com`)
+  traefik.http.routers.{{ param_role_name }}.rule: Host(`go-pulsar-manager.czy21.com`)
   traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
   traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 3000
 
 services:
 
   go-pulsar-manager:
-    image: registry.cluster.com/library/go-pulsar-manager:master
+    image: registry.czy21.com/library/go-pulsar-manager:master
     container_name: go-pulsar-manager
     labels:
       <<: *traefik-label
