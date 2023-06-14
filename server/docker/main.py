@@ -6,7 +6,8 @@ import pathlib
 import share
 from utility import (
     collection as collection_util,
-    path as path_util
+    path as path_util,
+    file as file_util
 )
 
 
@@ -52,6 +53,18 @@ def get_cmds(role_title: str,
 
     if args.command == share.Command.install.value:
         if role_conf_path.exists() or (role_node_target_conf_path and role_node_target_conf_path.exists()):
+            if args.rm:
+                target_role_conf_path = target_app_path.joinpath("conf")
+                if target_role_conf_path.exists() and target_app_path.name == role_name:
+                    role_conf_relative_files = set(file_util.get_files(role_conf_path, role_output_path.as_posix()))
+                    remove_conf_files = [
+                        t.as_posix()
+                        for t in filter(lambda a: a.is_file(), target_role_conf_path.rglob("*"))
+                        if not any([t.as_posix().__contains__(s) for s in role_conf_relative_files])
+                    ]
+                    if remove_conf_files:
+                        _cmds.append(share.echo_action(role_title, "remove conf"))
+                        _cmds.append("sudo rm -rfv {0}".format(" ".join(remove_conf_files)))
             _cmds.append('sudo mkdir -p {1} && sudo cp -rv {0} {1}'.format(
                 role_node_target_conf_path if role_node_target_conf_path and role_node_target_conf_path.exists() else role_conf_path.as_posix(),
                 target_app_path.as_posix())
