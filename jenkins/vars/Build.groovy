@@ -16,7 +16,7 @@ def call() {
             param_code_type = "${env.param_code_type}"
         }
         parameters {
-            gitParameter branchFilter: 'origin/(.*)', name: 'param_git_branch', type: 'PT_BRANCH', useRepository: "${env.param_git_repository_url}"
+            gitParameter branchFilter: 'origin/(.*)', name: 'param_git_branch', type: 'PT_BRANCH', defaultValue: 'master', useRepository: "${env.param_git_repository_url}"
         }
         stages {
             stage('clone') {
