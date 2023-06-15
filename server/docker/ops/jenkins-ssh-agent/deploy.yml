@@ -3,7 +3,7 @@ version: "3.9"
 services:
 
   jenkins-ssh-agent:
-    image: registry.czy21-internal.com/library/jenkins-ssh-agent
+    image: {{ param_registry_url }}/library/jenkins-ssh-agent
     pull_policy: always
     container_name: jenkins-ssh-agent
     privileged: true
