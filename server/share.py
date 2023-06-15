@@ -225,6 +225,7 @@ class Installer:
         parser.add_argument('--create-namespace', action="store_true")
         parser.add_argument('--debug', action="store_true", help="enable verbose output")
         parser.add_argument('--dry-run', action="store_true", help="only print not submit")
+        parser.add_argument('--rm', action="store_true")
 
     @staticmethod
     def __get_sub_parser_common_attr(name):
@@ -240,7 +241,6 @@ class Installer:
         parser = self.__command_parser.add_parser(**self.__get_sub_parser_common_attr(Command.install.value))
         self.set_common_argument(parser)
         parser.add_argument('--recreate', action="store_true")
-        parser.add_argument('--rm', action="store_true")
 
     def __init_delete_parser(self):
         parser = self.__command_parser.add_parser(**self.__get_sub_parser_common_attr(Command.delete.value))
