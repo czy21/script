@@ -10,11 +10,7 @@ def build() {
     env.param_project_context = PathUtils.ofPath(env.param_project_root, env.param_project_module)
     env.param_docker_context = StringUtils.isNotNull(env.param_docker_context) ? PathUtils.ofPath(env.param_project_root, env.param_docker_context) : env.param_project_context
     env.param_docker_file = PathUtils.ofPath(env.param_docker_context, "Dockerfile")
-    env.param_release_name = PathUtils.ofPath(
-            env.param_registry_repo,
-            env.param_registry_dir,
-            StringUtils.defaultIfEmpty(env.param_release_name, StringUtils.join("-", env.param_project_name, env.param_project_module))
-    )
+    env.param_release_name = PathUtils.ofPath(env.param_registry_repo,env.param_registry_dir,env.param_release_name)
     env.param_release_version = StringUtils.defaultIfEmpty(env.param_release_version, params.param_git_branch)
     def sdkMap = [
             java  : {
