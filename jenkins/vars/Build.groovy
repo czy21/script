@@ -9,7 +9,6 @@ def call() {
         agent any
         environment {
             param_project_root = PathUtils.ofPath("${env.WORKSPACE}", "${env.param_project_root}")
-            param_project_name = "${env.param_project_name}"
             param_project_module = "${env.param_project_module}"
             param_git_repository_url = "${env.param_git_repository_url}"
             param_git_credential_id = "${env.param_git_credential_id}"
