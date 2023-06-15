@@ -1,13 +1,13 @@
 http:
   routers:
     metrics:
-      rule: "Host(`traefik-{{ param_cluster_name }}.czy21-internal.com`) && PathPrefix(`/metrics`)"
+      rule: Host(`traefik-{{ param_cluster_name }}.czy21-internal.com`) && PathPrefix(`/metrics`)
       service: prometheus@internal
     traefik:
-      rule: "Host(`traefik-{{ param_cluster_name }}.czy21-internal.com`)"
+      rule: Host(`traefik-{{ param_cluster_name }}.czy21-internal.com`)
       service: traefik@docker
     cadvisor:
-      rule: "Host(`cadvisor-{{ param_cluster_name }}.czy21-internal.com`)"
+      rule: Host(`cadvisor-{{ param_cluster_name }}.czy21-internal.com`)
       service: cadvisor@docker
 #  middlewares:
 #    https-redirect:
