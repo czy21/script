@@ -3,8 +3,8 @@
 env.param_global_env_file_id="dev.env"
 env.param_git_repository_url="http://gitea.czy21-internal.com/czyhome/example.git"
 env.param_project_root="code/api"
-env.param_project_name="demo"
 env.param_project_module="portal"
 env.param_code_type="java"
+env.param_release_name="demo-portal"
 
 Build()
