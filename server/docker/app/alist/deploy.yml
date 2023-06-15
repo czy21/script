@@ -8,7 +8,7 @@ x-traefik-label: &traefik-label
 services:
 
   alist:
-    image: registry.czy21-internal.com/library/alist # xhofe/alist:v2.6.1
+    image: "{{ param_registry_url }}/library/alist" # xhofe/alist:v2.6.1
     container_name: alist
     labels:
       <<: *traefik-label

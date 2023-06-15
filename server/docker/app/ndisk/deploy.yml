@@ -8,7 +8,7 @@ x-traefik-label: &traefik-label
 services:
 
   ndisk:
-    image: registry.czy21-internal.com/library/ndisk:latest
+    image: {{ param_registry_url }}/library/ndisk:latest
     pull_policy: always
     container_name: ndisk
     labels:
