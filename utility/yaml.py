@@ -1,10 +1,10 @@
 import pathlib
 from typing import Union
 
+import pydash.objects
 import yaml
+from utility import file as file_util, safe as safe_util, path as path_util, collection as collection_util, template as template_util
 from yaml import FullLoader
-
-from utility import file as file_util, safe as safe_util, path as path_util
 
 
 def join_tag(loader: FullLoader, node):
@@ -19,3 +19,13 @@ def load(stream: Union[str, pathlib.Path]) -> dict:
     yaml.add_constructor('!htpasswd', lambda loader, node: safe_util.htpasswd(*loader.construct_sequence(node, deep=True)), loader1)
     yaml.add_constructor("!join_path", lambda loader, node: path_util.join_path(*loader.construct_sequence(node, deep=True)), loader1)
     return yaml.load(stream if isinstance(stream, str) else file_util.read_text(stream), loader1)
+
+
+# TODO
+def process(source: dict[str, object]):
+    result = collection_util.flat_dict(source)
+    for key, value in result.items():
+        if isinstance(value, str):
+            value = template_util.Template(value).render(**source)
+            pydash.objects.set_(source, key, value)
+    print(source)
