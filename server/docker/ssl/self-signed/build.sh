@@ -20,5 +20,5 @@ openssl_cnf=${conf_file}/openssl.cnf
 openssl_ext=${conf_file}/openssl.ext
 
 openssl genrsa -out ${tmp_generate}/{{ param_ssl_generate_domain }}.key 4096
-openssl req -new -key ${tmp_generate}/{{ param_ssl_generate_domain }}.key -out ${tmp_generate}/{{ param_ssl_generate_domain }}.csr -config ${openssl_cnf} -nodes -subj "/C=CN/ST=SH/L=SH/O=Home/OU=IT/CN=server.{{ param_ssl_generate_domain }}"
+openssl req -new -key ${tmp_generate}/{{ param_ssl_generate_domain }}.key -out ${tmp_generate}/{{ param_ssl_generate_domain }}.csr -config ${openssl_cnf} -nodes -subj "/C=CN/ST=SH/L=SH/O=Home/OU=IT/CN={{ param_ssl_generate_domain }}"
 openssl ca -in ${tmp_generate}/{{ param_ssl_generate_domain }}.csr -out ${tmp_generate}/{{ param_ssl_generate_domain }}.crt -cert ${tmp_ca}/ca.crt -keyfile ${tmp_ca}/ca.key -config ${openssl_cnf} -extfile ${openssl_ext}
