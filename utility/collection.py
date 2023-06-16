@@ -17,28 +17,33 @@ def flat_to_str(*items: typing.Any, delimiter: str = " ") -> str:
     return delimiter.join(flat(list(items)))
 
 
-def flat_dict(data: dict) -> dict:
-    ret = {}
-    for k, v in data.items():
-        if isinstance(v, list):
-            ret |= flat_dict({"{0}{1}".format(k, "[" + str(i) + "]"): t for i, t in enumerate(v)})
-        elif isinstance(v, dict):
-            ret |= flat_dict({"{0}.{1}".format(k, vk): vv for vk, vv in v.items()})
+def flat_dict(source: dict[str, object]):
+    result = {}
+    _build_flat_dict(result, source, None)
+    return result
+
+
+def _build_flat_dict(result: dict[str, object], source: dict[str, object], path):
+    for key, value in source.items():
+        if path is not None and str.strip(path).__len__() > 0:
+            if key.startswith("["):
+                key = path + key
+            else:
+                key = path + "." + key
+        if isinstance(value, str):
+            result[key] = value
+        elif isinstance(value, dict):
+            _build_flat_dict(result, value, key)
+        elif isinstance(value, list):
+            if value is None or not value:
+                result[key] = ""
+            else:
+                count = 0
+                for obj in value:
+                    _build_flat_dict(result, {'[' + str(count) + "]": obj}, key)
+                    count += 1
         else:
-            ret[k] = v
-    return ret
-
-
-def dict_render(data: dict,
-                key_filter_func: typing.Callable[[any], bool] = None,
-                val_filter_func: typing.Callable[[any], bool] = None) -> dict:
-    d = data.copy()
-    for k, v in flat_dict(d).items():
-        if (key_filter_func is None and val_filter_func is None) \
-                or (key_filter_func is not None and key_filter_func(k)) \
-                or (val_filter_func is not None and val_filter_func(v)):
-            pydash.set_(d, k, template.Template(v).render(**d))
-    return d
+            result[key] = value if value is not None else ""
 
 
 def print_grid(items: list, col_num: int = 0, msg: str = ""):
