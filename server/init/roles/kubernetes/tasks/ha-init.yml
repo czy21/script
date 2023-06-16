@@ -1,1 +1,2 @@
 - shell: bash {{ param_remote_role_path }}/ha.sh && sudo systemctl restart haproxy keepalived
+  when: inventory_hostname in groups["master"]
