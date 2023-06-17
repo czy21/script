@@ -24,6 +24,8 @@ dependencyManagement {
 dependencies {
     implementation 'org.apache.groovy:groovy'
     implementation "org.jenkins-ci.plugins.workflow:workflow-cps"
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
+
 }
 
 sourceSets {
