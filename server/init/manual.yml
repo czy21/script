@@ -53,6 +53,6 @@
   become: yes
   tasks:
     - name: cmd
-      shell: sudo reboot
+      shell: sudo sed -i 's|cluster.com|czy21-internal.com|' /etc/yum.repos.d/*.repo
   tags:
     - manual
