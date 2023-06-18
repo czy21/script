@@ -1,3 +1,4 @@
+param_release_version: ""
 param_app_name: ""
 param_app_version: v1
 param_image_name: ""
