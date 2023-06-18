@@ -10,8 +10,9 @@ metadata:
     app: {{ .Values.param_app_name | default .Release.Name }}
     version: {{ .Values.param_app_version | default .Values.param_release_version }}
 spec:
+  replicas: 2
   strategy:
-    type: Recreate
+    type: RollingUpdate
   selector:
     matchLabels:
       app: {{ .Values.param_app_name | default .Release.Name }}
