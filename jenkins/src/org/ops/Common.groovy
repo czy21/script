@@ -25,11 +25,4 @@ def writeParamToYaml() {
     writeYaml file: '.jenkins/param.yaml', data: CollectionUtils.sortMapByKey(param), charset: 'UTF-8', overwrite: true
 }
 
-@NonCPS
-def getNodes() {
-    jenkins.model.Jenkins.instance.nodes.collect { t ->
-        return t.name
-    }
-}
-
 return this
