@@ -39,6 +39,8 @@ def call() {
             stage('build') {
                 steps {
                     script {
+                        def nodes=new Common().getNodes()
+                        sh 'echo nodes'
                         new Common().loadParam()
                         new Builder().build()
                     }
