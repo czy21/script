@@ -39,8 +39,6 @@ def call() {
             stage('build') {
                 steps {
                     script {
-                        env.param_nodes = new Common().getNodes()
-                        sh 'echo ${env.param_nodes}'
                         new Common().loadParam()
                         new Builder().build()
                     }
