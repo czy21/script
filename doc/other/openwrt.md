@@ -12,6 +12,8 @@ rm -rf ./tmp && rm -rf .config
 pkgName=plugin && ./scripts/feeds update ${pkgName} && ./scripts/feeds install -a -p ${pkgName}
 make menuconfig
 make -j8 download V=s
+# friendlywrt
+PKG_HASH=skip nohup make -j1 V=s &
 # single thread
 nohup make -j1 V=s &
 # multi thread
