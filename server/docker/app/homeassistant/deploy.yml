@@ -5,12 +5,13 @@ services:
     image: homeassistant/home-assistant:stable
     container_name: homeassistant
     privileged: true
+    network_mode: host
     user: root
     expose:
       - "8123"
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/config/
     restart: always
-    networks:
-      macvlan10:
-        ipv4_address: 192.168.2.17
+#    networks:
+#      vlan5:
+#        ipv4_address: 192.168.5.17
