@@ -4,8 +4,8 @@ default_config:
 
 homeassistant:
   name: Home
-  latitude: 31.23
-  longitude: 121.47
+  latitude: 45.80
+  longitude: 126.54
   time_zone: Asia/Shanghai
 
 http:
