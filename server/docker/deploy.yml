@@ -1,6 +1,6 @@
 networks:
   default:
     name: local
-#  vlan5:
+#  vlan2:
 #    external:
-#      name: vlan5
+#      name: vlan2
