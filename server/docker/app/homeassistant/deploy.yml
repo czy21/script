@@ -13,5 +13,5 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/config/
     restart: always
 #    networks:
-#      vlan5:
-#        ipv4_address: 192.168.5.17
+#      vlan2:
+#        ipv4_address: 192.168.2.17
