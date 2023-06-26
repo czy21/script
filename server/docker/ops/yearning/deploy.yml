@@ -12,12 +12,14 @@ services:
     container_name: yearning
     labels:
       <<: *traefik-label
+    expose:
+      - "8000"
     environment:
       MYSQL_USER: {{ param_db_mysql_username }}
       MYSQL_PASSWORD: {{ param_db_mysql_password }}
       MYSQL_ADDR: {{ param_db_mysql_host }}
       MYSQL_DB: yearning
       SECRET_KEY: dbcjqheupqjsuwsm
-    ports:
-      - 8000:8000
+      IS_DOCKER: is_docker
+    command: /bin/bash -c "./Yearning install && ./Yearning run"
     restart: always
