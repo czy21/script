@@ -1,0 +1,25 @@
+version: '3.9'
+
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 8000
+
+services:
+  yearning:
+    image: {{ param_registry_url }}/library/yearning
+    pull_policy: always
+    container_name: yearning
+    labels:
+      <<: *traefik-label
+    environment:
+      MYSQL_USER: {{ param_db_mysql_username }}
+      MYSQL_PASSWORD: {{ param_db_mysql_password }}
+      MYSQL_ADDR: {{ param_db_mysql_host }}
+      MYSQL_DB: yearning
+      SECRET_KEY: dbcjqheupqjsuwsm
+      IS_DOCKER: is_docker
+    ports:
+      - 8000:8000
+    command: /bin/bash -c "./Yearning install && ./Yearning run"
+    restart: always
