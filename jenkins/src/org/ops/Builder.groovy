@@ -48,10 +48,10 @@ def build() {
                     }
                 }
                 configFileProvider([configFile(fileId: "gradle.config", variable: 'CONFIG_FILE_GRADLE')]) {
-                    tasks=["clean", "build","sonar"]
+                    tasks=["clean", "build"]
                     withSonarQubeEnv('sonarqube') {
                         cmd = StringUtils.format(
-                                "chmod +x {0}/gradlew && {0}/gradlew --init-script {1} --build-file {0}/build.gradle {2} -x test --refresh-dependencies -Dsonar.projectKey=czy21 -Dsonar.projectName='czy21'",
+                                "chmod +x {0}/gradlew && {0}/gradlew --init-script {1} --build-file {0}/build.gradle {2} sonar -x test --refresh-dependencies -Dsonar.projectKey=czy21 -Dsonar.projectName='czy21'",
                                 env.param_project_root,
                                 "${CONFIG_FILE_GRADLE}",
                                 tasks.collect { t -> StringUtils.join(":", env.param_project_module, t) }.join(" ")
@@ -92,7 +92,6 @@ def build() {
             }
     ]
     common.writeParamToYaml()
-//     env.SONARQUBE_HOME = "${tool 'sonarqube-4.8.0'}"
     cmdMap.get(env.param_code_type).call()
 }
 
