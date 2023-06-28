@@ -57,10 +57,10 @@ def build() {
                     sh "${cmd}"
                     withSonarQubeEnv('My SonarQube Server') {
                         gradle_sonarqube_cmd=StringUtils.format(
-                            "chmod +x {0}/gradlew && {0}/gradlew --init-script {1} --build-file {0}/build.gradle {2} -x test --refresh-dependencies",
+                            "chmod +x {0}/gradlew && {0}/gradlew --init-script {1} --build-file {0}/build.gradle {2}",
                             env.param_project_root,
                             "${CONFIG_FILE_GRADLE}",
-                            "-Dsonar.projectKey=czy21 -Dsonar.projectName='czy21'"
+                            "sonarqube"
                         )
                         sh '${gradle_sonarqube_cmd}'
                     }
