@@ -51,7 +51,7 @@ def build() {
                     tasks=["clean", "build","sonar"]
                     withSonarQubeEnv('sonarqube') {
                         cmd = StringUtils.format(
-                                "chmod +x {0}/gradlew && {0}/gradlew --init-script {1} --build-file {0}/build.gradle {2} -x test --refresh-dependencies",
+                                "chmod +x {0}/gradlew && {0}/gradlew --init-script {1} --build-file {0}/build.gradle {2} -x test --refresh-dependencies -Dsonar.projectKey=czy21 -Dsonar.projectName='czy21'",
                                 env.param_project_root,
                                 "${CONFIG_FILE_GRADLE}",
                                 tasks.collect { t -> StringUtils.join(":", env.param_project_module, t) }.join(" ")
