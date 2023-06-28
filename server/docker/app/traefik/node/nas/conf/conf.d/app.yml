@@ -92,6 +92,9 @@ http:
     yearning:
       rule: Host(`yearning.czy21-internal.com`)
       service: yearning@docker
+    sonarqube:
+      rule: Host(`sonarqube.czy21-internal.com`)
+      service: sonarqube@docker
 #    pulsar-proxy:
 #      rule: Host(`pulsar-proxy.czy21-internal.com`)
 #      service: pulsar-proxy@docker

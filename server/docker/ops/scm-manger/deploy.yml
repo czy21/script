@@ -20,5 +20,3 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/var/lib/scm/
     environment:
       JAVA_OPTS: "-Dscm.initialUser={{ param_manage_username }} -Dscm.initialPassword={{ param_manage_password }}"
-
-
