@@ -48,15 +48,21 @@ def build() {
                     }
                 }
                 configFileProvider([configFile(fileId: "gradle.config", variable: 'CONFIG_FILE_GRADLE')]) {
-                    tasks=["clean", "build"]
+                    cmd = StringUtils.format(
+                            "chmod +x {0}/gradlew && {0}/gradlew --init-script {1} --build-file {0}/build.gradle {2} -x test --refresh-dependencies",
+                            env.param_project_root,
+                            "${CONFIG_FILE_GRADLE}",
+                            ["clean", "build"].collect { t -> StringUtils.join(":", env.param_project_module, t) }.join(" ")
+                    )
+                    sh "${cmd}"
                     withSonarQubeEnv('sonarqube') {
-                        cmd = StringUtils.format(
-                                "chmod +x {0}/gradlew && {0}/gradlew --init-script {1} --build-file {0}/build.gradle {2} sonar -x test --refresh-dependencies -Dsonar.projectKey=czy21 -Dsonar.projectName='czy21'",
+                        snoarqube_cmd = StringUtils.format(
+                                "chmod +x {0}/gradlew && {0}/gradlew --init-script {1} --build-file {0}/build.gradle {2}",
                                 env.param_project_root,
                                 "${CONFIG_FILE_GRADLE}",
-                                tasks.collect { t -> StringUtils.join(":", env.param_project_module, t) }.join(" ")
+                                "snoar -Dsonar.projectKey=czy21 -Dsonar.projectName='czy21'"
                         )
-                        sh "${cmd}"
+                        sh "${snoarqube_cmd}"
                     }
                 }
             },
