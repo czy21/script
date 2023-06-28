@@ -62,7 +62,7 @@ def build() {
                             "${CONFIG_FILE_GRADLE}",
                             "sonarqube"
                         )
-                        sh '${gradle_sonarqube_cmd}'
+                        sh "${gradle_sonarqube_cmd}"
                     }
                 }
             },
