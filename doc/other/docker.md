@@ -12,13 +12,4 @@ ip link set macvlan2 up
 ip route add <target container ip> dev macvlan2
 # 删除macvlan接口
 ip link delete macvlan2
-
-# create macvlan diff net
-docker network create -d macvlan --subnet=192.168.5.0/24 --gateway=192.168.5.1 -o parent=ens160 vlan50
-docker run --rm -dit --network vlan50 --ip 192.168.5.17 --name macvlan-alpine1 alpine:latest ash
-
-ip link add macvlan50 link ens160 type macvlan mode bridge
-ip addr add 192.168.5.1 dev macvlan50
-ip link set macvlan50 up
-ip route add 192.168.5.0/24 dev macvlan50
 ```
