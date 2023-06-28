@@ -55,7 +55,7 @@ def build() {
                             ["clean", "build"].collect { t -> StringUtils.join(":", env.param_project_module, t) }.join(" ")
                     )
                     sh "${cmd}"
-                    withSonarQubeEnv('My SonarQube Server') {
+                    withSonarQubeEnv('sonarqube') {
                         gradle_sonarqube_cmd=StringUtils.format(
                             "chmod +x {0}/gradlew && {0}/gradlew --init-script {1} --build-file {0}/build.gradle {2}",
                             env.param_project_root,
