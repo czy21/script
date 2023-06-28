@@ -49,13 +49,21 @@ def build() {
                 }
                 configFileProvider([configFile(fileId: "gradle.config", variable: 'CONFIG_FILE_GRADLE')]) {
                     cmd = StringUtils.format(
-                            "chmod +x {0}/gradlew && {0}/gradlew --init-script {2} --build-file {0}/build.gradle {3} -x test --refresh-dependencies",
+                            "chmod +x {0}/gradlew && {0}/gradlew --init-script {1} --build-file {0}/build.gradle {2} -x test --refresh-dependencies",
                             env.param_project_root,
-                            env.param_gradle_user_home,
                             "${CONFIG_FILE_GRADLE}",
                             ["clean", "build"].collect { t -> StringUtils.join(":", env.param_project_module, t) }.join(" ")
                     )
                     sh "${cmd}"
+                    withSonarQubeEnv('My SonarQube Server') {
+                        gradle_sonarqube_cmd=StringUtils.format(
+                            "chmod +x {0}/gradlew && {0}/gradlew --init-script {1} --build-file {0}/build.gradle {2} -x test --refresh-dependencies",
+                            env.param_project_root,
+                            "${CONFIG_FILE_GRADLE}",
+                            "-Dsonar.projectKey=czy21 -Dsonar.projectName='czy21'"
+                        )
+                        sh '${gradle_sonarqube_cmd}'
+                    }
                 }
             },
             go    : {
