@@ -90,6 +90,7 @@ def build() {
             }
     ]
     common.writeParamToYaml()
+    env.SONARQUBE_HOME = "${tool 'sonarqube-4.8.0'}"
     cmdMap.get(env.param_code_type).call()
 }
 
