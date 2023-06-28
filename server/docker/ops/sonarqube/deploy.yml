@@ -1,0 +1,25 @@
+version: "3.9"
+
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 9000
+
+services:
+
+  sonarqube:
+    image: sonarqube:10.1-community
+    container_name: sonarqube
+    labels:
+      <<: *traefik-label
+    expose:
+      - "9000"
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/opt/sonarqube/data/
+      - {{ param_docker_data }}/{{ param_role_name }}/extensions/:/opt/sonarqube/extensions/
+      - {{ param_docker_data }}/{{ param_role_name }}/logs/:/opt/sonarqube/logs/
+    environment:
+      SONAR_JDBC_URL: jdbc:postgresql://{{ param_db_pgsql_host }}:{{ param_db_pgsql_port }}/sonarqube
+      SONAR_JDBC_USERNAME: "{{ param_db_pgsql_username }}"
+      SONAR_JDBC_PASSWORD: "{{ param_db_pgsql_password }}"
+    restart: always
