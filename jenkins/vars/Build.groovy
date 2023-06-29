@@ -50,6 +50,9 @@ def call() {
             }
             stage('analysis') {
                 steps {
+                    when {
+                        expression { params.param_code_analysis == true }
+                    }
                     script {
                         new Analysis().scan()
                     }
