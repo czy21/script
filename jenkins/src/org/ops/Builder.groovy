@@ -65,9 +65,8 @@ def build() {
                                     "{0} {1}",
                                     cmd_base,
                                     StringUtils.format(
-                                            "sonar -Dsonar.projectKey={0} -Dsonar.projectName={0} -Dsonar.projectVersion={1}",
-                                            "${env.param_release_name}",
-                                            "${env.param_release_version}"
+                                            "sonar -Dsonar.projectKey={0} -Dsonar.projectVersion={1}",
+                                            "${env.param_release_name}", "${env.param_release_version}"
                                     )
                             )
                             sh "${snoarqube_cmd}"
