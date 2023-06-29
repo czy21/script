@@ -61,8 +61,7 @@ def build() {
                                 env.param_project_root,
                                 "${CONFIG_FILE_GRADLE}",
                                 StringUtils.format(
-                                        "sonar -Dsonar.projectKey={0} -Dsonar.projectName={1}",
-                                        "czy21",
+                                        "sonar -Dsonar.projectKey={0} -Dsonar.projectName={0}",
                                         "${env.param_release_name}"
                                 )
                         )
