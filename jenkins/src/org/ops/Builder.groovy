@@ -10,7 +10,7 @@ def build() {
     env.param_project_context = PathUtils.ofPath(env.param_project_root, env.param_project_module)
     env.param_docker_context = StringUtils.isNotNull(env.param_docker_context) ? PathUtils.ofPath(env.param_project_root, env.param_docker_context) : env.param_project_context
     env.param_docker_file = PathUtils.ofPath(env.param_docker_context, "Dockerfile")
-    env.param_release_image = PathUtils.ofPath(env.param_registry_repo,env.param_registry_dir,env.param_release_name)
+    env.param_release_image = PathUtils.ofPath(env.param_registry_repo, env.param_registry_dir, env.param_release_name)
     env.param_release_version = StringUtils.defaultIfEmpty(env.param_release_version, params.param_git_branch)
     def sdkMap = [
             java  : {
@@ -48,22 +48,22 @@ def build() {
                     }
                 }
                 configFileProvider([configFile(fileId: "gradle.config", variable: 'CONFIG_FILE_GRADLE')]) {
-                    cmd = StringUtils.format(
-                            "chmod +x {0}/gradlew && {0}/gradlew --init-script {1} --build-file {0}/build.gradle {2} -x test --refresh-dependencies",
+                    cmd_base = StringUtils.format(
+                            "chmod +x {0}/gradlew && {0}/gradlew --init-script {1} --build-file {0}/build.gradle",
                             env.param_project_root,
                             "${CONFIG_FILE_GRADLE}",
+                    )
+                    cmd = StringUtils.format(
+                            "{0} {1} -x test --refresh-dependencies",
+                            cmd_base,
                             ["clean", "build"].collect { t -> StringUtils.join(":", env.param_project_module, t) }.join(" ")
                     )
                     sh "${cmd}"
-                    withSonarQubeEnv('sonarqube') {
+                    withSonarQubeEnv("${env.param_sonarqube_server}") {
                         snoarqube_cmd = StringUtils.format(
-                                "chmod +x {0}/gradlew && {0}/gradlew --init-script {1} --build-file {0}/build.gradle {2} ",
-                                env.param_project_root,
-                                "${CONFIG_FILE_GRADLE}",
-                                StringUtils.format(
-                                        "sonar -Dsonar.projectKey={0} -Dsonar.projectName={0}",
-                                        "${env.param_release_name}"
-                                )
+                                "{0} {1}",
+                                cmd_base,
+                                StringUtils.format("sonar -Dsonar.projectKey={0} -Dsonar.projectName={0}", "${env.param_release_name}")
                         )
                         sh "${snoarqube_cmd}"
                     }
