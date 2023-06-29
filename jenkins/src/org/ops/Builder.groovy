@@ -59,7 +59,7 @@ def build() {
                             ["clean", "build"].collect { t -> StringUtils.join(":", env.param_project_module, t) }.join(" ")
                     )
                     sh "${cmd}"
-                    if (Boolean.getBoolean("${params.param_code_analysis}")) {
+                    if (params.param_code_analysis) {
                         withSonarQubeEnv("${env.param_sonarqube_server}") {
                             snoarqube_cmd = StringUtils.format(
                                     "{0} {1}",
