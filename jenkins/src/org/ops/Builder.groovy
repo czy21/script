@@ -72,7 +72,7 @@ def build() {
 //                            sh "${snoarqube_cmd}"
 //                        }
                         env.SONARQUBE_HOME = "${tool 'sonarqube-4.8.0'}"
-                        env.PATH = "${SONARQUBE_HOME}:${PATH}"
+                        env.PATH = "${SONARQUBE_HOME}/bin:${PATH}"
                         withSonarQubeEnv("${env.param_sonarqube_server}") {
                             def sonar_scanner_cmd = StringUtils.format(
                                     "sonar-scanner -Dsonar.projectKey={0} -Dsonar.projectVersion={1} -Dsonar.sources=. -Dsonar.java.binaries=**/build/classes",
