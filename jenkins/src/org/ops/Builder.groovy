@@ -59,17 +59,19 @@ def build() {
                             ["clean", "build"].collect { t -> StringUtils.join(":", env.param_project_module, t) }.join(" ")
                     )
                     sh "${cmd}"
-                    withSonarQubeEnv("${env.param_sonarqube_server}") {
-                        snoarqube_cmd = StringUtils.format(
-                                "{0} {1}",
-                                cmd_base,
-                                StringUtils.format(
-                                        "sonar -Dsonar.projectKey={0} -Dsonar.projectName={0} -Dsonar.projectVersion={1}",
-                                        "${env.param_release_name}",
-                                        "${env.param_release_version}"
-                                )
-                        )
-                        sh "${snoarqube_cmd}"
+                    if ("${params.param_code_analysis}"){
+                        withSonarQubeEnv("${env.param_sonarqube_server}") {
+                            snoarqube_cmd = StringUtils.format(
+                                    "{0} {1}",
+                                    cmd_base,
+                                    StringUtils.format(
+                                            "sonar -Dsonar.projectKey={0} -Dsonar.projectName={0} -Dsonar.projectVersion={1}",
+                                            "${env.param_release_name}",
+                                            "${env.param_release_version}"
+                                    )
+                            )
+                            sh "${snoarqube_cmd}"
+                        }
                     }
                 }
             },
