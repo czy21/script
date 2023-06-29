@@ -65,7 +65,7 @@ def build() {
                         withSonarQubeEnv("${env.param_sonarqube_server}") {
                             def sonar_scanner_cmd = StringUtils.format(
                                     "sonar-scanner -Dsonar.projectKey={0} -Dsonar.projectVersion={1} -Dsonar.sources={2} -Dsonar.java.binaries=**/build/classes",
-                                    "${env.param_release_name}", "${env.param_project_root}".replace("${env.WORKSPACE}",""),"${env.param_release_version}"
+                                    "${env.param_release_name}", "${env.param_release_version}", "${env.param_project_root}".replace("${env.WORKSPACE}", "")
                             )
                             sh "${sonar_scanner_cmd}"
                         }
