@@ -60,23 +60,12 @@ def build() {
                     )
                     sh "${cmd}"
                     if (params.param_code_analysis) {
-//                        withSonarQubeEnv("${env.param_sonarqube_server}") {
-//                            snoarqube_cmd = StringUtils.format(
-//                                    "{0} {1}",
-//                                    cmd_base,
-//                                    StringUtils.format(
-//                                            "sonar -Dsonar.projectKey={0} -Dsonar.projectVersion={1}",
-//                                            "${env.param_release_name}", "${env.param_release_version}"
-//                                    )
-//                            )
-//                            sh "${snoarqube_cmd}"
-//                        }
                         env.SONARQUBE_HOME = "${tool 'sonarqube-4.8.0'}"
                         env.PATH = "${SONARQUBE_HOME}/bin:${PATH}"
                         withSonarQubeEnv("${env.param_sonarqube_server}") {
                             def sonar_scanner_cmd = StringUtils.format(
-                                    "sonar-scanner -Dsonar.projectKey={0} -Dsonar.projectVersion={1} -Dsonar.sources=. -Dsonar.java.binaries=**/build/classes",
-                                    "${env.param_release_name}", "${env.param_release_version}"
+                                    "sonar-scanner -Dsonar.projectKey={0} -Dsonar.projectVersion={1} -Dsonar.sources={2} -Dsonar.java.binaries=**/build/classes",
+                                    "${env.param_release_name}", "${env.param_project_root}","${env.param_release_version}"
                             )
                             sh "${sonar_scanner_cmd}"
                         }
