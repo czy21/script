@@ -1,3 +1,5 @@
+import java.nio.file.Path
+
 static void main(String[] args) {
 //    def a = [
 //            java: {
@@ -6,13 +8,14 @@ static void main(String[] args) {
 //    ]
 //    a.get("java").call()
 
-    Map<String, Object> a = new HashMap<>();
-    a.put("a", "111");
-    a.put("b", "null")
-    a.put("c", "null")
-    def b = a.findAll { k, v -> v in String && v == "null" }.each {
-        it.value = null
-        return it
-    }
-    println "aa"
+//    Map<String, Object> a = new HashMap<>();
+//    a.put("a", "111");
+//    a.put("b", "null")
+//    a.put("c", "null")
+//    def b = a.findAll { k, v -> v in String && v == "null" }.each {
+//        it.value = null
+//        return it
+//    }
+
+    println Path.of("/a/").relativize(Path.of("/a/b/c/"))
 }
