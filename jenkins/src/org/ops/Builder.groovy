@@ -58,17 +58,6 @@ def build() {
                             ["clean", "build"].collect { t -> StringUtils.join(":", env.param_project_module, t) }.join(" ")
                     )
                     sh "${cmd}"
-                    if (params.param_code_analysis) {
-                        env.SONARQUBE_HOME = "${tool 'sonarqube-4.8.0'}"
-                        env.PATH = "${SONARQUBE_HOME}/bin:${PATH}"
-                        withSonarQubeEnv("${env.param_sonarqube_server}") {
-                            def sonar_scanner_cmd = StringUtils.format(
-                                    "sonar-scanner -Dsonar.projectKey={0} -Dsonar.projectVersion={1} -Dsonar.sources={2} -Dsonar.java.binaries=**/build/classes",
-                                    "${env.param_release_name}", "${env.param_release_version}", PathUtils.relativize("${env.WORKSPACE}", "${env.param_project_root}")
-                            )
-                            sh "${sonar_scanner_cmd}"
-                        }
-                    }
                 }
             },
             go    : {
