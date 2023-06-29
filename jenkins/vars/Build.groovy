@@ -1,4 +1,5 @@
 #!/usr/bin/env groovy
+import org.ops.Analysis
 import org.ops.Builder
 import org.ops.Common
 import org.ops.Docker
@@ -44,6 +45,13 @@ def call() {
                     script {
                         new Common().loadParam()
                         new Builder().build()
+                    }
+                }
+            }
+            stage('analysis') {
+                steps {
+                    script {
+                        new Analysis().scan()
                     }
                 }
             }
