@@ -1,0 +1,25 @@
+version: "3.9"
+
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 80
+
+services:
+  baserow:
+    image: baserow/baserow:1.18.0
+    container_name: baserow
+    labels:
+      <<: *traefik-label
+    privileged: true
+    user: root
+    expose:
+      - "80"
+      - "443"
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/baserow/data/
+    environment:
+      BASEROW_PUBLIC_URL: http://baserow.czy21-internal.com
+      REDIS_URL: redis://:{{ param_db_redis_password }}@{{ param_db_redis_host }}:{{ param_db_redis_port }}
+      DATABASE_URL: postgresql://{{ param_db_pgsql_username }}:{{ param_db_pgsql_password }}@{{ param_db_pgsql_host }}:{{ param_db_pgsql_port }}/baserow
+    restart: always
