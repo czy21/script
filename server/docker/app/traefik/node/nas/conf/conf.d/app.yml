@@ -95,6 +95,9 @@ http:
     sonarqube:
       rule: Host(`sonarqube.czy21-internal.com`)
       service: sonarqube@docker
+    chat2db:
+      rule: Host(`chat2db.czy21-internal.com`)
+      service: chat2db@docker
 #    pulsar-proxy:
 #      rule: Host(`pulsar-proxy.czy21-internal.com`)
 #      service: pulsar-proxy@docker

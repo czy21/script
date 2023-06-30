@@ -1,0 +1,23 @@
+version: "3.9"
+
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 10824
+
+services:
+  chat2db:
+    image: "{{ param_registry_url }}/library/chat2db"
+    container_name: chat2db
+    labels:
+      <<: *traefik-label
+    privileged: true
+    user: root
+    expose:
+      - "10824"
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/data/
+    environment:
+      JAVA_OPTS: "-Dspring.datasource.url=jdbc:h2:/data/db/chat2db;MODE=MYSQL"
+      LOG_PATH: "/data/log/"
+    restart: always
