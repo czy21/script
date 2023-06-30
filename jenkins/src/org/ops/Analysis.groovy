@@ -16,8 +16,7 @@ def scan() {
     withSonarQubeEnv("${env.param_sonarqube_server}") {
         def scanCmdMap = [
                 java: {
-                    return StringUtils.format("{0} -Dsonar.java.binaries=**/build/classes", scanCmdPrefix,
-                    )
+                    return StringUtils.format("{0} -Dsonar.java.binaries=**/{1}/classes", scanCmdPrefix, "mvn" == env.param_java_build_tool ? "target" : "build")
                 }
         ]
         def scanCmd = scanCmdMap.get(env.param_code_type).call()
