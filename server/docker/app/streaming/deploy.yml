@@ -1,9 +1,24 @@
 version: "3.9"
 
-x-traefik--qbittorrent-label: &traefik-qbittorrent-label
+x-traefik-qbittorrent-label: &traefik-qbittorrent-label
   traefik.enable: true
   traefik.http.routers.qbittorrent.service: qbittorrent
   traefik.http.services.qbittorrent.loadbalancer.server.port: 8080
+
+x-traefik-jackett-label: &traefik-jackett-label
+  traefik.enable: true
+  traefik.http.routers.jackett.service: jackett
+  traefik.http.services.jackett.loadbalancer.server.port: 9117
+
+x-traefik-radarr-label: &traefik-radarr-label
+  traefik.enable: true
+  traefik.http.routers.radarr.service: radarr
+  traefik.http.services.radarr.loadbalancer.server.port: 7878
+
+x-traefik-sonarr-label: &traefik-sonarr-label
+  traefik.enable: true
+  traefik.http.routers.sonarr.service: sonarr
+  traefik.http.services.sonarr.loadbalancer.server.port: 8989
 
 services:
   qbittorrent:
@@ -21,10 +36,11 @@ services:
       WEBUI_PORT: 8080
     restart: always
 
-
   jackett:
     image: linuxserver/jackett
     container_name: jackett
+    labels:
+      <<: *traefik-jackett-label
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/data/jackett/:/config/
     environment:
@@ -34,10 +50,11 @@ services:
       AUTO_UPDATE: "true"
     restart: always
 
-
   radarr:
     image: linuxserver/radarr
     container_name: radarr
+    labels:
+      <<: *traefik-radarr-label
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/data/radarr/:/config/
       - {{ param_public_path }}/media/:/media/
@@ -47,10 +64,11 @@ services:
       TZ: Asia/Shanghai
     restart: always
 
-
   sonarr:
     image: linuxserver/sonarr
     container_name: sonarr
+    labels:
+      <<: *traefik-sonarr-label
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/data/sonarr/:/config/
       - {{ param_public_path }}/media/:/media/
