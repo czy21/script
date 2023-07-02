@@ -1,0 +1,27 @@
+version: "3.9"
+
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 8096
+
+services:
+  emby:
+    image: emby/embyserver:4.8.0.39
+    container_name: emby
+    hostname: emby
+    labels:
+      <<: *traefik-label
+    environment:
+      - UID=1000
+      - GID=100
+      - GIDLIST=100
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/config/
+      - {{ param_public_path }}/media/:/media/
+    expose:
+      - "8096"
+      - "8920"
+    devices:
+      - /dev/dri:/dev/dri
+    restart: always
