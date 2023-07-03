@@ -22,7 +22,7 @@ x-traefik-sonarr-label: &traefik-sonarr-label
 
 services:
   qbittorrent:
-    image: linuxserver/qbittorrent:4.4.5
+    image: linuxserver/qbittorrent:4.5.4
     container_name: qbittorrent
     labels:
       <<: *traefik-qbittorrent-label
@@ -37,7 +37,7 @@ services:
     restart: always
 
   jackett:
-    image: linuxserver/jackett
+    image: linuxserver/jackett:0.21.361
     container_name: jackett
     labels:
       <<: *traefik-jackett-label
@@ -51,7 +51,7 @@ services:
     restart: always
 
   radarr:
-    image: linuxserver/radarr
+    image: linuxserver/radarr:4.5.2
     container_name: radarr
     labels:
       <<: *traefik-radarr-label
@@ -65,7 +65,7 @@ services:
     restart: always
 
   sonarr:
-    image: linuxserver/sonarr
+    image: linuxserver/sonarr:3.0.10
     container_name: sonarr
     labels:
       <<: *traefik-sonarr-label
