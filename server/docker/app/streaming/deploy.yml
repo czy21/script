@@ -28,7 +28,7 @@ services:
       <<: *traefik-qbittorrent-label
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/data/qbittorrent/:/config/
-      - {{ param_public_path }}/media/:/media/
+      - {{ param_public_path }}/media/:{{ param_public_path }}/media/
     environment:
       PUID: 1000
       PGID: 1000
@@ -57,7 +57,7 @@ services:
       <<: *traefik-radarr-label
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/data/radarr/:/config/
-      - {{ param_public_path }}/media/:/media/
+      - {{ param_public_path }}/media/:{{ param_public_path }}/media/
     environment:
       PUID: 1000
       PGID: 1000
@@ -71,7 +71,7 @@ services:
       <<: *traefik-sonarr-label
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/data/sonarr/:/config/
-      - {{ param_public_path }}/media/:/media/
+      - {{ param_public_path }}/media/:{{ param_public_path }}/media/
     environment:
       PUID: 1000
       PGID: 1000
