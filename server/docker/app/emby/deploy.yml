@@ -18,7 +18,8 @@ services:
       - GIDLIST=100
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/config/
-      - {{ param_public_path }}/media/:/media/
+      - {{ param_public_path }}/media/tv/:/media/tv/
+      - {{ param_public_path }}/media/mv/:/media/mv/
     expose:
       - "8096"
       - "8920"
