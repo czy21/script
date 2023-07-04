@@ -12,17 +12,16 @@ services:
     hostname: emby
     labels:
       <<: *traefik-label
+    expose:
+      - "8096"
+      - "8920"
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/config/
+      - {{ param_public_path }}/media/:/media/
     environment:
       - UID=1000
       - GID=100
       - GIDLIST=100
-    volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/data/:/config/
-      - {{ param_public_path }}/media/tv/:/media/tv/
-      - {{ param_public_path }}/media/mv/:/media/mv/
-    expose:
-      - "8096"
-      - "8920"
     devices:
       - /dev/dri:/dev/dri
     restart: always
