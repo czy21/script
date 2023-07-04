@@ -18,7 +18,11 @@ logger = logging.getLogger()
 
 if __name__ == '__main__':
     log_util.init_logger()
-    private_key = pathlib.Path(__file__).parent.joinpath("___temp/private-key").as_posix()
+    private_key = pathlib.Path(__file__).parent.joinpath("___temp/private-key")
+    if not private_key.exists():
+        logger.error("ssh private-key not exists")
+        sys.exit(0)
+    private_key = private_key.as_posix()
     ansible_hosts = pathlib.Path(__file__).parent.joinpath("ansible-hosts").as_posix()
     parser = argparse.ArgumentParser(formatter_class=share.CustomHelpFormatter, conflict_handler="resolve")
     share.Installer.set_common_argument(parser)
