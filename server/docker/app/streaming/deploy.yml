@@ -61,7 +61,7 @@ services:
     restart: always
 
   radarr:
-    image: linuxserver/radarr:4.5.2
+    image: linuxserver/radarr:4.6.4
     container_name: radarr
     labels:
       <<: *traefik-radarr-label
@@ -87,7 +87,8 @@ services:
       PGID: 1000
       TZ: Asia/Shanghai
     restart: always
-
+  # prowlarr:
+  #   image: 
   bazarr:
     image: linuxserver/bazarr:1.2.2
     container_name: bazarr
@@ -102,7 +103,7 @@ services:
       TZ: Asia/Shanghai
 
   chinesesubfinder:
-    image: allanpk716/chinesesubfinder:latest
+    image: allanpk716/chinesesubfinder:v0.53.3
     container_name: chinesesubfinder
     labels:
       <<: *traefik-chinesesubfinder-label
