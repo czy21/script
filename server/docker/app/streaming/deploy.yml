@@ -20,6 +20,11 @@ x-traefik-sonarr-label: &traefik-sonarr-label
   traefik.http.routers.sonarr.service: sonarr
   traefik.http.services.sonarr.loadbalancer.server.port: 8989
 
+x-traefik-bazarr-label: &traefik-bazarr-label
+  traefik.enable: true
+  traefik.http.routers.bazarr.service: bazarr
+  traefik.http.services.bazarr.loadbalancer.server.port: 6767
+
 services:
   qbittorrent:
     image: linuxserver/qbittorrent:4.5.4
@@ -78,4 +83,15 @@ services:
       TZ: Asia/Shanghai
     restart: always
 
-
+  bazarr:
+    image: linuxserver/bazarr:1.2.2
+    container_name: bazarr
+    labels:
+      <<: *traefik-bazarr-label
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/data/bazarr/:/config/
+      - {{ param_public_path }}/media/:{{ param_public_path }}/media/
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: Asia/Shanghai

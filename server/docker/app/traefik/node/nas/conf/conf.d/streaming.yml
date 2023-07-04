@@ -1,14 +1,17 @@
 http:
   routers:
-    emby:
-      rule: Host(`emby.czy21-internal.com`)
-      service: emby@docker
-    sonarr:
-      rule: Host(`sonarr.czy21-internal.com`)
-      service: sonarr@docker
-    radarr:
-      rule: Host(`radarr.czy21-internal.com`)
-      service: radarr@docker
     jackett:
       rule: Host(`jackett.czy21-internal.com`)
       service: jackett@docker
+    radarr:
+      rule: Host(`radarr.czy21-internal.com`)
+      service: radarr@docker
+    sonarr:
+      rule: Host(`sonarr.czy21-internal.com`)
+      service: sonarr@docker
+    bazarr:
+      rule: Host(`bazarr.czy21-internal.com`)
+      service: bazarr@docker
+    emby:
+      rule: Host(`emby.czy21-internal.com`)
+      service: emby@docker
