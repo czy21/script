@@ -98,6 +98,9 @@ http:
     chat2db:
       rule: Host(`chat2db.czy21-internal.com`)
       service: chat2db@docker
+    dbeaver:
+      rule: Host(`dbeaver.czy21-internal.com`)
+      service: dbeaver@docker
 #    pulsar-proxy:
 #      rule: Host(`pulsar-proxy.czy21-internal.com`)
 #      service: pulsar-proxy@docker

@@ -25,6 +25,11 @@ x-traefik-bazarr-label: &traefik-bazarr-label
   traefik.http.routers.bazarr.service: bazarr
   traefik.http.services.bazarr.loadbalancer.server.port: 6767
 
+x-traefik-chinesesubfinder-label: &traefik-chinesesubfinder-label
+  traefik.enable: true
+  traefik.http.routers.chinesesubfinder.service: chinesesubfinder
+  traefik.http.services.chinesesubfinder.loadbalancer.server.port: 19035
+
 services:
   qbittorrent:
     image: linuxserver/qbittorrent:4.5.4
@@ -95,3 +100,17 @@ services:
       PUID: 1000
       PGID: 1000
       TZ: Asia/Shanghai
+
+  chinesesubfinder:
+    image: allanpk716/chinesesubfinder:latest
+    container_name: chinesesubfinder
+    labels:
+      <<: *traefik-chinesesubfinder-label
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/data/chinesesubfinder/:/config/
+      - {{ param_public_path }}/media/:/media/
+    environment:
+      PUID: 1000    
+      PGID: 1000        
+      TZ: Asia/Shanghai
+    restart: always
