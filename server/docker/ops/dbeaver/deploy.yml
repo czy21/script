@@ -1,0 +1,20 @@
+version: "3.9"
+
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 8978
+
+services:
+  dbeaver:
+    image: dbeaver/cloudbeaver:23.1.1
+    container_name: dbeaver
+    labels:
+      <<: *traefik-label
+    privileged: true
+    user: root
+    expose:
+      - "8978"
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/opt/cloudbeaver/workspace/
+    restart: always
