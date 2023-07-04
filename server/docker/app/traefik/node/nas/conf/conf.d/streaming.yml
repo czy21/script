@@ -15,3 +15,6 @@ http:
     emby:
       rule: Host(`emby.czy21-internal.com`)
       service: emby@docker
+    chinesesubfinder:
+      rule: Host(`chinesesubfinder.czy21-internal.com`)
+      service: chinesesubfinder@docker
