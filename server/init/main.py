@@ -31,7 +31,7 @@ if __name__ == '__main__':
     parser.add_argument('-t', '--tag', required=True, type=str, help="t1,t2")
     parser.add_argument('-k', '--ask-pass', action="store_true", help="ask for connection password")
     parser.add_argument('-u', '--user', required=False, type=str, help="connect as this user (default=[param_user_ops])")
-    parser.add_argument('--check', action="store_true", help="don't make any changes")
+    parser.add_argument('--dry-run', action="store_true", help="don't make any changes")
     parser.add_argument('--no-step', action="store_true", help="disable one-step-at-a-time")
     args = parser.parse_args()
     env_file: pathlib.Path = pathlib.Path(__file__).parent.joinpath(args.env_file)
@@ -72,7 +72,7 @@ if __name__ == '__main__':
         ansible_playbook_cmd.append("--step")
     if args.debug:
         ansible_playbook_cmd.append("-vv")
-    if args.check:
+    if args.dry_run:
         ansible_playbook_cmd.append("--check")
     _cmds.append("echo -n '' > {0}".format(ansible_log_file))
     _cmds.append(collection_util.flat_to_str(ansible_playbook_cmd))
