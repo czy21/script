@@ -314,11 +314,11 @@ class Installer:
                         t.as_posix(),
                         ".jinja2ignore {0}".format(self.__loop_namespaces.__name__)
                     )
-
-                    file_util.write_text(
-                        role_output_path.joinpath(t.relative_to(role_path)),
-                        file_util.read_text(t) if any(_rules.values()) else template_util.Template(file_util.read_text(t)).render(**role_env)
-                    )
+                    if not if any(_rules.values()):
+                        file_util.write_text(
+                            role_output_path.joinpath(t.relative_to(role_path)),
+                            template_util.Template(file_util.read_text(t)).render(**role_env)
+                        )
 
                 # collect command
                 _cmds = [
