@@ -21,7 +21,8 @@ function upload_exec_py() {
   local del_cmd="rm -rf \$HOME/${dst_name}"
   local ssh_opt="-o StrictHostKeyChecking=no"
   local ssh_cmd="ssh ${ssh_opt} ${host}"
-  local src_path_parent_files=$(cd ${src_path}/../;find -maxdepth 1 -name "env*.yaml" -o -name "share.py" -o -name "requirements.txt")
+  local src_path_parent_files=$(cd ${src_path}/../;find . -maxdepth 1 -name "env*.yaml" -o -name "share.py" -o -name "requirements.txt")
+  echo ${src_path_parent_files}
   tar -cf - --exclude="__pycache__" --exclude="${build_name}" \
   -C ${src_path} . \
   -C $(realpath ${utility_path}/../) ./$(basename ${utility_path}) \
