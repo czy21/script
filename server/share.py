@@ -314,7 +314,7 @@ class Installer:
                         t.as_posix(),
                         ".jinja2ignore {0}".format(self.__loop_namespaces.__name__)
                     )
-                    if not if any(_rules.values()):
+                    if not any(_rules.values()):
                         file_util.write_text(
                             role_output_path.joinpath(t.relative_to(role_path)),
                             template_util.Template(file_util.read_text(t)).render(**role_env)
