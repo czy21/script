@@ -82,17 +82,12 @@ def echo_action(role, content, exec_file=None) -> str:
     return 'echo "' + c + '"'
 
 
-def get_dir_dict(path: pathlib.Path, exclude_rules: list = None, select_tip="", col_num=5,
-                 args: argparse.Namespace = None) -> dict:
+def get_dir_dict(path: pathlib.Path, exclude_rules: list = None, select_tip="", col_num=5, args: argparse.Namespace = None) -> dict:
     _dirs = get_match_dirs(exclude_rules, list(filter(lambda a: a.is_dir(), sorted(path.iterdir()))))
     dir_dict: dict = {str(i): t for i, t in enumerate(_dirs, start=1)}
     collection_util.print_grid(["{0}.{1}".format(str(k), v.name) for k, v in dir_dict.items()], col_num=col_num, msg=path.as_posix())
     logger.info("\nplease select {0}:".format(select_tip))
-    dir_nums = []
-    if args.all_namespaces or args.all_roles:
-        dir_nums.extend(dir_dict.keys())
-    else:
-        dir_nums.extend(input().strip().split())
+    dir_nums = input().strip().split()
     return dict((t, dir_dict[t]) for t in dir_nums if t in dir_dict.keys())
 
 
@@ -117,14 +112,11 @@ def select_namespace(root_path: pathlib.Path, deep: int = 1, exclude_rules=None,
         role_dict = {str(i): p for i, p in
                      enumerate(map(lambda a: a["path"], filter(lambda a: a["deep"] == deep_index, flat_dirs)), start=1)}
         collection_util.print_grid(["{0}.{1}".format(k, v.name) for k, v in role_dict.items()], col_num=5, msg=next(iter(role_dict.items()))[1].parent.as_posix())
-        if args.all_namespaces:
-            app_paths = list(role_dict.values())
-        else:
-            logger.info("\nplease select options(example:1 2 ...)")
-            selected = input().strip()
-            if selected == '':
-                sys.exit()
-            app_paths = [role_dict[t] for t in selected.split()]
+        logger.info("\nplease select options(example:1 2 ...)")
+        selected = input().strip()
+        if selected == '':
+            sys.exit()
+        app_paths = [role_dict[t] for t in selected.split()]
         deep_index += 1
     namespaces.extend([
         Namespace(args.namespace if args.namespace else p.name,
@@ -219,13 +211,10 @@ class Installer:
         parser.add_argument('-n', '--namespace', type=str)
         parser.add_argument('-p', '--param', nargs="+", default=[], type=lambda s: dict({split_kv_str(s)}), help="k1=v1 k2=v2")
         parser.add_argument('--env-file', nargs="+", default=[], help="file1 file2")
-        parser.add_argument('--all-roles', action="store_true")
-        parser.add_argument('--all-namespaces', action="store_true")
         parser.add_argument('--ignore-namespace', action="store_true")
         parser.add_argument('--create-namespace', action="store_true")
         parser.add_argument('--debug', action="store_true", help="enable verbose output")
         parser.add_argument('--dry-run', action="store_true", help="only print not submit")
-        parser.add_argument('--rm', action="store_true")
 
     @staticmethod
     def __get_sub_parser_common_attr(name):
@@ -318,12 +307,13 @@ class Installer:
                     role_env |= yaml_util.load(template_util.Template(file_util.read_text(role_env_file)).render(**role_env))
                     file_util.write_text(role_env_output_file, yaml.dump(role_env))
                 # process template
-                for t in filter(lambda f: f.is_file() and not any(regex_util.match_rules(["___temp/", "build/"], f.as_posix()).values()), role_path.rglob("*")):
+                for t in filter(lambda f: f.is_file() and not any(regex_util.match_rules(["___temp", "build"], f.as_posix()).values()), role_path.rglob("*")):
                     _rules = regex_util.match_rules(
                         [*jinja2ignore_rules, role_output_path.joinpath("env.yaml").as_posix()],
                         t.as_posix(),
                         ".jinja2ignore {0}".format(self.__loop_namespaces.__name__)
                     )
+
                     file_util.write_text(
                         role_output_path.joinpath(t.relative_to(role_path)),
                         file_util.read_text(t) if any(_rules.values()) else template_util.Template(file_util.read_text(t)).render(**role_env)
