@@ -238,7 +238,7 @@ class Installer:
     def __init_build_parser(self):
         parser = self.__command_parser.add_parser(**self.__get_sub_parser_common_attr(Command.build.value))
         self.set_common_argument(parser)
-        parser.add_argument("--target", type=str, default="build.sh")
+        parser.add_argument("--target", type=str, default="build.sh", help="(default=build.sh)")
         parser.add_argument('--build-args', nargs="+", default=[])
         parser.add_argument('--tag')
         parser.add_argument('--push', action="store_true")
