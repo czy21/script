@@ -310,7 +310,7 @@ class Installer:
                 # process template
                 for t in filter(lambda f: f.is_file() and not any(regex_util.match_rules(["___temp/", "build/"], f.as_posix()).values()), role_path.rglob("*")):
                     _rules = regex_util.match_rules(
-                        [*jinja2ignore_rules, role_output_path.joinpath("env.yaml").as_posix()],
+                        [*jinja2ignore_rules, role_path.joinpath("env.yaml").as_posix()],
                         t.as_posix(),
                         ".jinja2ignore {0}".format(self.__loop_namespaces.__name__)
                     )
