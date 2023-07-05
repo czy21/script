@@ -53,7 +53,7 @@ def get_cmds(role_title: str,
 
     if args.command == share.Command.install.value:
         if role_conf_path.exists() or (role_node_target_conf_path and role_node_target_conf_path.exists()):
-            if args.rm:
+            if args.rm_conf:
                 target_role_conf_path = target_app_path.joinpath("conf")
                 if target_role_conf_path.exists() and target_app_path.name == role_name:
                     role_conf_relative_files = set(file_util.get_files(role_conf_path, role_output_path.as_posix()))
