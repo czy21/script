@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import pathlib
+import shutil
 from typing import NoReturn
 
 
@@ -14,3 +15,8 @@ def read_text(file: pathlib.Path) -> str:
 def write_text(file: pathlib.Path, text: str) -> NoReturn:
     file.parent.mkdir(parents=True, exist_ok=True)
     file.write_text(text, encoding="utf-8")
+
+
+def copy(src: pathlib.Path, dst: pathlib.Path) -> NoReturn:
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(src, dst)
