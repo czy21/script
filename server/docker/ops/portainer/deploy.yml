@@ -20,7 +20,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - {{ param_docker_data }}/{{ param_role_name }}/data:/data/
       - {{ param_docker_data }}/{{ param_role_name }}/conf/portainer_password:/tmp/portainer_password
-    command: --admin-password $$2y$$05$$hhw173QNdsali/hv8m4IA.X8U6taiu.VTbNOzztt3MTKFDKcko1TC
+    command: --admin-password {{ param_manage_password | htpasswd }}
 #    networks:
 #      macvlan100:
 #        ipv4_address: 192.168.2.147
