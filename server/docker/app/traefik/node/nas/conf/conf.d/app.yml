@@ -26,9 +26,6 @@ http:
     ndisk:
       rule: Host(`ndisk.czy21-internal.com`)
       service: ndisk@docker
-    qbittorrent:
-      rule: Host(`qb.czy21-internal.com`)
-      service: qbittorrent@docker
     flink-jmr:
       rule: Host(`flink-jmr.czy21-internal.com`)
       service: flink-jmr@docker
