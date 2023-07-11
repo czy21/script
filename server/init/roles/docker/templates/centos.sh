@@ -10,6 +10,3 @@ sudo sed -i.bak -e "s|https://download.docker.com|http://{{ param_mirror_raw }}/
 
 sudo yum -y install docker-ce docker-ce-cli containerd.io
 sudo systemctl daemon-reload && sudo systemctl restart docker && sudo systemctl enable docker
-
-# docker compose
-sudo -u root bash -c "echo \"alias docker-compose='docker compose'\" > /etc/profile.d/99-docker-compose.sh"
