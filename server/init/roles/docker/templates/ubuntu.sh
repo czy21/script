@@ -11,10 +11,5 @@ echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.
 sudo sed -i.bak -e "s|https://download.docker.com|http://{{ param_mirror_raw }}/docker-ce|g" /etc/apt/sources.list.d/docker.list
 
 sudo apt-get update
-sudo apt-get -y install docker-ce docker-ce-cli containerd.io docker-compose-plugin
-sudo systemctl daemon-reload
-sudo systemctl restart docker
-sudo systemctl enable docker
-
-# docker compose
-sudo -u root bash -c "echo \"alias docker-compose1='docker compose'\" > /etc/profile.d/99-docker-compose.sh"
+sudo apt-get -y install docker-ce docker-ce-cli containerd.io
+sudo systemctl daemon-reload && sudo systemctl restart docker && sudo systemctl enable docker
