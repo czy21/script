@@ -1,5 +1,8 @@
 http:
   routers:
+    qbittorrent:
+      rule: Host(`qb.czy21-internal.com`)
+      service: qbittorrent@docker
     jackett:
       rule: Host(`jackett.czy21-internal.com`)
       service: jackett@docker
