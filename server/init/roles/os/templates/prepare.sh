@@ -17,15 +17,15 @@ if [ "centos" == "${os_distribution}" ]; then
             cp -r {{ param_remote_role_path }}/*.repo /etc/yum.repos.d/
             ;;
         *)
-          sed -i.bak \
-          -e "s,^mirrorlist=,#mirrorlist=,g" \
-          -e "s,^#baseurl=,baseurl=,g" \
-          -e "s,^baseurl=http://mirror.centos.org,baseurl=http://{{ param_mirror_yum }},g" /etc/yum.repos.d/CentOS-*.repo
+          echo "nothing"
     esac
 fi
 
 if [ "ubuntu" == "${os_distribution}" ]; then
-  sed -i.bak "s,\(http\|https\)://.*.ubuntu.com,http://{{ param_mirror_apt }},g" /etc/apt/sources.list
+  if [ ! -f "/etc/apt/sources.list.bak" ];then
+    cp /etc/apt/sources.list /etc/apt/sources.list.bak
+  fi
+  sed "s,\(http\|https\)://.*.ubuntu.com,http://{{ param_mirror_apt }},g" /etc/apt/sources.list.bak > /etc/apt/sources.list
 fi
 
 echo -n "
