@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
+import logging
 import os
 import pathlib
 import re
 import shutil
-import typing
 
 from utility import (
     regex as regex_util
 )
+
+logger = logging.getLogger()
 
 
 def dfs_dir(t_path: str, pattern: re = None) -> list:
@@ -42,6 +44,5 @@ def merge_dir(src: pathlib.Path, dst: pathlib.Path, ignore_pattern: list[str]):
     for k, v in resources.items():
         if k.is_dir():
             v.mkdir(parents=True, exist_ok=True)
-    for k, v in resources.items():
-        if k.is_file() and not v.exists():
+        elif k.is_file() and not v.exists():
             shutil.copyfile(k, v)
