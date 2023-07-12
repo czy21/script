@@ -1,6 +1,7 @@
 networks:
   default:
     name: local
+    external: true
 #  vlan2:
 #    external:
 #      name: vlan2
