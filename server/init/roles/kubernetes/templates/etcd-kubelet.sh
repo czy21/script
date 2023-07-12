@@ -2,8 +2,8 @@
 set -e
 
 IPV4S=({{ param_ansible_host_ipv4s | join(' ') }})
-NAMES=({{ param_ansbile_host_names | join(' ') }})
-CLUSTER="{{ param_ansible_host_ipv4s|zip(param_ansbile_host_names) | map('format_args','{1}=https://{0}:2380')|join(',') }}"
+NAMES=({{ param_ansible_host_names | join(' ') }})
+CLUSTER="{{ param_ansible_host_ipv4s|zip(param_ansible_host_names) | map('format_args','{1}=https://{0}:2380')|join(',') }}"
 
 DIR=${HOME}/{{ param_remote_role_path }}/{{ param_k8s_etcd_cluster_name }}
 PKI=${DIR}/pki
