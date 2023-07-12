@@ -44,6 +44,6 @@ function upload_exec_py() {
   done
   cmd+="${PYTHON_EXEC} -B \$HOME/${dst_name}/main.py ${args}"
   ${ssh_cmd} ${cmd}
-  ${ssh_cmd} "tar -zcf - -C ${dst_name} ${tmp_name} ${build_name}" | tar -zxf - -C ${src_path}
+  ${ssh_cmd} "[ -d ${dst_name} ]" && ${ssh_cmd} "tar -zcf - -C ${dst_name} ${tmp_name} ${build_name}" | tar -zxf - -C ${src_path}
   ${ssh_cmd} ${del_cmd}
 }
