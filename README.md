@@ -1,4 +1,4 @@
-# linux(Centos8 Stream,Ubuntu 22.04)
+# linux(Centos Stream 9,Ubuntu 22.04)
 ```
 jenkins             # ci/cd share library pipeline template
 server
@@ -7,8 +7,6 @@ server
 ├── init            # linux: install docker k8s 集群初始化
 ├── omv             # nas: openmediavault
 ├── router          # 软路由: openwrt
-├── rpi             # 树莓派
-└── syno            # 群晖
 ```
 # grafana
 ![avatar](./static/grafana-dashboard.png)
