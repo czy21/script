@@ -120,6 +120,7 @@ services:
       PUID: 1000
       PGID: 1000
       TZ: Asia/Shanghai
+    restart: always
 
   chinesesubfinder:
     image: allanpk716/chinesesubfinder:v0.53.3
