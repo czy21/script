@@ -29,7 +29,9 @@ services:
       GITEA__security__INSTALL_LOCK: true
       GITEA__database__DB_TYPE: sqlite3
       GITEA__service__DISABLE_REGISTRATION: true
+      GITEA__packages__ENABLED: "true"
       GITEA__repository__DEFAULT_REPO_UNITS: repo.code,repo.releases
       GITEA__repository__DISABLED_REPO_UNITS: repo.issues, repo.ext_issues, repo.pulls, repo.wiki, repo.ext_wiki
-      GITEA__packages__ENABLED: "true"
+      GITEA__attachment__MAX_SIZE: 1024
+      GITEA__attachment__MAX_FILES: 20
     restart: always
