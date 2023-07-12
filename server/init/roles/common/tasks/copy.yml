@@ -1,4 +1,5 @@
-- import_tasks: mk.yml
+- name: mkdir
+  file: path={{ param_remote_role_path }} state=directory
 
 - template: src={{ item }} dest={{ param_remote_role_path }}
   with_fileglob:
