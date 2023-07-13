@@ -1,5 +1,9 @@
-site_name: script
+site_name: ""
 docs_dir: doc/public/
-theme: readthedocs
+theme:
+  name: material
 nav:
   - Home: index.md
+  - Docker:
+      - docker/nginx.md
+      - docker/streaming.md
