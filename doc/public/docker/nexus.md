@@ -23,6 +23,6 @@ services:
       - /volume1/storage/docker-data/nexus/data/:/nexus-data/
     environment:
       INSTALL4J_ADD_VM_PARAMS: -Xms4G -Xmx4G -XX:MaxDirectMemorySize=6717M
-      NEXUS_SECURITY_INITIAL_PASSWORD: "***REMOVED***"
+      NEXUS_SECURITY_INITIAL_PASSWORD: "<password>"
     restart: always
 ```

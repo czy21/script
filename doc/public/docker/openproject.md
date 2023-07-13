@@ -25,7 +25,7 @@ services:
       - /volume1/storage/docker-data/openproject/data/pgdata/:/var/openproject/pgdata
       - /volume1/storage/docker-data/openproject/data/assets/:/var/openproject/assets
     environment:
-      DATABASE_URL: "postgresql://postgres:***REMOVED***@192.168.2.18:5432/openproject?sslmode=disable"
+      DATABASE_URL: "postgresql://postgres:<password>@<ip>:5432/openproject?sslmode=disable"
       OPENPROJECT_SECRET_KEY_BASE: secret
       OPENPROJECT_HOST__NAME: ""
       OPENPROJECT_HTTPS: false

@@ -18,16 +18,16 @@ services:
       - /volume1/storage/docker-data/superset/data/superset/:/app/superset_home
     environment:
       DATABASE_DB: superset
-      DATABASE_HOST: 192.168.2.18
-      DATABASE_PASSWORD: ***REMOVED***
+      DATABASE_HOST: <ip>
+      DATABASE_PASSWORD: <password>
       DATABASE_USER: postgres
       DATABASE_PORT: 5432
       DATABASE_DIALECT: postgresql
       POSTGRES_DB: superset
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: ***REMOVED***
+      POSTGRES_PASSWORD: <password>
       PYTHONPATH: /app/pythonpath:/app/docker/pythonpath_dev
-      REDIS_HOST: 192.168.2.2
+      REDIS_HOST: <ip>
       REDIS_PORT: 6379
       FLASK_ENV: production
       SUPERSET_ENV: production
@@ -45,16 +45,16 @@ services:
       - /volume1/storage/docker-data/superset/data/superset/:/app/superset_home
     environment:
       DATABASE_DB: superset
-      DATABASE_HOST: 192.168.2.18
-      DATABASE_PASSWORD: ***REMOVED***
+      DATABASE_HOST: <ip>
+      DATABASE_PASSWORD: <password>
       DATABASE_USER: postgres
       DATABASE_PORT: 5432
       DATABASE_DIALECT: postgresql
       POSTGRES_DB: superset
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: ***REMOVED***
+      POSTGRES_PASSWORD: <password>
       PYTHONPATH: /app/pythonpath:/app/docker/pythonpath_dev
-      REDIS_HOST: 192.168.2.2
+      REDIS_HOST: <ip>
       REDIS_PORT: 6379
       FLASK_ENV: production
       SUPERSET_ENV: production
@@ -73,16 +73,16 @@ services:
       - /volume1/storage/docker-data/superset/data/superset/:/app/superset_home
     environment:
       DATABASE_DB: superset
-      DATABASE_HOST: 192.168.2.18
-      DATABASE_PASSWORD: ***REMOVED***
+      DATABASE_HOST: <ip>
+      DATABASE_PASSWORD: <password>
       DATABASE_USER: postgres
       DATABASE_PORT: 5432
       DATABASE_DIALECT: postgresql
       POSTGRES_DB: superset
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: ***REMOVED***
+      POSTGRES_PASSWORD: <password>
       PYTHONPATH: /app/pythonpath:/app/docker/pythonpath_dev
-      REDIS_HOST: 192.168.2.2
+      REDIS_HOST: <ip>
       REDIS_PORT: 6379
       FLASK_ENV: production
       SUPERSET_ENV: production
@@ -101,16 +101,16 @@ services:
       - /volume1/storage/docker-data/superset/data/superset/:/app/superset_home
     environment:
       DATABASE_DB: superset
-      DATABASE_HOST: 192.168.2.18
-      DATABASE_PASSWORD: ***REMOVED***
+      DATABASE_HOST: <ip>
+      DATABASE_PASSWORD: <password>
       DATABASE_USER: postgres
       DATABASE_PORT: 5432
       DATABASE_DIALECT: postgresql
       POSTGRES_DB: superset
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: ***REMOVED***
+      POSTGRES_PASSWORD: <password>
       PYTHONPATH: /app/pythonpath:/app/docker/pythonpath_dev
-      REDIS_HOST: 192.168.2.2
+      REDIS_HOST: <ip>
       REDIS_PORT: 6379
       FLASK_ENV: production
       SUPERSET_ENV: production

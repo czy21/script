@@ -271,7 +271,7 @@ class Installer:
         if self.env_file:
             env_file_paths.append(self.env_file)
         for ef in args.env_file:
-            ef = pathlib.Path(ef)
+            ef = self.env_file.parent.joinpath(ef)
             if not ef.is_absolute():
                 ef = pathlib.Path.cwd().joinpath(ef)
             if ef not in env_file_paths:

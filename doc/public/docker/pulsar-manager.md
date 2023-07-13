@@ -27,7 +27,7 @@ services:
       SPRING_CONFIGURATION_FILE: /opt/pulsar-manager/application.properties
       JAVA_ARGS: "
       --spring.datasource.driver-class-name=org.postgresql.Driver
-      --spring.datasource.url=jdbc:postgresql://192.168.2.18:5432/pulsar_manager?user=postgres&password=***REMOVED***
+      --spring.datasource.url=jdbc:postgresql://<ip>:5432/pulsar_manager?user=postgres&password=<password>
       --spring.datasource.initialization-mode=NEVER
       "
 

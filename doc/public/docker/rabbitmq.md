@@ -22,5 +22,5 @@ services:
       - /volume1/storage/docker-data/rabbitmq/data/:/var/lib/rabbitmq/
     environment:
       RABBITMQ_DEFAULT_USER: admin
-      RABBITMQ_DEFAULT_PASS: "***REMOVED***"
+      RABBITMQ_DEFAULT_PASS: "<password>"
 ```

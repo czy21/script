@@ -25,8 +25,8 @@ services:
     environment:
       NGINX_PORT: "9123"
       DEBUG: false
-      DATABASE_URL: mysql://admin:***REMOVED***@192.168.2.18:3306/archery
-      CACHE_URL: redis://192.168.2.2:6379/0?PASSWORD=***REMOVED***
+      DATABASE_URL: mysql://<username>:<password>@<ip>:3306/archery
+      CACHE_URL: redis://<ip>:6379/0?PASSWORD=<password>
       CSRF_TRUSTED_ORIGINS: http://127.0.0.1:9123
       ENABLE_LDAP: false
     restart: always

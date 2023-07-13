@@ -17,9 +17,9 @@ services:
       - "8002:8002"
     environment:
       KONG_DATABASE: postgres
-      KONG_PG_HOST: "192.168.2.18"
+      KONG_PG_HOST: "<ip>"
       KONG_PG_USER: "postgres"
-      KONG_PG_PASSWORD: "***REMOVED***"
+      KONG_PG_PASSWORD: "<password>"
       KONG_CASSANDRA_CONTACT_POINTS: kong
       KONG_PROXY_ACCESS_LOG: /dev/stdout
       KONG_PROXY_ERROR_LOG: /dev/stderr
@@ -38,7 +38,7 @@ services:
     expose: ["1337"]
     environment:
       DB_ADAPTER: mysql
-      DB_URI: "mysql://admin:***REMOVED***@192.168.2.18:3306/konga"
+      DB_URI: "mysql://<username>:<password>@<ip>:3306/konga"
       NODE_ENV: production
 
 

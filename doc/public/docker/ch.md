@@ -27,8 +27,8 @@ services:
       - '/volume1/storage/docker-data/ch-1/log/1:/var/log/'
     environment:
       CLICKHOUSE_DB: default
-      CLICKHOUSE_USER: admin
-      CLICKHOUSE_PASSWORD: ***REMOVED***
+      CLICKHOUSE_USER: <username>
+      CLICKHOUSE_PASSWORD: <password>
       CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
   ch-1-2:
     <<: *app-common
@@ -49,7 +49,7 @@ services:
       - '/volume1/storage/docker-data/ch-1/log/2:/var/log/'
     environment:
       CLICKHOUSE_DB: default
-      CLICKHOUSE_USER: admin
-      CLICKHOUSE_PASSWORD: ***REMOVED***
+      CLICKHOUSE_USER: <username>
+      CLICKHOUSE_PASSWORD: <password>
       CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
 ```

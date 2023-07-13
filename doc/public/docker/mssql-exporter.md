@@ -12,10 +12,10 @@ services:
     ports:
       - "4000:4000"
     environment:
-      SERVER: 192.168.2.18
+      SERVER: <ip>
       PORT: 1433
       USERNAME: sa
-      PASSWORD: ***REMOVED***
+      PASSWORD: <password>
       DEBUG: app
 
     user: root

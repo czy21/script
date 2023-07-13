@@ -25,8 +25,8 @@ services:
       - /volume1/storage/docker-data/influxdb/data/:/var/lib/influxdb2/
     environment:
       DOCKER_INFLUXDB_INIT_MODE: setup
-      DOCKER_INFLUXDB_INIT_USERNAME: "admin"
-      DOCKER_INFLUXDB_INIT_PASSWORD: "***REMOVED***"
+      DOCKER_INFLUXDB_INIT_USERNAME: "<username>"
+      DOCKER_INFLUXDB_INIT_PASSWORD: "<password>"
       DOCKER_INFLUXDB_INIT_ORG: "example"
       DOCKER_INFLUXDB_INIT_BUCKET: "default"
     restart: always
