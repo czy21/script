@@ -4,7 +4,7 @@ WORKDIR /app
 COPY requirements.txt mkdocs.yaml ./
 COPY doc ./doc
 RUN pip install --no-cache-dir -r requirements.txt
-RUN mkdocs build build/doc
+RUN mkdocs build -d build/doc
 RUN ls -al
 
 FROM nginx:1.23.4-alpine
