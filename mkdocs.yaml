@@ -58,7 +58,6 @@ nav:
       - mssql-exporter: docker/mssql-exporter.md
       - mysql: docker/mysql.md
       - mysql-slave: docker/mysql-slave.md
-      - nacos: docker/nacos.md
       - ndisk: docker/ndisk.md
       - neo4j: docker/neo4j.md
       - netbox: docker/netbox.md
@@ -96,9 +95,6 @@ nav:
       - technitium: docker/technitium.md
       - teleport: docker/teleport.md
       - traefik: docker/traefik.md
-      - ubuntu-friendlywrt: docker/ubuntu-friendlywrt.md
-      - ubuntu-lede: docker/ubuntu-lede.md
-      - ubuntu-openwrt: docker/ubuntu-openwrt.md
       - vault: docker/vault.md
       - wekan: docker/wekan.md
       - wordpress: docker/wordpress.md
