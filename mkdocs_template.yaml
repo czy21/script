@@ -1,0 +1,8 @@
+site_name: ""
+docs_dir: doc/public/
+theme:
+  name: material
+nav:
+  - Home: index.md
+  - Docker:
+      - {{ param_docker_mds }}
