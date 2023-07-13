@@ -1,15 +1,21 @@
+import logging
 import pathlib
-from utility import file as file_util, template as template_util
+from utility import file as file_util, template as template_util, regex as regex_util
 
+logger = logging.getLogger()
 if __name__ == '__main__':
+    logger.setLevel(logging.DEBUG)
     cwd = pathlib.Path(__file__).cwd()
+    doc_public = cwd.joinpath("doc/public")
     mkdocs = cwd.joinpath("mkdocs.yaml")
     mkdocs_template = cwd.joinpath("mkdocs_template.yaml")
-    docker_deploys = cwd.joinpath("server/docker/build").glob("**/output/deploy.yml")
-    docker_md = cwd.joinpath("doc/public/docker")
-    docker_md_template = docker_md.joinpath("template.md")
+    docker_deploys = cwd.joinpath("server/docker/build")
+    docker_md = doc_public.joinpath("docker")
+    docker_md_template = doc_public.joinpath("docker-template.md")
     docker_mds = []
-    for t in docker_deploys:
+    docker_md_ignore = ["ssl/", "test/"]
+    docker_md_ignore.extend(["{0}/build/output".format(t) for t in ["script"]])
+    for t in filter(lambda f: f.is_file() and not any(regex_util.match_rules(docker_md_ignore, f.as_posix()).values()), docker_deploys.rglob("**/output/deploy.yml")):
         name = t.parent.parent.parent.stem
         content = file_util.read_text(t)
         md_text = template_util.Template(file_util.read_text(docker_md_template)).render(**{"param_docker_compose_content": content})
