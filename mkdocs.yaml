@@ -22,7 +22,6 @@ nav:
       - piwigo: docker/piwigo.md
       - plone: docker/plone.md
       - redmine: docker/redmine.md
-      - script: docker/script.md
       - streaming: docker/streaming.md
       - traefik: docker/traefik.md
       - wordpress: docker/wordpress.md
@@ -108,6 +107,3 @@ nav:
       - taskcafe: docker/taskcafe.md
       - wekan: docker/wekan.md
       - youtrack: docker/youtrack.md
-      - demo-portal-java: docker/demo-portal-java.md
-      - learning-dotnet-portal: docker/learning-dotnet-portal.md
-      - web: docker/web.md
