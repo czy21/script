@@ -15,7 +15,7 @@ if __name__ == '__main__':
     docker_md = doc_public.joinpath("docker")
     docker_md_template = doc.joinpath("docker-template.md")
     docker_mds = []
-    docker_md_ignore = ["ssl/", "test/"]
+    docker_md_ignore = ["ssl/", "test/", "os"]
     docker_md_ignore.extend(["{0}/build/output".format(t) for t in ["script"]])
     for t in filter(lambda f: f.is_file() and not any(regex_util.match_rules(docker_md_ignore, f.as_posix()).values()),
                     docker_deploys.rglob("**/output/deploy.yml")):
