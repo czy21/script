@@ -1,0 +1,38 @@
+# dockerfile
+
+# docker-compose
+```yaml
+version: "3.9"
+
+services:
+
+  mysql-slave:
+    image: mysql:8.0.31
+    container_name: mysql-slave
+    privileged: true
+    user: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - /volume1/storage/docker-data/mysql-slave/data/:/var/lib/mysql/
+      - /volume1/storage/docker-data/mysql-slave/conf/conf.d/:/etc/mysql/conf.d/
+    command: --default-authentication-plugin=mysql_native_password 
+             --character-set-server=utf8mb4
+             --collation-server=utf8mb4_unicode_ci
+             --max_connections=10000
+             --log-bin=mysql-bin
+             --server-id=2
+    environment:
+      TZ: Asia/Shanghai
+      MYSQL_ALLOW_EMPTY_PASSWORD: 0
+      MYSQL_ROOT_PASSWORD: "***REMOVED***"
+    restart: always
+
+  mysql-slave-exporter-3306:
+    image: prom/mysqld-exporter
+    container_name: mysql-slave-exporter-3306
+    environment:
+      DATA_SOURCE_NAME: "root:***REMOVED***@(mysql-slave:3306)/"
+    restart: always
+
+```
