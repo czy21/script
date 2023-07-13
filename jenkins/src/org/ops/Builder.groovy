@@ -92,7 +92,9 @@ def build() {
             }
     ]
     common.writeParamToYaml()
-    cmdMap.get(env.param_code_type).call()
+    if (cmdMap.containsKey(env.param_code_type)) {
+        cmdMap.get(env.param_code_type).call()
+    }
 }
 
 return this
