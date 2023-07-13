@@ -24,6 +24,7 @@ if __name__ == '__main__':
         md_text = template_util.Template(file_util.read_text(docker_md_template)).render(**{"param_docker_compose_content": content})
         file_util.write_text(docker_md.joinpath(name + ".md"), md_text)
         docker_mds.append(name)
+    docker_mds.sort()
     mkdocs_text = template_util.Template(file_util.read_text(mkdocs_template)).render(
         **{"param_docker_mds": "\n      - ".join(["{0}: {1}".format(t, "docker/" + t + ".md") for t in docker_mds])}
     )
