@@ -27,11 +27,11 @@ services:
       PREFER_HOST_MODE: hostname
       MODE: standalone
       SPRING_DATASOURCE_PLATFORM: mysql
-      MYSQL_SERVICE_HOST: "192.168.2.18"
+      MYSQL_SERVICE_HOST: "<ip>"
       MYSQL_SERVICE_DB_NAME: nacos
       MYSQL_SERVICE_PORT: "3306"
-      MYSQL_SERVICE_USER: "admin"
-      MYSQL_SERVICE_PASSWORD: "***REMOVED***"
+      MYSQL_SERVICE_USER: "<username>"
+      MYSQL_SERVICE_PASSWORD: "<password>"
       MYSQL_SERVICE_DB_PARAM: characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&serverTimezone=UTC
     restart: always
 ```

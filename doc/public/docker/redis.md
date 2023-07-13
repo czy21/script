@@ -29,10 +29,10 @@ services:
     environment:
       REDIS_ARGS: |-
         --port 7000
-        --requirepass ***REMOVED***
+        --requirepass <password>
         --appendonly yes
         --cluster-enabled yes
-        --cluster-announce-ip 192.168.2.18
+        --cluster-announce-ip <ip>
   redis-2:
     <<: *redis-common
     container_name: redis-2
@@ -44,10 +44,10 @@ services:
     environment:
       REDIS_ARGS: |-
         --port 7001
-        --requirepass ***REMOVED***
+        --requirepass <password>
         --appendonly yes
         --cluster-enabled yes
-        --cluster-announce-ip 192.168.2.18
+        --cluster-announce-ip <ip>
   redis-3:
     <<: *redis-common
     container_name: redis-3
@@ -59,10 +59,10 @@ services:
     environment:
       REDIS_ARGS: |-
         --port 7002
-        --requirepass ***REMOVED***
+        --requirepass <password>
         --appendonly yes
         --cluster-enabled yes
-        --cluster-announce-ip 192.168.2.18
+        --cluster-announce-ip <ip>
   redis-exporter-7000:
     image: oliver006/redis_exporter:alpine
     labels:
@@ -73,7 +73,7 @@ services:
       - "9121"
     command:
       - --redis.addr=redis://redis-1:7000
-      - --redis.password=***REMOVED***
+      - --redis.password=<password>
     environment:
       REDIS_EXPORTER_IS_CLUSTER: "true"
     restart: always

@@ -19,7 +19,7 @@ services:
       - /volume1/storage/docker-data/neo4j/data/logs:/logs/
       - /volume1/storage/docker-data/neo4j/conf/:/conf/
     environment:
-      NEO4J_AUTH: neo4j/***REMOVED***
+      NEO4J_AUTH: neo4j/<password>
       NEO4J_dbms_memory_pagecache_size: 2g
 
 

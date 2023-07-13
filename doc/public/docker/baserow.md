@@ -24,7 +24,7 @@ services:
       - /volume1/storage/docker-data/baserow/data/:/baserow/data/
     environment:
       BASEROW_PUBLIC_URL: http://baserow.czy21-internal.com
-      REDIS_URL: redis://:***REMOVED***@192.168.2.2:6379
-      DATABASE_URL: postgresql://postgres:***REMOVED***@192.168.2.18:5432/baserow
+      REDIS_URL: redis://:<password>@<ip>:6379
+      DATABASE_URL: postgresql://postgres:<password>@<ip>:5432/baserow
     restart: always
 ```

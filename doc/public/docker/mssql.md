@@ -18,7 +18,7 @@ services:
     environment:
       TZ: Asia/Shanghai
       ACCEPT_EULA: Y
-      MSSQL_SA_PASSWORD: ***REMOVED***
+      MSSQL_SA_PASSWORD: <password>
       MSSQL_COLLATION: Chinese_PRC_CI_AS
     restart: always
     deploy:

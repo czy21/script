@@ -29,6 +29,6 @@ services:
     environment:
       GITLAB_OMNIBUS_CONFIG: |
         external_url 'http://gitlab.czy21-internal.com'
-      GITLAB_ROOT_PASSWORD: "***REMOVED***"
+      GITLAB_ROOT_PASSWORD: "<password>"
     shm_size: 256m
 ```

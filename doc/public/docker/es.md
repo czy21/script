@@ -50,7 +50,7 @@ services:
       cluster.initial_master_nodes: es-1-1,es-1-2
       discovery.seed_hosts: es-1-2
       bootstrap.memory_lock: "true"
-      ELASTIC_PASSWORD: ***REMOVED***
+      ELASTIC_PASSWORD: <password>
       xpack.security.enabled: true
       xpack.security.http.ssl.enabled: false
       xpack.security.transport.ssl.enabled: true
@@ -97,7 +97,7 @@ services:
       cluster.initial_master_nodes: es-1-1,es-1-2
       discovery.seed_hosts: es-1-1
       bootstrap.memory_lock: "true"
-      ELASTIC_PASSWORD: ***REMOVED***
+      ELASTIC_PASSWORD: <password>
       xpack.security.enabled: true
       xpack.security.http.ssl.enabled: false
       xpack.security.transport.ssl.enabled: true

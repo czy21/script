@@ -23,8 +23,8 @@ services:
       - /volume1/storage/docker-data/odoo/data/:/var/lib/odoo/
       - /volume1/storage/docker-data/odoo/addon/:/mnt/extra-addons/
     environment:
-     HOST: '192.168.2.18'
+     HOST: '<ip>'
      PORT: '5432'
      USER: 'odoo'
-     PASSWORD: '***REMOVED***'
+     PASSWORD: '<password>'
 ```

@@ -6,9 +6,9 @@ version: "3.9"
 
 x-db-common: &db-common
   SPAN_STORAGE_TYPE: elasticsearch
-  ES_SERVER_URLS: http://es.czy21-internal.com:80
-  ES_USERNAME: "admin"
-  ES_PASSWORD: "***REMOVED***"
+  ES_SERVER_URLS: http://<domain>:80
+  ES_USERNAME: "<username>"
+  ES_PASSWORD: "<password>"
 
 x-traefik-collector-label: &traefik-collector-label
   traefik.enable: true

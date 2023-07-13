@@ -20,5 +20,5 @@ services:
       - /volume1/storage/docker-data/technitium/data/:/etc/dns/config
     environment:
       DNS_SERVER_DOMAIN: dns-server
-      DNS_SERVER_ADMIN_PASSWORD: "***REMOVED***"
+      DNS_SERVER_ADMIN_PASSWORD: "<password>"
 ```
