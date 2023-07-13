@@ -6,3 +6,6 @@ http:
     redis-exporter:
       rule: Host(`redis-exporter-{{ param_cluster_name }}.czy21-internal.com`)
       service: redis-exporter@docker
+    script:
+      rule: Host(`script.czy21-internal.com`)
+      service: script@docker
