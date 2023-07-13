@@ -1,9 +1,8 @@
-FROM python:3.9.17-slim-bullseye
+FROM python:3.9.17-slim-bullseye as builder
 WORKDIR /app
 
 COPY requirements.txt mkdocs.yaml ./
 COPY doc ./doc
-RUN ls -al
 RUN pip install --no-cache-dir -r requirements.txt
 RUN mkdocs build
 
