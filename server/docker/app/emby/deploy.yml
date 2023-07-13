@@ -20,8 +20,8 @@ services:
       - {{ param_public_path }}/media/:/media/
     environment:
       - UID=1000
-      - GID=100
-      - GIDLIST=100
+      - GID=1000
+      - GIDLIST=1000
     devices:
       - /dev/dri:/dev/dri
     restart: always

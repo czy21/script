@@ -13,5 +13,6 @@ pyyaml==6.0
 Faker==10.0.0
 requests==2.26.0
 bcrypt==3.2.2
-mkdocs==1.4.2
+mkdocs==1.4.3
+mkdocs-material==9.1.18
 pydash==5.1.0
