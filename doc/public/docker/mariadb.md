@@ -17,8 +17,8 @@ services:
       - /volume1/storage/docker-data/mariadb/data/:/var/lib/mysql/
     environment:
       TZ: Asia/Shanghai
-      MARIADB_USER: "admin"
-      MARIADB_PASSWORD: "Czy.190815"
-      MARIADB_ROOT_PASSWORD: "Czy.190815"
+      MARIADB_USER: "<username>"
+      MARIADB_PASSWORD: "<password>"
+      MARIADB_ROOT_PASSWORD: "<password>"
     restart: always
 ```

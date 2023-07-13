@@ -18,12 +18,12 @@ services:
     command: -c config_file=/etc/postgresql/postgresql.conf
     environment:
       TZ: Asia/Shanghai
-      POSTGRES_PASSWORD: "Czy.190815"
+      POSTGRES_PASSWORD: "<password>"
     restart: always
   pgsql-exporter-5432:
     image: prometheuscommunity/postgres-exporter
     container_name: pgsql-exporter-5432
     environment:
-      DATA_SOURCE_NAME: "postgresql://postgres:Czy.190815@pgsql:5432/postgres?sslmode=disable"
+      DATA_SOURCE_NAME: "postgresql://postgres:<password>@pgsql:5432/postgres?sslmode=disable"
     restart: always
 ```

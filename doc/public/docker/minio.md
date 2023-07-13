@@ -12,8 +12,8 @@ x-minio-common: &minio-common
     - "9000"
     - "9001"
   environment:
-    MINIO_ROOT_USER: admin
-    MINIO_ROOT_PASSWORD: Czy.190815
+    MINIO_ROOT_USER: <username>
+    MINIO_ROOT_PASSWORD: <password>
     MINIO_PROMETHEUS_AUTH_TYPE: public
   restart: always
 

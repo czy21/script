@@ -3,6 +3,7 @@ import pathlib
 from utility import file as file_util, template as template_util, regex as regex_util
 
 logger = logging.getLogger()
+# bash toolchain.sh -h user@host install --dry-run --all-namespace --env-file env-public.yaml
 if __name__ == '__main__':
     logger.setLevel(logging.DEBUG)
     cwd = pathlib.Path(__file__).cwd()

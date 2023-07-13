@@ -25,14 +25,14 @@ services:
     environment:
       TZ: Asia/Shanghai
       MYSQL_ALLOW_EMPTY_PASSWORD: 0
-      MYSQL_ROOT_PASSWORD: "Czy.190815"
+      MYSQL_ROOT_PASSWORD: "<password>"
     restart: always
 
   mysql-exporter-3306:
     image: prom/mysqld-exporter
     container_name: mysql-exporter-3306
     environment:
-      DATA_SOURCE_NAME: "admin:Czy.190815@(mysql:3306)/"
+      DATA_SOURCE_NAME: "<username>:<password>@(mysql:3306)/"
     restart: always
 
 ```

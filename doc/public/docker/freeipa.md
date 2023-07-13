@@ -31,6 +31,6 @@ services:
     sysctls:
       - net.ipv6.conf.all.disable_ipv6=0
     environment:
-      PASSWORD: "Czy20210314."
+      PASSWORD: "<password>"
     restart: always
 ```

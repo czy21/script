@@ -22,17 +22,17 @@ services:
     environment:
       DB_VENDOR: mysql
       DB_NAME: bonita
-      DB_HOST: '192.168.2.18'
+      DB_HOST: '<ip>'
       DB_PORT: '3306'
-      DB_USER: 'admin'
-      DB_PASS: 'Czy.190815'
+      DB_USER: '<username>'
+      DB_PASS: '<password>'
       BIZ_DB_NAME: bonita_home
-      BIZ_DB_USER: 'admin'
-      BIZ_DB_PASS: 'Czy.190815'
-      TENANT_LOGIN: 'admin'
-      TENANT_PASSWORD: 'Czy20210314.'
-      PLATFORM_LOGIN: 'admin'
-      PLATFORM_PASSWORD: 'Czy20210314.'
+      BIZ_DB_USER: '<username>'
+      BIZ_DB_PASS: '<password>'
+      TENANT_LOGIN: '<username>'
+      TENANT_PASSWORD: '<password>'
+      PLATFORM_LOGIN: '<username>'
+      PLATFORM_PASSWORD: '<password>'
     entrypoint:
       - bash
       - -c

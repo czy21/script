@@ -21,8 +21,8 @@ services:
       KAFKA_HEAP_OPTS: -Xms256M -Xmx512M
       KAFKA_SERVER_broker.id: 1
       KAFKA_SERVER_listeners: PLAINTEXT://kafka-1:9092
-      KAFKA_SERVER_advertised.listeners: PLAINTEXT://192.168.2.18:9092
-      KAFKA_SERVER_zookeeper.connect: 192.168.2.18:2181,192.168.2.18:2182,192.168.2.18:2183/kafka/cluster1
+      KAFKA_SERVER_advertised.listeners: PLAINTEXT://<ip>:9092
+      KAFKA_SERVER_zookeeper.connect: <ip>:2181,<ip>:2182,<ip>:2183/kafka/cluster1
       KAFKA_SERVER_log.retention.hours: 720
       KAFKA_SERVER_log.roll.hours: 4
       KAFKA_SERVER_log.segment.bytes: 1073741824
@@ -43,8 +43,8 @@ services:
       KAFKA_HEAP_OPTS: -Xms256M -Xmx512M
       KAFKA_SERVER_broker.id: 2
       KAFKA_SERVER_listeners: PLAINTEXT://kafka-2:9093
-      KAFKA_SERVER_advertised.listeners: PLAINTEXT://192.168.2.18:9093
-      KAFKA_SERVER_zookeeper.connect: 192.168.2.18:2181,192.168.2.18:2182,192.168.2.18:2183/kafka/cluster1
+      KAFKA_SERVER_advertised.listeners: PLAINTEXT://<ip>:9093
+      KAFKA_SERVER_zookeeper.connect: <ip>:2181,<ip>:2182,<ip>:2183/kafka/cluster1
       KAFKA_SERVER_log.retention.hours: 720
       KAFKA_SERVER_log.roll.hours: 4
       KAFKA_SERVER_log.segment.bytes: 1073741824

@@ -12,7 +12,7 @@ services:
     privileged: true
     user: root
     environment:
-      PDNS_AUTH_API_KEY: Czy20210314.
+      PDNS_AUTH_API_KEY: <password>
   pdns-web:
     image: ngoduykhanh/powerdns-admin
     container_name: pdns-web
@@ -23,5 +23,5 @@ services:
     volumes:
       - /volume1/storage/docker-data/pdns/data/web/:/data/
     environment:
-      SECRET_KEY: Czy20210314.
+      SECRET_KEY: <password>
 ```
