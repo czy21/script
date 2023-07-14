@@ -1,7 +1,16 @@
 site_name: ""
+site_url: https://czy21.github.io/mkdocs-material
+site_author: Bruce CHEN
+repo_name: czy21/script
+repo_url: https://github.com/czy21/script
+copyright: Copyright &copy; 2019 - 2023 Bruce CHEN
 docs_dir: doc/public/
 theme:
   name: material
+  features:
+    - content.code.copy
+markdown_extensions:
+  - pymdownx.superfences
 nav:
   - Home: index.md
   - Docker:

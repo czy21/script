@@ -1,10 +1,10 @@
-param_disk_path: &param_disk_path /volume1
+param_disk_path: &param_disk_path /volume5
 
 # default
-param_docker_root: !join ["/",*param_disk_path,"docker-root"]
-param_docker_data: !join ["/",*param_disk_path,"storage/docker-data"]
+param_docker_root: !join_path [*param_disk_path,"docker-root"]
+param_docker_data: !join_path [*param_disk_path,"storage/docker-data"]
 
-param_public_path: !join ["/",*param_disk_path,public]
+param_public_path: !join_path [*param_disk_path,public]
 
 param_mirror_host: &param_mirror_host <ip|domain>/repository
 param_mirror_apt: !join ["/",*param_mirror_host,apt-proxy]
@@ -26,12 +26,12 @@ param_smb_kube_data: kube
 param_smb_kube_username: opsor
 param_smb_kube_password: *param_manage_password
 
-param_registry_url: registry.czy21-internal.com
+param_registry_url: registry.czy21-public.com
 param_registry_dir: library
-param_registry_proxy_url: registry-proxy.czy21-internal.com
+param_registry_proxy_url: registry-proxy.czy21-public.com
 
 param_helm_repo_name: nexus
-param_helm_repo_url: http://nexus.czy21-internal.com/repository/helm-hosted
+param_helm_repo_url: http://nexus.czy21-public.com/repository/helm-hosted
 param_helm_username: *param_manage_username
 param_helm_password: *param_manage_password
 
