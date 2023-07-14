@@ -1,7 +1,6 @@
-# dockerfile
 
-# docker-compose
-```shell
+## docker-compose
+```bash
 docker-compose --project-name technitium --file docker-compose.yaml up --detach --build --remove-orphans
 ```
 ```yaml

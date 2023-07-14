@@ -1,5 +1,4 @@
-# dockerfile
-# conf
+## conf
 - /volume5/storage/docker-data/pulsar/conf/bookie.conf
 ```text
 bookiePort=3181
@@ -34,9 +33,8 @@ zookeeperServers=<ip>:2181,<ip>:2182,<ip>:2183/pulsar/cluster1
 zookeeperSessionTimeoutMs=30000
 configurationStoreServers=<ip>:2181,<ip>:2182,<ip>:2183/pulsar/cluster1
 ```
-
-# docker-compose
-```shell
+## docker-compose
+```bash
 docker-compose --project-name pulsar --file docker-compose.yaml up --detach --build --remove-orphans
 ```
 ```yaml

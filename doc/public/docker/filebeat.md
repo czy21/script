@@ -1,5 +1,4 @@
-# dockerfile
-# conf
+## conf
 - /volume5/storage/docker-data/filebeat/conf/filebeat.yml
 ```text
 filebeat.config:
@@ -22,9 +21,8 @@ output.elasticsearch:
   indices:
     - index: "docker--log-%{+yyyy.MM.dd}"
 ```
-
-# docker-compose
-```shell
+## docker-compose
+```bash
 docker-compose --project-name filebeat --file docker-compose.yaml up --detach --build --remove-orphans
 ```
 ```yaml

@@ -1,5 +1,4 @@
-# dockerfile
-# conf
+## conf
 - /volume5/storage/docker-data/phpldapadmin/conf/config.yaml
 ```text
 # Apache
@@ -39,9 +38,8 @@ PHPLDAPADMIN_LDAP_HOSTS:
       - login:
           - bind_id: cn=admin,dc=example,dc=com
 ```
-
-# docker-compose
-```shell
+## docker-compose
+```bash
 docker-compose --project-name phpldapadmin --file docker-compose.yaml up --detach --build --remove-orphans
 ```
 ```yaml

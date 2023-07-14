@@ -1,12 +1,10 @@
-# dockerfile
-# conf
+## conf
 - /volume5/storage/docker-data/rabbitmq/conf/enabled_plugins
 ```text
 [rabbitmq_management,rabbitmq_prometheus,rabbitmq_mqtt].
 ```
-
-# docker-compose
-```shell
+## docker-compose
+```bash
 docker-compose --project-name rabbitmq --file docker-compose.yaml up --detach --build --remove-orphans
 ```
 ```yaml

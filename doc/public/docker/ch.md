@@ -1,5 +1,4 @@
-# dockerfile
-# conf
+## conf
 - /volume5/storage/docker-data/ch-1/conf/config.xml
 ```text
 <?xml version="1.0"?>
@@ -67,9 +66,8 @@
     </profiles>
 </yandex>
 ```
-
-# docker-compose
-```shell
+## docker-compose
+```bash
 docker-compose --project-name ch-1 --file docker-compose.yaml up --detach --build --remove-orphans
 ```
 ```yaml

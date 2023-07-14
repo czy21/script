@@ -1,5 +1,4 @@
-# dockerfile
-# conf
+## conf
 - /volume5/storage/docker-data/rocketmq/conf/setup.sh
 ```text
 #!/bin/bash
@@ -21,9 +20,8 @@ done
 
 echo "All done!";
 ```
-
-# docker-compose
-```shell
+## docker-compose
+```bash
 docker-compose --project-name rocketmq --file docker-compose.yaml up --detach --build --remove-orphans
 ```
 ```yaml

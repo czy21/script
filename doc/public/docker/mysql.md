@@ -1,5 +1,4 @@
-# dockerfile
-# conf
+## conf
 - /volume5/storage/docker-data/mysql/conf/mysql.cnf
 ```text
 [client]
@@ -7,9 +6,8 @@ default-character-set=utf8mb4
 [mysql]
 default-character-set=utf8mb4
 ```
-
-# docker-compose
-```shell
+## docker-compose
+```bash
 docker-compose --project-name mysql --file docker-compose.yaml up --detach --build --remove-orphans
 ```
 ```yaml

@@ -1,5 +1,4 @@
-# dockerfile
-# conf
+## conf
 - /volume5/storage/docker-data/teleport/conf/teleport.yaml
 ```text
 teleport:
@@ -26,9 +25,8 @@ proxy_service:
   enabled: "yes"
   web_listen_addr: "0.0.0.0:80"
 ```
-
-# docker-compose
-```shell
+## docker-compose
+```bash
 docker-compose --project-name teleport --file docker-compose.yaml up --detach --build --remove-orphans
 ```
 ```yaml
