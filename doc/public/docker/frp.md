@@ -1,5 +1,4 @@
-# dockerfile
-# conf
+## conf
 - /volume5/storage/docker-data/frp/conf/frps.ini
 ```text
 [common]
@@ -13,9 +12,8 @@ dashboard_port = 7500
 dashboard_user = admin
 dashboard_pwd = czy.1106
 ```
-
-# docker-compose
-```shell
+## docker-compose
+```bash
 docker-compose --project-name frp --file docker-compose.yaml up --detach --build --remove-orphans
 ```
 ```yaml

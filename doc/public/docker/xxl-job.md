@@ -1,7 +1,6 @@
-# dockerfile
 
-# docker-compose
-```shell
+## docker-compose
+```bash
 docker-compose --project-name xxl-job --file docker-compose.yaml up --detach --build --remove-orphans
 ```
 ```yaml

@@ -1,5 +1,4 @@
-# dockerfile
-# conf
+## conf
 - /volume5/storage/docker-data/nginx/conf/nginx.conf
 ```text
 user  nginx;
@@ -84,9 +83,8 @@ server {
 }
 
 ```
-
-# docker-compose
-```shell
+## docker-compose
+```bash
 docker-compose --project-name nginx --file docker-compose.yaml up --detach --build --remove-orphans
 ```
 ```yaml

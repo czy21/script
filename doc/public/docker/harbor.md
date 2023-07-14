@@ -1,5 +1,4 @@
-# dockerfile
-# conf
+## conf
 - /volume5/storage/docker-data/harbor/conf/harbor.yml
 ```text
 hostname: harbor.czy21-internal.com
@@ -246,9 +245,8 @@ upload_purging:
   interval: 24h
   dryrun: false
 ```
-
-# docker-compose
-```shell
+## docker-compose
+```bash
 docker-compose --project-name harbor --file docker-compose.yaml up --detach --build --remove-orphans
 ```
 ```yaml

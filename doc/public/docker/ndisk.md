@@ -1,5 +1,4 @@
-# dockerfile
-# conf
+## conf
 - /volume5/storage/docker-data/ndisk/conf/app.yaml
 ```text
 server:
@@ -29,9 +28,8 @@ dav:
 cloud189:
   cookie: ''
 ```
-
-# docker-compose
-```shell
+## docker-compose
+```bash
 docker-compose --project-name ndisk --file docker-compose.yaml up --detach --build --remove-orphans
 ```
 ```yaml

@@ -1,5 +1,4 @@
-# dockerfile
-# conf
+## conf
 - /volume5/storage/docker-data/consul/conf/acl.json
 ```text
 {
@@ -13,9 +12,8 @@
   }
 }
 ```
-
-# docker-compose
-```shell
+## docker-compose
+```bash
 docker-compose --project-name consul --file docker-compose.yaml up --detach --build --remove-orphans
 ```
 ```yaml

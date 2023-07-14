@@ -1,5 +1,4 @@
-# dockerfile
-# conf
+## conf
 - /volume5/storage/docker-data/homeassistant/conf/automations.yaml
 ```text
 
@@ -41,9 +40,8 @@ scene: !include scenes.yaml
 ```text
 
 ```
-
-# docker-compose
-```shell
+## docker-compose
+```bash
 docker-compose --project-name homeassistant --file docker-compose.yaml up --detach --build --remove-orphans
 ```
 ```yaml

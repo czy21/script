@@ -1,5 +1,4 @@
-# dockerfile
-# conf
+## conf
 - /volume5/storage/docker-data/superset/conf/.env
 ```text
 #
@@ -605,9 +604,8 @@ except ImportError:
 SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://pguser:pgpwd@some.host/superset"
 SQLALCHEMY_ECHO = True
 ```
-
-# docker-compose
-```shell
+## docker-compose
+```bash
 docker-compose --project-name superset --file docker-compose.yaml up --detach --build --remove-orphans
 ```
 ```yaml

@@ -1,5 +1,4 @@
-# dockerfile
-# conf
+## conf
 - /volume5/storage/docker-data/kafka-eagle/conf/system-config.properties
 ```text
 ######################################
@@ -114,9 +113,8 @@ efak.url=jdbc:mysql://<ip>:3306/ke?useUnicode=true&characterEncoding=UTF-8&zeroD
 efak.username=<username>
 efak.password=<password>
 ```
-
-# docker-compose
-```shell
+## docker-compose
+```bash
 docker-compose --project-name kafka-eagle --file docker-compose.yaml up --detach --build --remove-orphans
 ```
 ```yaml
