@@ -36,8 +36,8 @@ services:
     privileged: true
     user: root
     volumes:
-      - /volume1/storage/docker-data/consul/data/:/consul/data/
-      - /volume1/storage/docker-data/consul/conf/:/consul/config/
+      - /volume5/storage/docker-data/consul/data/:/consul/data/
+      - /volume5/storage/docker-data/consul/conf/:/consul/config/
     command: 'agent -server -ui -node=server-1 -bootstrap-expect=1 -client=0.0.0.0 -datacenter=nas'
     restart: always
 ```

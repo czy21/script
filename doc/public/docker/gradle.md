@@ -26,6 +26,6 @@ services:
     expose:
       - "5071"
     volumes:
-      - /volume1/storage/docker-data/gradle/data/cache/:/data/
+      - /volume5/storage/docker-data/gradle/data/cache/:/data/
     restart: always
 ```

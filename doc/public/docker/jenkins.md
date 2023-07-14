@@ -15,7 +15,7 @@ x-traefik-label: &traefik-label
 services:
 
   jenkins:
-    image: registry.czy21-internal.com/library/jenkins
+    image: registry.czy21-public.com/library/jenkins
     pull_policy: always
     container_name: jenkins
     privileged: true
@@ -25,7 +25,7 @@ services:
     ports:
       - "50000:50000"
     volumes:
-      - /volume1/storage/docker-data/jenkins/data/:/var/jenkins_home/
+      - /volume5/storage/docker-data/jenkins/data/:/var/jenkins_home/
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       JENKINS_UC: https://mirrors.aliyun.com/jenkins/updates/update-center.json

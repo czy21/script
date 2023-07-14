@@ -23,7 +23,7 @@ services:
     labels:
       <<: *traefik-cassandra-label
     volumes:
-      - /volume1/storage/docker-data/cassandra-1/data/1/:/var/lib/cassandra/
+      - /volume5/storage/docker-data/cassandra-1/data/1/:/var/lib/cassandra/
   cassandra-1-2:
     <<: *app-common
     container_name: cassandra-1-2
@@ -31,7 +31,7 @@ services:
     labels:
       <<: *traefik-cassandra-label
     volumes:
-      - /volume1/storage/docker-data/cassandra-1/data/2/:/var/lib/cassandra/
+      - /volume5/storage/docker-data/cassandra-1/data/2/:/var/lib/cassandra/
     environment:
       CASSANDRA_SEEDS: cassandra-1-1
 ```

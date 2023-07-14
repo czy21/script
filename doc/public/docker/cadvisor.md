@@ -15,7 +15,7 @@ x-traefik-label: &traefik-label
 services:
 
   cadvisor:
-    image: 'registry-proxy.czy21-internal.com/cadvisor/cadvisor:v0.47.1' # gcr.io/cadvisor/cadvisor:v0.47.1
+    image: 'registry-proxy.czy21-public.com/cadvisor/cadvisor:v0.47.1' # gcr.io/cadvisor/cadvisor:v0.47.1
     container_name: cadvisor
     labels:
       <<: *traefik-label
@@ -27,6 +27,6 @@ services:
       - /:/rootfs:ro
       - /var/run:/var/run:ro
       - /sys:/sys:ro
-      - /volume1/docker-root:/var/lib/docker:ro
+      - /volume5/docker-root:/var/lib/docker:ro
     restart: always
 ```

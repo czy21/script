@@ -23,6 +23,6 @@ services:
     expose:
       - "8978"
     volumes:
-      - /volume1/storage/docker-data/dbeaver/data/:/opt/cloudbeaver/workspace/
+      - /volume5/storage/docker-data/dbeaver/data/:/opt/cloudbeaver/workspace/
     restart: always
 ```

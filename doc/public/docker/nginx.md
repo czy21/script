@@ -100,8 +100,8 @@ services:
     privileged: true
     user: root
     volumes:
-      - /volume1/storage/docker-data/nginx/conf/nginx.conf:/etc/nginx/nginx.conf
-      - /volume1/storage/docker-data/nginx/conf/conf.d/:/etc/nginx/conf.d/
-      - /volume1/storage/docker-data/nginx/conf/cert/:/etc/nginx/cert/
+      - /volume5/storage/docker-data/nginx/conf/nginx.conf:/etc/nginx/nginx.conf
+      - /volume5/storage/docker-data/nginx/conf/conf.d/:/etc/nginx/conf.d/
+      - /volume5/storage/docker-data/nginx/conf/cert/:/etc/nginx/cert/
     restart: always
 ```

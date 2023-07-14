@@ -24,6 +24,6 @@ services:
       - "5244"
     user: root
     volumes:
-      - /volume1/storage/docker-data/alist/data/:/opt/alist/data/
+      - /volume5/storage/docker-data/alist/data/:/opt/alist/data/
     restart: always
 ```

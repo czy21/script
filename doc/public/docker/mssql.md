@@ -17,11 +17,11 @@ services:
     ports:
       - "1433:1433"
     volumes:
-      - /volume1/storage/docker-data/mssql/data/:/var/opt/mssql/
+      - /volume5/storage/docker-data/mssql/data/:/var/opt/mssql/
     environment:
       TZ: Asia/Shanghai
       ACCEPT_EULA: Y
-      MSSQL_SA_PASSWORD: Czy.190815
+      MSSQL_SA_PASSWORD: <password>
       MSSQL_COLLATION: Chinese_PRC_CI_AS
     restart: always
     deploy:

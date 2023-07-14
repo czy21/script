@@ -27,10 +27,10 @@ services:
       - "80"
       - "443"
     volumes:
-      - /volume1/storage/docker-data/rancher/cni/:/var/lib/cni/
-      - /volume1/storage/docker-data/rancher/kubelet/:/var/lib/kubelet/
-      - /volume1/storage/docker-data/rancher/data/:/var/lib/rancher
-      - /volume1/storage/docker-data/rancher/log/:/var/log/
+      - /volume5/storage/docker-data/rancher/cni/:/var/lib/cni/
+      - /volume5/storage/docker-data/rancher/kubelet/:/var/lib/kubelet/
+      - /volume5/storage/docker-data/rancher/data/:/var/lib/rancher
+      - /volume5/storage/docker-data/rancher/log/:/var/log/
     command:
       - --no-cacerts
     restart: always

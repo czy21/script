@@ -26,6 +26,6 @@ services:
     privileged: true
     user: root
     volumes:
-      - /volume1/storage/docker-data/focalboard/data/:/data/
+      - /volume5/storage/docker-data/focalboard/data/:/data/
     restart: always
 ```
