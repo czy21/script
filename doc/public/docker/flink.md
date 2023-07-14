@@ -1,4 +1,14 @@
 
+## dockerfile
+- Dockerfile
+```bash
+docker build --tag registry.czy21-public.com/library/flink --file Dockerfile . --pull
+```
+```dockerfile
+FROM flink:1.16.1-scala_2.12-java11
+RUN chown -R root:root .
+RUN sed -i 's|$(drop_privs_cmd) ||g' /docker-entrypoint.sh
+```
 ## docker-compose
 ```bash
 docker-compose --project-name flink --file docker-compose.yaml up --detach --build --remove-orphans

@@ -25,7 +25,17 @@ if __name__ == '__main__':
         role_env = {} | global_env
         if role_env_file.exists():
             role_env |= yaml_util.load(role_env_file)
+
+
+        def get_registry(n):
+            return "/".join([role_env["param_registry_url"], role_env["param_registry_dir"], n])
+
+
         name = t.parent.parent.parent.stem
+        dockerfile_dict = {t.name: {
+            "content": file_util.read_text(t),
+            "command": "docker build --tag {0} --file {1} . --pull".format(get_registry("-".join(filter(lambda d: d != "", [name, t.name.replace("Dockerfile", "").lower()]))), t.name)
+        } for t in sorted(t.parent.glob("Dockerfile*"), reverse=True)}
         target_path = pathlib.Path(path_util.join_path(role_env["param_docker_data"],
                                                        role_env["param_role_project_name"] if role_env.get("param_role_project_name") else name)
                                    )
@@ -36,9 +46,12 @@ if __name__ == '__main__':
         compose_command = "docker-compose --project-name {0} --file docker-compose.yaml up --detach --build --remove-orphans".format(target_path.stem)
         compose_content = file_util.read_text(t)
         md_dst = docker_md.joinpath(name + ".md")
-        md_dst_text = template_util.Template(file_util.read_text(docker_md_template)).render(**{"param_docker_conf_dict": target_conf_dict,
-                                                                                                "param_docker_compose_command": compose_command,
-                                                                                                "param_docker_compose_content": compose_content})
+        md_dst_text = template_util.Template(file_util.read_text(docker_md_template)).render(**{
+            "param_docker_dockerfile_dict": dockerfile_dict,
+            "param_docker_conf_dict": target_conf_dict,
+            "param_docker_compose_command": compose_command,
+            "param_docker_compose_content": compose_content
+        })
         if not md_dst.exists() or (md_dst.exists() and not safe_util.md5_encrypt(file_util.read_text(md_dst)) == safe_util.md5_encrypt(md_dst_text)):
             file_util.write_text(md_dst, md_dst_text)
         docker_mds.append(name)

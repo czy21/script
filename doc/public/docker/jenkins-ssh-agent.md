@@ -1,4 +1,19 @@
 
+## dockerfile
+- Dockerfile
+```bash
+docker build --tag registry.czy21-public.com/library/jenkins-ssh-agent --file Dockerfile . --pull
+```
+```dockerfile
+FROM jenkins/ssh-agent:5.1.0-jdk17
+USER root
+RUN apt update && apt install git sudo curl -y
+RUN curl -L "https://github.com/docker/compose/releases/download/v2.18.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+RUN chmod +x /usr/local/bin/docker-compose
+RUN ln -sf /usr/local/bin/docker-compose /usr/bin/docker-compose
+RUN echo -n "%sudo   ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers.d/99-custom
+RUN usermod -aG sudo jenkins
+```
 ## docker-compose
 ```bash
 docker-compose --project-name jenkins-ssh-agent --file docker-compose.yaml up --detach --build --remove-orphans
