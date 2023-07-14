@@ -2,7 +2,7 @@
 # conf
 - /volume5/storage/docker-data/portainer/conf/portainer_password
 ```text
-***REMOVED***
+<password>
 ```
 
 # docker-compose
@@ -30,8 +30,8 @@ services:
       - "9443"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /volume1/storage/docker-data/portainer/data:/data/
-      - /volume1/storage/docker-data/portainer/conf/portainer_password:/tmp/portainer_password
+      - /volume5/storage/docker-data/portainer/data:/data/
+      - /volume5/storage/docker-data/portainer/conf/portainer_password:/tmp/portainer_password
     command: --admin-password-file /tmp/portainer_password
 #    networks:
 #      macvlan100:

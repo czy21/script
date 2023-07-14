@@ -24,10 +24,10 @@ services:
       - "10000"
     user: root
     environment:
-      MYSQL_HOST: '192.168.2.18'
+      MYSQL_HOST: '<ip>'
       MYSQL_PORT: '3306'
-      MYSQL_USER: 'admin'
-      MYSQL_PASSWORD: '***REMOVED***'
+      MYSQL_USER: '<username>'
+      MYSQL_PASSWORD: '<password>'
       MYSQL_SCHEMA: "sqle"
     restart: always
 ```

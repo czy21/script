@@ -24,7 +24,7 @@ services:
       - "22"
     user: root
     volumes:
-      - /volume1/storage/docker-data/scm-manger/data/:/var/lib/scm/
+      - /volume5/storage/docker-data/scm-manger/data/:/var/lib/scm/
     environment:
-      JAVA_OPTS: "-Dscm.initialUser=admin -Dscm.initialPassword=***REMOVED***"
+      JAVA_OPTS: "-Dscm.initialUser=<username> -Dscm.initialPassword=<password>"
 ```

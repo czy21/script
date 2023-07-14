@@ -21,9 +21,9 @@ services:
     expose:
       - "8096"
     volumes:
-      - /volume1/storage/docker-data/jellyfin/conf/:/config/
-      - /volume1/storage/docker-data/jellyfin/data/cache/:/cache/
-      - /volume1/public/media/:/media/
+      - /volume5/storage/docker-data/jellyfin/conf/:/config/
+      - /volume5/storage/docker-data/jellyfin/data/cache/:/cache/
+      - /volume5/public/media/:/media/
     devices:
       - /dev/dri:/dev/dri
 

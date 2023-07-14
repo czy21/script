@@ -26,14 +26,14 @@ services:
     ports:
       - "389:389"
     volumes:
-      - /volume1/storage/docker-data/freeipa/data/:/data/
-      - /volume1/storage/docker-data/freeipa/run/:/run/
-      - /volume1/storage/docker-data/freeipa/tmp/:/tmp/
-      - /volume1/storage/docker-data/freeipa/log/://var/log/journal/
+      - /volume5/storage/docker-data/freeipa/data/:/data/
+      - /volume5/storage/docker-data/freeipa/run/:/run/
+      - /volume5/storage/docker-data/freeipa/tmp/:/tmp/
+      - /volume5/storage/docker-data/freeipa/log/://var/log/journal/
     command: ipa-server-install -U -r czy21-internal.com --no-ntp
     sysctls:
       - net.ipv6.conf.all.disable_ipv6=0
     environment:
-      PASSWORD: "***REMOVED***"
+      PASSWORD: "<password>"
     restart: always
 ```

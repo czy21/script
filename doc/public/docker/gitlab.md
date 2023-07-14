@@ -26,12 +26,12 @@ services:
       - "443"
       - "22"
     volumes:
-      - /volume1/storage/docker-data/gitlab/data/conf/:/etc/gitlab/
-      - /volume1/storage/docker-data/gitlab/data/data/:/var/opt/gitlab/
-      - /volume1/storage/docker-data/gitlab/log/:/var/log/gitlab/
+      - /volume5/storage/docker-data/gitlab/data/conf/:/etc/gitlab/
+      - /volume5/storage/docker-data/gitlab/data/data/:/var/opt/gitlab/
+      - /volume5/storage/docker-data/gitlab/log/:/var/log/gitlab/
     environment:
       GITLAB_OMNIBUS_CONFIG: |
         external_url 'http://gitlab.czy21-internal.com'
-      GITLAB_ROOT_PASSWORD: "***REMOVED***"
+      GITLAB_ROOT_PASSWORD: "<password>"
     shm_size: 256m
 ```

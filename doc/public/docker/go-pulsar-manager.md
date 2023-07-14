@@ -32,7 +32,7 @@ x-traefik-label: &traefik-label
 services:
 
   go-pulsar-manager:
-    image: registry.czy21-internal.com/library/go-pulsar-manager:master
+    image: registry.czy21-public.com/library/go-pulsar-manager:master
     container_name: go-pulsar-manager
     labels:
       <<: *traefik-label
@@ -42,8 +42,8 @@ services:
       - "8080"
     user: root
     volumes:
-      - /volume1/storage/docker-data/go-pulsar-manager/conf/app.yaml:/app/app.yaml
-      - /volume1/storage/docker-data/go-pulsar-manager/log/:/app/log/
+      - /volume5/storage/docker-data/go-pulsar-manager/conf/app.yaml:/app/app.yaml
+      - /volume5/storage/docker-data/go-pulsar-manager/log/:/app/log/
     environment:
       TZ: Asia/Shanghai
       GIN_MODE: release

@@ -21,8 +21,8 @@ services:
     expose:
       - "80"
     volumes:
-      - /volume1/storage/docker-data/piwigo/conf/:/config/
-      - /volume1/storage/docker-data/piwigo/data/:/gallery/
+      - /volume5/storage/docker-data/piwigo/conf/:/config/
+      - /volume5/storage/docker-data/piwigo/data/:/gallery/
     environment:
       TZ: Asia/Shanghai
       PUID: 1000

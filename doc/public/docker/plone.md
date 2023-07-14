@@ -23,5 +23,5 @@ services:
     expose:
       - "8080"
     volumes:
-      - /volume1/storage/docker-data/plone/data/:/data/
+      - /volume5/storage/docker-data/plone/data/:/data/
 ```

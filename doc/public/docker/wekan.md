@@ -25,9 +25,9 @@ services:
     privileged: true
     user: root
     volumes:
-      - /volume1/storage/docker-data/wekan/data/:/data/
+      - /volume5/storage/docker-data/wekan/data/:/data/
     environment:
-      MONGO_URL: mongodb://admin:***REMOVED***@192.168.2.18:27017/wekan?authSource=admin
+      MONGO_URL: mongodb://<username>:<password>@<ip>:27017/wekan?authSource=<username>
       WRITABLE_PATH: /data
       ROOT_URL: http://
     restart: always

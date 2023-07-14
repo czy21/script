@@ -25,11 +25,11 @@ services:
     privileged: true
     user: root
     volumes:
-      - /volume1/storage/docker-data/taskcafe/data/:/data/
+      - /volume5/storage/docker-data/taskcafe/data/:/data/
     environment:
-      TASKCAFE_DATABASE_HOST: "192.168.2.18"
+      TASKCAFE_DATABASE_HOST: "<ip>"
       TASKCAFE_DATABASE_USER: "postgres"
-      TASKCAFE_DATABASE_PASSWORD: "***REMOVED***"
+      TASKCAFE_DATABASE_PASSWORD: "<password>"
       TASKCAFE_DATABASE_NAME: "taskcafe"
       TASKCAFE_MIGRATE: true
     restart: always

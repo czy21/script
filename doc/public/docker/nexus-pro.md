@@ -19,7 +19,7 @@ services:
     ports:
       - "8090:8081"
     volumes:
-      - /volume1/storage/docker-data/nexus-pro/data/:/sonatype-work/
+      - /volume5/storage/docker-data/nexus-pro/data/:/sonatype-work/
     environment:
       TZ: Asia/Shanghai
 

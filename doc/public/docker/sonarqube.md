@@ -22,12 +22,12 @@ services:
     expose:
       - "9000"
     volumes:
-      - /volume1/storage/docker-data/sonarqube/data/:/opt/sonarqube/data/
-      - /volume1/storage/docker-data/sonarqube/extensions/:/opt/sonarqube/extensions/
-      - /volume1/storage/docker-data/sonarqube/logs/:/opt/sonarqube/logs/
+      - /volume5/storage/docker-data/sonarqube/data/:/opt/sonarqube/data/
+      - /volume5/storage/docker-data/sonarqube/extensions/:/opt/sonarqube/extensions/
+      - /volume5/storage/docker-data/sonarqube/logs/:/opt/sonarqube/logs/
     environment:
-      SONAR_JDBC_URL: jdbc:postgresql://192.168.2.18:5432/sonarqube
+      SONAR_JDBC_URL: jdbc:postgresql://<ip>:5432/sonarqube
       SONAR_JDBC_USERNAME: "postgres"
-      SONAR_JDBC_PASSWORD: "***REMOVED***"
+      SONAR_JDBC_PASSWORD: "<password>"
     restart: always
 ```

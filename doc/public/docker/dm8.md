@@ -17,7 +17,7 @@ services:
     ports:
       - "5236:5236"
     volumes:
-      - /volume1/storage/docker-data/dm8/data/:/opt/dmdbms/data/
+      - /volume5/storage/docker-data/dm8/data/:/opt/dmdbms/data/
     environment:
       PAGE_SIZE: 16
       LD_LIBRARY_PATH: /opt/dmdbms/bin

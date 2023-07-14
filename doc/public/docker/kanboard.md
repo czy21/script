@@ -25,11 +25,11 @@ services:
     privileged: true
     user: root
     volumes:
-      - /volume1/storage/docker-data/kanboard/data/data/:/var/www/app/data/
-      - /volume1/storage/docker-data/kanboard/data/plugins/:/var/www/app/plugins/
-      - /volume1/storage/docker-data/kanboard/data/ssl/:/etc/nginx/ssl/
+      - /volume5/storage/docker-data/kanboard/data/data/:/var/www/app/data/
+      - /volume5/storage/docker-data/kanboard/data/plugins/:/var/www/app/plugins/
+      - /volume5/storage/docker-data/kanboard/data/ssl/:/etc/nginx/ssl/
     environment:
-      DATABASE_URL: mysql://admin:***REMOVED***@192.168.2.18:3306/kanboard
+      DATABASE_URL: mysql://<username>:<password>@<ip>:3306/kanboard
       PLUGIN_INSTALLER: true
       LOG_DRIVER: stdout
       ENABLE_URL_REWRITE: false

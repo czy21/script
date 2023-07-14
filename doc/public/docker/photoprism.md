@@ -23,8 +23,8 @@ services:
     expose:
       - "2342"
     volumes:
-      - /volume1/storage/docker-data/photoprism/data/:/photoprism
+      - /volume5/storage/docker-data/photoprism/data/:/photoprism
     restart: always
     environment:
-      PHOTOPRISM_ADMIN_PASSWORD: "***REMOVED***"
+      PHOTOPRISM_ADMIN_PASSWORD: "<password>"
 ```

@@ -21,8 +21,8 @@ services:
       <<: *traefik-label
     privileged: true
     volumes:
-      - /volume1/storage/docker-data/prometheus/conf/:/etc/prometheus/
-      - /volume1/storage/docker-data/prometheus/data/:/prometheus/
+      - /volume5/storage/docker-data/prometheus/conf/:/etc/prometheus/
+      - /volume5/storage/docker-data/prometheus/data/:/prometheus/
     command:
       - --config.file=/etc/prometheus/prometheus.yml
       - --storage.tsdb.path=/prometheus

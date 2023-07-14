@@ -31,7 +31,7 @@ http:
 # The initial password of Harbor admin
 # It only works in first time to install harbor
 # Remember Change the admin password from UI after launching Harbor.
-harbor_admin_password: ***REMOVED***
+harbor_admin_password: <password>
 
 # Harbor DB configuration
 database:
@@ -142,11 +142,11 @@ _version: 2.5.0
 # Uncomment external_database if using external database.
 external_database:
    harbor:
-     host: 192.168.2.18
+     host: <ip>
      port: 5432
      db_name: harbor
      username: postgres
-     password: ***REMOVED***
+     password: <password>
      ssl_mode: disable
      max_idle_conns: 2
      max_open_conns: 0
@@ -171,8 +171,8 @@ external_redis:
 #   # host for redis: <host_redis>:<port_redis>
 #   # host for redis+sentinel:
 #   #<host_sentinel1>:<port_sentinel1>,<host_sentinel2>:<port_sentinel2>,<host_sentinel3>:<port_sentinel3>
-  host: 192.168.2.2:6379
-  password: ***REMOVED***
+  host: <ip>:6379
+  password: <password>
 #   # sentinel_master_set must be set to support redis+sentinel
 #   #sentinel_master_set:
 #   # db_index 0 is for core, it's unchangeable
@@ -282,9 +282,9 @@ services:
     container_name: harbor-log
     <<: *common
     volumes:
-      - /volume1/storage/docker-data/harbor/log/harbor/:/var/log/docker/
-      - /volume1/storage/docker-data/harbor/data/common/config/log/logrotate.conf:/etc/logrotate.d/logrotate.conf
-      - /volume1/storage/docker-data/harbor/data/common/config/log/rsyslog_docker.conf:/etc/rsyslog.d/rsyslog_docker.conf
+      - /volume5/storage/docker-data/harbor/log/harbor/:/var/log/docker/
+      - /volume5/storage/docker-data/harbor/data/common/config/log/logrotate.conf:/etc/logrotate.d/logrotate.conf
+      - /volume5/storage/docker-data/harbor/data/common/config/log/rsyslog_docker.conf:/etc/rsyslog.d/rsyslog_docker.conf
     ports:
       - "127.0.0.1:1514:10514"
   registry:
@@ -294,10 +294,10 @@ services:
     expose:
       - "5000"
     volumes:
-      - /volume1/storage/docker-data/harbor/data/registry/:/storage/
-      - /volume1/storage/docker-data/harbor/data/common/config/registry/:/etc/registry/
-      - /volume1/storage/docker-data/harbor/data/secret/registry/root.crt:/etc/registry/root.crt
-      - /volume1/storage/docker-data/harbor/data/common/config/shared/trust-certificates:/harbor_cust_cert
+      - /volume5/storage/docker-data/harbor/data/registry/:/storage/
+      - /volume5/storage/docker-data/harbor/data/common/config/registry/:/etc/registry/
+      - /volume5/storage/docker-data/harbor/data/secret/registry/root.crt:/etc/registry/root.crt
+      - /volume5/storage/docker-data/harbor/data/common/config/shared/trust-certificates:/harbor_cust_cert
     depends_on:
       - log
     logging:
@@ -310,12 +310,12 @@ services:
     container_name: registryctl
     <<: *common
     env_file:
-      - /volume1/storage/docker-data/harbor/data/common/config/registryctl/env
+      - /volume5/storage/docker-data/harbor/data/common/config/registryctl/env
     volumes:
-      - /volume1/storage/docker-data/harbor/data/registry/:/storage/
-      - /volume1/storage/docker-data/harbor/data/common/config/registry/:/etc/registry/
-      - /volume1/storage/docker-data/harbor/data/common/config/registryctl/config.yml:/etc/registryctl/config.yml
-      - /volume1/storage/docker-data/harbor/data/common/config/shared/trust-certificates:/harbor_cust_cert
+      - /volume5/storage/docker-data/harbor/data/registry/:/storage/
+      - /volume5/storage/docker-data/harbor/data/common/config/registry/:/etc/registry/
+      - /volume5/storage/docker-data/harbor/data/common/config/registryctl/config.yml:/etc/registryctl/config.yml
+      - /volume5/storage/docker-data/harbor/data/common/config/shared/trust-certificates:/harbor_cust_cert
     depends_on:
       - log
     logging:
@@ -332,15 +332,15 @@ services:
     expose:
       - "8080"
     env_file:
-      - /volume1/storage/docker-data/harbor/data/common/config/core/env
+      - /volume5/storage/docker-data/harbor/data/common/config/core/env
     volumes:
-      - /volume1/storage/docker-data/harbor/data/ca_download/:/etc/core/ca/
-      - /volume1/storage/docker-data/harbor/data/:/data/
-      - /volume1/storage/docker-data/harbor/data/common/config/core/certificates/:/etc/core/certificates/
-      - /volume1/storage/docker-data/harbor/data/common/config/core/app.conf:/etc/core/app.conf
-      - /volume1/storage/docker-data/harbor/data/secret/core/private_key.pem:/etc/core/private_key.pem
-      - /volume1/storage/docker-data/harbor/data/secret/keys/secretkey:/etc/core/key
-      - /volume1/storage/docker-data/harbor/data/common/config/shared/trust-certificates:/harbor_cust_cert
+      - /volume5/storage/docker-data/harbor/data/ca_download/:/etc/core/ca/
+      - /volume5/storage/docker-data/harbor/data/:/data/
+      - /volume5/storage/docker-data/harbor/data/common/config/core/certificates/:/etc/core/certificates/
+      - /volume5/storage/docker-data/harbor/data/common/config/core/app.conf:/etc/core/app.conf
+      - /volume5/storage/docker-data/harbor/data/secret/core/private_key.pem:/etc/core/private_key.pem
+      - /volume5/storage/docker-data/harbor/data/secret/keys/secretkey:/etc/core/key
+      - /volume5/storage/docker-data/harbor/data/common/config/shared/trust-certificates:/harbor_cust_cert
     depends_on:
       - log
       - registry
@@ -358,7 +358,7 @@ services:
     expose:
       - "8080"
     volumes:
-      - /volume1/storage/docker-data/harbor/data/common/config/portal/nginx.conf:/etc/nginx/nginx.conf
+      - /volume5/storage/docker-data/harbor/data/common/config/portal/nginx.conf:/etc/nginx/nginx.conf
     depends_on:
       - log
     logging:
@@ -372,11 +372,11 @@ services:
     container_name: harbor-jobservice
     <<: *common
     env_file:
-      - /volume1/storage/docker-data/harbor/data/common/config/jobservice/env
+      - /volume5/storage/docker-data/harbor/data/common/config/jobservice/env
     volumes:
-      - /volume1/storage/docker-data/harbor/data/job_logs/:/var/log/jobs/
-      - /volume1/storage/docker-data/harbor/data/common/config/jobservice/config.yml:/etc/jobservice/config.yml
-      - /volume1/storage/docker-data/harbor/data/common/config/shared/trust-certificates:/harbor_cust_cert
+      - /volume5/storage/docker-data/harbor/data/job_logs/:/var/log/jobs/
+      - /volume5/storage/docker-data/harbor/data/common/config/jobservice/config.yml:/etc/jobservice/config.yml
+      - /volume5/storage/docker-data/harbor/data/common/config/shared/trust-certificates:/harbor_cust_cert
     depends_on:
       - core
     logging:

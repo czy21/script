@@ -3,7 +3,7 @@
 - /volume5/storage/docker-data/pulsar/conf/bookie.conf
 ```text
 bookiePort=3181
-zkServers=192.168.2.18:2181,192.168.2.18:2182,192.168.2.18:2183/pulsar/cluster1
+zkServers=<ip>:2181,<ip>:2182,<ip>:2183/pulsar/cluster1
 zkTimeout=30000
 
 useHostNameAsBookieID=true
@@ -14,9 +14,9 @@ autoRecoveryDaemonEnabled=false
 - /volume5/storage/docker-data/pulsar/conf/broker.conf
 ```text
 clusterName=pulsar
-zookeeperServers=192.168.2.18:2181,192.168.2.18:2182,192.168.2.18:2183/pulsar/cluster1
+zookeeperServers=<ip>:2181,<ip>:2182,<ip>:2183/pulsar/cluster1
 zooKeeperSessionTimeoutMillis=30000
-configurationStoreServers=192.168.2.18:2181,192.168.2.18:2182,192.168.2.18:2183/pulsar/cluster1
+configurationStoreServers=<ip>:2181,<ip>:2182,<ip>:2183/pulsar/cluster1
 
 brokerServicePort=6650
 webServicePort=8080
@@ -30,9 +30,9 @@ brokerDeleteInactiveTopicsEnabled=false
 - /volume5/storage/docker-data/pulsar/conf/proxy.conf
 ```text
 clusterName=pulsar
-zookeeperServers=192.168.2.18:2181,192.168.2.18:2182,192.168.2.18:2183/pulsar/cluster1
+zookeeperServers=<ip>:2181,<ip>:2182,<ip>:2183/pulsar/cluster1
 zookeeperSessionTimeoutMs=30000
-configurationStoreServers=192.168.2.18:2181,192.168.2.18:2182,192.168.2.18:2183/pulsar/cluster1
+configurationStoreServers=<ip>:2181,<ip>:2182,<ip>:2183/pulsar/cluster1
 ```
 
 # docker-compose
@@ -62,9 +62,9 @@ services:
     expose:
       - "3181"
     volumes:
-      - /volume1/storage/docker-data/pulsar/conf/bookie.conf:/pulsar/conf/bookkeeper.conf
-      - /volume1/storage/docker-data/pulsar/data/bookie/1/:/pulsar/data/bookie/
-      - /volume1/storage/docker-data/pulsar/log/bookie/1/:/pulsar/logs/
+      - /volume5/storage/docker-data/pulsar/conf/bookie.conf:/pulsar/conf/bookkeeper.conf
+      - /volume5/storage/docker-data/pulsar/data/bookie/1/:/pulsar/data/bookie/
+      - /volume5/storage/docker-data/pulsar/log/bookie/1/:/pulsar/logs/
     command: bin/pulsar bookie
     environment:
       PULSAR_MEM: "-Xms128m -Xmx256m -XX:MaxDirectMemorySize=256m"
@@ -76,9 +76,9 @@ services:
     expose:
       - "3181"
     volumes:
-      - /volume1/storage/docker-data/pulsar/conf/bookie.conf:/pulsar/conf/bookkeeper.conf
-      - /volume1/storage/docker-data/pulsar/data/bookie/2/:/pulsar/data/bookie/
-      - /volume1/storage/docker-data/pulsar/log/bookie/2/:/pulsar/logs/
+      - /volume5/storage/docker-data/pulsar/conf/bookie.conf:/pulsar/conf/bookkeeper.conf
+      - /volume5/storage/docker-data/pulsar/data/bookie/2/:/pulsar/data/bookie/
+      - /volume5/storage/docker-data/pulsar/log/bookie/2/:/pulsar/logs/
     command: bin/pulsar bookie
     environment:
       PULSAR_MEM: "-Xms128m -Xmx256m -XX:MaxDirectMemorySize=256m"
@@ -92,8 +92,8 @@ services:
       - "8080"
       - "6650"
     volumes:
-      - /volume1/storage/docker-data/pulsar/conf/broker.conf:/pulsar/conf/broker.conf
-      - /volume1/storage/docker-data/pulsar/log/broker/1/:/pulsar/logs/
+      - /volume5/storage/docker-data/pulsar/conf/broker.conf:/pulsar/conf/broker.conf
+      - /volume5/storage/docker-data/pulsar/log/broker/1/:/pulsar/logs/
     command: bin/pulsar broker
     environment:
       PULSAR_MEM: "-Xms128m -Xmx256m -XX:MaxDirectMemorySize=256m"
@@ -106,8 +106,8 @@ services:
       - "8080"
       - "6650"
     volumes:
-      - /volume1/storage/docker-data/pulsar/conf/broker.conf:/pulsar/conf/broker.conf
-      - /volume1/storage/docker-data/pulsar/log/broker/2/:/pulsar/logs/
+      - /volume5/storage/docker-data/pulsar/conf/broker.conf:/pulsar/conf/broker.conf
+      - /volume5/storage/docker-data/pulsar/log/broker/2/:/pulsar/logs/
     command: bin/pulsar broker
     environment:
       PULSAR_MEM: "-Xms128m -Xmx256m -XX:MaxDirectMemorySize=256m"
@@ -125,8 +125,8 @@ services:
     ports:
       - "6650:6650"
     volumes:
-      - /volume1/storage/docker-data/pulsar/conf/proxy.conf:/pulsar/conf/proxy.conf
-      - /volume1/storage/docker-data/pulsar/log/proxy/:/pulsar/logs/
+      - /volume5/storage/docker-data/pulsar/conf/proxy.conf:/pulsar/conf/proxy.conf
+      - /volume5/storage/docker-data/pulsar/log/proxy/:/pulsar/logs/
     command: bin/pulsar proxy
     environment:
       PULSAR_MEM: "-Xms64m -Xmx64m -XX:MaxDirectMemorySize=64m"

@@ -10,16 +10,16 @@ version: "3.9"
 services:
 
   jenkins-ssh-agent:
-    image: registry.czy21-internal.com/library/jenkins-ssh-agent
+    image: registry.czy21-public.com/library/jenkins-ssh-agent
     pull_policy: always
     container_name: jenkins-ssh-agent
     privileged: true
     ports:
       - "5022:22"
     volumes:
-      - /volume1/storage/docker-data/jenkins-ssh-agent/data/:/home/jenkins/
-      - /volume1/storage/docker-data/jenkins-ssh-agent/data/.jenkins:/home/jenkins/.jenkins
-      - /volume1/storage/docker-data/jenkins-ssh-agent/data/agent:/home/jenkins/agent
+      - /volume5/storage/docker-data/jenkins-ssh-agent/data/:/home/jenkins/
+      - /volume5/storage/docker-data/jenkins-ssh-agent/data/.jenkins:/home/jenkins/.jenkins
+      - /volume5/storage/docker-data/jenkins-ssh-agent/data/agent:/home/jenkins/agent
       - /run/:/run/
       - /var/run/:/var/run/
       - /tmp/:/tmp/

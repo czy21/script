@@ -91,9 +91,9 @@ services:
       - "8080"
       - "8082"
     volumes:
-      - /volume1/storage/docker-data/traefik/conf/traefik.yml:/etc/traefik/traefik.yml
-      - /volume1/storage/docker-data/traefik/conf/conf.d/:/etc/traefik/conf.d/
-      - /volume1/storage/docker-data/traefik/conf/cert/:/etc/traefik/cert/
+      - /volume5/storage/docker-data/traefik/conf/traefik.yml:/etc/traefik/traefik.yml
+      - /volume5/storage/docker-data/traefik/conf/conf.d/:/etc/traefik/conf.d/
+      - /volume5/storage/docker-data/traefik/conf/cert/:/etc/traefik/cert/
       - /var/run/docker.sock:/var/run/docker.sock:ro
     restart: always
 ```

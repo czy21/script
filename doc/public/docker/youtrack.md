@@ -25,9 +25,9 @@ services:
     privileged: true
     user: root
     volumes:
-      - /volume1/storage/docker-data/youtrack/data/data/:/opt/youtrack/data/
-      - /volume1/storage/docker-data/youtrack/data/conf/:/opt/youtrack/conf/
-      - /volume1/storage/docker-data/youtrack/data/logs/:/opt/youtrack/logs/
-      - /volume1/storage/docker-data/youtrack/data/backups/:/opt/youtrack/backups/
+      - /volume5/storage/docker-data/youtrack/data/data/:/opt/youtrack/data/
+      - /volume5/storage/docker-data/youtrack/data/conf/:/opt/youtrack/conf/
+      - /volume5/storage/docker-data/youtrack/data/logs/:/opt/youtrack/logs/
+      - /volume5/storage/docker-data/youtrack/data/backups/:/opt/youtrack/backups/
     restart: always
 ```

@@ -22,9 +22,9 @@ services:
     expose:
       - "8000"
     environment:
-      MYSQL_USER: admin
-      MYSQL_PASSWORD: ***REMOVED***
-      MYSQL_ADDR: 192.168.2.18
+      MYSQL_USER: <username>
+      MYSQL_PASSWORD: <password>
+      MYSQL_ADDR: <ip>
       MYSQL_DB: yearning
       SECRET_KEY: dbcjqheupqjsuwsm
       IS_DOCKER: is_docker

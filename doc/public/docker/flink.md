@@ -8,7 +8,7 @@ docker-compose --project-name flink --file docker-compose.yaml up --detach --bui
 version: "3.9"
 
 x-flink-common: &flink-common
-  image: registry.czy21-internal.com/library/flink
+  image: registry.czy21-public.com/library/flink
   privileged: true
   user: root
   pull_policy: always
@@ -31,8 +31,8 @@ services:
     labels:
       <<: *traefik-jmr-label
     volumes:
-      - /volume1/storage/docker-data/flink/data/:/data/
-      - /volume1/storage/docker-data/flink/log/:/opt/flink/log/
+      - /volume5/storage/docker-data/flink/data/:/data/
+      - /volume5/storage/docker-data/flink/log/:/opt/flink/log/
     environment:
       FLINK_PROPERTIES: |
         jobmanager.rpc.address: flink-jmr
@@ -48,7 +48,7 @@ services:
     container_name: flink-tmr-1
     hostname: flink-tmr1
     volumes:
-      - /volume1/storage/docker-data/flink/log/:/opt/flink/log/
+      - /volume5/storage/docker-data/flink/log/:/opt/flink/log/
     environment:
       FLINK_PROPERTIES: |
         jobmanager.rpc.address: flink-jmr
@@ -61,7 +61,7 @@ services:
     container_name: flink-tmr-2
     hostname: flink-tmr2
     volumes:
-      - /volume1/storage/docker-data/flink/log/:/opt/flink/log/
+      - /volume5/storage/docker-data/flink/log/:/opt/flink/log/
     environment:
       FLINK_PROPERTIES: |
         jobmanager.rpc.address: flink-jmr
@@ -77,8 +77,8 @@ services:
     labels:
       <<: *traefik-his-label
     volumes:
-      - /volume1/storage/docker-data/flink/data/:/data/
-      - /volume1/storage/docker-data/flink/log/:/opt/flink/log/
+      - /volume5/storage/docker-data/flink/data/:/data/
+      - /volume5/storage/docker-data/flink/log/:/opt/flink/log/
     environment:
       FLINK_PROPERTIES: |
         historyserver.web.address: flink-his

@@ -148,14 +148,14 @@ services:
       BOOTSTRAP_TOKEN: "7Q11Vz6R2J6BLAdO"
       DEBUG: "FALSE"
       LOG_LEVEL: "ERROR"
-      DB_HOST: "192.168.2.18"
+      DB_HOST: "<ip>"
       DB_PORT: "3306"
-      DB_USER: "admin"
-      DB_PASSWORD: "***REMOVED***"
+      DB_USER: "<username>"
+      DB_PASSWORD: "<password>"
       DB_NAME: "jms"
-      REDIS_HOST: "192.168.2.2"
+      REDIS_HOST: "<ip>"
       REDIS_PORT: "6379"
-      REDIS_PASSWORD: "***REMOVED***"
+      REDIS_PASSWORD: "<password>"
     healthcheck:
       test: "curl -fsL http://localhost:8080/api/health/ > /dev/null"
       interval: 10s
@@ -163,8 +163,8 @@ services:
       retries: 3
       start_period: 90s
     volumes:
-      - /volume1/storage/docker-data/jms/data/core/data:/opt/jumpserver/data
-      - /volume1/storage/docker-data/jms/data/core/logs:/opt/jumpserver/logs
+      - /volume5/storage/docker-data/jms/data/core/data:/opt/jumpserver/data
+      - /volume5/storage/docker-data/jms/data/core/logs:/opt/jumpserver/logs
     expose:
       - "8080"
 
@@ -180,14 +180,14 @@ services:
       BOOTSTRAP_TOKEN: "7Q11Vz6R2J6BLAdO"
       DEBUG: "FALSE"
       LOG_LEVEL: "ERROR"
-      DB_HOST: "192.168.2.18"
+      DB_HOST: "<ip>"
       DB_PORT: "3306"
-      DB_USER: "admin"
-      DB_PASSWORD: "***REMOVED***"
+      DB_USER: "<username>"
+      DB_PASSWORD: "<password>"
       DB_NAME: "jms"
-      REDIS_HOST: "192.168.2.2"
+      REDIS_HOST: "<ip>"
       REDIS_PORT: "6379"
-      REDIS_PASSWORD: "***REMOVED***"
+      REDIS_PASSWORD: "<password>"
     depends_on:
       jms-core:
         condition: service_healthy
@@ -198,8 +198,8 @@ services:
       retries: 3
       start_period: 30s
     volumes:
-      - /volume1/storage/docker-data/jms/data/core/data:/opt/jumpserver/data
-      - /volume1/storage/docker-data/jms/data/core/logs:/opt/jumpserver/logs
+      - /volume5/storage/docker-data/jms/data/core/data:/opt/jumpserver/data
+      - /volume5/storage/docker-data/jms/data/core/logs:/opt/jumpserver/logs
 
   jms-koko:
     image: jumpserver/koko:v2.28.5
@@ -223,7 +223,7 @@ services:
       retries: 3
       start_period: 10s
     volumes:
-      - /volume1/storage/docker-data/jms/data/koko/data:/opt/koko/data
+      - /volume5/storage/docker-data/jms/data/koko/data:/opt/koko/data
     expose:
       - "22"
     ports:
@@ -249,7 +249,7 @@ services:
       retries: 3
       start_period: 10s
     volumes:
-      - /volume1/storage/docker-data/jms/data/lion/data:/opt/lion/data
+      - /volume5/storage/docker-data/jms/data/lion/data:/opt/lion/data
 
   jms-magnus:
     image: jumpserver/magnus:v2.28.5
@@ -271,7 +271,7 @@ services:
       retries: 3
       start_period: 10s
     volumes:
-      - /volume1/storage/docker-data/jms/data/magnus/data:/opt/magnus/data
+      - /volume5/storage/docker-data/jms/data/magnus/data:/opt/magnus/data
     ports:
       - 30000-30100:30000-30100
 
@@ -293,9 +293,9 @@ services:
       retries: 3
       start_period: 10s
     volumes:
-      - /volume1/storage/docker-data/jms/conf/nginx.conf:/etc/nginx/nginx.conf
-      - /volume1/storage/docker-data/jms/data/core/data:/opt/jumpserver/data
-      - /volume1/storage/docker-data/jms/data/nginx/data/logs:/var/log/nginx
+      - /volume5/storage/docker-data/jms/conf/nginx.conf:/etc/nginx/nginx.conf
+      - /volume5/storage/docker-data/jms/data/core/data:/opt/jumpserver/data
+      - /volume5/storage/docker-data/jms/data/nginx/data/logs:/var/log/nginx
     labels:
       <<: *traefik-label
 ```

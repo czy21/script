@@ -25,7 +25,7 @@ services:
       - "22"
     user: root
     volumes:
-      - /volume1/storage/docker-data/gitea/data/:/data/
+      - /volume5/storage/docker-data/gitea/data/:/data/
     environment:
       TZ: Asia/Shanghai
       GITEA__server__DOMAIN: "gitea.czy21-internal.com"

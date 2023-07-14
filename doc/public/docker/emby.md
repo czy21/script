@@ -23,8 +23,8 @@ services:
       - "8096"
       - "8920"
     volumes:
-      - /volume1/storage/docker-data/emby/data/:/config/
-      - /volume1/public/media/:/media/
+      - /volume5/storage/docker-data/emby/data/:/config/
+      - /volume5/public/media/:/media/
     environment:
       - UID=1000
       - GID=1000

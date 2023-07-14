@@ -29,7 +29,7 @@ services:
       - '4201:4200'
       - '5401:5432'
     volumes:
-      - /volume1/storage/docker-data/crate-1/data/1/:/data/
+      - /volume5/storage/docker-data/crate-1/data/1/:/data/
     command:
       - "crate"
       - "-Ccluster.name=crate-1"
@@ -54,7 +54,7 @@ services:
       - '4202:4200'
       - '5402:5432'
     volumes:
-      - /volume1/storage/docker-data/crate-1/data/2/:/data/
+      - /volume5/storage/docker-data/crate-1/data/2/:/data/
     command:
       - "crate"
       - "-Ccluster.name=crate-1"
@@ -79,7 +79,7 @@ services:
       - '4203:4200'
       - '5403:5432'
     volumes:
-      - /volume1/storage/docker-data/crate-1/data/3/:/data/
+      - /volume5/storage/docker-data/crate-1/data/3/:/data/
     command:
       - "crate"
       - "-Ccluster.name=crate-1"

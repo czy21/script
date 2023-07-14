@@ -51,8 +51,8 @@ services:
     ports:
       - "6881:6881" # bt port
     volumes:
-      - /volume1/storage/docker-data/streaming/data/qbittorrent/:/config/
-      - /volume1/public/media/:/volume1/public/media/
+      - /volume5/storage/docker-data/streaming/data/qbittorrent/:/config/
+      - /volume5/public/media/:/volume5/public/media/
     environment:
       PUID: 1000
       PGID: 1000
@@ -66,7 +66,7 @@ services:
     labels:
       <<: *traefik-jackett-label
     volumes:
-      - /volume1/storage/docker-data/streaming/data/jackett/:/config/
+      - /volume5/storage/docker-data/streaming/data/jackett/:/config/
     environment:
       PUID: 1000
       PGID: 1000
@@ -80,8 +80,8 @@ services:
     labels:
       <<: *traefik-radarr-label
     volumes:
-      - /volume1/storage/docker-data/streaming/data/radarr/:/config/
-      - /volume1/public/media/:/volume1/public/media/
+      - /volume5/storage/docker-data/streaming/data/radarr/:/config/
+      - /volume5/public/media/:/volume5/public/media/
     environment:
       PUID: 1000
       PGID: 1000
@@ -94,8 +94,8 @@ services:
     labels:
       <<: *traefik-sonarr-label
     volumes:
-      - /volume1/storage/docker-data/streaming/data/sonarr/:/config/
-      - /volume1/public/media/:/volume1/public/media/
+      - /volume5/storage/docker-data/streaming/data/sonarr/:/config/
+      - /volume5/public/media/:/volume5/public/media/
     environment:
       PUID: 1000
       PGID: 1000
@@ -108,7 +108,7 @@ services:
     labels:
       <<: *traefik-prowlarr-label
     volumes:
-      - /volume1/storage/docker-data/streaming/data/prowlarr/:/config/
+      - /volume5/storage/docker-data/streaming/data/prowlarr/:/config/
     environment:
       PUID: 1000
       PGID: 1000
@@ -121,8 +121,8 @@ services:
     labels:
       <<: *traefik-bazarr-label
     volumes:
-      - /volume1/storage/docker-data/streaming/data/bazarr/:/config/
-      - /volume1/public/media/:/volume1/public/media/
+      - /volume5/storage/docker-data/streaming/data/bazarr/:/config/
+      - /volume5/public/media/:/volume5/public/media/
     environment:
       PUID: 1000
       PGID: 1000
@@ -135,8 +135,8 @@ services:
     labels:
       <<: *traefik-chinesesubfinder-label
     volumes:
-      - /volume1/storage/docker-data/streaming/data/chinesesubfinder/:/config/
-      - /volume1/public/media/:/media/
+      - /volume5/storage/docker-data/streaming/data/chinesesubfinder/:/config/
+      - /volume5/public/media/:/media/
     environment:
       PUID: 1000    
       PGID: 1000        

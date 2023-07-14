@@ -25,8 +25,8 @@ services:
       - "22"
     user: root
     volumes:
-      - /volume1/storage/docker-data/gogs/data/:/data/
-      - /volume1/storage/docker-data/gogs/backup/:/backup/
+      - /volume5/storage/docker-data/gogs/data/:/data/
+      - /volume5/storage/docker-data/gogs/backup/:/backup/
 
 
 ```

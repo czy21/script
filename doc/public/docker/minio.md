@@ -15,8 +15,8 @@ x-minio-common: &minio-common
     - "9000"
     - "9001"
   environment:
-    MINIO_ROOT_USER: admin
-    MINIO_ROOT_PASSWORD: ***REMOVED***
+    MINIO_ROOT_USER: <username>
+    MINIO_ROOT_PASSWORD: <password>
     MINIO_PROMETHEUS_AUTH_TYPE: public
   restart: always
 
@@ -34,7 +34,7 @@ services:
     labels:
       <<: *traefik-label
     volumes:
-      - /volume1/storage/docker-data/minio/data/single:/data/
+      - /volume5/storage/docker-data/minio/data/single:/data/
     command: server /data --console-address ":9001"
 
 ```

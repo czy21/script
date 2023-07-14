@@ -4,8 +4,8 @@
 ```text
 http.host: "0.0.0.0"
 xpack.monitoring.enabled: true
-xpack.monitoring.elasticsearch.username: admin
-xpack.monitoring.elasticsearch.password: ***REMOVED***
+xpack.monitoring.elasticsearch.username: <username>
+xpack.monitoring.elasticsearch.password: <password>
 xpack.monitoring.elasticsearch.hosts: [ "http://es-1-1:9200" ]
 ```
 - /volume5/storage/docker-data/logstash/conf/logstash-spring.conf
@@ -22,8 +22,8 @@ output {
   elasticsearch {
     hosts => ["http://es-1-1:9200"]
     index => "%{service}-%{+YYYY.MM.dd}"
-    user => "admin"
-    password => "***REMOVED***"
+    user => "<username>"
+    password => "<password>"
   }
 }
 ```
@@ -43,9 +43,9 @@ services:
     privileged: true
     user: root
     volumes:
-      - /volume1/storage/docker-data/logstash/data/:/usr/share/logstash/data/
-      - /volume1/storage/docker-data/logstash/conf/logstash.yml:/usr/share/logstash/config/logstash.yml
-      - /volume1/storage/docker-data/logstash/conf/pipeline/:/usr/share/logstash/pipeline/
-      - /volume1/storage/docker-data/app/log/:/app/log/
+      - /volume5/storage/docker-data/logstash/data/:/usr/share/logstash/data/
+      - /volume5/storage/docker-data/logstash/conf/logstash.yml:/usr/share/logstash/config/logstash.yml
+      - /volume5/storage/docker-data/logstash/conf/pipeline/:/usr/share/logstash/pipeline/
+      - /volume5/storage/docker-data/app/log/:/app/log/
     restart: always
 ```

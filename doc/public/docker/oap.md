@@ -18,9 +18,9 @@ services:
       SW_OTEL_RECEIVER: default
       SW_OTEL_RECEIVER_ENABLED_OC_RULES: vm
       SW_STORAGE: elasticsearch
-      SW_STORAGE_ES_CLUSTER_NODES: es.czy21-internal.com:80
-      SW_ES_USER: admin
-      SW_ES_PASSWORD: ***REMOVED***
+      SW_STORAGE_ES_CLUSTER_NODES: <domain>:80
+      SW_ES_USER: <username>
+      SW_ES_PASSWORD: <password>
       SW_TELEMETRY: prometheus
       SW_PROMETHEUS_FETCHER: default
       JAVA_OPTS: "-Xms2048m -Xmx2048m"
