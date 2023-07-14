@@ -64,7 +64,7 @@ echo "All done!";
 ```
 - /volume5/storage/docker-data/es-1/conf/users
 ```text
-<username>:$2b$12$9ux91iTlGkiNaZQ1NEYk0.K2zKFcn3WTAbSfWkm..3QoybGd/oQ6W
+<username>:$2b$12$txr1Gk68b9dIaJd7D6B0TuxUFzAVdOdsTV/ItD/LU4YC2rh2mSc2O
 ```
 - /volume5/storage/docker-data/es-1/conf/users_roles
 ```text
