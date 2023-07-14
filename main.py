@@ -10,10 +10,10 @@ if __name__ == '__main__':
     logger.setLevel(logging.DEBUG)
     current = pathlib.Path(__file__).parent
     global_env = yaml_util.load(current.joinpath("server/env-public.yaml"))
+    mkdocs = current.joinpath("mkdocs.yaml")
     doc = current.joinpath("doc")
     doc_public = doc.joinpath("public")
-    mkdocs = current.joinpath("mkdocs.yaml")
-    mkdocs_template = current.joinpath("mkdocs_template.yaml")
+    mkdocs_template = doc.joinpath("mkdocs_template.yaml")
     docker_deploys = current.joinpath("server/docker/build")
     docker_md = doc_public.joinpath("docker")
     docker_md_template = doc.joinpath("docker-template.md")
