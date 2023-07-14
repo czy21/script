@@ -26,9 +26,9 @@ services:
       - "5672:5672"
       - "1883:1883"
     volumes:
-      - /volume1/storage/docker-data/rabbitmq/conf/enabled_plugins:/etc/rabbitmq/enabled_plugins
-      - /volume1/storage/docker-data/rabbitmq/data/:/var/lib/rabbitmq/
+      - /volume5/storage/docker-data/rabbitmq/conf/enabled_plugins:/etc/rabbitmq/enabled_plugins
+      - /volume5/storage/docker-data/rabbitmq/data/:/var/lib/rabbitmq/
     environment:
       RABBITMQ_DEFAULT_USER: admin
-      RABBITMQ_DEFAULT_PASS: "***REMOVED***"
+      RABBITMQ_DEFAULT_PASS: "<password>"
 ```

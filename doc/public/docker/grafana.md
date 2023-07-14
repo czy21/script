@@ -21,10 +21,10 @@ services:
     privileged: true
     user: root
     volumes:
-      - /volume1/storage/docker-data/grafana/conf/grafana.ini:/etc/grafana/grafana.ini
-      - /volume1/storage/docker-data/grafana/conf/datasources/:/etc/grafana/provisioning/datasources/
-      - /volume1/storage/docker-data/grafana/conf/dashboards/:/etc/grafana/provisioning/dashboards/
-      - /volume1/storage/docker-data/grafana/data/:/var/lib/grafana/
+      - /volume5/storage/docker-data/grafana/conf/grafana.ini:/etc/grafana/grafana.ini
+      - /volume5/storage/docker-data/grafana/conf/datasources/:/etc/grafana/provisioning/datasources/
+      - /volume5/storage/docker-data/grafana/conf/dashboards/:/etc/grafana/provisioning/dashboards/
+      - /volume5/storage/docker-data/grafana/data/:/var/lib/grafana/
     environment:
       GF_INSTALL_PLUGINS: grafana-piechart-panel
     restart: always

@@ -38,12 +38,12 @@ services:
     privileged: true
     user: root
     volumes:
-      - /volume1/storage/docker-data/filebeat/conf/filebeat.yml:/usr/share/filebeat/filebeat.yml
+      - /volume5/storage/docker-data/filebeat/conf/filebeat.yml:/usr/share/filebeat/filebeat.yml
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - /volume1/docker-root/containers/:/var/lib/docker/containers:ro
+      - /volume5/docker-root/containers/:/var/lib/docker/containers:ro
     environment:
-      ELASTICSEARCH_HOSTS: "es.czy21-internal.com:80"
-      ELASTICSEARCH_USERNAME: "admin"
-      ELASTICSEARCH_PASSWORD: "***REMOVED***"
+      ELASTICSEARCH_HOSTS: "<domain>:80"
+      ELASTICSEARCH_USERNAME: "<username>"
+      ELASTICSEARCH_PASSWORD: "<password>"
     restart: always
 ```

@@ -22,7 +22,7 @@ http:
     - 0.0.0.0/0
 
 recorder:
-  db_url: postgresql://postgres:***REMOVED***@192.168.2.18:5432/homeassistant
+  db_url: postgresql://postgres:<password>@<ip>:5432/homeassistant
   purge_keep_days: 180
 
 # Text to speech
@@ -59,7 +59,7 @@ services:
     expose:
       - "8123"
     volumes:
-      - /volume1/storage/docker-data/homeassistant/data/:/config/
+      - /volume5/storage/docker-data/homeassistant/data/:/config/
     restart: always
 #    networks:
 #      vlan2:

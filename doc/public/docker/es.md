@@ -32,8 +32,8 @@ monitoring:
 elasticsearch:
   hosts: 
     - http://es-1-1:9200
-  username: admin
-  password: ***REMOVED***
+  username: <username>
+  password: <password>
 ```
 - /volume5/storage/docker-data/es-1/conf/setup.sh
 ```text
@@ -64,12 +64,12 @@ echo "All done!";
 ```
 - /volume5/storage/docker-data/es-1/conf/users
 ```text
-admin:$2b$12$zEPzRxxtrOHm/tvuyfbIdOqGt6t44.LxXiAWqBin0EShm9zOOcLr.
+<username>:$2b$12$nQrMkfLWdX5vR9IkhzT9CexcYG0dQFAEFXmsAHrXgD7SiopEfV0u2
 ```
 - /volume5/storage/docker-data/es-1/conf/users_roles
 ```text
-superuser:admin
-kibana_system:admin
+superuser:<username>
+kibana_system:<username>
 ```
 
 # docker-compose
@@ -100,10 +100,10 @@ services:
     user: "0"
     working_dir: /usr/share/elasticsearch
     volumes:
-      - /volume1/storage/docker-data/es-1/conf/setup.sh:/usr/share/elasticsearch/setup.sh
-      - /volume1/storage/docker-data/es-1/conf/instance.yml/:/usr/share/elasticsearch/config/instance.yml
-      - /volume1/storage/docker-data/es-1/cert/:/usr/share/elasticsearch/config/cert/
-      - /volume1/storage/docker-data/es-1/data/:/usr/share/elasticsearch/data/
+      - /volume5/storage/docker-data/es-1/conf/setup.sh:/usr/share/elasticsearch/setup.sh
+      - /volume5/storage/docker-data/es-1/conf/instance.yml/:/usr/share/elasticsearch/config/instance.yml
+      - /volume5/storage/docker-data/es-1/cert/:/usr/share/elasticsearch/config/cert/
+      - /volume5/storage/docker-data/es-1/data/:/usr/share/elasticsearch/data/
     healthcheck:
       test: ["CMD-SHELL", "[ -f /usr/share/elasticsearch/config/cert/es-1-1/es-1-1.crt ]"]
       interval: 1s
@@ -125,7 +125,7 @@ services:
       cluster.initial_master_nodes: es-1-1,es-1-2
       discovery.seed_hosts: es-1-2
       bootstrap.memory_lock: "true"
-      ELASTIC_PASSWORD: ***REMOVED***
+      ELASTIC_PASSWORD: <password>
       xpack.security.enabled: true
       xpack.security.http.ssl.enabled: false
       xpack.security.transport.ssl.enabled: true
@@ -137,10 +137,10 @@ services:
       xpack.security.authc.realms.native.realm1.order: 1
       xpack.monitoring.collection.enabled: true
     volumes:
-      - /volume1/storage/docker-data/es-1/conf/users:/usr/share/elasticsearch/config/users
-      - /volume1/storage/docker-data/es-1/conf/users_roles:/usr/share/elasticsearch/config/users_roles
-      - /volume1/storage/docker-data/es-1/data/1/:/usr/share/elasticsearch/data/
-      - /volume1/storage/docker-data/es-1/cert/:/usr/share/elasticsearch/config/cert/
+      - /volume5/storage/docker-data/es-1/conf/users:/usr/share/elasticsearch/config/users
+      - /volume5/storage/docker-data/es-1/conf/users_roles:/usr/share/elasticsearch/config/users_roles
+      - /volume5/storage/docker-data/es-1/data/1/:/usr/share/elasticsearch/data/
+      - /volume5/storage/docker-data/es-1/cert/:/usr/share/elasticsearch/config/cert/
     deploy:
       resources:
         limits:
@@ -172,7 +172,7 @@ services:
       cluster.initial_master_nodes: es-1-1,es-1-2
       discovery.seed_hosts: es-1-1
       bootstrap.memory_lock: "true"
-      ELASTIC_PASSWORD: ***REMOVED***
+      ELASTIC_PASSWORD: <password>
       xpack.security.enabled: true
       xpack.security.http.ssl.enabled: false
       xpack.security.transport.ssl.enabled: true
@@ -184,10 +184,10 @@ services:
       xpack.security.authc.realms.native.realm1.order: 1
       xpack.monitoring.collection.enabled: true
     volumes:
-      - /volume1/storage/docker-data/es-1/conf/users:/usr/share/elasticsearch/config/users
-      - /volume1/storage/docker-data/es-1/conf/users_roles:/usr/share/elasticsearch/config/users_roles
-      - /volume1/storage/docker-data/es-1/data/2/:/usr/share/elasticsearch/data/
-      - /volume1/storage/docker-data/es-1/cert/:/usr/share/elasticsearch/config/cert/
+      - /volume5/storage/docker-data/es-1/conf/users:/usr/share/elasticsearch/config/users
+      - /volume5/storage/docker-data/es-1/conf/users_roles:/usr/share/elasticsearch/config/users_roles
+      - /volume5/storage/docker-data/es-1/data/2/:/usr/share/elasticsearch/data/
+      - /volume5/storage/docker-data/es-1/cert/:/usr/share/elasticsearch/config/cert/
     deploy:
       resources:
         limits:
@@ -211,7 +211,7 @@ services:
     expose:
       - "5601"
     volumes:
-      - /volume1/storage/docker-data/es-1/conf/kibana.yml:/usr/share/kibana/config/kibana.yml
+      - /volume5/storage/docker-data/es-1/conf/kibana.yml:/usr/share/kibana/config/kibana.yml
     depends_on:
       es-1-1:
         condition: service_healthy

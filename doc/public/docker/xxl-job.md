@@ -24,12 +24,12 @@ services:
       - "8080"
     user: root
     volumes:
-      - /volume1/storage/docker-data/xxl-job/log/:/data/applogs
+      - /volume5/storage/docker-data/xxl-job/log/:/data/applogs
     environment:
       PARAMS: "
-        --spring.datasource.url=jdbc:mysql://192.168.2.18:3306/xxl_job?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai 
-        --spring.datasource.username=admin
-        --spring.datasource.password=***REMOVED***
+        --spring.datasource.url=jdbc:mysql://<ip>:3306/xxl_job?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai 
+        --spring.datasource.username=<username>
+        --spring.datasource.password=<password>
         --server.servlet.context-path=/
       "
     restart: always

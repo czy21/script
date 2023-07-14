@@ -22,8 +22,8 @@ services:
     expose:
       - "80"
     volumes:
-      - /volume1/storage/docker-data/nextcloud/data/:/var/www/html
+      - /volume5/storage/docker-data/nextcloud/data/:/var/www/html
     environment:
-      NEXTCLOUD_ADMIN_USER: 'admin'
-      NEXTCLOUD_ADMIN_PASSWORD: '***REMOVED***'
+      NEXTCLOUD_ADMIN_USER: '<username>'
+      NEXTCLOUD_ADMIN_PASSWORD: '<password>'
 ```

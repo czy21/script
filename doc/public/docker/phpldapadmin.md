@@ -65,7 +65,7 @@ services:
     expose:
       - "80"
     volumes:
-      - "/volume1/storage/docker-data/phpldapadmin/conf/config.yaml:/container/environment/01-custom/env.yaml"
-      - "/volume1/storage/docker-data/phpldapadmin/data/:/var/www/phpldapadmin/"
+      - "/volume5/storage/docker-data/phpldapadmin/conf/config.yaml:/container/environment/01-custom/env.yaml"
+      - "/volume5/storage/docker-data/phpldapadmin/data/:/var/www/phpldapadmin/"
     restart: always
 ```

@@ -25,8 +25,8 @@ services:
     expose:
       - "8200"
     volumes:
-      - /volume1/storage/docker-data/vault/data/file/:/vault/file/
-      - /volume1/storage/docker-data/vault/data/logs/:/vault/logs/
+      - /volume5/storage/docker-data/vault/data/file/:/vault/file/
+      - /volume5/storage/docker-data/vault/data/logs/:/vault/logs/
     environment:
       VAULT_LOCAL_CONFIG: '{"backend": {"file": {"path": "/vault/file"}}, "default_lease_ttl": "168h", "max_lease_ttl": "720h"}'
 ```

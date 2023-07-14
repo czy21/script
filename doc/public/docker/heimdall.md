@@ -23,7 +23,7 @@ services:
     privileged: true
     user: root
     volumes:
-      - /volume1/storage/docker-data/heimdall/data/config/:/config/
+      - /volume5/storage/docker-data/heimdall/data/config/:/config/
     environment:
       PUID: 1000
       PGID: 1000

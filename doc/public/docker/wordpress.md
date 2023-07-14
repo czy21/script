@@ -23,7 +23,7 @@ services:
     expose:
       - "80"
     volumes:
-      - /volume1/storage/docker-data/wordpress/data/:/var/www/html
+      - /volume5/storage/docker-data/wordpress/data/:/var/www/html
     environment:
       WORDPRESS_DB_HOST: 192.168.2.18
       WORDPRESS_DB_USER: admin

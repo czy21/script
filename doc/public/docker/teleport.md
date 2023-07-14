@@ -51,7 +51,7 @@ services:
     expose:
       - "80"
     volumes:
-      - /volume1/storage/docker-data/teleport/data/empty/:/teleport/
-      - /volume1/storage/docker-data/teleport/conf/teleport.yaml:/etc/teleport.d/teleport.yaml
-      - /volume1/storage/docker-data/teleport/data/data/:/var/lib/teleport
+      - /volume5/storage/docker-data/teleport/data/empty/:/teleport/
+      - /volume5/storage/docker-data/teleport/conf/teleport.yaml:/etc/teleport.d/teleport.yaml
+      - /volume5/storage/docker-data/teleport/data/data/:/var/lib/teleport
 ```

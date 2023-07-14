@@ -20,5 +20,5 @@ services:
       - "5335:53/tcp"
       - "5335:53/udp"
     volumes:
-      - /volume1/storage/docker-data/adguard/data/:/opt/adguardhome/work/
+      - /volume5/storage/docker-data/adguard/data/:/opt/adguardhome/work/
 ```

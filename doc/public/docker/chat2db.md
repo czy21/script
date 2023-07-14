@@ -14,7 +14,7 @@ x-traefik-label: &traefik-label
 
 services:
   chat2db:
-    image: "registry.czy21-internal.com/library/chat2db"
+    image: "registry.czy21-public.com/library/chat2db"
     container_name: chat2db
     labels:
       <<: *traefik-label
@@ -23,7 +23,7 @@ services:
     expose:
       - "10824"
     volumes:
-      - /volume1/storage/docker-data/chat2db/data/:/data/
+      - /volume5/storage/docker-data/chat2db/data/:/data/
     environment:
       JAVA_OPTS: "-Dspring.datasource.url=jdbc:h2:/data/db/chat2db;MODE=MYSQL"
       LOG_PATH: "/data/log/"

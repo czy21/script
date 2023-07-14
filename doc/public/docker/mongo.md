@@ -64,11 +64,11 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - /volume1/storage/docker-data/mongo/data/:/data/db/
-      - /volume1/storage/docker-data/mongo/conf/:/data/configdb/
+      - /volume5/storage/docker-data/mongo/data/:/data/db/
+      - /volume5/storage/docker-data/mongo/conf/:/data/configdb/
     environment:
       TZ: Asia/Shanghai
-      MONGO_INITDB_ROOT_USERNAME: "admin"
-      MONGO_INITDB_ROOT_PASSWORD: "***REMOVED***"
+      MONGO_INITDB_ROOT_USERNAME: "<username>"
+      MONGO_INITDB_ROOT_PASSWORD: "<password>"
     restart: always
 ```

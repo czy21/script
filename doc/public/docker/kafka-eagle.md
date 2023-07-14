@@ -7,7 +7,7 @@
 # Settings prefixed with 'kafka.eagle.' will be deprecated, use 'efak.' instead
 ######################################
 efak.zk.cluster.alias=cluster1
-cluster1.zk.list=192.168.2.18:2181,192.168.2.18:2182,192.168.2.18:2183/kafka/cluster1
+cluster1.zk.list=<ip>:2181,<ip>:2182,<ip>:2183/kafka/cluster1
 
 ######################################
 # zookeeper enable acl
@@ -110,9 +110,9 @@ cluster2.efak.sasl.cgroup.topics=
 # kafka mysql jdbc driver address
 ######################################
 efak.driver=com.mysql.cj.jdbc.Driver
-efak.url=jdbc:mysql://192.168.2.18:3306/ke?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
-efak.username=admin
-efak.password=***REMOVED***
+efak.url=jdbc:mysql://<ip>:3306/ke?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
+efak.username=<username>
+efak.password=<password>
 ```
 
 # docker-compose
@@ -129,7 +129,7 @@ x-traefik-label: &traefik-label
 
 services:
   kafka-eagle:
-    image: registry.czy21-internal.com/library/kafka-eagle
+    image: registry.czy21-public.com/library/kafka-eagle
     pull_policy: always
     container_name: kafka-eagle
     labels:
@@ -139,7 +139,7 @@ services:
     expose:
       - "8048"
     volumes:
-      - /volume1/storage/docker-data/kafka-eagle/conf/system-config.properties:/opt/kafka-eagle/conf/system-config.properties
-      - /volume1/storage/docker-data/kafka-eagle/logs/:/opt/kafka-eagle/logs/
+      - /volume5/storage/docker-data/kafka-eagle/conf/system-config.properties:/opt/kafka-eagle/conf/system-config.properties
+      - /volume5/storage/docker-data/kafka-eagle/logs/:/opt/kafka-eagle/logs/
     restart: always
 ```

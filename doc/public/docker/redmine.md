@@ -22,11 +22,11 @@ services:
     expose:
       - "3000"
     volumes:
-      - /volume1/storage/docker-data/redmine/data/files/:/usr/src/redmine/files/
+      - /volume5/storage/docker-data/redmine/data/files/:/usr/src/redmine/files/
     environment:
-      REDMINE_DB_MYSQL: '192.168.2.18'
-      REDMINE_DB_USERNAME: 'admin'
-      REDMINE_DB_PASSWORD: '***REMOVED***'
+      REDMINE_DB_MYSQL: '<ip>'
+      REDMINE_DB_USERNAME: '<username>'
+      REDMINE_DB_PASSWORD: '<password>'
       REDMINE_DB_DATABASE: 'redmine'
       REDMINE_DB_ENCODING: 'utf8'
 ```

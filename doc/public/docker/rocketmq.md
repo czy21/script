@@ -45,8 +45,8 @@ services:
     image: ubuntu:22.04
     container_name: rocketmq-setup
     volumes:
-      - /volume1/storage/docker-data/rocketmq/conf/:/conf/
-      - /volume1/storage/docker-data/rocketmq/broker/:/data/
+      - /volume5/storage/docker-data/rocketmq/conf/:/conf/
+      - /volume5/storage/docker-data/rocketmq/broker/:/data/
     command: bash /conf/setup.sh
     restart: always
   rocketmq-namesrv:
@@ -57,7 +57,7 @@ services:
     expose:
       - 9876
     volumes:
-      - /volume1/storage/docker-data/rocketmq/namesrv/logs/:/logs/
+      - /volume5/storage/docker-data/rocketmq/namesrv/logs/:/logs/
     command: sh mqnamesrv
   rocketmq-broker-1:
     <<: *rocketmq-common
@@ -68,9 +68,9 @@ services:
       - 10911
       - 10912
     volumes:
-      - /volume1/storage/docker-data/rocketmq/broker/1/logs/:/home/rocketmq/logs/
-      - /volume1/storage/docker-data/rocketmq/broker/1/store/:/home/rocketmq/store/
-      - /volume1/storage/docker-data/rocketmq/broker/:/data/
+      - /volume5/storage/docker-data/rocketmq/broker/1/logs/:/home/rocketmq/logs/
+      - /volume5/storage/docker-data/rocketmq/broker/1/store/:/home/rocketmq/store/
+      - /volume5/storage/docker-data/rocketmq/broker/:/data/
     command: sh mqbroker -n rocketmq-namesrv:9876 -c /data/1/broker.conf
     depends_on:
       - rocketmq-setup
@@ -84,9 +84,9 @@ services:
       - 10911
       - 10912
     volumes:
-      - /volume1/storage/docker-data/rocketmq/broker/2/logs/:/home/rocketmq/logs/
-      - /volume1/storage/docker-data/rocketmq/broker/2/store/:/home/rocketmq/store/
-      - /volume1/storage/docker-data/rocketmq/broker/:/data/
+      - /volume5/storage/docker-data/rocketmq/broker/2/logs/:/home/rocketmq/logs/
+      - /volume5/storage/docker-data/rocketmq/broker/2/store/:/home/rocketmq/store/
+      - /volume5/storage/docker-data/rocketmq/broker/:/data/
     command: sh mqbroker -n rocketmq-namesrv:9876 -c /data/2/broker.conf
     depends_on:
       - rocketmq-setup

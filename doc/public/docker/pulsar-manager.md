@@ -16,7 +16,7 @@ mybatis.type-aliases-package=org.apache.pulsar.manager
 
 # postgresql configuration
 spring.datasource.driver-class-name=org.postgresql.Driver
-spring.datasource.url=jdbc:postgresql://192.168.2.18:5432/pulsar_manager?user=postgres&password=***REMOVED***
+spring.datasource.url=jdbc:postgresql://<ip>:5432/pulsar_manager?user=postgres&password=<password>
 
 # zuul config
 # https://cloud.spring.io/spring-cloud-static/Dalston.SR5/multi/multi__router_and_filter_zuul.html
@@ -161,7 +161,7 @@ x-traefik-label: &traefik-label
 services:
 
   pulsar-manager:
-    image: registry.czy21-internal.com/library/pulsar-manager
+    image: registry.czy21-public.com/library/pulsar-manager
     container_name: pulsar-manager
     labels:
       <<: *traefik-label
@@ -170,13 +170,13 @@ services:
     expose:
       - "9527"
     volumes:
-      - /volume1/storage/docker-data/pulsar-manager/log/web/:/var/log/nginx/
-      - /volume1/storage/docker-data/pulsar-manager/log/api/:/log/
+      - /volume5/storage/docker-data/pulsar-manager/log/web/:/var/log/nginx/
+      - /volume5/storage/docker-data/pulsar-manager/log/api/:/log/
     environment:
       SPRING_CONFIGURATION_FILE: /opt/pulsar-manager/application.properties
       JAVA_ARGS: "
       --spring.datasource.driver-class-name=org.postgresql.Driver
-      --spring.datasource.url=jdbc:postgresql://192.168.2.18:5432/pulsar_manager?user=postgres&password=***REMOVED***
+      --spring.datasource.url=jdbc:postgresql://<ip>:5432/pulsar_manager?user=postgres&password=<password>
       --spring.datasource.initialization-mode=NEVER
       "
 
