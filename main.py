@@ -1,6 +1,5 @@
 import logging
 import pathlib
-import shutil
 
 from utility import file as file_util, template as template_util, regex as regex_util, safe as safe_util, yaml as yaml_util, path as path_util
 
