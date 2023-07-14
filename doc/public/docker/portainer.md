@@ -1,12 +1,10 @@
-# dockerfile
-# conf
+## conf
 - /volume5/storage/docker-data/portainer/conf/portainer_password
 ```text
 <password>
 ```
-
-# docker-compose
-```shell
+## docker-compose
+```bash
 docker-compose --project-name portainer --file docker-compose.yaml up --detach --build --remove-orphans
 ```
 ```yaml

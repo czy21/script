@@ -1,5 +1,4 @@
-# dockerfile
-# conf
+## conf
 - /volume5/storage/docker-data/neo4j/conf/neo4j.conf
 ```text
 #*****************************************************************
@@ -369,9 +368,8 @@ dbms.memory.pagecache.size=512M
 dbms.tx_log.rotation.retention_policy=100M size
 dbms.directories.logs=/logs
 ```
-
-# docker-compose
-```shell
+## docker-compose
+```bash
 docker-compose --project-name neo4j --file docker-compose.yaml up --detach --build --remove-orphans
 ```
 ```yaml

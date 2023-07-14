@@ -1,5 +1,4 @@
-# dockerfile
-# conf
+## conf
 - /volume5/storage/docker-data/hadoop/conf/core-site.xml
 ```text
 <?xml version="1.0" encoding="UTF-8"?>
@@ -49,9 +48,8 @@ export HADOOP_OPTS="-Djava.library.path=${HADOOP_HOME}/lib/native"
     </property>
 </configuration>
 ```
-
-# docker-compose
-```shell
+## docker-compose
+```bash
 docker-compose --project-name hadoop --file docker-compose.yaml up --detach --build --remove-orphans
 ```
 ```yaml

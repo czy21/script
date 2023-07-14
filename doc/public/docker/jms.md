@@ -1,5 +1,4 @@
-# dockerfile
-# conf
+## conf
 - /volume5/storage/docker-data/jms/conf/nginx.conf
 ```text
 user nginx;
@@ -122,9 +121,8 @@ http {
     }
 }
 ```
-
-# docker-compose
-```shell
+## docker-compose
+```bash
 docker-compose --project-name jms --file docker-compose.yaml up --detach --build --remove-orphans
 ```
 ```yaml

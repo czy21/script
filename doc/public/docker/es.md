@@ -1,5 +1,4 @@
-# dockerfile
-# conf
+## conf
 - /volume5/storage/docker-data/es-1/conf/instance.yml
 ```text
 instances:
@@ -64,16 +63,15 @@ echo "All done!";
 ```
 - /volume5/storage/docker-data/es-1/conf/users
 ```text
-<username>:$2b$12$nQrMkfLWdX5vR9IkhzT9CexcYG0dQFAEFXmsAHrXgD7SiopEfV0u2
+<username>:$2b$12$BCDttbwSyh2qN2rQ9EVePOIT1eSNfVBlVxor8eSFqsNBE7yy.hNv.
 ```
 - /volume5/storage/docker-data/es-1/conf/users_roles
 ```text
 superuser:<username>
 kibana_system:<username>
 ```
-
-# docker-compose
-```shell
+## docker-compose
+```bash
 docker-compose --project-name es-1 --file docker-compose.yaml up --detach --build --remove-orphans
 ```
 ```yaml

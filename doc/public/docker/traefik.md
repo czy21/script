@@ -1,5 +1,4 @@
-# dockerfile
-# conf
+## conf
 - /volume5/storage/docker-data/traefik/conf/traefik.yml
 ```text
 providers:
@@ -63,9 +62,8 @@ http:
 #    - certFile: /etc/traefik/cert/server.crt
 #      keyFile: /etc/traefik/cert/server.key
 ```
-
-# docker-compose
-```shell
+## docker-compose
+```bash
 docker-compose --project-name traefik --file docker-compose.yaml up --detach --build --remove-orphans
 ```
 ```yaml

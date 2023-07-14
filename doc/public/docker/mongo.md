@@ -1,5 +1,4 @@
-# dockerfile
-# conf
+## conf
 - /volume5/storage/docker-data/mongo/conf/mongod.conf
 ```text
 # mongod.conf
@@ -46,9 +45,8 @@ processManagement:
 
 #snmp:
 ```
-
-# docker-compose
-```shell
+## docker-compose
+```bash
 docker-compose --project-name mongo --file docker-compose.yaml up --detach --build --remove-orphans
 ```
 ```yaml

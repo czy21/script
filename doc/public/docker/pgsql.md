@@ -1,5 +1,4 @@
-# dockerfile
-# conf
+## conf
 - /volume5/storage/docker-data/pgsql/conf/postgresql.conf
 ```text
 # -----------------------------
@@ -799,9 +798,8 @@ default_text_search_config = 'pg_catalog.english'
 
 # Add settings for extensions here
 ```
-
-# docker-compose
-```shell
+## docker-compose
+```bash
 docker-compose --project-name pgsql --file docker-compose.yaml up --detach --build --remove-orphans
 ```
 ```yaml

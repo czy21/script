@@ -1,5 +1,4 @@
-# dockerfile
-# conf
+## conf
 - /volume5/storage/docker-data/go-pulsar-manager/conf/app.yaml
 ```text
 web:
@@ -16,9 +15,8 @@ log:
 #  file: /app/log/app.log # if removed,log in console
   level: info # info,debug,error
 ```
-
-# docker-compose
-```shell
+## docker-compose
+```bash
 docker-compose --project-name go-pulsar-manager --file docker-compose.yaml up --detach --build --remove-orphans
 ```
 ```yaml

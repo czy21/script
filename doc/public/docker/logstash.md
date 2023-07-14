@@ -1,5 +1,4 @@
-# dockerfile
-# conf
+## conf
 - /volume5/storage/docker-data/logstash/conf/logstash.yml
 ```text
 http.host: "0.0.0.0"
@@ -27,9 +26,8 @@ output {
   }
 }
 ```
-
-# docker-compose
-```shell
+## docker-compose
+```bash
 docker-compose --project-name logstash --file docker-compose.yaml up --detach --build --remove-orphans
 ```
 ```yaml

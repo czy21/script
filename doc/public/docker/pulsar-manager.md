@@ -1,5 +1,4 @@
-# dockerfile
-# conf
+## conf
 - /volume5/storage/docker-data/pulsar-manager/conf/manager.properties
 ```text
 spring.cloud.refresh.refreshable=none
@@ -145,9 +144,8 @@ server {
     }
 }
 ```
-
-# docker-compose
-```shell
+## docker-compose
+```bash
 docker-compose --project-name pulsar-manager --file docker-compose.yaml up --detach --build --remove-orphans
 ```
 ```yaml
