@@ -1,3 +1,4 @@
+
 ## conf
 - /volume5/storage/docker-data/es-1/conf/instance.yml
 ```text
@@ -63,7 +64,7 @@ echo "All done!";
 ```
 - /volume5/storage/docker-data/es-1/conf/users
 ```text
-<username>:$2b$12$BCDttbwSyh2qN2rQ9EVePOIT1eSNfVBlVxor8eSFqsNBE7yy.hNv.
+<username>:$2b$12$9ux91iTlGkiNaZQ1NEYk0.K2zKFcn3WTAbSfWkm..3QoybGd/oQ6W
 ```
 - /volume5/storage/docker-data/es-1/conf/users_roles
 ```text

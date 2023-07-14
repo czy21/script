@@ -1,8 +1,16 @@
-{%- if param_docker_dockerfile_content %}
+{%- if param_docker_dockerfile_dict %}
 ## dockerfile
-{{ param_docker_dockerfile_content }}
+{%- for k,v in param_docker_dockerfile_dict.items() %}
+- {{ k }}
+```bash
+{{ v["command"] }}
+```
+```dockerfile
+{{ v["content"] }}
+```
+{%- endfor %}
 {%- endif %}
-{%- if param_docker_conf_dict -%}
+{%- if param_docker_conf_dict %}
 ## conf
 {%- for k,v in param_docker_conf_dict.items() %}
 - {{ k }}
