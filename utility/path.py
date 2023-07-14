@@ -31,8 +31,7 @@ def dfs_dir(t_path: str, pattern: re = None) -> list:
 
 
 def join_path(*paths) -> str:
-    p = pathlib.Path("/".join(paths))
-    return os.path.abspath(p.as_posix()).replace("\\", "/") if p.is_absolute() else os.path.relpath(p.as_posix())
+    return pathlib.Path("/".join(paths)).__str__().replace("\\", "/")
 
 
 def merge_dir(src: pathlib.Path, dst: pathlib.Path, ignore_pattern: list[str]):
