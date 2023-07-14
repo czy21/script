@@ -315,11 +315,11 @@ class Installer:
                 # process env
                 if role_env_file and role_env_file.exists():
                     role_env |= yaml_util.load(template_util.Template(file_util.read_text(role_env_file)).render(**role_env))
-                file_util.write_text(role_env_output_file, yaml.dump(role_env))
+                    file_util.write_text(role_env_output_file, yaml.dump(role_env))
                 # process template
-                for t in filter(lambda f: f.is_file() and not any(regex_util.match_rules(["___temp/", "build/"], f.as_posix()).values()), role_path.rglob("*")):
+                for t in filter(lambda f: f.is_file() and not any(regex_util.match_rules(["build/"], f.as_posix()).values()), role_path.rglob("*")):
                     _rules = regex_util.match_rules(
-                        [*jinja2ignore_rules],
+                        [*jinja2ignore_rules, "___temp/"],
                         t.as_posix(),
                         ".jinja2ignore {0}".format(self.__loop_namespaces.__name__)
                     )
