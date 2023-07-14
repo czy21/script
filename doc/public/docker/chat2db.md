@@ -1,4 +1,16 @@
 
+## dockerfile
+- Dockerfile
+```bash
+docker build --tag registry.czy21-public.com/library/chat2db --file Dockerfile . --pull
+```
+```dockerfile
+FROM chat2db/chat2db:latest
+
+COPY docker-entrypoint.sh /
+RUN chmod +x /docker-entrypoint.sh
+ENTRYPOINT ["/docker-entrypoint.sh"]
+```
 ## docker-compose
 ```bash
 docker-compose --project-name chat2db --file docker-compose.yaml up --detach --build --remove-orphans

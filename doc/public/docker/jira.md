@@ -1,4 +1,19 @@
 
+## dockerfile
+- Dockerfile
+```bash
+docker build --tag registry.czy21-public.com/library/jira --file Dockerfile . --pull
+```
+```dockerfile
+FROM cptactionhank/atlassian-jira-software:latest
+
+USER root
+
+COPY ./___temp/atlassian-agent.jar /opt/atlassian/jira/
+COPY ./___temp/lib/ /opt/atlassian/jira/lib/
+
+RUN echo 'export CATALINA_OPTS="-javaagent:/opt/atlassian/jira/atlassian-agent.jar ${CATALINA_OPTS}"' >> /opt/atlassian/jira/bin/setenv.sh
+```
 ## docker-compose
 ```bash
 docker-compose --project-name jira --file docker-compose.yaml up --detach --build --remove-orphans
