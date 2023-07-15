@@ -1,40 +1,5 @@
 
 ## conf
-- /volume5/storage/docker-data/es-1/conf/instance.yml
-```text
-instances:
-  - name: es-1-1
-    dns:
-      - es-1-1
-      - localhost
-    ip:
-      - 127.0.0.1
-  
-  - name: es-1-2
-    dns:
-      - es-1-2
-      - localhost
-    ip:
-      - 127.0.0.1
-  
-```
-- /volume5/storage/docker-data/es-1/conf/kibana.yml
-```text
-server:
-  host: "0.0.0.0"
-
-monitoring:
-  ui:
-    container:
-      elasticsearch:
-        enabled: true
-
-elasticsearch:
-  hosts: 
-    - http://es-1-1:9200
-  username: <username>
-  password: <password>
-```
 - /volume5/storage/docker-data/es-1/conf/setup.sh
 ```text
 #!/bin/bash
@@ -62,14 +27,49 @@ until curl -s http://es-1-1:9200 | grep -q "missing authentication credentials";
 
 echo "All done!";
 ```
-- /volume5/storage/docker-data/es-1/conf/users
-```text
-<username>:$2b$12$txr1Gk68b9dIaJd7D6B0TuxUFzAVdOdsTV/ItD/LU4YC2rh2mSc2O
-```
 - /volume5/storage/docker-data/es-1/conf/users_roles
 ```text
 superuser:<username>
 kibana_system:<username>
+```
+- /volume5/storage/docker-data/es-1/conf/kibana.yml
+```text
+server:
+  host: "0.0.0.0"
+
+monitoring:
+  ui:
+    container:
+      elasticsearch:
+        enabled: true
+
+elasticsearch:
+  hosts: 
+    - http://es-1-1:9200
+  username: <username>
+  password: <password>
+```
+- /volume5/storage/docker-data/es-1/conf/users
+```text
+<username>:$2b$12$Y4eZCfTS9mMRJO2Yqbeq5.B6dhD3e2nIWqp8Ci/2RxIYw5P7Eqnp2
+```
+- /volume5/storage/docker-data/es-1/conf/instance.yml
+```text
+instances:
+  - name: es-1-1
+    dns:
+      - es-1-1
+      - localhost
+    ip:
+      - 127.0.0.1
+  
+  - name: es-1-2
+    dns:
+      - es-1-2
+      - localhost
+    ip:
+      - 127.0.0.1
+  
 ```
 ## docker-compose
 ```bash
