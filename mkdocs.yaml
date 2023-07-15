@@ -39,7 +39,6 @@ nav:
       - frp: docker/frp.md
       - gitea: docker/gitea.md
       - gitlab: docker/gitlab.md
-      - go-pulsar-manager: docker/go-pulsar-manager.md
       - gogs: docker/gogs.md
       - gradle: docker/gradle.md
       - grafana: docker/grafana.md
@@ -67,7 +66,6 @@ nav:
       - mssql-exporter: docker/mssql-exporter.md
       - mysql: docker/mysql.md
       - mysql-slave: docker/mysql-slave.md
-      - ndisk: docker/ndisk.md
       - neo4j: docker/neo4j.md
       - netbox: docker/netbox.md
       - nextcloud: docker/nextcloud.md
