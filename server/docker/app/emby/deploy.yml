@@ -7,7 +7,8 @@ x-traefik-label: &traefik-label
 
 services:
   emby:
-    image: emby/embyserver:4.8.0.39
+    image: {{ param_registry_url }}/{{ param_registry_dir }}/emby
+    pull_policy: always
     container_name: emby
     hostname: emby
     labels:
@@ -19,9 +20,9 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/config/
       - {{ param_public_path }}/media/:/media/
     environment:
-      - UID=1000
-      - GID=1000
-      - GIDLIST=1000
+      PUID: 1000
+      PGID: 1000
+      TZ: Asia/Shanghai
     devices:
       - /dev/dri:/dev/dri
     restart: always
