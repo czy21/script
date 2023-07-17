@@ -22,7 +22,7 @@
 * Managed Files
   ```text
   dev.env
+  mvn.config
   gradle.config
   docker.config
-  mvn.config
   ```
