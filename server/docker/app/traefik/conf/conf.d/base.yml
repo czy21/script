@@ -9,6 +9,9 @@ http:
     cadvisor:
       rule: Host(`cadvisor-{{ param_cluster_name }}.czy21-internal.com`)
       service: cadvisor@docker
+    nginx-exporter:
+      rule: Host(`nginx-exporter-{{ param_cluster_name }}.czy21-internal.com`)
+      service: nginx-exporter@docker
 #  middlewares:
 #    https-redirect:
 #      redirectScheme:
