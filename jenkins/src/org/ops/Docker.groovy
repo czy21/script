@@ -14,4 +14,20 @@ def build() {
     }
 }
 
+def deploy() {
+    deployMap = [
+            java: {
+                configFileProvider([configFile(fileId: "docker-compose-java-v1.yaml", targetLocation: '.jenkins/docker-compose.yaml')]) {}
+            },
+            web : {
+                configFileProvider([configFile(fileId: "docker-compose-web-v1.yaml", targetLocation: '.jenkins/docker-compose.yaml')]) {}
+            }
+    ]
+    deployMap.get(env.param_code_type).call()
+    param_file = PathUtils.ofPath("${env.WORKSPACE}", ".jenkins/param.yaml")
+    docker_compose_file = PathUtils.ofPath("${env.WORKSPACE}", ".jenkins/docker-compose.yaml")
+    docker_deploy_cmd = "sudo docker-compose --project-name ${env.param_release_name} --file ${docker_compose_file} --env-file ${param_file} up --detach"
+    sh "${docker_deploy_cmd} && sudo ${env.param_docker_cli} image prune --force"
+}
+
 return this
