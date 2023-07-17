@@ -1,8 +1,7 @@
 
 ## conf
-- /volume5/storage/docker-data/superset/conf/frontend-mem-nag.sh
+- /volume5/storage/docker-data/superset/conf/.env
 ```text
-#!/usr/bin/env bash
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
@@ -19,38 +18,36 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+COMPOSE_PROJECT_NAME=superset
 
-set -e
+# database configurations (do not modify)
+DATABASE_DB=superset
+DATABASE_HOST=db
+DATABASE_PASSWORD=superset
+DATABASE_USER=superset
 
-# We need at least 3GB of free mem...
-MIN_MEM_FREE_GB=3
-MIN_MEM_FREE_KB=$(($MIN_MEM_FREE_GB*1000000))
+# database engine specific environment variables
+# change the below if you prefers another database engine
+DATABASE_PORT=5432
+DATABASE_DIALECT=postgresql
+POSTGRES_DB=superset
+POSTGRES_USER=superset
+POSTGRES_PASSWORD=superset
+#MYSQL_DATABASE=superset
+#MYSQL_USER=superset
+#MYSQL_PASSWORD=superset
+#MYSQL_RANDOM_ROOT_PASSWORD=yes
 
-echo_mem_warn() {
-  MEM_FREE_KB=$(awk '/MemFree/ { printf "%s \n", $2 }' /proc/meminfo)
-  MEM_FREE_GB=$(awk '/MemFree/ { printf "%s \n", $2/1024/1024 }' /proc/meminfo)
+# Add the mapped in /app/pythonpath_docker which allows devs to override stuff
+PYTHONPATH=/app/pythonpath:/app/docker/pythonpath_dev
+REDIS_HOST=redis
+REDIS_PORT=6379
 
-  if [[ "${MEM_FREE_KB}" -lt "${MIN_MEM_FREE_KB}" ]]; then
-    cat <<EOF
-    ===============================================
-    ========  Memory Insufficient Warning =========
-    ===============================================
-
-    It looks like you only have ${MEM_FREE_GB}GB of
-    memory free. Please increase your Docker
-    resources to at least ${MIN_MEM_FREE_GB}GB
-
-    ===============================================
-    ========  Memory Insufficient Warning =========
-    ===============================================
-EOF
-  else
-    echo "Memory check Ok [${MEM_FREE_GB}GB free]"
-  fi
-}
-
-# Always nag if they're low on mem...
-echo_mem_warn
+FLASK_ENV=development
+SUPERSET_ENV=development
+SUPERSET_LOAD_EXAMPLES=yes
+CYPRESS_CONFIG=false
+SUPERSET_PORT=8088
 ```
 - /volume5/storage/docker-data/superset/conf/.env-non-dev
 ```text
@@ -155,122 +152,9 @@ elif [[ "${1}" == "app-gunicorn" ]]; then
   /usr/bin/run-server.sh
 fi
 ```
-- /volume5/storage/docker-data/superset/conf/run-server.sh
+- /volume5/storage/docker-data/superset/conf/docker-ci.sh
 ```text
 #!/usr/bin/env bash
-#
-# Licensed to the Apache Software Foundation (ASF) under one
-# or more contributor license agreements.  See the NOTICE file
-# distributed with this work for additional information
-# regarding copyright ownership.  The ASF licenses this file
-# to you under the Apache License, Version 2.0 (the
-# "License"); you may not use this file except in compliance
-# with the License.  You may obtain a copy of the License at
-#
-# http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing,
-# software distributed under the License is distributed on an
-# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-# KIND, either express or implied.  See the License for the
-# specific language governing permissions and limitations
-# under the License.
-#
-HYPHEN_SYMBOL='-'
-
-gunicorn \
-    --bind "${SUPERSET_BIND_ADDRESS:-0.0.0.0}:${SUPERSET_PORT:-8088}" \
-    --access-logfile "${ACCESS_LOG_FILE:-$HYPHEN_SYMBOL}" \
-    --error-logfile "${ERROR_LOG_FILE:-$HYPHEN_SYMBOL}" \
-    --workers ${SERVER_WORKER_AMOUNT:-1} \
-    --worker-class ${SERVER_WORKER_CLASS:-gthread} \
-    --threads ${SERVER_THREADS_AMOUNT:-20} \
-    --timeout ${GUNICORN_TIMEOUT:-60} \
-    --limit-request-line ${SERVER_LIMIT_REQUEST_LINE:-0} \
-    --limit-request-field_size ${SERVER_LIMIT_REQUEST_FIELD_SIZE:-0} \
-    "${FLASK_APP}"
-```
-- /volume5/storage/docker-data/superset/conf/README.md
-```text
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-# Getting Started with Superset using Docker
-
-Docker is an easy way to get started with Superset.
-
-## Prerequisites
-
-1. Docker! [link](https://www.docker.com/get-started)
-2. Docker-compose [link](https://docs.docker.com/compose/install/)
-
-## Configuration
-
-The `/app/pythonpath` folder is mounted from [`./docker/pythonpath_dev`](./pythonpath_dev)
-which contains a base configuration [`./docker/pythonpath_dev/superset_config.py`](./pythonpath_dev/superset_config.py)
-intended for use with local development.
-
-### Local overrides
-
-In order to override configuration settings locally, simply make a copy of [`./docker/pythonpath_dev/superset_config_local.example`](./pythonpath_dev/superset_config_local.example)
-into `./docker/pythonpath_dev/superset_config_docker.py` (git ignored) and fill in your overrides.
-
-### Local packages
-
-If you want to add Python packages in order to test things like databases locally, you can simply add a local requirements.txt (`./docker/requirements-local.txt`)
-and rebuild your Docker stack.
-
-Steps:
-
-1. Create `./docker/requirements-local.txt`
-2. Add your new packages
-3. Rebuild docker-compose
-    1. `docker-compose down -v`
-    2. `docker-compose up`
-
-## Initializing Database
-
-The database will initialize itself upon startup via the init container ([`superset-init`](./docker-init.sh)). This may take a minute.
-
-## Normal Operation
-
-To run the container, simply run: `docker-compose up`
-
-After waiting several minutes for Superset initialization to finish, you can open a browser and view [`http://localhost:8088`](http://localhost:8088)
-to start your journey.
-
-## Developing
-
-While running, the container server will reload on modification of the Superset Python and JavaScript source code.
-Don't forget to reload the page to take the new frontend into account though.
-
-## Production
-
-It is possible to run Superset in non-development mode by using [`docker-compose-non-dev.yml`](../docker-compose-non-dev.yml). This file excludes the volumes needed for development and uses [`./docker/.env-non-dev`](./.env-non-dev) which sets the variable `SUPERSET_ENV` to `production`.
-
-## Resource Constraints
-
-If you are attempting to build on macOS and it exits with 137 you need to increase your Docker resources. See instructions [here](https://docs.docker.com/docker-for-mac/#advanced) (search for memory)
-
-```
-- /volume5/storage/docker-data/superset/conf/.env
-```text
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
@@ -287,36 +171,44 @@ If you are attempting to build on macOS and it exits with 137 you need to increa
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-COMPOSE_PROJECT_NAME=superset
+/app/docker/docker-init.sh
 
-# database configurations (do not modify)
-DATABASE_DB=superset
-DATABASE_HOST=db
-DATABASE_PASSWORD=superset
-DATABASE_USER=superset
+# TODO: copy config overrides from ENV vars
 
-# database engine specific environment variables
-# change the below if you prefers another database engine
-DATABASE_PORT=5432
-DATABASE_DIALECT=postgresql
-POSTGRES_DB=superset
-POSTGRES_USER=superset
-POSTGRES_PASSWORD=superset
-#MYSQL_DATABASE=superset
-#MYSQL_USER=superset
-#MYSQL_PASSWORD=superset
-#MYSQL_RANDOM_ROOT_PASSWORD=yes
+# TODO: run celery in detached state
+export SERVER_THREADS_AMOUNT=8
+# start up the web server
 
-# Add the mapped in /app/pythonpath_docker which allows devs to override stuff
-PYTHONPATH=/app/pythonpath:/app/docker/pythonpath_dev
-REDIS_HOST=redis
-REDIS_PORT=6379
+/usr/bin/run-server.sh
+```
+- /volume5/storage/docker-data/superset/conf/docker-frontend.sh
+```text
+#!/usr/bin/env bash
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+set -e
 
-FLASK_ENV=development
-SUPERSET_ENV=development
-SUPERSET_LOAD_EXAMPLES=yes
-CYPRESS_CONFIG=false
-SUPERSET_PORT=8088
+cd /app/superset-frontend
+npm install -g npm@7
+npm install -f --no-optional --global webpack webpack-cli
+npm install -f --no-optional
+
+echo "Running frontend"
+npm run dev
 ```
 - /volume5/storage/docker-data/superset/conf/docker-init.sh
 ```text
@@ -400,7 +292,7 @@ if [ "$SUPERSET_LOAD_EXAMPLES" = "yes" ]; then
     echo_step "4" "Complete" "Loading examples"
 fi
 ```
-- /volume5/storage/docker-data/superset/conf/docker-ci.sh
+- /volume5/storage/docker-data/superset/conf/frontend-mem-nag.sh
 ```text
 #!/usr/bin/env bash
 #
@@ -419,44 +311,152 @@ fi
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-/app/docker/docker-init.sh
 
-# TODO: copy config overrides from ENV vars
-
-# TODO: run celery in detached state
-export SERVER_THREADS_AMOUNT=8
-# start up the web server
-
-/usr/bin/run-server.sh
-```
-- /volume5/storage/docker-data/superset/conf/docker-frontend.sh
-```text
-#!/usr/bin/env bash
-#
-# Licensed to the Apache Software Foundation (ASF) under one or more
-# contributor license agreements.  See the NOTICE file distributed with
-# this work for additional information regarding copyright ownership.
-# The ASF licenses this file to You under the Apache License, Version 2.0
-# (the "License"); you may not use this file except in compliance with
-# the License.  You may obtain a copy of the License at
-#
-#    http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
 set -e
 
-cd /app/superset-frontend
-npm install -g npm@7
-npm install -f --no-optional --global webpack webpack-cli
-npm install -f --no-optional
+# We need at least 3GB of free mem...
+MIN_MEM_FREE_GB=3
+MIN_MEM_FREE_KB=$(($MIN_MEM_FREE_GB*1000000))
 
-echo "Running frontend"
-npm run dev
+echo_mem_warn() {
+  MEM_FREE_KB=$(awk '/MemFree/ { printf "%s \n", $2 }' /proc/meminfo)
+  MEM_FREE_GB=$(awk '/MemFree/ { printf "%s \n", $2/1024/1024 }' /proc/meminfo)
+
+  if [[ "${MEM_FREE_KB}" -lt "${MIN_MEM_FREE_KB}" ]]; then
+    cat <<EOF
+    ===============================================
+    ========  Memory Insufficient Warning =========
+    ===============================================
+
+    It looks like you only have ${MEM_FREE_GB}GB of
+    memory free. Please increase your Docker
+    resources to at least ${MIN_MEM_FREE_GB}GB
+
+    ===============================================
+    ========  Memory Insufficient Warning =========
+    ===============================================
+EOF
+  else
+    echo "Memory check Ok [${MEM_FREE_GB}GB free]"
+  fi
+}
+
+# Always nag if they're low on mem...
+echo_mem_warn
+```
+- /volume5/storage/docker-data/superset/conf/README.md
+```text
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+# Getting Started with Superset using Docker
+
+Docker is an easy way to get started with Superset.
+
+## Prerequisites
+
+1. Docker! [link](https://www.docker.com/get-started)
+2. Docker-compose [link](https://docs.docker.com/compose/install/)
+
+## Configuration
+
+The `/app/pythonpath` folder is mounted from [`./docker/pythonpath_dev`](./pythonpath_dev)
+which contains a base configuration [`./docker/pythonpath_dev/superset_config.py`](./pythonpath_dev/superset_config.py)
+intended for use with local development.
+
+### Local overrides
+
+In order to override configuration settings locally, simply make a copy of [`./docker/pythonpath_dev/superset_config_local.example`](./pythonpath_dev/superset_config_local.example)
+into `./docker/pythonpath_dev/superset_config_docker.py` (git ignored) and fill in your overrides.
+
+### Local packages
+
+If you want to add Python packages in order to test things like databases locally, you can simply add a local requirements.txt (`./docker/requirements-local.txt`)
+and rebuild your Docker stack.
+
+Steps:
+
+1. Create `./docker/requirements-local.txt`
+2. Add your new packages
+3. Rebuild docker-compose
+    1. `docker-compose down -v`
+    2. `docker-compose up`
+
+## Initializing Database
+
+The database will initialize itself upon startup via the init container ([`superset-init`](./docker-init.sh)). This may take a minute.
+
+## Normal Operation
+
+To run the container, simply run: `docker-compose up`
+
+After waiting several minutes for Superset initialization to finish, you can open a browser and view [`http://localhost:8088`](http://localhost:8088)
+to start your journey.
+
+## Developing
+
+While running, the container server will reload on modification of the Superset Python and JavaScript source code.
+Don't forget to reload the page to take the new frontend into account though.
+
+## Production
+
+It is possible to run Superset in non-development mode by using [`docker-compose-non-dev.yml`](../docker-compose-non-dev.yml). This file excludes the volumes needed for development and uses [`./docker/.env-non-dev`](./.env-non-dev) which sets the variable `SUPERSET_ENV` to `production`.
+
+## Resource Constraints
+
+If you are attempting to build on macOS and it exits with 137 you need to increase your Docker resources. See instructions [here](https://docs.docker.com/docker-for-mac/#advanced) (search for memory)
+
+```
+- /volume5/storage/docker-data/superset/conf/run-server.sh
+```text
+#!/usr/bin/env bash
+#
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+#
+HYPHEN_SYMBOL='-'
+
+gunicorn \
+    --bind "${SUPERSET_BIND_ADDRESS:-0.0.0.0}:${SUPERSET_PORT:-8088}" \
+    --access-logfile "${ACCESS_LOG_FILE:-$HYPHEN_SYMBOL}" \
+    --error-logfile "${ERROR_LOG_FILE:-$HYPHEN_SYMBOL}" \
+    --workers ${SERVER_WORKER_AMOUNT:-1} \
+    --worker-class ${SERVER_WORKER_CLASS:-gthread} \
+    --threads ${SERVER_THREADS_AMOUNT:-20} \
+    --timeout ${GUNICORN_TIMEOUT:-60} \
+    --limit-request-line ${SERVER_LIMIT_REQUEST_LINE:-0} \
+    --limit-request-field_size ${SERVER_LIMIT_REQUEST_FIELD_SIZE:-0} \
+    "${FLASK_APP}"
 ```
 - /volume5/storage/docker-data/superset/conf/superset_config.py
 ```text

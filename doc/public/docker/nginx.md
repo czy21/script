@@ -29,6 +29,14 @@ http {
 
     #gzip  on;
     resolver 127.0.0.11; # docker container internal dns
+    server {
+        listen 8080;
+        server_name  localhost;
+        location /stub_status {
+           stub_status on;
+           access_log off;
+        }
+    }
     include /etc/nginx/conf.d/*.conf;
 }
 
@@ -42,8 +50,9 @@ proxy_request_buffering off;
 proxy_buffering off;
 tcp_nodelay on;
 server {
+    http2 on;
     listen       80;
-    listen      443 ssl http2;
+    listen      443 ssl;
     server_name  *.czy21-internal.com *.cluster.com;
 
     client_max_body_size 0;
@@ -91,10 +100,15 @@ docker-compose --project-name nginx --file docker-compose.yaml up --detach --bui
 ```yaml
 version: "3.9"
 
+x-traefik-exporter-label: &traefik-exporter-label
+  traefik.enable: true
+  traefik.http.routers.nginx-exporter.service: nginx-exporter
+  traefik.http.services.nginx-exporter.loadbalancer.server.port: 9113
+
 services:
 
   nginx:
-    image: nginx:1.23.3-alpine
+    image: nginx:1.25.1-alpine
     container_name: nginx
     privileged: true
     user: root
@@ -102,5 +116,15 @@ services:
       - /volume5/storage/docker-data/nginx/conf/nginx.conf:/etc/nginx/nginx.conf
       - /volume5/storage/docker-data/nginx/conf/conf.d/:/etc/nginx/conf.d/
       - /volume5/storage/docker-data/nginx/conf/cert/:/etc/nginx/cert/
+    restart: always
+
+  nginx-exporter:
+    image: nginx/nginx-prometheus-exporter:0.11.0
+    container_name: nginx-exporter
+    labels:
+      <<: *traefik-exporter-label
+    expose:
+      - "9113"
+    command: -nginx.scrape-uri=http://nginx:8080/stub_status
     restart: always
 ```

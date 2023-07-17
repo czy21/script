@@ -11,13 +11,6 @@ journalDirectories=data/bookie/journal
 ledgerDirectories=data/bookie/ledgers
 autoRecoveryDaemonEnabled=false
 ```
-- /volume5/storage/docker-data/pulsar/conf/proxy.conf
-```text
-clusterName=pulsar
-zookeeperServers=<ip>:2181,<ip>:2182,<ip>:2183/pulsar/cluster1
-zookeeperSessionTimeoutMs=30000
-configurationStoreServers=<ip>:2181,<ip>:2182,<ip>:2183/pulsar/cluster1
-```
 - /volume5/storage/docker-data/pulsar/conf/broker.conf
 ```text
 clusterName=pulsar
@@ -33,6 +26,13 @@ managedLedgerDefaultWriteQuorum=2
 managedLedgerDefaultAckQuorum=2
 
 brokerDeleteInactiveTopicsEnabled=false
+```
+- /volume5/storage/docker-data/pulsar/conf/proxy.conf
+```text
+clusterName=pulsar
+zookeeperServers=<ip>:2181,<ip>:2182,<ip>:2183/pulsar/cluster1
+zookeeperSessionTimeoutMs=30000
+configurationStoreServers=<ip>:2181,<ip>:2182,<ip>:2183/pulsar/cluster1
 ```
 ## docker-compose
 ```bash

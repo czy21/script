@@ -29,7 +29,6 @@ nav:
       - crate: docker/crate.md
       - dbeaver: docker/dbeaver.md
       - dm8: docker/dm8.md
-      - emby: docker/emby.md
       - es: docker/es.md
       - etcd: docker/etcd.md
       - filebeat: docker/filebeat.md
