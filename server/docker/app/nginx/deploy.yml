@@ -8,7 +8,7 @@ x-traefik-exporter-label: &traefik-exporter-label
 services:
 
   nginx:
-    image: nginx:1.23.3-alpine
+    image: nginx:1.25.1-alpine
     container_name: nginx
     privileged: true
     user: root
