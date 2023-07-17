@@ -1,7 +1,7 @@
 
 ## conf
 - /volume5/storage/docker-data/es-1/conf/instance.yml
-```text
+```yaml
 instances:
   - name: es-1-1
     dns:
@@ -19,7 +19,7 @@ instances:
   
 ```
 - /volume5/storage/docker-data/es-1/conf/kibana.yml
-```text
+```yaml
 server:
   host: "0.0.0.0"
 
@@ -36,7 +36,7 @@ elasticsearch:
   password: <password>
 ```
 - /volume5/storage/docker-data/es-1/conf/setup.sh
-```text
+```bash
 #!/bin/bash
 
 for ((i=1;i<=2;i++));do

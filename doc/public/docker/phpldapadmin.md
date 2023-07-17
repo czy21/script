@@ -1,7 +1,7 @@
 
 ## conf
 - /volume5/storage/docker-data/phpldapadmin/conf/config.yaml
-```text
+```yaml
 # Apache
 PHPLDAPADMIN_SERVER_ADMIN: webmaster@example.org
 PHPLDAPADMIN_SERVER_PATH: /phpldapadmin

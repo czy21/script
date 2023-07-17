@@ -1,6 +1,6 @@
 
 ## conf
-- /volume5/storage/docker-data/superset/conf/.env
+- /volume5/storage/docker-data/superset/conf/docker/.env
 ```text
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more
@@ -49,7 +49,7 @@ SUPERSET_LOAD_EXAMPLES=yes
 CYPRESS_CONFIG=false
 SUPERSET_PORT=8088
 ```
-- /volume5/storage/docker-data/superset/conf/.env-non-dev
+- /volume5/storage/docker-data/superset/conf/docker/.env-non-dev
 ```text
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more
@@ -98,8 +98,8 @@ SUPERSET_LOAD_EXAMPLES=yes
 CYPRESS_CONFIG=false
 SUPERSET_PORT=8088
 ```
-- /volume5/storage/docker-data/superset/conf/docker-bootstrap.sh
-```text
+- /volume5/storage/docker-data/superset/conf/docker/docker-bootstrap.sh
+```bash
 #!/usr/bin/env bash
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more
@@ -152,8 +152,8 @@ elif [[ "${1}" == "app-gunicorn" ]]; then
   /usr/bin/run-server.sh
 fi
 ```
-- /volume5/storage/docker-data/superset/conf/docker-ci.sh
-```text
+- /volume5/storage/docker-data/superset/conf/docker/docker-ci.sh
+```bash
 #!/usr/bin/env bash
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more
@@ -181,8 +181,8 @@ export SERVER_THREADS_AMOUNT=8
 
 /usr/bin/run-server.sh
 ```
-- /volume5/storage/docker-data/superset/conf/docker-frontend.sh
-```text
+- /volume5/storage/docker-data/superset/conf/docker/docker-frontend.sh
+```bash
 #!/usr/bin/env bash
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more
@@ -210,8 +210,8 @@ npm install -f --no-optional
 echo "Running frontend"
 npm run dev
 ```
-- /volume5/storage/docker-data/superset/conf/docker-init.sh
-```text
+- /volume5/storage/docker-data/superset/conf/docker/docker-init.sh
+```bash
 #!/usr/bin/env bash
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more
@@ -292,8 +292,8 @@ if [ "$SUPERSET_LOAD_EXAMPLES" = "yes" ]; then
     echo_step "4" "Complete" "Loading examples"
 fi
 ```
-- /volume5/storage/docker-data/superset/conf/frontend-mem-nag.sh
-```text
+- /volume5/storage/docker-data/superset/conf/docker/frontend-mem-nag.sh
+```bash
 #!/usr/bin/env bash
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more
@@ -344,7 +344,7 @@ EOF
 # Always nag if they're low on mem...
 echo_mem_warn
 ```
-- /volume5/storage/docker-data/superset/conf/README.md
+- /volume5/storage/docker-data/superset/conf/docker/README.md
 ```text
 <!--
 Licensed to the Apache Software Foundation (ASF) under one
@@ -423,8 +423,8 @@ It is possible to run Superset in non-development mode by using [`docker-compose
 If you are attempting to build on macOS and it exits with 137 you need to increase your Docker resources. See instructions [here](https://docs.docker.com/docker-for-mac/#advanced) (search for memory)
 
 ```
-- /volume5/storage/docker-data/superset/conf/run-server.sh
-```text
+- /volume5/storage/docker-data/superset/conf/docker/run-server.sh
+```bash
 #!/usr/bin/env bash
 #
 # Licensed to the Apache Software Foundation (ASF) under one
@@ -458,7 +458,7 @@ gunicorn \
     --limit-request-field_size ${SERVER_LIMIT_REQUEST_FIELD_SIZE:-0} \
     "${FLASK_APP}"
 ```
-- /volume5/storage/docker-data/superset/conf/superset_config.py
+- /volume5/storage/docker-data/superset/conf/docker/pythonpath_dev/superset_config.py
 ```text
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
@@ -575,7 +575,7 @@ try:
 except ImportError:
     logger.info("Using default Docker config...")
 ```
-- /volume5/storage/docker-data/superset/conf/superset_config_local.example
+- /volume5/storage/docker-data/superset/conf/docker/pythonpath_dev/superset_config_local.example
 ```text
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more

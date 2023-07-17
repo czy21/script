@@ -57,7 +57,7 @@ ENTRYPOINT ["/docker-entrypoint.sh"]
 ```
 ## conf
 - /volume5/storage/docker-data/hadoop/conf/core-site.xml
-```text
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 <configuration>
@@ -72,7 +72,7 @@ ENTRYPOINT ["/docker-entrypoint.sh"]
 </configuration>
 ```
 - /volume5/storage/docker-data/hadoop/conf/hadoop-env.sh
-```text
+```bash
 export HDFS_DATANODE_USER=root
 export HDFS_NAMENODE_USER=root
 export HDFS_SECONDARYNAMENODE_USER=root
@@ -81,7 +81,7 @@ export HADOOP_OS_TYPE=${HADOOP_OS_TYPE:-$(uname -s)}
 export HADOOP_OPTS="-Djava.library.path=${HADOOP_HOME}/lib/native"
 ```
 - /volume5/storage/docker-data/hadoop/conf/hdfs-site.xml
-```text
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 <configuration>
