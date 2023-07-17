@@ -70,7 +70,7 @@ scrape_configs:
     metrics_path: /minio/v2/metrics/cluster
     scheme: http
     static_configs:
-    - targets: ['minio.czy21-internal.com']
+      - targets: ['minio.czy21-internal.com']
 
   - job_name: traefik
     metrics_path: /metrics
@@ -78,3 +78,9 @@ scrape_configs:
     static_configs:
       - targets: ['traefik-nas.czy21-internal.com']
       - targets: ['traefik-base.czy21-internal.com']
+  - job_name: nginx
+    metrics_path: /metrics
+    static_configs:
+      - targets:
+          - 'nginx-exporter-base.czy21-internal.com'
+          - 'nginx-exporter-nas.czy21-internal.com'
