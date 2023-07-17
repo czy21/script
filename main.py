@@ -3,6 +3,23 @@ import pathlib
 
 from utility import file as file_util, template as template_util, regex as regex_util, safe as safe_util, yaml as yaml_util, path as path_util
 
+md_type_yaml = ["yaml", "yml"]
+
+
+def get_file_type(extension):
+    extension = extension.split(".")[1] if extension.split(".").__len__() > 1 else "text"
+    if extension in md_type_yaml:
+        return "yaml"
+    elif extension == "sh":
+        return "bash"
+    elif extension == "xml":
+        return "xml"
+    elif extension == "json":
+        return "json";
+    else:
+        return "text"
+
+
 logger = logging.getLogger()
 # bash toolchain.sh -h user@host install --dry-run --all-namespace --env-file env-public.yaml
 if __name__ == '__main__':
@@ -17,7 +34,7 @@ if __name__ == '__main__':
     docker_md = doc_public.joinpath("docker")
     docker_md_template = doc.joinpath("docker-template.md")
     docker_mds = []
-    docker_md_ignore = ["ssl/", "test/", "os/", "go-pulsar-manager", "ndisk","emby"]
+    docker_md_ignore = ["ssl/", "test/", "os/", "go-pulsar-manager", "ndisk", "emby"]
     docker_md_ignore.extend(["{0}/build/output".format(t) for t in ["script"]])
     for t in filter(lambda f: f.is_file() and not any(regex_util.match_rules(docker_md_ignore, f.as_posix()).values()), docker_deploys.rglob("**/output/deploy.yml")):
         role_env_file = t.parent.joinpath("env.yaml")
@@ -38,10 +55,15 @@ if __name__ == '__main__':
         target_path = pathlib.Path(path_util.join_path(role_env["param_docker_data"],
                                                        role_env["param_role_project_name"] if role_env.get("param_role_project_name") else name)
                                    )
-        target_conf = path_util.join_path(str(target_path), "conf")
-        target_conf_dict = {path_util.join_path(target_conf, c.name): file_util.read_text(c)
-                            for c in
-                            filter(lambda f: f.is_file() and not any(regex_util.match_rules(["cert", "prometheus", "grafana"], f.as_posix()).values()), t.parent.joinpath("conf").rglob("*"))}
+
+        target_conf_dict = {
+            path_util.join_path(str(target_path), str(c.relative_to(t.parent))): {
+                "content": file_util.read_text(c),
+                "fileType": get_file_type(c.suffix)
+            }
+            for c in
+            filter(lambda f: f.is_file() and not any(regex_util.match_rules(["cert", "prometheus", "grafana", "conf.d/app.conf"], f.as_posix()).values()), t.parent.joinpath("conf").rglob("*"))}
+
         compose_command = "docker-compose --project-name {0} --file docker-compose.yaml up --detach --build --remove-orphans".format(target_path.stem)
         compose_content = file_util.read_text(t)
         md_dst = docker_md.joinpath(name + ".md")

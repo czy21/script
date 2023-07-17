@@ -1,11 +1,11 @@
 
 ## conf
 - /volume5/storage/docker-data/homeassistant/conf/automations.yaml
-```text
+```yaml
 
 ```
 - /volume5/storage/docker-data/homeassistant/conf/configuration.yaml
-```text
+```yaml
 
 # Loads default set of integrations. Do not remove.
 default_config:
@@ -34,11 +34,11 @@ script: !include scripts.yaml
 scene: !include scenes.yaml
 ```
 - /volume5/storage/docker-data/homeassistant/conf/scenes.yaml
-```text
+```yaml
 
 ```
 - /volume5/storage/docker-data/homeassistant/conf/scripts.yaml
-```text
+```yaml
 
 ```
 ## docker-compose

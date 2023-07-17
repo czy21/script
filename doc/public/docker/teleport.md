@@ -1,7 +1,7 @@
 
 ## conf
 - /volume5/storage/docker-data/teleport/conf/teleport.yaml
-```text
+```yaml
 teleport:
   data_dir: /var/lib/teleport
   log:

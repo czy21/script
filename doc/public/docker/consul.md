@@ -1,7 +1,7 @@
 
 ## conf
 - /volume5/storage/docker-data/consul/conf/acl.json
-```text
+```json
 {
   "acl": {
     "enabled": true,

@@ -1,14 +1,14 @@
 
 ## conf
 - /volume5/storage/docker-data/logstash/conf/logstash.yml
-```text
+```yaml
 http.host: "0.0.0.0"
 xpack.monitoring.enabled: true
 xpack.monitoring.elasticsearch.username: <username>
 xpack.monitoring.elasticsearch.password: <password>
 xpack.monitoring.elasticsearch.hosts: [ "http://es-1-1:9200" ]
 ```
-- /volume5/storage/docker-data/logstash/conf/logstash-spring.conf
+- /volume5/storage/docker-data/logstash/conf/pipeline/logstash-spring.conf
 ```text
 input {
   file {

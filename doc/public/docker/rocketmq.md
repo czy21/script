@@ -1,7 +1,7 @@
 
 ## conf
 - /volume5/storage/docker-data/rocketmq/conf/setup.sh
-```text
+```bash
 #!/bin/bash
 
 for ((i=1;i<=2;i++));do

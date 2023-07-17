@@ -1,7 +1,7 @@
 
 ## conf
 - /volume5/storage/docker-data/traefik/conf/traefik.yml
-```text
+```yaml
 providers:
   docker:
     endpoint: "unix:///var/run/docker.sock"
@@ -40,8 +40,8 @@ metrics:
 #    samplingServerURL: http://jaeger-agent.czy21-internal.com:5778/sampling
 #    localAgentHostPort: jaeger-agent.czy21-internal.com:6831
 ```
-- /volume5/storage/docker-data/traefik/conf/base.yml
-```text
+- /volume5/storage/docker-data/traefik/conf/conf.d/base.yml
+```yaml
 http:
   routers:
     metrics:
