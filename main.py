@@ -17,7 +17,7 @@ if __name__ == '__main__':
     docker_md = doc_public.joinpath("docker")
     docker_md_template = doc.joinpath("docker-template.md")
     docker_mds = []
-    docker_md_ignore = ["ssl/", "test/", "os/", "go-pulsar-manager", "ndisk"]
+    docker_md_ignore = ["ssl/", "test/", "os/", "go-pulsar-manager", "ndisk","emby"]
     docker_md_ignore.extend(["{0}/build/output".format(t) for t in ["script"]])
     for t in filter(lambda f: f.is_file() and not any(regex_util.match_rules(docker_md_ignore, f.as_posix()).values()), docker_deploys.rglob("**/output/deploy.yml")):
         role_env_file = t.parent.joinpath("env.yaml")
@@ -54,10 +54,6 @@ if __name__ == '__main__':
         if not md_dst.exists() or (md_dst.exists() and not safe_util.md5_encrypt(file_util.read_text(md_dst)) == safe_util.md5_encrypt(md_dst_text)):
             file_util.write_text(md_dst, md_dst_text)
         docker_mds.append(name)
-    # remove exists
-    for t in [t for t in docker_md.rglob("*") if t.is_file()]:
-        if t.stem not in docker_mds:
-            t.unlink()
     docker_mds.sort()
     mkdocs_text = template_util.Template(file_util.read_text(mkdocs_template)).render(
         **{"param_docker_mds": "\n      - ".join(["{0}: {1}".format(t, "docker/" + t + ".md") for t in docker_mds])}

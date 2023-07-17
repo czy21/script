@@ -13,17 +13,20 @@ x-traefik-label: &traefik-label
 
 services:
   jellyfin:
-    image: jellyfin/jellyfin
+    image: linuxserver/jellyfin:10.8.10
     container_name: jellyfin
+    hostname: jellyfin
     labels:
       <<: *traefik-label
     expose:
       - "8096"
     volumes:
       - /volume5/storage/docker-data/jellyfin/conf/:/config/
-      - /volume5/storage/docker-data/jellyfin/data/cache/:/cache/
       - /volume5/public/media/:/media/
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: Asia/Shanghai
     devices:
       - /dev/dri:/dev/dri
-
 ```
