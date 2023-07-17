@@ -43,8 +43,8 @@ def call() {
             stage('param') {
                 steps {
                     script {
-                        new Common().loadParam()
                         def common = new Common()
+                        common.loadParam()
                         env.param_project_context = PathUtils.ofPath(env.param_project_root, env.param_project_module)
                         env.param_docker_context = StringUtils.isNotNull(env.param_docker_context) ? PathUtils.ofPath(env.param_project_root, env.param_docker_context) : env.param_project_context
                         env.param_docker_file = PathUtils.ofPath(env.param_docker_context, "Dockerfile")
