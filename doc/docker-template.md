@@ -14,8 +14,8 @@
 ## conf
 {%- for k,v in param_docker_conf_dict.items() %}
 - {{ k }}
-```text
-{{ v }}
+```{{ v["fileType"] }}
+{{ v["content"] }}
 ```
 {%- endfor %}
 {%- endif %}

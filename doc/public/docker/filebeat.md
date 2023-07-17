@@ -1,7 +1,7 @@
 
 ## conf
 - /volume5/storage/docker-data/filebeat/conf/filebeat.yml
-```text
+```yaml
 filebeat.config:
   modules:
     path: ${path.config}/modules.d/*.yml

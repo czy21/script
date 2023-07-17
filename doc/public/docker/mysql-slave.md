@@ -1,6 +1,6 @@
 
 ## conf
-- /volume5/storage/docker-data/mysql-slave/conf/mysql.cnf
+- /volume5/storage/docker-data/mysql-slave/conf/conf.d/mysql.cnf
 ```text
 [client]
 default-character-set=utf8mb4

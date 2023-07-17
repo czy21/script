@@ -1,7 +1,7 @@
 
 ## conf
 - /volume5/storage/docker-data/ch-1/conf/config.xml
-```text
+```xml
 <?xml version="1.0"?>
 <yandex>
     <listen_host>0.0.0.0</listen_host>
@@ -54,7 +54,7 @@
 </yandex>
 ```
 - /volume5/storage/docker-data/ch-1/conf/users.xml
-```text
+```xml
 <?xml version="1.0"?>
 <yandex>
     <users>

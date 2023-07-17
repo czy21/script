@@ -1,7 +1,7 @@
 
 ## conf
 - /volume5/storage/docker-data/harbor/conf/harbor.yml
-```text
+```yaml
 hostname: harbor.czy21-internal.com
 
 # http related config
