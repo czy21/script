@@ -54,6 +54,7 @@ if __name__ == '__main__':
         if not md_dst.exists() or (md_dst.exists() and not safe_util.md5_encrypt(file_util.read_text(md_dst)) == safe_util.md5_encrypt(md_dst_text)):
             file_util.write_text(md_dst, md_dst_text)
         docker_mds.append(name)
+    docker_mds.extend(["emby"])
     docker_mds.sort()
     mkdocs_text = template_util.Template(file_util.read_text(mkdocs_template)).render(
         **{"param_docker_mds": "\n      - ".join(["{0}: {1}".format(t, "docker/" + t + ".md") for t in docker_mds])}
