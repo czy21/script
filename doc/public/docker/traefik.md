@@ -53,6 +53,9 @@ http:
     cadvisor:
       rule: Host(`cadvisor-.czy21-internal.com`)
       service: cadvisor@docker
+    nginx-exporter:
+      rule: Host(`nginx-exporter-.czy21-internal.com`)
+      service: nginx-exporter@docker
 #  middlewares:
 #    https-redirect:
 #      redirectScheme:

@@ -56,6 +56,30 @@ EXPOSE 22 9870 9000
 ENTRYPOINT ["/docker-entrypoint.sh"]
 ```
 ## conf
+- /volume5/storage/docker-data/hadoop/conf/core-site.xml
+```text
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+    <property>
+        <name>fs.defaultFS</name>
+        <value>hdfs://hadoop-namenode:9000</value>
+    </property>
+    <property>
+        <name>dfs.namenode.rpc-bind-host</name>
+        <value>0.0.0.0</value>
+    </property>
+</configuration>
+```
+- /volume5/storage/docker-data/hadoop/conf/hadoop-env.sh
+```text
+export HDFS_DATANODE_USER=root
+export HDFS_NAMENODE_USER=root
+export HDFS_SECONDARYNAMENODE_USER=root
+export JAVA_HOME=/usr/local/openjdk-8
+export HADOOP_OS_TYPE=${HADOOP_OS_TYPE:-$(uname -s)}
+export HADOOP_OPTS="-Djava.library.path=${HADOOP_HOME}/lib/native"
+```
 - /volume5/storage/docker-data/hadoop/conf/hdfs-site.xml
 ```text
 <?xml version="1.0" encoding="UTF-8"?>
@@ -80,30 +104,6 @@ ENTRYPOINT ["/docker-entrypoint.sh"]
         <value>1</value>
     </property>
 </configuration>
-```
-- /volume5/storage/docker-data/hadoop/conf/core-site.xml
-```text
-<?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
-<configuration>
-    <property>
-        <name>fs.defaultFS</name>
-        <value>hdfs://hadoop-namenode:9000</value>
-    </property>
-    <property>
-        <name>dfs.namenode.rpc-bind-host</name>
-        <value>0.0.0.0</value>
-    </property>
-</configuration>
-```
-- /volume5/storage/docker-data/hadoop/conf/hadoop-env.sh
-```text
-export HDFS_DATANODE_USER=root
-export HDFS_NAMENODE_USER=root
-export HDFS_SECONDARYNAMENODE_USER=root
-export JAVA_HOME=/usr/local/openjdk-8
-export HADOOP_OS_TYPE=${HADOOP_OS_TYPE:-$(uname -s)}
-export HADOOP_OPTS="-Djava.library.path=${HADOOP_HOME}/lib/native"
 ```
 ## docker-compose
 ```bash
