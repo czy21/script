@@ -10,7 +10,7 @@
             name: '{{ param_role_name }}'
       always:
         - import_tasks: roles/common/tasks/clean.yml
-  tags: ['{{ param_role_name }}']
+      tags: ['{{ param_role_name }}']
 
 - name: docker
   hosts: all
@@ -24,7 +24,7 @@
             name: '{{ param_role_name }}'
       always:
         - import_tasks: roles/common/tasks/clean.yml
-  tags: ['{{ param_role_name }}']
+      tags: ['{{ param_role_name }}']
 
 - name: haproxy
   hosts: all
