@@ -1,7 +1,6 @@
 #!/bin/bash
 set -e
 
-mkdir /run/sshd
 echo -n "%wheel  ALL=(ALL)       ALL" > /etc/sudoers.d/99-custom
 
 yum clean all && yum --refresh makecache -v
