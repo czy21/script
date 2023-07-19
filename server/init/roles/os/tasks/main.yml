@@ -1,8 +1,23 @@
-- name: prepare
+- name: valid
+  assert:
+    that: param_user_ops_opsor_ssh_public_key != ""
+    fail_msg: param_user_ops_opsor_ssh_public_key is empty
+
+- name: mirror
   shell: |-
-    bash {{ param_remote_role_path }}/prepare.sh
+    bash {{ param_remote_role_path }}/mirror.sh
+  when: param_mirror_use_proxy
 
 - name: install
   shell: |-
     timedatectl set-timezone Asia/Shanghai
     bash {{ param_remote_role_path }}/{{ ansible_distribution | lower}}.sh
+
+- name: sshd_config
+  shell: |-
+    echo -n "
+    UseDNS no
+    PermitRootLogin yes
+    PasswordAuthentication no
+    ClientAliveInterval 30
+    " > /etc/ssh/sshd_config.d/99-custom.conf
