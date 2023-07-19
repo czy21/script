@@ -4,4 +4,4 @@ param_registry_mirrors:
 param_insecure_registries:
   - "{{ param_registry_url }}"
   - "{{ param_registry_proxy_url }}"
-param_compose_version: v2.18.1
+param_compose_version: v2.20.1
