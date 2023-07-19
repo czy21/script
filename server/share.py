@@ -184,25 +184,6 @@ class CustomHelpFormatter(argparse.MetavarTypeHelpFormatter):
             return action.type.__name__
 
 
-def load_env_file(env_file: pathlib.Path, env_file_names: list[str]):
-    d = {}
-    env_file_paths: list[pathlib.Path] = []
-    if env_file:
-        env_file_paths.append(env_file)
-    for ef in env_file_names:
-        ef = env_file.parent.joinpath(ef)
-        if not ef.is_absolute():
-            ef = pathlib.Path.cwd().joinpath(ef)
-        if ef not in env_file_paths:
-            env_file_paths.append(ef)
-    print(env_file_paths)
-    for t in env_file_paths:
-        if t.exists():
-            logger.debug("load env_file: %s" % t.as_posix())
-            d |= yaml_util.load(t)
-    return d
-
-
 class Installer:
     def __init__(self,
                  root_path: pathlib.Path,
@@ -231,6 +212,23 @@ class Installer:
         log_util.init_logger(file=self.build_path.joinpath("share.log"))
         self.tmp_path.mkdir(exist_ok=True)
         self.build_path.mkdir(exist_ok=True)
+
+    @staticmethod
+    def load_env_file(env_file: pathlib.Path, env_file_names: list[str]):
+        d = {}
+        env_file_paths: list[pathlib.Path] = [env_file]
+        for ef in env_file_names:
+            ef = env_file.parent.joinpath(ef)
+            if not ef.is_absolute():
+                ef = pathlib.Path.cwd().joinpath(ef)
+            if ef not in env_file_paths:
+                env_file_paths.append(ef)
+        env_file_paths = sorted(set(env_file_paths), key=env_file_paths.index)
+        for t in env_file_paths:
+            if t.exists():
+                logger.debug("load env_file: %s" % t.as_posix())
+                d |= yaml_util.load(t)
+        return d
 
     @staticmethod
     def set_common_argument(parser: argparse.ArgumentParser):
@@ -283,9 +281,6 @@ class Installer:
     def __init_push_parser(self):
         parser = self.__command_parser.add_parser(**self.__get_sub_parser_common_attr(Command.push.value))
         self.set_common_argument(parser)
-
-    def __load_env_file(self, args: argparse.Namespace) -> dict:
-        return load_env_file(self.env_file, args.env_file)
 
     def __loop_namespaces(self,
                           namespaces: list[Namespace],
@@ -371,7 +366,7 @@ class Installer:
         logger.info("args: {0}".format(args))
         if args.debug:
             logger.setLevel(logging.DEBUG)
-        global_env = self.__load_env_file(args)
+        global_env = self.load_env_file(self.env_file, args.env_file)
         global_env["param_command"] = args.command
         global_jinja2ignore_rules = file_util.read_text(self.jinja2ignore_file).split("\n") if self.jinja2ignore_file and self.jinja2ignore_file.exists() else []
         selected_namespaces = select_namespace(self.root_path, self.role_deep, args=args)
