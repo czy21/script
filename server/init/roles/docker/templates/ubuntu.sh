@@ -11,5 +11,6 @@ echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.
 sudo sed -i.bak -e "s|https://download.docker.com|http://{{ param_mirror_raw }}/docker-ce|g" /etc/apt/sources.list.d/docker.list
 
 sudo apt-get update
-sudo apt-get -y install docker-ce docker-ce-cli containerd.io
+docker_version=`sudo apt-cache madison docker-ce | awk '{ print $3 }' | grep "{{ param_docker_version }}"`
+sudo apt-get -y install docker-ce=${docker_version} docker-ce-cli=${docker_version} containerd.io docker-buildx-plugin
 sudo systemctl daemon-reload && sudo systemctl restart docker && sudo systemctl enable docker
