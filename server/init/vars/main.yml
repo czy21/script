@@ -10,27 +10,4 @@ param_ansible_host_name: "{{ hostvars[inventory_hostname]['ansible_hostname'] }}
 param_ansible_hosts: "{{ dict(param_ansible_host_ipv4s|zip(param_ansible_host_names)) | dict2items(key_name='ip', value_name='name') }}"
 param_ansible_lead_ipv4: "{{ param_ansible_host_ipv4s[0] }}"
 
-param_hosts:
-#  - ip: 192.168.2.21
-#    name: k8s-node-21
-#  - ip: 192.168.2.22
-#    name: k8s-node-22
-#  - ip: 192.168.2.23
-#    name: k8s-node-23
-  - ip: 192.168.2.25
-    name: k8s-node-25
-  - ip: 192.168.2.26
-    name: k8s-node-26
-  - ip: 192.168.2.27
-    name: k8s-node-27
-  - ip: 192.168.2.30
-    name: k8s-vip-dev.czy21-internal.com
-  - ip: 192.168.2.31
-    name: k8s-node-31
-  - ip: 192.168.2.32
-    name: k8s-node-32
-  - ip: 192.168.2.33
-    name: k8s-node-33
-
-
 param_backup_prefix: '{{ inventory_hostname }}-backup'
