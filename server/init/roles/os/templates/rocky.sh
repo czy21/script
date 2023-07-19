@@ -1,11 +1,12 @@
 #!/bin/bash
 set -e
 
+mkdir /run/sshd
 echo -n "%wheel  ALL=(ALL)       ALL" > /etc/sudoers.d/99-custom
 
 yum clean all && yum --refresh makecache -v
 
-yum -y install wget vim nfs-utils bash-completion git jq rsync nc net-tools
+yum -y install tar wget vim nfs-utils bash-completion git jq rsync nc net-tools
 
 useradd -m {{ param_user_ops }} && usermod -aG wheel {{ param_user_ops }} && passwd -d {{ param_user_ops }} && chown {{ param_user_ops }}:{{ param_user_ops }} /home/{{ param_user_ops }}
 
