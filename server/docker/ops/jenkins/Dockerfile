@@ -1,4 +1,4 @@
-FROM jenkins/jenkins:2.410-jdk11
+FROM jenkins/jenkins:2.414-jdk11
 USER root
 RUN apt update && apt install sudo -y
 RUN curl -L "https://github.com/docker/compose/releases/download/v2.18.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
