@@ -43,10 +43,3 @@ if [ "ubuntu" == "${os_distribution}" ]; then
   fi
   sed "s,\(http\|https\)://.*.ubuntu.com,http://{{ param_mirror_apt }},g" /etc/apt/sources.list.bak > /etc/apt/sources.list
 fi
-
-echo -n "
-UseDNS no
-PermitRootLogin yes
-PasswordAuthentication no
-ClientAliveInterval 30
-" > /etc/ssh/sshd_config.d/99-custom.conf
