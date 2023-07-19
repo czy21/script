@@ -21,6 +21,22 @@ if [ "centos" == "${os_distribution}" ]; then
     esac
 fi
 
+if [ "rocky" == "${os_distribution}" ]; then
+    case ${os_major_version} in
+        "9")
+            for r in `find /etc/yum.repos.d/*.repo -maxdepth 1 -name "rocky*.repo"`;do
+              r_bak="${r}.bak"
+              if [ ! -f "${r_bak}" ];then
+                cp ${r} ${r_bak}
+              fi
+              sed -e 's|^mirrorlist=|#mirrorlist=|g' -e 's|^#baseurl=http://dl.rockylinux.org/$contentdir|baseurl=http://{{ param_mirror_yum }}/rocky|g' ${r_bak} > ${r}
+            done
+            ;;
+        *)
+          echo "nothing"
+    esac
+fi
+
 if [ "ubuntu" == "${os_distribution}" ]; then
   if [ ! -f "/etc/apt/sources.list.bak" ];then
     cp /etc/apt/sources.list /etc/apt/sources.list.bak
