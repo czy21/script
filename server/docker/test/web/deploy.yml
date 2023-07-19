@@ -26,5 +26,6 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/templates/:/etc/nginx/templates/
     environment:
       WEB_NODE_NAME: {{ node }}
+    restart: always
 
   {% endfor %}
