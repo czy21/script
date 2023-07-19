@@ -15,3 +15,6 @@ sudo -u {{ param_user_ops }} bash -c "${public_key}"
 
 systemctl stop firewalld && systemctl disable firewalld
 sed -i -r "s/SELINUX=enforcing/SELINUX=disabled/" /etc/selinux/config
+
+# fix Missing privilege separation directory: /run/sshd bug
+echo 'd /var/run/sshd 0755 root' > /usr/lib/tmpfiles.d/sshd.conf
