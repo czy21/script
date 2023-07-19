@@ -8,12 +8,12 @@ os_product_name="{{ ansible_product_name }}"
 if [ "centos" == "${os_distribution}" ]; then
     case ${os_major_version} in
         "9")
-            if [ ! -f "/etc/yum.repos.d/centos.repo.bak" ];then
-              cp /etc/yum.repos.d/centos.repo /etc/yum.repos.d/centos.repo.bak
-            fi
-            if [ ! -f "/etc/yum.repos.d/centos-addons.repo.bak" ];then
-              cp /etc/yum.repos.d/centos-addons.repo /etc/yum.repos.d/centos-addons.repo.bak
-            fi
+            for r in `find /etc/yum.repos.d/ -maxdepth 1 -name "centos*.repo"`;do
+              r_bak="${r}.bak"
+              if [ ! -f "${r_bak}" ];then
+                cp ${r} ${r_bak}
+              fi
+            done
             cp -r {{ param_remote_role_path }}/*.repo /etc/yum.repos.d/
             ;;
         *)
@@ -24,7 +24,7 @@ fi
 if [ "rocky" == "${os_distribution}" ]; then
     case ${os_major_version} in
         "9")
-            for r in `find /etc/yum.repos.d/*.repo -maxdepth 1 -name "rocky*.repo"`;do
+            for r in `find /etc/yum.repos.d/ -maxdepth 1 -name "rocky*.repo"`;do
               r_bak="${r}.bak"
               if [ ! -f "${r_bak}" ];then
                 cp ${r} ${r_bak}
