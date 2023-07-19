@@ -184,6 +184,25 @@ class CustomHelpFormatter(argparse.MetavarTypeHelpFormatter):
             return action.type.__name__
 
 
+def load_env_file(env_file: pathlib.Path, env_file_names: list[str]):
+    d = {}
+    env_file_paths: list[pathlib.Path] = []
+    if env_file:
+        env_file_paths.append(env_file)
+    for ef in env_file_names:
+        ef = env_file.parent.joinpath(ef)
+        if not ef.is_absolute():
+            ef = pathlib.Path.cwd().joinpath(ef)
+        if ef not in env_file_paths:
+            env_file_paths.append(ef)
+    print(env_file_paths)
+    for t in env_file_paths:
+        if t.exists():
+            logger.debug("load env_file: %s" % t.as_posix())
+            d |= yaml_util.load(t)
+    return d
+
+
 class Installer:
     def __init__(self,
                  root_path: pathlib.Path,
@@ -217,7 +236,7 @@ class Installer:
     def set_common_argument(parser: argparse.ArgumentParser):
         parser.add_argument('-n', '--namespace', type=str)
         parser.add_argument('-p', '--param', nargs="+", default=[], type=lambda s: dict({split_kv_str(s)}), help="k1=v1 k2=v2")
-        parser.add_argument('--env-file', nargs="+", default=[], help="file1 file2")
+        parser.add_argument('--env-file', nargs="+", default=[], help="file1.yaml file2.yaml")
         parser.add_argument('--all-roles', action="store_true")
         parser.add_argument('--all-namespaces', action="store_true")
         parser.add_argument('--ignore-namespace', action="store_true")
@@ -266,21 +285,7 @@ class Installer:
         self.set_common_argument(parser)
 
     def __load_env_file(self, args: argparse.Namespace) -> dict:
-        d = {}
-        env_file_paths: list[pathlib.Path] = []
-        if self.env_file:
-            env_file_paths.append(self.env_file)
-        for ef in args.env_file:
-            ef = self.env_file.parent.joinpath(ef)
-            if not ef.is_absolute():
-                ef = pathlib.Path.cwd().joinpath(ef)
-            if ef not in env_file_paths:
-                env_file_paths.append(ef)
-        for t in env_file_paths:
-            if t.exists():
-                logger.debug("load env_file: %s" % t.as_posix())
-                d |= yaml_util.load(t)
-        return d
+        return load_env_file(self.env_file, args.env_file)
 
     def __loop_namespaces(self,
                           namespaces: list[Namespace],
