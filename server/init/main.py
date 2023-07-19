@@ -31,7 +31,7 @@ if __name__ == '__main__':
     ansible_hosts = pwd.joinpath("ansible-hosts").as_posix()
     parser = argparse.ArgumentParser(formatter_class=share.CustomHelpFormatter, conflict_handler="resolve")
     share.Installer.set_common_argument(parser)
-    parser.add_argument('--env-file', required=False, default="env.yaml", type=str, help="env file (default=[env.yaml])")
+    parser.add_argument('--env-file', nargs="+", default=[], help="file1.yaml file2.yaml")
     parser.add_argument('-f', '--file', required=True, type=str, help="inventory file")
     parser.add_argument('-t', '--tag', required=True, type=str, help="t1,t2")
     parser.add_argument('-k', '--ask-pass', action="store_true", help="ask for connection password")
@@ -39,11 +39,11 @@ if __name__ == '__main__':
     parser.add_argument('--dry-run', action="store_true", help="don't make any changes")
     parser.add_argument('--no-step', action="store_true", help="disable one-step-at-a-time")
     args = parser.parse_args()
-    env_file: pathlib.Path = pwd.joinpath(args.env_file)
+    env_file: pathlib.Path = pwd.joinpath("env.yaml")
     if not env_file.exists():
         logger.error("env file not exists")
         sys.exit(0)
-    env_dict = yaml_util.load(file_util.read_text(env_file))
+    env_dict = share.load_env_file(env_file, args.env_file)
     file_util.write_text(pwd.joinpath("vars/env.yml"), yaml.dump(env_dict))
     if not args.user:
         args.user = env_dict["param_user_ops"]
