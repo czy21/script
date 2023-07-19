@@ -1,12 +1,12 @@
-## centos
+## centos pre-installed
 ```shell
-sudo yum -y install epel-release 
+sudo yum -y install tar wget epel-release 
 sudo yum -y update
 sudo yum -y install ansible
 ```
 ## ubuntu pre-installed
 ```shell
-# desktop 
+# desktop
 sudo apt install openssh-server vim
 passwd
 sed -i -r "s/^\s*PermitRootLogin\s+\w+/PermitRootLogin yes/;" /etc/ssh/sshd_config
@@ -17,7 +17,7 @@ vim /etc/systemd/timesyncd.conf
 NTP=ntp.aliyun.com
 
 # mDNS
-# sudo apt install avahi-daemon -y 
+# sudo apt install avahi-daemon -y
 ```
 ## ansible
 ```bash
