@@ -1,5 +1,5 @@
 - name: mkdir
-  file: path={{ param_remote_role_path }} state=directory
+  file: path={{ param_remote_role_path }} state=directory mode=0777
 
 - template: src={{ item }} dest={{ param_remote_role_path }}
   with_fileglob:
