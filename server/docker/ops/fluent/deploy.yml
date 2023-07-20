@@ -7,6 +7,9 @@ services:
     container_name: fluent
     privileged: true
     user: root
+    ports:
+      - "24224:24224"
+      - "24224:24224/udp"
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/:/fluentd/etc/
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/fluentd/log/
