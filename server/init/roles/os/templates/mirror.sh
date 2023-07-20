@@ -1,9 +1,9 @@
 #!/bin/bash
 set -e
 
-os_distribution="{{ ansible_distribution | lower}}"
-os_major_version="{{ ansible_distribution_major_version | lower }}"
-os_product_name="{{ ansible_product_name }}"
+os_distribution="{{ param_ansible_distribution }}"
+os_major_version="{{ param_ansible_distribution_major_version }}"
+os_product_name="{{ param_ansible_product_name }}"
 
 if [ "centos" == "${os_distribution}" ]; then
     case ${os_major_version} in
