@@ -1,7 +1,7 @@
 - name: valid
   assert:
-    that: param_user_ops_opsor_ssh_public_key != ""
-    fail_msg: param_user_ops_opsor_ssh_public_key is empty
+    that: param_user_ops_ssh_public_key != ""
+    fail_msg: param_user_ops_ssh_public_key is empty
 
 - name: mirror
   shell: |-
