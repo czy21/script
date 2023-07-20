@@ -1,0 +1,13 @@
+version: "3.9"
+
+services:
+
+  fluent:
+    image: fluent/fluentd:v1.16-debian
+    container_name: fluent
+    privileged: true
+    user: root
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/:/fluentd/etc/
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/fluentd/log/
+    restart: always
