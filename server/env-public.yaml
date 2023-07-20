@@ -16,7 +16,7 @@ param_manage_password: &param_manage_password <password>
 param_manage_email: 805899926@qq.com
 
 param_user_ops: opsor
-param_user_ops_opsor_ssh_public_key: "" # ssh-rsa XXX
+param_user_ops_ssh_public_key: "" # ssh-rsa XXX
 
 param_nfs_kube_server: <ip>
 param_nfs_kube_data: /export/kube
