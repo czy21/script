@@ -1,6 +1,6 @@
 - name: valid
   assert:
-    that: param_user_ops_ssh_public_key != ""
+    that: param_user_ops_ssh_public_key | trim != ""
     fail_msg: param_user_ops_ssh_public_key is empty
 
 - name: mirror
