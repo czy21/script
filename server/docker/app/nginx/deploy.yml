@@ -17,6 +17,12 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/conf.d/:/etc/nginx/conf.d/
       - {{ param_docker_data }}/{{ param_role_name }}/conf/cert/:/etc/nginx/cert/
     restart: always
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: "docker.{{ '{{' }}.Name{{ '}}' }}"
+
 
   nginx-exporter:
     image: nginx/nginx-prometheus-exporter:0.11.0
