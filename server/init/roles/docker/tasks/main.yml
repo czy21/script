@@ -9,7 +9,7 @@
     EOF
     sudo mkdir -p /etc/docker/
     sudo cat {{ param_remote_role_path }}/daemon.json > /etc/docker/daemon.json
-    bash {{ param_remote_role_path }}/{{ ansible_distribution | lower}}.sh
+    bash {{ param_remote_role_path }}/{{ param_ansible_distribution }}.sh
 - name: docker compose
   become: yes
   shell: |
