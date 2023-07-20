@@ -22,7 +22,7 @@
     EOF
 
     sudo sysctl --system
-    bash {{ param_remote_role_path }}/k8s-{{ ansible_distribution | lower}}.sh && kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
+    bash {{ param_remote_role_path }}/k8s-{{ param_ansible_distribution }}.sh && kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
 
 - name: helm install
   shell: |

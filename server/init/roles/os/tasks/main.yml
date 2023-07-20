@@ -11,7 +11,7 @@
 - name: install
   shell: |-
     timedatectl set-timezone Asia/Shanghai
-    bash {{ param_remote_role_path }}/{{ ansible_distribution | lower}}.sh
+    bash {{ param_remote_role_path }}/{{ param_ansible_distribution }}.sh
 
 - name: sshd_config
   shell: |-
