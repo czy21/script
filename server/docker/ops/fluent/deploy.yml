@@ -3,14 +3,16 @@ version: "3.9"
 services:
 
   fluent:
-    image: fluent/fluentd:v1.16-debian
+    image: "{{ param_registry_url }}/{{ param_registry_dir }}/fluent"
     container_name: fluent
     privileged: true
     user: root
     ports:
-      - "24224:24224"
+      - "24224:24224" # input
       - "24224:24224/udp"
+    expose:
+      - "24231" # metrics
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/:/fluentd/etc/
-      - {{ param_docker_data }}/{{ param_role_name }}/data/:/fluentd/log/
+      - {{ param_docker_data }}/{{ param_role_name }}/log/:/fluentd/log/
     restart: always
