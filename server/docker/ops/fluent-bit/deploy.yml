@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+
+  fluent-bit:
+    image: fluent/fluent-bit:2.1.7
+    pull_policy: always
+    container_name: fluent-bit
+    privileged: true
+    user: root
+    ports:
+      - "24224:24224" # input
+      - "24224:24224/udp"
+      - "2020:2020"
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/:/fluent-bit/etc/
+    restart: always
