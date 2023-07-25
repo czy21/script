@@ -4,6 +4,7 @@ services:
 
   fluent:
     image: "{{ param_registry_url }}/{{ param_registry_dir }}/fluent"
+    pull_policy: always
     container_name: fluent
     privileged: true
     user: root
