@@ -46,7 +46,7 @@ if __name__ == '__main__':
     file_util.write_text(pwd.joinpath("vars/env.yml"), yaml.dump(env_dict))
     if not args.user:
         args.user = env_dict["param_user_ops"]
-    ansible_inventory_file = pwd.joinpath("{0}.yml".format(args.file)).as_posix()
+    ansible_inventory_file = pathlib.Path(args.file).as_posix() if pathlib.Path(args.file).is_absolute() else pwd.joinpath(args.file).as_posix()
     _cmds = ["chmod 600 {0}".format(private_key)]
     ansible_playbook_cmd = [
         "ANSIBLE_SUDO_PASS=0",
