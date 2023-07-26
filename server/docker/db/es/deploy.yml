@@ -40,7 +40,7 @@ services:
     {%- set initial_master_nodes=[] %}
     {%- for t in range(1,param_db_es_cluster_replicas | int + 1) %}
        {%- set t_node_name = '-'.join([param_role_project_name,t|string]) %}
-      {%- if t_node_name != node_name %}
+      {%- if i != t %}
         {{- seed_hosts.append(t_node_name) or '' }}
       {%- endif %}
       {{- initial_master_nodes.append(t_node_name) or '' }}
