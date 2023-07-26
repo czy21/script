@@ -12,6 +12,7 @@ services:
       - "24224:24224" # input
       - "24224:24224/udp"
       - "2020:2020"
+      - "2021:2021"
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/:/fluent-bit/etc/
     restart: always
