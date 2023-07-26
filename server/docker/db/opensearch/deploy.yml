@@ -1,0 +1,98 @@
+version: "3.9"
+
+{%- set setup_name = param_role_project_name + '-setup' %}
+
+x-app-common: &app-common
+  image: opensearchproject/opensearch:{{ param_db_opensearch_version }}
+
+x-traefik-opensearch-label: &traefik-opensearch-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_project_name }}.service: {{ param_role_project_name }}
+  traefik.http.services.{{ param_role_project_name }}.loadbalancer.server.port: 9200
+
+x-traefik-opensearch-dashboard-label: &traefik-opensearch-dashboard-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_db_opensearch_dashboard_name }}.service: {{ param_db_opensearch_dashboard_name }}
+  traefik.http.services.{{ param_db_opensearch_dashboard_name }}.loadbalancer.server.port: 5601
+
+services:
+  {{ setup_name }}:
+    <<: *app-common
+    container_name: {{ setup_name }}
+    command: sh ./setup.sh
+    user: "0"
+    working_dir: /usr/share/opensearch
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_project_name }}/conf/setup.sh:/usr/share/opensearch/setup.sh
+      - {{ param_docker_data }}/{{ param_role_project_name }}/data/:/usr/share/opensearch/data/
+    healthcheck:
+      test: ["CMD-SHELL", "[ -d /usr/share/opensearch/data/1 ]"]
+      interval: 1s
+      timeout: 5s
+      retries: 120
+  {% set node_names=[] %}
+  {%- for i in range(1,param_db_opensearch_cluster_replicas | int + 1) %}
+    {%- set node_name = '-'.join([param_role_project_name,i|string]) %}
+    {{- node_names.append(node_name) or '' }}
+    {%- set seed_hosts=[] %}
+    {%- set initial_master_nodes=[] %}
+    {%- for t in range(1,param_db_opensearch_cluster_replicas | int + 1) %}
+       {%- set t_node_name = '-'.join([param_role_project_name,t|string]) %}
+      {%- if t_node_name != node_name %}
+        {{- seed_hosts.append(t_node_name) or '' }}
+      {%- endif %}
+      {{- initial_master_nodes.append(t_node_name) or '' }}
+    {%- endfor %}
+  {{ node_name }}:
+    <<: *app-common
+    container_name: {{ node_name }}
+    hostname: {{ node_name }}
+    labels:
+      <<: *traefik-opensearch-label
+    expose:
+      - "9200"
+      - "9600"
+    environment:
+      OPENSEARCH_JAVA_OPTS: "-Xms512m -Xmx512m"
+      node.name: {{ node_name }}
+      cluster.name: {{ param_role_project_name }}
+      cluster.initial_cluster_manager_nodes: {{ initial_master_nodes | join(',') }}
+      discovery.seed_hosts: {{ initial_master_nodes | join(',') }}
+      bootstrap.memory_lock: "true"
+      DISABLE_SECURITY_PLUGIN: "true"
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_project_name }}/data/{{ i }}/:/usr/share/opensearch/data/
+    deploy:
+      resources:
+        limits:
+          memory: {{ param_db_opensearch_deploy_limit_memory }}
+    ulimits:
+      memlock:
+        soft: -1 # Set memlock to unlimited (no soft or hard limit)
+        hard: -1
+      nofile:
+        soft: 65536 # Maximum number of open files for the opensearch user - set to at least 65536
+        hard: 65536
+    depends_on:
+    {%- if node_name == param_db_opensearch_first_node_name %}
+      {{ setup_name }}:
+        condition: service_healthy
+    {%- else %}
+      - {{ param_role_project_name + '-' + (i|int-1) | string }}
+    {%- endif %}
+    healthcheck:
+      test: ["CMD-SHELL","curl -s http://localhost:9200 | grep -q '{{ node_name }}'"]
+      interval: 10s
+      timeout: 10s
+      retries: 120
+  {%- endfor %}
+  {{ param_db_opensearch_dashboard_name }}:
+    image: opensearchproject/opensearch-dashboards:{{ param_db_opensearch_version }}
+    container_name: {{ param_db_opensearch_dashboard_name }}
+    labels:
+      <<: *traefik-opensearch-dashboard-label
+    expose:
+      - "5601"
+    environment:
+      OPENSEARCH_HOSTS: '{{ node_names | zip | map('format_args',"http://{0}:9200") | list | tojson }}'
+      DISABLE_SECURITY_DASHBOARDS_PLUGIN: "true"

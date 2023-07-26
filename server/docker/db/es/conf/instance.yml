@@ -1,9 +1,9 @@
 instances:
   {%- for i in range(1,param_db_es_cluster_replicas | int + 1) %}
-    {%- set es_node_name = param_role_project_name + '-' + i | string %}
-  - name: {{ es_node_name }}
+    {%- set node_name = param_role_project_name + '-' + i | string %}
+  - name: {{ node_name }}
     dns:
-      - {{ es_node_name }}
+      - {{ node_name }}
       - localhost
     ip:
       - 127.0.0.1
