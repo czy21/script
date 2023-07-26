@@ -304,7 +304,7 @@ class Installer:
                 shutil.rmtree(role_output_path, ignore_errors=True)
                 role_env_file = role_path.joinpath("env.yaml")
                 role_env_output_file = role_output_path.joinpath("env.yaml")
-                role_env = {} | global_env | args.param | {
+                role_env = {} | global_env | {
                     "param_role_name": role_name,
                     "param_role_path": role_path.as_posix(),
                     "param_role_title": role_title,
@@ -316,6 +316,7 @@ class Installer:
                 if role_env_file and role_env_file.exists():
                     role_env |= yaml_util.load(template_util.Template(file_util.read_text(role_env_file)).render(**role_env))
                     file_util.write_text(role_env_output_file, yaml.dump(role_env))
+                role_env |= args.param
                 # process template
                 for t in filter(lambda f: f.is_file() and not any(regex_util.match_rules(["build/"], f.as_posix()).values()), role_path.rglob("*")):
                     _rules = regex_util.match_rules(
