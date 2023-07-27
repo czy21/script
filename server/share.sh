@@ -32,11 +32,14 @@ function upload_exec_py() {
 
   local args=""
   local cmd=""
-  cmd+="if [ ! -f ${PYTHON_EXEC} ];then python3 -m venv ${PYTHON_HOME} --without-pip --system-site-packages && wget -nv -O - https://bootstrap.pypa.io/get-pip.py | ${PYTHON_EXEC};fi && "
+  pypi="-i https://pypi.tuna.tsinghua.edu.cn/simple/"
+  cmd+="if [ ! -f ${PYTHON_EXEC} ];then "
+  cmd+="python3 -m venv ${PYTHON_HOME} --without-pip --system-site-packages && wget -nv -O - https://bootstrap.pypa.io/get-pip.py | ${PYTHON_EXEC} - ${pypi}"
+  cmd+=";fi &&"
   for ((i=1;i<="$#";i++));do
     item=${!i}
     if [ "-r" == ${item} ]; then
-        cmd+="${PYTHON_EXEC} -m pip install -r \$HOME/${dst_name}/requirements.txt && "
+        cmd+="${PYTHON_EXEC} -m pip install ${pypi} -r \$HOME/${dst_name}/requirements.txt && "
         shift 1
         continue
     fi
