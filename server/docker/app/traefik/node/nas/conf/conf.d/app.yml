@@ -1,5 +1,8 @@
 http:
   routers:
+    homepage:
+      rule: Host(`homepage.czy21-internal.com`)
+      service: homepage@docker
     nexus:
       rule: Host(`nexus.czy21-internal.com`)
       service: nexus@docker

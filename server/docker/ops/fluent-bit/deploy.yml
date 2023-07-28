@@ -1,5 +1,10 @@
 version: "3.9"
 
+x-traefik-log-metrics-label: &traefik-log-metrics-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}-log-metrics.service: {{ param_role_name }}-log-metrics
+  traefik.http.services.{{ param_role_name }}-log-metrics.loadbalancer.server.port: 2021
+
 services:
 
   fluent-bit:
@@ -8,11 +13,14 @@ services:
     container_name: fluent-bit
     privileged: true
     user: root
+    labels:
+      <<: *traefik-log-metrics-label
+    expose:
+      - "2020"
+      - "2021"
     ports:
       - "24224:24224" # input
       - "24224:24224/udp"
-      - "2020:2020"
-      - "2021:2021"
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/:/fluent-bit/etc/
     restart: always
