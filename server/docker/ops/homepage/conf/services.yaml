@@ -1,10 +1,10 @@
-- basic:
-    - adguard:
-        icon: adguard-home.svg
-        href: http://192.168.2.2:3000
+- devops:
+    - grafana:
+        icon: grafana.svg
+        href: http://grafana.czy21-internal.com
         widget:
-          type: adguard
-          url: http://192.168.2.2:3000
+          type: grafana
+          url: http://grafana.czy21-internal.com
           username: {{ param_manage_username }}
           password: {{ param_manage_password }}
     - traefik-base:
@@ -19,16 +19,6 @@
         widget:
           type: traefik
           url: http://traefik-nas.czy21-internal.com
-
-- devops:
-    - grafana:
-        icon: grafana.svg
-        href: http://grafana.czy21-internal.com
-        widget:
-          type: grafana
-          url: http://grafana.czy21-internal.com
-          username: {{ param_manage_username }}
-          password: {{ param_manage_password }}
     - prometheus-nas:
         icon: prometheus.svg
         href: http://prom-nas.czy21-internal.com
