@@ -3,6 +3,9 @@ http:
     heimdall:
       rule: Host(`heimdall.czy21-internal.com`)
       service: heimdall@docker
+    homepage:
+      rule: Host(`homepage.czy21-internal.com`)
+      service: homepage@docker
     redis-exporter:
       rule: Host(`redis-exporter-{{ param_cluster_name }}.czy21-internal.com`)
       service: redis-exporter@docker
