@@ -1,0 +1,25 @@
+version: "3.9"
+
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 3000
+
+services:
+
+  homepage:
+    image: "{{ param_registry_proxy_url }}/benphelps/homepage:v0.6.22" # ghcr.io/benphelps/homepage:latest
+    container_name: homepage
+    hostname: homepage
+    labels:
+      <<: *traefik-label
+    privileged: true
+    user: root
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/:/app/config/
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: Asia/Shanghai
+    restart: always
