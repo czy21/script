@@ -1,0 +1,5 @@
+docker-nas:
+  socket: /var/run/docker.sock
+docker-rocky12:
+  host: 192.168.2.12
+  port: 2375
