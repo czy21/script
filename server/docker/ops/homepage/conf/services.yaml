@@ -1,0 +1,97 @@
+- basic:
+    - adguard:
+        icon: adguard-home.svg
+        href: http://192.168.2.2:3000
+        widget:
+          type: adguard
+          url: http://192.168.2.2:3000
+          username: {{ param_manage_username }}
+          password: {{ param_manage_password }}
+    - traefik-base:
+        icon: traefik.svg
+        href: http://traefik-base.czy21-internal.com
+        widget:
+          type: traefik
+          url: http://traefik-base.czy21-internal.com
+    - traefik-nas:
+        icon: traefik.svg
+        href: http://traefik-nas.czy21-internal.com
+        widget:
+          type: traefik
+          url: http://traefik-nas.czy21-internal.com
+
+- devops:
+    - grafana:
+        icon: grafana.svg
+        href: http://grafana.czy21-internal.com
+        widget:
+          type: grafana
+          url: http://grafana.czy21-internal.com
+          username: {{ param_manage_username }}
+          password: {{ param_manage_password }}
+    - prometheus-nas:
+        icon: prometheus.svg
+        href: http://prom-nas.czy21-internal.com
+        widget:
+          type: prometheus
+          url: http://prom-nas.czy21-internal.com
+    - portainer-nas:
+        icon: portainer.svg
+        href: http://portainer.czy21-internal.com
+        widget:
+          type: portainer
+          url: http://portainer.czy21-internal.com
+          env: 2
+          key: ptr_V8YZL+4evqMYaJBysM4nwBm2ZQjHAtKAjJSwz1dK0pc=
+    - portainer-test:
+        icon: portainer.svg
+        href: http://portainer.czy21-internal.com
+        widget:
+          type: portainer
+          url: http://portainer.czy21-internal.com
+          env: 3
+          key: ptr_V8YZL+4evqMYaJBysM4nwBm2ZQjHAtKAjJSwz1dK0pc=
+
+- media:
+    - emby:
+        icon: emby.svg
+        href: http://emby.czy21-internal.com
+        widget:
+          type: emby
+          url: http://emby.czy21-internal.com
+          key: 56203aaf7539480db7e938b9a0357fbe
+    - qbittorrent:
+        icon: qbittorrent.svg
+        href: http://qb.czy21-internal.com
+        widget:
+          type: qbittorrent
+          url: http://qb.czy21-internal.com
+          username: {{ param_manage_username }}
+          password: {{ param_manage_password }}
+    - sonarr:
+        icon: sonarr.svg
+        href: http://sonarr.czy21-internal.com
+        widget:
+          type: sonarr
+          url: http://sonarr.czy21-internal.com
+          key: 59ba45380d2649d087d3acdabf043af6
+    - radarr:
+        icon: radarr.svg
+        href: http://radarr.czy21-internal.com
+        widget:
+          type: radarr
+          url: http://radarr.czy21-internal.com
+          key: c9db24d66ccf4e77959d7eb1384e519b
+    - prowlarr:
+        icon: prowlarr.svg
+        href: http://prowlarr.czy21-internal.com
+        widget:
+          type: prowlarr
+          url: http://prowlarr.czy21-internal.com
+          key: e66d2f0f671d4a9999f27b274aa2a633
+    - jackett:
+        icon: jackett.svg
+        href: http://jackett.czy21-internal.com
+        widget:
+          type: jackett
+          url: http://jackett.czy21-internal.com
