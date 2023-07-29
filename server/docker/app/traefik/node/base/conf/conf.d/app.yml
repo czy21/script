@@ -12,3 +12,7 @@ http:
     script:
       rule: Host(`script.czy21-internal.com`)
       service: script@docker
+    doc:
+      rule: Host(`doc.czy21.com`)
+      service: script@docker
+      tls: {}

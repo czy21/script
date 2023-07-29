@@ -3,9 +3,3 @@ http:
     web:
       rule: Host(`web-{{ param_cluster_name }}.czy21-internal.com`)
       service: web@docker
-    es:
-      rule: Host(`es12.czy21-internal.com`)
-      service: es-1@docker
-    kb:
-      rule: Host(`kb12.czy21-internal.com`)
-      service: es-1-kb@docker

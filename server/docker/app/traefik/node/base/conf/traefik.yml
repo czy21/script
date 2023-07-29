@@ -20,6 +20,13 @@ api:
 entryPoints:
   web:
     address: :80
+    http:
+      tls:
+        certResolver: ali
+        domains:
+          - main: czy21.com
+            sans:
+              - "*.czy21.com"
   websecure:
     address: :443
   traefik:
@@ -30,3 +37,11 @@ entryPoints:
 metrics:
   prometheus:
     entryPoint: metrics
+
+certificatesResolvers:
+  ali:
+    acme:
+      email: 805899926@qq.com
+      storage: /etc/traefik/cert/acme.json
+      dnsChallenge:
+        provider: alidns
