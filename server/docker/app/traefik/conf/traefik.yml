@@ -30,8 +30,3 @@ entryPoints:
 metrics:
   prometheus:
     entryPoint: metrics
-
-#tracing:
-#  jaeger:
-#    samplingServerURL: http://jaeger-agent.czy21-internal.com:5778/sampling
-#    localAgentHostPort: jaeger-agent.czy21-internal.com:6831
