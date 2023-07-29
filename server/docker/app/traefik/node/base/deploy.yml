@@ -1,9 +1,0 @@
-
-services:
-  traefik:
-    ports:
-      - "80:80"
-      - "443:443"
-    environment:
-      ALICLOUD_ACCESS_KEY:
-      ALICLOUD_SECRET_KEY: 

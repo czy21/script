@@ -15,12 +15,3 @@ http:
     fluent-bit-log-metrics:
       rule: Host(`fluent-bit-{{ param_cluster_name }}-log-metrics.czy21-internal.com`)
       service: fluent-bit-log-metrics@docker
-#  middlewares:
-#    https-redirect:
-#      redirectScheme:
-#        scheme: https
-#        permanent: true
-#tls:
-#  certificates:
-#    - certFile: /etc/traefik/cert/server.crt
-#      keyFile: /etc/traefik/cert/server.key
