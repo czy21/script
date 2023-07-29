@@ -48,6 +48,7 @@ vmkfstools -x check <>.vmdk
 
 vmkfstools -x repair <>.vmdk
 ```
+# cron.err xxxxxx 意为cron执行过任务,不是任务内部出错
 
 ## raspberry pi zero w
 ```bash
