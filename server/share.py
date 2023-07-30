@@ -343,11 +343,13 @@ class Installer:
                     if args.target == "doc":
                         logger.info("build doc")
 
-                _cmds.extend(role_func(role_title=role_title,
+                _cmds.extend(role_func(root_path=self.root_path,
+                                       role_title=role_title,
                                        role_name=role_name,
                                        role_path=role_path,
                                        role_output_path=role_output_path,
                                        role_env=role_env,
+                                       role_env_output_file=role_env_output_file,
                                        namespace=namespace,
                                        args=args,
                                        **kwargs))
