@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
 import argparse
+import json
 import pathlib
 import re
 
 import share
+import yaml
 
 from utility import (
-    collection as collection_util
+    collection as collection_util,
+    file as file_util
 )
 
 
@@ -36,7 +39,8 @@ def uci_bak_config_cmd(name, kind: str, section: str, output_file: pathlib.Path)
     return collection_util.flat_to_str(_uci_cmd, delimiter=" | ") + " >> {0}".format(output_file)
 
 
-def get_cmds(role_title: str,
+def get_cmds(root_path: pathlib.Path,
+             role_title: str,
              role_name: str,
              role_path: pathlib.Path,
              role_output_path: pathlib.Path,
@@ -53,34 +57,9 @@ def get_cmds(role_title: str,
     _cmds = []
     if role_init_sh.exists():
         _cmds.append("bash {}".format(role_init_sh.as_posix()))
-    if args.command in [share.Command.install.value, share.Command.restore.value]:
-        if param_uci_config:
-            for c in param_uci_config:
-                _kind: str = c.get("type")
-                _section: str = c.get("section")
-                if _section is None:
-                    _cmds.append("while uci -q delete {0}.@{1}[0]; do :; done".format(role_name, _kind))
-                    _cmds.append("cat {0} | uci batch".format(role_script_uci.as_posix()))
-                else:
-                    _section_del_cmd = collection_util.flat_to_str([
-                        "uci show {0}".format(role_name),
-                        "grep -E '^{0}.{1}={2}'".format(role_name, format_config(_kind, _section), _kind),
-                        collection_util.flat_to_str([
-                            "sed",
-                            "-e 's|={0}|\\1|g'".format(_kind),
-                            "-e 's|^{0}|delete \\0|g'".format(role_name)
-                        ]),
-                    ], delimiter=" | ")
-                    _cmds.append("({0};cat {1};echo;) | cat | uci batch".format(_section_del_cmd, role_script_uci.as_posix()))
-                _cmds.append("uci commit {0}".format(role_name))
-    if args.command == share.Command.backup.value:
-        if param_uci_config:
-            _cmds.append("cat /dev/null > {0}".format(role_script_uci_bak))
-            for c in param_uci_config:
-                _kind: str = c.get("type")
-                _section: str = c.get("section")
-                _cmds.append(uci_bak_config_cmd(role_name, _kind, _section, role_script_uci_bak))
-
+    role_env_output_json = role_output_path.joinpath("env.json")
+    file_util.write_text(role_env_output_json, json.dumps(role_env))
+    _cmds.append("lua {0} --command {1} --env-file {2}".format(root_path.joinpath("role.lua"), args.command, role_env_output_json.as_posix()))
     return _cmds
 
 
