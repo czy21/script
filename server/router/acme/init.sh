@@ -1,15 +1,15 @@
 #!/bin/bash
 
 param_command="{{ param_command }}"
-acme_etc_path="{{ param_acme_etc_path }}"
+etc_app_path="{{ param_etc_app_path }}"
 if [ "install" == "${param_command}" ];then
   echo ''
 fi
 
 if [ "backup" == "${param_command}" ];then
-  mkdir -p {{ param_role_temp_path }}/acme-bak/ && cp -r ${acme_etc_path}/* {{ param_role_temp_path }}/acme-bak/
+  find ${etc_app_path}/ -maxdepth 1 ! -path ${etc_app_path}/ ! -name "sync.sh" -exec cp -r {} {{ param_role_bak_path }} \;
 fi
 
 if [ "restore" == "${param_command}" ];then
-  cp -r {{ param_role_temp_path }}/acme-bak/* ${acme_etc_path}
+  cp -r {{ param_role_bak_path }}/* ${etc_app_path}
 fi

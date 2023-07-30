@@ -1,14 +1,15 @@
 #!/bin/bash
 
 param_command="{{ param_command }}"
+etc_app_path="{{ param_etc_app_path }}"
 if [ "install" == "${param_command}" ];then
   echo ''
 fi
 
 if [ "backup" == "${param_command}" ];then
-  find /etc/samba/ -type f -name 'smbpasswd' -exec sh -c 'f={}; cp $f {{ param_role_temp_path }}/$(basename $f).bak' \;
+  find ${etc_app_path}/ -maxdepth 1 ! -path ${etc_app_path}/  -name "smb.conf.template" -o -name "smbpasswd" -exec cp -r {} {{ param_role_bak_path }} \;
 fi
 
 if [ "restore" == "${param_command}" ];then
-  find {{ param_role_temp_path }} -type f -name 'smbpasswd.bak' -exec sh -c 'f={}; cp $f /etc/samba/$(basename $f .bak)' \;
+  cp -r {{ param_role_bak_path }}/* ${etc_app_path}
 fi

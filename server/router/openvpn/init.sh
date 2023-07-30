@@ -1,16 +1,15 @@
 #!/bin/bash
 
 param_command="{{ param_command }}"
+etc_app_path="{{ param_etc_app_path }}"
 if [ "install" == "${param_command}" ];then
   echo ''
 fi
 
 if [ "backup" == "${param_command}" ];then
-  find {{ param_openvpn_etc_path }} -type f -regex '.*\.\(auth\|ovpn\)' -exec sh -c 'f={}; cp $f {{ param_role_temp_path }}/$(basename $f).bak' \;
-  find {{ param_openvpn_etc_path }} -type d -regex '.*_\(ccd\)' -exec sh -c 'd={}; cp -r $d {{ param_role_temp_path }}' \;
+  find ${etc_app_path}/ -maxdepth 1 ! -path ${etc_app_path}/ ! -name "auth.sh" -exec cp -r {} {{ param_role_bak_path }} \;
 fi
 
 if [ "restore" == "${param_command}" ];then
-  find {{ param_role_temp_path }} -type f -regex '.*\.\(auth\|ovpn\).bak' -exec sh -c 'f={}; cp $f {{ param_openvpn_etc_path }}/$(basename $f .bak)' \;
-  find {{ param_role_temp_path }} -type d -regex '.*_\(ccd\)' -exec sh -c 'd={}; cp -r $d {{ param_openvpn_etc_path }}' \;
+  cp -r {{ param_role_bak_path }}/* ${etc_app_path}
 fi
