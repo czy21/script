@@ -22,13 +22,13 @@ then
 end
 
 local config_json = envJson.param_role_temp_path .. "/config.json"
-for uc_i, uc_v in ipairs(envJson.param_uci_config) do
+local obj = {}
+for _, uc_v in ipairs(envJson.param_uci_config) do
     if not uc_v.type
     then
         print("type is empty")
         break
     end
-    local obj = {}
     if command == "backup"
     then
         uci:foreach(envJson.param_role_name, uc_v.type, function(s)
@@ -45,13 +45,12 @@ for uc_i, uc_v in ipairs(envJson.param_uci_config) do
                 end
                 table.insert(obj[uc_v.type], s)
             end
-            for k1 in pairs(s) do
-                if string.match(k1, "^%.") then
-                    s[k1] = nil
+            for k in pairs(s) do
+                if string.match(k, "^%.") then
+                    s[k] = nil
                 end
             end
         end)
-        fs.writefile(config_json, json.stringify(obj, true))
     elseif command == "restore"
     then
         uci:delete_all(envJson.param_role_name, uc_v.type, function(s)
@@ -62,22 +61,31 @@ for uc_i, uc_v in ipairs(envJson.param_uci_config) do
             return true
         end)
         obj = json.parse(fs.readfile(config_json))
-        for fk, fv in pairs(obj) do
-            if uc_v.section and string.match(fk, uc_v.section)
+        for obj_k, obj_v in pairs(obj) do
+            if uc_v.section and string.match(obj_k, uc_v.section)
             then
-                uci:section(envJson.param_role_name, uc_v.type, fk, {})
-                for sk, sv in pairs(fv) do
-                    uci:set(envJson.param_role_name, fk, sk, sv)
+                uci:section(envJson.param_role_name, uc_v.type, obj_k, {})
+                for ok, ov in pairs(obj_v) do
+                    uci:set(envJson.param_role_name, obj_k, ok, ov)
                 end
-            else
-                for _, tv in ipairs(fv) do
+            elseif obj_k == uc_v.type
+            then
+                for _, tv in ipairs(obj_v) do
                     section = uci:add(envJson.param_role_name, uc_v.type)
-                    for mk, mv in pairs(tv) do
-                        uci:set(envJson.param_role_name, section, mk, mv)
+                    for ok, ov in pairs(tv) do
+                        uci:set(envJson.param_role_name, section, ok, ov)
                     end
                 end
             end
         end
-        uci:commit(envJson.param_role_name)
     end
+end
+if command == "backup"
+then
+    fs.writefile(config_json, json.stringify(obj, true))
+end
+
+if command == "restore"
+then
+    uci:commit(envJson.param_role_name)
 end
