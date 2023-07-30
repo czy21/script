@@ -6,9 +6,9 @@ if [ "install" == "${param_command}" ];then
 fi
 
 if [ "backup" == "${param_command}" ];then
-  find /etc/ -type f -name 'adguardhome.yaml' -exec sh -c 'f={}; cp $f {{ param_role_temp_path }}/$(basename $f).bak' \;
+  find /etc/ -type f -name 'adguardhome.yaml' -exec sh -c 'f={}; cp $f {{ param_role_bak_path }}/$(basename $f)' \;
 fi
 
 if [ "restore" == "${param_command}" ];then
-  find {{ param_role_temp_path }} -type f -name 'adguardhome.yaml.bak' -exec sh -c 'f={}; cp $f /etc/$(basename $f .bak)' \;
+  find {{ param_role_bak_path }} -type f -name 'adguardhome.yaml' -exec sh -c 'f={}; cp $f /etc/$(basename $f )' \;
 fi
