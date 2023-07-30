@@ -298,6 +298,7 @@ class Installer:
                 role_title = "%s.%s" % (role_key, role_name)
                 role_temp_path = role_path.joinpath("___temp")
                 role_temp_path.mkdir(parents=True, exist_ok=True)
+                role_bak_path = role_temp_path.joinpath("bak")
                 role_build_path = role_path.joinpath("build")
                 role_build_path.mkdir(parents=True, exist_ok=True)
                 role_output_path = role_build_path.joinpath("output")
@@ -310,8 +311,11 @@ class Installer:
                     "param_role_title": role_title,
                     "param_role_build_path": role_build_path.as_posix(),
                     "param_role_output_path": role_output_path.as_posix(),
-                    "param_role_temp_path": role_temp_path.as_posix()
+                    "param_role_temp_path": role_temp_path.as_posix(),
+                    "param_role_bak_path": role_bak_path.as_posix()
                 }
+                if args.command == Command.backup.value:
+                    role_bak_path.mkdir(exist_ok=True)
                 # process env
                 if role_env_file and role_env_file.exists():
                     role_env |= yaml_util.load(template_util.Template(file_util.read_text(role_env_file)).render(**role_env))
@@ -342,7 +346,6 @@ class Installer:
                             _cmds.append("sh {0} {1}".format(target_file.as_posix(), " ".join(args.build_args)))
                     if args.target == "doc":
                         logger.info("build doc")
-
                 _cmds.extend(role_func(root_path=self.root_path,
                                        role_title=role_title,
                                        role_name=role_name,
