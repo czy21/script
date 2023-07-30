@@ -23,6 +23,13 @@ end
 
 local config_json = envJson.param_role_temp_path .. "/config.json"
 local obj = {}
+
+function set_option_value(section, value)
+    for ok, ov in pairs(value) do
+        uci:set(envJson.param_role_name, section, ok, ov)
+    end
+end
+
 for _, uc_v in ipairs(envJson.param_uci_config) do
     if not uc_v.type
     then
@@ -65,16 +72,12 @@ for _, uc_v in ipairs(envJson.param_uci_config) do
             if uc_v.section and string.match(obj_k, uc_v.section)
             then
                 uci:section(envJson.param_role_name, uc_v.type, obj_k, {})
-                for ok, ov in pairs(obj_v) do
-                    uci:set(envJson.param_role_name, obj_k, ok, ov)
-                end
+                set_option_value(obj_k, obj_v)
             elseif obj_k == uc_v.type
             then
                 for _, tv in ipairs(obj_v) do
                     section = uci:add(envJson.param_role_name, uc_v.type)
-                    for ok, ov in pairs(tv) do
-                        uci:set(envJson.param_role_name, section, ok, ov)
-                    end
+                    set_option_value(section, tv)
                 end
             end
         end
