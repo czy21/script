@@ -20,7 +20,7 @@ function upload_exec_py() {
   local utility_path=$(realpath ${src_path}/../../utility)
   local del_cmd="rm -rf \$HOME/${dst_name}"
   local ssh_opt="-o StrictHostKeyChecking=no"
-  local ssh_cmd="ssh ${ssh_opt} ${host}"
+  local ssh_cmd="ssh -q ${ssh_opt} ${host}"
   local src_path_parent_path=$(realpath ${src_path}/../)
   local src_path_parent_files=$(cd ${src_path_parent_path};find . -maxdepth 1 -name "env*.yaml" -o -name "share.py" -o -name "requirements.txt")
 
