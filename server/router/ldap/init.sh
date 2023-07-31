@@ -27,8 +27,9 @@ if [ "backup" == "${param_command}" ];then
 fi
 
 if [ "restore" == "${param_command}" ];then
-  rm -rf {{ param_ldap_data }}/* ${ldap_etc_path}/slapd.d/*
   /etc/init.d/ldap stop
+  sed -i -e 's|^\s*mkdir|#\0|' -e 's|"ldap://localhost/.*"|"ldap:/// ldaps:/// ldapi:///"|' /etc/init.d/ldap
+  rm -rf {{ param_ldap_data }}/* ${ldap_etc_path}/slapd.d/*
   slapadd -F ${ldap_etc_path}/slapd.d -b cn=config -l ${config_ldif_bak_file}
   slapadd -F ${ldap_etc_path}/slapd.d -b dc="{{ param_ldap_domain }}",dc=com -l ${domain_ldif_bak_file}
   /etc/init.d/ldap start
