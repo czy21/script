@@ -30,33 +30,36 @@ function set_option_value(section, value)
     end
 end
 
-for _, uc_v in ipairs(envJson.param_uci_config) do
-    if not uc_v.type
+for _, uv in ipairs(envJson.param_uci_config) do
+    if not uv.type
     then
         print("type is empty")
         break
     end
     if command == "backup"
     then
-        uci:foreach(envJson.param_role_name, uc_v.type, function(s)
-            if uc_v.section
-            then
-                if s[".name"] == uc_v.section or string.match(s[".name"], uc_v.section)
+        for ak, av in pairs(uci:get_all(envJson.param_role_name)) do
+            at = av[".type"]
+            if at == uv.type or string.match(at, uv.type) then
+                if uv.section
                 then
-                    obj[s[".name"]] = s
+                    if ak == uv.section or string.match(ak, uv.section)
+                    then
+                        obj[ak] = av
+                    end
+                else
+                    obj[at] = not obj[at] and {} or obj[at]
+                    if not av["name"] or av[".name"] ~= av["name"] then
+                        table.insert(obj[at], av)
+                    end
                 end
-            else
-                obj[uc_v.type] = not obj[uc_v.type] and {} or obj[uc_v.type]
-                if not s["name"] or s[".name"] ~= s["name"] then
-                    table.insert(obj[uc_v.type], s)
+                for k in pairs(av) do
+                    if string.match(k, "^%.") then
+                        av[k] = nil
+                    end
                 end
             end
-            for k in pairs(s) do
-                if string.match(k, "^%.") then
-                    s[k] = nil
-                end
-            end
-        end)
+        end
     elseif command == "restore"
     then
         config_json_content = fs.readfile(config_json)
@@ -65,22 +68,30 @@ for _, uc_v in ipairs(envJson.param_uci_config) do
             return
         end
         obj = json.parse(config_json_content)
-        uci:delete_all(envJson.param_role_name, uc_v.type, function(s)
-            if uc_v.section
-            then
-                return s[".name"] == uc_v.section or string.match(s[".name"], uc_v.section)
+        for ak, av in pairs(uci:get_all(envJson.param_role_name)) do
+            at = av[".type"]
+            if at == uv.type or string.match(at, uv.type) then
+                if uv.section
+                then
+                    if ak == uv.section or string.match(ak, uv.section) then
+                        uci:delete(envJson.param_role_name, ak)
+                    end
+                else
+                    if not av["name"] or av[".name"] ~= av["name"] then
+                        uci:delete(envJson.param_role_name, ak)
+                    end
+                end
             end
-            return not s["name"] or s[".name"] ~= s["name"]
-        end)
-        for obj_k, obj_v in pairs(obj) do
-            if uc_v.section and (obj_k == uc_v.section or string.match(obj_k, uc_v.section))
+        end
+        for ck, cv in pairs(obj) do
+            if uv.section and (ck == uv.section or string.match(ck, uv.section))
             then
-                uci:section(envJson.param_role_name, uc_v.type, obj_k, {})
-                set_option_value(obj_k, obj_v)
-            elseif obj_k == uc_v.type and not uc_v.section
+                uci:section(envJson.param_role_name, uv.type, ck, {})
+                set_option_value(ck, cv)
+            elseif not uv.section and (ck == uv.type or string.match(ck,uv.type))
             then
-                for _, tv in ipairs(obj_v) do
-                    section = uci:add(envJson.param_role_name, uc_v.type)
+                for _, tv in ipairs(cv) do
+                    section = uci:add(envJson.param_role_name, ck)
                     set_option_value(section, tv)
                 end
             end
