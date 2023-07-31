@@ -1,7 +1,7 @@
 #!/bin/bash
 
 param_command="{{ param_command }}"
-etc_app_path="{{ param_etc_app_path }}"
+etc_app_path="{{ param_app_path }}"
 if [ "install" == "${param_command}" ];then
   echo ''
 fi
