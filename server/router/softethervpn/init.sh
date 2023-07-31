@@ -7,7 +7,7 @@ if [ "install" == "${param_command}" ];then
 fi
 
 if [ "backup" == "${param_command}" ];then
-  find ${etc_app_path}/ -maxdepth 1 ! -path ${etc_app_path}/ ! -name "sync.sh" -exec cp -r {} {{ param_role_bak_path }} \;
+  find ${etc_app_path}/ -maxdepth 1 ! -path ${etc_app_path}/ -name "vpn_server.config" -exec cp -r {} {{ param_role_bak_path }} \;
 fi
 
 if [ "restore" == "${param_command}" ];then
