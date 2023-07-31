@@ -41,16 +41,15 @@ for _, uc_v in ipairs(envJson.param_uci_config) do
         uci:foreach(envJson.param_role_name, uc_v.type, function(s)
             if uc_v.section
             then
-                if string.match(s[".name"], uc_v.section)
+                if s[".name"] == uc_v.section or string.match(s[".name"], uc_v.section)
                 then
                     obj[s[".name"]] = s
                 end
             else
-                if not obj[uc_v.type]
-                then
-                    obj[uc_v.type] = {}
+                obj[uc_v.type] = not obj[uc_v.type] and {} or obj[uc_v.type]
+                if not s["name"] or s[".name"] ~= s["name"] then
+                    table.insert(obj[uc_v.type], s)
                 end
-                table.insert(obj[uc_v.type], s)
             end
             for k in pairs(s) do
                 if string.match(k, "^%.") then
@@ -60,20 +59,25 @@ for _, uc_v in ipairs(envJson.param_uci_config) do
         end)
     elseif command == "restore"
     then
+        config_json_content = fs.readfile(config_json)
+        if config_json_content == nil then
+            print(config_json .. " not exist")
+            return
+        end
+        obj = json.parse(config_json_content)
         uci:delete_all(envJson.param_role_name, uc_v.type, function(s)
             if uc_v.section
             then
-                return string.match(s[".name"], uc_v.section)
+                return s[".name"] == uc_v.section or string.match(s[".name"], uc_v.section)
             end
-            return true
+            return not s["name"] or s[".name"] ~= s["name"]
         end)
-        obj = json.parse(fs.readfile(config_json))
         for obj_k, obj_v in pairs(obj) do
-            if uc_v.section and string.match(obj_k, uc_v.section)
+            if uc_v.section and (obj_k == uc_v.section or string.match(obj_k, uc_v.section))
             then
                 uci:section(envJson.param_role_name, uc_v.type, obj_k, {})
                 set_option_value(obj_k, obj_v)
-            elseif obj_k == uc_v.type
+            elseif obj_k == uc_v.type and not uc_v.section
             then
                 for _, tv in ipairs(obj_v) do
                     section = uci:add(envJson.param_role_name, uc_v.type)
@@ -85,7 +89,7 @@ for _, uc_v in ipairs(envJson.param_uci_config) do
 end
 if command == "backup"
 then
-    fs.writefile(config_json, json.stringify(obj, true))
+    fs.writefile(config_json, next(obj) == nil and "{}" or json.stringify(obj, true))
 end
 
 if command == "restore"
