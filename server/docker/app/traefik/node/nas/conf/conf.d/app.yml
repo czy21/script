@@ -103,7 +103,7 @@ http:
       service: wordpress@docker
     blog:
       rule: Host(`blog.czy21-internal.com`)
-      service: wordpress@docker
+      service: blog@docker
 #    pulsar-proxy:
 #      rule: Host(`pulsar-proxy.czy21-internal.com`)
 #      service: pulsar-proxy@docker
