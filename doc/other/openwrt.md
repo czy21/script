@@ -3,6 +3,7 @@
 sudo apt install -y build-essential clang flex g++ gawk gcc-multilib gettext git libncurses5-dev libssl-dev python3-distutils rsync unzip zlib1g-dev file wget qemu-utils
 echo "
 src-git helloworld https://github.com/fw876/helloworld
+src-git openclash https://github.com/vernesong/OpenClash
 src-git plugin http://gitea.czy21-internal.com/czyhome/openwrt-plugin.git
 #src-link plugin /volume2/openwrt-plugin
 " >> feeds.conf.default
