@@ -98,6 +98,9 @@ http:
     dbeaver:
       rule: Host(`dbeaver.czy21-internal.com`)
       service: dbeaver@docker
+    ghost:
+      rule: Host(`ghost.czy21-internal.com`)
+      service: ghost@docker
     wordpress:
       rule: Host(`blog.czy21.com`)
       service: wordpress@docker
