@@ -1,0 +1,28 @@
+version: "3.9"
+
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 8090
+
+services:
+  halo:
+    image: halohub/halo:2.8
+    container_name: halo
+    hostname: halo
+    labels:
+      <<: *traefik-label
+    privileged: true
+    user: root
+    expose:
+      - "8090"
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/root/.halo2/
+    command:
+      - --spring.sql.init.platform=mysql
+      - --spring.r2dbc.url=r2dbc:pool:mysql://{{ param_db_mysql_host }}:{{ param_db_mysql_port }}/halo
+      - --spring.r2dbc.username={{ param_db_mysql_username }}
+      - --spring.r2dbc.password={{ param_db_mysql_password }}
+      - --halo.security.initializer.superadminusername={{ param_manage_username }}
+      - --halo.security.initializer.superadminpassword={{ param_manage_password }}
+    restart: always
