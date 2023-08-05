@@ -104,6 +104,9 @@ http:
     drupal:
       rule: Host(`drupal.czy21-internal.com`)
       service: drupal@docker
+    mix:
+      rule: Host(`mix.czy21-internal.com`)
+      service: mix@docker
     ghost:
       rule: Host(`ghost.czy21-internal.com`)
       service: ghost@docker
