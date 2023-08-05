@@ -98,15 +98,12 @@ http:
     dbeaver:
       rule: Host(`dbeaver.czy21-internal.com`)
       service: dbeaver@docker
-    wordpress:
-      rule: Host(`blog.czy21.com`)
-      service: wordpress@docker
     joomla:
       rule: Host(`joomla.czy21-internal.com`)
       service: joomla@docker
-    drupal:
-      rule: Host(`drupal.czy21-internal.com`)
-      service: drupal@docker
+    wordpress:
+      rule: Host(`blog.czy21.com`)
+      service: wordpress@docker
 #    pulsar-proxy:
 #      rule: Host(`pulsar-proxy.czy21-internal.com`)
 #      service: pulsar-proxy@docker
