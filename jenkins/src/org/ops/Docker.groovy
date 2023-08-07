@@ -26,7 +26,7 @@ def deploy() {
     if (deployMap.containsKey(env.param_code_type)) {
         deployMap.get(env.param_code_type).call()
     }
-    sh 'echo ${env.param_docker_compose_file}'
+    sh "echo ${env.param_docker_compose_file}"
     if (fileExists("${env.param_docker_compose_file}")) {
        sh "cp ${env.param_docker_compose_file} .jenkins/docker-compose.yaml"
     }
