@@ -31,7 +31,7 @@ def deploy() {
        sh "cp ${env.param_docker_compose_file} .jenkins/docker-compose.yaml"
     }
     docker_host = "tcp://${env.param_docker_deploy_host}:2375"
-    param_file = PathUtils.ofPath("${env.WORKSPACE}", ".jenkins/param.yaml")
+    param_file = PathUtils.ofPath("${env.WORKSPACE}", ".jenkins/param.conf")
     docker_compose_file = PathUtils.ofPath("${env.WORKSPACE}", ".jenkins/docker-compose.yaml")
     docker_deploy_cmd = "DOCKER_HOST=${docker_host} sudo docker-compose --project-name ${env.param_release_name} --file ${docker_compose_file} --env-file ${param_file} up --detach"
     sh "${docker_deploy_cmd} && sudo ${env.param_docker_cli} image prune --force"
