@@ -26,6 +26,7 @@ def call() {
             stage('clone') {
                 steps {
                     script {
+                        sh 'env'
                         checkout([$class           : 'GitSCM',
                                   branches         : [
                                           [name: "${params.param_git_branch}"]
