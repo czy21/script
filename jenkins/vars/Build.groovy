@@ -26,7 +26,9 @@ def call() {
             stage('clone') {
                 steps {
                     script {
-                        sh 'env'
+                        if (StringUtils.isNotEmpty("${env.param_git_branch}")) {
+                           params.param_git_branch = env.param_git_branch
+                        }
                         checkout([$class           : 'GitSCM',
                                   branches         : [
                                           [name: "${params.param_git_branch}"]
