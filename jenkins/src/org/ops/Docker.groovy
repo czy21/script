@@ -23,8 +23,14 @@ def deploy() {
                 configFileProvider([configFile(fileId: "docker-compose-web-v1.yaml", targetLocation: '.jenkins/docker-compose.yaml')]) {}
             }
     ]
+    if (deployMap.containsKey(env.param_code_type)) {
+        deployMap.get(env.param_code_type).call()
+    }
+    project_docker_compose_file_exist = fileExists '${env.param_docker_compose_file}'
+    if (project_docker_compose_file_exist) {
+       sh 'cp ${env.param_docker_compose_file} .jenkins/docker-compose.yaml'
+    }
     docker_host = "tcp://${env.param_docker_deploy_host}:2375"
-    deployMap.get(env.param_code_type).call()
     param_file = PathUtils.ofPath("${env.WORKSPACE}", ".jenkins/param.yaml")
     docker_compose_file = PathUtils.ofPath("${env.WORKSPACE}", ".jenkins/docker-compose.yaml")
     docker_deploy_cmd = "DOCKER_HOST=${docker_host} sudo docker-compose --project-name ${env.param_release_name} --file ${docker_compose_file} --env-file ${param_file} up --detach"
