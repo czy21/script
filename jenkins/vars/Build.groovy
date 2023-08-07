@@ -26,12 +26,9 @@ def call() {
             stage('clone') {
                 steps {
                     script {
-                        if (StringUtils.isNotEmpty("${env.param_git_branch}")) {
-                           params.param_git_branch = env.param_git_branch
-                        }
                         checkout([$class           : 'GitSCM',
                                   branches         : [
-                                          [name: "${params.param_git_branch}"]
+                                          [name: StringUtils.defaultIfEmpty(${env.param_git_branch},${params.param_git_branch})]
                                   ],
                                   extensions       : [
                                           [$class: 'SubmoduleOption', disableSubmodules: false, parentCredentials: true, recursiveSubmodules: true, reference: '', trackingSubmodules: false]
