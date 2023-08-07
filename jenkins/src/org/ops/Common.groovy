@@ -23,7 +23,6 @@ def writeParamToYaml() {
         }
     }
     writeYaml file: '.jenkins/param.yaml', data: CollectionUtils.sortMapByKey(param), charset: 'UTF-8', overwrite: true
-    writeFile file: '.jenkins/param.conf',text: param.collect{t->t.key+"="+t.value}.join('\n')
 }
 
 return this
