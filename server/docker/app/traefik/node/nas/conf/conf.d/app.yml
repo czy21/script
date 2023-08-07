@@ -104,9 +104,6 @@ http:
     ghost:
       rule: Host(`ghost.czy21-internal.com`)
       service: ghost@docker
-    wordpress:
-      rule: Host(`blog.czy21.com`)
-      service: wordpress@docker
 #    joomla:
 #      rule: Host(`blog.czy21.com`)
 #      service: joomla@docker
