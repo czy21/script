@@ -17,9 +17,10 @@ def call() {
             param_global_env_file_id = "${env.param_global_env_file_id}"
             param_code_type = "${env.param_code_type}"
             param_sonarqube_server = StringUtils.defaultIfEmpty("${env.param_sonarqube_server}", "sonarqube")
+            param_default_branch = StringUtils.defaultIfEmpty("${env.param_default_branch}", "master")
         }
         parameters {
-            gitParameter branchFilter: 'origin/(.*)',name: 'param_git_branch',type: 'PT_BRANCH',defaultValue: "StringUtils.defaultIfEmpty(\"${env.param_branch}\", \"master\")",useRepository: "${env.param_git_repository_url}"
+            gitParameter branchFilter: 'origin/(.*)',name: 'param_git_branch',type: 'PT_BRANCH',defaultValue: "${env.param_default_branch}",useRepository: "${env.param_git_repository_url}"
             booleanParam defaultValue: false, name: 'param_code_analysis'
         }
         stages {
