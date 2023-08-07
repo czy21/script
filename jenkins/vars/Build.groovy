@@ -80,6 +80,16 @@ def call() {
                     }
                 }
             }
+            stage('dockerDeploy') {
+                when {
+                    expression { env.param_docker_deploy_host != "" }
+                }
+                steps {
+                    script {
+                        new Docker().deploy()
+                    }
+                }
+            }
         }
     }
 }
