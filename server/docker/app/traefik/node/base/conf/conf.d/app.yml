@@ -12,3 +12,6 @@ http:
     script:
       rule: Host(`script.czy21-internal.com`)
       service: script@docker
+    blog:
+      rule: Host(`blog.czy21-internal.com`)
+      service: blog@docker
