@@ -27,7 +27,7 @@ def deploy() {
         deployMap.get(env.param_code_type).call()
     }
     sh 'echo ${env.param_docker_compose_file}'
-    if (fileExists("${env.param_docker_compose_file}") {
+    if (fileExists("${env.param_docker_compose_file}")) {
        sh "cp ${env.param_docker_compose_file} .jenkins/docker-compose.yaml"
     }
     docker_host = "tcp://${env.param_docker_deploy_host}:2375"
