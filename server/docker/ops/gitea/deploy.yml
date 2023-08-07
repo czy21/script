@@ -34,4 +34,5 @@ services:
       GITEA__repository__DISABLED_REPO_UNITS: repo.issues, repo.ext_issues, repo.pulls, repo.wiki, repo.ext_wiki
       GITEA__attachment__MAX_SIZE: 1024
       GITEA__attachment__MAX_FILES: 20
+      GITEA__webhook__ALLOWED_HOST_LIST: "*"
     restart: always

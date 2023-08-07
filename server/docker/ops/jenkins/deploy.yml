@@ -23,7 +23,7 @@ services:
     environment:
       JENKINS_UC: https://mirrors.aliyun.com/jenkins/updates/update-center.json
       JENKINS_UC_EXPERIMENTAL: https://mirrors.aliyun.com/jenkins/updates/experimental/update-center.json
-      # JAVA_OPS: "-Xms1024m -Xmx2048m -XX:PermSize=256m -XX:MaxPermSize=512m"
+      #JAVA_OPS: "-Xms1024m -Xmx2048m -XX:PermSize=256m -XX:MaxPermSize=512m"
     deploy:
       resources:
         limits:
