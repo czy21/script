@@ -19,7 +19,7 @@ def call() {
             param_sonarqube_server = StringUtils.defaultIfEmpty("${env.param_sonarqube_server}", "sonarqube")
         }
         parameters {
-            gitParameter branchFilter: 'origin/(.*)',name: 'param_git_branch',type: 'PT_BRANCH',defaultValue: StringUtils.defaultIfEmpty("${env.param_branch}", "master"),useRepository: "${env.param_git_repository_url}"
+            gitParameter branchFilter: 'origin/(.*)',name: 'param_git_branch',type: 'PT_BRANCH',defaultValue: "StringUtils.defaultIfEmpty(\"${env.param_branch}\", \"master\")",useRepository: "${env.param_git_repository_url}"
             booleanParam defaultValue: false, name: 'param_code_analysis'
         }
         stages {
