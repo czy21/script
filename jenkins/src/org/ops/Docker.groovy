@@ -26,10 +26,6 @@ def deploy() {
     if (deployMap.containsKey(env.param_code_type)) {
         deployMap.get(env.param_code_type).call()
     }
-    sh "echo ${env.param_docker_compose_file}"
-    if (fileExists("${env.param_docker_compose_file}")) {
-       sh "cp ${env.param_docker_compose_file} .jenkins/docker-compose.yaml"
-    }
     docker_host = "tcp://${env.param_docker_deploy_host}:2375"
     param_file = PathUtils.ofPath("${env.WORKSPACE}", ".jenkins/param.yaml")
     docker_compose_file = PathUtils.ofPath("${env.WORKSPACE}", ".jenkins/docker-compose.yaml")
