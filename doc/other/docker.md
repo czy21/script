@@ -14,3 +14,8 @@ ip route add <target container ip> dev macvlan2
 # 删除macvlan接口
 ip link delete macvlan2
 ```
+```shell
+# omv allow 2375
+vim /etc/systemd/system/multi-user.target.wants/docker.service
+ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock -H tcp://0.0.0.0:2375
+```
