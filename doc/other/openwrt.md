@@ -1,32 +1,6 @@
-```shell
-# ubuntu 22.04
-sudo apt install -y build-essential clang flex g++ gawk gcc-multilib gettext git libncurses5-dev libssl-dev python3-distutils rsync unzip zlib1g-dev file wget qemu-utils
-echo "
-src-git helloworld https://github.com/fw876/helloworld
-src-git openclash https://github.com/vernesong/OpenClash
-src-git plugin http://gitea.czy21-internal.com/czyhome/openwrt-plugin.git
-#src-link plugin /volume2/openwrt-plugin
-" >> feeds.conf.default
-
-rm -rf ./tmp && rm -rf .config
-./scripts/feeds update -a && ./scripts/feeds install -a
-pkgName=plugin && ./scripts/feeds update ${pkgName} && ./scripts/feeds install -a -p ${pkgName}
-make menuconfig
-make -j8 download V=s
-# friendlywrt
-PKG_HASH=skip nohup make -j1 V=s &
-# single thread
-nohup make -j1 V=s &
-# multi thread
-nohup make -j$(($(nproc) + 1)) V=s &
-```
 ```bash
 #build guide: https://openwrt.org/docs/guide-developer/toolchain/use-buildsystem
 sed -i 's|https://git.openwrt.org/\(.*\)/|http://gitea.czy21-internal.com/openwrt/|g' feeds.conf.default
-# select luci-app-bundle-server
-
-# helloworld
-# ignore Base System -> dnsmasq
 
 # convert
 ssh ubun \
@@ -34,15 +8,7 @@ ssh ubun \
 projectRoot=openwrt/bin/targets/x86/64/openwrt-x86-64-generic-squashfs-combined-efi;
 gunzip --keep --force ${projectRoot}.img.gz;
 qemu-img convert -f raw -O vmdk ${projectRoot}.img ${projectRoot}.vmdk
-' && \
-scp ubun:openwrt/bin/targets/x86/64/openwrt-x86-64-generic-squashfs-combined-efi.vmdk .
-
-# set vmdk size
-image_name=openwrt-x86-64-generic-squashfs-combined-efi; \
-esxi_image_dir=/vmfs/volumes/datastore1/image; \
-scp ${image_name}.vmdk esxi1:${esxi_image_dir}/ && \
-ssh esxi1 "vmkfstools -X 500M ${esxi_image_dir}/${image_name}.vmdk" && \
-scp esxi1:${esxi_image_dir}/${image_name}.vmdk . && scp esxi1:${esxi_image_dir}/${image_name}-s001.vmdk .
+'
 
 # repair
 vmkfstools -x check <>.vmdk
