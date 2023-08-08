@@ -10,8 +10,10 @@ def build() {
         docker_config_dir = PathUtils.ofPath("${env.WORKSPACE}", ".jenkins/docker/")
         docker_image_tag = "${env.param_release_image}:${env.param_release_version}"
         docker_build_cmd = "sudo ${param_docker_cli} build --tag ${docker_image_tag} --file ${env.param_docker_file} ${env.param_docker_context} --pull"
-        if (env.param_docker_build_args) {
-            env.param_docker_build_args.each { t -> docker_build_cmd += " --build-arg $t" }
+        sh "echo ${env.param_docker_build_args1}"
+        env.param_docker_build_args1.each { t -> print(t) }
+        if (StringUtils.isNotEmpty(env.param_docker_build_args)) {
+            env.param_docker_build_args.split(",").each { t -> docker_build_cmd += " --build-arg $t" }
         }
         docker_push_cmd = "sudo ${param_docker_cli} --config ${docker_config_dir} push ${docker_image_tag}"
         sh "${docker_build_cmd} && ${docker_push_cmd}"
