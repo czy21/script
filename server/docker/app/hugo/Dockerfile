@@ -1,4 +1,4 @@
-FROM ubuntu:jammy
+FROM node:18.17.0-bullseye
 ENV HUGO_VERSION=0.116.1
 WORKDIR /app
 RUN sed -i.bak "s,\(ca.archive\|archive\|security\).ubuntu.com,{{ param_mirror_apt }},g" /etc/apt/sources.list
