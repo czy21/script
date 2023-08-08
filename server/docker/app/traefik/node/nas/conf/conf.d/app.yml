@@ -98,12 +98,6 @@ http:
     dbeaver:
       rule: Host(`dbeaver.czy21-internal.com`)
       service: dbeaver@docker
-    halo:
-      rule: Host(`halo.czy21-internal.com`)
-      service: halo@docker
-    ghost:
-      rule: Host(`ghost.czy21-internal.com`)
-      service: ghost@docker
 #    joomla:
 #      rule: Host(`blog.czy21.com`)
 #      service: joomla@docker
