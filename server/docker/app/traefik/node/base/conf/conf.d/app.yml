@@ -9,9 +9,9 @@ http:
     redis-exporter:
       rule: Host(`redis-exporter-{{ param_cluster_name }}.czy21-internal.com`)
       service: redis-exporter@docker
-    script:
-      rule: Host(`script.czy21-internal.com`)
+    doc:
+      rule: Host(`doc.czy21.com`)
       service: script@docker
     blog:
-      rule: Host(`blog.czy21-internal.com`)
+      rule: Host(`blog.czy21.com`)
       service: blog@docker
