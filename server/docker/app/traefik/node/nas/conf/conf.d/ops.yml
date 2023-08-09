@@ -1,0 +1,38 @@
+http:
+  routers:
+    grafana:
+      rule: Host(`grafana.czy21-internal.com`)
+      service: grafana@docker
+    consul:
+      rule: Host(`consul.czy21-internal.com`)
+      service: consul@docker
+    gitea:
+      rule: Host(`gitea.czy21-internal.com`)
+      service: gitea@docker
+    gradle-build-cache:
+      rule: Host(`gbc.czy21-internal.com`)
+      service: gradle-build-cache@docker
+    jenkins:
+      rule: Host(`jenkins.czy21-internal.com`)
+      service: jenkins@docker
+    gocd:
+      rule: Host(`gocd.czy21-internal.com`)
+      service: gocd@docker
+    jms:
+      rule: Host(`jms.czy21-internal.com`)
+      service: jms@docker
+    nacos:
+      rule: Host(`nacos.czy21-internal.com`)
+      service: nacos@docker
+    portainer:
+      rule: Host(`portainer.czy21-internal.com`)
+      service: portainer@docker
+    yearning:
+      rule: Host(`yearning.czy21-internal.com`)
+      service: yearning@docker
+    sonarqube:
+      rule: Host(`sonarqube.czy21-internal.com`)
+      service: sonarqube@docker
+    prometheus:
+      rule: Host(`prom-{{ param_cluster_name }}.czy21-internal.com`)
+      service: prometheus@docker

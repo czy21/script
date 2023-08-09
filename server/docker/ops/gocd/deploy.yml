@@ -1,0 +1,23 @@
+version: "3.9"
+
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 8153
+
+services:
+
+  gocd:
+    image: gocd/gocd-server:v23.3.0
+    container_name: gocd
+    hostname: gocd
+    privileged: true
+    user: root
+    labels:
+      <<: *traefik-label
+    expose:
+      - "8153"
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/home/go/
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/db.properties:/godata/config/db.properties
+    restart: always
