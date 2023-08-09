@@ -1,103 +1,20 @@
 http:
   routers:
-    nexus:
-      rule: Host(`nexus.czy21-internal.com`)
-      service: nexus@docker
-    nexus-repository:
-      rule: Host(`nexus.czy21-internal.com`) && PathPrefix(`/repository`)
-      service: nexus@docker
-      middlewares:
-        - raw-proxy
-        - apt-proxy
-        - yum-proxy
-    registry:
-      rule: Host(`registry.czy21-internal.com`)
-      service: nexus@docker
-      middlewares:
-        - registry-hosted
-    registry-proxy:
-      rule: Host(`registry-proxy.czy21-internal.com`)
-      service: nexus@docker
-      middlewares:
-        - registry-proxy-group
-    grafana:
-      rule: Host(`grafana.czy21-internal.com`)
-      service: grafana@docker
-    ndisk:
-      rule: Host(`ndisk.czy21-internal.com`)
-      service: ndisk@docker
     flink-jmr:
       rule: Host(`flink-jmr.czy21-internal.com`)
       service: flink-jmr@docker
     flink-his:
       rule: Host(`flink-his.czy21-internal.com`)
       service: flink-his@docker
-    es:
-      rule: Host(`es.czy21-internal.com`)
-      service: es-1@docker
-    kb:
-      rule: Host(`kb.czy21-internal.com`)
-      service: es-1-kb@docker
-    influxdb:
-      rule: Host(`influxdb.czy21-internal.com`)
-      service: influxdb@docker
-    kafka-eagle:
-      rule: Host(`ke.czy21-internal.com`)
-      service: kafka-eagle@docker
-    minio:
-      rule: Host(`minio.czy21-internal.com`)
-      service: minio-api@docker
-    minio-web:
-      rule: Host(`minio-web.czy21-internal.com`)
-      service: minio-web@docker
     adminer:
       rule: Host(`adminer.czy21-internal.com`)
       service: adminer@docker
-    consul:
-      rule: Host(`consul.czy21-internal.com`)
-      service: consul@docker
-    gitea:
-      rule: Host(`gitea.czy21-internal.com`)
-      service: gitea@docker
-    gradle-build-cache:
-      rule: Host(`gbc.czy21-internal.com`)
-      service: gradle-build-cache@docker
-    jenkins:
-      rule: Host(`jenkins.czy21-internal.com`)
-      service: jenkins@docker
-    jms:
-      rule: Host(`jms.czy21-internal.com`)
-      service: jms@docker
-    nacos:
-      rule: Host(`nacos.czy21-internal.com`)
-      service: nacos@docker
     phpldapadmin:
       rule: Host(`pla.czy21-internal.com`)
       service: phpldapadmin@docker
-    portainer:
-      rule: Host(`portainer.czy21-internal.com`)
-      service: portainer@docker
-    redis-exporter:
-      rule: Host(`redis-exporter-{{ param_cluster_name }}.czy21-internal.com`)
-      service: redis-exporter@docker
-    prometheus:
-      rule: Host(`prom-{{ param_cluster_name }}.czy21-internal.com`)
-      service: prometheus@docker
     youtrack:
       rule: Host(`youtrack.czy21-internal.com`)
       service: youtrack@docker
-    yearning:
-      rule: Host(`yearning.czy21-internal.com`)
-      service: yearning@docker
-    sonarqube:
-      rule: Host(`sonarqube.czy21-internal.com`)
-      service: sonarqube@docker
-    chat2db:
-      rule: Host(`chat2db.czy21-internal.com`)
-      service: chat2db@docker
-    dbeaver:
-      rule: Host(`dbeaver.czy21-internal.com`)
-      service: dbeaver@docker
 #    joomla:
 #      rule: Host(`blog.czy21.com`)
 #      service: joomla@docker
@@ -109,33 +26,3 @@ http:
 #    pulsar-manager:
 #      rule: Host(`pulsar-web.czy21-internal.com`)
 #      service: pulsar-manager@docker
-
-  middlewares:
-    force-https-header:
-      headers:
-        customRequestHeaders:
-          X-Forwarded-Proto: "https"
-    https-redirect:
-      redirectScheme:
-        scheme: https
-        permanent: true
-    raw-proxy:
-      replacePathRegex:
-        regex: "^/repository/raw-proxy/(.*)/"
-        replacement: "/repository/raw-proxy-${1}/"
-    apt-proxy:
-      replacePathRegex:
-        regex: "^/repository/apt-proxy/(.*)/"
-        replacement: "/repository/apt-proxy-${1}/"
-    yum-proxy:
-      replacePathRegex:
-        regex: "^/repository/yum-proxy/(.*)/"
-        replacement: "/repository/yum-proxy-$1/"
-    registry-hosted:
-      replacePathRegex:
-        regex: "^/"
-        replacement: "/repository/docker-hosted/"
-    registry-proxy-group:
-      replacePathRegex:
-        regex: "^/"
-        replacement: "/repository/docker-proxy-group/"
