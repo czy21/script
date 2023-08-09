@@ -83,7 +83,7 @@ def call() {
             }
             stage('dockerDeploy') {
                 when {
-                    expression { env.param_docker_deploy_host != "" }
+                    expression { StringUtils.isNotEmpty(env.param_docker_deploy_host) }
                 }
                 steps {
                     script {
