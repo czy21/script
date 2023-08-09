@@ -26,3 +26,5 @@
   gradle.config
   docker.config
   ```
+## Git Parameter
+branch filter: origin/(.*)
