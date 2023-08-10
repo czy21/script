@@ -89,12 +89,12 @@ def get_cmds(home_path: pathlib.Path,
             _cmds.append(docker_compose_cmd("down --remove-orphans"))
 
     if args.command == share.Command.build.value and args.target.startswith("Dockerfile"):
-        target_file = role_output_path.joinpath(args.target)
+        role_dockerfile = role_output_path.joinpath(args.target)
         registry_source_url = role_env['param_registry_url']
         registry_source_dir = role_env['param_registry_dir']
-        registry_full_url = path_util.join_path(registry_source_url, registry_source_dir)
-        if target_file.exists():
-            registry_source_tag = path_util.join_path(registry_full_url, role_name)
+        registry_source_url = path_util.join_path(registry_source_url, registry_source_dir)
+        if role_dockerfile.exists():
+            registry_source_tag = path_util.join_path(registry_source_url, role_name)
             if args.tag:
                 registry_source_tag = registry_source_tag + ":" + args.tag
             registry_targets = args.param.get("param_registry_targets").split(",") if args.param.get("param_registry_targets") else []
@@ -109,7 +109,7 @@ def get_cmds(home_path: pathlib.Path,
                 if args.tag:
                     target_registry_tag = target_registry_tag + ":" + args.tag
                 registry_target_tags.append(target_registry_tag)
-            _cmds.append("docker build --tag {0} --file {1} {2} --pull".format(registry_source_tag, target_file.as_posix(), role_output_path.as_posix()))
+            _cmds.append("docker build --tag {0} --file {1} {2} --pull".format(registry_source_tag, role_dockerfile.as_posix(), role_output_path.as_posix()))
             _cmds.extend(["docker tag {} {}".format(registry_source_tag, t) for t in registry_target_tags])
             if args.push:
                 _cmds.append("docker push {0}".format(registry_source_tag))
