@@ -1,0 +1,22 @@
+version: "3.9"
+
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.script.service: script
+  traefik.http.services.script.loadbalancer.server.port: 80
+
+services:
+  app:
+    image: ${param_registry_repo}/library/script:${param_release_version}
+    pull_policy: always
+    container_name: script
+    labels:
+      <<: *traefik-label
+    expose:
+      - "80"
+    restart: always
+    
+networks:
+  default:
+    name: local
+    external: true
