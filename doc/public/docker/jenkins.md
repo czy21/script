@@ -36,7 +36,7 @@ x-traefik-label: &traefik-label
 services:
 
   jenkins:
-    image: czy21/jenkins
+    image: docker.io/czy21/jenkins
     pull_policy: always
     container_name: jenkins
     privileged: true
