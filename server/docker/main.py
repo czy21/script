@@ -96,7 +96,7 @@ def get_cmds(home_path: pathlib.Path,
             registry_source_tag = path_util.join_path(registry_source_url, role_name)
             if args.tag:
                 registry_source_tag = registry_source_tag + ":" + args.tag
-            registry_targets = args.param.get("param_registry_targets", [])
+            registry_targets = args.param.get("param_registry_targets", []).split(",")
             registry_target_tags = []
             for t in registry_targets:
                 registry_target_url = role_env.get("param_registry_{0}_url".format(t))
