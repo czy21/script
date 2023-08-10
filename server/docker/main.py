@@ -1,17 +1,26 @@
 #!/usr/bin/env python3
 
 import argparse
+import filecmp
+import logging
+import os
 import pathlib
+import shutil
 
 import share
+import urllib3.util
 from utility import (
     collection as collection_util,
     path as path_util,
-    file as file_util
+    file as file_util,
+    regex as regex_util
 )
 
+logger = logging.getLogger()
 
-def get_cmds(role_title: str,
+
+def get_cmds(home_path: pathlib.Path,
+             role_title: str,
              role_name: str,
              role_path: pathlib.Path,
              role_output_path: pathlib.Path,
@@ -86,12 +95,29 @@ def get_cmds(role_title: str,
         target_file = role_output_path.joinpath(args.target)
         registry_url = role_env['param_registry_url']
         registry_dir = role_env['param_registry_dir']
+        if args.param["param_registry_target"] == "ghcr":
+            registry_url = role_env['param_registry_github_url']
+            registry_dir = role_env['param_registry_github_dir']
         if target_file.exists():
             image_tag = "/".join([
                 str(p).strip("/")
                 for p in [registry_url, registry_dir, (role_name + ":" + args.tag if args.tag else role_name)]
             ])
             _cmds.append("docker build --tag {0} --file {1} {2} --pull".format(image_tag, target_file.as_posix(), role_output_path.as_posix()))
+            if args.param["param_registry_target"] == "ghcr":
+                registry_github_repo: str = role_env["param_registry_github_repo"]
+                registry_github_repo_url: urllib3.util.Url = urllib3.util.parse_url(registry_github_repo)
+                registry_github_repo_name: str = pathlib.Path(registry_github_repo_url.path).name
+                registry_github_repo_dir: pathlib.Path = home_path.joinpath(registry_github_repo_name)
+                if not registry_github_repo_dir.exists():
+                    share.execute("git clone {0} {1}".format(registry_github_repo.replace("https://github.com", "git@github.com:"), registry_github_repo_dir))
+                registry_github_repo_role_dir = registry_github_repo_dir.joinpath(role_name)
+                registry_github_repo_role_dir.mkdir(exist_ok=True)
+                sync_is_change = file_util.sync(role_output_path,
+                                                lambda a: any(regex_util.match_rules(["Dockerfile*", "docker-entrypoint.sh"], a.as_posix()).values()),
+                                                registry_github_repo_role_dir)
+                if sync_is_change:
+                    _cmds.append("cd {0} && git add . && git commit -m \"# add or update {1} Dockerfile\" && git push && cd".format(registry_github_repo_role_dir.as_posix(), role_name))
             if args.push:
                 _cmds.append("docker push {0}".format(image_tag))
     return _cmds
