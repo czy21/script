@@ -2,7 +2,7 @@
 ## dockerfile
 - Dockerfile
 ```bash
-docker build --tag registry.czy21-public.com/library/frp --file Dockerfile . --pull
+docker build --tag docker.io/czy21/frp --file Dockerfile . --pull
 ```
 ```dockerfile
 FROM alpine:3.11

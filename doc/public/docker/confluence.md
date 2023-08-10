@@ -2,7 +2,7 @@
 ## dockerfile
 - Dockerfile
 ```bash
-docker build --tag registry.czy21-public.com/library/confluence --file Dockerfile . --pull
+docker build --tag docker.io/czy21/confluence --file Dockerfile . --pull
 ```
 ```dockerfile
 FROM cptactionhank/atlassian-confluence:latest
@@ -23,7 +23,7 @@ version: "3.9"
 
 services:
   confluence:
-    image: registry.czy21-public.com/library/confluence
+    image: docker.io/czy21/confluence
     container_name: confluence
     privileged: true
     user: root

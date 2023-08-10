@@ -2,7 +2,7 @@
 ## dockerfile
 - Dockerfile
 ```bash
-docker build --tag registry.czy21-public.com/library/kafka-eagle --file Dockerfile . --pull
+docker build --tag docker.io/czy21/kafka-eagle --file Dockerfile . --pull
 ```
 ```dockerfile
 FROM openjdk:11-jdk
@@ -154,7 +154,7 @@ x-traefik-label: &traefik-label
 
 services:
   kafka-eagle:
-    image: registry.czy21-public.com/library/kafka-eagle
+    image: docker.io/czy21/kafka-eagle
     pull_policy: always
     container_name: kafka-eagle
     labels:

@@ -2,7 +2,7 @@
 ## dockerfile
 - Dockerfile
 ```bash
-docker build --tag registry.czy21-public.com/library/nexus-pro --file Dockerfile . --pull
+docker build --tag docker.io/czy21/nexus-pro --file Dockerfile . --pull
 ```
 ```dockerfile
 FROM openjdk:8-jdk

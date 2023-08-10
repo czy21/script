@@ -2,7 +2,7 @@
 ## dockerfile
 - DockerfileBase
 ```bash
-docker build --tag registry.czy21-public.com/library/hadoop-base --file DockerfileBase . --pull
+docker build --tag docker.io/czy21/hadoop-base --file DockerfileBase . --pull
 ```
 ```dockerfile
 FROM openjdk:8-jdk
@@ -45,7 +45,7 @@ RUN su root bash -c 'cd;ssh-keygen -t rsa -f ~/.ssh/id_rsa; cat ~/.ssh/id_rsa.pu
 ```
 - Dockerfile
 ```bash
-docker build --tag registry.czy21-public.com/library/hadoop --file Dockerfile . --pull
+docker build --tag docker.io/czy21/hadoop --file Dockerfile . --pull
 ```
 ```dockerfile
 FROM registry.czy21-internal.com/library/hadoop-base
@@ -114,7 +114,7 @@ version: "3.9"
 
 services:
   hadoop-namenode:
-    image: 'registry.czy21-public.com/library/hadoop'
+    image: 'docker.io/czy21/hadoop'
     container_name: 'hadoop-namenode'
     hostname: 'hadoop-namenode'
     ports:
@@ -128,7 +128,7 @@ services:
       HADOOP_NODE_TYPE: namenode
   
   hadoop-datanode-1:
-    image: 'registry.czy21-public.com/library/hadoop'
+    image: 'docker.io/czy21/hadoop'
     container_name: 'hadoop-datanode-1'
     hostname: 'hadoop-datanode-1'
     volumes:
@@ -140,7 +140,7 @@ services:
       HADOOP_NODE_TYPE: datanode
   
   hadoop-datanode-2:
-    image: 'registry.czy21-public.com/library/hadoop'
+    image: 'docker.io/czy21/hadoop'
     container_name: 'hadoop-datanode-2'
     hostname: 'hadoop-datanode-2'
     volumes:

@@ -16,11 +16,12 @@ http {
     include       /etc/nginx/mime.types;
     default_type  application/octet-stream;
 
-    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
-                      '$status $body_bytes_sent "$http_referer" '
-                      '"$http_user_agent" "$http_x_forwarded_for"';
+    log_format  main  '$remote_addr $host $remote_user [$time_local] '
+                      '"$request" $status $body_bytes_sent '
+                      '"$http_referer" "$http_user_agent" "$http_x_forwarded_for" '
+                      '$request_time $upstream_response_time';
 
-    access_log  /dev/stdout;
+    access_log  /dev/stdout main;
 
     sendfile        on;
     #tcp_nopush     on;
@@ -86,6 +87,12 @@ services:
       - /volume5/storage/docker-data/nginx/conf/conf.d/:/etc/nginx/conf.d/
       - /volume5/storage/docker-data/nginx/conf/cert/:/etc/nginx/cert/
     restart: always
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: "docker.{{.Name}}"
+
 
   nginx-exporter:
     image: nginx/nginx-prometheus-exporter:0.11.0

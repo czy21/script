@@ -7,7 +7,7 @@ x-traefik-label: &traefik-label
 
 services:
   chat2db:
-    image: "{{ param_registry_url }}/library/chat2db"
+    image: "{{ param_registry_url }}/{{ param_registry_dir }}/chat2db"
     container_name: chat2db
     labels:
       <<: *traefik-label

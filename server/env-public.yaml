@@ -26,8 +26,8 @@ param_smb_kube_data: kube
 param_smb_kube_username: opsor
 param_smb_kube_password: *param_manage_password
 
-param_registry_url: registry.czy21-public.com
-param_registry_dir: library
+param_registry_url: docker.io
+param_registry_dir: czy21
 param_registry_proxy_url: registry-proxy.czy21-public.com
 
 param_helm_repo_name: nexus
