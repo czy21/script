@@ -34,11 +34,6 @@ entryPoints:
 metrics:
   prometheus:
     entryPoint: metrics
-
-#tracing:
-#  jaeger:
-#    samplingServerURL: http://jaeger-agent.czy21-internal.com:5778/sampling
-#    localAgentHostPort: jaeger-agent.czy21-internal.com:6831
 ```
 - /volume5/storage/docker-data/traefik/conf/conf.d/base.yml
 ```yaml
@@ -56,15 +51,9 @@ http:
     nginx-exporter:
       rule: Host(`nginx-exporter-.czy21-internal.com`)
       service: nginx-exporter@docker
-#  middlewares:
-#    https-redirect:
-#      redirectScheme:
-#        scheme: https
-#        permanent: true
-#tls:
-#  certificates:
-#    - certFile: /etc/traefik/cert/server.crt
-#      keyFile: /etc/traefik/cert/server.key
+    fluent-bit-log-metrics:
+      rule: Host(`fluent-bit--log-metrics.czy21-internal.com`)
+      service: fluent-bit-log-metrics@docker
 ```
 ## docker-compose
 ```bash
@@ -81,7 +70,7 @@ x-traefik-label: &traefik-label
 services:
 
   traefik:
-    image: traefik:v2.10.1
+    image: traefik:v2.10.4
     container_name: traefik
     labels:
       <<: *traefik-label

@@ -2,7 +2,7 @@
 ## dockerfile
 - Dockerfile
 ```bash
-docker build --tag registry.czy21-public.com/library/kafka --file Dockerfile . --pull
+docker build --tag docker.io/czy21/kafka --file Dockerfile . --pull
 ```
 ```dockerfile
 FROM openjdk:11-jdk
@@ -35,7 +35,7 @@ version: "3.9"
 
 services:
   kafka-1:
-    image: registry.czy21-public.com/library/kafka
+    image: docker.io/czy21/kafka
     pull_policy: always
     container_name: kafka-1
     privileged: true
@@ -57,7 +57,7 @@ services:
       KAFKA_SERVER_log.segment.bytes: 1073741824
     restart: always
   kafka-2:
-    image: registry.czy21-public.com/library/kafka
+    image: docker.io/czy21/kafka
     pull_policy: always
     container_name: kafka-2
     privileged: true

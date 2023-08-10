@@ -13,8 +13,9 @@ x-traefik-label: &traefik-label
 
 services:
   wordpress:
-    image: wordpress
+    image: wordpress:php8.0-apache
     container_name: wordpress
+    hostname: wordpress
     labels:
       <<: *traefik-label
     privileged: true
@@ -24,9 +25,9 @@ services:
     volumes:
       - /volume5/storage/docker-data/wordpress/data/:/var/www/html
     environment:
-      WORDPRESS_DB_HOST: 192.168.2.18
-      WORDPRESS_DB_USER: admin
-      WORDPRESS_DB_PASSWORD: ***REMOVED***
+      WORDPRESS_DB_HOST: "<ip>"
+      WORDPRESS_DB_USER: "<username>"
+      WORDPRESS_DB_PASSWORD: "<password>"
       WORDPRESS_DB_NAME: wordpress
     restart: always
 ```

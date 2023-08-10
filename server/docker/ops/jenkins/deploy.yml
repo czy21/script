@@ -8,7 +8,7 @@ x-traefik-label: &traefik-label
 services:
 
   jenkins:
-    image: {{ param_registry_url }}/library/jenkins
+    image: czy21/jenkins
     pull_policy: always
     container_name: jenkins
     privileged: true

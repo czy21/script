@@ -8,7 +8,7 @@ x-traefik-label: &traefik-label
 services:
 
   ndisk:
-    image: {{ param_registry_url }}/library/ndisk:latest
+    image: {{ param_registry_url }}/{{ param_registry_dir }}/ndisk:latest
     pull_policy: always
     container_name: ndisk
     labels:

@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   {{ param_role_name }}:
-    image: {{ param_registry_url }}/library/{{ param_role_name }}
+    image: {{ param_registry_url }}/{{ param_registry_dir }}/{{ param_role_name }}
     pull_policy: always
     container_name: {{ param_role_name }}
     hostname: {{ param_role_name }}

@@ -8,7 +8,7 @@ x-traefik-label: &traefik-label
 services:
 
   script:
-    image: {{ param_registry_url }}/library/script:master
+    image: {{ param_registry_url }}/{{ param_registry_dir }}/script:master
     pull_policy: always
     container_name: script
     labels:

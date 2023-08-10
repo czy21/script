@@ -35,8 +35,7 @@ def get_cmds(home_path: pathlib.Path,
     if param_role_target_path:
         target_app_path = pathlib.Path(param_role_target_path)
     role_node_path = role_output_path.joinpath("node")
-    role_node_target_path = next(filter(lambda a: a.is_dir and str(a.name) == role_node_name, role_node_path.glob("*")),
-                                 None) if role_node_path.exists() else None
+    role_node_target_path = next(filter(lambda a: a.is_dir and str(a.name) == role_node_name, role_node_path.glob("*")), None) if role_node_path.exists() else None
     role_node_target_deploy_file = None
     role_node_target_conf_path = None
     if role_node_target_path:
@@ -97,7 +96,7 @@ def get_cmds(home_path: pathlib.Path,
             registry_source_tag = path_util.join_path(registry_source_url, role_name)
             if args.tag:
                 registry_source_tag = registry_source_tag + ":" + args.tag
-            registry_targets = args.param.get("param_registry_targets").split(",") if args.param.get("param_registry_targets") else []
+            registry_targets = args.param.get("param_registry_targets", [])
             registry_target_tags = []
             for t in registry_targets:
                 registry_target_url = role_env.get("param_registry_{0}_url".format(t))

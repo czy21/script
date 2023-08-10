@@ -2,45 +2,50 @@
 ## conf
 - /volume5/storage/docker-data/jms/conf/nginx.conf
 ```text
-user nginx;
-worker_processes auto;
-error_log /var/log/nginx/error.log;
-pid /run/nginx.pid;
+user  nginx;
+worker_processes  auto;
 
-include /usr/share/nginx/modules/*.conf;
+error_log  /var/log/nginx/error.log notice;
+pid        /var/run/nginx.pid;
 
 events {
-    worker_connections 1024;
+    worker_connections  1024;
 }
 
 http {
+    include       /etc/nginx/mime.types;
+    default_type  application/octet-stream;
+
     log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
                       '$status $body_bytes_sent "$http_referer" '
-                      '"$http_user_agent" "$http_x_forwarded_for" "$upstream_addr"';
+                      '"$http_user_agent" "$http_x_forwarded_for"';
 
-    # access_log  /var/log/nginx/access.log  main;
-    access_log off;
+    access_log  /var/log/nginx/access.log  main;
+    proxy_cache_path /var/cache/nginx/proxy_cache levels=1:1:1 keys_zone=cache:10m max_size=2g;
 
-    sendfile            on;
-    tcp_nopush          on;
-    tcp_nodelay         on;
-    keepalive_timeout   65;
-    types_hash_max_size 2048;
+    sendfile        on;
+    #tcp_nopush     on;
 
-    include             /etc/nginx/mime.types;
-    default_type        application/octet-stream;
-    # include /etc/nginx/conf.d/*.conf;
+    keepalive_timeout  65;
+
+    gzip  on;
+    server_tokens off;
 
     server {
         listen 80;
         server_name  _;
 
+        proxy_cache cache;
+        proxy_cache_key $host$request_uri;
+        proxy_cache_methods GET HEAD;
+        proxy_cache_valid 200 302 720m;
+        proxy_cache_valid 404      1m;
+        proxy_cache_use_stale http_502;
+        proxy_set_header X-Real-IP $remote_addr;
+        add_header X-Via $server_addr;
+
         client_max_body_size 4096m;  # 录像及文件上传大小限制
 
-        location /player/ {
-            try_files $uri / /index.html;
-            alias /opt/player/;
-        }
         location /download/ {
             alias /opt/download/;
         }
@@ -56,9 +61,6 @@ http {
             add_header Content-Encoding gzip;
             root /opt/jumpserver/data/;
         }
-        location /media/ {
-            root /opt/jumpserver/data/;
-        }
         location /static/ {
             root /opt/jumpserver/data/;
         }
@@ -72,11 +74,6 @@ http {
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header Host $host;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_ignore_client_abort on;
-            proxy_connect_timeout 600;
-            proxy_send_timeout 600;
-            proxy_read_timeout 600;
-            send_timeout 6000;
         }
         location /lion/ {
             proxy_pass http://jms-lion:8081;
@@ -88,14 +85,9 @@ http {
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header Host $host;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_ignore_client_abort on;
-            proxy_connect_timeout 600;
-            proxy_send_timeout 600;
-            proxy_read_timeout 600;
-            send_timeout 6000;
         }
         location /ws/ {
-            proxy_pass http://jms-core:8070;
+            proxy_pass http://jms-core:8080;
             proxy_buffering off;
             proxy_http_version 1.1;
             proxy_set_header Upgrade $http_upgrade;
@@ -104,13 +96,7 @@ http {
             proxy_set_header Host $host;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         }
-        location /api/ {
-            proxy_set_header X-Real-IP $remote_addr;
-            proxy_set_header Host $host;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_pass http://jms-core:8080;
-        }
-        location /core/ {
+        location ~ ^/(core|api|media)/ {
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header Host $host;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -136,7 +122,7 @@ x-traefik-label: &traefik-label
 
 services:
   jms-core:
-    image: jumpserver/core:v2.28.5
+    image: jumpserver/core:v3.5.0
     container_name: jms-core
     hostname: jms-core
     restart: always
@@ -168,7 +154,7 @@ services:
       - "8080"
 
   jms-celery:
-    image: jumpserver/core:v2.28.5
+    image: jumpserver/core:v3.5.0
     container_name: jms-celery
     hostname: jms-celery
     restart: always
@@ -201,7 +187,7 @@ services:
       - /volume5/storage/docker-data/jms/data/core/logs:/opt/jumpserver/logs
 
   jms-koko:
-    image: jumpserver/koko:v2.28.5
+    image: jumpserver/koko:v3.5.0
     container_name: jms-koko
     hostname: jms-koko
     restart: always
@@ -229,7 +215,7 @@ services:
       - 2222:22
 
   jms-lion:
-    image: jumpserver/lion:v2.28.5
+    image: jumpserver/lion:v3.5.0
     container_name: jms-lion
     hostname: jms-lion
     restart: always
@@ -251,7 +237,7 @@ services:
       - /volume5/storage/docker-data/jms/data/lion/data:/opt/lion/data
 
   jms-magnus:
-    image: jumpserver/magnus:v2.28.5
+    image: jumpserver/magnus:v3.5.0
     container_name: jms-magnus
     hostname: jms-magnus
     restart: always
@@ -275,7 +261,7 @@ services:
       - 30000-30100:30000-30100
 
   jms-web:
-    image: jumpserver/web:v2.28.5
+    image: jumpserver/web:v3.5.0
     container_name: jms-web
     hostname: jms-web
     restart: always

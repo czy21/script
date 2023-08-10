@@ -2,7 +2,7 @@
 ## dockerfile
 - Dockerfile
 ```bash
-docker build --tag registry.czy21-public.com/library/pulsar-manager --file Dockerfile . --pull
+docker build --tag docker.io/czy21/pulsar-manager --file Dockerfile . --pull
 ```
 ```dockerfile
 FROM openjdk:11-jre-slim
@@ -198,7 +198,7 @@ x-traefik-label: &traefik-label
 services:
 
   pulsar-manager:
-    image: registry.czy21-public.com/library/pulsar-manager
+    image: docker.io/czy21/pulsar-manager
     container_name: pulsar-manager
     labels:
       <<: *traefik-label

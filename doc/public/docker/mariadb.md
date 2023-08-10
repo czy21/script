@@ -9,7 +9,7 @@ version: "3.9"
 services:
 
   mariadb:
-    image: mariadb:10.9.4
+    image: mariadb:11.0.2
     container_name: mariadb
     privileged: true
     user: root

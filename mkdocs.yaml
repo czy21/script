@@ -29,23 +29,30 @@ nav:
       - crate: docker/crate.md
       - dbeaver: docker/dbeaver.md
       - dm8: docker/dm8.md
+      - drupal: docker/drupal.md
       - emby: docker/emby.md
       - es: docker/es.md
       - etcd: docker/etcd.md
       - filebeat: docker/filebeat.md
       - flink: docker/flink.md
+      - fluent: docker/fluent.md
+      - fluent-bit: docker/fluent-bit.md
       - focalboard: docker/focalboard.md
       - freeipa: docker/freeipa.md
       - frp: docker/frp.md
+      - ghost: docker/ghost.md
       - gitea: docker/gitea.md
       - gitlab: docker/gitlab.md
+      - gocd: docker/gocd.md
       - gogs: docker/gogs.md
       - gradle: docker/gradle.md
       - grafana: docker/grafana.md
       - hadoop: docker/hadoop.md
+      - halo: docker/halo.md
       - harbor: docker/harbor.md
       - heimdall: docker/heimdall.md
       - homeassistant: docker/homeassistant.md
+      - homepage: docker/homepage.md
       - influxdb: docker/influxdb.md
       - jaeger: docker/jaeger.md
       - jellyfin: docker/jellyfin.md
@@ -53,6 +60,7 @@ nav:
       - jenkins-ssh-agent: docker/jenkins-ssh-agent.md
       - jira: docker/jira.md
       - jms: docker/jms.md
+      - joomla: docker/joomla.md
       - kafka: docker/kafka.md
       - kafka-eagle: docker/kafka-eagle.md
       - kafka-exporter: docker/kafka-exporter.md
@@ -61,6 +69,7 @@ nav:
       - logstash: docker/logstash.md
       - mariadb: docker/mariadb.md
       - minio: docker/minio.md
+      - mix: docker/mix.md
       - mongo: docker/mongo.md
       - mssql: docker/mssql.md
       - mssql-exporter: docker/mssql-exporter.md
@@ -77,6 +86,7 @@ nav:
       - oap: docker/oap.md
       - odoo: docker/odoo.md
       - openproject: docker/openproject.md
+      - opensearch: docker/opensearch.md
       - pdns: docker/pdns.md
       - pgsql: docker/pgsql.md
       - photoprism: docker/photoprism.md
@@ -96,6 +106,7 @@ nav:
       - scm-manger: docker/scm-manger.md
       - sonarqube: docker/sonarqube.md
       - sqle: docker/sqle.md
+      - sscms: docker/sscms.md
       - streaming: docker/streaming.md
       - superset: docker/superset.md
       - taskcafe: docker/taskcafe.md
