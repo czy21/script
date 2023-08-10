@@ -2,7 +2,7 @@
 ## dockerfile
 - Dockerfile
 ```bash
-docker build --tag registry.czy21-public.com/library/jira --file Dockerfile . --pull
+docker build --tag docker.io/czy21/jira --file Dockerfile . --pull
 ```
 ```dockerfile
 FROM cptactionhank/atlassian-jira-software:latest
@@ -23,7 +23,7 @@ version: "3.9"
 
 services:
   jira:
-    image: registry.czy21-public.com/library/jira
+    image: docker.io/czy21/jira
     container_name: jira
     privileged: true
     user: root

@@ -8,7 +8,7 @@ x-traefik-label: &traefik-label
 services:
 
   go-pulsar-manager:
-    image: {{ param_registry_url }}/library/go-pulsar-manager:master
+    image: {{ param_registry_url }}/{{ param_registry_dir }}/go-pulsar-manager:master
     container_name: go-pulsar-manager
     labels:
       <<: *traefik-label

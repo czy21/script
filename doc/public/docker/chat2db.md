@@ -2,7 +2,7 @@
 ## dockerfile
 - Dockerfile
 ```bash
-docker build --tag registry.czy21-public.com/library/chat2db --file Dockerfile . --pull
+docker build --tag docker.io/czy21/chat2db --file Dockerfile . --pull
 ```
 ```dockerfile
 FROM chat2db/chat2db:latest
@@ -25,7 +25,7 @@ x-traefik-label: &traefik-label
 
 services:
   chat2db:
-    image: "registry.czy21-public.com/library/chat2db"
+    image: "docker.io/czy21/chat2db"
     container_name: chat2db
     labels:
       <<: *traefik-label

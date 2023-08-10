@@ -2,7 +2,7 @@
 ## dockerfile
 - Dockerfile
 ```bash
-docker build --tag registry.czy21-public.com/library/flink --file Dockerfile . --pull
+docker build --tag docker.io/czy21/flink --file Dockerfile . --pull
 ```
 ```dockerfile
 FROM flink:1.16.1-scala_2.12-java11
@@ -17,7 +17,7 @@ docker-compose --project-name flink --file docker-compose.yaml up --detach --bui
 version: "3.9"
 
 x-flink-common: &flink-common
-  image: registry.czy21-public.com/library/flink
+  image: docker.io/czy21/flink
   privileged: true
   user: root
   pull_policy: always

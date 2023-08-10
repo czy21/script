@@ -2,10 +2,16 @@
 ## dockerfile
 - Dockerfile
 ```bash
-docker build --tag registry.czy21-public.com/library/jenkins-ssh-agent --file Dockerfile . --pull
+docker build --tag docker.io/czy21/jenkins-ssh-agent --file Dockerfile . --pull
 ```
 ```dockerfile
 FROM jenkins/ssh-agent:5.1.0-jdk17
+
+LABEL org.opencontainers.image.url='https://github.com/czy21/container'
+LABEL org.opencontainers.image.source='https://github.com/czy21/container/tree/main/jenkins-ssh-agent'
+LABEL org.opencontainers.image.title='base on jenkins/ssh-agent:5.1.0-jdk17'
+LABEL org.opencontainers.image.authors='a805899926@gmail.com>'
+
 USER root
 RUN apt update && apt install git sudo curl -y
 RUN curl -L "https://github.com/docker/compose/releases/download/v2.18.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
@@ -24,7 +30,7 @@ version: "3.9"
 services:
 
   jenkins-ssh-agent:
-    image: registry.czy21-public.com/library/jenkins-ssh-agent
+    image: docker.io/czy21/jenkins-ssh-agent
     pull_policy: always
     container_name: jenkins-ssh-agent
     privileged: true
