@@ -190,6 +190,7 @@ class Installer:
                  role_func: typing.Callable[..., list[str]] = None,
                  role_deep: int = 1
                  ) -> None:
+        self.home_path: pathlib.Path = root_path.joinpath("..").resolve()
         self.root_path: pathlib.Path = root_path
         self.build_path: pathlib.Path = root_path.joinpath("build")
         self.tmp_path: pathlib.Path = root_path.joinpath("___temp")
@@ -346,7 +347,8 @@ class Installer:
                             _cmds.append("sh {0} {1}".format(target_file.as_posix(), " ".join(args.build_args)))
                     if args.target == "doc":
                         logger.info("build doc")
-                _cmds.extend(role_func(root_path=self.root_path,
+                _cmds.extend(role_func(home_path=self.home_path,
+                                       root_path=self.root_path,
                                        role_title=role_title,
                                        role_name=role_name,
                                        role_path=role_path,
