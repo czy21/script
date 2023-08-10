@@ -1,11 +1,8 @@
 #!/usr/bin/env python3
 
 import argparse
-import filecmp
 import logging
-import os
 import pathlib
-import shutil
 
 import share
 import urllib3.util
@@ -93,18 +90,31 @@ def get_cmds(home_path: pathlib.Path,
 
     if args.command == share.Command.build.value and args.target.startswith("Dockerfile"):
         target_file = role_output_path.joinpath(args.target)
-        registry_url = role_env['param_registry_url']
-        registry_dir = role_env['param_registry_dir']
-        if args.param["param_registry_target"] == "ghcr":
-            registry_url = role_env['param_registry_github_url']
-            registry_dir = role_env['param_registry_github_dir']
+        registry_source_url = role_env['param_registry_url']
+        registry_source_dir = role_env['param_registry_dir']
+        registry_full_url = path_util.join_path(registry_source_url, registry_source_dir)
         if target_file.exists():
-            image_tag = "/".join([
-                str(p).strip("/")
-                for p in [registry_url, registry_dir, (role_name + ":" + args.tag if args.tag else role_name)]
-            ])
-            _cmds.append("docker build --tag {0} --file {1} {2} --pull".format(image_tag, target_file.as_posix(), role_output_path.as_posix()))
-            if args.param["param_registry_target"] == "ghcr":
+            registry_source_tag = path_util.join_path(registry_full_url, role_name)
+            if args.tag:
+                registry_source_tag = registry_source_tag + ":" + args.tag
+            registry_targets = args.param.get("param_registry_targets").split(",") if args.param.get("param_registry_targets") else []
+            registry_target_tags = []
+            for t in registry_targets:
+                registry_target_url = role_env.get("param_registry_{0}_url".format(t))
+                registry_target_dir = role_env.get("param_registry_{0}_dir".format(t))
+                if not registry_target_url:
+                    logger.warning("registry_target: {} not exist".format(t))
+                    continue
+                target_registry_tag = path_util.join_path(registry_target_url, registry_target_dir, role_name)
+                if args.tag:
+                    target_registry_tag = target_registry_tag + ":" + args.tag
+                registry_target_tags.append(target_registry_tag)
+            _cmds.append("docker build --tag {0} --file {1} {2} --pull".format(registry_source_tag, target_file.as_posix(), role_output_path.as_posix()))
+            _cmds.extend(["docker tag {} {}".format(registry_source_tag, t) for t in registry_target_tags])
+            if args.push:
+                _cmds.append("docker push {0}".format(registry_source_tag))
+                _cmds.extend(["docker push {0}".format(t) for t in registry_target_tags])
+            if registry_targets:
                 registry_github_repo: str = role_env["param_registry_github_repo"]
                 registry_github_repo_url: urllib3.util.Url = urllib3.util.parse_url(registry_github_repo)
                 registry_github_repo_name: str = pathlib.Path(registry_github_repo_url.path).name
@@ -118,8 +128,6 @@ def get_cmds(home_path: pathlib.Path,
                                                 registry_github_repo_role_dir)
                 if sync_is_change:
                     _cmds.append("cd {0} && git add . && git commit -m \"# add or update {1} Dockerfile\" && git push && cd".format(registry_github_repo_role_dir.as_posix(), role_name))
-            if args.push:
-                _cmds.append("docker push {0}".format(image_tag))
     return _cmds
 
 
