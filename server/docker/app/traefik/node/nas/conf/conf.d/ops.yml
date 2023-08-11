@@ -15,9 +15,6 @@ http:
     jenkins:
       rule: Host(`jenkins.czy21-internal.com`)
       service: jenkins@docker
-    gocd:
-      rule: Host(`gocd.czy21-internal.com`)
-      service: gocd@docker
     jms:
       rule: Host(`jms.czy21-internal.com`)
       service: jms@docker
@@ -36,3 +33,6 @@ http:
     prometheus:
       rule: Host(`prom-{{ param_cluster_name }}.czy21-internal.com`)
       service: prometheus@docker
+    concourse:
+      rule: Host(`concourse.czy21-internal.com`)
+      service: concourse@docker
