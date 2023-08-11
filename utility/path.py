@@ -3,10 +3,10 @@ import logging
 import os
 import pathlib
 import re
-import shutil
 
 from utility import (
-    regex as regex_util
+    regex as regex_util,
+    file as file_util
 )
 
 logger = logging.getLogger()
@@ -44,4 +44,4 @@ def merge_dir(src: pathlib.Path, dst: pathlib.Path, ignore_pattern: list[str]):
         if k.is_dir():
             v.mkdir(parents=True, exist_ok=True)
         elif k.is_file() and not v.exists():
-            shutil.copyfile(k, v)
+            file_util.copy(k, v)
