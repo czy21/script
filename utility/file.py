@@ -22,7 +22,7 @@ def write_text(file: pathlib.Path, text: str) -> NoReturn:
 
 def copy(src: pathlib.Path, dst: pathlib.Path) -> NoReturn:
     dst.parent.mkdir(parents=True, exist_ok=True)
-    shutil.copy2(src, dst)
+    shutil.copy(src, dst)
 
 
 # sync src files to dst; delete dst files by src not exist files
@@ -39,6 +39,6 @@ def sync(src: pathlib.Path, src_filter_func: typing.Callable[[pathlib.Path], boo
     for t in [a for a in dst.rglob("*") if a.is_file()]:
         s = src.joinpath(t.relative_to(dst))
         if not s.exists():
-            t.unlink()
+            t.unlink(missing_ok=True)
             is_change = True
     return is_change
