@@ -1,67 +1,74 @@
 #!/usr/bin/env python3
-import argparse
 import pathlib
 
-import share
 import yaml
-
 from utility import (
     collection as collection_util,
     file as file_util
 )
 
+import share
+# from script.server import share
 
-def get_cmds(role_title: str,
-             role_name: str,
-             role_path: pathlib.Path,
-             role_output_path: pathlib.Path,
-             role_env: dict,
-             namespace: str,
-             args: argparse.Namespace,
-             **kwargs) -> list[str]:
-    role_values_override_file = role_output_path.joinpath("values.override.yaml")
-    file_util.write_text(role_values_override_file, yaml.dump(role_env))
 
-    _cmds = []
-    if args.command == share.Command.push.value:
-        helm_repo_name = role_env.get("param_helm_repo_name")
-        helm_repo_url = role_env.get("param_helm_repo_url")
-        helm_username = role_env.get("param_helm_username")
-        helm_password = role_env.get("param_helm_password")
+class ChartRole(share.AbstractRole):
+
+    def __init__(self,
+                 home_path: pathlib.Path = None,
+                 root_path: pathlib.Path = None,
+                 namespace: str = None,
+                 role_title: str = None,
+                 role_name: str = None,
+                 role_path: pathlib.Path = None,
+                 role_output_path: pathlib.Path = None,
+                 role_env: dict = None,
+                 role_env_output_file: pathlib.Path = None,
+                 args=None) -> None:
+        super().__init__(home_path, root_path, namespace, role_title, role_name, role_path, role_output_path, role_env, role_env_output_file, args)
+        self.role_values_override_file = role_output_path.joinpath("values.override.yaml")
+        file_util.write_text(self.role_values_override_file, yaml.dump(role_env))
+
+    def install(self) -> list[str]:
+        _cmds = ['helm dep up {0}'.format(self.role_output_path.as_posix())]
+        cmd = [
+            "helm {0} {1} {2} --values {3}".format("upgrade --install", self.role_name, self.role_output_path.as_posix(), self.role_values_override_file)
+        ]
+        if not self.args.ignore_namespace:
+            cmd.append("--namespace {0}".format(self.namespace))
+        if self.args.create_namespace:
+            cmd.append("--create-namespace")
+        _cmds.append(collection_util.flat_to_str(cmd))
+        return _cmds
+
+    def build(self) -> list[str]:
+        return []
+
+    def delete(self) -> list[str]:
+        return ["helm delete {0} {1}".format(self.role_name, "" if self.args.ignore_namespace else "--namespace {0}".format(self.namespace))]
+
+    def backup(self) -> list[str]:
+        return []
+
+    def restore(self) -> list[str]:
+        return []
+
+    def push(self) -> list[str]:
+        _cmds = []
+        helm_repo_name = self.role_env.get("param_helm_repo_name")
+        helm_repo_url = self.role_env.get("param_helm_repo_url")
+        helm_username = self.role_env.get("param_helm_username")
+        helm_password = self.role_env.get("param_helm_password")
         _cmds.append("helm plugin list | if [ -z \"$(grep -w nexus-push)\" ];then helm plugin install --version master https://github.com/sonatype-nexus-community/helm-nexus-push.git;fi")
         _cmds.append("helm repo   list | if [ -z \"$(grep -w {0})\" ];then helm repo add {0} {1};fi".format(helm_repo_name, helm_repo_url))
         _cmds.append(
             "helm package {0} --destination {0} | sed 's/Successfully packaged chart and saved it to: //g' | xargs helm nexus-push {1}  --username {2} --password {3}".format(
-                role_output_path, helm_repo_name,
+                self.role_output_path, helm_repo_name,
                 helm_username,
                 helm_password
             )
         )
-
-    else:
-        _command = args.command
-        _extension = ""
-        if args.command == share.Command.delete.value:
-            _cmds.append([
-                "helm delete {0} {1}".format(role_name, "" if args.ignore_namespace else "--namespace {0}".format(namespace))
-            ])
-        else:
-            if args.command == share.Command.install.value:
-                _command = "upgrade --install"
-            helm_cmd = [
-                "helm {0} {1} {2} --values {3}".format(_command, role_name, role_output_path.as_posix(), role_values_override_file)
-            ]
-            if not args.ignore_namespace:
-                helm_cmd.append("--namespace {0}".format(namespace))
-            if args.create_namespace:
-                helm_cmd.append("--create-namespace")
-
-            _cmds.append('helm dep up {0}'.format(role_output_path.as_posix()))
-            _cmds.append(collection_util.flat_to_str(helm_cmd))
-    return _cmds
+        return _cmds
 
 
 if __name__ == '__main__':
-    root_path = pathlib.Path(__file__).parent
-    installer = share.Installer(root_path, get_cmds, role_deep=2)
-    installer.run()
+    share.Installer(pathlib.Path(__file__).parent, ChartRole, role_deep=2).run()
