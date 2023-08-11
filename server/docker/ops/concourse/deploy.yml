@@ -13,13 +13,21 @@ services:
     hostname: concourse
     labels:
       <<: *traefik-label
-    privileged: true
-    user: root
     expose:
       - "8080"
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/keys/:/concourse-keys/
     environment:
+      CONCOURSE_CLUSTER_NAME: dev
+      CONCOURSE_EXTERNAL_URL: "http://concourse.czy21-internal.com:80"
       CONCOURSE_POSTGRES_HOST: "{{ param_db_pgsql_host }}"
       CONCOURSE_POSTGRES_USER: "{{ param_db_pgsql_username }}"
       CONCOURSE_POSTGRES_PASSWORD: "{{ param_db_pgsql_password }}"
       CONCOURSE_POSTGRES_DATABASE: concourse
+      CONCOURSE_ADD_LOCAL_USER: "{{ param_manage_username }}:{{ param_manage_password }}"
+      CONCOURSE_MAIN_TEAM_LOCAL_USER: "{{ param_manage_username }}"
+      CONCOURSE_SESSION_SIGNING_KEY: /concourse-keys/session_signing_key
+      CONCOURSE_TSA_HOST_KEY: /concourse-keys/tsa_host_key
+      CONCOURSE_TSA_AUTHORIZED_KEYS: /concourse-keys/authorized_worker_keys
+    command: web
     restart: always
