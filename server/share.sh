@@ -22,11 +22,12 @@ function upload_exec_py() {
   local ssh_opt="-o StrictHostKeyChecking=no"
   local ssh_cmd="ssh -q ${ssh_opt} ${host}"
   local src_path_parent_path=$(realpath ${src_path}/../)
-  local src_path_parent_files=$(cd ${src_path_parent_path};find . -maxdepth 1 -name "env*.yaml" -o -name "share.py" -o -name "requirements.txt")
+  local src_path_parent_files=$(cd ${src_path_parent_path};find . -maxdepth 1 -name "env*.yaml" -o -name "requirements.txt")
 
   tar -cf - --exclude="__pycache__" --exclude="${build_name}" \
   -C ${src_path} . \
   -C $(realpath ${utility_path}/../) ./$(basename ${utility_path}) \
+  -C $(realpath ${src_path}/../../) ./server/share.py \
   -C ${src_path_parent_path} ${src_path_parent_files} \
    | ${ssh_cmd} "mkdir -p ${dst_name};tar -xf - -C ${dst_name}"
 

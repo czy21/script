@@ -98,7 +98,7 @@ def get_dir_dict(path: pathlib.Path, exclude_rules: list = None, select_tip="", 
 
 def select_namespace(root_path: pathlib.Path, deep: int = 1, exclude_rules=None, args: argparse.Namespace = None) -> list[Namespace]:
     exclude_rules = exclude_rules if exclude_rules else []
-    exclude_rules.extend(["___temp", "build", "utility"])
+    exclude_rules.extend(["___temp", "build", "utility", "server"])
     flat_dirs = dfs_dir(root_path, exclude_rules=exclude_rules)
 
     deep_index = 1

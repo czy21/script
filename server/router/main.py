@@ -2,12 +2,10 @@
 import json
 import pathlib
 
+from server import share
 from utility import (
     file as file_util
 )
-
-import share
-# from script.server import share
 
 
 class RouterRole(share.AbstractRole):

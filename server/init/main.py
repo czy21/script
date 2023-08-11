@@ -4,8 +4,9 @@ import logging
 import pathlib
 import sys
 
-import share
 import yaml
+
+from server import share
 from utility import (
     collection as collection_util,
     file as file_util,
