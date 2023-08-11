@@ -5,6 +5,7 @@ import pathlib
 import shutil
 import sys
 import typing
+from abc import ABCMeta
 from enum import Enum
 
 import yaml
@@ -21,7 +22,7 @@ from utility import (
 logger = logging.getLogger()
 
 
-class Role:
+class RoleMeta:
     def __init__(self, key: str, name: str, path: pathlib.Path, parent_path: pathlib.Path):
         self.key: str = key
         self.name: str = name
@@ -30,7 +31,7 @@ class Role:
 
 
 class Namespace:
-    def __init__(self, name: str, roles: list[Role]):
+    def __init__(self, name: str, roles: list[RoleMeta]):
         self.name = name
         self.roles = roles
 
@@ -106,7 +107,7 @@ def select_namespace(root_path: pathlib.Path, deep: int = 1, exclude_rules=None,
         _root_path = pathlib.Path(root_path)
         namespaces.extend([
             Namespace(args.namespace if args.namespace else _root_path.name, [
-                Role(rk, rv.name, rv, _root_path)
+                RoleMeta(rk, rv.name, rv, _root_path)
                 for rk, rv in get_dir_dict(_root_path, exclude_rules=exclude_rules, select_tip="role num(example:1 2 ...)", args=args).items()
             ])
         ])
@@ -127,9 +128,9 @@ def select_namespace(root_path: pathlib.Path, deep: int = 1, exclude_rules=None,
         deep_index += 1
     namespaces.extend([
         Namespace(args.namespace if args.namespace else p.name,
-                  [Role("%s.%s" % (next(filter(lambda t: t["path"] == p, flat_dirs), None)["key"], rk),
-                        rv.name,
-                        rv, p) for rk, rv in
+                  [RoleMeta("%s.%s" % (next(filter(lambda t: t["path"] == p, flat_dirs), None)["key"], rk),
+                            rv.name,
+                            rv, p) for rk, rv in
                    get_dir_dict(p, exclude_rules=exclude_rules, select_tip="role num(example:1 2 ...)",
                                 args=args).items()])
         for p in app_paths
@@ -184,12 +185,52 @@ class CustomHelpFormatter(argparse.MetavarTypeHelpFormatter):
             return action.type.__name__
 
 
-class Installer:
+class AbstractRole(metaclass=ABCMeta):
+
     def __init__(self,
-                 root_path: pathlib.Path,
-                 role_func: typing.Callable[..., list[str]] = None,
-                 role_deep: int = 1
+                 home_path: pathlib.Path = None,
+                 root_path: pathlib.Path = None,
+                 namespace: str = None,
+                 role_title: str = None,
+                 role_name: str = None,
+                 role_path: pathlib.Path = None,
+                 role_output_path: pathlib.Path = None,
+                 role_env: dict = None,
+                 role_env_output_file: pathlib.Path = None,
+                 args=None
                  ) -> None:
+        self.home_path = home_path
+        self.root_path = root_path
+        self.role_title = role_title
+        self.role_name = role_name
+        self.role_path = role_path
+        self.role_output_path = role_output_path
+        self.role_env = role_env
+        self.role_env_output_file = role_env_output_file
+        self.namespace = namespace
+        self.args = args
+
+    def install(self) -> list[str]:
+        pass
+
+    def build(self) -> list[str]:
+        pass
+
+    def delete(self) -> list[str]:
+        pass
+
+    def backup(self) -> list[str]:
+        pass
+
+    def restore(self) -> list[str]:
+        pass
+
+    def push(self) -> list[str]:
+        pass
+
+
+class Installer:
+    def __init__(self, root_path: pathlib.Path, role_class: typing.Type[AbstractRole] = None, role_deep: int = 1) -> None:
         self.home_path: pathlib.Path = root_path.joinpath("..").resolve()
         self.root_path: pathlib.Path = root_path
         self.build_path: pathlib.Path = root_path.joinpath("build")
@@ -197,7 +238,7 @@ class Installer:
         self.bak_path: pathlib.Path = self.tmp_path.joinpath("bak")
         self.env_file: pathlib.Path = root_path.joinpath("env.yaml")
         self.jinja2ignore_file: pathlib.Path = root_path.joinpath(".jinja2ignore")
-        self.role_func: typing.Callable[..., list[str]] = role_func
+        self.role_class: typing.Type[AbstractRole] = role_class
         self.role_deep: int = role_deep
         self.arg_parser: argparse.ArgumentParser = argparse.ArgumentParser(formatter_class=CustomHelpFormatter,
                                                                            usage='%(prog)s [command] [options]')
@@ -283,13 +324,7 @@ class Installer:
         parser = self.__command_parser.add_parser(**self.__get_sub_parser_common_attr(Command.push.value))
         self.set_common_argument(parser)
 
-    def __loop_namespaces(self,
-                          namespaces: list[Namespace],
-                          role_func: typing.Callable[..., list[str]],
-                          global_env: dict,
-                          args: argparse.Namespace,
-                          jinja2ignore_rules: list,
-                          **kwargs) -> None:
+    def __loop_namespaces(self, namespaces: list[Namespace], global_env: dict, args: argparse.Namespace, jinja2ignore_rules: list) -> None:
         for n in namespaces:
             namespace = n.name
             for r in n.roles:
@@ -347,17 +382,17 @@ class Installer:
                             _cmds.append("sh {0} {1}".format(target_file.as_posix(), " ".join(args.build_args)))
                     if args.target == "doc":
                         logger.info("build doc")
-                _cmds.extend(role_func(home_path=self.home_path,
-                                       root_path=self.root_path,
-                                       role_title=role_title,
-                                       role_name=role_name,
-                                       role_path=role_path,
-                                       role_output_path=role_output_path,
-                                       role_env=role_env,
-                                       role_env_output_file=role_env_output_file,
-                                       namespace=namespace,
-                                       args=args,
-                                       **kwargs))
+                role_instance = self.role_class(home_path=self.home_path,
+                                                root_path=self.root_path,
+                                                role_title=role_title,
+                                                role_name=role_name,
+                                                role_path=role_path,
+                                                role_output_path=role_output_path,
+                                                role_env=role_env,
+                                                role_env_output_file=role_env_output_file,
+                                                namespace=namespace,
+                                                args=args)
+                _cmds.extend(getattr(role_instance, args.command)())
                 execute(collection_util.flat_to_str(_cmds, delimiter=" && "), dry_run=args.dry_run)
 
                 def cp_role_to_root(src: pathlib.Path, dst: pathlib.Path):
@@ -377,16 +412,14 @@ class Installer:
         global_env = self.load_env_file(self.env_file, args.env_file)
         global_env["param_command"] = args.command
         global_jinja2ignore_rules = file_util.read_text(self.jinja2ignore_file).split("\n") if self.jinja2ignore_file and self.jinja2ignore_file.exists() else []
-        selected_namespaces = select_namespace(self.root_path, self.role_deep, args=args)
-        for n in selected_namespaces:
+        namespaces = select_namespace(self.root_path, self.role_deep, args=args)
+        for n in namespaces:
             logger.info("namespace: {0}; roles: {1}".format(n.name, ",".join(["%s.%s" % (r.key, r.name) for r in n.roles])))
         self.__loop_namespaces(
-            namespaces=selected_namespaces,
-            role_func=self.role_func,
+            namespaces=namespaces,
             global_env=global_env,
             jinja2ignore_rules=global_jinja2ignore_rules,
-            args=args,
-            **kwargs
+            args=args
         )
 
 
