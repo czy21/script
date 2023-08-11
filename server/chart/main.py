@@ -2,13 +2,12 @@
 import pathlib
 
 import yaml
+
+from server import share
 from utility import (
     collection as collection_util,
     file as file_util
 )
-
-import share
-# from script.server import share
 
 
 class ChartRole(share.AbstractRole):

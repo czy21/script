@@ -4,9 +4,9 @@ import argparse
 import logging
 import pathlib
 
-import share
-# from script.server import share
 import urllib3.util
+
+from server import share
 from utility import (
     collection as collection_util,
     path as path_util,
