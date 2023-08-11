@@ -1,0 +1,25 @@
+version: "3.9"
+
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 8080
+
+services:
+
+  concourse:
+    image: concourse/concourse:7.10
+    container_name: concourse
+    hostname: concourse
+    labels:
+      <<: *traefik-label
+    privileged: true
+    user: root
+    expose:
+      - "8080"
+    environment:
+      CONCOURSE_POSTGRES_HOST: "{{ param_db_pgsql_host }}"
+      CONCOURSE_POSTGRES_USER: "{{ param_db_pgsql_username }}"
+      CONCOURSE_POSTGRES_PASSWORD: "{{ param_db_pgsql_password }}"
+      CONCOURSE_POSTGRES_DATABASE: concourse
+    restart: always
