@@ -19,7 +19,6 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/keys/:/concourse-keys/
       - {{ param_docker_data }}/{{ param_role_name }}/data/worker-state/:/worker-state/
     environment:
-      CONCOURSE_CLUSTER_NAME: dev
       CONCOURSE_EXTERNAL_URL: "http://concourse.czy21-internal.com:80"
       CONCOURSE_POSTGRES_HOST: "{{ param_db_pgsql_host }}"
       CONCOURSE_POSTGRES_USER: "{{ param_db_pgsql_username }}"
