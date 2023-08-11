@@ -30,10 +30,10 @@ def sync(src: pathlib.Path, src_filter_func: typing.Callable[[pathlib.Path], boo
     is_change = False
     # upsert
     for s in [a for a in src.rglob("*") if a.is_file()]:
-        if src_filter_func(s):
+        if src_filter_func is None or src_filter_func(s):
             t = dst.joinpath(s.relative_to(src))
             if not t.exists() or not filecmp.cmp(s, t):
-                shutil.copyfile(s, t)
+                copy(s, t)
                 is_change = True
     # delete
     for t in [a for a in dst.rglob("*") if a.is_file()]:

@@ -97,11 +97,10 @@ class DockerRole(share.AbstractRole):
             role_dockerfile = self.role_output_path.joinpath(self.args.target)
             registry_source_url = self.role_env['param_registry_url']
             registry_source_dir = self.role_env['param_registry_dir']
-            registry_source_url = path_util.join_path(registry_source_url, registry_source_dir)
             if role_dockerfile.exists():
-                registry_source_tag = path_util.join_path(registry_source_url, self.role_name)
+                registry_source_tag = path_util.join_path(registry_source_url, registry_source_dir, self.role_name)
                 if self.args.tag:
-                    registry_source_tag = registry_source_tag + ":" + self.args.tag
+                    registry_source_tag += ":" + self.args.tag
                 registry_targets = self.args.param.get("param_registry_targets").split(",") if self.args.param.get("param_registry_targets") else []
                 registry_target_tags = []
                 for t in registry_targets:
@@ -110,10 +109,10 @@ class DockerRole(share.AbstractRole):
                     if not registry_target_url:
                         logger.warning("registry_target: {} not exist".format(t))
                         continue
-                    target_registry_tag = path_util.join_path(registry_target_url, registry_target_dir, self.role_name)
+                    registry_target_tag = path_util.join_path(registry_target_url, registry_target_dir, self.role_name)
                     if self.args.tag:
-                        target_registry_tag = target_registry_tag + ":" + self.args.tag
-                    registry_target_tags.append(target_registry_tag)
+                        registry_target_tag += ":" + self.args.tag
+                    registry_target_tags.append(registry_target_tag)
                 _cmds.append("docker build --tag {0} --file {1} {2} --pull".format(registry_source_tag, role_dockerfile.as_posix(), self.role_output_path.as_posix()))
                 _cmds.extend(["docker tag {} {}".format(registry_source_tag, t) for t in registry_target_tags])
                 if self.args.push:
