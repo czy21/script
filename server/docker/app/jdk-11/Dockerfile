@@ -1,8 +1,8 @@
-FROM openjdk:11.0.16-jdk-slim-bullseye
+FROM eclipse-temurin:11-jdk-jammy
 
 LABEL org.opencontainers.image.url='https://github.com/czy21/container'
 LABEL org.opencontainers.image.source='https://github.com/czy21/container/tree/main/jdk11'
-LABEL org.opencontainers.image.title='based on openjdk:11.0.16-jdk-slim-bullseye'
+LABEL org.opencontainers.image.title='based on eclipse-temurin:11-jdk-jammy'
 LABEL org.opencontainers.image.authors='a805899926@gmail.com>'
 
 WORKDIR /app
