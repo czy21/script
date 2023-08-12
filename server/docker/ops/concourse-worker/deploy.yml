@@ -11,6 +11,7 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/keys/:/concourse-keys/
       - {{ param_docker_data }}/{{ param_role_name }}/data/worker-state/:/worker-state/
     environment:
+      CONCOURSE_NAME: "{{ param_cluster_name }}"
       CONCOURSE_RUNTIME: containerd
       CONCOURSE_TSA_HOST: concourse.czy21-internal.com:2224
       CONCOURSE_TSA_PUBLIC_KEY: /concourse-keys/tsa_host_key.pub
