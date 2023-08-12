@@ -24,6 +24,8 @@ nav:
       - cassandra: docker/cassandra.md
       - ch: docker/ch.md
       - chat2db: docker/chat2db.md
+      - concourse: docker/concourse.md
+      - concourse-worker: docker/concourse-worker.md
       - confluence: docker/confluence.md
       - consul: docker/consul.md
       - crate: docker/crate.md

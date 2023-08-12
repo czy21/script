@@ -380,8 +380,6 @@ class Installer:
                         if target_file.exists():
                             _cmds.append(echo_action(role_title, Command.build.value, target_file.as_posix()))
                             _cmds.append("sh {0} {1}".format(target_file.as_posix(), " ".join(args.build_args)))
-                    if args.target == "doc":
-                        logger.info("build doc")
                 role_instance = self.role_class(home_path=self.home_path,
                                                 root_path=self.root_path,
                                                 role_title=role_title,
