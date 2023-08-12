@@ -7,22 +7,19 @@ services:
     container_name: concourse-worker
     hostname: concourse-worker
     privileged: true
-    ports:
-      - 7777:7777
-      - 7788:7788
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/keys/:/concourse-keys/
       - {{ param_docker_data }}/{{ param_role_name }}/data/worker-state/:/worker-state/
-    stop_signal: SIGUSR2
     environment:
       CONCOURSE_RUNTIME: containerd
-      CONCOURSE_TSA_HOST: concourse:2222
+      CONCOURSE_TSA_HOST: concourse.czy21-internal.com:2224
       CONCOURSE_TSA_PUBLIC_KEY: /concourse-keys/tsa_host_key.pub
       CONCOURSE_TSA_WORKER_PRIVATE_KEY: /concourse-keys/worker_key
       CONCOURSE_BIND_IP: 0.0.0.0
       CONCOURSE_BAGGAGECLAIM_BIND_IP: 0.0.0.0
       CONCOURSE_BAGGAGECLAIM_DRIVER: overlay
-      CONCOURSE_GARDEN_DNS_PROXY_ENABLE: "true"
       CONCOURSE_CONTAINERD_DNS_SERVER: 8.8.8.8
+      CONCOURSE_GARDEN_DNS_PROXY_ENABLE: "true"
+      CONCOURSE_CONTAINERD_ALLOW_HOST_ACCESS: "true"
     command: worker
     restart: always

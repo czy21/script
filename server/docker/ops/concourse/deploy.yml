@@ -15,6 +15,9 @@ services:
       <<: *traefik-label
     expose:
       - "8080"
+      - "2222"
+    ports:
+      - "2224:2222"
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/keys/:/concourse-keys/
       - {{ param_docker_data }}/{{ param_role_name }}/data/worker-state/:/worker-state/
