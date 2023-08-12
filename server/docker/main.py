@@ -131,7 +131,10 @@ class DockerRole(share.AbstractRole):
                                                         lambda a: any(regex_util.match_rules(["Dockerfile*", "docker-entrypoint.sh"], a.as_posix()).values()),
                                                         registry_github_repo_role_dir)
                         if sync_is_change:
-                            _cmds.append("cd {0} && git add . && git commit -m \"# add or update {1} Dockerfile\" && git push && cd".format(registry_github_repo_role_dir.as_posix(), self.role_name))
+                            _cmds.append(
+                                "cd {0} && git pull && git add . && git commit -m \"# add or update {1} Dockerfile\" && git push && cd"
+                                .format(registry_github_repo_role_dir.as_posix(), self.role_name)
+                            )
         return _cmds
 
     def delete(self) -> list[str]:
