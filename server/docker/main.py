@@ -135,6 +135,8 @@ class DockerRole(share.AbstractRole):
                                 "cd {0} && git pull && git add . && git commit -m \"# add or update {1} Dockerfile\" && git push && cd"
                                 .format(registry_github_repo_role_dir.as_posix(), self.role_name)
                             )
+        if self.args.target == "doc":
+            print("")
         return _cmds
 
     def delete(self) -> list[str]:
