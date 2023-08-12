@@ -1,4 +1,4 @@
-FROM FROM registry.czy21-internal.com/library/mkdoc as builder
+FROM registry.czy21-internal.com/library/mkdoc as builder
 WORKDIR /app
 
 COPY mkdocs.yaml ./
