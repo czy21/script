@@ -60,7 +60,7 @@ spec:
                   fieldPath: metadata.name
             - name: TZ
               value: Asia/Shanghai
-            - name: JAVA_OPS
+            - name: JAVA_OPTS
               value: {{ .Values.param_app_args }}
           volumeMounts:
             - name: data
