@@ -44,12 +44,12 @@ class RouterRole(share.AbstractRole):
         return get_cmds(self)
 
 
-def get_cmds(router_role: RouterRole) -> list[str]:
+def get_cmds(role: RouterRole) -> list[str]:
     _cmds = []
-    if router_role.role_init_sh.exists():
-        _cmds.append("bash {}".format(router_role.role_init_sh.as_posix()))
-    file_util.write_text(router_role.role_env_output_json, json.dumps(router_role.role_env))
-    _cmds.append("lua {0} --command {1} --env-file {2}".format(router_role.root_path.joinpath("role.lua"), router_role.args.command, router_role.role_env_output_json.as_posix()))
+    if role.role_init_sh.exists():
+        _cmds.append("bash {}".format(role.role_init_sh.as_posix()))
+    file_util.write_text(role.role_env_output_json, json.dumps(role.role_env))
+    _cmds.append("lua {0} --command {1} --env-file {2}".format(role.root_path.joinpath("role.lua"), role.args.command, role.role_env_output_json.as_posix()))
     return _cmds
 
 
