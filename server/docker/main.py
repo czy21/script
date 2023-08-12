@@ -118,20 +118,20 @@ class DockerRole(share.AbstractRole):
                 if self.args.push:
                     _cmds.append("docker push {0}".format(registry_source_tag))
                     _cmds.extend(["docker push {0}".format(t) for t in registry_target_tags])
-                if registry_targets:
-                    registry_git_repo: str = self.role_env["param_registry_git_repo"]
-                    registry_git_repo_url: urllib3.util.Url = urllib3.util.parse_url(registry_git_repo)
-                    registry_git_repo_name: str = pathlib.Path(registry_git_repo_url.path).name
-                    registry_git_repo_dir: pathlib.Path = self.home_path.joinpath(registry_git_repo_name)
-                    if not registry_git_repo_dir.exists():
-                        share.execute("git clone {0} {1}".format(registry_git_repo.replace("https://github.com", "git@github.com:"), registry_git_repo_dir))
-                    registry_github_repo_role_dir = registry_git_repo_dir.joinpath(self.role_name)
-                    registry_github_repo_role_dir.mkdir(exist_ok=True)
-                    sync_is_change = file_util.sync(self.role_output_path,
-                                                    lambda a: any(regex_util.match_rules(["Dockerfile*", "docker-entrypoint.sh"], a.as_posix()).values()),
-                                                    registry_github_repo_role_dir)
-                    if sync_is_change:
-                        _cmds.append("cd {0} && git add . && git commit -m \"# add or update {1} Dockerfile\" && git push && cd".format(registry_github_repo_role_dir.as_posix(), self.role_name))
+                    if registry_targets:
+                        registry_git_repo: str = self.role_env["param_registry_git_repo"]
+                        registry_git_repo_url: urllib3.util.Url = urllib3.util.parse_url(registry_git_repo)
+                        registry_git_repo_name: str = pathlib.Path(registry_git_repo_url.path).name
+                        registry_git_repo_dir: pathlib.Path = self.home_path.joinpath(registry_git_repo_name)
+                        if not registry_git_repo_dir.exists():
+                            share.execute("git clone {0} {1}".format(registry_git_repo.replace("https://github.com", "git@github.com:"), registry_git_repo_dir))
+                        registry_github_repo_role_dir = registry_git_repo_dir.joinpath(self.role_name)
+                        registry_github_repo_role_dir.mkdir(exist_ok=True)
+                        sync_is_change = file_util.sync(self.role_output_path,
+                                                        lambda a: any(regex_util.match_rules(["Dockerfile*", "docker-entrypoint.sh"], a.as_posix()).values()),
+                                                        registry_github_repo_role_dir)
+                        if sync_is_change:
+                            _cmds.append("cd {0} && git add . && git commit -m \"# add or update {1} Dockerfile\" && git push && cd".format(registry_github_repo_role_dir.as_posix(), self.role_name))
         return _cmds
 
     def delete(self) -> list[str]:
