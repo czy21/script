@@ -266,6 +266,9 @@ class Installer:
             if ef not in env_file_paths:
                 env_file_paths.append(ef)
         env_file_paths = sorted(set(env_file_paths), key=env_file_paths.index)
+        env_self_file = env_file.parent.joinpath("env-self.yaml")
+        if env_self_file.exists():
+            env_file_paths.append(env_self_file)
         for t in env_file_paths:
             if t.exists():
                 logger.debug("load env_file: %s" % t.as_posix())

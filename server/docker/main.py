@@ -11,7 +11,8 @@ from utility import (
     collection as collection_util,
     path as path_util,
     file as file_util,
-    regex as regex_util
+    regex as regex_util,
+    template as template_util
 )
 
 logger = logging.getLogger()
@@ -32,6 +33,8 @@ class DockerRole(share.AbstractRole):
                  args: argparse.Namespace = None) -> None:
         super().__init__(home_path, root_path, namespace, role_title, role_name, role_path, role_output_path, role_env, role_env_output_file, args)
         self.root_deploy_file = root_path.joinpath("deploy.yml")
+        self.root_doc_template_file = root_path.joinpath("doc-template.md")
+
         self.role_deploy_file = role_output_path.joinpath("deploy.yml")
         self.role_conf_path = role_output_path.joinpath("conf")
         self.role_init_sh = role_output_path.joinpath("init.sh")
@@ -118,25 +121,35 @@ class DockerRole(share.AbstractRole):
                 if self.args.push:
                     _cmds.append("docker push {0}".format(registry_source_tag))
                     _cmds.extend(["docker push {0}".format(t) for t in registry_target_tags])
-                    if registry_targets:
-                        registry_git_repo: str = self.role_env["param_registry_git_repo"]
-                        registry_git_repo_url: urllib3.util.Url = urllib3.util.parse_url(registry_git_repo)
-                        registry_git_repo_name: str = pathlib.Path(registry_git_repo_url.path).name
-                        registry_git_repo_dir: pathlib.Path = self.home_path.joinpath(registry_git_repo_name)
-                        if not registry_git_repo_dir.exists():
-                            share.execute("git clone {0} {1}".format(registry_git_repo.replace("https://github.com", "git@github.com:"), registry_git_repo_dir))
-                        registry_github_repo_role_dir = registry_git_repo_dir.joinpath(self.role_name)
-                        registry_github_repo_role_dir.mkdir(exist_ok=True)
-                        sync_is_change = file_util.sync(self.role_output_path,
-                                                        lambda a: any(regex_util.match_rules(["Dockerfile*", "docker-entrypoint.sh"], a.as_posix()).values()),
-                                                        registry_github_repo_role_dir)
-                        if sync_is_change:
-                            _cmds.append(
-                                "cd {0} && git pull && git add . && git commit -m \"# add or update {1} Dockerfile\" && git push && cd"
-                                .format(registry_github_repo_role_dir.as_posix(), self.role_name)
-                            )
         if self.args.target == "doc":
-            print("")
+            md_content = template_util.Template(file_util.read_text(self.root_doc_template_file)).render(**{
+                "param_registry_git_repo_dict": {t["name"]: "{}/{}/{}".format(t["url"], "tree/master", self.role_name) for t in self.role_env.get("param_registry_git_repos")},
+                "param_docker_dockerfile_dict": {t.name: {
+                    "command": "docker build --tag {0} --file {1} . --pull".format(
+                        path_util.join_path(
+                            self.role_env['param_registry_url'],
+                            self.role_env['param_registry_dir'],
+                            "-".join(filter(lambda d: d != "", [self.role_name, t.name.replace("Dockerfile", "").lower()]))
+                        ), t.name
+                    )
+                } for t in sorted(self.role_output_path.glob("Dockerfile*"), reverse=True)},
+                "param_docker_compose_command": "",
+            })
+            file_util.write_text(self.role_output_path.joinpath("doc.md"), md_content)
+        if self.args.target == "doc" or self.args.target.startswith("Dockerfile"):
+            registry_git_repo: str = self.role_env["param_registry_git_repo"]
+            registry_git_repo_url: urllib3.util.Url = urllib3.util.parse_url(registry_git_repo)
+            registry_git_repo_name: str = pathlib.Path(registry_git_repo_url.path).name
+            registry_git_repo_dir: pathlib.Path = self.home_path.joinpath(registry_git_repo_name)
+            if not registry_git_repo_dir.exists():
+                share.execute("git clone ssh://{0} {1}".format(registry_git_repo, registry_git_repo_dir))
+            registry_github_repo_role_dir = registry_git_repo_dir.joinpath(self.role_name)
+            registry_github_repo_role_dir.mkdir(exist_ok=True)
+            file_util.sync(
+                self.role_output_path,
+                lambda a: not any(regex_util.match_rules(self.role_env["param_doc_excludes"], a.as_posix()).values()),
+                registry_github_repo_role_dir
+            )
         return _cmds
 
     def delete(self) -> list[str]:

@@ -1,0 +1,17 @@
+## git repo
+{%- for k,v in param_registry_git_repo_dict.items() %}
+  - {{ k }}: {{ v }}
+{%- endfor %}
+{%- if param_docker_dockerfile_dict %}
+## dockerfile
+{%- for k,v in param_docker_dockerfile_dict.items() %}
+- {{ k }}
+```bash
+{{ v["command"] }}
+```
+{%- endfor %}
+{%- endif %}
+## docker-compose
+```bash
+{{ param_docker_compose_command }}
+```
