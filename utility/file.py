@@ -15,18 +15,18 @@ def read_text(file: pathlib.Path) -> str:
     return file.read_text(encoding="utf-8")
 
 
-def write_text(file: pathlib.Path, text: str) -> NoReturn:
+def write_text(file: pathlib.Path, text: str):
     file.parent.mkdir(parents=True, exist_ok=True)
     file.write_text(text, encoding="utf-8")
 
 
-def copy(src: pathlib.Path, dst: pathlib.Path) -> NoReturn:
+def copy(src: pathlib.Path, dst: pathlib.Path):
     dst.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy(src, dst)
 
 
 # sync src files to dst; delete dst files by src not exist files
-def sync(src: pathlib.Path, src_filter_func: typing.Callable[[pathlib.Path], bool], dst: pathlib.Path) -> NoReturn:
+def sync(src: pathlib.Path, src_filter_func: typing.Callable[[pathlib.Path], bool], dst: pathlib.Path):
     # upsert
     for s in [a for a in src.rglob("*") if a.is_file()]:
         if src_filter_func(s):
