@@ -18,6 +18,8 @@ nav:
       - adminer: docker/adminer.md
       - alist: docker/alist.md
       - archery: docker/archery.md
+      - aspnet6: docker/aspnet6.md
+      - aspnet7: docker/aspnet7.md
       - baserow: docker/baserow.md
       - bonita: docker/bonita.md
       - cadvisor: docker/cadvisor.md
@@ -32,7 +34,6 @@ nav:
       - dbeaver: docker/dbeaver.md
       - dm8: docker/dm8.md
       - drupal: docker/drupal.md
-      - emby: docker/emby.md
       - es: docker/es.md
       - etcd: docker/etcd.md
       - filebeat: docker/filebeat.md
@@ -45,20 +46,27 @@ nav:
       - ghost: docker/ghost.md
       - gitea: docker/gitea.md
       - gitlab: docker/gitlab.md
+      - go-pulsar-manager: docker/go-pulsar-manager.md
       - gocd: docker/gocd.md
       - gogs: docker/gogs.md
+      - graalvm-jdk-17: docker/graalvm-jdk-17.md
       - gradle: docker/gradle.md
       - grafana: docker/grafana.md
       - hadoop: docker/hadoop.md
       - halo: docker/halo.md
       - harbor: docker/harbor.md
+      - hbase: docker/hbase.md
       - heimdall: docker/heimdall.md
       - homeassistant: docker/homeassistant.md
       - homepage: docker/homepage.md
+      - hugo: docker/hugo.md
       - influxdb: docker/influxdb.md
       - jaeger: docker/jaeger.md
+      - jdk-11: docker/jdk-11.md
+      - jdk-17: docker/jdk-17.md
       - jellyfin: docker/jellyfin.md
       - jenkins: docker/jenkins.md
+      - jenkins-inbound-agent: docker/jenkins-inbound-agent.md
       - jenkins-ssh-agent: docker/jenkins-ssh-agent.md
       - jira: docker/jira.md
       - jms: docker/jms.md
@@ -67,11 +75,13 @@ nav:
       - kafka-eagle: docker/kafka-eagle.md
       - kafka-exporter: docker/kafka-exporter.md
       - kanboard: docker/kanboard.md
+      - keycloak: docker/keycloak.md
       - kong: docker/kong.md
       - logstash: docker/logstash.md
       - mariadb: docker/mariadb.md
       - minio: docker/minio.md
       - mix: docker/mix.md
+      - mkdoc: docker/mkdoc.md
       - mongo: docker/mongo.md
       - mssql: docker/mssql.md
       - mssql-exporter: docker/mssql-exporter.md
@@ -83,8 +93,8 @@ nav:
       - nexus: docker/nexus.md
       - nexus-pro: docker/nexus-pro.md
       - nginx: docker/nginx.md
+      - nginx-spa: docker/nginx-spa.md
       - nginx-unit: docker/nginx-unit.md
-      - node-exporter: docker/node-exporter.md
       - oap: docker/oap.md
       - odoo: docker/odoo.md
       - openproject: docker/openproject.md
@@ -100,6 +110,7 @@ nav:
       - prometheus: docker/prometheus.md
       - pulsar: docker/pulsar.md
       - pulsar-manager: docker/pulsar-manager.md
+      - python3: docker/python3.md
       - rabbitmq: docker/rabbitmq.md
       - rancher: docker/rancher.md
       - redis: docker/redis.md

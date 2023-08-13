@@ -1,17 +1,7 @@
-
+## git repo
+  - github: https://github.com/czy21/container/tree/main/nginx-unit
+  - gitee: https://gitee.com/czy21/container/tree/main/nginx-unit
 ## docker-compose
 ```bash
-docker-compose --project-name nginx-unit --file docker-compose.yaml up --detach --build --remove-orphans
-```
-```yaml
-version: "3.9"
-
-services:
-
-  nginx-unit:
-    image: unit:1.30.0-minimal
-    container_name: nginx-unit
-    privileged: true
-    user: root
-    restart: always
+docker-compose --project-name nginx-unit --file deploy.yml up --detach --remove-orphans
 ```

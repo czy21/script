@@ -1,35 +1,7 @@
-
+## git repo
+  - github: https://github.com/czy21/container/tree/main/archery
+  - gitee: https://gitee.com/czy21/container/tree/main/archery
 ## docker-compose
 ```bash
-docker-compose --project-name archery --file docker-compose.yaml up --detach --build --remove-orphans
-```
-```yaml
-version: "3.9"
-
-x-traefik-label: &traefik-label
-  traefik.enable: true
-  traefik.http.routers.archery.service: archery
-  traefik.http.services.archery.loadbalancer.server.port: 9123
-
-services:
-
-  archery:
-    image: hhyo/archery:v1.9.1
-    container_name: archery
-    labels:
-      <<: *traefik-label
-    privileged: true
-    expose:
-      - "9123"
-    user: root
-    volumes:
-      - /volume5/storage/docker-data/archery/data/:/data/
-    environment:
-      NGINX_PORT: "9123"
-      DEBUG: false
-      DATABASE_URL: mysql://<username>:<password>@<ip>:3306/archery
-      CACHE_URL: redis://<ip>:6379/0?PASSWORD=<password>
-      CSRF_TRUSTED_ORIGINS: http://127.0.0.1:9123
-      ENABLE_LDAP: false
-    restart: always
+docker-compose --project-name archery --file deploy.yml up --detach --remove-orphans
 ```
