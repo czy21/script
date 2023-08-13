@@ -1,4 +1,3 @@
-import filecmp
 import logging
 import pathlib
 
@@ -13,21 +12,16 @@ if __name__ == '__main__':
     doc = current.joinpath("doc")
     doc_public = doc.joinpath("public")
     mkdocs_template = doc.joinpath("mkdocs_template.yaml")
-    docker_deploys = current.joinpath("container")
-    docker_md_dir = doc_public.joinpath("docker")
-    docker_md_names = []
-    for s in filter(lambda f: f.is_file(), docker_deploys.rglob("**/docker.md")):
+    container_source_dir = current.joinpath("container")
+    container_target_dir = doc_public.joinpath("container")
+    container_md_names = []
+    for s in filter(lambda f: f.is_file(), container_source_dir.rglob("**/docker.md")):
         name = s.parent.stem
-        t: pathlib.Path = docker_md_dir.joinpath("{}.md".format(name))
-        docker_md_names.append(name)
-        if not t.exists() or (not filecmp.cmp(s, t)):
-            file_util.copy(s, t)
-    for t in filter(lambda f: f.is_file(), docker_md_dir.rglob("*")):
-        t: pathlib.Path = t
-        if not docker_md_names.__contains__(t.stem):
-            t.unlink(missing_ok=True)
-    docker_md_names.sort()
+        t: pathlib.Path = container_target_dir.joinpath("{}.md".format(name))
+        container_md_names.append(name)
+        file_util.copy(s, t)
+    container_md_names.sort()
     mkdocs_text = template_util.Template(file_util.read_text(mkdocs_template)).render(
-        **{"param_docker_mds": "\n      - ".join(["{0}: {1}".format(t, "container/" + t + ".md") for t in docker_md_names])}
+        **{"param_container_mds": "\n      - ".join(["{0}: {1}".format(t, "container/" + t + ".md") for t in container_md_names])}
     )
     file_util.write_text(mkdocs, mkdocs_text)
