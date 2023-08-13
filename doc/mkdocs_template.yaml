@@ -14,5 +14,5 @@ markdown_extensions:
   - attr_list
 nav:
   - Home: index.md
-  - Docker:
-      - {{ param_docker_mds }}
+  - Container:
+      - {{ param_container_mds }}
