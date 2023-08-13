@@ -1,5 +1,6 @@
 param_doc_excludes:
   - "README.md"
+  - "doc.md"
   - "node"
   - "env.yaml"
   - "ndisk"
