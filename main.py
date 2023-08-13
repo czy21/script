@@ -1,24 +1,33 @@
+import filecmp
+import logging
 import pathlib
 
 from utility import file as file_util, template as template_util
 
+logger = logging.getLogger()
 # bash toolchain.sh -h user@host build --target doc --env-file env-public.yaml --all-namespace
 if __name__ == '__main__':
+    logger.setLevel(logging.DEBUG)
     current = pathlib.Path(__file__).parent
     mkdocs = current.joinpath("mkdocs.yaml")
     doc = current.joinpath("doc")
     doc_public = doc.joinpath("public")
     mkdocs_template = doc.joinpath("mkdocs_template.yaml")
-    container_source_dir = current.joinpath("container")
-    container_target_dir = doc_public.joinpath("container")
+    docker_deploys = current.joinpath("server/docker/build")
+    docker_md_dir = doc_public.joinpath("container")
     container_md_names = []
-    for s in filter(lambda f: f.is_file(), container_source_dir.rglob("**/docker.md")):
-        name = s.parent.stem
-        t: pathlib.Path = container_target_dir.joinpath("{}.md".format(name))
+    for s in filter(lambda f: f.is_file(), docker_deploys.rglob("**/output/doc.md")):
+        name = s.parent.parent.parent.stem
+        t: pathlib.Path = docker_md_dir.joinpath("{}.md".format(name))
         container_md_names.append(name)
-        file_util.copy(s, t)
+        if not t.exists() or not filecmp.cmp(s, t):
+            file_util.copy(s, t)
+    for t in filter(lambda f: f.is_file(), docker_md_dir.rglob("*")):
+        t: pathlib.Path = t
+        if not container_md_names.__contains__(t.stem):
+            t.unlink(missing_ok=True)
     container_md_names.sort()
     mkdocs_text = template_util.Template(file_util.read_text(mkdocs_template)).render(
-        **{"param_container_mds": "\n      - ".join(["{0}: {1}".format(t, "container/" + t + ".md") for t in container_md_names])}
+        **{"param_container_mds": "\n      - ".join(["{0}: {1}".format(m, "container/" + m + ".md") for m in container_md_names])}
     )
     file_util.write_text(mkdocs, mkdocs_text)
