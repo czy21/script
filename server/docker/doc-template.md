@@ -11,7 +11,9 @@
 ```
 {%- endfor %}
 {%- endif %}
+{%- if param_docker_compose_command %}
 ## docker-compose
 ```bash
 {{ param_docker_compose_command }}
 ```
+{%- endif %}

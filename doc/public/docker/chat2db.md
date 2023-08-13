@@ -1,42 +1,12 @@
-
+## git repo
+  - github: https://github.com/czy21/container/tree/main/chat2db
+  - gitee: https://gitee.com/czy21/container/tree/main/chat2db
 ## dockerfile
 - Dockerfile
 ```bash
 docker build --tag docker.io/czy21/chat2db --file Dockerfile . --pull
 ```
-```dockerfile
-FROM chat2db/chat2db:latest
-
-COPY docker-entrypoint.sh /
-RUN chmod +x /docker-entrypoint.sh
-ENTRYPOINT ["/docker-entrypoint.sh"]
-```
 ## docker-compose
 ```bash
-docker-compose --project-name chat2db --file docker-compose.yaml up --detach --build --remove-orphans
-```
-```yaml
-version: "3.9"
-
-x-traefik-label: &traefik-label
-  traefik.enable: true
-  traefik.http.routers.chat2db.service: chat2db
-  traefik.http.services.chat2db.loadbalancer.server.port: 10824
-
-services:
-  chat2db:
-    image: "docker.io/czy21/chat2db"
-    container_name: chat2db
-    labels:
-      <<: *traefik-label
-    privileged: true
-    user: root
-    expose:
-      - "10824"
-    volumes:
-      - /volume5/storage/docker-data/chat2db/data/:/data/
-    environment:
-      JAVA_OPTS: "-Dspring.datasource.url=jdbc:h2:/data/db/chat2db;MODE=MYSQL"
-      LOG_PATH: "/data/log/"
-    restart: always
+docker-compose --project-name chat2db --file deploy.yml up --detach --remove-orphans
 ```

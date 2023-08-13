@@ -1,29 +1,7 @@
-
+## git repo
+  - github: https://github.com/czy21/container/tree/main/pdns
+  - gitee: https://gitee.com/czy21/container/tree/main/pdns
 ## docker-compose
 ```bash
-docker-compose --project-name pdns --file docker-compose.yaml up --detach --build --remove-orphans
-```
-```yaml
-version: "3.9"
-
-services:
-
-  pdns-auth:
-    image: powerdns/pdns-auth-master
-    container_name: pdns-auth
-    privileged: true
-    user: root
-    environment:
-      PDNS_AUTH_API_KEY: <password>
-  pdns-web:
-    image: ngoduykhanh/powerdns-admin
-    container_name: pdns-web
-    privileged: true
-    user: root
-    ports:
-      - "9191:80"
-    volumes:
-      - /volume5/storage/docker-data/pdns/data/web/:/data/
-    environment:
-      SECRET_KEY: <password>
+docker-compose --project-name pdns --file deploy.yml up --detach --remove-orphans
 ```
