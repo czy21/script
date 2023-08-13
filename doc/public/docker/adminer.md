@@ -1,25 +1,7 @@
-
+## git repo
+  - github: https://github.com/czy21/container/tree/main/adminer
+  - gitee: https://gitee.com/czy21/container/tree/main/adminer
 ## docker-compose
 ```bash
-docker-compose --project-name adminer --file docker-compose.yaml up --detach --build --remove-orphans
-```
-```yaml
-version: "3.9"
-
-x-traefik-label: &traefik-label
-  traefik.enable: true
-  traefik.http.routers.adminer.service: adminer
-  traefik.http.services.adminer.loadbalancer.server.port: 8080
-
-services:
-
-  adminer:
-    image: adminer:4-standalone
-    pull_policy: always
-    container_name: adminer
-    labels:
-      <<: *traefik-label
-    privileged: true
-    user: root
-    restart: always
+docker-compose --project-name adminer --file deploy.yml up --detach --remove-orphans
 ```

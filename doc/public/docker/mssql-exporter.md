@@ -1,25 +1,7 @@
-
+## git repo
+  - github: https://github.com/czy21/container/tree/main/mssql-exporter
+  - gitee: https://gitee.com/czy21/container/tree/main/mssql-exporter
 ## docker-compose
 ```bash
-docker-compose --project-name mssql-exporter --file docker-compose.yaml up --detach --build --remove-orphans
-```
-```yaml
-version: "3.9"
-
-services:
-
-  mssql_exporter:
-    image: awaragi/prometheus-mssql-exporter
-    container_name: mssql_exporter
-    ports:
-      - "4000:4000"
-    environment:
-      SERVER: <ip>
-      PORT: 1433
-      USERNAME: sa
-      PASSWORD: <password>
-      DEBUG: app
-
-    user: root
-
+docker-compose --project-name mssql-exporter --file deploy.yml up --detach --remove-orphans
 ```
