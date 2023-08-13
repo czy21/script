@@ -38,48 +38,37 @@ class DockerRole(share.AbstractRole):
         self.role_deploy_file = role_output_path.joinpath("deploy.yml")
         self.role_conf_path = role_output_path.joinpath("conf")
         self.role_init_sh = role_output_path.joinpath("init.sh")
-        self.role_node_name = self.role_env.get("param_cluster_name")
-        self.target_app_path = pathlib.Path(self.role_env.get("param_docker_data")).joinpath(self.role_name)
-        self.param_role_target_path = self.role_env.get("param_role_target_path")
-        if self.param_role_target_path:
-            self.target_app_path = pathlib.Path(self.param_role_target_path)
-        self.role_node_path = self.role_output_path.joinpath("node")
-        self.role_node_target_path = next(filter(lambda a: a.is_dir and str(a.name) == self.role_node_name, self.role_node_path.glob("*")), None) if self.role_node_path.exists() else None
-        self.role_node_target_deploy_file = None
-        self.role_node_target_conf_path = None
-        if self.role_node_target_path:
+
+        self.role_node_name = self.role_env.get("param_cluster_name", "null")
+        self.role_node_target_path = self.role_output_path.joinpath("node").joinpath(self.role_node_name)
+        self.role_node_target_conf_path = self.role_node_target_path.joinpath("conf")
+        self.role_node_target_deploy_file = self.role_node_target_path.joinpath("deploy.yml")
+
+        self.role_target_path = pathlib.Path(self.role_env.get("param_role_target_path", self.role_env.get("param_docker_data") + "/" + self.role_name))
+        if self.role_target_path.parents.__len__() <= 1:
+            raise Exception('role_target_path: {} parents length <= 1'.format(self.role_target_path))
+        self.role_target_conf_path = self.role_target_path.joinpath("conf")
+        if self.role_node_target_path.exists():
             path_util.merge_dir(self.role_output_path, self.role_node_target_path, ["node", "deploy.yml"])
-            self.role_node_target_conf_path = self.role_node_target_path.joinpath("conf")
-            self.role_node_target_deploy_file = self.role_node_target_path.joinpath("deploy.yml")
 
     def docker_compose_cmd(self, option):
         role_deploy_files = [
             self.root_deploy_file,
             self.role_deploy_file.as_posix()
         ]
-        if self.role_node_target_deploy_file and self.role_node_target_deploy_file.exists():
+        if self.role_node_target_deploy_file.exists():
             role_deploy_files.append(self.role_node_target_deploy_file)
         role_project_name = self.role_env.get("param_role_project_name", self.role_name)
         return 'sudo docker-compose --project-name {0} {1} {2}'.format(role_project_name, " ".join(["--file {0}".format(t) for t in role_deploy_files]), option)
 
     def install(self) -> list[str]:
         _cmds = []
-        if self.role_conf_path.exists() or (self.role_node_target_conf_path and self.role_node_target_conf_path.exists()):
-            if self.args.rm_conf:
-                target_role_conf_path = self.target_app_path.joinpath("conf")
-                if target_role_conf_path.exists() and self.target_app_path.name == self.role_name:
-                    role_conf_relative_files = set(file_util.get_files(self.role_conf_path, self.role_output_path.as_posix()))
-                    remove_conf_files = [
-                        t.as_posix()
-                        for t in filter(lambda a: a.is_file(), target_role_conf_path.rglob("*"))
-                        if not any([t.as_posix().__contains__(s) for s in role_conf_relative_files])
-                    ]
-                    if remove_conf_files:
-                        _cmds.append(share.echo_action(self.role_title, "remove conf"))
-                        _cmds.append("sudo rm -rfv {0}".format(" ".join(remove_conf_files)))
+        if self.role_conf_path.exists() or self.role_node_target_conf_path.exists():
+            if self.args.rm_conf and self.role_target_conf_path.exists():
+                _cmds.append("sudo rm -rfv {0}".format(self.role_target_conf_path.as_posix()))
             _cmds.append('sudo mkdir -p {1} && sudo cp -rv {0} {1}'.format(
-                self.role_node_target_conf_path if self.role_node_target_conf_path and self.role_node_target_conf_path.exists() else self.role_conf_path.as_posix(),
-                self.target_app_path.as_posix())
+                self.role_node_target_conf_path if self.role_node_target_conf_path.exists() else self.role_conf_path.as_posix(),
+                self.role_target_path.as_posix())
             )
         if self.role_init_sh.exists():
             _cmds.append("bash {}".format(self.role_init_sh.as_posix()))
