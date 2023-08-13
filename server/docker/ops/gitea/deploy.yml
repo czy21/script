@@ -16,6 +16,8 @@ services:
     expose:
       - "3000"
       - "22"
+    ports:
+      - "2226:22"
     user: root
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/data/

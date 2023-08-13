@@ -1,4 +1,4 @@
-FROM registry.czy21-internal.com/library/ubuntu-openwrt-base
+FROM {{ param_registry_url }}/{{ param_registry_dir }}/ubuntu-openwrt-base
 
 RUN wget -O - https://raw.githubusercontent.com/friendlyarm/build-env-on-ubuntu-bionic/master/install.sh | bash
 RUN apt-get clean
