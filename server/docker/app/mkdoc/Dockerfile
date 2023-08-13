@@ -7,4 +7,5 @@ LABEL org.opencontainers.image.authors='a805899926@gmail.com>'
 
 WORKDIR /app
 
+RUN apt update -y && apt install git -y && rm -rf /var/lib/apt/lists/*
 RUN pip install mkdocs mkdocs-material
