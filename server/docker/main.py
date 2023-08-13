@@ -130,7 +130,7 @@ class DockerRole(share.AbstractRole):
                     "param_docker_dockerfile_dict": role_dockerfile_dict,
                     "param_docker_compose_command": docker_compose_command if self.role_deploy_file.exists() else None,
                 })
-                file_util.write_text(self.role_output_path.joinpath("doc.md"), md_content)
+                file_util.write_text(self.role_output_path.joinpath("docker.md"), md_content)
             registry_git_repo_url: urllib3.util.Url = urllib3.util.parse_url(self.role_env["param_registry_git_repo"])
             registry_git_repo_name: str = pathlib.Path(registry_git_repo_url.path).name
             registry_git_repo_dir: pathlib.Path = self.home_path.joinpath(registry_git_repo_name)
