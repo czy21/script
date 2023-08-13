@@ -13,16 +13,18 @@ if __name__ == '__main__':
     doc = current.joinpath("doc")
     doc_public = doc.joinpath("public")
     mkdocs_template = doc.joinpath("mkdocs_template.yaml")
-    docker_deploys = current.joinpath("server/docker/build")
-    docker_md_dir = doc_public.joinpath("container")
+    docker_dir = current.joinpath("server/docker/")
+
+    docker_build_dir = docker_dir.joinpath("build")
+    container_dir = doc_public.joinpath("container")
     container_md_names = []
-    for s in filter(lambda f: f.is_file(), docker_deploys.rglob("**/output/doc.md")):
+    for s in filter(lambda f: f.is_file(), docker_build_dir.rglob("**/output/doc.md")):
         name = s.parent.parent.parent.stem
-        t: pathlib.Path = docker_md_dir.joinpath("{}.md".format(name))
+        t: pathlib.Path = container_dir.joinpath("{}.md".format(name))
         container_md_names.append(name)
         if not t.exists() or not filecmp.cmp(s, t):
             file_util.copy(s, t)
-    for t in filter(lambda f: f.is_file(), docker_md_dir.rglob("*")):
+    for t in filter(lambda f: f.is_file(), container_dir.rglob("*")):
         t: pathlib.Path = t
         if not container_md_names.__contains__(t.stem):
             t.unlink(missing_ok=True)
