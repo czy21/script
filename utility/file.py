@@ -26,19 +26,15 @@ def copy(src: pathlib.Path, dst: pathlib.Path) -> NoReturn:
 
 
 # sync src files to dst; delete dst files by src not exist files
-def sync(src: pathlib.Path, src_filter_func: typing.Callable[[pathlib.Path], bool], dst: pathlib.Path) -> bool:
-    is_change = False
+def sync(src: pathlib.Path, src_filter_func: typing.Callable[[pathlib.Path], bool], dst: pathlib.Path) -> NoReturn:
     # upsert
     for s in [a for a in src.rglob("*") if a.is_file()]:
-        if src_filter_func is None or src_filter_func(s):
+        if src_filter_func(s):
             t = dst.joinpath(s.relative_to(src))
             if not t.exists() or not filecmp.cmp(s, t):
                 copy(s, t)
-                is_change = True
     # delete
     for t in [a for a in dst.rglob("*") if a.is_file()]:
         s = src.joinpath(t.relative_to(dst))
-        if not s.exists():
+        if not s.exists() or not src_filter_func(s):
             t.unlink(missing_ok=True)
-            is_change = True
-    return is_change
