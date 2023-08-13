@@ -1,12 +1,9 @@
-import logging
 import pathlib
 
 from utility import file as file_util, template as template_util
 
-logger = logging.getLogger()
 # bash toolchain.sh -h user@host build --target doc --env-file env-public.yaml --all-namespace
 if __name__ == '__main__':
-    logger.setLevel(logging.DEBUG)
     current = pathlib.Path(__file__).parent
     mkdocs = current.joinpath("mkdocs.yaml")
     doc = current.joinpath("doc")
