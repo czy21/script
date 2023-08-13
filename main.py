@@ -13,11 +13,11 @@ if __name__ == '__main__':
     doc = current.joinpath("doc")
     doc_public = doc.joinpath("public")
     mkdocs_template = doc.joinpath("mkdocs_template.yaml")
-    docker_deploys = current.joinpath("server/docker/build")
+    docker_deploys = current.joinpath("container")
     docker_md_dir = doc_public.joinpath("docker")
     docker_md_names = []
-    for s in filter(lambda f: f.is_file(), docker_deploys.rglob("**/output/doc.md")):
-        name = s.parent.parent.parent.stem
+    for s in filter(lambda f: f.is_file(), docker_deploys.rglob("**/docker.md")):
+        name = s.parent.stem
         t: pathlib.Path = docker_md_dir.joinpath("{}.md".format(name))
         docker_md_names.append(name)
         if not t.exists() or (not filecmp.cmp(s, t)):
@@ -28,6 +28,6 @@ if __name__ == '__main__':
             t.unlink(missing_ok=True)
     docker_md_names.sort()
     mkdocs_text = template_util.Template(file_util.read_text(mkdocs_template)).render(
-        **{"param_docker_mds": "\n      - ".join(["{0}: {1}".format(t, "docker/" + t + ".md") for t in docker_md_names])}
+        **{"param_docker_mds": "\n      - ".join(["{0}: {1}".format(t, "container/" + t + ".md") for t in docker_md_names])}
     )
     file_util.write_text(mkdocs, mkdocs_text)
