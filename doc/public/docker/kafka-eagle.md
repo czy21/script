@@ -1,6 +1,6 @@
 ## git repo
-  - github: https://github.com/czy21/container/tree/main/kafka-eagle
-  - gitee: https://gitee.com/czy21/container/tree/main/kafka-eagle
+  - github: [https://github.com/czy21/container/tree/main/kafka-eagle](https://github.com/czy21/container/tree/main/kafka-eagle){:target=_blank}
+  - gitee: [https://gitee.com/czy21/container/tree/main/kafka-eagle](https://gitee.com/czy21/container/tree/main/kafka-eagle){:target=_blank}
 ## dockerfile
 - Dockerfile
 ```bash

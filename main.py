@@ -2,27 +2,10 @@ import filecmp
 import logging
 import pathlib
 
-from utility import file as file_util, template as template_util, regex as regex_util, safe as safe_util, yaml as yaml_util, path as path_util
-
-md_type_yaml = ["yaml", "yml"]
-
-
-def get_file_type(extension):
-    extension = extension.split(".")[1] if extension.split(".").__len__() > 1 else "text"
-    if extension in md_type_yaml:
-        return "yaml"
-    elif extension == "sh":
-        return "bash"
-    elif extension == "xml":
-        return "xml"
-    elif extension == "json":
-        return "json";
-    else:
-        return "text"
-
+from utility import file as file_util, template as template_util
 
 logger = logging.getLogger()
-# bash toolchain.sh -h user@host install --dry-run --all-namespace --env-file env-public.yaml
+# bash toolchain.sh -h user@host build --target doc --env-file env-public.yaml --all-namespace
 if __name__ == '__main__':
     logger.setLevel(logging.DEBUG)
     current = pathlib.Path(__file__).parent

@@ -1,6 +1,6 @@
 ## git repo
-  - github: https://github.com/czy21/container/tree/main/aspnet6
-  - gitee: https://gitee.com/czy21/container/tree/main/aspnet6
+  - github: [https://github.com/czy21/container/tree/main/aspnet6](https://github.com/czy21/container/tree/main/aspnet6){:target=_blank}
+  - gitee: [https://gitee.com/czy21/container/tree/main/aspnet6](https://gitee.com/czy21/container/tree/main/aspnet6){:target=_blank}
 ## dockerfile
 - Dockerfile
 ```bash

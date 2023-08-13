@@ -1,6 +1,6 @@
 ## git repo
-  - github: https://github.com/czy21/container/tree/main/fluent
-  - gitee: https://gitee.com/czy21/container/tree/main/fluent
+  - github: [https://github.com/czy21/container/tree/main/fluent](https://github.com/czy21/container/tree/main/fluent){:target=_blank}
+  - gitee: [https://gitee.com/czy21/container/tree/main/fluent](https://gitee.com/czy21/container/tree/main/fluent){:target=_blank}
 ## dockerfile
 - Dockerfile
 ```bash

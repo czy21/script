@@ -1,6 +1,6 @@
 ## git repo
-  - github: https://github.com/czy21/container/tree/main/nginx-spa
-  - gitee: https://gitee.com/czy21/container/tree/main/nginx-spa
+  - github: [https://github.com/czy21/container/tree/main/nginx-spa](https://github.com/czy21/container/tree/main/nginx-spa){:target=_blank}
+  - gitee: [https://gitee.com/czy21/container/tree/main/nginx-spa](https://gitee.com/czy21/container/tree/main/nginx-spa){:target=_blank}
 ## dockerfile
 - Dockerfile
 ```bash

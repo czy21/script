@@ -1,6 +1,6 @@
 ## git repo
-  - github: https://github.com/czy21/container/tree/main/kafka
-  - gitee: https://gitee.com/czy21/container/tree/main/kafka
+  - github: [https://github.com/czy21/container/tree/main/kafka](https://github.com/czy21/container/tree/main/kafka){:target=_blank}
+  - gitee: [https://gitee.com/czy21/container/tree/main/kafka](https://gitee.com/czy21/container/tree/main/kafka){:target=_blank}
 ## dockerfile
 - Dockerfile
 ```bash

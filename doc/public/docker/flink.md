@@ -1,6 +1,6 @@
 ## git repo
-  - github: https://github.com/czy21/container/tree/main/flink
-  - gitee: https://gitee.com/czy21/container/tree/main/flink
+  - github: [https://github.com/czy21/container/tree/main/flink](https://github.com/czy21/container/tree/main/flink){:target=_blank}
+  - gitee: [https://gitee.com/czy21/container/tree/main/flink](https://gitee.com/czy21/container/tree/main/flink){:target=_blank}
 ## dockerfile
 - Dockerfile
 ```bash
