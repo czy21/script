@@ -1,6 +1,6 @@
 ## git repo
-  - github: https://github.com/czy21/container/tree/main/nexus-pro
-  - gitee: https://gitee.com/czy21/container/tree/main/nexus-pro
+  - github: [https://github.com/czy21/container/tree/main/nexus-pro](https://github.com/czy21/container/tree/main/nexus-pro){:target=_blank}
+  - gitee: [https://gitee.com/czy21/container/tree/main/nexus-pro](https://gitee.com/czy21/container/tree/main/nexus-pro){:target=_blank}
 ## dockerfile
 - Dockerfile
 ```bash

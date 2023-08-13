@@ -1,6 +1,6 @@
 ## git repo
-  - github: https://github.com/czy21/container/tree/main/chat2db
-  - gitee: https://gitee.com/czy21/container/tree/main/chat2db
+  - github: [https://github.com/czy21/container/tree/main/chat2db](https://github.com/czy21/container/tree/main/chat2db){:target=_blank}
+  - gitee: [https://gitee.com/czy21/container/tree/main/chat2db](https://gitee.com/czy21/container/tree/main/chat2db){:target=_blank}
 ## dockerfile
 - Dockerfile
 ```bash

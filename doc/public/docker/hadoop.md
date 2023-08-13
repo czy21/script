@@ -1,6 +1,6 @@
 ## git repo
-  - github: https://github.com/czy21/container/tree/main/hadoop
-  - gitee: https://gitee.com/czy21/container/tree/main/hadoop
+  - github: [https://github.com/czy21/container/tree/main/hadoop](https://github.com/czy21/container/tree/main/hadoop){:target=_blank}
+  - gitee: [https://gitee.com/czy21/container/tree/main/hadoop](https://gitee.com/czy21/container/tree/main/hadoop){:target=_blank}
 ## dockerfile
 - DockerfileBase
 ```bash
