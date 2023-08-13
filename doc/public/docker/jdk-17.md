@@ -1,6 +1,6 @@
 ## git repo
-  - github: https://github.com/czy21/container/tree/main/jdk-17
-  - gitee: https://gitee.com/czy21/container/tree/main/jdk-17
+  - github: [https://github.com/czy21/container/tree/main/jdk-17](https://github.com/czy21/container/tree/main/jdk-17){:target=_blank}
+  - gitee: [https://gitee.com/czy21/container/tree/main/jdk-17](https://gitee.com/czy21/container/tree/main/jdk-17){:target=_blank}
 ## dockerfile
 - Dockerfile
 ```bash

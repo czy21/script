@@ -11,6 +11,7 @@ theme:
     - content.code.copy
 markdown_extensions:
   - pymdownx.superfences
+  - attr_list
 nav:
   - Home: index.md
   - Docker:

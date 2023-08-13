@@ -1,6 +1,6 @@
 ## git repo
-  - github: https://github.com/czy21/container/tree/main/pulsar-manager
-  - gitee: https://gitee.com/czy21/container/tree/main/pulsar-manager
+  - github: [https://github.com/czy21/container/tree/main/pulsar-manager](https://github.com/czy21/container/tree/main/pulsar-manager){:target=_blank}
+  - gitee: [https://gitee.com/czy21/container/tree/main/pulsar-manager](https://gitee.com/czy21/container/tree/main/pulsar-manager){:target=_blank}
 ## dockerfile
 - Dockerfile
 ```bash

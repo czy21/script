@@ -1,6 +1,6 @@
 ## git repo
-  - github: https://github.com/czy21/container/tree/main/frp
-  - gitee: https://gitee.com/czy21/container/tree/main/frp
+  - github: [https://github.com/czy21/container/tree/main/frp](https://github.com/czy21/container/tree/main/frp){:target=_blank}
+  - gitee: [https://gitee.com/czy21/container/tree/main/frp](https://gitee.com/czy21/container/tree/main/frp){:target=_blank}
 ## dockerfile
 - Dockerfile
 ```bash

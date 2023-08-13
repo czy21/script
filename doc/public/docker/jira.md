@@ -1,6 +1,6 @@
 ## git repo
-  - github: https://github.com/czy21/container/tree/main/jira
-  - gitee: https://gitee.com/czy21/container/tree/main/jira
+  - github: [https://github.com/czy21/container/tree/main/jira](https://github.com/czy21/container/tree/main/jira){:target=_blank}
+  - gitee: [https://gitee.com/czy21/container/tree/main/jira](https://gitee.com/czy21/container/tree/main/jira){:target=_blank}
 ## dockerfile
 - Dockerfile
 ```bash

@@ -1,6 +1,6 @@
 ## git repo
-  - github: https://github.com/czy21/container/tree/main/aspnet7
-  - gitee: https://gitee.com/czy21/container/tree/main/aspnet7
+  - github: [https://github.com/czy21/container/tree/main/aspnet7](https://github.com/czy21/container/tree/main/aspnet7){:target=_blank}
+  - gitee: [https://gitee.com/czy21/container/tree/main/aspnet7](https://gitee.com/czy21/container/tree/main/aspnet7){:target=_blank}
 ## dockerfile
 - Dockerfile
 ```bash
