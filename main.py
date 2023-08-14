@@ -1,7 +1,7 @@
 import filecmp
 import logging
 import pathlib
-
+from server import share
 from utility import file as file_util, template as template_util
 
 logger = logging.getLogger()
@@ -13,8 +13,8 @@ if __name__ == '__main__':
     doc = current.joinpath("doc")
     doc_public = doc.joinpath("public")
     mkdocs_template = doc.joinpath("mkdocs_template.yaml")
-    docker_dir = current.joinpath("server/docker/")
-
+    docker_dir = current.joinpath("server/docker")
+    share.execute("cd {0} && rm -rf build && bash toolchain.sh -h {1} build --target doc --env-file env-public.yaml --all-namespace".format(docker_dir.as_posix(), "rocky12"))
     docker_build_dir = docker_dir.joinpath("build")
     container_dir = doc_public.joinpath("container")
     container_md_names = []
