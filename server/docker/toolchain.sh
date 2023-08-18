@@ -7,11 +7,11 @@ while getopts "h:" opt
 do
 	case $opt in
 		h)
-      source ../share.sh
-      host=$2
-      shift 2
-      upload_exec_py $@
-      break
+      host=$OPTARG
 			;;
 	esac
 done
+shift "$((OPTIND-1))"
+
+source ../share.sh
+upload_exec_py $@
