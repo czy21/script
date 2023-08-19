@@ -12,7 +12,6 @@ fi
 function upload_exec_py() {
   local PYTHON_HOME="\$HOME/.python3"
   local PYTHON_EXEC="${PYTHON_HOME}/bin/python3"
-  local PIP_EXEC="${PYTHON_HOME}/bin/pip3"
   local src_path=$(pwd)
   local dst_name=$(basename ${src_path})
   local tmp_name=___temp
