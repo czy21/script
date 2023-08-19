@@ -27,6 +27,7 @@ nav:
       - cassandra: container/cassandra.md
       - ch: container/ch.md
       - chat2db: container/chat2db.md
+      - clickhouse: container/clickhouse.md
       - concourse: container/concourse.md
       - concourse-worker: container/concourse-worker.md
       - confluence: container/confluence.md
@@ -88,6 +89,7 @@ nav:
       - mssql-exporter: container/mssql-exporter.md
       - mysql: container/mysql.md
       - mysql-slave: container/mysql-slave.md
+      - nacos: container/nacos.md
       - neo4j: container/neo4j.md
       - netbox: container/netbox.md
       - nextcloud: container/nextcloud.md
@@ -127,6 +129,10 @@ nav:
       - technitium: container/technitium.md
       - teleport: container/teleport.md
       - traefik: container/traefik.md
+      - ubuntu-friendlywrt: container/ubuntu-friendlywrt.md
+      - ubuntu-lede: container/ubuntu-lede.md
+      - ubuntu-openwrt: container/ubuntu-openwrt.md
+      - ubuntu-openwrt-base: container/ubuntu-openwrt-base.md
       - vault: container/vault.md
       - wekan: container/wekan.md
       - wordpress: container/wordpress.md
