@@ -8,6 +8,7 @@ import typing
 from abc import ABCMeta
 from enum import Enum
 
+import urllib3
 import yaml
 from utility import (
     collection as collection_util,
@@ -227,6 +228,19 @@ class AbstractRole(metaclass=ABCMeta):
 
     def push(self) -> list[str]:
         pass
+
+    def sync_to_git_repo(self, role_platform_name):
+        registry_git_repo_url: urllib3.util.Url = urllib3.util.parse_url(self.role_env.get("param_registry_git_repo"))
+        registry_git_repo_name: str = pathlib.Path(registry_git_repo_url.path).name
+        registry_git_repo_dir: pathlib.Path = self.home_path.joinpath(registry_git_repo_name)
+        if not registry_git_repo_dir.exists():
+            execute("git clone ssh://{0} {1}".format(registry_git_repo_url, registry_git_repo_dir))
+        registry_git_repo_role_dir = registry_git_repo_dir.joinpath(self.role_name).joinpath(role_platform_name)
+        registry_git_repo_role_dir.mkdir(exist_ok=True, parents=True)
+        file_util.sync(self.role_output_path, self.any_doc_exclude, registry_git_repo_role_dir)
+
+    def any_doc_exclude(self, f: pathlib.Path):
+        return not any(regex_util.match_rules(self.role_env["param_doc_excludes"], f.as_posix()).values())
 
 
 class Installer:
