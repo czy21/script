@@ -99,7 +99,7 @@ class DockerRole(share.AbstractRole):
                         continue
                     registry_target_tag = self.get_image_tag(registry_target_url, registry_target_dir, role_dockerfile)
                     registry_target_tags.append(registry_target_tag)
-                _cmds.append("docker build --tag {0} --file {1} {2} --pull".format(registry_source_tag, role_dockerfile.as_posix(), self.role_output_path.as_posix()))
+                _cmds.append("DOCKER_BUILDKIT=0 docker build --tag {0} --file {1} {2} --pull".format(registry_source_tag, role_dockerfile.as_posix(), self.role_output_path.as_posix()))
                 _cmds.extend(["docker tag {} {}".format(registry_source_tag, t) for t in registry_target_tags])
                 if self.args.push:
                     _cmds.append("docker push {0}".format(registry_source_tag))
