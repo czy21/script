@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # -h user@host    upload to remote and execute
-# -r              install requirement.txt
+# -r              install requirements.txt
 
 shopt -s expand_aliases
 
