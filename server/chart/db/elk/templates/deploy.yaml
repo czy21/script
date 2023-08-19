@@ -33,6 +33,9 @@ spec:
           containers:
             - name: elasticsearch
               image: {{ .Values.param_registry_proxy_url | default "docker.elastic.co" }}/elasticsearch/elasticsearch:{{ .Values.version }}
+              securityContext:
+                capabilities:
+                  add: ["SYS_CHROOT"]
       volumeClaimTemplates:
         - metadata:
             name: elasticsearch-data
