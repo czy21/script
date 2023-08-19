@@ -57,7 +57,7 @@ cmd+=";fi &&"
 if [ $requirement ];then
   cmd+="${PYTHON_EXEC} -m pip install ${pypi} -r \$HOME/${dst_name}/requirements.txt && "
 fi
-cmd+="${PYTHON_EXEC} -B \$HOME/${dst_name}/main.py $@"
+cmd+="${PYTHON_EXEC} -B \$HOME/${dst_name}/main.py $args"
 ${ssh_cmd} ${cmd}
 ${ssh_cmd} "[ -d ${dst_name} ]" && ${ssh_cmd} "tar -zcf - -C ${dst_name} ${tmp_name} ${build_name}" | tar -zxf - -C ${src_path}
 ${ssh_cmd} ${del_cmd}
