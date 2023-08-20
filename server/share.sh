@@ -10,8 +10,9 @@ if [ -n "$(type -p gtar)" ];then
 fi
 
 unset -v host
-unset -v requirement
 unset -v args
+unset -v is_requirement
+unset -v is_debug
 
 while [ $# -gt 0 ];do
   case "$1" in
@@ -20,7 +21,10 @@ while [ $# -gt 0 ];do
       shift
       ;;
     -r)
-      requirement=true
+      is_requirement=true
+      ;;
+    --debug)
+      is_debug=true
       ;;
      *)
       args+=" $1"
@@ -28,6 +32,11 @@ while [ $# -gt 0 ];do
   esac
   shift
 done
+
+if [ $is_debug ];then
+  args+=" --debug"
+  set -x
+fi
 
 PYTHON_HOME="\$HOME/.python3"
 PYTHON_EXEC="${PYTHON_HOME}/bin/python3"
@@ -42,22 +51,22 @@ ssh_cmd="ssh ${ssh_opt} ${host}"
 src_path_parent_path=$(realpath ${src_path}/../)
 src_path_parent_files=$(cd ${src_path_parent_path};find . -maxdepth 1 -name "env*.yaml" -o -name "requirements.txt")
 
-tar -cf - --exclude="__pycache__" --exclude="${build_name}" \
+tar -zcf - --exclude="__pycache__" --exclude="${build_name}" \
 -C ${src_path} . \
 -C $(realpath ${utility_path}/../) ./$(basename ${utility_path}) \
 -C $(realpath ${src_path}/../../) ./server/share.py \
 -C ${src_path_parent_path} ${src_path_parent_files} \
- | ${ssh_cmd} "mkdir -p ${dst_name};tar -xf - -C ${dst_name}"
+ | ${ssh_cmd} "mkdir -p ${dst_name};tar --touch -zxf - -C ${dst_name}"
 
 cmd=""
 pypi="-i https://pypi.tuna.tsinghua.edu.cn/simple/"
 cmd+="if [ ! -f ${PYTHON_EXEC} ];then "
 cmd+="python3 -m venv ${PYTHON_HOME} --without-pip --system-site-packages && wget -nv -O - https://bootstrap.pypa.io/get-pip.py | ${PYTHON_EXEC} - ${pypi}"
 cmd+=";fi &&"
-if [ $requirement ];then
+if [ ${is_requirement} ];then
   cmd+="${PYTHON_EXEC} -m pip install ${pypi} -r \$HOME/${dst_name}/requirements.txt && "
 fi
 cmd+="${PYTHON_EXEC} -B \$HOME/${dst_name}/main.py $args"
 ${ssh_cmd} ${cmd}
-${ssh_cmd} "[ -d ${dst_name} ]" && ${ssh_cmd} "tar -zcf - -C ${dst_name} ${tmp_name} ${build_name}" | tar -zxf - -C ${src_path}
+${ssh_cmd} "[ -d ${dst_name} ]" && ${ssh_cmd} "tar -zcf - -C ${dst_name} ${tmp_name} ${build_name}" | tar --touch -zxf - -C ${src_path}
 ${ssh_cmd} ${del_cmd}
