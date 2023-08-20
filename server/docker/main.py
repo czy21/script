@@ -104,18 +104,19 @@ class DockerRole(share.AbstractRole):
                 if self.args.push:
                     _cmds.append("docker push {0}".format(registry_source_tag))
                     _cmds.extend(["docker push {0}".format(t) for t in registry_target_tags])
-        if self.args.target == "doc" and self.any_doc_exclude(self.role_output_path):
-            role_dockerfile_dict = {
-                t.name: {
-                    "command": "docker build --tag {0} --file {1} . --pull".format(self.get_image_tag(registry_source_url, registry_source_dir, t), t.name)
-                } for t in sorted(self.role_output_path.glob("Dockerfile*"), reverse=True)}
-            docker_compose_command = "docker-compose --project-name {0} --file deploy.yml up --detach --remove-orphans".format(self.role_env.get("param_role_project_name", self.role_name))
-            md_content = template_util.Template(file_util.read_text(self.root_doc_template_file)).render(**{
-                "param_registry_git_repo_dict": {t["name"]: "{}/{}/{}".format(t["url"], "tree/main", self.role_name) for t in self.role_env.get("param_registry_git_repos")},
-                "param_docker_dockerfile_dict": role_dockerfile_dict,
-                "param_docker_compose_command": docker_compose_command if self.role_deploy_file.exists() else None,
-            })
-            file_util.write_text(self.role_output_path.joinpath("doc.md"), md_content)
+        if self.args.target == "doc":
+            if self.any_doc_exclude(self.role_output_path):
+                role_dockerfile_dict = {
+                    t.name: {
+                        "command": "docker build --tag {0} --file {1} . --pull".format(self.get_image_tag(registry_source_url, registry_source_dir, t), t.name)
+                    } for t in sorted(self.role_output_path.glob("Dockerfile*"), reverse=True)}
+                docker_compose_command = "docker-compose --project-name {0} --file deploy.yml up --detach --remove-orphans".format(self.role_env.get("param_role_project_name", self.role_name))
+                md_content = template_util.Template(file_util.read_text(self.root_doc_template_file)).render(**{
+                    "param_registry_git_repo_dict": {t["name"]: "{}/{}/{}".format(t["url"], "tree/main", self.role_name) for t in self.role_env.get("param_registry_git_repos")},
+                    "param_docker_dockerfile_dict": role_dockerfile_dict,
+                    "param_docker_compose_command": docker_compose_command if self.role_deploy_file.exists() else None,
+                })
+                file_util.write_text(self.role_output_path.joinpath("doc.md"), md_content)
             self.sync_to_git_repo("docker")
         return _cmds
 
