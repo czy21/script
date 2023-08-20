@@ -285,7 +285,7 @@ class Installer:
             env_file_paths.append(env_self_file)
         for t in env_file_paths:
             if t.exists():
-                logger.debug("load env_file: %s" % t.as_posix())
+                logger.info("load env_file: %s" % t.as_posix())
                 d |= yaml_util.load(t)
         return d
 
