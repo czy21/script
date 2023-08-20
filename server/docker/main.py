@@ -86,9 +86,8 @@ class DockerRole(share.AbstractRole):
         registry_source_url = self.role_env.get('param_registry_url')
         registry_source_dir = self.role_env.get('param_registry_dir')
         if self.args.target.startswith("Dockerfile"):
-            role_dockerfile = self.role_output_path.joinpath(self.args.target)
-            if role_dockerfile.exists():
-                registry_source_tag = self.get_image_tag(registry_source_url, registry_source_dir, role_dockerfile)
+            for rd in sorted(self.role_output_path.glob(self.args.target), reverse=True):
+                registry_source_tag = self.get_image_tag(registry_source_url, registry_source_dir, rd)
                 registry_targets = self.args.param.get("param_registry_targets").split(",") if self.args.param.get("param_registry_targets") else []
                 registry_target_tags = []
                 for t in registry_targets:
@@ -97,23 +96,23 @@ class DockerRole(share.AbstractRole):
                     if not registry_target_url:
                         logger.warning("registry target: {} not exist".format(t))
                         continue
-                    registry_target_tag = self.get_image_tag(registry_target_url, registry_target_dir, role_dockerfile)
+                    registry_target_tag = self.get_image_tag(registry_target_url, registry_target_dir, rd)
                     registry_target_tags.append(registry_target_tag)
-                _cmds.append("DOCKER_BUILDKIT=0 docker build --tag {0} --file {1} {2} --pull".format(registry_source_tag, role_dockerfile.as_posix(), self.role_output_path.as_posix()))
+                _cmds.append("DOCKER_BUILDKIT=0 docker build --tag {0} --file {1} {2} --pull".format(registry_source_tag, rd.as_posix(), self.role_output_path.as_posix()))
                 _cmds.extend(["docker tag {} {}".format(registry_source_tag, t) for t in registry_target_tags])
                 if self.args.push:
                     _cmds.append("docker push {0}".format(registry_source_tag))
                     _cmds.extend(["docker push {0}".format(t) for t in registry_target_tags])
         if self.args.target == "doc":
             if self.any_doc_exclude(self.role_output_path):
-                role_dockerfile_dict = {
+                rdd = {
                     t.name: {
                         "command": "docker build --tag {0} --file {1} . --pull".format(self.get_image_tag(registry_source_url, registry_source_dir, t), t.name)
                     } for t in sorted(self.role_output_path.glob("Dockerfile*"), reverse=True)}
                 docker_compose_command = "docker-compose --project-name {0} --file deploy.yml up --detach --remove-orphans".format(self.role_env.get("param_role_project_name", self.role_name))
                 md_content = template_util.Template(file_util.read_text(self.root_doc_template_file)).render(**{
                     "param_registry_git_repo_dict": {t["name"]: "{}/{}/{}".format(t["url"], "tree/main", self.role_name) for t in self.role_env.get("param_registry_git_repos")},
-                    "param_docker_dockerfile_dict": role_dockerfile_dict,
+                    "param_docker_dockerfile_dict": rdd,
                     "param_docker_compose_command": docker_compose_command if self.role_deploy_file.exists() else None,
                 })
                 file_util.write_text(self.role_output_path.joinpath("doc.md"), md_content)
