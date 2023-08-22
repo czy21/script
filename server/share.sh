@@ -56,7 +56,7 @@ tar -zcf - --exclude="__pycache__" --exclude="${build_name}" \
 -C $(realpath ${utility_path}/../) ./$(basename ${utility_path}) \
 -C $(realpath ${src_path}/../../) ./server/share.py \
 -C ${src_path_parent_path} ${src_path_parent_files} \
- | ${ssh_cmd} "mkdir -p ${dst_name};tar --touch -zxf - -C ${dst_name}"
+ | ${ssh_cmd} "mkdir -p ${dst_name};tar -zxf - -C ${dst_name}"
 
 cmd=""
 pypi="-i https://pypi.tuna.tsinghua.edu.cn/simple/"
@@ -68,5 +68,5 @@ if [ ${is_requirement} ];then
 fi
 cmd+="${PYTHON_EXEC} -B \$HOME/${dst_name}/main.py $args"
 ${ssh_cmd} ${cmd}
-${ssh_cmd} "[ -d ${dst_name} ]" && ${ssh_cmd} "tar -zcf - -C ${dst_name} ${tmp_name} ${build_name}" | tar --touch -zxf - -C ${src_path}
+${ssh_cmd} "[ -d ${dst_name} ]" && ${ssh_cmd} "tar -zcf - -C ${dst_name} ${tmp_name} ${build_name}" | tar -zxf - -C ${src_path}
 ${ssh_cmd} ${del_cmd}
