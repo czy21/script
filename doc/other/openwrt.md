@@ -1,6 +1,6 @@
 ```bash
 #build guide: https://openwrt.org/docs/guide-developer/toolchain/use-buildsystem
-sed -i 's|https://git.openwrt.org/\(.*\)/|http://gitea.czy21-internal.com/openwrt/|g' feeds.conf.default
+sed -i -e 's|https://git.openwrt.org/\(.*\)/|http://gitea.czy21-internal.com/openwrt/|g' -e 's|\^.*|;openwrt-22.03|' feeds.conf.default
 
 # convert
 ssh ubun \
