@@ -15,7 +15,7 @@ if [ "install" == "${param_command}" ];then
   fi
   sed -i 's|^olcAccess.*|olcAccess: {0}to * by dn.exact=gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth manage by * none|g' ${config_ldif_etc_file}
   sed -i 's|^olcDbDirectory.*|olcDbDirectory: {{ param_ldap_data }}|g' ${mdb_ldif_etc_file}
-  /etc/init.d/ldap restart
+  /etc/init.d/openldap restart
   ldapadd -Y EXTERNAL -H ldapi:/// -f ${config_ldif_file}
   ldapadd -x -D cn=admin,dc="{{ param_ldap_domain }}",dc=com -W -f ${domain_ldif_file}
   find ${ldap_etc_path}/schema/ -regex '.*\(cosine\|nis\|inetorgperson\|log\).ldif' -exec ldapadd -Y EXTERNAL -H ldapi:/// -f {} \;
@@ -27,10 +27,10 @@ if [ "backup" == "${param_command}" ];then
 fi
 
 if [ "restore" == "${param_command}" ];then
-  /etc/init.d/ldap stop
-  sed -i -e 's|^\s*mkdir|#\0|' -e 's|"ldap://localhost/.*"|"ldap:/// ldaps:/// ldapi:///"|' /etc/init.d/ldap
+  /etc/init.d/openldap stop
+  sed -i -e 's|^\s*mkdir|#\0|' -e 's|"ldap://localhost/.*"|"ldap:/// ldaps:/// ldapi:///"|' /etc/init.d/openldap
   rm -rf {{ param_ldap_data }}/* ${ldap_etc_path}/slapd.d/*
   slapadd -F ${ldap_etc_path}/slapd.d -b cn=config -l ${config_ldif_bak_file}
   slapadd -F ${ldap_etc_path}/slapd.d -b dc="{{ param_ldap_domain }}",dc=com -l ${domain_ldif_bak_file}
-  /etc/init.d/ldap start
+  /etc/init.d/openldap start
 fi
