@@ -25,9 +25,9 @@ services:
     restart: always
 
   mysql-exporter-{{ param_db_mysql_port }}:
-    image: prom/mysqld-exporter
+    image: prom/mysqld-exporter:v0.15.0
     container_name: mysql-exporter-{{ param_db_mysql_port }}
+    command: --mysqld.address=mysql:{{ param_db_mysql_port }} --mysqld.username={{ param_db_mysql_username }}
     environment:
-      DATA_SOURCE_NAME: "{{ param_db_mysql_username }}:{{ param_db_mysql_password }}@(mysql:{{ param_db_mysql_port }})/"
+      MYSQLD_EXPORTER_PASSWORD: {{ param_db_mysql_password }}
     restart: always
-

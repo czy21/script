@@ -1,3 +1,3 @@
 #!/bin/bash
 
-java -Dspring.profiles.active=release ${JAVA_OPTS} -jar ali-dbhub-server-start.jar
+java -Dloader.path=lib -Dspring.profiles.active=release ${JAVA_OPTS} -jar chat2db-server-start.jar
