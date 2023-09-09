@@ -27,7 +27,6 @@ nav:
       - cassandra: container/cassandra.md
       - ch: container/ch.md
       - chat2db: container/chat2db.md
-      - clickhouse: container/clickhouse.md
       - concourse: container/concourse.md
       - concourse-worker: container/concourse-worker.md
       - confluence: container/confluence.md
