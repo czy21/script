@@ -1,7 +1,7 @@
 FROM openjdk:11-jdk
 
-ENV KAFKA_VERSION=2.13-3.4.0
-ENV KAFKA_TGZ_URL=https://downloads.apache.org/kafka/3.4.0/kafka_${KAFKA_VERSION}.tgz
+ENV KAFKA_VERSION=2.13-3.4.1
+ENV KAFKA_TGZ_URL=https://downloads.apache.org/kafka/3.4.1/kafka_${KAFKA_VERSION}.tgz
 ENV KAFKA_HOME=/opt/kafka
 ENV PATH=$KAFKA_HOME/bin:$PATH
 
