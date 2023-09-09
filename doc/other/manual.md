@@ -15,6 +15,8 @@ mount -t nfs 192.168.1.3:/nfs_test /mnt/test1
 vmkfstools -z /vmfs/devices/disks/t10.ATA_____ST4000NM000A2D2HZ100_________________________________WS213MF7 /vmfs/volumes/ds15/4T_1.vmdk
 vmkfstools -z /vmfs/devices/disks/t10.ATA_____ST4000NM000A2D2HZ100_________________________________WS21R4S8 /vmfs/volumes/ds15/4T_2.vmdk
 vmkfstools -z /vmfs/devices/disks/t10.ATA_____Samsung_SSD_850_EVO_250GB_______________S2R7NX0K172814Y_____  /vmfs/volumes/ds15/SSD_250G_1.vmdk
+vmkfstools -z /vmfs/devices/disks/t10.NVMe____Samsung_SSD_970_EVO_Plus_250GB__________C2659E1151382500  /vmfs/volumes/ds15/SSD_250G_2.vmdk
+
 # vmware import ssl cert
 cd /etc/vmware/ssl
 mv rui.crt rui.crt.bak && mv rui.key rui.key.bak
