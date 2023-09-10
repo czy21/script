@@ -1,2 +1,0 @@
-#!/bin/bash
-java -Dnexus-work=${SONATYPE_WORK} -Dnexus-webapp-context-path=${CONTEXT_PATH} -Djava.util.prefs.userRoot=${SONATYPE_WORK}/javaprefs -Xms${MIN_HEAP} -Xmx${MAX_HEAP} -cp 'conf/:lib/*' ${JAVA_OPTS} org.sonatype.nexus.bootstrap.Launcher ${LAUNCHER_CONF}
