@@ -12,8 +12,6 @@ nmcli dev wifi connect XXXX password ****
 mount -t nfs 192.168.1.3:/nfs_test /mnt/test1
 
 # vmware RDM硬盘直通{0} 硬盘挂载地址, {1} 生成目标映射地址
-vmkfstools -z /vmfs/devices/disks/t10.NVMe____Samsung_SSD_970_PRO_512GB_______________81F1B39155382500 /vmfs/volumes/ds15/SSD_512G_win.vmdk
-vmkfstools -z /vmfs/devices/disks/t10.ATA_____Samsung_SSD_850_EVO_250GB_______________S2R7NX0K172814Y_____  /vmfs/volumes/ds15/SSD_250G_1.vmdk
 
 vmkfstools -z /vmfs/devices/disks/t10.ATA_____ST4000NM000A2D2HZ100_________________________________WS213MF7 /vmfs/volumes/ds15/4T_omv_1.vmdk
 
