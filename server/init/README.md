@@ -7,9 +7,9 @@ sudo yum -y install ansible
 ## ubuntu pre-installed
 ```shell
 # desktop
-sudo apt install openssh-server vim
+sudo apt install -y openssh-server sshpass vim git libfuse2 gnome-shell-extension-manager
 passwd
-sed -i -r "s/^\s*PermitRootLogin\s+\w+/PermitRootLogin yes/;" /etc/ssh/sshd_config
+sed -i -e "s|^PermitRootLogin.*|#\0|" -e "0,/^\S*PermitRootLogin.*/s//PermitRootLogin yes/" /etc/ssh/sshd_config
 
 # set ntp server
 vim /etc/systemd/timesyncd.conf
