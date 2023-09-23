@@ -1,3 +1,3 @@
 ```sql
---- https://github.com/alibaba/nacos/blob/2.2.0/distribution/conf/mysql-schema.sql
+--- https://github.com/alibaba/nacos/blob/2.2.3/distribution/conf/mysql-schema.sql
 ```

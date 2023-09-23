@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: {{ .Release.Name }}
-        image: nacos/nacos-server:v2.2.0
+        image: nacos/nacos-server:v2.2.3
         ports:
           - name: http
             containerPort: 8848
