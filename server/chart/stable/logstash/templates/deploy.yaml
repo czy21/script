@@ -24,7 +24,7 @@ spec:
               mountPath: /usr/share/logstash/pipeline/
             - name: data
               mountPath: /usr/share/logstash/data/
-            - name: log
+            - name: data-app-log
               mountPath: /app/log/
               subPath: log
       volumes:
@@ -43,7 +43,7 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: data-logstash
-        - name: log
+        - name: data-app-log
           persistentVolumeClaim:
             claimName: data-app-log
 ---
