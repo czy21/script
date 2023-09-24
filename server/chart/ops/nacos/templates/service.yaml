@@ -10,7 +10,7 @@ spec:
   ports:
   - name: http
     port: 8848
-    targetPort: 8848
-  - name: rpc
+    targetPort: http
+  - name: grpc
     port: 9848
-    targetPort: 9848
+    targetPort: grpc
