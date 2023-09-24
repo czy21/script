@@ -60,6 +60,8 @@ spec:
                   fieldPath: metadata.name
             - name: TZ
               value: Asia/Shanghai
+            - name: SPRING_PROFILES_ACTIVE
+              value: {{ .Values.param_spring_profiles_active }}
             - name: JAVA_OPTS
               value: {{ .Values.param_app_args }}
           volumeMounts:
