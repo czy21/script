@@ -1,0 +1,59 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Release.Name }}
+          image: logstash:7.17.10
+          volumeMounts:
+            - name: conf
+              mountPath: /usr/share/logstash/config/logstash.yml
+              subPath: logstash.yml
+            - name: conf-pipeline
+              mountPath: /usr/share/logstash/pipeline/
+            - name: data
+              mountPath: /usr/share/logstash/data/
+            - name: log
+              mountPath: /app/log/
+              subPath: log
+      volumes:
+        - name: conf
+          configMap:
+            name: {{ .Release.Name }}
+            items:
+              - key: logstash.yml
+                path: logstash.yml
+        - name: conf-pipeline
+          configMap:
+            name: {{ .Release.Name }}
+            items:
+              - key: logstash-spring.conf
+                path: logstash-spring.conf
+        - name: data
+          persistentVolumeClaim:
+            claimName: data-logstash
+        - name: log
+          persistentVolumeClaim:
+            claimName: data-app-log
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-logstash
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 256Gi
