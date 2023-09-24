@@ -21,7 +21,7 @@ spec:
         ports:
           - name: http
             containerPort: 8848
-          - name: rpc
+          - name: grpc
             containerPort: 9848
         env:
           - name: PREFER_HOST_MODE
