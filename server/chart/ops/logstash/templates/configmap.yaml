@@ -1,0 +1,32 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Release.Name }}
+data:
+  logstash.yml: |
+    http.host: "0.0.0.0"
+    xpack.monitoring.enabled: true
+    xpack.monitoring.elasticsearch.hosts: ["http://{{ .Values.param_db_es_host }}:80"]
+    xpack.monitoring.elasticsearch.username: {{ .Values.param_db_es_username }}
+    xpack.monitoring.elasticsearch.password: {{ .Values.param_db_es_password }}
+  logstash-spring.conf: |
+    input {
+      file {
+        path => "/app/log/*/*.json"
+        codec => "json"
+        start_position => beginning
+      }
+    }
+
+    output {
+      elasticsearch {
+        hosts => ["http://{{ .Values.param_db_es_host }}:80"]
+        index => "%{service}-%{+YYYY.MM.dd}"
+        user => "{{ .Values.param_db_es_username }}"
+        password => "{{ .Values.param_db_es_password }}"
+      }
+    }
