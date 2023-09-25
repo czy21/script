@@ -43,9 +43,6 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: {{ .Values.param_data_claim_name }}
-        - name: log
-          persistentVolumeClaim:
-            claimName: {{ .Values.param_log_claim_name }}
       containers:
         - name: {{ .Release.Name }}
           image: {{ .Values.param_registry_repo }}/{{ .Values.param_registry_dir }}/{{ .Release.Name }}:{{ .Values.param_release_version }}
@@ -68,9 +65,6 @@ spec:
             - name: data
               mountPath: /app/data/
               subPath: data
-            - name: log
-              mountPath: /app/log/
-              subPath: log
 #          readinessProbe:
 #            httpGet:
 #              path: /actuator/health
