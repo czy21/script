@@ -16,6 +16,9 @@ spec:
       containers:
         - name: {{ .Release.Name }}
           image: logstash:7.17.10
+          ports:
+            - name: spring
+              containerPort: 4560
           volumeMounts:
             - name: conf
               mountPath: /usr/share/logstash/config/logstash.yml
