@@ -24,9 +24,6 @@ spec:
               mountPath: /usr/share/logstash/pipeline/
             - name: data
               mountPath: /usr/share/logstash/data/
-            - name: data-app-log
-              mountPath: /app/log/
-              subPath: log
       volumes:
         - name: conf
           configMap:
@@ -43,9 +40,6 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: data-logstash
-        - name: data-app-log
-          persistentVolumeClaim:
-            claimName: data-app-log
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
