@@ -1,7 +1,7 @@
 # esxi 显卡直通后导致宿主机死机的解决方法
 ```shell
 # ssh登录esxi后台
-echo '10de ffff linke false' >> /etc/vmware/passthru.map
+echo '10de ffff link false' >> /etc/vmware/passthru.map
 ```
 
 # vmware RDM硬盘直通{0} 硬盘挂载地址, {1} 生成目标映射地址
