@@ -1,4 +1,4 @@
-# esxi 显卡直通后导致宿主机死机;解决方法
+# esxi 显卡直通后导致宿主机死机的解决方法
 ```shell
 echo '10de ffff linke false' >> /etc/vmware/passthru.map
 ```
