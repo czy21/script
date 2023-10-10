@@ -30,7 +30,18 @@ def build() {
     def cmdMap = [
             java  : {
                 sdkMap.get("java").call()
-                if ("gradle" == env.param_java_build_tool) {
+                if ("mvn" == env.param_java_build_tool) {
+                    env.MAVEN_HOME = "${tool 'mvn-3.9'}"
+                    env.PATH = "${MAVEN_HOME}/bin:${PATH}"
+                    configFileProvider([configFile(fileId: "mvn.config", variable: 'CONFIG_FILE_MVN')]) {
+                        cmd = StringUtils.format(
+                                "mvn clean install -f {0}/pom.xml -s {1} -U -e -Dmaven.test.skip=true",
+                                env.param_project_root,
+                                "${CONFIG_FILE_MVN}")
+                        sh "${cmd}"
+                    }
+                }
+                else {
                     configFileProvider([configFile(fileId: "gradle.config", variable: 'CONFIG_FILE_GRADLE')]) {
                         cmd_base = StringUtils.format(
                                 "chmod +x {0}/gradlew && {0}/gradlew --init-script {1} --build-file {0}/build.gradle",
@@ -42,17 +53,6 @@ def build() {
                                 cmd_base,
                                 ["clean", "build"].collect { t -> StringUtils.join(":", env.param_project_module, t) }.join(" ")
                         )
-                        sh "${cmd}"
-                    }
-                }
-                else {
-                    env.MAVEN_HOME = "${tool 'mvn-3.9'}"
-                    env.PATH = "${MAVEN_HOME}/bin:${PATH}"
-                    configFileProvider([configFile(fileId: "mvn.config", variable: 'CONFIG_FILE_MVN')]) {
-                        cmd = StringUtils.format(
-                                "mvn clean install -f {0}/pom.xml -s {1} -U -e -Dmaven.test.skip=true",
-                                env.param_project_root,
-                                "${CONFIG_FILE_MVN}")
                         sh "${cmd}"
                     }
                 }
