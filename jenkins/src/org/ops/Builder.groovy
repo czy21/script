@@ -47,7 +47,7 @@ def build() {
                 }
                 else {
                     env.MAVEN_HOME = "${tool 'mvn-3.9'}"
-                    env.PATH = "${MAVEN_HOME}:${PATH}"
+                    env.PATH = "${MAVEN_HOME}/bin:${PATH}"
                     configFileProvider([configFile(fileId: "mvn.config", variable: 'CONFIG_FILE_MVN')]) {
                         cmd = StringUtils.format(
                                 "mvn clean install -f {0}/pom.xml -s {1} -U -e -Dmaven.test.skip=true",
