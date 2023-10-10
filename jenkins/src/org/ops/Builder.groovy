@@ -30,7 +30,22 @@ def build() {
     def cmdMap = [
             java  : {
                 sdkMap.get("java").call()
-                if ("mvn" == env.param_java_build_tool) {
+                if ("gradle" == env.param_java_build_tool) {
+                    configFileProvider([configFile(fileId: "gradle.config", variable: 'CONFIG_FILE_GRADLE')]) {
+                        cmd_base = StringUtils.format(
+                                "chmod +x {0}/gradlew && {0}/gradlew --init-script {1} --build-file {0}/build.gradle",
+                                env.param_project_root,
+                                "${CONFIG_FILE_GRADLE}",
+                        )
+                        cmd = StringUtils.format(
+                                "{0} {1} -x test --refresh-dependencies",
+                                cmd_base,
+                                ["clean", "build"].collect { t -> StringUtils.join(":", env.param_project_module, t) }.join(" ")
+                        )
+                        sh "${cmd}"
+                    }
+                }
+                else {
                     env.MAVEN_HOME = "${tool 'mvn-3.9'}"
                     configFileProvider([configFile(fileId: "mvn.config", variable: 'CONFIG_FILE_MVN')]) {
                         cmd = StringUtils.format(
@@ -39,19 +54,6 @@ def build() {
                                 "${CONFIG_FILE_MVN}")
                         sh "${cmd}"
                     }
-                }
-                configFileProvider([configFile(fileId: "gradle.config", variable: 'CONFIG_FILE_GRADLE')]) {
-                    cmd_base = StringUtils.format(
-                            "chmod +x {0}/gradlew && {0}/gradlew --init-script {1} --build-file {0}/build.gradle",
-                            env.param_project_root,
-                            "${CONFIG_FILE_GRADLE}",
-                    )
-                    cmd = StringUtils.format(
-                            "{0} {1} -x test --refresh-dependencies",
-                            cmd_base,
-                            ["clean", "build"].collect { t -> StringUtils.join(":", env.param_project_module, t) }.join(" ")
-                    )
-                    sh "${cmd}"
                 }
             },
             go    : {
