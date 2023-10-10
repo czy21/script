@@ -42,15 +42,17 @@ def build() {
                     }
                 }
                 else {
+                    env.GRADLE_HOME = "${tool 'gradle-8.4'}"
+                    env.PATH = "${GRADLE_HOME}/bin:${PATH}"
                     configFileProvider([configFile(fileId: "gradle.config", variable: 'CONFIG_FILE_GRADLE')]) {
-                        cmd_base = StringUtils.format(
-                                "chmod +x {0}/gradlew && {0}/gradlew --init-script {1} --build-file {0}/build.gradle",
+                        base = StringUtils.format(
+                                "gradle --init-script {1} --build-file {0}/build.gradle",
                                 env.param_project_root,
-                                "${CONFIG_FILE_GRADLE}",
+                                "${CONFIG_FILE_GRADLE}"
                         )
                         cmd = StringUtils.format(
                                 "{0} {1} -x test --refresh-dependencies",
-                                cmd_base,
+                                base,
                                 ["clean", "build"].collect { t -> StringUtils.join(":", env.param_project_module, t) }.join(" ")
                         )
                         sh "${cmd}"
