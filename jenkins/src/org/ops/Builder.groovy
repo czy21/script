@@ -25,7 +25,7 @@ def build() {
                 env.CGO_ENABLED = "0"
                 env.PATH = "${GO_HOME}/bin:${PATH}"
             },
-            web   : {
+            node   : {
                 env.NODEJS_HOME = "${tool 'node-v18.14.0'}"
                 env.PATH = "${NODEJS_HOME}/bin:${PATH}"
             },
@@ -59,8 +59,8 @@ def build() {
                 cmd = StringUtils.format("cd {0};go build -o build main.go;", env.param_project_context)
                 sh "${cmd}"
             },
-            web   : {
-                toolMap.get("web").call()
+            node   : {
+                toolMap.get("node").call()
                 cmd = StringUtils.format("{0} install --no-lockfile --update-checksums && {0} --ignore-engines build",
                         StringUtils.format("yarn --cwd {0} --registry {1}", env.param_project_context, env.param_npm_repo)
                 )
