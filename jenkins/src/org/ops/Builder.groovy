@@ -38,19 +38,16 @@ def build() {
     def langMap = [
             java  : {
                 toolMap.get("java").call()
-                if ("mvn" == env.param_java_build_tool || fileExists("${env.param_project_root}/pom.xml")) {
+                if ("mvn" == env.param_java_build_tool || fileExists("${env.param_project_context}/pom.xml")) {
                     toolMap.get("maven").call()
-                    configFileProvider([configFile(fileId: "mvn.config", variable: 'CONFIG_FILE_MVN')]) {
-                        cmd = StringUtils.format("mvn clean install -f {0}/pom.xml -s {1} -U -e -Dmaven.test.skip=true", env.param_project_root, "${CONFIG_FILE_MVN}")
-                        sh "${cmd}"
+                    configFileProvider([configFile(fileId: "mvn.config", variable: 'CONFIG_FILE')]) {
+                        sh "mvn -s ${CONFIG_FILE} -f ${env.param_project_context}/pom.xml clean install -U -e -Dmaven.test.skip=true"
                     }
                 }
-                if ("gradle" == env.param_java_build_tool || fileExists("${env.param_project_root}/build.gradle")) {
+                if ("gradle" == env.param_java_build_tool || fileExists("${env.param_project_context}/build.gradle")) {
                     toolMap.get("gradle").call()
-                    configFileProvider([configFile(fileId: "gradle.config", variable: 'CONFIG_FILE_GRADLE')]) {
-                        base = StringUtils.format("gradle --init-script {1} --build-file {0}/build.gradle", env.param_project_root, "${CONFIG_FILE_GRADLE}")
-                        cmd = StringUtils.format("{0} {1} -x test --refresh-dependencies",base,["clean", "build"].collect { t -> StringUtils.join(":", env.param_project_module, t) }.join(" "))
-                        sh "${cmd}"
+                    configFileProvider([configFile(fileId: "gradle.config", variable: 'CONFIG_FILE')]) {
+                        sh "gradle -I ${CONFIG_FILE} -b ${env.param_project_context}/build.gradle clean build -U -x test"
                     }
                 }
             },
