@@ -4,6 +4,36 @@ package org.ops
 import org.ops.util.PathUtils
 import org.ops.util.StringUtils
 
+def maven_build(){
+    env.MAVEN_HOME = "${tool 'mvn-3.9'}"
+    env.PATH = "${MAVEN_HOME}/bin:${PATH}"
+    configFileProvider([configFile(fileId: "mvn.config", variable: 'CONFIG_FILE_MVN')]) {
+        cmd = StringUtils.format(
+                "mvn clean install -f {0}/pom.xml -s {1} -U -e -Dmaven.test.skip=true",
+                env.param_project_root,
+                "${CONFIG_FILE_MVN}")
+        sh "${cmd}"
+    }
+}
+
+def gradle_build(){
+    env.GRADLE_HOME = "${tool 'gradle-8.4'}"
+    env.PATH = "${GRADLE_HOME}/bin:${PATH}"
+    configFileProvider([configFile(fileId: "gradle.config", variable: 'CONFIG_FILE_GRADLE')]) {
+        base = StringUtils.format(
+                "gradle --init-script {1} --build-file {0}/build.gradle",
+                env.param_project_root,
+                "${CONFIG_FILE_GRADLE}"
+        )
+        cmd = StringUtils.format(
+                "{0} {1} -x test --refresh-dependencies",
+                base,
+                ["clean", "build"].collect { t -> StringUtils.join(":", env.param_project_module, t) }.join(" ")
+        )
+        sh "${cmd}"
+    }
+}
+
 def build() {
     def sdkMap = [
             java  : {
@@ -30,33 +60,11 @@ def build() {
     def cmdMap = [
             java  : {
                 sdkMap.get("java").call()
-                if ("mvn" == env.param_java_build_tool) {
-                    env.MAVEN_HOME = "${tool 'mvn-3.9'}"
-                    env.PATH = "${MAVEN_HOME}/bin:${PATH}"
-                    configFileProvider([configFile(fileId: "mvn.config", variable: 'CONFIG_FILE_MVN')]) {
-                        cmd = StringUtils.format(
-                                "mvn clean install -f {0}/pom.xml -s {1} -U -e -Dmaven.test.skip=true",
-                                env.param_project_root,
-                                "${CONFIG_FILE_MVN}")
-                        sh "${cmd}"
-                    }
+                if ("mvn" == env.param_java_build_tool || fileExists("${env.param_project_root}/pom.xml")) {
+                    maven_build()
                 }
-                else {
-                    env.GRADLE_HOME = "${tool 'gradle-8.4'}"
-                    env.PATH = "${GRADLE_HOME}/bin:${PATH}"
-                    configFileProvider([configFile(fileId: "gradle.config", variable: 'CONFIG_FILE_GRADLE')]) {
-                        base = StringUtils.format(
-                                "gradle --init-script {1} --build-file {0}/build.gradle",
-                                env.param_project_root,
-                                "${CONFIG_FILE_GRADLE}"
-                        )
-                        cmd = StringUtils.format(
-                                "{0} {1} -x test --refresh-dependencies",
-                                base,
-                                ["clean", "build"].collect { t -> StringUtils.join(":", env.param_project_module, t) }.join(" ")
-                        )
-                        sh "${cmd}"
-                    }
+                if ("gradle" == env.param_java_build_tool || fileExists("${env.param_project_root}/build.gradle")) {
+                    gradle_build()
                 }
             },
             go    : {
