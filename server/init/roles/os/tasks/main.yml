@@ -15,9 +15,9 @@
 
 - name: sshd_config
   shell: |-
-    echo -n "
+    cat << EOF > /etc/ssh/sshd_config.d/99-custom.conf
     UseDNS no
     PermitRootLogin yes
     PasswordAuthentication no
     ClientAliveInterval 30
-    " > /etc/ssh/sshd_config.d/99-custom.conf
+    EOF
