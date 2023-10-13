@@ -23,6 +23,7 @@ services:
         --spring.datasource.url=jdbc:mysql://{{ param_db_mysql_host }}:{{ param_db_mysql_port }}/xxl_job?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai 
         --spring.datasource.username={{ param_db_mysql_username }}
         --spring.datasource.password={{ param_db_mysql_password }}
+        --xxl.job.access-token=''
         --server.servlet.context-path=/
       "
     restart: always
