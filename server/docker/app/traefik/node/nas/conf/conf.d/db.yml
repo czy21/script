@@ -1,25 +1,11 @@
 http:
   routers:
-    nexus:
-      rule: Host(`nexus.czy21-internal.com`)
-      service: nexus@docker
-    nexus-repository:
-      rule: Host(`nexus.czy21-internal.com`) && PathPrefix(`/repository`)
-      service: nexus@docker
-      middlewares:
-        - raw-proxy
-        - apt-proxy
-        - yum-proxy
-    registry:
-      rule: Host(`registry.czy21-internal.com`)
-      service: nexus@docker
-      middlewares:
-        - registry-hosted
-    registry-proxy:
-      rule: Host(`registry-proxy.czy21-internal.com`)
-      service: nexus@docker
-      middlewares:
-        - registry-proxy-group
+    flink-jmr:
+      rule: Host(`flink-jmr.czy21-internal.com`)
+      service: flink-jmr@docker
+    flink-his:
+      rule: Host(`flink-his.czy21-internal.com`)
+      service: flink-his@docker
     ndisk:
       rule: Host(`ndisk.czy21-internal.com`)
       service: ndisk@docker
@@ -50,33 +36,3 @@ http:
     redis-exporter:
       rule: Host(`redis-exporter-{{ param_cluster_name }}.czy21-internal.com`)
       service: redis-exporter@docker
-
-  middlewares:
-    force-https-header:
-      headers:
-        customRequestHeaders:
-          X-Forwarded-Proto: "https"
-    https-redirect:
-      redirectScheme:
-        scheme: https
-        permanent: true
-    raw-proxy:
-      replacePathRegex:
-        regex: "^/repository/raw-proxy/(.*)/"
-        replacement: "/repository/raw-proxy-${1}/"
-    apt-proxy:
-      replacePathRegex:
-        regex: "^/repository/apt-proxy/(.*)/"
-        replacement: "/repository/apt-proxy-${1}/"
-    yum-proxy:
-      replacePathRegex:
-        regex: "^/repository/yum-proxy/(.*)/"
-        replacement: "/repository/yum-proxy-$1/"
-    registry-hosted:
-      replacePathRegex:
-        regex: "^/"
-        replacement: "/repository/docker-hosted/"
-    registry-proxy-group:
-      replacePathRegex:
-        regex: "^/"
-        replacement: "/repository/docker-proxy-group/"

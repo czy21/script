@@ -1,11 +1,5 @@
 http:
   routers:
-    flink-jmr:
-      rule: Host(`flink-jmr.czy21-internal.com`)
-      service: flink-jmr@docker
-    flink-his:
-      rule: Host(`flink-his.czy21-internal.com`)
-      service: flink-his@docker
     adminer:
       rule: Host(`adminer.czy21-internal.com`)
       service: adminer@docker
@@ -15,14 +9,3 @@ http:
     youtrack:
       rule: Host(`youtrack.czy21-internal.com`)
       service: youtrack@docker
-#    joomla:
-#      rule: Host(`blog.czy21.com`)
-#      service: joomla@docker
-#      middlewares:
-#        - force-https-header
-#    pulsar-proxy:
-#      rule: Host(`pulsar-proxy.czy21-internal.com`)
-#      service: pulsar-proxy@docker
-#    pulsar-manager:
-#      rule: Host(`pulsar-web.czy21-internal.com`)
-#      service: pulsar-manager@docker
