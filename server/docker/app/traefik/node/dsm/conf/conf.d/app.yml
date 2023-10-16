@@ -1,0 +1,8 @@
+http:
+  routers:
+    phpldapadmin:
+      rule: Host(`pla.czy21-internal.com`)
+      service: phpldapadmin@docker
+    youtrack:
+      rule: Host(`youtrack.czy21-internal.com`)
+      service: youtrack@docker
