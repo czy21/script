@@ -56,7 +56,7 @@ def build() {
                 cmd = StringUtils.format("cd {0};go build -o build main.go;", env.param_project_context)
                 sh "${cmd}"
             },
-            node   : {
+            web   : {
                 toolMap.get("node").call()
                 cmd = StringUtils.format("{0} install --no-lockfile --update-checksums && {0} --ignore-engines build",
                         StringUtils.format("yarn --cwd {0} --registry {1}", env.param_project_context, env.param_npm_repo)

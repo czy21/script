@@ -39,10 +39,6 @@ spec:
       annotations:
         helm.sh/revision: "{{ .Release.Revision }}"
     spec:
-      volumes:
-        - name: data
-          persistentVolumeClaim:
-            claimName: {{ .Values.param_data_claim_name }}
       containers:
         - name: {{ .Release.Name }}
           image: {{ .Values.param_registry_repo }}/{{ .Values.param_registry_dir }}/{{ .Release.Name }}:{{ .Values.param_release_version }}
@@ -65,16 +61,25 @@ spec:
             - name: data
               mountPath: /app/data/
               subPath: data
-#          readinessProbe:
-#            httpGet:
-#              path: /actuator/health
-#              port: 8080
-#            initialDelaySeconds: 10
-#            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
           livenessProbe:
             httpGet:
               path: /actuator/health
               port: 8080
-            initialDelaySeconds: 90
+            initialDelaySeconds: 30
+            periodSeconds: 10
             timeoutSeconds: 5
-            periodSeconds: 30
+            successThreshold: 1
+            failureThreshold: 3
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ .Values.param_data_claim_name }}
