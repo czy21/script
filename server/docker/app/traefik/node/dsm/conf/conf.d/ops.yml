@@ -3,3 +3,13 @@ http:
     gitea:
       rule: Host(`gitea.czy21-internal.com`)
       service: gitea@docker
+
+  middlewares:
+    force-https-header:
+      headers:
+        customRequestHeaders:
+          X-Forwarded-Proto: "https"
+    https-redirect:
+      redirectScheme:
+        scheme: https
+        permanent: true
