@@ -23,6 +23,6 @@ services:
       PUID: 1000
       PGID: 1000
       TZ: Asia/Shanghai
-    devices:
-      - /dev/dri:/dev/dri
+    # devices:
+    #   - /dev/dri:/dev/dri
     restart: always
