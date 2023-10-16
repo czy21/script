@@ -1,0 +1,5 @@
+http:
+  routers:
+    gitea:
+      rule: Host(`gitea.czy21-internal.com`)
+      service: gitea@docker
