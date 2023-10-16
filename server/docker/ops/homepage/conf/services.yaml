@@ -13,6 +13,12 @@
         widget:
           type: traefik
           url: http://traefik-base.czy21-internal.com
+    - traefik-dsm:
+        icon: traefik.svg
+        href: http://traefik-dsm.czy21-internal.com
+        widget:
+          type: traefik
+          url: http://traefik-dsm.czy21-internal.com
     - traefik-nas:
         icon: traefik.svg
         href: http://traefik-nas.czy21-internal.com

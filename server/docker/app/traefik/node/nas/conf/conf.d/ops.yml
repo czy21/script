@@ -1,5 +1,11 @@
 http:
   routers:
+    nginx-exporter:
+      rule: Host(`nginx-exporter-{{ param_cluster_name }}.czy21-internal.com`)
+      service: nginx-exporter@docker
+    fluent-bit-log-metrics:
+      rule: Host(`fluent-bit-{{ param_cluster_name }}-log-metrics.czy21-internal.com`)
+      service: fluent-bit-log-metrics@docker
     grafana:
       rule: Host(`grafana.czy21-internal.com`)
       service: grafana@docker
