@@ -1,0 +1,196 @@
+param_disk_path: &param_disk_path /volume1
+
+# default
+param_docker_root: !join ["/",*param_disk_path,"@docker"]
+param_docker_data: !join ["/",*param_disk_path,"docker"]
+
+param_public_path: !join ["/",*param_disk_path,public]
+
+param_mirror_use_proxy: true
+param_mirror_host: &param_mirror_host nexus.czy21-internal.com/repository
+param_mirror_apt: !join ["/",*param_mirror_host,apt-proxy]
+param_mirror_yum: !join ["/",*param_mirror_host,yum-proxy]
+param_mirror_raw: !join ["/",*param_mirror_host,raw-proxy]
+
+param_manage_username: &param_manage_username admin
+param_manage_password: &param_manage_password !decrypt ["Q3p5MjAyMTAzMTQuCg=="]
+param_manage_email: 805899926@qq.com
+
+param_user_ops: opsor
+param_user_ops_ssh_public_key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC3nTRJ/aVb67l1xMaN36jmIbabU7Hiv/xpZ8bwLVvNO3Bj7kUzYTp7DIbPcHQg4d6EsPC6j91E8zW6CrV2fo2Ai8tDO/rCq9Se/64F3+8oEIiI6E/OfUZfXD1mPbG7M/kcA3VeQP6wxNPhWBbKRisqgUc6VTKhl+hK6LwRTZgeShxSNcey+HZst52wJxjQkNG+7CAEY5bbmBzAlHCSl4Z0RftYTHR3q8LcEg7YLNZasUogX68kBgRrb+jw1pRMNo7o7RI9xliDAGX+E4C3vVZL0IsccKgr90222axsADoEjC9O+Q6uwKjahemOVaau+9sHIwkelcOcCzW5SuAwkezv 805899926@qq.com" # ssh-rsa XXX
+
+param_nfs_kube_server: 192.168.2.18
+param_nfs_kube_data: /export/kube
+
+param_smb_kube_server: 192.168.2.18
+param_smb_kube_data: kube
+param_smb_kube_username: opsor
+param_smb_kube_password: *param_manage_password
+
+param_registry_url: registry.czy21-internal.com
+param_registry_dir: library
+param_registry_proxy_url: registry-proxy.czy21-internal.com
+
+param_registry_git_repo: git@gitea.czy21-internal.com:2226/czyhome/container
+
+param_registry_git_repos:
+  - name: github
+    url: https://github.com/czy21/container
+  - name: gitee
+    url: https://gitee.com/czy21/container
+
+param_registry_github_url: ghcr.io
+param_registry_github_dir: czy21
+
+param_registry_dockerhub_url: docker.io
+param_registry_dockerhub_dir: czy21
+
+param_helm_repo_name: nexus
+param_helm_repo_url: http://nexus.czy21-internal.com/repository/helm-hosted
+param_helm_username: *param_manage_username
+param_helm_password: *param_manage_password
+
+param_grafana_host: grafana.czy21-internal.com
+param_grafana_username: *param_manage_username
+param_grafana_password: *param_manage_password
+
+param_db_host: &param_db_host 192.168.2.18
+param_db_username: &param_db_username admin
+param_db_password: &param_db_password !decrypt ["Q3p5LjE5MDgxNQo="]
+
+param_db_mysql_host: *param_db_host
+param_db_mysql_port: 3306
+param_db_mysql_username: *param_db_username
+param_db_mysql_password: *param_db_password
+
+param_db_mariadb_host: *param_db_host
+param_db_mariadb_port: 3406
+param_db_mariadb_username: *param_db_username
+param_db_mariadb_password: *param_db_password
+
+param_db_pgsql_host: *param_db_host
+param_db_pgsql_port: 5432
+param_db_pgsql_username: postgres
+param_db_pgsql_password: *param_db_password
+
+param_db_mssql_host: *param_db_host
+param_db_mssql_port: 1433
+param_db_mssql_username: sa
+param_db_mssql_password: *param_db_password
+
+param_db_mongo_host: *param_db_host
+param_db_mongo_port: 27017
+param_db_mongo_username: *param_db_username
+param_db_mongo_password: *param_db_password
+
+param_db_neo4j_host: *param_db_host
+param_db_neo4j_port: 7474
+param_db_neo4j_username: *param_db_username
+param_db_neo4j_password: *param_db_password
+
+param_db_redis_host: 192.168.2.2
+param_db_redis_port: 6379
+param_db_redis_password: *param_db_password
+
+param_db_redis_deploy_roles: cluster # single,cluster
+param_db_redis_cluster_start_port: 7000
+param_db_redis_cluster_ip: 192.168.2.18
+param_db_redis_cluster_replicas: 3
+
+param_db_etcd_host: 192.168.2.18
+param_db_etcd_cluster_name: 1
+param_db_etcd_cluster_start_port: 2381
+param_db_etcd_cluster_replicas: 3
+
+param_db_es_host: es.czy21-internal.com
+param_db_es_port: 80
+param_db_es_username: *param_db_username
+param_db_es_password: *param_db_password
+
+param_db_es_cluster_name: '1'
+param_db_es_cluster_replicas: 2
+
+param_db_kb_host: kb.czy21-internal.com
+param_db_kb_port: 80
+
+param_db_opensearch_host: opensearch.czy21-internal.com
+param_db_opensearch_port: 80
+param_db_opensearch_username: *param_db_username
+param_db_opensearch_password: *param_db_password
+
+param_db_opensearch_cluster_name: '1'
+param_db_opensearch_cluster_replicas: 2
+
+param_db_opensearch_dashboard_host: opensearch-dashboard.czy21-internal.com
+param_db_opensearch_dashboard_port: 80
+
+param_db_minio_host: minio.czy21-internal.com
+param_db_minio_username: *param_db_username
+param_db_minio_password: *param_db_password
+
+param_db_minio_deploy_role: single # single,cluster
+param_db_minio_cluster_replicas: 2
+param_db_minio_cluster_drives: 2
+
+param_db_zk_host: *param_db_host
+param_db_zk_cluster_replicas: 3
+param_db_zk_cluster_servers: &param_db_zk_cluster_servers 192.168.2.18:2181,192.168.2.18:2182,192.168.2.18:2183
+
+param_db_ch_host: *param_db_host
+param_db_ch_port: 8123
+param_db_ch_username: *param_db_username
+param_db_ch_password: *param_db_password
+
+param_db_ch_deploy_roles: cluster # single,cluster
+param_db_ch_cluster_name: 1
+param_db_ch_cluster_start_port: 8124
+param_db_ch_cluster_replicas: 2
+
+param_db_cassandra_host: *param_db_host
+param_db_cassandra_port: 7000
+param_db_cassandra_username: *param_db_username
+param_db_cassandra_password: *param_db_password
+param_db_cassandra_deploy_roles: cluster # single,cluster
+param_db_cassandra_cluster_name: 1
+param_db_cassandra_cluster_start_port: 7001
+param_db_cassandra_cluster_replicas: 2
+
+param_db_crate_host: *param_db_host
+param_db_crate_port: 4200
+param_db_crate_username: *param_db_username
+param_db_crate_password: *param_db_password
+
+param_db_crate_deploy_roles: cluster # single,cluster
+param_db_crate_cluster_name: 1
+param_db_crate_cluster_start_port: 4201
+param_db_crate_cluster_crate_start_port: 5401
+param_db_crate_cluster_replicas: 3
+
+param_ops_jaeger_cluster_collector_replicas: 2
+
+param_db_influxdb_username: *param_db_username
+param_db_influxdb_password: *param_db_password
+
+param_mq_rabbit_username: *param_db_username
+param_mq_rabbit_password: *param_db_password
+
+param_mq_kafka_cluster_name: cluster1
+param_mq_kafka_cluster_replicas: 2
+param_mq_kafka_cluster_host_ip: 192.168.2.18
+param_mq_kafka_cluster_zk_servers: *param_db_zk_cluster_servers
+param_mq_kafka_cluster_zk_root_path: kafka
+
+param_mq_pulsar_cluster_name: cluster1
+param_mq_pulsar_cluster_bookie_replicas: 2
+param_mq_pulsar_cluster_broker_replicas: 2
+param_mq_pulsar_cluster_zk_servers: *param_db_zk_cluster_servers
+param_mq_pulsar_cluster_zk_root_path: pulsar
+param_mq_pulsar_web_username: *param_manage_username
+param_mq_pulsar_web_password: *param_manage_password
+
+param_mq_rocket_cluster_name: cluster1
+param_mq_rocket_cluster_replicas: 2
+param_mq_rocket_cluster_host_ip: 192.168.2.18
+
+param_bd_flink_cluster_tmr_replicas: 2
+param_bd_hadoop_hdfs_datanode_replicas: 2
