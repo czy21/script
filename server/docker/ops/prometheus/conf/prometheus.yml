@@ -49,6 +49,7 @@ scrape_configs:
     static_configs:
       - targets: ['cadvisor-nas.czy21-internal.com']
       - targets: ['cadvisor-base.czy21-internal.com']
+      - targets: ['cadvisor-dsm.czy21-internal.com']
 
   - job_name: mysql
     static_configs:

@@ -372,7 +372,7 @@ class Installer:
                 # process env
                 if role_env_file and role_env_file.exists():
                     role_env |= yaml_util.load(template_util.Template(file_util.read_text(role_env_file)).render(**role_env))
-                    file_util.write_text(role_env_output_file, yaml.dump(role_env))
+                file_util.write_text(role_env_output_file, yaml.dump(role_env))
                 role_env |= args.param
                 # process template
                 for t in filter(lambda f: f.is_file() and not any(regex_util.match_rules(["build/"], f.as_posix()).values()), role_path.rglob("*")):
@@ -389,6 +389,7 @@ class Installer:
 
                 # collect command
                 _cmds = [
+                    "export PATH=/usr/local/bin:$PATH",
                     echo_action(role_title, args.command)
                 ]
                 if args.command == Command.build.value:
