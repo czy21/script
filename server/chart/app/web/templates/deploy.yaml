@@ -10,6 +10,7 @@ metadata:
     app: {{ .Values.param_app_name | default .Release.Name }}
     version: {{ .Values.param_app_version | default .Values.param_release_version }}
 spec:
+  revisionHistoryLimit: 3
   replicas: 2
   strategy:
     type: RollingUpdate
@@ -26,14 +27,12 @@ spec:
         version: {{ .Values.param_app_version | default .Values.param_release_version }}
     spec:
       containers:
-      - name: {{ .Values.param_app_name | default .Release.Name }}
-        image: "{{ .Values.param_registry_repo }}/{{ .Values.param_registry_dir }}/{{ .Values.param_image_name | default .Values.param_release_name }}:{{ .Values.param_image_version | default .Values.param_release_version }}"
-        imagePullPolicy: Always
-        ports:
-          - name: http
-            containerPort: 80
-          - name: https
-            containerPort: 443
-        env:
-          - name: TZ
-            value: Asia/Shanghai
+        - name: {{ .Values.param_app_name | default .Release.Name }}
+          image: "{{ .Values.param_registry_repo }}/{{ .Values.param_registry_dir }}/{{ .Values.param_image_name | default .Values.param_release_name }}:{{ .Values.param_image_version | default .Values.param_release_version }}"
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 80
+          env:
+            - name: TZ
+              value: Asia/Shanghai
