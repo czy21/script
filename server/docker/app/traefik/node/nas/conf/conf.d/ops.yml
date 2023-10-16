@@ -6,9 +6,6 @@ http:
     consul:
       rule: Host(`consul.czy21-internal.com`)
       service: consul@docker
-    gitea:
-      rule: Host(`gitea.czy21-internal.com`)
-      service: gitea@docker
     gradle-build-cache:
       rule: Host(`gbc.czy21-internal.com`)
       service: gradle-build-cache@docker
@@ -36,3 +33,13 @@ http:
     concourse:
       rule: Host(`concourse.czy21-internal.com`)
       service: concourse@docker
+      
+  middlewares:
+    force-https-header:
+      headers:
+        customRequestHeaders:
+          X-Forwarded-Proto: "https"
+    https-redirect:
+      redirectScheme:
+        scheme: https
+        permanent: true
