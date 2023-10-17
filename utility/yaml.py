@@ -2,8 +2,9 @@ import pathlib
 from typing import Union
 
 import pydash.objects
+
 import yaml
-from utility import file as file_util, safe as safe_util, path as path_util, collection as collection_util, template as template_util
+from utility import file as file_util, safe as safe_util, path as path_util, collection as collection_util, template as template_util, basic as basic_util
 from yaml import FullLoader
 
 
@@ -18,6 +19,9 @@ def load(stream: Union[str, pathlib.Path]) -> dict:
     yaml.add_constructor('!decrypt', lambda loader, node: safe_util.decrypt(*loader.construct_sequence(node, deep=True)), loader1)
     yaml.add_constructor('!htpasswd', lambda loader, node: safe_util.htpasswd(*loader.construct_sequence(node, deep=True)), loader1)
     yaml.add_constructor("!join_path", lambda loader, node: path_util.join_path(*loader.construct_sequence(node, deep=True)), loader1)
+    yaml.add_constructor("!get_uid", lambda loader, node: basic_util.getpwnam_uid(*loader.construct_sequence(node, deep=True)), loader1)
+    yaml.add_constructor("!get_gid", lambda loader, node: basic_util.getpwnam_gid(*loader.construct_sequence(node, deep=True)), loader1)
+
     return yaml.load(stream if isinstance(stream, str) else file_util.read_text(stream), loader1)
 
 
