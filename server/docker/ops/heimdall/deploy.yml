@@ -18,7 +18,7 @@ services:
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/data/config/:/config/
     environment:
-      PUID: 1000
-      PGID: 1000
+      PUID: {{ param_user_ops_uid }}
+      PGID: {{ param_user_ops_gid }}
       TZ: Asia/Shanghai
     restart: always

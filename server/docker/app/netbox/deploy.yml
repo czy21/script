@@ -17,8 +17,8 @@ services:
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/:/config
     environment:
-      PUID: 1000
-      PGID: 1000
+      PUID: {{ param_user_ops_uid }}
+      PGID: {{ param_user_ops_gid }}
       TZ: Asia/Shanghai
       SUPERUSER_EMAIL: 805899926@qq.com
       SUPERUSER_PASSWORD: '{{ param_manage_password }}'
