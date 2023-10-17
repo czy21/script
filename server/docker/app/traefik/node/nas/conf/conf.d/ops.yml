@@ -36,9 +36,6 @@ http:
     prometheus:
       rule: Host(`prom-{{ param_cluster_name }}.czy21-internal.com`)
       service: prometheus@docker
-    concourse:
-      rule: Host(`concourse.czy21-internal.com`)
-      service: concourse@docker
       
   middlewares:
     force-https-header:
