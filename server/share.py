@@ -389,7 +389,6 @@ class Installer:
 
                 # collect command
                 _cmds = [
-                    "export PATH=/usr/local/bin:$PATH",
                     echo_action(role_title, args.command)
                 ]
                 if args.command == Command.build.value:

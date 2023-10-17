@@ -43,11 +43,11 @@ def execute(
             return
     if not dry_run:
         if is_return:
-            with subprocess.Popen(["sh", "-c", cmd], stdout=subprocess.PIPE, encoding=encoding, shell=shell) as proc:
+            with subprocess.Popen(["sh", "-c", "PATH=$PATH:/usr/local/bin;{0}".format(cmd)], stdout=subprocess.PIPE, encoding=encoding, shell=shell) as proc:
                 func(iter(proc.stdout.readline, ''), proc, func_param)
                 ret = proc.stdout.read()
                 proc.stdout.close()
                 proc.wait()
                 return ret
         else:
-            subprocess.Popen(["sh", "-c", cmd], shell=shell).wait()
+            subprocess.Popen(["sh", "-c", "PATH=$PATH:/usr/local/bin;{0}".format(cmd)], shell=shell).wait()
