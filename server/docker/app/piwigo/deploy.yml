@@ -18,6 +18,6 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/gallery/
     environment:
       TZ: Asia/Shanghai
-      PUID: 1000
-      PGID: 1000
+      PUID: {{ param_user_ops_uid }}
+      PGID: {{ param_user_ops_gid }}
 

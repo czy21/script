@@ -4,8 +4,23 @@ import logging
 import os
 import pathlib
 import subprocess
+import pwd
 
 logger = logging.getLogger()
+
+
+def getpwnam_uid(name,default=1000):
+    try:
+        return pwd.getpwnam(name).pw_uid
+    except KeyError as err:
+        return default
+
+
+def getpwnam_gid(name,default=1000):
+    try:
+        return pwd.getpwnam(name).pw_gid
+    except KeyError as err:
+        return default
 
 
 def action_formatter(action_name: str, message=None):

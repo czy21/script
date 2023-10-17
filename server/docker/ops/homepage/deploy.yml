@@ -19,7 +19,7 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/:/app/config/
       - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
-      PUID: 1000
-      PGID: 1000
+      PUID: {{ param_user_ops_uid }}
+      PGID: {{ param_user_ops_gid }}
       TZ: Asia/Shanghai
     restart: always

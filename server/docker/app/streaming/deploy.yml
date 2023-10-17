@@ -47,8 +47,8 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/data/qbittorrent/:/config/
       - {{ param_public_path }}/media/:{{ param_public_path }}/media/
     environment:
-      PUID: 1000
-      PGID: 1000
+      PUID: {{ param_user_ops_uid }}
+      PGID: {{ param_user_ops_gid }}
       TZ: Asia/Shanghai
       WEBUI_PORT: 8080
     restart: always
@@ -61,8 +61,8 @@ services:
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/data/jackett/:/config/
     environment:
-      PUID: 1000
-      PGID: 1000
+      PUID: {{ param_user_ops_uid }}
+      PGID: {{ param_user_ops_gid }}
       TZ: Asia/Shanghai
       AUTO_UPDATE: "true"
     restart: always
@@ -76,8 +76,8 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/data/radarr/:/config/
       - {{ param_public_path }}/media/:{{ param_public_path }}/media/
     environment:
-      PUID: 1000
-      PGID: 1000
+      PUID: {{ param_user_ops_uid }}
+      PGID: {{ param_user_ops_gid }}
       TZ: Asia/Shanghai
     restart: always
 
@@ -90,8 +90,8 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/data/sonarr/:/config/
       - {{ param_public_path }}/media/:{{ param_public_path }}/media/
     environment:
-      PUID: 1000
-      PGID: 1000
+      PUID: {{ param_user_ops_uid }}
+      PGID: {{ param_user_ops_gid }}
       TZ: Asia/Shanghai
     restart: always
 
@@ -103,8 +103,8 @@ services:
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/data/prowlarr/:/config/
     environment:
-      PUID: 1000
-      PGID: 1000
+      PUID: {{ param_user_ops_uid }}
+      PGID: {{ param_user_ops_gid }}
       TZ: Asia/Shanghai
     restart: always
 
@@ -117,8 +117,8 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/data/bazarr/:/config/
       - {{ param_public_path }}/media/:{{ param_public_path }}/media/
     environment:
-      PUID: 1000
-      PGID: 1000
+      PUID: {{ param_user_ops_uid }}
+      PGID: {{ param_user_ops_gid }}
       TZ: Asia/Shanghai
     restart: always
 
@@ -131,7 +131,7 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/data/chinesesubfinder/:/config/
       - {{ param_public_path }}/media/:/media/
     environment:
-      PUID: 1000    
-      PGID: 1000        
+      PUID: {{ param_user_ops_uid }}    
+      PGID: {{ param_user_ops_gid }}        
       TZ: Asia/Shanghai
     restart: always
