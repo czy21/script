@@ -14,12 +14,11 @@ unset -v args
 unset -v is_requirement
 unset -v is_debug
 
+host=$1
+shift
+
 while [ $# -gt 0 ];do
   case "$1" in
-    -h)
-      host=$2
-      shift
-      ;;
     -r)
       is_requirement=true
       ;;
