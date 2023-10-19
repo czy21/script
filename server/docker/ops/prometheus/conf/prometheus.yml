@@ -32,9 +32,6 @@ scrape_configs:
       - targets: ['prom-nas.czy21-internal.com']
         labels:
           origin_prometheus: nas
-      - targets: ['prom-test.czy21-internal.com']
-        labels:
-          origin_prometheus: test
       - targets: ['prom-prod.czy21-internal.com']
         labels:
           origin_prometheus: prod
@@ -79,6 +76,7 @@ scrape_configs:
     static_configs:
       - targets: ['traefik-nas.czy21-internal.com']
       - targets: ['traefik-base.czy21-internal.com']
+      - targets: ['traefik-dsm.czy21-internal.com']
   - job_name: nginx
     metrics_path: /metrics
     static_configs:
