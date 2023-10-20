@@ -23,3 +23,8 @@ ___pubs/
 
 # jenkins
 jenkins/lib/
+
+# ssl
+*.crt
+*.key
+*.pem
