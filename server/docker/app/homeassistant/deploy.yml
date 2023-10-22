@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   homeassistant:
-    image: homeassistant/home-assistant:stable
+    image: homeassistant/home-assistant:2023.10.4
     container_name: homeassistant
     privileged: true
     network_mode: host
