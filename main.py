@@ -14,7 +14,7 @@ if __name__ == '__main__':
     doc_public = doc.joinpath("public")
     mkdocs_template = doc.joinpath("mkdocs_template.yaml")
     docker_dir = current.joinpath("server/docker")
-    share.execute("cd {0} && rm -rf build && bash main.sh -h {1} build --target doc --env-file env-public.yaml --all-namespace".format(docker_dir.as_posix(), "rocky12"))
+    share.execute("cd {0} && rm -rf build && bash main.sh {1} build --target doc --env-file env-public.yaml --all-namespace".format(docker_dir.as_posix(), "ubun12"))
     docker_build_dir = docker_dir.joinpath("build")
     container_dir = doc_public.joinpath("container")
     container_md_names = []

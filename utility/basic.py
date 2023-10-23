@@ -4,22 +4,24 @@ import logging
 import os
 import pathlib
 import subprocess
-import pwd
+
+if os.name != "nt":
+    import pwd
 
 logger = logging.getLogger()
 
 
-def getpwnam_uid(name,default=1000):
+def getpwnam_uid(name, default=1000):
     try:
         return pwd.getpwnam(name).pw_uid
-    except KeyError as err:
+    except KeyError:
         return default
 
 
-def getpwnam_gid(name,default=1000):
+def getpwnam_gid(name, default=1000):
     try:
         return pwd.getpwnam(name).pw_gid
-    except KeyError as err:
+    except KeyError:
         return default
 
 
