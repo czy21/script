@@ -4,14 +4,11 @@ import argparse
 import logging
 import pathlib
 
-import urllib3.util
-
 from server import share
 from utility import (
     collection as collection_util,
     path as path_util,
     file as file_util,
-    regex as regex_util,
     template as template_util
 )
 

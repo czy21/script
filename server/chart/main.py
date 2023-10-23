@@ -1,15 +1,13 @@
 #!/usr/bin/env python3
 import pathlib
 
-import urllib3
 import yaml
 
 from server import share
 from utility import (
     collection as collection_util,
     file as file_util,
-    regex as regex_util,
-    template as template_util
+    regex as regex_util
 )
 
 
