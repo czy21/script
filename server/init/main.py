@@ -41,7 +41,7 @@ if __name__ == '__main__':
         logger.error("ssh private-key not exists")
         sys.exit(0)
     private_key = private_key.as_posix()
-    env_file: pathlib.Path = pwd.joinpath("env.yaml")
+    env_file: pathlib.Path = pwd.joinpath("server/env.yaml")
     if not env_file.exists():
         logger.error("env file not exists")
         sys.exit(0)

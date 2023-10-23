@@ -10,6 +10,7 @@ from enum import Enum
 
 import urllib3
 import yaml
+
 from utility import (
     collection as collection_util,
     file as file_util,
@@ -272,17 +273,15 @@ class Installer:
     @staticmethod
     def load_env_file(env_file: pathlib.Path, env_file_names: list[str]):
         d = {}
-        env_file_paths: list[pathlib.Path] = [env_file]
         env_self_file = env_file.parent.parent.joinpath(env_file.name)
-        if env_self_file.exists():
-            env_file_paths.append(env_self_file)
+        env_file_paths: list[pathlib.Path] = [env_file, env_self_file]
 
         def add_env_file(f):
             for ef in env_file_names:
                 ef = f.parent.joinpath(ef)
                 if not ef.is_absolute():
                     ef = pathlib.Path.cwd().joinpath(ef)
-                if ef.exists() and ef not in env_file_paths:
+                if ef not in env_file_paths:
                     env_file_paths.append(ef)
 
         add_env_file(env_file)
