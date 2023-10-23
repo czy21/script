@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# -h user@host    upload to remote and execute
 # -r              install requirements.txt
 
 shopt -s expand_aliases
@@ -48,13 +47,12 @@ del_cmd="rm -rf \$HOME/${dst_name}"
 ssh_opt="-o StrictHostKeyChecking=no"
 ssh_cmd="ssh ${ssh_opt} ${host}"
 src_path_parent_path=$(realpath ${src_path}/../)
-src_path_parent_files=$(cd ${src_path_parent_path};find . -maxdepth 1 -name "env*.yaml" -o -name "requirements.txt")
+src_path_server_files=$(cd ${src_path_parent_path};find . -maxdepth 1 -type f -not -name "share.sh" -not -name "README.md" -exec sh -c 'f={};echo ./server/$(basename $f)' \;)
 
 tar -zcf - --exclude="__pycache__" --exclude="${build_name}" \
 -C ${src_path} . \
 -C $(realpath ${utility_path}/../) ./$(basename ${utility_path}) \
--C $(realpath ${src_path}/../../) ./server/share.py \
--C ${src_path_parent_path} ${src_path_parent_files} \
+-C $(realpath ${src_path}/../../) ${src_path_server_files} \
  | ${ssh_cmd} "mkdir -p ${dst_name};tar -zxf - -C ${dst_name}"
 
 cmd=""
@@ -63,7 +61,7 @@ cmd+="if [ ! -f ${PYTHON_EXEC} ];then "
 cmd+="python3 -m venv ${PYTHON_HOME} --without-pip --system-site-packages && wget -nv -O - https://bootstrap.pypa.io/get-pip.py | ${PYTHON_EXEC} - ${pypi}"
 cmd+=";fi &&"
 if [ ${is_requirement} ];then
-  cmd+="${PYTHON_EXEC} -m pip install ${pypi} -r \$HOME/${dst_name}/requirements.txt && "
+  cmd+="${PYTHON_EXEC} -m pip install ${pypi} -r \$HOME/${dst_name}/server/requirements.txt && "
 fi
 cmd+="${PYTHON_EXEC} -B \$HOME/${dst_name}/main.py $args"
 ${ssh_cmd} ${cmd}

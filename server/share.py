@@ -250,7 +250,7 @@ class Installer:
         self.build_path: pathlib.Path = root_path.joinpath("build")
         self.tmp_path: pathlib.Path = root_path.joinpath("___temp")
         self.bak_path: pathlib.Path = self.tmp_path.joinpath("bak")
-        self.env_file: pathlib.Path = root_path.joinpath("env.yaml")
+        self.env_file: pathlib.Path = root_path.joinpath("server/env.yaml")
         self.jinja2ignore_file: pathlib.Path = root_path.joinpath(".jinja2ignore")
         self.role_class: typing.Type[AbstractRole] = role_class
         self.role_deep: int = role_deep
@@ -273,16 +273,21 @@ class Installer:
     def load_env_file(env_file: pathlib.Path, env_file_names: list[str]):
         d = {}
         env_file_paths: list[pathlib.Path] = [env_file]
-        for ef in env_file_names:
-            ef = env_file.parent.joinpath(ef)
-            if not ef.is_absolute():
-                ef = pathlib.Path.cwd().joinpath(ef)
-            if ef not in env_file_paths:
-                env_file_paths.append(ef)
-        env_file_paths = sorted(set(env_file_paths), key=env_file_paths.index)
-        env_self_file = env_file.parent.joinpath("env-self.yaml")
+        env_self_file = env_file.parent.parent.joinpath(env_file.name)
         if env_self_file.exists():
             env_file_paths.append(env_self_file)
+
+        def add_env_file(f):
+            for ef in env_file_names:
+                ef = f.parent.joinpath(ef)
+                if not ef.is_absolute():
+                    ef = pathlib.Path.cwd().joinpath(ef)
+                if ef.exists() and ef not in env_file_paths:
+                    env_file_paths.append(ef)
+
+        add_env_file(env_file)
+        add_env_file(env_self_file)
+        env_file_paths = sorted(set(env_file_paths), key=env_file_paths.index)
         for t in env_file_paths:
             if t.exists():
                 logger.info("load env_file: %s" % t.as_posix())
