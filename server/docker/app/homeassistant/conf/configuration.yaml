@@ -21,6 +21,12 @@ recorder:
 tts:
   - platform: google_translate
 
+# logger:
+#   default: info
+#   logs: 
+#     custom_components.xiaomi_miot: debug
+
 automation: !include automations.yaml
+sensor: !include sensor.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
