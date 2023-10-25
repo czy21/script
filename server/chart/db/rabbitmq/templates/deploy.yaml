@@ -28,3 +28,7 @@ spec:
             port: 15692
             targetPort: 15692
             nodePort: 15692
+          - name: "1883"
+            port: 1883
+            targetPort: 1883
+            nodePort: 1883
