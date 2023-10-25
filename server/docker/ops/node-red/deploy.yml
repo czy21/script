@@ -1,0 +1,20 @@
+version: "3.9"
+
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 1880
+
+services:
+
+  node-red:
+    image: nodered/node-red:3.1.0-18-minimal
+    pull_policy: always
+    container_name: node-red
+    privileged: true
+    user: root
+    labels:
+      <<: *traefik-label
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/data/
+    restart: always
