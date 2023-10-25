@@ -8,7 +8,7 @@ x-traefik-label: &traefik-label
 services:
 
   gitea:
-    image: gitea/gitea:1.20.2
+    image: gitea/gitea:1.20.5
     container_name: gitea
     labels:
       <<: *traefik-label
@@ -37,4 +37,8 @@ services:
       GITEA__attachment__MAX_SIZE: 1024
       GITEA__attachment__MAX_FILES: 20
       GITEA__webhook__ALLOWED_HOST_LIST: "*"
+    deploy:
+      resources:
+        limits:
+          memory: 2g
     restart: always
