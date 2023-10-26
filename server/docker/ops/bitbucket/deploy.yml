@@ -1,0 +1,24 @@
+version: "3.9"
+
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 7990
+
+services:
+
+  bitbucket:
+    image: atlassian/bitbucket:8.15.0-ubuntu-jdk11
+    container_name: bitbucket
+    labels:
+      <<: *traefik-label
+    privileged: true
+    user: root
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/var/atlassian/application-data/bitbucket/
+    environment:
+      JDBC_DRIVER: "org.postgresql.Driver"
+      JDBC_USER: "{{ param_db_pgsql_username }}"
+      JDBC_PASSWORD: "{{ param_db_pgsql_password }}"
+      JDBC_URL: "jdbc:postgresql://{{ param_db_pgsql_host }}:{{ param_db_pgsql_port }}/bitbucket"
+    restart: always
