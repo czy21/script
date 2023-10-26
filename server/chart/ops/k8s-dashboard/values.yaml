@@ -1,6 +1,8 @@
 dashboard:
   service:
+    type: NodePort
     externalPort: 8080
+    nodePort: 8080
   protocolHttp: true
   serviceAccount:
     name: k8s-dashboard
