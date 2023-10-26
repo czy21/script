@@ -39,13 +39,13 @@ spec:
               mountPath: /etc/mysql/conf.d/
             - name: data
               mountPath: /var/lib/mysql/
-        - name: mysqld-exporter
-          image: prom/mysqld-exporter
-          ports:
-            - containerPort: 9104
-          env:
-            - name: DATA_SOURCE_NAME
-              value: 'root:{{ .Values.param_db_password }}@({{ .Values.param_db_mysql_host }}:{{ .Values.param_db_mysql_port }})/'
+        # - name: mysqld-exporter
+        #   image: prom/mysqld-exporter
+        #   ports:
+        #     - containerPort: 9104
+        #   env:
+        #     - name: DATA_SOURCE_NAME
+        #       value: 'root:{{ .Values.param_db_password }}@({{ .Values.param_db_mysql_host }}:{{ .Values.param_db_mysql_port }})/'
   volumeClaimTemplates:
     - metadata:
         name: data
