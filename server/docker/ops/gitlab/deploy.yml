@@ -7,7 +7,7 @@ x-traefik-label: &traefik-label
 
 services:
   gitlab:
-    image: gitlab/gitlab-ee:15.6.0-ee.0
+    image: gitlab/gitlab-ee:16.5.0-ee.0
     container_name: gitlab
     hostname: gitlab
     labels:
@@ -19,8 +19,8 @@ services:
       - "443"
       - "22"
     volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/data/conf/:/etc/gitlab/
-      - {{ param_docker_data }}/{{ param_role_name }}/data/data/:/var/opt/gitlab/
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/:/etc/gitlab/
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/var/opt/gitlab/
       - {{ param_docker_data }}/{{ param_role_name }}/log/:/var/log/gitlab/
     environment:
       GITLAB_OMNIBUS_CONFIG: |
