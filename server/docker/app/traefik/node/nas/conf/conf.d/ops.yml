@@ -39,7 +39,7 @@ http:
     node-red:
       rule: Host(`node-red.czy21-internal.com`)
       service: node-red@docker
-      
+
   middlewares:
     force-https-header:
       headers:
