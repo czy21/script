@@ -1,1 +1,1 @@
-shell: curl -sfL https://get.k3s.io | K3S_KUBECONFIG_MODE="644" sh -s - --flannel-backend none --disable-network-policy --docker
+- shell: curl -sfL https://get.k3s.io | K3S_KUBECONFIG_MODE="644" sh -s - --flannel-backend none --disable-network-policy --docker
