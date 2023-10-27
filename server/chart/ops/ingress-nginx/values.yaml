@@ -2,8 +2,8 @@ ingress-nginx:
   commonLabels:
     sidecar.istio.io/inject: "false"
   controller:
-    # image:
-    #   registry: '{{ param_registry_proxy_url }}' # registry.k8s.io
+    image:
+      registry: '{{ param_registry_proxy_url }}' # registry.k8s.io
     ingressClassResource:
       default: true
     service:
@@ -19,4 +19,4 @@ ingress-nginx:
     admissionWebhooks:
       patch:
         image:
-          # registry: '{{ param_registry_proxy_url }}'
+          registry: '{{ param_registry_proxy_url }}'
