@@ -8,7 +8,7 @@ nodeRegistration:
 ---
 apiVersion: kubeadm.k8s.io/v1beta3
 kind: ClusterConfiguration
-kubernetesVersion: "v{{ param_k8s_version }}"
+kubernetesVersion: "v{{ param_k8s_patch_version }}"
 imageRepository: "{{ param_registry_proxy_url }}"
 controlPlaneEndpoint: "{{ param_k8s_control_plane_endpoint }}"
 networking:
@@ -18,7 +18,7 @@ dns:
   imageRepository: "{{ param_registry_proxy_url }}/coredns"
 apiServer:
   extraArgs:
-    service-node-port-range: "1-65535"
+    service-node-port-range: "0-65535"
 etcd:
 {% if 'external' == param_etcd_mode %}
   external:

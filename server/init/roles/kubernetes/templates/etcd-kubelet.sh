@@ -8,7 +8,7 @@ CLUSTER="{{ param_ansible_host_ipv4s|zip(param_ansible_host_names) | map('format
 DIR=${HOME}/{{ param_remote_role_path }}/{{ param_k8s_etcd_cluster_name }}
 PKI=${DIR}/pki
 mkdir -p ${PKI}
-kubeadm init phase certs etcd-ca --kubernetes-version {{ param_k8s_version }} --cert-dir ${PKI}
+kubeadm init phase certs etcd-ca --kubernetes-version {{ param_k8s_patch_version }} --cert-dir ${PKI}
 
 for i in "${!IPV4S[@]}"; do
   IPV4=${IPV4S[$i]}
@@ -28,7 +28,7 @@ localAPIEndpoint:
 ---
 apiVersion: "kubeadm.k8s.io/v1beta3"
 kind: ClusterConfiguration
-kubernetesVersion: "v{{ param_k8s_version }}"
+kubernetesVersion: "v{{ param_k8s_patch_version }}"
 imageRepository: "{{ param_registry_proxy_url }}"
 certificatesDir: "${PKI}"
 etcd:

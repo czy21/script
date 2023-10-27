@@ -41,7 +41,7 @@
     - name: machine shutdown
       shell: shutdown -h now
     - name: kubeadm reset
-      shell: sudo kubeadm reset --force --ignore-preflight-errors all && sudo reboot
+      shell: sudo kubeadm reset --force --ignore-preflight-errors all;sudo crictl rmi --all;sudo reboot
   tags:
     - machine
 
