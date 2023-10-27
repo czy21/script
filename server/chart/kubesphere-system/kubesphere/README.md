@@ -1,8 +1,3 @@
-## install
-```shell
-kubectl create namespace kubesphere-system
--n kubesphere-system --create-namespace
-```
 ###
 default user/password (admin/P@88w0rd)
 ```shell

@@ -1,6 +1,4 @@
 ```shell
--n cattle-system --create-namespace
-
 # cert-manager
 kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.12.0/cert-manager.crds.yaml
 helm repo add jetstack https://charts.jetstack.io
