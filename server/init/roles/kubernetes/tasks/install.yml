@@ -24,16 +24,4 @@
     sudo sysctl --system
     bash {{ param_remote_role_path }}/k8s-{{ param_ansible_distribution }}.sh && kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
 
-- name: helm install
-  shell: |
-    sudo wget -O - https://get.helm.sh/helm-v{{ param_helm_version }}-linux-amd64.tar.gz | sudo tar -zxf - --strip-components 1 -C /usr/local/bin/ linux-amd64/helm
-    sudo chown root:root /usr/local/bin/helm && sudo chmod +x /usr/local/bin/helm
-    sudo ln -sf /usr/local/bin/helm /usr/bin/helm
-    helm completion bash | sudo tee /etc/bash_completion.d/helm > /dev/null
-
-- name: velero install
-  shell: |
-    sudo wget -O - https://github.com/vmware-tanzu/velero/releases/download/v{{ param_velero_version }}/velero-v{{ param_velero_version }}-linux-amd64.tar.gz | sudo tar -zxf - --strip-components 1 -C /usr/local/bin/ velero-v{{ param_velero_version }}-linux-amd64/velero
-    sudo chown root:root /usr/local/bin/velero && sudo chmod +x /usr/local/bin/velero
-    sudo ln -sf /usr/local/bin/velero /usr/bin/velero
-    velero completion bash | sudo tee /etc/bash_completion.d/velero > /dev/null
+- import_tasks: tool.yml
