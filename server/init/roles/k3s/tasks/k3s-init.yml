@@ -1,0 +1,4 @@
+- name: k3s init
+  shell: |
+    sudo k3s server
+  when: inventory_hostname == groups["master"][0]
