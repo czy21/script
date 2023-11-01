@@ -1,0 +1,2 @@
+write-kubeconfig-mode: "0644"
+cluster-init: true

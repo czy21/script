@@ -13,4 +13,7 @@ param_ansible_host_name: "{{ hostvars[inventory_hostname]['ansible_hostname'] }}
 param_ansible_hosts: "{{ dict(param_ansible_host_ipv4s|zip(param_ansible_host_names)) | dict2items(key_name='ip', value_name='name') }}"
 param_ansible_lead_ipv4: "{{ param_ansible_host_ipv4s[0] }}"
 
+param_helm_version: 3.13.1
+param_velero_version: 1.12.1
+
 param_backup_prefix: '{{ inventory_hostname }}-backup'
