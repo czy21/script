@@ -54,6 +54,7 @@ if __name__ == '__main__':
     ansible_inventory_file = pathlib.Path(args.file).as_posix() if pathlib.Path(args.file).is_absolute() else pwd.joinpath(args.file).as_posix()
     _cmds = ["chmod 600 {0}".format(private_key)]
     ansible_playbook_cmd = [
+        "ANSIBLE_DEPRECATION_WARNINGS=0",
         "ANSIBLE_SUDO_PASS=0",
         "ANSIBLE_HOST_KEY_CHECKING=0",
         "ANSIBLE_FORCE_COLOR=1",
