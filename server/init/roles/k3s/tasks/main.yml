@@ -8,3 +8,8 @@
   import_tasks: k3s-init.yml
   tags:
     - 'k3s-init'
+
+- name: k3s join
+  import_tasks: k3s-join.yml
+  tags:
+    - 'k3s-join'

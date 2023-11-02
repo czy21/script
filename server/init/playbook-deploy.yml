@@ -49,12 +49,12 @@
   tasks:
     - block:
         - import_tasks: roles/common/tasks/copy.yml
-          tags: ['hosts-init']
+          tags: ['hosts']
         - import_role:
             name: '{{ param_role_name }}'
       always:
         - import_tasks: roles/common/tasks/clean.yml
-          tags: ['hosts-init']
+          tags: ['hosts']
 
 - name: kubernetes
   hosts: all

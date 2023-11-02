@@ -1,0 +1,4 @@
+- name: k3s worker join
+  shell: |
+    curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="agent" K3S_TOKEN="K1002eab20aa58d812bb0d3826d650759fa28be939baa87811237270b6ca4cc60b6::nb0v9m.pc1j4h2hqaiumf88" sh -s - --server https://192.168.2.21
+  when: 'inventory_hostname in groups["worker"]'
