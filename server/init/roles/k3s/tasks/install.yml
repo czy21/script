@@ -1,8 +1,7 @@
 - name: k3s install
   become: yes
   shell: |
-    curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION="v{{ param_k3s_version }}" INSTALL_K3S_SKIP_START="true" sh -s -
     sudo chmod +x /usr/local/bin/k3s
     sudo ln -sf /usr/local/bin/k3s /usr/bin/k3s
 
-# - import_tasks: roles/kubernetes/tasks/tool.yml
+- import_tasks: roles/kubernetes/tasks/tool.yml
