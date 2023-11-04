@@ -42,6 +42,8 @@
       shell: shutdown -h now
     - name: kubeadm reset
       shell: sudo kubeadm reset --force --ignore-preflight-errors all;sudo crictl rmi --all;sudo reboot
+    - name: k3s uninstall
+      shell: /usr/local/bin/k3s-*uninstall.sh;sudo reboot
   tags:
     - machine
 
