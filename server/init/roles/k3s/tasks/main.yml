@@ -1,3 +1,8 @@
+- name: k3s
+  import_tasks: install.yml
+  tags:
+    - 'k3s'
+
 - name: k3s init
   import_tasks: k3s-init.yml
   tags:
