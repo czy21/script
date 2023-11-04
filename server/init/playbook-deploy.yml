@@ -81,12 +81,12 @@
   tasks:
     - block:
         - import_tasks: roles/common/tasks/copy.yml
-          tags: ['k3s-init','k3s-join']
+          tags: ['k3s-init','k3s-join','k3s-post']
         - import_role:
             name: '{{ param_role_name }}'
       always:
         - import_tasks: roles/common/tasks/clean.yml
-          tags: ['k3s-init','k3s-join']
+          tags: ['k3s-init','k3s-join','k3s-post']
 
 - name: truenas
   hosts: all

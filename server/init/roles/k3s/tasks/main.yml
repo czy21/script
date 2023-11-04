@@ -7,3 +7,8 @@
   import_tasks: k3s-join.yml
   tags:
     - 'k3s-join'
+
+- name: k3s post
+  import_tasks: k3s-post.yml
+  tags:
+    - 'k3s-post'
