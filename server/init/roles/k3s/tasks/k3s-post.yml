@@ -5,6 +5,6 @@
     sudo ln -sf /usr/local/bin/kubectl /usr/bin/kubectl
     sudo ln -sf /usr/local/bin/crictl /usr/bin/crictl
     kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
-    crictl completion bash | sudo tee /etc/bash_completion.d/crictl > /dev/null
-    
+    crictl completion bash | sudo tee /etc/bash_completion.d/crictl > /dev/null    
+
 - import_tasks: roles/kubernetes/tasks/tool.yml
