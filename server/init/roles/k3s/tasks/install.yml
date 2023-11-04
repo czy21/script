@@ -1,7 +1,0 @@
-- name: k3s install
-  become: yes
-  shell: |
-    sudo chmod +x /usr/local/bin/k3s
-    sudo ln -sf /usr/local/bin/k3s /usr/bin/k3s
-
-- import_tasks: roles/kubernetes/tasks/tool.yml
