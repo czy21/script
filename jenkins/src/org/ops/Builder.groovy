@@ -7,7 +7,7 @@ import org.ops.util.StringUtils
 def build() {
     def toolMap = [
             java  : {
-                env.JAVA_HOME = "${tool 'jdk-17'}"
+                env.JAVA_HOME = "${tool 'jdk-21'}"
                 env.PATH = "${JAVA_HOME}/bin:${PATH}"
             },
             maven : {
@@ -15,7 +15,7 @@ def build() {
                 env.PATH = "${MAVEN_HOME}/bin:${PATH}"
             },
             gradle: {
-                env.GRADLE_HOME = "${tool 'gradle-8.4'}"
+                env.GRADLE_HOME = "${tool 'gradle-8.5'}"
                 env.PATH = "${GRADLE_HOME}/bin:${PATH}"
             },
             go    : {
