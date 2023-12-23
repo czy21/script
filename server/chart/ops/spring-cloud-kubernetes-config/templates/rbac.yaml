@@ -27,5 +27,5 @@ metadata:
   name: {{ .Release.Name }}
 rules:
   - apiGroups: ["", "extensions", "apps"]
-    resources: ["configmaps", "pods", "services", "endpoints", "secrets"]
-    verbs: ["get", "list", "watch"]
+    resources: ["configmaps", "secrets"]
+    verbs: ["get", "list"]
