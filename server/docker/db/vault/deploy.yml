@@ -7,7 +7,7 @@ x-traefik-label: &traefik-label
 
 services:
   vault:
-    image: vault:1.11.3
+    image: hashicorp/vault:1.14.8
     container_name: vault
     labels:
       <<: *traefik-label
