@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+    spec:
+      serviceAccount: {{ .Release.Name }}
+      volumes:
+        - name: conf
+          configMap:
+            name: {{ .Release.Name }}
+            items:
+              - key: application-kubernetes.yml
+                path: application-kubernetes.yml
+      containers:
+        - name: {{ .Release.Name }}
+          image: springcloud/spring-cloud-kubernetes-configserver:3.1.0
+          env:
+            - name: SPRING_PROFILES_INCLUDE
+              value: "kubernetes"
+          readinessProbe:
+            httpGet:
+              port: 8888
+              path: /actuator/health/readiness
+          livenessProbe:
+            httpGet:
+              port: 8888
+              path: /actuator/health/liveness
+          ports:
+            - containerPort: 8888
+          volumeMounts:
+            - name: conf
+              mountPath: /workspace/BOOT-INF/classes/application-kubernetes.yml
+              subPath: application-kubernetes.yml
