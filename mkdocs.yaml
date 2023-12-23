@@ -22,11 +22,13 @@ nav:
       - aspnet6: container/aspnet6.md
       - aspnet7: container/aspnet7.md
       - baserow: container/baserow.md
+      - bitbucket: container/bitbucket.md
       - bonita: container/bonita.md
       - cadvisor: container/cadvisor.md
       - cassandra: container/cassandra.md
       - ch: container/ch.md
       - chat2db: container/chat2db.md
+      - clickhouse: container/clickhouse.md
       - concourse: container/concourse.md
       - concourse-worker: container/concourse-worker.md
       - confluence: container/confluence.md
@@ -65,6 +67,7 @@ nav:
       - jaeger: container/jaeger.md
       - jdk-11: container/jdk-11.md
       - jdk-17: container/jdk-17.md
+      - jdk-21: container/jdk-21.md
       - jellyfin: container/jellyfin.md
       - jenkins: container/jenkins.md
       - jenkins-inbound-agent: container/jenkins-inbound-agent.md
