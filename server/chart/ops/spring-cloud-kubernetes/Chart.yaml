@@ -1,0 +1,3 @@
+apiVersion: v2
+name: spring-cloud-kubernetes
+version: 0.1.0

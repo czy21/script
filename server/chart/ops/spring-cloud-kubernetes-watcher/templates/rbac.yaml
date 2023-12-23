@@ -15,7 +15,7 @@ metadata:
 roleRef:
   kind: ClusterRole
   apiGroup: rbac.authorization.k8s.io
-  name: namespace-reader-watcher
+  name: {{ .Release.Name }}
 subjects:
   - kind: ServiceAccount
     name: {{ .Release.Name }}
@@ -24,7 +24,7 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: namespace-reader-watcher
+  name: {{ .Release.Name }}
 rules:
   - apiGroups: ["", "extensions", "apps"]
     resources: ["configmaps", "pods", "services", "endpoints", "secrets"]
