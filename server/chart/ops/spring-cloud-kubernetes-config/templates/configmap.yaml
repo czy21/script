@@ -12,6 +12,4 @@ data:
       cloud:
         kubernetes:
           configserver:
-            config-map-namespaces:
-              - {{ .Release.Namespace }}
-              - stable
+            config-map-namespaces: {{ .Release.Namespace }},stable
