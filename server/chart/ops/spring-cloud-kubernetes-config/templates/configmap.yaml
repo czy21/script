@@ -7,7 +7,7 @@ metadata:
   labels:
     app: {{ .Release.Name }}
 data:
-  application-kubernetes.yml: |-
+  application.yml: |-
     spring:
       cloud:
         kubernetes:
