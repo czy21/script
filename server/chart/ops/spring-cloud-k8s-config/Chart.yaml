@@ -1,0 +1,3 @@
+apiVersion: v2
+name: spring-cloud-k8s-config
+version: 0.1.0
