@@ -16,3 +16,13 @@ spec:
               name: prometheus
               port:
                 number: 9090
+    - host: spring-config.czy21-internal.com
+      http:
+        paths:
+        - pathType: Prefix
+          path: /
+          backend:
+            service:
+              name: spring-cloud-k8s-config
+              port:
+                number: 8888

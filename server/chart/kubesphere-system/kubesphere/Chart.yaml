@@ -1,8 +1,0 @@
-apiVersion: v2
-name: kubesphere
-version: 0.1.0
-
-dependencies:
-  - name: ks-installer
-    version: 0.3.1
-    repository: https://charts.kubesphere.io/main
