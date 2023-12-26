@@ -1,0 +1,30 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-watch
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Release.Name }}-watch
+data:
+  application.yml: |-
+    logging:
+      level:
+        org.springframework.cloud.kubernetes.client.config.reload.KubernetesClientEventBasedSecretsChangeDetector: debug
+    spring:
+      cloud:
+        kubernetes:
+          reload:
+            strategy: refresh
+            namespaces: [ops,stable]
+          configuration:
+            watcher:
+              refresh-delay: 5000
+    management:
+      endpoints:
+        web:
+          exposure:
+            include: "*"
+      endpoint:
+        env:
+          show-values: always
