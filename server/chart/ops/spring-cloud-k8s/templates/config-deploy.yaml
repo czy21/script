@@ -1,21 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}
+  name: {{ .Release.Name }}-config
   namespace: {{ .Release.Namespace }}
 spec:
   selector:
     matchLabels:
-      app: {{ .Release.Name }}
+      app: {{ .Release.Name }}-config
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}
+        app: {{ .Release.Name }}-config
     spec:
       serviceAccount: {{ .Release.Name }}
       containers:
-        - name: {{ .Release.Name }}
-          image: springcloud/spring-cloud-kubernetes-configuration-watcher:3.1.0
+        - name: {{ .Release.Name }}-config
+          image: springcloud/spring-cloud-kubernetes-configserver:3.1.0
+          args:
+            - --spring.application.name={{ .Release.Name }}-config
           readinessProbe:
             httpGet:
               port: 8888

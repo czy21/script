@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-watch
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-watch
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-watch
+    spec:
+      serviceAccount: {{ .Release.Name }}
+      containers:
+        - name: {{ .Release.Name }}-watch
+          image: springcloud/spring-cloud-kubernetes-configuration-watcher:3.1.0
+          args:
+            - --spring.application.name={{ .Release.Name }}-watch
+          readinessProbe:
+            httpGet:
+              port: 8888
+              path: /actuator/health/readiness
+          livenessProbe:
+            httpGet:
+              port: 8888
+              path: /actuator/health/liveness
+          ports:
+            - containerPort: 8888
