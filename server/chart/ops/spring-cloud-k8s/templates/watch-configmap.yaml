@@ -16,7 +16,13 @@ data:
         kubernetes:
           reload:
             strategy: refresh
-            namespaces: [ops,stable]
+            namespaces: 
+              - ops
+              - stable
+          discovery:
+            namespaces: 
+              - ops
+              - stable
           configuration:
             watcher:
               refresh-delay: 5000
