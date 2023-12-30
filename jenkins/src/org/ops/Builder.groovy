@@ -7,7 +7,7 @@ import org.ops.util.StringUtils
 def build() {
     def toolMap = [
             java  : {
-                env.JAVA_HOME = "${tool 'jdk-21'}"
+                env.JAVA_HOME = "${tool 'jdk-17'}"
                 env.PATH = "${JAVA_HOME}/bin:${PATH}"
             },
             maven : {
