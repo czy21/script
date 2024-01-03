@@ -15,5 +15,6 @@ requests==2.31.0
 bcrypt==3.2.2
 mkdocs==1.4.3
 mkdocs-material==9.1.18
-pydash==5.1.0
-urllib3==2.0.4
+pydash==7.0.6
+urllib3==2.1.0
+yfinance==0.2.33
