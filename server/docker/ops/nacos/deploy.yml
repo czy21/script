@@ -8,7 +8,7 @@ x-traefik-label: &traefik-label
 services:
 
   nacos:
-    image: nacos/nacos-server:v2.2.3
+    image: nacos/nacos-server:v2.3.0
     pull_policy: always
     container_name: "{{ param_role_name }}"
     hostname: "{{ param_role_name }}"
