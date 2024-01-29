@@ -18,3 +18,5 @@ mkdocs-material==9.1.18
 pydash==7.0.6
 urllib3==2.1.0
 yfinance==0.2.33
+python-telegram-bot==20.7
+telethon==1.33.1

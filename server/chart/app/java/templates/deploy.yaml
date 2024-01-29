@@ -26,7 +26,7 @@ metadata:
   annotations:
     helm.sh/revision: "{{ .Release.Revision }}"
 spec:
-  replicas: 2
+  replicas: {{ .Values.param_replicas | default 2 }}
   strategy:
     type: RollingUpdate
   selector:
