@@ -35,6 +35,9 @@ def build() {
                 env.PATH = "${DOTNET_HOME}:${PATH}"
             }
     ]
+    if (StringUtils.isNotEmpty(env.param_tools)) {
+        env.param_tools.split(",").each { toolMap.get(it).call() }
+    }
     def langMap = [
             java  : {
                 toolMap.get("java").call()
@@ -75,9 +78,6 @@ def build() {
                 }
             },
             shell : {
-                if (StringUtils.isNotEmpty(env.param_tools)) {
-                    env.param_tools.split(",").each { toolMap.get(it).call() }
-                }
                 cmd = StringUtils.format("chmod +x {0};{0}", PathUtils.ofPath(env.param_project_root, env.param_project_shell_file))
                 sh "${cmd}"
             }
