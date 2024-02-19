@@ -10,5 +10,5 @@ if [ "backup" == "${param_command}" ];then
 fi
 
 if [ "restore" == "${param_command}" ];then
-  find {{ param_role_bak_path }} -type f -name 'daemon.json' -exec sh -c 'f={}; cp $f /etc/docker/$(basename $f )' \;
+  find {{ param_role_bak_path }} -type f -name 'daemon.json' -exec sh -c 'f={};mkdir -p /etc/docker/;cp $f /etc/docker/$(basename $f )' \;
 fi
