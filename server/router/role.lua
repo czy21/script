@@ -38,7 +38,8 @@ for _, uv in ipairs(envJson.param_uci_config) do
     end
     if command == "backup"
     then
-        for ak, av in pairs(uci:get_all(envJson.param_role_name)) do
+        role_config = uci:get_all(envJson.param_role_name)
+        for ak, av in pairs(role_config == false and {} or role_config) do
             at = av[".type"]
             if at == uv.type or string.match(at, uv.type) then
                 if uv.section
