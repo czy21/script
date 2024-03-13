@@ -39,6 +39,9 @@ http:
     node-red:
       rule: Host(`node-red.czy21-internal.com`)
       service: node-red@docker
+    onedev:
+      rule: Host(`onedev.czy21-internal.com`)
+      service: onedev@docker
 
   middlewares:
     force-https-header:
