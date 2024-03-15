@@ -36,3 +36,6 @@ http:
     redis-exporter:
       rule: Host(`redis-exporter-{{ param_cluster_name }}.czy21-internal.com`)
       service: redis-exporter@docker
+    metatube:
+      rule: Host(`metatube.czy21-internal.com`)
+      service: metatube@docker

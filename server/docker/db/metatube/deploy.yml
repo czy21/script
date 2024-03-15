@@ -1,0 +1,18 @@
+version: "3.9"
+
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 8080
+
+services:
+  metatube:
+    image: metatube/metatube-server:1.2.3
+    container_name: metatube
+    labels:
+      <<: *traefik-label
+    privileged: true
+    user: root
+    volumes:
+        - {{ param_docker_data }}/{{ param_role_name }}/data/:/var/run
+    command: -dsn "postgres://{{ param_db_pgsql_username }}:{{ param_db_pgsql_password }}@{{ param_db_pgsql_host }}:{{ param_db_pgsql_port }}/metatube" -port 8080 -db-auto-migrate -db-prepared-stmt
