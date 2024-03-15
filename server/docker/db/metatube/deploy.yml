@@ -13,6 +13,5 @@ services:
       <<: *traefik-label
     privileged: true
     user: root
-    volumes:
-        - {{ param_docker_data }}/{{ param_role_name }}/data/:/var/run
     command: -dsn "postgres://{{ param_db_pgsql_username }}:{{ param_db_pgsql_password }}@{{ param_db_pgsql_host }}:{{ param_db_pgsql_port }}/metatube" -port 8080 -db-auto-migrate -db-prepared-stmt
+    restart: always
