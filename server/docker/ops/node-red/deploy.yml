@@ -6,9 +6,8 @@ x-traefik-label: &traefik-label
   traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 1880
 
 services:
-
   node-red:
-    image: nodered/node-red:3.1.0-18-minimal
+    image: nodered/node-red:3.1.8-18-minimal
     pull_policy: always
     container_name: node-red
     privileged: true
