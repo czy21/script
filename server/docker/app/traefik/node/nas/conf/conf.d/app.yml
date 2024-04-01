@@ -1,0 +1,5 @@
+http:
+  routers:
+    alist:
+      rule: Host(`alist.czy21-internal.com`)
+      service: alist@docker
