@@ -2,10 +2,12 @@ ingress-nginx:
   commonLabels:
     sidecar.istio.io/inject: "false"
   controller:
+    allowSnippetAnnotations: true
     image:
       registry: '{{ param_registry_proxy_url }}' # registry.k8s.io
     ingressClassResource:
       default: true
+    hostNetwork: true
     service:
       type: NodePort
       nodePorts:
