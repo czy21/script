@@ -9,6 +9,9 @@ spec:
       app: sunny-gateway
   action: ALLOW
   rules:
-    - to:
+    - from:
+        - source:
+            remoteIpBlocks: ["192.168.0.0/16"]
+      to:
         - operation:
-            paths: ["*"]
+            paths: ["/doc.html"]
