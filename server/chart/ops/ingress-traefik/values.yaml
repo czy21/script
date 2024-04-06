@@ -1,0 +1,9 @@
+traefik:
+  service:
+    type: NodePort
+  ports:
+    traefik:
+      expose:
+        default: true
+  ingressClass:
+    isDefaultClass: false

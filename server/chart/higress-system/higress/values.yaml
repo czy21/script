@@ -1,0 +1,5 @@
+higress:
+  higress-core:
+    gateway:
+      service:
+        type: NodePort
