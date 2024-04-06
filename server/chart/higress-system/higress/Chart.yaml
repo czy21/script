@@ -1,0 +1,8 @@
+apiVersion: v2
+name: higress
+version: 0.1.0
+
+dependencies:
+  - name: higress
+    version: 1.3.5
+    repository: "https://higress.io/helm-charts"
