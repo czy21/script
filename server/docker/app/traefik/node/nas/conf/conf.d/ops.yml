@@ -24,6 +24,9 @@ http:
     nacos:
       rule: Host(`nacos.czy21-internal.com`)
       service: nacos@docker
+    seata:
+      rule: Host(`seata.czy21-internal.com`)
+      service: seata@docker
     portainer:
       rule: Host(`portainer.czy21-internal.com`)
       service: portainer@docker
