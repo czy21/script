@@ -1,3 +1,2 @@
 #!/bin/bash
-
-exec java ${JAVA_OPTS} -jar ${JAR} --spring.config.additional-location=/app/conf/ ${@}
+exec java -Dcom.sun.management.jmxremote.port=9999 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false ${JAVA_OPTS} -jar ${JAR} --spring.config.additional-location=/app/conf/ ${@}

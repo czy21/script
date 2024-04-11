@@ -14,5 +14,5 @@ COPY docker-entrypoint.sh /
 RUN chmod +x /docker-entrypoint.sh
 
 VOLUME ["/app/data/","/app/log"]
-EXPOSE 8080
+EXPOSE 8080 9999
 ENTRYPOINT ["/docker-entrypoint.sh"]
