@@ -17,6 +17,9 @@ spec:
     - name: http
       port: 8080
       targetPort: http
+    - name: tcp
+      port: 9999
+      targetPort: jmx
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -46,6 +49,8 @@ spec:
           ports:
             - name: http
               containerPort: 8080
+            - name: jmx
+              containerPort: 9999
           env:
             - name: POD_NAME
               valueFrom:
