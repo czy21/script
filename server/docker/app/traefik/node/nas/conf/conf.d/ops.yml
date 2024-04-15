@@ -45,6 +45,10 @@ http:
     onedev:
       rule: Host(`onedev.czy21-internal.com`)
       service: onedev@docker
+    drawio:
+      rule: Host(`drawio.czy21-internal.com`)
+      service: drawio@docker
+      
 
   middlewares:
     force-https-header:
