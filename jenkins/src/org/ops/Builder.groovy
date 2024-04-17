@@ -15,7 +15,7 @@ def build() {
                 env.PATH = "${MAVEN_HOME}/bin:${PATH}"
             },
             gradle: {
-                env.GRADLE_HOME = "${tool 'gradle-8.5'}"
+                env.GRADLE_HOME = "${tool 'gradle-8.6'}"
                 env.PATH = "${GRADLE_HOME}/bin:${PATH}"
             },
             go    : {
