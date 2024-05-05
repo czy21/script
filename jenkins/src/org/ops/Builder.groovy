@@ -61,8 +61,10 @@ def build() {
             },
             web   : {
                 toolMap.get("node").call()
-                cmd = StringUtils.format("{0} install --no-lockfile --update-checksums && {0} --ignore-engines build",
-                        StringUtils.format("yarn --cwd {0} --registry {1}", env.param_project_context, env.param_npm_repo)
+                // cmd = StringUtils.format("{0} install --no-lockfile --update-checksums && {0} --ignore-engines build",
+                //         StringUtils.format("yarn --cwd {0} --registry {1}", env.param_project_context, env.param_npm_repo)
+                // )
+                cmd = StringUtils.format("{0} install && {0} run build",StringUtils.format("npm --prefix {0} --registry {1}", env.param_project_context, env.param_npm_repo)
                 )
                 sh "${cmd}"
             },
