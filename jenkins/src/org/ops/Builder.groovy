@@ -50,7 +50,7 @@ def build() {
                 if ("gradle" == env.param_java_build_tool || fileExists("${env.param_project_context}/build.gradle")) {
                     toolMap.get("gradle").call()
                     configFileProvider([configFile(fileId: "gradle.config", variable: 'CONFIG_FILE')]) {
-                        sh "gradle -I ${CONFIG_FILE} -b ${env.param_project_context}/build.gradle clean build -U -x test"
+                        sh "gradle -I ${CONFIG_FILE} -p ${env.param_project_context} clean build -U -x test"
                     }
                 }
             },
@@ -61,11 +61,17 @@ def build() {
             },
             web   : {
                 toolMap.get("node").call()
-                // cmd = StringUtils.format("{0} install --no-lockfile --update-checksums && {0} --ignore-engines build",
-                //         StringUtils.format("yarn --cwd {0} --registry {1}", env.param_project_context, env.param_npm_repo)
-                // )
-                cmd = StringUtils.format("{0} install && {0} run build",StringUtils.format("npm --prefix {0} --registry {1}", env.param_project_context, env.param_npm_repo)
-                )
+                cmd = StringUtils.format("{0} install --no-package-lock && {0} run build",StringUtils.format("npm --prefix {0} --registry {1}", env.param_project_context, env.param_npm_repo))
+                sh "${cmd}"
+            },
+            npm   : {
+                toolMap.get("node").call()
+                cmd = StringUtils.format("{0} install --no-package-lock && {0} run build",StringUtils.format("npm --prefix {0} --registry {1}", env.param_project_context, env.param_npm_repo))
+                sh "${cmd}"
+            },
+            yarn   : {
+                toolMap.get("node").call()
+                cmd = StringUtils.format("{0} install --no-lockfile --update-checksums && {0} --ignore-engines build",StringUtils.format("yarn --cwd {0} --registry {1}", env.param_project_context, env.param_npm_repo))
                 sh "${cmd}"
             },
             dotnet: {
