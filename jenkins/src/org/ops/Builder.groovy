@@ -5,7 +5,7 @@ import org.ops.util.PathUtils
 import org.ops.util.StringUtils
 
 def build() {
-    def toolMap = [
+    def pathMap = [
             java  : {
                 env.JAVA_HOME = "${tool 'jdk-17'}"
                 env.PATH = "${JAVA_HOME}/bin:${PATH}"
@@ -36,46 +36,41 @@ def build() {
             }
     ]
     if (StringUtils.isNotEmpty(env.param_tools)) {
-        env.param_tools.split(",").each { toolMap.get(it).call() }
+        env.param_tools.split(",").each { pathMap.get(it).call() }
     }
-    def langMap = [
+    def buildMap = [
             java  : {
-                toolMap.get("java").call()
+                pathMap.get("java").call()
                 if ("mvn" == env.param_java_build_tool || fileExists("${env.param_project_context}/pom.xml")) {
-                    toolMap.get("maven").call()
+                    pathMap.get("maven").call()
                     configFileProvider([configFile(fileId: "mvn.config", variable: 'CONFIG_FILE')]) {
                         sh "mvn -s ${CONFIG_FILE} -f ${env.param_project_context}/pom.xml clean install -U -e -Dmaven.test.skip=true"
                     }
                 }
                 if ("gradle" == env.param_java_build_tool || fileExists("${env.param_project_context}/build.gradle")) {
-                    toolMap.get("gradle").call()
+                    pathMap.get("gradle").call()
                     configFileProvider([configFile(fileId: "gradle.config", variable: 'CONFIG_FILE')]) {
                         sh "gradle -I ${CONFIG_FILE} -p ${env.param_project_context} clean build -U -x test"
                     }
                 }
             },
             go    : {
-                toolMap.get("go").call()
+                pathMap.get("go").call()
                 cmd = StringUtils.format("cd {0};go build -o build main.go;", env.param_project_context)
                 sh "${cmd}"
             },
             web   : {
-                toolMap.get("node").call()
-                cmd = StringUtils.format("{0} install --no-package-lock && {0} run build",StringUtils.format("npm --prefix {0} --registry {1}", env.param_project_context, env.param_npm_repo))
-                sh "${cmd}"
-            },
-            npm   : {
-                toolMap.get("node").call()
+                pathMap.get("node").call()
                 cmd = StringUtils.format("{0} install --no-package-lock && {0} run build",StringUtils.format("npm --prefix {0} --registry {1}", env.param_project_context, env.param_npm_repo))
                 sh "${cmd}"
             },
             yarn   : {
-                toolMap.get("node").call()
+                pathMap.get("node").call()
                 cmd = StringUtils.format("{0} install --no-lockfile --update-checksums && {0} --ignore-engines build",StringUtils.format("yarn --cwd {0} --registry {1}", env.param_project_context, env.param_npm_repo))
                 sh "${cmd}"
             },
             dotnet: {
-                toolMap.get("dotnet").call()
+                pathMap.get("dotnet").call()
                 configFileProvider([configFile(fileId: "nuget.config", variable: 'CONFIG_FILE_NUGET')]) {
                     cmd = StringUtils.format(
                             "rm -rf {0}/build && dotnet publish --configfile {1} -c Release {0} -o {0}/build",
@@ -90,8 +85,8 @@ def build() {
                 sh "${cmd}"
             }
     ]
-    if (langMap.containsKey(env.param_code_type)) {
-        langMap.get(env.param_code_type).call()
+    if (buildMap.containsKey(env.param_code_type)) {
+        buildMap.get(env.param_code_type).call()
     }
 }
 
