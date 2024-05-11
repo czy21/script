@@ -1,14 +1,11 @@
 velero:
-  image:
-    repository: velero/velero
-    tag: v1.10.0
   initContainers:
-   - name: velero-plugin-for-aws
-     image: velero/velero-plugin-for-aws:v1.6.0
-     imagePullPolicy: IfNotPresent
-     volumeMounts:
-       - mountPath: /target
-         name: plugins
+    - name: velero-plugin-for-aws
+      image: velero/velero-plugin-for-aws:v1.9.0
+      imagePullPolicy: IfNotPresent
+      volumeMounts:
+        - mountPath: /target
+          name: plugins
   credentials:
     secretContents:
       cloud: |
@@ -16,10 +13,21 @@ velero:
         aws_access_key_id={{ param_db_minio_username }}
         aws_secret_access_key={{ param_db_minio_password }}
   configuration:
-    provider: aws
     backupStorageLocation:
-      bucket: velero
-      config:
-        region: minio
-        s3Url: http://{{ param_db_minio_host }}
-        s3ForcePathStyle: true
+      - name: default
+        provider: aws
+        bucket: velero
+        config:
+          region: minio
+          s3Url: http://{{ param_db_minio_host }}
+          s3ForcePathStyle: true
+  # schedules:
+  #   prod:
+  #     disabled: false
+  #     schedule: "*/1 * * * *"
+  #     template:
+  #       ttl: "240h"
+  #       storageLocation: default
+  #       includedNamespaces:
+  #         - ops
+  #         - stable
