@@ -16,13 +16,13 @@ spec:
               name: prometheus
               port:
                 number: 9090
-    - host: spring-config.czy21-internal.com
+    - host: xxl-job-{{ .Values.param_cluster_name }}.czy21-internal.com
       http:
         paths:
-        - pathType: Prefix
-          path: /
-          backend:
-            service:
-              name: spring-cloud-k8s-config
-              port:
-                number: 8888
+          - backend:
+              service:
+                name: xxl-job
+                port:
+                  number: 8080
+            path: /
+            pathType: Prefix
