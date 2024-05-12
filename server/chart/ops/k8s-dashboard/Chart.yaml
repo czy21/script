@@ -2,9 +2,8 @@ apiVersion: v2
 name: k8s-dashboard
 version: 0.1.0
 
-
 dependencies:
   - name: kubernetes-dashboard
-    version: 6.0.7
+    version: 6.0.8
     repository: "https://kubernetes.github.io/dashboard"
     alias: dashboard
