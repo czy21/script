@@ -1,0 +1,6 @@
+debug = false
+
+{% for t in vars['param_registry_mirrors'] %}
+[registry."{{ t }}"]
+  http = true
+{% endfor %}
