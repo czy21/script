@@ -10,6 +10,14 @@
     sudo mkdir -p /etc/docker/
     sudo cat {{ param_remote_role_path }}/daemon.json > /etc/docker/daemon.json
     bash {{ param_remote_role_path }}/{{ param_ansible_distribution }}.sh
+
+- name: docker buildx
+  become: yes
+  shell: |
+    sudo mkdir -p /etc/buildkit/
+    sudo cat {{ param_remote_role_path }}/buildkitd.toml > /etc/buildkit/buildkitd.toml
+    # docker buildx create --use --bootstrap --name container --driver docker-container --config /etc/buildkit/buildkitd.toml
+
 - name: docker compose
   become: yes
   shell: |
