@@ -24,7 +24,7 @@ spec:
             path: prometheus.yml
       containers:
       - name: {{ .Release.Name }}
-        image: prom/prometheus:v2.36.0
+        image: prom/prometheus:v2.52.0
         args:
         - --config.file=/etc/prometheus/prometheus.yml
         - --storage.tsdb.path=/prometheus
