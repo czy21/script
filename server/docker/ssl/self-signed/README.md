@@ -1,19 +1,3 @@
-# guide
-```bash
-# https://docs.azure.cn/zh-cn/articles/azure-operations-guide/application-gateway/aog-application-gateway-howto-create-self-signed-cert-via-openssl
-```
-
-# openssl.ext
-```ini
-keyUsage = nonRepudiation, digitalSignature, keyEncipherment
-extendedKeyUsage = serverAuth, clientAuth
-subjectAltName=@alt_names
-
-[ alt_names ]
-DNS.1=domain.com
-DNS.2=*.domain.com
-```
-
 ```shell
 # self-signed ca
 rm -rf ~/ssl/demoCA ~/ssl/server.* && mkdir -p ~/ssl/demoCA/{certs,newcerts,crl,private} && cd ~/ssl/ && touch demoCA/index.txt && echo "01" > demoCA/serial && sudo cp /etc/ssl/openssl.cnf ~/ssl/openssl.cnf
