@@ -23,7 +23,7 @@ def scan() {
                 }
         ]
         def scanCmd = scanCmdMap.get(env.param_code_type).call()
-        sh "${scanCmdPrefix}"
+        sh "${scanCmd}"
     }
 }
 
