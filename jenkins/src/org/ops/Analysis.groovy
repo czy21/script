@@ -17,6 +17,9 @@ def scan() {
         def scanCmdMap = [
                 java: {
                     return StringUtils.format("{0} -Dsonar.java.binaries=**/{1}/classes", scanCmdPrefix, "mvn" == env.param_java_build_tool ? "target" : "build")
+                },
+                web: {
+                    return StringUtils.format("{0}", scanCmdPrefix)
                 }
         ]
         def scanCmd = scanCmdMap.get(env.param_code_type).call()
