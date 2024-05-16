@@ -59,13 +59,13 @@ if [ ${is_requirement} ];then
 fi
 cmd+="${PYTHON_EXEC} -B \$HOME/${dst_name}/main.py $args"
 
-if [ ! -z $host ];then
-  tar -zcf - --exclude="__pycache__" --exclude="${build_name}" \
-  -C ${src_path} . \
-  -C $(realpath ${utility_path}/../) ./$(basename ${utility_path}) \
-  -C $(realpath ${src_path}/../../) ${src_path_server_files} \
- | ${ssh_cmd} "mkdir -p ${dst_name};tar -zxf - -C ${dst_name}"
-  ${ssh_cmd} ${cmd}
-  ${ssh_cmd} "[ -d ${dst_name} ]" && ${ssh_cmd} "tar -zcf - -C ${dst_name} ${tmp_name} ${build_name}" | tar -zxf - -C ${src_path}
-  ${ssh_cmd} ${del_cmd}
-fi
+[ $host == "local" ] && ssh_cmd="sh -c"
+
+tar -zcf - --exclude="__pycache__" --exclude="${build_name}" \
+-C ${src_path} . \
+-C $(realpath ${utility_path}/../) ./$(basename ${utility_path}) \
+-C $(realpath ${src_path}/../../) ${src_path_server_files} \
+| ${ssh_cmd} "mkdir -p \$HOME/${dst_name};tar -zxf - -C \$HOME/${dst_name}"
+${ssh_cmd} "${cmd}"
+${ssh_cmd} "[ -d $HOME/${dst_name} ]" && ${ssh_cmd} "tar -zcf - -C \$HOME/${dst_name} ${tmp_name} ${build_name}" | tar -zxf - -C ${src_path}
+${ssh_cmd} "${del_cmd}"
