@@ -99,11 +99,7 @@ class DockerRole(share.AbstractRole):
                 _cmds.extend(["docker tag {} {}".format(registry_source_tag, t[1]) for t in registry_target_tags])
                 if self.args.push:
                     _cmds.append("docker push {0}".format(registry_source_tag))
-                    for t in registry_target_tags:
-                        if "dockerhub" == t[0]:
-                            _cmds.append("docker --config $HOME/.docker/config-{0}.json push {1}".format(t[0],t[1]))
-                            continue
-                        _cmds.append("docker push {0}".format(t[1]))
+                    _cmds.extend(["docker --config $HOME/.docker/config-{0}.json push {1}".format(t[0],t[1]) if "dockerhub" == t[0] else "docker push {0}".format(t[1]) for t in registry_target_tags])
         if self.args.target == "doc":
             if self.any_doc_exclude(self.role_output_path):
                 rdd = {
