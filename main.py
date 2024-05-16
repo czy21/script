@@ -5,7 +5,7 @@ from server import share
 from utility import file as file_util, template as template_util
 
 logger = logging.getLogger()
-# bash toolchain.sh -h user@host build --target doc --env-file env-public.yaml --all-namespace
+# sh toolchain.sh -h user@host build --target doc --env-file env-public.yaml --all-namespace
 if __name__ == '__main__':
     logger.setLevel(logging.DEBUG)
     current = pathlib.Path(__file__).parent
@@ -14,7 +14,7 @@ if __name__ == '__main__':
     doc_public = doc.joinpath("public")
     mkdocs_template = doc.joinpath("mkdocs_template.yaml")
     docker_dir = current.joinpath("server/docker")
-    share.execute("cd {0} && rm -rf build && bash main.sh {1} build --target doc --env-file env-public.yaml --all-namespace".format(docker_dir.as_posix(), "ubun12"))
+    share.execute("cd {0} && rm -rf build && sh main.sh {1} build --target doc --env-file env-public.yaml --all-namespace".format(docker_dir.as_posix(), "local"))
     docker_build_dir = docker_dir.joinpath("build")
     container_dir = doc_public.joinpath("container")
     container_md_names = []
