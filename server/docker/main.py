@@ -94,12 +94,16 @@ class DockerRole(share.AbstractRole):
                         logger.warning("registry target: {} not exist".format(t))
                         continue
                     registry_target_tag = self.get_image_tag(registry_target_url, registry_target_dir, rd)
-                    registry_target_tags.append(registry_target_tag)
+                    registry_target_tags.append((t,registry_target_tag))
                 _cmds.append("DOCKER_BUILDKIT=0 docker build --tag {0} --file {1} {2} --pull".format(registry_source_tag, rd.as_posix(), self.role_output_path.as_posix()))
-                _cmds.extend(["docker tag {} {}".format(registry_source_tag, t) for t in registry_target_tags])
+                _cmds.extend(["docker tag {} {}".format(registry_source_tag, t[1]) for t in registry_target_tags])
                 if self.args.push:
                     _cmds.append("docker push {0}".format(registry_source_tag))
-                    _cmds.extend(["docker push {0}".format(t) for t in registry_target_tags])
+                    for t in registry_target_tags:
+                        if "dockerhub" == t[0]:
+                            _cmds.append("docker --config $HOME/.docker/config-{0}.json push {1}".format(t[0],t[1]))
+                            continue
+                        _cmds.append("docker push {0}".format(t[1]))
         if self.args.target == "doc":
             if self.any_doc_exclude(self.role_output_path):
                 rdd = {
