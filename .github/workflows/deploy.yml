@@ -32,7 +32,10 @@ jobs:
           python-version: '3.10'
           cache: 'pip'
       - run: pip install -r server/requirements.txt
-      - run: ssh localhost
+      - run: |
+          ssh-keygen -t dsa -P '' -f ~/.ssh/id_dsa
+          cat ~/.ssh/id_dsa.pub >> ~/.ssh/authorized_keys
+          ssh localhost 'pwd;ls -al'
   #     - name: Setup Pages
   #       id: pages
   #       uses: actions/configure-pages@v3
