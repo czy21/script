@@ -49,12 +49,6 @@ ssh_cmd="ssh ${ssh_opt} ${host}"
 src_path_parent_path=$(realpath ${src_path}/../)
 src_path_server_files=$(cd ${src_path_parent_path};find . -maxdepth 1 -type f -not -name "share.sh" -not -name "README.md" -exec sh -c 'f={};echo ./server/$(basename $f)' \;)
 
-tar -zcf - --exclude="__pycache__" --exclude="${build_name}" \
--C ${src_path} . \
--C $(realpath ${utility_path}/../) ./$(basename ${utility_path}) \
--C $(realpath ${src_path}/../../) ${src_path_server_files} \
- | ${ssh_cmd} "mkdir -p ${dst_name};tar -zxf - -C ${dst_name}"
-
 cmd=""
 pypi="-i https://pypi.tuna.tsinghua.edu.cn/simple/"
 cmd+="if [ ! -f ${PYTHON_EXEC} ];then "
@@ -64,6 +58,14 @@ if [ ${is_requirement} ];then
   cmd+="${PYTHON_EXEC} -m pip install ${pypi} -r \$HOME/${dst_name}/server/requirements.txt && "
 fi
 cmd+="${PYTHON_EXEC} -B \$HOME/${dst_name}/main.py $args"
-${ssh_cmd} ${cmd}
-${ssh_cmd} "[ -d ${dst_name} ]" && ${ssh_cmd} "tar -zcf - -C ${dst_name} ${tmp_name} ${build_name}" | tar -zxf - -C ${src_path}
-${ssh_cmd} ${del_cmd}
+
+if [ ! -z $host ];then
+  tar -zcf - --exclude="__pycache__" --exclude="${build_name}" \
+  -C ${src_path} . \
+  -C $(realpath ${utility_path}/../) ./$(basename ${utility_path}) \
+  -C $(realpath ${src_path}/../../) ${src_path_server_files} \
+ | ${ssh_cmd} "mkdir -p ${dst_name};tar -zxf - -C ${dst_name}"
+  ${ssh_cmd} ${cmd}
+  ${ssh_cmd} "[ -d ${dst_name} ]" && ${ssh_cmd} "tar -zcf - -C ${dst_name} ${tmp_name} ${build_name}" | tar -zxf - -C ${src_path}
+  ${ssh_cmd} ${del_cmd}
+fi
