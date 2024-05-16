@@ -45,7 +45,6 @@ build_name=build
 utility_path=$(realpath ${src_path}/../../utility)
 del_cmd="rm -rf \$HOME/${dst_name}"
 ssh_opt="-o StrictHostKeyChecking=no"
-ssh_cmd="ssh ${ssh_opt} ${host}"
 src_path_parent_path=$(realpath ${src_path}/../)
 src_path_server_files=$(cd ${src_path_parent_path};find . -maxdepth 1 -type f -not -name "share.sh" -not -name "README.md" -exec sh -c 'f={};echo ./server/$(basename $f)' \;)
 
@@ -59,13 +58,15 @@ if [ ${is_requirement} ];then
 fi
 cmd+="${PYTHON_EXEC} -B \$HOME/${dst_name}/main.py $args"
 
-[ $host == "local" ] && ssh_cmd="eval"
+host_cmd="ssh ${ssh_opt} ${host}"
+
+[ $host == "local" ] && host_cmd="eval"
 
 tar -zcf - --exclude="__pycache__" --exclude="${build_name}" \
 -C ${src_path} . \
 -C $(realpath ${utility_path}/../) ./$(basename ${utility_path}) \
 -C $(realpath ${src_path}/../../) ${src_path_server_files} \
-| ${ssh_cmd} "mkdir -p \$HOME/${dst_name};tar -zxf - -C \$HOME/${dst_name}"
-${ssh_cmd} "${cmd}"
-${ssh_cmd} "[ -d $HOME/${dst_name} ]" && ${ssh_cmd} "tar -zcf - -C \$HOME/${dst_name} ${tmp_name} ${build_name}" | tar -zxf - -C ${src_path}
-${ssh_cmd} "${del_cmd}"
+| ${host_cmd} "mkdir -p \$HOME/${dst_name};tar -zxf - -C \$HOME/${dst_name}"
+${host_cmd} "${cmd}"
+${host_cmd} "[ -d $HOME/${dst_name} ]" && ${host_cmd} "tar -zcf - -C \$HOME/${dst_name} ${tmp_name} ${build_name}" | tar -zxf - -C ${src_path}
+${host_cmd} "${del_cmd}"
