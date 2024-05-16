@@ -4,6 +4,7 @@ import logging
 import os
 import pathlib
 import subprocess
+import re
 
 if os.name != "nt":
     import pwd
@@ -52,7 +53,7 @@ def execute(
     if len(stack) - 1 >= stack_index:
         stack_item = stack[stack_index]
         stack_logs.append("{0} line: {1} func: {2}".format(pathlib.Path(stack_item.filename).as_posix(), str(stack_item.lineno), stack_item.function))
-    stack_logs.append(cmd)
+    stack_logs.append(re.sub('&&\s+', '&&\n', cmd))
     logger.info("\n".join(stack_logs))
     if is_input:
         input_exec = str(input("Are you sure you want to execute (y/n)?").strip())
