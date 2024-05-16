@@ -59,7 +59,7 @@ if [ ${is_requirement} ];then
 fi
 cmd+="${PYTHON_EXEC} -B \$HOME/${dst_name}/main.py $args"
 
-[ $host == "local" ] && ssh_cmd="sh -c"
+[ $host == "local" ] && ssh_cmd="eval"
 
 tar -zcf - --exclude="__pycache__" --exclude="${build_name}" \
 -C ${src_path} . \
