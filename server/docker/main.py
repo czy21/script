@@ -104,7 +104,8 @@ class DockerRole(share.AbstractRole):
             if self.any_doc_exclude(self.role_output_path):
                 rdd = {
                     t.name: {
-                        "command": "docker build --tag {0} --file {1} . --pull".format(self.get_image_tag(registry_source_url, registry_source_dir, t), t.name)
+                        "command": "docker build --tag {0} --file {1} . --pull".format(self.get_image_tag(registry_source_url, registry_source_dir, t), t.name),
+                        "content": file_util.read_text(t),
                     } for t in sorted(self.role_output_path.glob("Dockerfile*"), reverse=True)}
                 docker_compose_command = "docker-compose --project-name {0} --file deploy.yml up --detach --remove-orphans".format(self.role_env.get("param_role_project_name", self.role_name))
                 md_content = template_util.Template(file_util.read_text(self.root_doc_template_file)).render(**{
