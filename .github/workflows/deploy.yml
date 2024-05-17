@@ -24,10 +24,13 @@ defaults:
 jobs:
   # Build job
   build:
-    runs-on: ubuntu-host
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v4
-      - run: $HOME/.python3/bin/python3 -m pip install -r server/requirements.txt && $HOME/.python3/bin/python3/python3 -B main.py
+      - run: |
+          $HOME/.python3/bin/python3 -m pip install -r server/requirements.txt
+          $HOME/.python3/bin/python3 -m pip install mkdocs mkdocs-material
+          $HOME/.python3/bin/python3/python3 -B main.py
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v3
