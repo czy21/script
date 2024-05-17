@@ -23,7 +23,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: |
-          id && pwd
           $HOME/.python3/bin/python3 -m pip install -r server/requirements.txt
           $HOME/.python3/bin/python3 -m pip install mkdocs mkdocs-material
           $HOME/.python3/bin/python3 -B main.py
@@ -40,7 +39,7 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     needs: build
     steps:
       - name: Deploy to GitHub Pages
