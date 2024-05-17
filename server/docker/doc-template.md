@@ -1,18 +1,20 @@
-## git repo
+## Git Repository
 {%- for k,v in param_registry_git_repo_dict.items() %}
   - {{ k }}: [{{ v }}]({{ v }}){:target=_blank}
 {%- endfor %}
 {%- if param_docker_dockerfile_dict %}
-## dockerfile
+## Dockerfile
 {%- for k,v in param_docker_dockerfile_dict.items() %}
-- {{ k }}
+```dockerfile
+{{ v["content"] }}
+```
 ```bash
 {{ v["command"] }}
 ```
 {%- endfor %}
 {%- endif %}
 {%- if param_docker_compose_command %}
-## docker-compose
+## Docker Compose
 ```yaml
 {{ param_docker_compose_content }}
 ```
