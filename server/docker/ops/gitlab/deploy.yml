@@ -7,7 +7,7 @@ x-traefik-label: &traefik-label
 
 services:
   gitlab:
-    image: gitlab/gitlab-ee:16.5.0-ee.0
+    image: gitlab/gitlab-ee:16.11.2-ee.0
     container_name: gitlab
     hostname: gitlab
     labels:
