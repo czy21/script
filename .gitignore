@@ -28,3 +28,7 @@ jenkins/lib/
 *.crt
 *.key
 *.pem
+
+# doc
+doc/public/container
+mkdocs.yaml
