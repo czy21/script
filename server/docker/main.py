@@ -110,6 +110,7 @@ class DockerRole(share.AbstractRole):
                 md_content = template_util.Template(file_util.read_text(self.root_doc_template_file)).render(**{
                     "param_registry_git_repo_dict": {t["name"]: "{}/{}/{}".format(t["url"], "tree/main", self.role_name) for t in self.role_env.get("param_registry_git_repos")},
                     "param_docker_dockerfile_dict": rdd,
+                    "param_docker_compose_content": file_util.read_text(self.role_deploy_file) if self.role_deploy_file.exists() else None,
                     "param_docker_compose_command": docker_compose_command if self.role_deploy_file.exists() else None,
                 })
                 file_util.write_text(self.role_output_path.joinpath("doc.md"), md_content)

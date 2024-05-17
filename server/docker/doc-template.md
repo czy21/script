@@ -13,6 +13,9 @@
 {%- endif %}
 {%- if param_docker_compose_command %}
 ## docker-compose
+```yaml
+{{ param_docker_compose_content }}
+```
 ```bash
 {{ param_docker_compose_command }}
 ```
