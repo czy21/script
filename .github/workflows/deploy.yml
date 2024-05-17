@@ -36,7 +36,7 @@ jobs:
         id: pages
         uses: actions/configure-pages@v3
       - name: Build with Mkdocs
-        run: mkdocs build -d build/doc
+        run: $HOME/.python3/bin/mkdocs build -d build/doc
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
