@@ -38,7 +38,7 @@ jobs:
       - name: Build with Mkdocs
         run: $HOME/.python3/bin/mkdocs build -d build/doc
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v1
         with:
           path: ./build/doc
 
