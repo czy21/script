@@ -1,6 +1,9 @@
 name: Deploy Doc
 
 on:
+  push:
+    paths:
+      - server/docker/**
   workflow_dispatch:
 
 permissions:
@@ -36,11 +39,11 @@ jobs:
         with:
           path: ./build/doc
   deploy:
+    runs-on: ubuntu-latest
+    needs: build
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
