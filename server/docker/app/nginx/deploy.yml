@@ -8,7 +8,7 @@ x-traefik-exporter-label: &traefik-exporter-label
 services:
 
   nginx:
-    image: nginx:1.25.1-alpine
+    image: nginx:1.26.0-alpine
     container_name: nginx
     privileged: true
     user: root
@@ -17,15 +17,9 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/conf.d/:/etc/nginx/conf.d/
       - {{ param_docker_data }}/{{ param_role_name }}/conf/cert/:/etc/nginx/cert/
     restart: always
-    logging:
-      driver: "fluentd"
-      options:
-        fluentd-address: localhost:24224
-        tag: "docker.{{ '{{' }}.Name{{ '}}' }}"
-
 
   nginx-exporter:
-    image: nginx/nginx-prometheus-exporter:0.11.0
+    image: nginx/nginx-prometheus-exporter:1.1
     container_name: nginx-exporter
     labels:
       <<: *traefik-exporter-label
