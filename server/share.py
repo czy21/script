@@ -141,7 +141,6 @@ def select_namespace(root_path: pathlib.Path, deep: int = 1, exclude_rules=None,
 
 
 def execute(cmd, is_return: bool = False, dry_run=False):
-    logger.debug("\n{0}".format(re.sub(r'&&\s+', '&&\n', cmd)))
     return basic_util.execute(cmd, is_input=False, is_return=is_return, dry_run=dry_run)
 
 
