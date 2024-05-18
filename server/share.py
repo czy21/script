@@ -353,7 +353,7 @@ class Installer:
                 role_name = r.name
                 role_path: pathlib.Path = r.path
                 role_title = "%s.%s" % (role_key, role_name)
-                role_log_prefix = "{0} {1}".format(role_title, args.command)
+                role_log_prefix = role_title
                 role_temp_path = role_path.joinpath("___temp")
                 role_temp_path.mkdir(parents=True, exist_ok=True)
                 role_bak_path = role_temp_path.joinpath("bak")
@@ -415,11 +415,11 @@ class Installer:
                 execute(_cmds_string, dry_run=args.dry_run)
 
                 def cp_role_to_root(src: pathlib.Path, dst: pathlib.Path):
-                    return "mkdir -p {0} && cp -r {1} {0}".format(dst.joinpath(role_path.relative_to(self.root_path)).as_posix(), src.as_posix())
+                    return "mkdir -p {0} && cp -r {1} {0}".format(dst.joinpath(role_path.relative_to(self.root_path)).as_posix(), src.as_posix()) if any(src.iterdir()) else []
 
                 _post_cmds_string = collection_util.flat_to_str([
                     cp_role_to_root(role_build_path, self.build_path),
-                    cp_role_to_root(role_temp_path, self.tmp_path) if any(role_temp_path.iterdir()) else []
+                    cp_role_to_root(role_temp_path, self.tmp_path)
                 ], delimiter=" && ")
                 execute(_post_cmds_string)
 
