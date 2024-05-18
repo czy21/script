@@ -411,17 +411,12 @@ class Installer:
                                                 namespace=namespace,
                                                 args=args)
                 _cmds.extend(getattr(role_instance, args.command)())
-                _cmds_string = collection_util.flat_to_str(_cmds, delimiter=" && ")
-                execute(_cmds_string, dry_run=args.dry_run)
+                execute(collection_util.flat_to_str(_cmds, delimiter=" && "), dry_run=args.dry_run)
 
                 def cp_role_to_root(src: pathlib.Path, dst: pathlib.Path):
                     return "mkdir -p {0} && cp -r {1} {0}".format(dst.joinpath(role_path.relative_to(self.root_path)).as_posix(), src.as_posix()) if any(src.iterdir()) else []
 
-                _post_cmds_string = collection_util.flat_to_str([
-                    cp_role_to_root(role_build_path, self.build_path),
-                    cp_role_to_root(role_temp_path, self.tmp_path)
-                ], delimiter=" && ")
-                execute(_post_cmds_string)
+                execute(collection_util.flat_to_str([cp_role_to_root(role_build_path, self.build_path), cp_role_to_root(role_temp_path, self.tmp_path)], delimiter=" && "))
 
     def run(self, **kwargs):
         args: argparse.Namespace = self.arg_parser.parse_args()
