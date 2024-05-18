@@ -79,9 +79,9 @@ def get_match_dirs(rules, items):
 
 
 def echo_action(role, content, exec_file=None) -> str:
-    c = "{} {} ".format(role, content)
+    c = "{} {}".format(role, content)
     if exec_file:
-        c += "=> {}".format(exec_file)
+        c += " => {}".format(exec_file)
     return 'echo "' + c + '"'
 
 
