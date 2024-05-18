@@ -2,6 +2,7 @@ import argparse
 import logging
 import os
 import pathlib
+import re
 import shutil
 import sys
 import typing
@@ -140,7 +141,8 @@ def select_namespace(root_path: pathlib.Path, deep: int = 1, exclude_rules=None,
 
 
 def execute(cmd, is_return: bool = False, dry_run=False):
-    return basic_util.execute(cmd, is_input=False, is_return=is_return, stack_index=2, dry_run=dry_run)
+    logger.debug("\n{0}".format(re.sub(r'&&\s+', '&&\n', cmd)))
+    return basic_util.execute(cmd, is_input=False, is_return=is_return, dry_run=dry_run)
 
 
 class CustomHelpFormatter(argparse.MetavarTypeHelpFormatter):
@@ -351,6 +353,7 @@ class Installer:
                 role_name = r.name
                 role_path: pathlib.Path = r.path
                 role_title = "%s.%s" % (role_key, role_name)
+                role_log_prefix = "{0} {1}".format(role_title, args.command)
                 role_temp_path = role_path.joinpath("___temp")
                 role_temp_path.mkdir(parents=True, exist_ok=True)
                 role_bak_path = role_temp_path.joinpath("bak")
@@ -369,6 +372,7 @@ class Installer:
                     "param_role_temp_path": role_temp_path.as_posix(),
                     "param_role_bak_path": role_bak_path.as_posix()
                 }
+                logger.info(role_log_prefix)
                 if args.command == Command.backup.value:
                     role_bak_path.mkdir(exist_ok=True)
                 # process env
@@ -390,14 +394,11 @@ class Installer:
                         file_util.copy(t, role_output_file)
 
                 # collect command
-                _cmds = [
-                    echo_action(role_title, args.command)
-                ]
+                _cmds = []
                 if args.command == Command.build.value:
                     if args.target == "build.sh":
                         target_file = role_output_path.joinpath(args.target)
                         if target_file.exists():
-                            _cmds.append(echo_action(role_title, Command.build.value, target_file.as_posix()))
                             _cmds.append("sh {0} {1}".format(target_file.as_posix(), " ".join(args.build_args)))
                 role_instance = self.role_class(home_path=self.home_path,
                                                 root_path=self.root_path,
@@ -410,15 +411,17 @@ class Installer:
                                                 namespace=namespace,
                                                 args=args)
                 _cmds.extend(getattr(role_instance, args.command)())
-                execute(collection_util.flat_to_str(_cmds, delimiter=" && "), dry_run=args.dry_run)
+                _cmds_string = collection_util.flat_to_str(_cmds, delimiter=" && ")
+                execute(_cmds_string, dry_run=args.dry_run)
 
                 def cp_role_to_root(src: pathlib.Path, dst: pathlib.Path):
                     return "mkdir -p {0} && cp -r {1} {0}".format(dst.joinpath(role_path.relative_to(self.root_path)).as_posix(), src.as_posix())
-                
-                execute(collection_util.flat_to_str([
+
+                _post_cmds_string = collection_util.flat_to_str([
                     cp_role_to_root(role_build_path, self.build_path),
                     cp_role_to_root(role_temp_path, self.tmp_path) if any(role_temp_path.iterdir()) else []
-                ], delimiter=" && "))
+                ], delimiter=" && ")
+                execute(_post_cmds_string)
 
     def run(self, **kwargs):
         args: argparse.Namespace = self.arg_parser.parse_args()
