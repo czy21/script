@@ -414,10 +414,10 @@ class Installer:
 
                 def cp_role_to_root(src: pathlib.Path, dst: pathlib.Path):
                     return "mkdir -p {0} && cp -r {1} {0}".format(dst.joinpath(role_path.relative_to(self.root_path)).as_posix(), src.as_posix())
-
+                
                 execute(collection_util.flat_to_str([
                     cp_role_to_root(role_build_path, self.build_path),
-                    cp_role_to_root(role_temp_path, self.tmp_path)
+                    cp_role_to_root(role_temp_path, self.tmp_path) if any(role_temp_path.iterdir()) else []
                 ], delimiter=" && "))
 
     def run(self, **kwargs):
