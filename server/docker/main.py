@@ -94,12 +94,12 @@ class DockerRole(share.AbstractRole):
                         logger.warning("registry target: {} not exist".format(t))
                         continue
                     registry_target_tag = self.get_image_tag(registry_target_url, registry_target_dir, rd)
-                    registry_target_tags.append((t,registry_target_tag))
+                    registry_target_tags.append((t, registry_target_tag))
                 _cmds.append("DOCKER_BUILDKIT=0 docker build --tag {0} --file {1} {2} --pull".format(registry_source_tag, rd.as_posix(), self.role_output_path.as_posix()))
                 _cmds.extend(["docker tag {} {}".format(registry_source_tag, t[1]) for t in registry_target_tags])
                 if self.args.push:
                     _cmds.append("docker push {0}".format(registry_source_tag))
-                    _cmds.extend(["docker --config $HOME/.docker/{0} push {1}".format(t[0],t[1]) if "dockerhub" == t[0] else "docker push {0}".format(t[1]) for t in registry_target_tags])
+                    _cmds.extend(["docker --config $HOME/.docker/{0} push {1}".format(t[0], t[1]) if "dockerhub" == t[0] else "docker push {0}".format(t[1]) for t in registry_target_tags])
         if self.args.target == "doc":
             if self.any_doc_exclude(self.role_output_path):
                 rdd = {
@@ -114,7 +114,8 @@ class DockerRole(share.AbstractRole):
                     "param_docker_compose_content": file_util.read_text(self.role_deploy_file) if self.role_deploy_file.exists() else None,
                     "param_docker_compose_command": docker_compose_command if self.role_deploy_file.exists() else None,
                 })
-                file_util.write_text(self.role_output_path.joinpath("doc.md"), md_content)
+                role_readme = self.role_output_path.joinpath("README.md")
+                file_util.write_text(self.role_output_path.joinpath("doc.md"), md_content + "\n" + file_util.read_text(role_readme) if role_readme.exists() else "")
             self.sync_to_git_repo("docker")
         return _cmds
 
