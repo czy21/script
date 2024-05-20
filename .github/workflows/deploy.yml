@@ -29,7 +29,7 @@ jobs:
           $HOME/.python3/bin/python3 -m pip install -r server/requirements.txt
           $HOME/.python3/bin/python3 -m pip install mkdocs mkdocs-material
           $HOME/.python3/bin/python3 -B main.py
-      - name: Commit to container repository
+      - name: Push to container repository
         run: |
           cd $HOME/container/
           if [[ ! -z $(git status -s) ]];then
