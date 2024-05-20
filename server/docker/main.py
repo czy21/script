@@ -109,14 +109,12 @@ class DockerRole(share.AbstractRole):
                         {
                             "name": t.name,
                             "command": "docker build --tag {0} --file {1} . --pull".format(self.get_image_tag(registry_source_url, registry_source_dir, t), t.name),
-                            "content": file_util.read_text(t),
                             "rawUrl": "https://raw.githubusercontent.com/czy21/container/main/{0}/docker/{1}".format(self.role_name,t.name)
                         } for t in sorted(self.role_output_path.glob("Dockerfile*"), reverse=True)
                     ],
                     "param_docker_compose":{
                         "name": self.role_deploy_file.name,
                         "command": docker_compose_command,
-                        "content": file_util.read_text(self.role_deploy_file),
                         "rawUrl": "https://raw.githubusercontent.com/czy21/container/main/{0}/docker/{1}".format(self.role_name,self.role_deploy_file.name)
                     } if self.role_deploy_file.exists() else None
                 })
