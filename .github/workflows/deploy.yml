@@ -32,7 +32,7 @@ jobs:
       - name: Commit to container repository
         run: |
           cd $HOME/container/
-          if [[ ! -z $(git status -s) ]]then
+          if [[ ! -z $(git status -s) ]];then
             git pull
             git add .
             git commit -m "# generate"
