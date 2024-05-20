@@ -102,20 +102,20 @@ class DockerRole(share.AbstractRole):
                     _cmds.extend(["docker --config $HOME/.docker/{0} push {1}".format(t[0], t[1]) if "dockerhub" == t[0] else "docker push {0}".format(t[1]) for t in registry_target_tags])
         if self.args.target == "doc":
             if self.any_doc_exclude(self.role_output_path):
-                docker_compose_command = "docker-compose --project-name {0} --file deploy.yml up --detach --remove-orphans".format(self.role_env.get("param_role_project_name", self.role_name))
+                registry_git_repo_raw_format = self.role_env.get("param_registry_git_repo_raw")+"/main/{0}/docker/{1}"
                 md_content = template_util.Template(file_util.read_text(self.root_doc_template_file)).render(**{
                     "param_registry_git_repo_dict": {t["name"]: "{}/{}/{}".format(t["url"], "tree/main", self.role_name) for t in self.role_env.get("param_registry_git_repos")},
                     "param_docker_dockerfiles": [
                         {
                             "name": t.name,
                             "command": "docker build --tag {0} --file {1} . --pull".format(self.get_image_tag(registry_source_url, registry_source_dir, t), t.name),
-                            "rawUrl": "https://raw.githubusercontent.com/czy21/container/main/{0}/docker/{1}".format(self.role_name,t.name)
+                            "rawUrl": registry_git_repo_raw_format.format(self.role_name,t.name)
                         } for t in sorted(self.role_output_path.glob("Dockerfile*"), reverse=True)
                     ],
                     "param_docker_compose":{
                         "name": self.role_deploy_file.name,
-                        "command": docker_compose_command,
-                        "rawUrl": "https://raw.githubusercontent.com/czy21/container/main/{0}/docker/{1}".format(self.role_name,self.role_deploy_file.name)
+                        "command": "docker-compose --project-name {0} --file deploy.yml up --detach --remove-orphans".format(self.role_env.get("param_role_project_name", self.role_name)),
+                        "rawUrl": registry_git_repo_raw_format.format(self.role_name,self.role_deploy_file.name)
                     } if self.role_deploy_file.exists() else None
                 })
                 role_readme = self.role_output_path.joinpath("README.md")
