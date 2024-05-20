@@ -5,6 +5,7 @@
 {%- if param_docker_dockerfiles %}
 ## Dockerfile
 {%- for t in param_docker_dockerfiles %}
+- {{ t["name"] }}
 ```dockerfile
 {{ t["content"] }}
 ```
