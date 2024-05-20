@@ -102,17 +102,20 @@ class DockerRole(share.AbstractRole):
                     _cmds.extend(["docker --config $HOME/.docker/{0} push {1}".format(t[0], t[1]) if "dockerhub" == t[0] else "docker push {0}".format(t[1]) for t in registry_target_tags])
         if self.args.target == "doc":
             if self.any_doc_exclude(self.role_output_path):
-                rdd = {
-                    t.name: {
-                        "command": "docker build --tag {0} --file {1} . --pull".format(self.get_image_tag(registry_source_url, registry_source_dir, t), t.name),
-                        "content": file_util.read_text(t),
-                    } for t in sorted(self.role_output_path.glob("Dockerfile*"), reverse=True)}
                 docker_compose_command = "docker-compose --project-name {0} --file deploy.yml up --detach --remove-orphans".format(self.role_env.get("param_role_project_name", self.role_name))
                 md_content = template_util.Template(file_util.read_text(self.root_doc_template_file)).render(**{
                     "param_registry_git_repo_dict": {t["name"]: "{}/{}/{}".format(t["url"], "tree/main", self.role_name) for t in self.role_env.get("param_registry_git_repos")},
-                    "param_docker_dockerfile_dict": rdd,
-                    "param_docker_compose_content": file_util.read_text(self.role_deploy_file) if self.role_deploy_file.exists() else None,
-                    "param_docker_compose_command": docker_compose_command if self.role_deploy_file.exists() else None,
+                    "param_docker_dockerfiles": [
+                        {
+                            "name": t.name,
+                            "command": "docker build --tag {0} --file {1} . --pull".format(self.get_image_tag(registry_source_url, registry_source_dir, t), t.name),
+                            "content": file_util.read_text(t),
+                        } for t in sorted(self.role_output_path.glob("Dockerfile*"), reverse=True)
+                    ],
+                    "param_docker_compose":{
+                        "command": docker_compose_command,
+                        "content": file_util.read_text(self.role_deploy_file),
+                    } if self.role_deploy_file.exists() else None
                 })
                 role_readme = self.role_output_path.joinpath("README.md")
                 file_util.write_text(self.role_output_path.joinpath("doc.md"), md_content + "\n" + (file_util.read_text(role_readme) if role_readme.exists() else ""))

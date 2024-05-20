@@ -2,23 +2,24 @@
 {%- for k,v in param_registry_git_repo_dict.items() %}
   - {{ k }}: [{{ v }}]({{ v }}){:target=_blank}
 {%- endfor %}
-{%- if param_docker_dockerfile_dict %}
+{%- if param_docker_dockerfiles %}
 ## Dockerfile
-{%- for k,v in param_docker_dockerfile_dict.items() %}
+{%- for t in param_docker_dockerfiles %}
+- {{ t["name"] }}
 ```dockerfile
-{{ v["content"] }}
+{{ t["content"] }}
 ```
 ```bash
-{{ v["command"] }}
-```
+{{ t["command"] }}
+  ```
 {%- endfor %}
 {%- endif %}
-{%- if param_docker_compose_command %}
+{%- if param_docker_compose %}
 ## Docker Compose
 ```yaml
-{{ param_docker_compose_content }}
+{{ param_docker_compose['content'] }}
 ```
 ```bash
-{{ param_docker_compose_command }}
+{{ param_docker_compose['command'] }}
 ```
 {%- endif %}
