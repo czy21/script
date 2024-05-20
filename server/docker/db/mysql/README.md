@@ -1,3 +1,4 @@
+## Master Slave
 ```sql
 -- create slave user on master
 CREATE USER 'slave'@'192.168.2.%' IDENTIFIED BY '';
