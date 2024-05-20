@@ -10,7 +10,7 @@
 ```
 ```bash
 {{ t["command"] }}
-  ```
+```
 {%- endfor %}
 {%- endif %}
 {%- if param_docker_compose %}
