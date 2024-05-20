@@ -113,6 +113,7 @@ class DockerRole(share.AbstractRole):
                         } for t in sorted(self.role_output_path.glob("Dockerfile*"), reverse=True)
                     ],
                     "param_docker_compose":{
+                        "name": self.role_deploy_file.name,
                         "command": docker_compose_command,
                         "content": file_util.read_text(self.role_deploy_file),
                     } if self.role_deploy_file.exists() else None
