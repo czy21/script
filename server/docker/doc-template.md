@@ -16,6 +16,7 @@
 {%- endif %}
 {%- if param_docker_compose %}
 ## Docker Compose
+- {{ param_docker_compose['name'] }}
 ```yaml
 {{ param_docker_compose['content'] }}
 ```
