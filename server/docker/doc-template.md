@@ -5,10 +5,7 @@
 {%- if param_docker_dockerfiles %}
 ## Dockerfile
 {%- for t in param_docker_dockerfiles %}
-- {{ t["name"] }}
-```dockerfile
-{{ t["content"] }}
-```
+- [{{ t["name"] }}]({{ t['rawUrl'] }}){:target=_blank}
 ```bash
 {{ t["command"] }}
 ```
@@ -16,10 +13,7 @@
 {%- endif %}
 {%- if param_docker_compose %}
 ## Docker Compose
-- {{ param_docker_compose['name'] }}
-```yaml
-{{ param_docker_compose['content'] }}
-```
+- [{{ param_docker_compose['name'] }}]({{ param_docker_compose['rawUrl'] }}){:target=_blank}
 ```bash
 {{ param_docker_compose['command'] }}
 ```
