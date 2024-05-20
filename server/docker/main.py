@@ -115,7 +115,7 @@ class DockerRole(share.AbstractRole):
                     "param_docker_compose_command": docker_compose_command if self.role_deploy_file.exists() else None,
                 })
                 role_readme = self.role_output_path.joinpath("README.md")
-                file_util.write_text(self.role_output_path.joinpath("doc.md"), md_content + "\n" + file_util.read_text(role_readme) if role_readme.exists() else "")
+                file_util.write_text(self.role_output_path.joinpath("doc.md"), md_content + "\n" + (file_util.read_text(role_readme) if role_readme.exists() else ""))
             self.sync_to_git_repo("docker")
         return _cmds
 
