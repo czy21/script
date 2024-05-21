@@ -7,7 +7,7 @@ from server import share
 from utility import (
     collection as collection_util,
     file as file_util,
-    regex as regex_util
+    template as template_util
 )
 
 
@@ -43,21 +43,15 @@ class ChartRole(share.AbstractRole):
 
     def build(self) -> list[str]:
         _cmds = []
-        if self.args.target == "doc" and self.any_doc_exclude(self.role_output_path):
-            # role_dockerfile_dict = {
-            #     t.name: {
-            #         "command": "docker build --tag {0} --file {1} . --pull".format()
-            #     } for t in sorted(self.role_output_path.glob("Dockerfile*"), reverse=True)}
-            # docker_compose_command = "docker-compose --project-name {0} --file deploy.yml up --detach --remove-orphans".format(self.role_env.get("param_role_project_name", self.role_name))
-            # md_content = template_util.Template(file_util.read_text(self.root_doc_template_file)).render(**{
-            #     "param_k8s_helm_command": docker_compose_command,
-            # })
-            # file_util.write_text(self.role_output_path.joinpath("doc.md"), md_content)
-            self.sync_to_git_repo("helm")
+        if self.args.target == "doc":
+            if self.any_doc_exclude(self.role_output_path):
+                md_content = template_util.Template(file_util.read_text(self.root_doc_template_file)).render(**{
+                    "param_registry_git_repo_dict": {t["name"]: "{}/{}/{}".format(t["url"], "tree/main", self.role_name) for t in self.role_env.get("param_registry_git_repos")}
+                })
+                role_readme = self.role_output_path.joinpath("README.md")
+                file_util.write_text(self.role_output_path.joinpath("doc.md"), md_content + "\n" + (file_util.read_text(role_readme) if role_readme.exists() else ""))
+            self.sync_to_git_repo("chart")
         return _cmds
-
-    def any_doc_exclude(self, f: pathlib.Path):
-        return not any(regex_util.match_rules(self.role_env["param_doc_excludes"], f.as_posix()).values())
 
     def delete(self) -> list[str]:
         return ["helm delete {0} {1}".format(self.role_name, "" if self.args.ignore_namespace else "--namespace {0}".format(self.namespace))]
