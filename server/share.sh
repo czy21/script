@@ -48,8 +48,9 @@ ssh_opt="-o StrictHostKeyChecking=no"
 src_path_parent_path=$(realpath ${src_path}/../)
 src_path_server_files=$(cd ${src_path_parent_path};find . -maxdepth 1 -type f -not -name "share.sh" -not -name "README.md" -exec sh -c 'f={};echo ./server/$(basename $f)' \;)
 
-cmd=""
 pypi="-i https://pypi.tuna.tsinghua.edu.cn/simple/"
+
+cmd=""
 cmd+="if [ ! -f ${PYTHON_EXEC} ];then "
 cmd+="python3 -m venv ${PYTHON_HOME} --without-pip --system-site-packages && wget -nv -O - https://bootstrap.pypa.io/get-pip.py | ${PYTHON_EXEC} - ${pypi}"
 cmd+=";fi &&"
