@@ -10,7 +10,7 @@ def collect_doc(source_name):
     share.execute("cd {0} && rm -rf build && sh main.sh {1} build --target doc --env-file env-public.yaml --all-namespace".format(source_dir.as_posix(), "local"))
     source_build_dir = source_dir.joinpath("build")
     target_dir = doc_public.joinpath(source_name)
-    shutil.rmtree(target_dir)
+    shutil.rmtree(target_dir,ignore_errors=True)
     namespaces = []
     for s in filter(lambda f: f.is_dir(),source_build_dir.iterdir()):
         roles=[]
@@ -36,10 +36,7 @@ if __name__ == '__main__':
     mkdocs_template = doc.joinpath("mkdocs_template.yaml")
     mkdocs_text = template_util.Template(file_util.read_text(mkdocs_template)).render(
         **{
-            "param_doc_nav": {
-              "Docker": collect_doc("docker"),
-              "Chart": collect_doc("chart"),
-           }  
+            "param_doc_nav": dict([t.capitalize(),collect_doc(t)] for t in ["docker","chart"])
         }
     )
     file_util.write_text(mkdocs, mkdocs_text)
