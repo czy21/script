@@ -14,17 +14,12 @@ markdown_extensions:
   - attr_list
 nav:
   - Home: index.md
-  - Docker:
-{%- for n in param_docker_namespaces %}
-      - {{ n.namespace }}
+{%- for k,v in param_doc_nav.items() %}
+  - {{ k }}:
+{%- for n in v %}
+      - {{ n.namespace }}:
 {%- for r in n.roles %}
         - {{ r.name }}: {{ r.file }}
 {%- endfor %}
-{%- endfor %}
-  - Chart:
-{%- for n in param_chart_namespaces %}
-      - {{ n.namespace }}
-{%- for r in n.roles %}
-        - {{ r.name }}: {{ r.file }}
 {%- endfor %}
 {%- endfor %}
