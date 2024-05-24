@@ -8,21 +8,8 @@ logger = logging.getLogger()
 
 root_path = path_util.join_path(__file__, "../../../../")
 output = path_util.join_path(root_path, "___output")
-project_code = path_util.join_path(root_path, "code")
 project_db = path_util.join_path(root_path, "db")
 
-script_template = path_util.join_path(root_path, "script/template")
-
-# child dir of code
-project_code_api = path_util.join_path(project_code, "api")
-project_code_web = path_util.join_path(project_code, "web")
-project_code_app = path_util.join_path(project_code, "app")
-project_code_plugin = path_util.join_path(project_code, "gradle-plugin")
-
-# child dir of output
-output_api = path_util.join_path(output, "api")
-output_web = path_util.join_path(output, "web")
-output_app = path_util.join_path(output, "app")
 output_db = path_util.join_path(output, "db")
 output_db_bak = path_util.join_path(output_db, "bak")
 output_db_all_in_one = path_util.join_path(output_db, "all_in_one")
