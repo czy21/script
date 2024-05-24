@@ -6,8 +6,6 @@ from utility import path as path_util
 param_project_name = ""
 param_env_suffix = ""
 
-param_template_output_dict = {}
-
 param_main_db_name = ""
 param_main_db_bak_name = ""
 
@@ -61,16 +59,3 @@ param_main_db_mongo_file_path = ""
 
 param_main_redis_host = ""
 param_main_rabbit_host = ""
-
-# api
-param_api_root_project_path = ""
-param_api_gradle_init_script_file_path = ""
-param_api_gradle_plugin_root_project_path = default_path.project_code_plugin
-param_api_module_name = ""
-
-# api output
-param_api_output_path = default_path.output_api
-
-# web
-param_web_output_path = default_path.output_web
-param_web_root_project_path = ""
