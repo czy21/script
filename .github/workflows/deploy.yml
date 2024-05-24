@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - server/docker/**
+      - server/chart/**
   workflow_dispatch:
 
 permissions:
