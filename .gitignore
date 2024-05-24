@@ -30,5 +30,6 @@ jenkins/lib/
 *.pem
 
 # doc
-doc/public/container
+doc/public/docker
+doc/public/chart
 mkdocs.yaml

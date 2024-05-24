@@ -5,11 +5,11 @@ from server import share
 from utility import file as file_util, template as template_util
 
 
-def collect_doc(source_name,target_name):
+def collect_doc(source_name):
     source_dir = current.joinpath("server/{0}".format(source_name))
     share.execute("cd {0} && rm -rf build && sh main.sh {1} build --target doc --env-file env-public.yaml --all-namespace".format(source_dir.as_posix(), "local"))
     source_build_dir = source_dir.joinpath("build")
-    target_dir = doc_public.joinpath(target_name)
+    target_dir = doc_public.joinpath(source_name)
     source_md_names = []
     for s in filter(lambda f: f.is_file(), source_build_dir.rglob("**/output/doc.md")):
         name = s.parent.parent.parent.stem
@@ -37,7 +37,7 @@ if __name__ == '__main__':
     chart_docs=collect_doc("chart")
     mkdocs_text = template_util.Template(file_util.read_text(mkdocs_template)).render(
         **{
-            "param_container_mds": "\n      - ".join(["{0}: {1}".format(m, "container/" + m + ".md") for m in docker_docs])
+            "param_docker_mds": "\n      - ".join(["{0}: {1}".format(m, "docker/" + m + ".md") for m in docker_docs]),
             "param_chart_mds": "\n      - ".join(["{0}: {1}".format(m, "chart/" + m + ".md") for m in chart_docs])
         }
     )
