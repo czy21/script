@@ -1,28 +1,26 @@
 import filecmp
 import logging
-import pathlib
+import pathlib,json
 from server import share
 from utility import file as file_util, template as template_util
 
 
 def collect_doc(source_name):
     source_dir = current.joinpath("server/{0}".format(source_name))
-    share.execute("cd {0} && rm -rf build && sh main.sh {1} build --target doc --env-file env-public.yaml --all-namespace".format(source_dir.as_posix(), "local"))
+    #share.execute("cd {0} && rm -rf build && sh main.sh {1} build --target doc --env-file env-public.yaml --all-namespace".format(source_dir.as_posix(), "local"))
     source_build_dir = source_dir.joinpath("build")
     target_dir = doc_public.joinpath(source_name)
-    source_md_names = []
-    for s in filter(lambda f: f.is_file(), source_build_dir.rglob("**/output/doc.md")):
-        name = s.parent.parent.parent.stem
-        t: pathlib.Path = target_dir.joinpath("{}.md".format(name))
-        source_md_names.append(name)
-        if not t.exists() or not filecmp.cmp(s, t):
-            file_util.copy(s, t)
-    for t in filter(lambda f: f.is_file(), target_dir.rglob("*")):
-        t: pathlib.Path = t
-        if not source_md_names.__contains__(t.stem):
-            t.unlink(missing_ok=True)
-    source_md_names.sort()
-    return source_md_names
+    namespaces = []
+    for s in filter(lambda f: f.is_dir(),source_build_dir.iterdir()):
+        roles=[]
+        for sd in filter(lambda f: f.is_file, s.rglob("**/output/doc.md")):
+            t: pathlib.Path = target_dir.joinpath("{}/{}.md".format(s.name,sd.parent.parent.parent.name))
+            role_name=sd.parent.parent.parent.name
+            roles.append({"name": role_name,"file": "{}/{}/{}.md".format(source_name,s.name,role_name)})
+            if not t.exists() or not filecmp.cmp(sd, t):
+                file_util.copy(sd, t)
+        namespaces.append({"namespace":s.name,"roles":roles})
+    return namespaces
 
 logger = logging.getLogger()
 # sh toolchain.sh -h user@host build --target doc --env-file env-public.yaml --all-namespace
@@ -37,8 +35,8 @@ if __name__ == '__main__':
     chart_docs=collect_doc("chart")
     mkdocs_text = template_util.Template(file_util.read_text(mkdocs_template)).render(
         **{
-            "param_docker_mds": "\n      - ".join(["{0}: {1}".format(m, "docker/" + m + ".md") for m in docker_docs]),
-            "param_chart_mds": "\n      - ".join(["{0}: {1}".format(m, "chart/" + m + ".md") for m in chart_docs])
+            "param_docker_namespaces":docker_docs,
+            "param_chart_namespaces": chart_docs
         }
     )
     file_util.write_text(mkdocs, mkdocs_text)
