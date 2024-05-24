@@ -3,7 +3,7 @@
   - {{ k }}: [{{ v }}]({{ v }}){:target=_blank}
 {%- endfor %}
 {%- if param_k8s_helm_command %}
-## helm
+## Helm
 ```bash
 {{ param_k8s_helm_command }}
 ```
