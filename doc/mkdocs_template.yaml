@@ -16,3 +16,5 @@ nav:
   - Home: index.md
   - Container:
       - {{ param_container_mds }}
+  - Chart:
+      - {{ param_chart_mds }}
