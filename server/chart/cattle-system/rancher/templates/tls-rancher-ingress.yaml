@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Secret
+type: kubernetes.io/tls
+metadata:
+  name: tls-rancher-ingress
+  namespace: {{ .Release.Namespace }}
+data:
+  tls.crt: {{ .Files.Get "cert/czy21-internal.com.crt" | b64enc }}
+  tls.key: {{ .Files.Get "cert/czy21-internal.com.key" | b64enc }}
