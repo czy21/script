@@ -4,8 +4,7 @@ package org.ops.util
 import java.nio.file.Path
 
 static def ofPath(String first, String... more) {
-    String[] moreParam = more.findAll { StringUtils.isNotEmpty(it) } as String[]
-    return Path.of(first, moreParam).toString()
+    return Path.of(first, more.findAll { StringUtils.isNotEmpty(it) } as String[]).toString()
 }
 
 static def relativize(String p1, String p2) {
