@@ -2,7 +2,6 @@ import argparse
 import logging
 import os
 import pathlib
-import re
 import shutil
 import sys
 import typing
