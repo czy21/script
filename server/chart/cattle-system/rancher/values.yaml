@@ -3,5 +3,7 @@ rancher:
   bootstrapPassword: {{ param_manage_password }}
   ingress:
     ingressClassName: "nginx"
+    extraAnnotations:
+      nginx.ingress.kubernetes.io/proxy-ssl-secret: ops/czy21-internal.com-secret
   tls: external
   debug: false
