@@ -1,5 +1,5 @@
 param_docker_version: 24.0.4
-param_compose_version: 2.20.1
+param_compose_version: {{ param_global_compose_version }}
 param_registry_mirrors:
   - "http://{{ param_registry_proxy_url }}"
 param_insecure_registries:

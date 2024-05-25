@@ -18,6 +18,4 @@ btrfsck --repair /dev/sdb1
 # omv allow 2375
 vim /etc/systemd/system/multi-user.target.wants/docker.service
 ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock -H tcp://0.0.0.0:2375
-# docker-compose
-sudo ln -sf /usr/libexec/docker/cli-plugins/docker-compose /usr/bin/docker-compose
 ```
