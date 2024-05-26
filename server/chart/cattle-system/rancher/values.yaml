@@ -5,5 +5,4 @@ rancher:
     ingressClassName: "nginx"
     tls:
       source: secret
-      secretName: tls-rancher-ingress
   debug: false
