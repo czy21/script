@@ -18,6 +18,8 @@ NTP=ntp.aliyun.com
 ```bash
 # use pip
 $HOME/.python3/bin/python3 -m pip install ansible
+# mac
+sudo brew install sshpass
 # ubuntu 22.04 (jammy)
 sudo apt install sshpass -y
 ```
