@@ -61,7 +61,7 @@ if __name__ == '__main__':
         "ANSIBLE_STDOUT_CALLBACK=yaml",
         "ANSIBLE_CHECK_MODE_MARKERS=yes",
         "ANSIBLE_LOG_PATH={0}".format(log_file),
-        "ansible-playbook",
+        "$HOME/.python3/bin/ansible-playbook",
         "--ssh-common-args \'-o StrictHostKeyChecking=no\'",
         "--ssh-extra-args \'-o StrictHostKeyChecking=no\'",
         "--scp-extra-args \'-o StrictHostKeyChecking=no\'",
