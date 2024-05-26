@@ -1,10 +1,4 @@
-## centos pre-installed
-```shell
-sudo yum -y install tar wget epel-release 
-sudo yum -y update
-sudo yum -y install ansible
-```
-## ubuntu pre-installed
+## Ubuntu pre-installed
 ```shell
 # desktop
 sudo apt install -y openssh-server sshpass vim git libfuse2 gnome-shell-extension-manager
@@ -19,38 +13,16 @@ NTP=ntp.aliyun.com
 # mDNS
 # sudo apt install avahi-daemon -y
 ```
-## ansible
+
+## Ansible
 ```bash
-# debian 11
-echo 'deb http://ppa.launchpad.net/ansible/ansible/ubuntu focal main' > /etc/apt/sources.list.d/ansible.list
-sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367
-sudo apt install ansible
-
+# use pip
+$HOME/.python3/bin/python3 -m pip install ansible
 # ubuntu 22.04 (jammy)
-#sudo update-alternatives --list python
-#sudo update-alternatives --install /usr/bin/python python /usr/bin/python2.7 1
-#sudo update-alternatives --install /usr/bin/python3 python /usr/bin/python3.10 2
-#sudo update-alternatives --config python # 1
-#sudo apt install software-properties-common -y
-#sudo add-apt-repository ppa:ansible/ansible --yes --update
-sudo apt install ansible sshpass -y
+sudo apt install sshpass -y
 ```
 
-### docker
-```shell
-# allow user exec docker
-sudo usermod -aG docker $USER
-
-# ubuntu cri-dockerd
-wget https://github.com/Mirantis/cri-dockerd/releases/download/v0.2.5/cri-dockerd_0.2.5.3-0.ubuntu-$(lsb_release -c -s)_amd64.deb -O cri-dockerd.deb && sudo dpkg -i cri-dockerd.deb && rm -rf cri-dockerd.deb
-
-# remote access with daemon.json
-{
-  "hosts": ["unix:///var/run/docker.sock", "tcp://127.0.0.1:2375"]
-}
-```
-
-### k8s
+### Kubernetes
 ```shell
 # get join command on master node
 sudo kubeadm token create --print-join-command
@@ -71,26 +43,4 @@ kubectl label nodes k8s-nodeX slave=X
 
 # show node label
 kubectl get node --show-labels
-```
-
-### k8s upgrade
-```shell
-# all
-sudo yum install -y kubeadm-1.23.3-0 --disableexcludes=kubernetes
-# master
-sudo kubeadm upgrade plan
-sudo kubeadm upgrade apply v1.23.3 --force
-
-yum install -y kubelet-1.23.3-0 kubectl-1.23.3-0 --disableexcludes=kubernetes
-sudo systemctl daemon-reload && sudo systemctl restart kubelet
-```
-
-### velero
-```shell
-# guide: https://velero.io/docs/v1.10/migration-case/
-velero -n ops backup-location get
-# create  backup on cluster_src
-velero -n ops backup create <BACKUP_NAME> --include-namespaces stable,istio-system
-# restore backup on cluster_dst
-velero -n ops restore create --from-backup <BACKUP_NAME>
 ```
