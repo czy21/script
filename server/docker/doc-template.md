@@ -1,6 +1,6 @@
 ## Git Repository
 {%- for k,v in param_registry_git_repo_dict.items() %}
-  - {{ k }}: [{{ v }}]({{ v }}){:target=_blank}
+- [{{ k }}]({{ v }}){:target=_blank}
 {%- endfor %}
 {%- if param_docker_dockerfiles %}
 ## Dockerfile
