@@ -81,4 +81,4 @@ if __name__ == '__main__':
     if args.dry_run:
         ansible_playbook_cmd.append("--check")
     _cmds.append(collection_util.flat_to_str(ansible_playbook_cmd))
-    share.execute(collection_util.flat_to_str(_cmds, delimiter=" && "), is_return=False, dry_run=args.dry_run)
+    share.execute(collection_util.flat_to_str(_cmds, delimiter=" && "), is_return=False, dry_run=False)
