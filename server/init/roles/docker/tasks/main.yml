@@ -9,7 +9,13 @@
     EOF
     sudo mkdir -p /etc/docker/
     sudo cat {{ param_remote_role_path }}/daemon.json > /etc/docker/daemon.json
-    bash {{ param_remote_role_path }}/{{ param_ansible_distribution }}.sh
+    if [ "{{ param_ansible_distribution }}" == "debian" ];then
+      sh {{ param_remote_role_path }}/ubuntu.sh
+    else
+      sh {{ param_remote_role_path }}/{{ param_ansible_distribution }}.sh
+    fi
+  tags:
+    - '{{ param_role_name }}'
 
 - name: docker buildx
   become: yes
@@ -17,6 +23,8 @@
     sudo mkdir -p /etc/buildkit/
     sudo cat {{ param_remote_role_path }}/buildkitd.toml > /etc/buildkit/buildkitd.toml
     # docker buildx create --use --bootstrap --name container --driver docker-container --config /etc/buildkit/buildkitd.toml
+  tags:
+    - '{{ param_role_name }}-plugin'
 
 - name: docker compose
   become: yes
@@ -25,3 +33,5 @@
     sudo curl -L "https://github.com/docker/compose/releases/download/v{{ param_compose_version }}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/lib/docker/cli-plugins/docker-compose
     sudo chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
     sudo ln -sf /usr/local/lib/docker/cli-plugins/docker-compose /usr/bin/docker-compose
+  tags:
+    - '{{ param_role_name }}-plugin'
