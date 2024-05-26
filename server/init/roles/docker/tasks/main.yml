@@ -1,4 +1,4 @@
-- name: docker install
+- name: install
   become: yes
   shell: |
     sudo mkdir -p /etc/systemd/system/docker.service.d/
@@ -17,7 +17,7 @@
   tags:
     - '{{ param_role_name }}'
 
-- name: docker buildx
+- name: buildx
   become: yes
   shell: |
     sudo mkdir -p /etc/buildkit/
@@ -26,7 +26,7 @@
   tags:
     - '{{ param_role_name }}-plugin'
 
-- name: docker compose
+- name: compose
   become: yes
   shell: |
     sudo mkdir -p /usr/local/lib/docker/cli-plugins/
