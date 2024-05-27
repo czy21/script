@@ -36,10 +36,9 @@ def deploy() {
     configFileProvider([
             configFile(fileId: 'docker-ssh-private-key', variable: 'DOCKER_SSH_PRIVATE_KEY')
     ]) {
-        docker_host = "ssh://opsor@${env.param_docker_deploy_host}"
         param_file = PathUtils.ofPath("${env.WORKSPACE}", ".jenkins/param.yaml")
         docker_compose_file = PathUtils.ofPath("${env.WORKSPACE}", ".jenkins/docker-compose.yaml")
-        docker_deploy_cmd = "DOCKER_HOST=${docker_host} eval `ssh-agent` && ssh-add ${DOCKER_SSH_PRIVATE_KEY} && docker-compose ls && ssh-agent -k"
+        docker_deploy_cmd = "DOCKER_HOST=ssh://opsor@${env.param_docker_deploy_host} eval `ssh-agent` && ssh-add ${DOCKER_SSH_PRIVATE_KEY} && docker-compose ls && ssh-agent -k"
         sh "${docker_deploy_cmd}"
     }
 }
