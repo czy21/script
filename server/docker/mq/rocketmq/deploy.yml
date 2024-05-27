@@ -13,12 +13,12 @@ x-traefik-web-label: &traefik-web-label
 
 services:
   rocketmq-setup:
-    image: ubuntu:22.04
+    image: busybox
     container_name: rocketmq-setup
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/:/conf/
       - {{ param_docker_data }}/{{ param_role_name }}/broker/:/data/
-    command: bash /conf/setup.sh
+    command: sh /conf/setup.sh
     restart: always
   rocketmq-namesrv:
     <<: *rocketmq-common
@@ -48,6 +48,12 @@ services:
     depends_on:
       - rocketmq-setup
       - rocketmq-namesrv
+    environment:
+      JAVA_OPT_EXT: "-Xms4096m -Xmx4096m"
+    deploy:
+      resources:
+        limits:
+          memory: 8g
   {%- endfor %}
   rocketmq-dashboard:
     image: apacherocketmq/rocketmq-dashboard
