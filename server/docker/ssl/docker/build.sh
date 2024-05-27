@@ -1,7 +1,6 @@
 #!/bin/bash
 
 # server
-openssl req -new -x509 -days 365 -key ca-key.pem -sha256 -passin pass:1121 -out ca.pem -subj "/C=CN/ST=SH/L=SH/O=Home/OU=IT/CN=server"
 openssl genrsa -out server-key.pem 4096
 openssl req -subj "/CN=server" -sha256 -new -key server-key.pem -out server.csr
 echo subjectAltName = IP:192.168.2.12,IP:127.0.0.1 >> extfile.cnf
