@@ -38,7 +38,7 @@ def deploy() {
     ]) {
         param_file = PathUtils.ofPath("${env.WORKSPACE}", ".jenkins/param.yaml")
         docker_compose_file = PathUtils.ofPath("${env.WORKSPACE}", ".jenkins/docker-compose.yaml")
-        cmd="mkdir -p \$HOME/.ssh;echo Host *\n  StrictHostKeyChecking no > \$HOME/.ssh/config;"
+        cmd="mkdir -p \$HOME/.ssh;echo -e 'Host *\n  StrictHostKeyChecking no' > \$HOME/.ssh/config;"
         cmd+="eval `ssh-agent`;chmod 600 ${DOCKER_SSH_PRIVATE_KEY};ssh-add ${DOCKER_SSH_PRIVATE_KEY};"
         cmd+="DOCKER_HOST=ssh://opsor@${env.param_docker_deploy_host} docker-compose ls;"
         cmd+="ssh-agent -k;"
