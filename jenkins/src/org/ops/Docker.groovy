@@ -33,11 +33,15 @@ def deploy() {
     if (fileExists("${env.param_docker_compose_file}")) {
         sh "cp ${env.param_docker_compose_file} .jenkins/docker-compose.yaml"
     }
-    docker_host = "tcp://${env.param_docker_deploy_host}:2375"
-    param_file = PathUtils.ofPath("${env.WORKSPACE}", ".jenkins/param.yaml")
-    docker_compose_file = PathUtils.ofPath("${env.WORKSPACE}", ".jenkins/docker-compose.yaml")
-    docker_deploy_cmd = "DOCKER_HOST=${docker_host} docker-compose --project-name ${env.param_release_name} --file ${docker_compose_file} --env-file ${param_file} up --detach --remove-orphans"
-    sh "${docker_deploy_cmd}"
+    configFileProvider([
+            configFile(fileId: 'docker-ssh-private-key', variable: 'DOCKER_SSH_PRIVATE_KEY')
+    ]) {
+        docker_host = "ssh://${env.param_docker_deploy_host}:2375"
+        param_file = PathUtils.ofPath("${env.WORKSPACE}", ".jenkins/param.yaml")
+        docker_compose_file = PathUtils.ofPath("${env.WORKSPACE}", ".jenkins/docker-compose.yaml")
+        docker_deploy_cmd = "DOCKER_HOST=${docker_host} eval `ssh-agent` && ssh-add ${DOCKER_SSH_PRIVATE_KEY} && docker-compose ls && ssh-agent -k"
+        sh "${docker_deploy_cmd}"
+    }
 }
 
 return this
