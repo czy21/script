@@ -6,6 +6,6 @@ ff00::0 ip6-mcastprefix
 ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
 
-{% for t in vars['param_hosts'] %}
+{% for t in param_hosts %}
 {{ t.ip }} {{ t.name }}
 {% endfor %}
