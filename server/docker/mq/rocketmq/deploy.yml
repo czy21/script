@@ -64,6 +64,8 @@ services:
     user: root
     expose:
       - "8080"
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/dashboard/tmp/:/tmp/
     environment:
       JAVA_OPTS: -Drocketmq.namesrv.addr=rocketmq-namesrv:9876
     restart: always
