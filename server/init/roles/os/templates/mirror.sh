@@ -11,7 +11,7 @@ if [ "centos" = "${os_distribution}" ]; then
             for r in `find /etc/yum.repos.d/ -maxdepth 1 -name "centos*.repo"`;do
               r_bak="${r}.bak"
               if [ ! -f "${r_bak}" ];then
-                cp ${r} ${r_bak}
+                cp -rv ${r} ${r_bak}
               fi
             done
             cp -r {{ param_remote_role_path }}/*.repo /etc/yum.repos.d/
@@ -27,9 +27,9 @@ if [ "rocky" = "${os_distribution}" ]; then
             for r in `find /etc/yum.repos.d/ -maxdepth 1 -name "rocky*.repo"`;do
               r_bak="${r}.bak"
               if [ ! -f "${r_bak}" ];then
-                cp ${r} ${r_bak}
+                cp -rv ${r} ${r_bak}
               fi
-              sed -e 's|^mirrorlist=|#mirrorlist=|g' -e 's|^#baseurl=http://dl.rockylinux.org/$contentdir|baseurl=http://{{ param_mirror_yum }}/rocky|g' ${r_bak} > ${r}
+              sed -e 's|^mirrorlist=|#mirrorlist=|g' -e 's|^#baseurl=http://dl.rockylinux.org/$contentdir|baseurl=http://{{ param_mirror_yum }}/rocky|g' ${r_bak} | tee ${r} > dev/null
             done
             ;;
         *)
@@ -39,7 +39,7 @@ fi
 
 if [ "ubuntu" = "${os_distribution}" ]; then
   if [ ! -f "/etc/apt/sources.list.bak" ];then
-    cp /etc/apt/sources.list /etc/apt/sources.list.bak
+    cp -rv /etc/apt/sources.list /etc/apt/sources.list.bak
   fi
-  sed "s,\(http\|https\)://.*.ubuntu.com,http://{{ param_mirror_apt }},g" /etc/apt/sources.list.bak > /etc/apt/sources.list
+  sed "s,\(http\|https\)://.*.ubuntu.com,http://{{ param_mirror_apt }},g" /etc/apt/sources.list.bak | tee /etc/apt/sources.list > /dev/null
 fi
