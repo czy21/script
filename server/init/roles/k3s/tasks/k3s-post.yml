@@ -1,5 +1,4 @@
 - name: k3s link
-  become: yes
   shell: |
     sudo ln -sf /usr/local/bin/k3s /usr/bin/k3s
     sudo ln -sf /usr/local/bin/kubectl /usr/bin/kubectl
