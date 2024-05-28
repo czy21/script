@@ -1,21 +1,21 @@
 - name: crio install
   shell: |
     sudo mkdir -p /etc/containers/
-    sudo cat {{ param_remote_role_path }}/crio-registries.conf > /etc/containers/registries.conf
-    curl https://raw.githubusercontent.com/cri-o/cri-o/v{{ param_crio_version }}/scripts/get | sudo PREFIX=/usr bash -s -- -t v{{ param_crio_version }}
+    cat {{ param_remote_role_path }}/crio-registries.conf | sudo tee /etc/containers/registries.conf > /dev/null
+    curl https://raw.githubusercontent.com/cri-o/packaging/main/get | sudo bash -s -- -t v{{ param_crio_version }}
     sudo sed -i 's|/usr/local/bin/crio|/usr/bin/crio|g' /usr/lib/systemd/system/crio.service
-    sudo cat {{ param_remote_role_path }}/crio.conf > /etc/crio/crio.conf.d/99-custom.conf
+    cat {{ param_remote_role_path }}/crio.conf | sudo tee /etc/crio/crio.conf.d/99-custom.conf > /dev/null
     sudo systemctl daemon-reload && sudo systemctl restart crio && sudo systemctl enable crio
 
 - name: k8s install
   shell: |
-    sudo cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
+    cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
     overlay
     br_netfilter
     ip_tables
     EOF
 
-    sudo cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
+    cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
     net.bridge.bridge-nf-call-iptables  = 1
     net.bridge.bridge-nf-call-ip6tables = 1
     net.ipv4.ip_forward                 = 1
