@@ -1,2 +1,2 @@
 - name: clean
-  file: path={{ inventory_dir|basename }} state=absent
+  file: path={{ param_remote_path }} state=absent
