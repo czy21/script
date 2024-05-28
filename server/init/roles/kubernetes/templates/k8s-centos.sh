@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-sudo cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
+cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
 name=Kubernetes
 baseurl=https://pkgs.k8s.io/core:/stable:/v{{ param_k8s_minor_version }}/rpm/
