@@ -36,8 +36,7 @@ def deploy() {
     withCredentials([dockerCert(credentialsId: 'docker-client', variable: 'DOCKER_CERT_PATH')]) {
         param_file = PathUtils.ofPath("${env.WORKSPACE}", ".jenkins/param.yaml")
         docker_compose_file = PathUtils.ofPath("${env.WORKSPACE}", ".jenkins/docker-compose.yaml")
-        cmd="DOCKER_HOST=tcp://${env.param_docker_deploy_host}:2376 docker-compose --project-name ${env.param_release_name} --file ${docker_compose_file} --env-file ${param_file}
-        up --detach --remove-orphans || error=true"
+        cmd="DOCKER_HOST=tcp://${env.param_docker_deploy_host}:2376 docker-compose --project-name ${env.param_release_name} --file ${docker_compose_file} --env-file ${param_file} up --detach --remove-orphans"
         sh "${cmd}"
     }
 }
