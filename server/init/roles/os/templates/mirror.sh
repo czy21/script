@@ -5,7 +5,7 @@ os_distribution="{{ param_ansible_distribution }}"
 os_major_version="{{ param_ansible_distribution_major_version }}"
 os_product_name="{{ param_ansible_product_name }}"
 
-if [ "centos" == "${os_distribution}" ]; then
+if [ "centos" = "${os_distribution}" ]; then
     case ${os_major_version} in
         "9")
             for r in `find /etc/yum.repos.d/ -maxdepth 1 -name "centos*.repo"`;do
@@ -21,7 +21,7 @@ if [ "centos" == "${os_distribution}" ]; then
     esac
 fi
 
-if [ "rocky" == "${os_distribution}" ]; then
+if [ "rocky" = "${os_distribution}" ]; then
     case ${os_major_version} in
         "9")
             for r in `find /etc/yum.repos.d/ -maxdepth 1 -name "rocky*.repo"`;do
@@ -37,7 +37,7 @@ if [ "rocky" == "${os_distribution}" ]; then
     esac
 fi
 
-if [ "ubuntu" == "${os_distribution}" ]; then
+if [ "ubuntu" = "${os_distribution}" ]; then
   if [ ! -f "/etc/apt/sources.list.bak" ];then
     cp /etc/apt/sources.list /etc/apt/sources.list.bak
   fi

@@ -9,7 +9,7 @@ domain_ldif_bak_file="{{ param_role_bak_path }}/domain.ldif"
 config_ldif_etc_file="${ldap_etc_path}/slapd.d/cn=config/olcDatabase={0}config.ldif"
 mdb_ldif_etc_file="${ldap_etc_path}/slapd.d/cn=config/olcDatabase={1}mdb.ldif"
 mkdir -p {{ param_ldap_data }}/ ${ldap_etc_path}/slapd.d/
-if [ "install" == "${param_command}" ];then
+if [ "install" = "${param_command}" ];then
   if [ ! -f "${config_ldif_etc_file}" ]; then
       slaptest -f ${ldap_etc_path}/slapd.conf -F ${ldap_etc_path}/slapd.d
   fi
@@ -21,12 +21,12 @@ if [ "install" == "${param_command}" ];then
   find ${ldap_etc_path}/schema/ -regex '.*\(cosine\|nis\|inetorgperson\|log\).ldif' -exec ldapadd -Y EXTERNAL -H ldapi:/// -f {} \;
 fi
 
-if [ "backup" == "${param_command}" ];then
+if [ "backup" = "${param_command}" ];then
   nice /usr/sbin/slapcat -b cn=config > ${config_ldif_bak_file}
   nice /usr/sbin/slapcat -b dc="{{ param_ldap_domain }}",dc=com > ${domain_ldif_bak_file}
 fi
 
-if [ "restore" == "${param_command}" ];then
+if [ "restore" = "${param_command}" ];then
   /etc/init.d/openldap stop
   rm -rf {{ param_ldap_data }}/* ${ldap_etc_path}/slapd.d/*
   slapadd -F ${ldap_etc_path}/slapd.d -b cn=config -l ${config_ldif_bak_file}

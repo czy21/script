@@ -39,7 +39,7 @@ EOF
 }
 ADMIN_PASSWORD="admin"
 # If Cypress run – overwrite the password for admin and export env variables
-if [ "$CYPRESS_CONFIG" == "true" ]; then
+if [ "$CYPRESS_CONFIG" = "true" ]; then
     ADMIN_PASSWORD="general"
     export SUPERSET_CONFIG=tests.superset_test_config
     export SUPERSET_TESTENV=true
@@ -69,7 +69,7 @@ if [ "$SUPERSET_LOAD_EXAMPLES" = "yes" ]; then
     # Load some data to play with
     echo_step "4" "Starting" "Loading examples"
     # If Cypress run which consumes superset_test_config – load required data for tests
-    if [ "$CYPRESS_CONFIG" == "true" ]; then
+    if [ "$CYPRESS_CONFIG" = "true" ]; then
         superset load_test_users
         superset load_examples --load-test-data
     else
