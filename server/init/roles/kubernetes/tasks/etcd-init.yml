@@ -1,5 +1,5 @@
 - name: etcd push cert
-  synchronize: src=___temp/{{ param_k8s_etcd_cluster_name }} dest={{ inventory_dir }}/{{ role_name }}/
+  synchronize: src=___temp/{{ param_k8s_etcd_cluster_name }} dest={{ param_remote_role_path }}
 
 - name: etcd of kubelet init
   become: yes
