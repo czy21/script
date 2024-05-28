@@ -5,7 +5,7 @@ HOST_IPV4="{{ param_ansible_host_ipv4 }}"
 LEAD_IPV4="{{ param_ansible_lead_ipv4 }}"
 
 STATE="BACKUP"
-INTERFACE="{{ param_iface }}"
+INTERFACE="{{ param_ansible_host_iface }}"
 ROUTER_ID=51
 PRIORITY=50
 AUTH_PASS=42

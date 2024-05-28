@@ -55,6 +55,7 @@
   become: yes
   tasks:
     - name: cmd
-      shell: sudo sed -i 's|cluster.com|czy21-internal.com|' /etc/yum.repos.d/*.repo
+      shell: |
+        echo {{ param_ansible_hosts }}
   tags:
     - manual
