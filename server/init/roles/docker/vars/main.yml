@@ -1,5 +1,8 @@
 param_docker_version: 26.1.3
-param_docker_add_repo: true
+param_docker_add_repo: false
+param_docker_tls_verify: true
+param_docker_tls_days: 1825 # 5y
+param_docker_tls_ca_password: 1121
 param_registry_mirrors:
   - "http://{{ param_registry_proxy_url }}"
 param_insecure_registries:
