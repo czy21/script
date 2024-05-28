@@ -1,5 +1,3 @@
 - name: hosts
   become: yes
   shell: sudo cat {{ param_remote_role_path }}/{{ param_ansible_distribution }} > /etc/hosts
-  tags:
-    - 'hosts'

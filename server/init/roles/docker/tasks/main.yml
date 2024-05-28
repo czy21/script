@@ -56,6 +56,7 @@
     sudo -u {{ ansible_user_id }} sh -c "docker buildx ls | grep 'container' -q && docker buildx rm container;docker buildx create --use --bootstrap --name container --driver docker-container --config /etc/buildkit/buildkitd.toml"
   tags:
     - '{{ param_role_name }}'
+    - '{{ param_role_name }}-buildx'
     - '{{ param_role_name }}-plugin'
 
 - name: compose
@@ -67,4 +68,5 @@
     sudo ln -sf /usr/local/lib/docker/cli-plugins/docker-compose /usr/bin/docker-compose
   tags:
     - '{{ param_role_name }}'
+    - '{{ param_role_name }}-compose'
     - '{{ param_role_name }}-plugin'
