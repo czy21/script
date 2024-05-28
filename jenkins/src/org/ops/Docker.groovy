@@ -27,16 +27,15 @@ def deploy() {
                 configFileProvider([configFile(fileId: "docker-compose-web-v1.yaml", targetLocation: '.jenkins/docker-compose.yaml')]) {}
             }
     ]
-    if (deployMap.containsKey(env.param_code_type)) {
-        deployMap.get(env.param_code_type).call()
-    }
     if (fileExists("${env.param_docker_compose_file}")) {
         sh "cp ${env.param_docker_compose_file} .jenkins/docker-compose.yaml"
+    } else {
+        deployMap.get(env.param_code_type).call()
     }
     withCredentials([dockerCert(credentialsId: 'docker-client', variable: 'DOCKER_CERT_PATH')]) {
         param_file = PathUtils.ofPath("${env.WORKSPACE}", ".jenkins/param.yaml")
         docker_compose_file = PathUtils.ofPath("${env.WORKSPACE}", ".jenkins/docker-compose.yaml")
-        cmd="DOCKER_TLS_VERIFY=1 DOCKER_HOST=tcp://${env.param_docker_deploy_host}:2376 docker-compose --project-name ${env.param_release_name} --file ${docker_compose_file} --env-file ${param_file} up --detach --remove-orphans"
+        cmd = "DOCKER_TLS_VERIFY=1 DOCKER_HOST=tcp://${env.param_docker_deploy_host}:2376 docker-compose --project-name ${env.param_release_name} --file ${docker_compose_file} --env-file ${param_file} up --detach --remove-orphans"
         sh "${cmd}"
     }
 }
