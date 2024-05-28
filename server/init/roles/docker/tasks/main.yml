@@ -1,14 +1,43 @@
+- name: ca
+  synchronize: src=___temp/ca dest={{ inventory_dir }}/{{ role_name }}/
+  when: param_docker_tls_verify
+  tags:
+    - '{{ param_role_name }}'
+    - '{{ param_role_name }}-tls'
+
+- name: tls
+  become: yes
+  shell: |
+    ca_dir={{ param_remote_role_path }}/ca
+    tls_dir={{ param_remote_role_path }}/tls
+    mkdir -p $tls_dir
+    openssl genrsa -out $tls_dir/server-key.pem 4096
+    openssl req -subj "/CN=server" -sha256 -new -key $tls_dir/server-key.pem -out $tls_dir/server.csr
+    echo "subjectAltName = IP:{{ param_ansible_host_ipv4 }},IP:127.0.0.1\nextendedKeyUsage = serverAuth" > $tls_dir/extfile.cnf
+    openssl x509 -req -days {{ param_docker_tls_days }} -sha256 -passin pass:{{ param_docker_tls_ca_password }} \
+      -in $tls_dir/server.csr -CA $ca_dir/ca.pem -CAkey $ca_dir/ca-key.pem -CAcreateserial \
+      -out $tls_dir/server-cert.pem -extfile $tls_dir/extfile.cnf
+    sudo chown -R {{ ansible_user_id }}:{{ ansible_user_id }} $tls_dir
+    sudo mkdir -p /etc/docker/
+    sudo cat {{ param_remote_role_path }}/daemon.json > /etc/docker/daemon.json
+    sudo mkdir -p /etc/docker/tls/
+    sudo cp -rv $ca_dir/ca.pem $tls_dir/*.pem /etc/docker/tls/
+  when: param_docker_tls_verify
+  tags:
+    - '{{ param_role_name }}'
+    - '{{ param_role_name }}-tls'
+
 - name: install
   become: yes
   shell: |
+    sudo mkdir -p /etc/docker/
+    sudo cat {{ param_remote_role_path }}/daemon.json > /etc/docker/daemon.json
     sudo mkdir -p /etc/systemd/system/docker.service.d/
     sudo tee /etc/systemd/system/docker.service.d/docker.conf <<-'EOF'
     [Service]
     ExecStart=
     ExecStart=/usr/bin/dockerd
     EOF
-    sudo mkdir -p /etc/docker/
-    sudo cat {{ param_remote_role_path }}/daemon.json > /etc/docker/daemon.json
     if [ "{{ param_ansible_distribution }}" == "debian" ];then
       sh {{ param_remote_role_path }}/ubuntu.sh
     else
@@ -24,6 +53,7 @@
     sudo cat {{ param_remote_role_path }}/buildkitd.toml > /etc/buildkit/buildkitd.toml
     # docker buildx create --use --bootstrap --name container --driver docker-container --config /etc/buildkit/buildkitd.toml
   tags:
+    - '{{ param_role_name }}'
     - '{{ param_role_name }}-plugin'
 
 - name: compose
@@ -34,4 +64,5 @@
     sudo chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
     sudo ln -sf /usr/local/lib/docker/cli-plugins/docker-compose /usr/bin/docker-compose
   tags:
+    - '{{ param_role_name }}'
     - '{{ param_role_name }}-plugin'
