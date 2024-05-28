@@ -2,7 +2,6 @@
   synchronize: src=___temp/{{ param_k8s_etcd_cluster_name }} dest={{ param_remote_role_path }}
 
 - name: etcd of kubelet init
-  become: yes
   shell: |
     sudo mkdir -p /etc/systemd/system/kubelet.service.d/
     sudo cat << EOF > /etc/systemd/system/kubelet.service.d/20-etcd-service-manager.conf

@@ -22,6 +22,7 @@
     EOF
 
     sudo sysctl --system
-    bash {{ param_remote_role_path }}/k8s-{{ param_ansible_distribution }}.sh && kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
+    sh {{ param_remote_role_path }}/k8s-{{ param_ansible_distribution }}.sh
+    kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
 
 - import_tasks: tool.yml

@@ -6,7 +6,6 @@
     - '{{ param_role_name }}-tls'
 
 - name: tls
-  become: yes
   shell: |
     ca_dir={{ param_remote_role_path }}/ca
     tls_dir={{ param_remote_role_path }}/tls
@@ -17,7 +16,6 @@
     openssl x509 -req -days {{ param_docker_tls_days }} -sha256 -passin pass:{{ param_docker_tls_ca_password }} \
       -in $tls_dir/server.csr -CA $ca_dir/ca.pem -CAkey $ca_dir/ca-key.pem -CAcreateserial \
       -out $tls_dir/server-cert.pem -extfile $tls_dir/extfile.cnf
-    sudo chown -R {{ ansible_user_id }} $tls_dir
     sudo mkdir -p /etc/docker/
     sudo cat {{ param_remote_role_path }}/daemon.json > /etc/docker/daemon.json
     sudo mkdir -p /etc/docker/tls/
@@ -28,7 +26,6 @@
     - '{{ param_role_name }}-tls'
 
 - name: install
-  become: yes
   shell: |
     sudo mkdir -p /etc/docker/
     sudo cat {{ param_remote_role_path }}/daemon.json > /etc/docker/daemon.json
@@ -49,7 +46,6 @@
     - '{{ param_role_name }}'
 
 - name: buildx
-  become: yes
   shell: |
     sudo mkdir -p /etc/buildkit/
     sudo cat {{ param_remote_role_path }}/buildkitd.toml > /etc/buildkit/buildkitd.toml
@@ -60,7 +56,6 @@
     - '{{ param_role_name }}-plugin'
 
 - name: compose
-  become: yes
   shell: |
     sudo mkdir -p /usr/local/lib/docker/cli-plugins/
     sudo curl -L "https://github.com/docker/compose/releases/download/v{{ param_compose_version }}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/lib/docker/cli-plugins/docker-compose

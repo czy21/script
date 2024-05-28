@@ -1,3 +1,2 @@
 - name: hosts
-  become: yes
-  shell: sudo cat {{ param_remote_role_path }}/{{ param_ansible_distribution }} > /etc/hosts
+  shell: cat {{ param_remote_role_path }}/{{ param_ansible_distribution }} | sudo tee /etc/hosts > /dev/null
