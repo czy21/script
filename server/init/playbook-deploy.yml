@@ -20,12 +20,11 @@
   tasks:
     - block:
         - import_tasks: roles/common/tasks/copy.yml
-          tags: ['{{ param_role_name }}']
         - import_role:
             name: '{{ param_role_name }}'
       always:
         - import_tasks: roles/common/tasks/clean.yml
-          tags: ['{{ param_role_name }}']
+      tags: ['{{ param_role_name }}']
 
 - name: docker
   hosts: all
@@ -35,12 +34,22 @@
   tasks:
     - block:
         - import_tasks: roles/common/tasks/copy.yml
-          tags: ['{{ param_role_name }}','{{ param_role_name }}-tls',"{{ param_role_name }}-plugin"]
+          tags:
+            - '{{ param_role_name }}'
+            - '{{ param_role_name }}-tls'
+            - "{{ param_role_name }}-buildx"
+            - "{{ param_role_name }}-compose"
+            - "{{ param_role_name }}-plugin"
         - import_role:
             name: '{{ param_role_name }}'
       always:
         - import_tasks: roles/common/tasks/clean.yml
-          tags: ['{{ param_role_name }}','{{ param_role_name }}-tls',"{{ param_role_name }}-plugin"]
+          tags:
+            - '{{ param_role_name }}'
+            - '{{ param_role_name }}-tls'
+            - "{{ param_role_name }}-buildx"
+            - "{{ param_role_name }}-compose"
+            - "{{ param_role_name }}-plugin"
 
 - name: haproxy
   hosts: all
@@ -50,12 +59,16 @@
   tasks:
     - block:
         - import_tasks: roles/common/tasks/copy.yml
-          tags: ["ha","ha-init"]
+          tags:
+            - "ha"
+            - "ha-init"
         - import_role:
             name: '{{ param_role_name }}'
       always:
         - import_tasks: roles/common/tasks/clean.yml
-          tags: ["ha","ha-init"]
+          tags:
+            - "ha"
+            - "ha-init"
 
 - name: kubernetes
   hosts: all
@@ -67,12 +80,24 @@
   tasks:
     - block:
         - import_tasks: roles/common/tasks/copy.yml
-          tags: ['k8s','k8s-init-ha','k8s-init-etcd-cert','k8s-init-etcd','k8s-init-kube','k8s-join']
+          tags:
+            - 'k8s'
+            - 'k8s-init-ha'
+            - 'k8s-init-etcd-cert'
+            - 'k8s-init-etcd'
+            - 'k8s-init-kube'
+            - 'k8s-join'
         - import_role:
             name: '{{ param_role_name }}'
       always:
         - import_tasks: roles/common/tasks/clean.yml
-          tags: ['k8s','k8s-init-ha','k8s-init-etcd-cert','k8s-init-etcd','k8s-init-kube','k8s-join']
+          tags:
+            - 'k8s'
+            - 'k8s-init-ha'
+            - 'k8s-init-etcd-cert'
+            - 'k8s-init-etcd'
+            - 'k8s-init-kube'
+            - 'k8s-join'
 
 - name: k3s
   hosts: all
@@ -82,12 +107,20 @@
   tasks:
     - block:
         - import_tasks: roles/common/tasks/copy.yml
-          tags: ['{{ param_role_name }}','{{ param_role_name }}-init','{{ param_role_name }}-join','{{ param_role_name }}-post']
+          tags:
+            - '{{ param_role_name }}'
+            - '{{ param_role_name }}-init'
+            - '{{ param_role_name }}-join'
+            - '{{ param_role_name }}-post'
         - import_role:
             name: '{{ param_role_name }}'
       always:
         - import_tasks: roles/common/tasks/clean.yml
-          tags: ['{{ param_role_name }}','{{ param_role_name }}-init','{{ param_role_name }}-join','{{ param_role_name }}-post']
+          tags:
+            - '{{ param_role_name }}'
+            - '{{ param_role_name }}-init'
+            - '{{ param_role_name }}-join'
+            - '{{ param_role_name }}-post'
 
 - name: truenas
   hosts: all
@@ -97,9 +130,11 @@
   tasks:
     - block:
         - import_tasks: roles/common/tasks/copy.yml
-          tags: ['{{ param_role_name }}']
+          tags:
+            - '{{ param_role_name }}'
         - import_role:
             name: '{{ param_role_name }}'
       always:
         - import_tasks: roles/common/tasks/clean.yml
-          tags: ['{{ param_role_name }}']
+          tags:
+            - '{{ param_role_name }}'

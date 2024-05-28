@@ -2,7 +2,7 @@
   with_fileglob:
     - "roles/k3s/templates/*"
   tags:
-    - truenas
+    - '{{ param_role_name }}'
 
 - shell: |
     mkdir -p $HOME/.kube && sudo cp --force /etc/rancher/k3s/k3s.yaml $HOME/.kube/config && sudo chown $USER:$USER $HOME/.kube/config
@@ -12,4 +12,4 @@
     kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
     helm completion bash | sudo tee /etc/bash_completion.d/helm > /dev/null
   tags:
-    - truenas
+    - '{{ param_role_name }}'
