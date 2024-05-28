@@ -38,8 +38,10 @@
     ExecStart=
     ExecStart=/usr/bin/dockerd
     EOF
-    if [ "{{ param_ansible_distribution }}" == "debian" ];then
+    if [ "debian" = "{{ param_ansible_distribution }}" ];then
       sh {{ param_remote_role_path }}/ubuntu.sh
+    elif [ "rocky" = "{{ param_ansible_distribution }}" ];then
+      sh {{ param_remote_role_path }}/centos.sh
     else
       sh {{ param_remote_role_path }}/{{ param_ansible_distribution }}.sh
     fi

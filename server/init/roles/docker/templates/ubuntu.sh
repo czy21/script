@@ -13,7 +13,8 @@ if [ "{{ param_docker_add_repo | lower }}" = true ];then
   echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/{{ param_ansible_distribution }} $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
   if [ "{{ param_mirror_use_proxy | lower }}" = true ];then
-    sudo sed -i.bak -e "s|https://download.docker.com|http://{{ param_mirror_raw }}/docker-ce|g" /etc/apt/sources.list.d/docker.list
+    [ ! -f "/etc/apt/sources.list.d/docker.list.bak" ] && sudo cp -rv /etc/apt/sources.list.d/docker.list /etc/apt/sources.list.d/docker.list.bak
+    sed -e "s|https://download.docker.com|http://{{ param_mirror_raw }}/docker-ce|g" /etc/apt/sources.list.d/docker.list.bak | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
   fi
 
 fi
