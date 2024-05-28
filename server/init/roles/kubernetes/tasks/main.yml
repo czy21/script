@@ -1,5 +1,4 @@
 - name: k8s
-  become: yes
   import_tasks: install.yml
   tags:
     - 'k8s'

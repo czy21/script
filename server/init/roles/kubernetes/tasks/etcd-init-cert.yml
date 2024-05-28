@@ -1,5 +1,5 @@
 - name: etcd init cert
-  shell: bash {{ param_remote_role_path }}/etcd-kubelet.sh
+  shell: sh {{ param_remote_role_path }}/etcd-kubelet.sh
   when: inventory_hostname == groups["master"][0]
 
 - name: etcd pull cert

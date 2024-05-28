@@ -52,10 +52,9 @@
   remote_user: opsor
   vars_files:
     - "vars/main.yml"
-  become: yes
   tasks:
     - name: cmd
       shell: |
-        echo '{{ inventory_dir }}'
+        echo $USER
   tags:
     - manual
