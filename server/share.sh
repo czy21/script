@@ -61,7 +61,7 @@ cmd+="${PYTHON_EXEC} -B \$HOME/${dst_name}/main.py $args"
 
 host_cmd="ssh ${ssh_opt} ${host}"
 
-[ $host == "local" ] && host_cmd="eval"
+[ $host = "local" ] && host_cmd="eval"
 
 tar -zcf - --exclude="__pycache__" --exclude="${build_name}" \
 -C ${src_path} . \

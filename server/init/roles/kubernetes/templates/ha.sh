@@ -13,7 +13,7 @@ APISERVER_VIP={{ param_k8s_ha_api_server_vip }}
 APISERVER_SRC_PORT=6443
 APISERVER_DST_PORT={{ param_k8s_ha_api_server_dst_port }}
 
-if [ "${LEAD_IPV4}" == "${HOST_IPV4}" ];then
+if [ "${LEAD_IPV4}" = "${HOST_IPV4}" ];then
   STATE="MASTER"
   PRIORITY=100
 fi
