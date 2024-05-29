@@ -1,10 +1,9 @@
 ---
-param_crio_version: 1.26.4
-param_k8s_minor_version: 1.26
-param_k8s_patch_version: 1.26.10
+param_k8s_patch_version: 1.30.1
+param_k8s_minor_version: "{{ param_k8s_patch_version.split('.')[:2] | join('.') }}"
 param_k8s_svc_network_cidr: 10.1.0.0/16
 param_k8s_pod_network_cidr: 10.2.0.0/16
-param_cri_socket: "unix:///var/run/crio/crio.sock" # use docker as cri: unix:///var/run/cri-dockerd.sock
+param_cri_socket: "unix:///var/run/crio/crio.sock"
 
 param_k8s_ha_api_server_vip: 192.168.2.30
 param_k8s_ha_api_server_dst_port: 16433
