@@ -1,6 +1,6 @@
 [master]
-192.168.2.25 param_node_name=k8s-node-25
+192.168.2.25 param_node_name=k8s-master-1
 
 [worker]
-192.168.2.31 param_node_name=k8s-node-31
-192.168.2.32 param_node_name=k8s-node-32
+192.168.2.31 param_node_name=k8s-worker-1
+192.168.2.32 param_node_name=k8s-worker-2
