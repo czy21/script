@@ -12,6 +12,7 @@ param_ansible_host_ipv4s: "{{ ansible_play_hosts | map('extract', hostvars, 'ans
 param_ansible_host_names: "{{ ansible_play_hosts | map('extract', hostvars, 'ansible_hostname') }}"
 param_ansible_hosts: "{{ dict(param_ansible_host_ipv4s|zip(param_ansible_host_names)) | dict2items(key_name='ip', value_name='name') }}"
 param_ansible_lead_ipv4: "{{ param_ansible_host_ipv4s[0] }}"
+param_hosts: "{{ dict(ansible_play_hosts|zip(ansible_play_hosts | map('extract', hostvars, 'param_node_name') | map('replace', ',', ' ') )) }}"
 
 param_velero_version: 1.12.1
 
