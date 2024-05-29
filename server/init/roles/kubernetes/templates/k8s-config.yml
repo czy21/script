@@ -9,13 +9,13 @@ nodeRegistration:
 apiVersion: kubeadm.k8s.io/v1beta3
 kind: ClusterConfiguration
 kubernetesVersion: "v{{ param_k8s_patch_version }}"
-imageRepository: "{{ param_registry_proxy_url }}"
+imageRepository: "{{ param_registry_proxy_url | default('registry.k8s.io') }}"
 controlPlaneEndpoint: "{{ param_k8s_control_plane_endpoint }}"
 networking:
   serviceSubnet: "{{ param_k8s_svc_network_cidr }}"
   podSubnet: "{{ param_k8s_pod_network_cidr }}"
 dns:
-  imageRepository: "{{ param_registry_proxy_url }}/coredns"
+  imageRepository: "{{ param_registry_proxy_url | default('registry.k8s.io') }}/coredns"
 apiServer:
   extraArgs:
     service-node-port-range: "0-65535"

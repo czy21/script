@@ -1,14 +1,10 @@
-- name: crio install
+- name: install
   shell: |
-    sudo mkdir -p /etc/containers/
-    cat {{ param_remote_role_path }}/crio-registries.conf | sudo tee /etc/containers/registries.conf > /dev/null
-    curl https://raw.githubusercontent.com/cri-o/packaging/main/get | sudo bash -s -- -t v{{ param_crio_version }}
-    sudo sed -i 's|/usr/local/bin/crio|/usr/bin/crio|g' /usr/lib/systemd/system/crio.service
+    sudo mkdir -p /etc/containers/registries.conf.d
+    cat {{ param_remote_role_path }}/crio-registries.conf | sudo tee /etc/containers/registries.conf.d/99-custom.conf > /dev/null
+    sudo mkdir -p /etc/crio/crio.conf.d
     cat {{ param_remote_role_path }}/crio.conf | sudo tee /etc/crio/crio.conf.d/99-custom.conf > /dev/null
-    sudo systemctl daemon-reload && sudo systemctl restart crio && sudo systemctl enable crio
-
-- name: k8s install
-  shell: |
+    
     cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
     overlay
     br_netfilter
