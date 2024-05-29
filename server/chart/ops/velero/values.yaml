@@ -31,10 +31,9 @@ velero:
       disabled: false
       schedule: 0 1 * * *
       template:
-        ttl: 360h
+        ttl: 168h
         storageLocation: default
         includedNamespaces:
           - db
           - ops
           - stable
-          - istio-system
