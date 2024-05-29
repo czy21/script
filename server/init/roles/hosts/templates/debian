@@ -1,3 +1,3 @@
-{% for t in param_hosts %}
-{{ t.ip }} {{ t.name }}
+{% for k,v in param_hosts.items() %}
+{{ k }} {{ v }}
 {% endfor %}
