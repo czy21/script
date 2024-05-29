@@ -19,6 +19,7 @@
 
     sudo sysctl --system
     sh {{ param_remote_role_path }}/k8s-{{ param_ansible_distribution }}.sh
+    crictl completion bash | sudo tee /etc/bash_completion.d/crictl > /dev/null
     kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
 
 - import_tasks: tool.yml
