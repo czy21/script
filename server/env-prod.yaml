@@ -5,11 +5,3 @@ param_ops_nacos_mysql_db_name: nacos_prod
 param_ops_nacos_mysql_port: 3306
 param_ops_nacos_mysql_username: admin
 param_ops_nacos_mysql_password: !decrypt ["Q3p5LjE5MDgxNQo="]
-
-param_hosts:
-  - ip: 192.168.2.25
-    name: k8s-node-25
-  - ip: 192.168.2.31
-    name: k8s-node-31
-  - ip: 192.168.2.32
-    name: k8s-node-32
