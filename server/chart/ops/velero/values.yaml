@@ -34,6 +34,4 @@ velero:
         ttl: 168h
         storageLocation: default
         includedNamespaces:
-          - db
-          - ops
           - stable
