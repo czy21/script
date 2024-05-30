@@ -5,7 +5,7 @@ ingress-nginx:
     config:
       use-forwarded-headers: true
     nodeSelector:
-      kubernetes.io/hostname: node-31
+      kubernetes.io/hostname: k8s-worker-1
     allowSnippetAnnotations: true
     image:
       registry: '{{ param_registry_proxy_url }}' # registry.k8s.io
