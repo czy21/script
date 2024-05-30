@@ -1,5 +1,5 @@
 - name: install
-  shell: bash {{ param_remote_role_path }}/ha-{{ param_ansible_distribution }}.sh
+  shell: bash {{ param_remote_role_path }}/ha-{{ param_ansible_os_family }}.sh
   tags:
     - 'ha'
 

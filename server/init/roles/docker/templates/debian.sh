@@ -19,7 +19,7 @@ if [ "{{ param_docker_add_repo | lower }}" = true ];then
 
 fi
 
-sudo apt-get update
+sudo apt-get update -y
 docker_version=`sudo apt-cache madison docker-ce | awk '{ print $3 }' | grep "{{ param_docker_version }}" | head -n 1`
 sudo apt-get -y install docker-ce=${docker_version} docker-ce-cli=${docker_version} containerd.io docker-buildx-plugin
 sudo systemctl daemon-reload && sudo systemctl restart docker && sudo systemctl enable docker
