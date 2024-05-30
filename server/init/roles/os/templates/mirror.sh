@@ -29,7 +29,7 @@ if [ "rocky" = "${os_distribution}" ]; then
               if [ ! -f "${r_bak}" ];then
                 cp -rv ${r} ${r_bak}
               fi
-              sed -e 's|^mirrorlist=|#mirrorlist=|g' -e 's|^#baseurl=http://dl.rockylinux.org/$contentdir|baseurl=http://{{ param_mirror_yum }}/rocky|g' ${r_bak} | tee ${r} > dev/null
+              sed -e 's|^mirrorlist=|#mirrorlist=|g' -e 's|^#baseurl=http://dl.rockylinux.org/$contentdir|baseurl=http://{{ param_mirror_yum }}/rocky|g' ${r_bak} | tee ${r} > /dev/null
             done
             ;;
         *)
