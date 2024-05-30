@@ -1,5 +1,10 @@
 - name: hosts
-  shell: cat {{ param_remote_role_path }}/{{ param_ansible_distribution }} | sudo tee /etc/hosts > /dev/null
+  shell: |
+    if [ "rocky" = "{{ param_ansible_distribution }}" ];then
+      cat {{ param_remote_role_path }}/centos | sudo tee /etc/hosts > /dev/null
+    else
+      cat {{ param_remote_role_path }}/{{ param_ansible_distribution }} | sudo tee /etc/hosts > /dev/null
+    fi
 
 - name: set hostname
   shell: sudo hostnamectl set-hostname --static {{ param_node_name | split(',') | first }}
