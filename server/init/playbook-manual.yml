@@ -55,6 +55,6 @@
   tasks:
     - name: cmd
       shell: |
-        echo $USER
+        echo {{ param_ansible_os_family }}
   tags:
     - manual

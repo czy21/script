@@ -10,11 +10,7 @@
 - name: install
   shell: |-
     timedatectl set-timezone Asia/Shanghai
-    if [ "rocky" = "{{ param_ansible_distribution }}" ];then
-      sh {{ param_remote_role_path }}/centos.sh
-    else
-      sh {{ param_remote_role_path }}/{{ param_ansible_distribution }}.sh
-    fi
+    sh {{ param_remote_role_path }}/{{ param_ansible_os_family }}.sh
 
 - name: sshd_config
   shell: |-
