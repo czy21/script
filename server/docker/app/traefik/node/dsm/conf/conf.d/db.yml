@@ -10,6 +10,8 @@ http:
         - raw-proxy
         - apt-proxy
         - yum-proxy
+        - k8s-proxy
+        - docker-proxy
     registry:
       rule: Host(`registry.czy21-internal.com`)
       service: nexus@docker
@@ -34,6 +36,14 @@ http:
       replacePathRegex:
         regex: "^/repository/yum-proxy/(.*)/"
         replacement: "/repository/yum-proxy-$1/"
+    k8s-proxy:
+      replacePathRegex:
+        regex: "^/repository/k8s-proxy/"
+        replacement: "/repository/raw-proxy-kubernetes/"
+    docker-proxy:
+      replacePathRegex:
+        regex: "^/repository/docker-proxy/"
+        replacement: "/repository/raw-proxy-docker/"
     registry-hosted:
       replacePathRegex:
         regex: "^/"
