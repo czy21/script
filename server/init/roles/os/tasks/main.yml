@@ -4,14 +4,17 @@
     fail_msg: param_user_ops_ssh_public_key is empty
 
 - name: mirror
-  shell: |-
-    bash {{ param_remote_role_path }}/mirror.sh
+  shell: sh {{ param_remote_role_path }}/mirror.sh
   when: param_mirror_use_proxy
 
 - name: install
   shell: |-
     timedatectl set-timezone Asia/Shanghai
-    bash {{ param_remote_role_path }}/{{ param_ansible_distribution }}.sh
+    if [ "rocky" = "{{ param_ansible_distribution }}" ];then
+      sh {{ param_remote_role_path }}/centos.sh
+    else
+      sh {{ param_remote_role_path }}/{{ param_ansible_distribution }}.sh
+    fi
 
 - name: sshd_config
   shell: |-

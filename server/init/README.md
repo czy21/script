@@ -4,6 +4,7 @@
 sudo apt install -y openssh-server sshpass vim git libfuse2 gnome-shell-extension-manager
 passwd
 sed -i -e "s|^PermitRootLogin.*|#\0|" -e "0,/^\S*PermitRootLogin.*/s//PermitRootLogin yes/" /etc/ssh/sshd_config
+systemctl restart ssh
 
 # set ntp server
 vim /etc/systemd/timesyncd.conf
