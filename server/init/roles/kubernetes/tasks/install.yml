@@ -20,11 +20,7 @@
     net.ipv4.ip_forward                 = 1
     EOF
     sudo sysctl --system
-    if [ "rocky" = "{{ param_ansible_distribution }}" ];then
-      sh {{ param_remote_role_path }}/k8s-centos.sh
-    else
-      sh {{ param_remote_role_path }}/k8s-{{ param_ansible_distribution }}.sh
-    fi
+    sh {{ param_remote_role_path }}/k8s-{{ param_ansible_os_family }}.sh
     crictl completion bash | sudo tee /etc/bash_completion.d/crictl > /dev/null
     kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
 

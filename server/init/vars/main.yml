@@ -4,6 +4,7 @@ param_remote_role_path: "{{ (param_remote_path,param_role_name) | path_join }}"
 param_ansible_distribution: "{{ ansible_distribution | lower}}"
 param_ansible_distribution_major_version: "{{ ansible_distribution_major_version | lower }}"
 param_ansible_product_name: "{{ ansible_product_name }}"
+param_ansible_os_family: "{{ ansible_os_family | lower }}"
 
 param_ansible_host_iface: "{{ ansible_default_ipv4.interface }}"
 param_ansible_host_ipv4: "{{ ansible_default_ipv4.address }}"
