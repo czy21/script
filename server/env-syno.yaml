@@ -4,4 +4,4 @@ param_disk_path: /volume1
 param_docker_root: "/volume1/@docker"
 param_docker_data: "{{ param_disk_path }}/docker"
 
-param_public_path: "{{ param_disk_path }}/storage/public"
+param_public_path: "{{ param_disk_path }}/public"
