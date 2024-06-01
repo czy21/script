@@ -28,6 +28,7 @@ class Template:
     def __init__(self, text: str, undefined: typing.Type[jinja2.Undefined] = jinja2.Undefined):
         env = jinja2.Environment()
         env.undefined = undefined
+        env.filters["zip"] = zip
         env.filters["join_path"] = lambda value: value if isinstance(value, Undefined) else join_path(*value)
         env.filters["decrypt"] = lambda value: value if isinstance(value, Undefined) else decrypt(value)
         env.filters["htpasswd"] = lambda value: value if isinstance(value, Undefined) else htpasswd(value)
