@@ -20,6 +20,7 @@ from utility import (
     log as log_util,
     basic as basic_util
 )
+from utility.yaml import YamlPropertySourceLoader
 
 logger = logging.getLogger()
 
@@ -250,7 +251,6 @@ class Installer:
         self.build_path: pathlib.Path = root_path.joinpath("build")
         self.tmp_path: pathlib.Path = root_path.joinpath("___temp")
         self.bak_path: pathlib.Path = self.tmp_path.joinpath("bak")
-        self.env_file: pathlib.Path = root_path.joinpath("server/env.yaml")
         self.jinja2ignore_file: pathlib.Path = root_path.joinpath(".jinja2ignore")
         self.role_class: typing.Type[AbstractRole] = role_class
         self.role_deep: int = role_deep
@@ -269,33 +269,29 @@ class Installer:
         self.build_path.mkdir(exist_ok=True)
 
     @staticmethod
-    def load_env_file(env_file: pathlib.Path, env_file_names: list[str]):
-        d = {}
-        env_self_file = env_file.parent.parent.joinpath(env_file.name)
-        env_file_paths: list[pathlib.Path] = [env_file, env_self_file]
+    def load_env_file(env_active: list[str]) -> dict:
+        server_path = pathlib.Path(__file__).parent
+        root_path = server_path.parent
+        env_files = []
 
-        def add_env_file(f):
-            for ef in env_file_names:
-                ef = f.parent.joinpath(ef)
-                if not ef.is_absolute():
-                    ef = pathlib.Path.cwd().joinpath(ef)
-                if ef not in env_file_paths:
-                    env_file_paths.append(ef)
+        def scan_env_files(src_env_files):
+            for e in env_active:
+                for se in src_env_files:
+                    if se.name.startswith("env-{}".format(e)):
+                        env_files.append(se)
+            for se in src_env_files:
+                if se.stem == "env":
+                    env_files.append(se)
 
-        add_env_file(env_file)
-        add_env_file(env_self_file)
-        env_file_paths = sorted(set(env_file_paths), key=env_file_paths.index)
-        for t in env_file_paths:
-            if t.exists():
-                logger.info("load env_file: %s" % t.as_posix())
-                d |= yaml_util.load(t)
-        return d
+        scan_env_files(list(root_path.glob("env*")))
+        scan_env_files(list(server_path.glob("env*")))
+        return YamlPropertySourceLoader(env_files).load()
 
     @staticmethod
     def set_common_argument(parser: argparse.ArgumentParser):
         parser.add_argument('-n', '--namespace', type=str)
         parser.add_argument('-p', '--param', nargs="+", default=[], type=lambda s: dict({split_kv_str(s)}), help="k1=v1 k2=v2")
-        parser.add_argument('--env-file', nargs="+", default=[], help="file1.yaml file2.yaml")
+        parser.add_argument('--env-active', nargs="+", default=[], help="list of env active")
         parser.add_argument('--all-roles', action="store_true")
         parser.add_argument('--all-namespaces', action="store_true")
         parser.add_argument('--ignore-namespace', action="store_true")
@@ -422,7 +418,7 @@ class Installer:
         logger.info("args: {0}".format(args))
         if args.debug:
             logger.setLevel(logging.DEBUG)
-        global_env = self.load_env_file(self.env_file, args.env_file)
+        global_env = self.load_env_file(args.env_active)
         global_env["param_command"] = args.command
         global_jinja2ignore_rules = file_util.read_text(self.jinja2ignore_file).split("\n") if self.jinja2ignore_file and self.jinja2ignore_file.exists() else []
         namespaces = select_namespace(self.root_path, self.role_deep, args=args)

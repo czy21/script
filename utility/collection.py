@@ -3,10 +3,6 @@ import itertools
 import logging
 import typing
 
-import pydash
-
-import template
-
 logger = logging.getLogger()
 
 
@@ -17,13 +13,13 @@ def flat_to_str(*items: typing.Any, delimiter: str = " ") -> str:
     return delimiter.join(flat(list(items)))
 
 
-def flat_dict(source: dict[str, object]):
+def flat_dict(source: dict):
     result = {}
     _build_flat_dict(result, source, None)
     return result
 
 
-def _build_flat_dict(result: dict[str, object], source: dict[str, object], path):
+def _build_flat_dict(result: dict, source: dict, path):
     for key, value in source.items():
         if path is not None and str.strip(path).__len__() > 0:
             if key.startswith("["):
@@ -35,15 +31,15 @@ def _build_flat_dict(result: dict[str, object], source: dict[str, object], path)
         elif isinstance(value, dict):
             _build_flat_dict(result, value, key)
         elif isinstance(value, list):
-            if value is None or not value:
+            if not value:
                 result[key] = ""
             else:
                 count = 0
                 for obj in value:
-                    _build_flat_dict(result, {'[' + str(count) + "]": obj}, key)
+                    _build_flat_dict(result, {'[{}]'.format(count): obj}, key)
                     count += 1
         else:
-            result[key] = value if value is not None else ""
+            result[key] = value if value else ""
 
 
 def print_grid(items: list, col_num: int = 0, msg: str = ""):

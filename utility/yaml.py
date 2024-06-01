@@ -1,11 +1,15 @@
+import logging
 import pathlib
 from typing import Union
 
-import pydash.objects
-
+import jinja2.defaults
 import yaml
-from utility import file as file_util, safe as safe_util, path as path_util, collection as collection_util, template as template_util, basic as basic_util
 from yaml import FullLoader
+
+from utility import file as file_util, safe as safe_util, path as path_util, collection as collection_util, basic as basic_util
+from utility.abs import PropertySource, PropertySourcesPlaceholdersResolver
+
+logger = logging.getLogger()
 
 
 def join_tag(loader: FullLoader, node):
@@ -25,11 +29,41 @@ def load(stream: Union[str, pathlib.Path]) -> dict:
     return yaml.load(stream if isinstance(stream, str) else file_util.read_text(stream), loader1)
 
 
-# TODO
-def process(source: dict[str, object]):
-    result = collection_util.flat_dict(source)
-    for key, value in result.items():
-        if isinstance(value, str):
-            value = template_util.Template(value).render(**source)
-            pydash.objects.set_(source, key, value)
-    print(source)
+class OriginTrackedMapPropertySource(PropertySource[dict]):
+    flatten = None
+
+    def __init__(self, name, source):
+        super().__init__(name, source)
+        self.flatten = {}
+        for k, v in collection_util.flat_dict(source).items():
+            if v and isinstance(v, str) and jinja2.defaults.VARIABLE_START_STRING in v:
+                self.flatten[k] = v
+
+    def getProperty(self, name: str):
+        return self.flatten.get(name)
+
+    def getPropertyNames(self):
+        return self.flatten.keys()
+
+
+class YamlPropertySourceLoader:
+    file_extensions = ["yaml", "yml"]
+    resources: list[pathlib.Path] = None
+
+    def __init__(self, sources):
+        self.resources = sources
+
+    def load(self) -> dict:
+        sources = []
+        for r in self.resources:
+            if r.suffix and r.suffix[1:] in self.file_extensions:
+                sources.append(OriginTrackedMapPropertySource(r.as_posix(), load(r)))
+        resolver = PropertySourcesPlaceholdersResolver(sources)
+        for t in sources:
+            for name in t.getPropertyNames():
+                resolver.resolve_placeholder(t, name, t.getProperty(name))
+        d = {}
+        for t in reversed(sources):
+            logger.info("load env_file: %s" % t.name)
+            d |= t.source
+        return d

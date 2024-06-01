@@ -8,7 +8,7 @@ from utility import file as file_util, template as template_util
 
 def collect_doc(source_name):
     source_dir = root_path.joinpath("server/{0}".format(source_name))
-    share.execute("cd {0} && rm -rf build && sh main.sh {1} build --target doc --env-file env-public.yaml --all-namespace".format(source_dir.as_posix(), "local"))
+    share.execute("cd {0} && rm -rf build && sh main.sh {1} build --target doc --env-active public --all-namespace".format(source_dir.as_posix(), "local"))
     source_build_dir = source_dir.joinpath("build")
     target_dir = doc_public.joinpath(source_name)
     shutil.rmtree(target_dir, ignore_errors=True)
@@ -28,7 +28,7 @@ def collect_doc(source_name):
 
 
 logger = logging.getLogger()
-# sh toolchain.sh -h user@host build --target doc --env-file env-public.yaml --all-namespace
+# sh toolchain.sh -h user@host build --target doc --env-active public --all-namespace
 if __name__ == '__main__':
     logger.setLevel(logging.DEBUG)
     root_path = pathlib.Path(__file__).parent
