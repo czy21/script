@@ -27,7 +27,7 @@ if __name__ == '__main__':
     ansible_host_file = pwd.joinpath("ansible-host").as_posix()
     parser = argparse.ArgumentParser(formatter_class=share.CustomHelpFormatter, conflict_handler="resolve")
     share.Installer.set_common_argument(parser)
-    parser.add_argument('--ansible-host', required=False,type=str,help="ansible host file (default=ansible-host)")
+    parser.add_argument('--ansible-host', required=False, type=str, help="ansible host file (default=ansible-host)")
     parser.add_argument('-f', '--file', required=True, type=str, help="inventory file")
     parser.add_argument('-t', '--tag', required=True, type=str, help="t1,t2")
     parser.add_argument('-k', '--ask-pass', action="store_true", help="ask for connection password")
@@ -41,11 +41,7 @@ if __name__ == '__main__':
         logger.error("ssh private-key not exists")
         sys.exit(0)
     private_key = private_key.as_posix()
-    env_file: pathlib.Path = pwd.joinpath("server/env.yaml")
-    if not env_file.exists():
-        logger.error("env file not exists")
-        sys.exit(0)
-    env_dict = share.Installer.load_env_file(env_file, args.env_file) | args.param
+    env_dict = share.Installer.load_env_file(args.env_active) | args.param
     file_util.write_text(pwd.joinpath("vars/env.yml"), yaml.dump(env_dict))
     if not args.user:
         args.user = env_dict["param_user_ops"]
