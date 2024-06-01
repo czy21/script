@@ -275,16 +275,14 @@ class Installer:
         env_files = []
 
         def scan_env_files(src_env_files):
-            for e in env_active:
-                for se in src_env_files:
-                    if se.name.startswith("env-{}".format(e)):
-                        env_files.append(se)
+            for e in reversed(env_active):
+                env_files.extend([se for se in src_env_files if se.stem == "env-{0}".format(e)])
             for se in src_env_files:
                 if se.stem == "env":
                     env_files.append(se)
-
         scan_env_files(list(root_path.glob("env*")))
         scan_env_files(list(server_path.glob("env*")))
+
         return YamlPropertySourceLoader(env_files).load()
 
     @staticmethod
@@ -435,5 +433,5 @@ class Installer:
 if __name__ == '__main__':
     log_util.init_logger(file=pathlib.Path(__file__).parent.joinpath("___temp/share.log"))
     logger.setLevel(logging.DEBUG)
-    select_namespace(pathlib.Path(__file__).parent.joinpath("docker"), deep=2)
-    # Installer(pathlib.Path(__file__).parent).run()
+    # select_namespace(pathlib.Path(__file__).parent.joinpath("docker"), deep=2)
+    Installer(pathlib.Path(__file__).parent).run()
