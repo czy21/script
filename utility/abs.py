@@ -36,9 +36,8 @@ class PropertySourcesPlaceholdersResolver:
         self.sources = sources
 
     def resolve_placeholder(self, source, name, value):
-        if isinstance(value, str):
-            for s in self.sources:
-                resolved = template_util.Template(value, undefined=template_util.Undefined).render(**s.source)
-                if jinja2.defaults.VARIABLE_START_STRING not in resolved:
-                    pydash.objects.set_with(source.source, name, resolved)
-                    return
+        for s in self.sources:
+            resolved = template_util.Template(value, undefined=template_util.Undefined).render(**s.source)
+            if jinja2.defaults.VARIABLE_START_STRING not in resolved:
+                pydash.objects.set_with(source.source, name, resolved)
+                return
