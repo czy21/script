@@ -280,6 +280,7 @@ class Installer:
             for se in src_env_files:
                 if se.stem == "env":
                     env_files.append(se)
+
         scan_env_files(list(root_path.glob("env*")))
         scan_env_files(list(server_path.glob("env*")))
 
@@ -373,12 +374,8 @@ class Installer:
                 file_util.write_text(role_env_output_file, yaml.dump(role_env))
                 role_env |= args.param
                 # process template
-                for t in filter(lambda f: f.is_file() and not any(regex_util.match_rules(["build/"], f.as_posix()).values()), role_path.rglob("*")):
-                    _rules = regex_util.match_rules(
-                        [*jinja2ignore_rules, "___temp/"],
-                        t.as_posix(),
-                        ".jinja2ignore {0}".format(self.__loop_namespaces.__name__)
-                    )
+                for t in filter(lambda f: f.is_file() and not any(regex_util.match_rules(["build/", "___temp/", role_env_file.name], f.as_posix()).values()), role_path.rglob("*")):
+                    _rules = regex_util.match_rules([*jinja2ignore_rules], t.as_posix(), ".jinja2ignore {0}".format(self.__loop_namespaces.__name__))
                     role_output_file = role_output_path.joinpath(t.relative_to(role_path))
                     if not any(_rules.values()):
                         file_util.write_text(role_output_file, template_util.Template(file_util.read_text(t)).render(**role_env))
