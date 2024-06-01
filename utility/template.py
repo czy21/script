@@ -29,7 +29,7 @@ class Template:
         env = jinja2.Environment()
         env.undefined = undefined
         env.filters["join_path"] = lambda value: value if isinstance(value, Undefined) else join_path(*value)
-        env.filters["decrypt"] = lambda value, mode: value if isinstance(value, Undefined) else decrypt(value, mode)
+        env.filters["decrypt"] = lambda value: value if isinstance(value, Undefined) else decrypt(value)
         env.filters["htpasswd"] = lambda value: value if isinstance(value, Undefined) else htpasswd(value)
         env.filters["format_args"] = lambda value, pattern: value if isinstance(value, Undefined) else pattern.format(value) if isinstance(value, str) else pattern.format(*value)
         env.filters["get_uid"] = lambda value: value if isinstance(value, Undefined) else get_uid(value)
