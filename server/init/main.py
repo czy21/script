@@ -10,7 +10,8 @@ from server import share
 from utility import (
     collection as collection_util,
     file as file_util,
-    log as log_util
+    log as log_util,
+    yaml as yaml_util,
 )
 
 logger = logging.getLogger()
@@ -42,7 +43,7 @@ if __name__ == '__main__':
         sys.exit(0)
     private_key = private_key.as_posix()
     env_dict = share.Installer.load_env_file(args.env_active) | args.param
-    file_util.write_text(pwd.joinpath("vars/env.yml"), yaml.dump(env_dict))
+    file_util.write_text(pwd.joinpath("vars/env.yml"), yaml_util.dump(env_dict))
     if not args.user:
         args.user = env_dict["param_user_ops"]
     if args.ansible_host:

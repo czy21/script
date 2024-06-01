@@ -7,7 +7,8 @@ from server import share
 from utility import (
     collection as collection_util,
     file as file_util,
-    template as template_util
+    template as template_util,
+    yaml as yaml_util,
 )
 
 
@@ -27,7 +28,7 @@ class ChartRole(share.AbstractRole):
         super().__init__(home_path, root_path, namespace, role_title, role_name, role_path, role_output_path, role_env, role_env_output_file, args)
         self.root_doc_template_file = root_path.joinpath("doc-template.md")
         self.role_values_override_file = role_output_path.joinpath("values.override.yaml")
-        file_util.write_text(self.role_values_override_file, yaml.dump(role_env))
+        file_util.write_text(self.role_values_override_file, yaml_util.dump(role_env))
 
     def install(self) -> list[str]:
         _cmds = ['helm dep up {0}'.format(self.role_output_path.as_posix())]

@@ -9,7 +9,6 @@ from abc import ABCMeta
 from enum import Enum
 
 import urllib3
-import yaml
 
 from utility import (
     collection as collection_util,
@@ -20,7 +19,6 @@ from utility import (
     log as log_util,
     basic as basic_util
 )
-from utility.yaml import YamlPropertySourceLoader
 
 logger = logging.getLogger()
 
@@ -284,7 +282,7 @@ class Installer:
         scan_env_files(list(root_path.glob("env*")))
         scan_env_files(list(server_path.glob("env*")))
 
-        return YamlPropertySourceLoader(env_files).load()
+        return yaml_util.YamlPropertySourceLoader(env_files).load()
 
     @staticmethod
     def set_common_argument(parser: argparse.ArgumentParser):
@@ -371,7 +369,7 @@ class Installer:
                 # process env
                 if role_env_file and role_env_file.exists():
                     role_env |= yaml_util.load(template_util.Template(file_util.read_text(role_env_file)).render(**role_env))
-                file_util.write_text(role_env_output_file, yaml.dump(role_env))
+                file_util.write_text(role_env_output_file, yaml_util.dump(role_env))
                 role_env |= args.param
                 # process template
                 for t in filter(lambda f: f.is_file() and not any(regex_util.match_rules(["build/", "___temp/", role_env_file.name], f.as_posix()).values()), role_path.rglob("*")):
