@@ -15,14 +15,16 @@ logger = logging.getLogger()
 def getpwnam_uid(name, default=1000):
     try:
         return pwd.getpwnam(name).pw_uid
-    except KeyError:
+    except KeyError as e:
+        logger.warning(e)
         return default
 
 
 def getpwnam_gid(name, default=1000):
     try:
         return pwd.getpwnam(name).pw_gid
-    except KeyError:
+    except KeyError as e:
+        logger.warning(e)
         return default
 
 
