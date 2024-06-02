@@ -13,33 +13,41 @@ def flat_to_str(*items: typing.Any, delimiter: str = " ") -> str:
     return delimiter.join(flat(list(items)))
 
 
-def flat_dict(source: dict):
+def flat_dict(
+        source: dict,
+        key_wrap: typing.Callable[[str], str] = lambda k: '.' + k,
+        val_filter: typing.Callable[[typing.Any], bool] = lambda x: True,
+) -> dict:
     result = {}
-    _build_flat_dict(result, source, None)
+    _build_flat_dict(result, source, None, key_wrap, val_filter)
     return result
 
 
-def _build_flat_dict(result: dict, source: dict, path):
+def _build_flat_dict(result: dict, source: dict, path, key_wrap: typing.Callable[[str], str], value_filter: typing.Callable[[typing.Any], bool]):
     for key, value in source.items():
         if path is not None and str.strip(path).__len__() > 0:
             if key.startswith("["):
                 key = path + key
             else:
-                key = path + "." + key
+                key = path + key_wrap(key)
         if isinstance(value, str):
             result[key] = value
         elif isinstance(value, dict):
-            _build_flat_dict(result, value, key)
+            _build_flat_dict(result, value, key, key_wrap, value_filter)
         elif isinstance(value, list):
             if not value:
                 result[key] = ""
             else:
                 count = 0
                 for obj in value:
-                    _build_flat_dict(result, {'[{}]'.format(count): obj}, key)
+                    _build_flat_dict(result, {'[{}]'.format(count): obj}, key, key_wrap, value_filter)
                     count += 1
         else:
-            result[key] = value if value else ""
+            if value_filter:
+                if value_filter(value):
+                    result[key] = value if value else ""
+            else:
+                result[key] = value if value else ""
 
 
 def print_grid(items: list, col_num: int = 0, msg: str = ""):
