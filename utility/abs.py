@@ -38,5 +38,5 @@ class PropertySourcesPlaceholdersResolver:
         for s in self.sources:
             resolved = template_util.Template(value, undefined=template_util.Undefined).render(**s.source)
             if jinja2.defaults.VARIABLE_START_STRING not in resolved:
-                exec(name + "='{0}'".format(resolved), None, source.source)
+                exec(name + "=resolved", locals(), source.source)
                 return

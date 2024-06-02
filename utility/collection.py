@@ -34,7 +34,8 @@ def _build_flat_dict(
         if path and str.strip(path):
             key = path + (key if key.startswith("[") else key_wrap_func(key))
         if isinstance(value, str):
-            result[key] = value
+            if val_predicate(value):
+                result[key] = value
         elif isinstance(value, dict):
             _build_flat_dict(result, value, key, key_wrap_func, val_predicate)
         elif isinstance(value, list):
