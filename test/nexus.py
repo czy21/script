@@ -1,6 +1,3 @@
-import pandas as pd
-import yaml
-
 if __name__ == '__main__':
     d = {
         'a': 1,
@@ -8,7 +5,11 @@ if __name__ == '__main__':
         'd': [1, 2, 3]
     }
 
-    df = pd.json_normalize(d)
-    a=pd.DataFrame(df.to_dict(orient='records'))
-
+    a = {
+        'a': 1,
+        'b': 2
+    }
+    b = {
+        'a'
+    }
     print()
