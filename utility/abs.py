@@ -3,7 +3,6 @@ from abc import abstractmethod
 from typing import TypeVar, Generic
 
 import jinja2.defaults
-import pydash.objects
 
 from utility import template as template_util
 
@@ -39,5 +38,5 @@ class PropertySourcesPlaceholdersResolver:
         for s in self.sources:
             resolved = template_util.Template(value, undefined=template_util.Undefined).render(**s.source)
             if jinja2.defaults.VARIABLE_START_STRING not in resolved:
-                pydash.objects.set_with(source.source, name, resolved)
+                exec(name + "='{0}'".format(resolved), None, source.source)
                 return
