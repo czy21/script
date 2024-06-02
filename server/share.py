@@ -142,7 +142,7 @@ def execute(cmd, is_return: bool = False, dry_run=False):
     return basic_util.execute(cmd, is_input=False, is_return=is_return, dry_run=dry_run)
 
 
-class CustomHelpFormatter(argparse.MetavarTypeHelpFormatter):
+class ArgParseHelpFormatter(argparse.MetavarTypeHelpFormatter):
     def add_arguments(self, actions: typing.Iterable[argparse.Action]) -> None:
         for a in sorted(actions, key=lambda i: i.dest[0:1]):
             self.add_argument(a)
@@ -252,7 +252,7 @@ class Installer:
         self.jinja2ignore_file: pathlib.Path = root_path.joinpath(".jinja2ignore")
         self.role_class: typing.Type[AbstractRole] = role_class
         self.role_deep: int = role_deep
-        self.arg_parser: argparse.ArgumentParser = argparse.ArgumentParser(formatter_class=CustomHelpFormatter, usage='%(prog)s [command] [options]')
+        self.arg_parser: argparse.ArgumentParser = argparse.ArgumentParser(formatter_class=ArgParseHelpFormatter, usage='%(prog)s [command] [options]')
         self.set_common_argument(self.arg_parser)
         self.__command_parser = self.arg_parser.add_subparsers(title="commands", metavar="", dest="command")
         self.__init_install_parser()
@@ -302,7 +302,7 @@ class Installer:
             "prog": "{0} {1}".format(os.path.basename(sys.argv[0]), name),
             "name": name,
             "usage": "%(prog)s [options]",
-            "formatter_class": CustomHelpFormatter,
+            "formatter_class": ArgParseHelpFormatter,
             "help": "",
         }
 
