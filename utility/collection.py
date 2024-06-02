@@ -23,13 +23,16 @@ def flat_dict(
     return result
 
 
-def _build_flat_dict(result: dict, source: dict, path, key_wrap_func: typing.Callable[[str], str], val_predicate: typing.Callable[[typing.Any], bool]):
+def _build_flat_dict(
+        result: dict,
+        source: dict,
+        path,
+        key_wrap_func: typing.Callable[[str], str],
+        val_predicate: typing.Callable[[typing.Any], bool]
+):
     for key, value in source.items():
-        if path and str.strip(path).__len__() > 0:
-            if key.startswith("["):
-                key = path + key
-            else:
-                key = path + key_wrap_func(key)
+        if path and str.strip(path):
+            key = path + (key if key.startswith("[") else key_wrap_func(key))
         if isinstance(value, str):
             result[key] = value
         elif isinstance(value, dict):
