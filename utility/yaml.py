@@ -60,8 +60,8 @@ class YamlPropertySourceLoader:
     file_extensions = ["yaml", "yml"]
     resources: list[pathlib.Path] = None
 
-    def __init__(self, sources):
-        self.resources = sources
+    def __init__(self, resources):
+        self.resources = resources
 
     def load(self) -> dict:
         sources = []
