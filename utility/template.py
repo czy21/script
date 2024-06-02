@@ -12,18 +12,6 @@ class Undefined(jinja2.Undefined):
         return "{{ " + self._undefined_name + " }}"
 
 
-def get_uid(value):
-    if isinstance(value, Undefined):
-        return value
-    return getpwnam_uid(value)
-
-
-def get_gid(value):
-    if isinstance(value, Undefined):
-        return value
-    return getpwnam_gid(value)
-
-
 class Template:
     def __init__(self, text: str, undefined: typing.Type[jinja2.Undefined] = jinja2.Undefined):
         env = jinja2.Environment()
@@ -33,8 +21,8 @@ class Template:
         env.filters["decrypt"] = lambda value: value if isinstance(value, Undefined) else decrypt(value)
         env.filters["htpasswd"] = lambda value: value if isinstance(value, Undefined) else htpasswd(value)
         env.filters["format_args"] = lambda value, pattern: value if isinstance(value, Undefined) else pattern.format(value) if isinstance(value, str) else pattern.format(*value)
-        env.filters["get_uid"] = lambda value: value if isinstance(value, Undefined) else get_uid(value)
-        env.filters["get_gid"] = lambda value: value if isinstance(value, Undefined) else get_gid(value)
+        env.filters["get_uid"] = lambda value: value if isinstance(value, Undefined) else getpwnam_uid(value)
+        env.filters["get_gid"] = lambda value: value if isinstance(value, Undefined) else getpwnam_gid(value)
         self.text = text
         self._templator = env.from_string(text)
 
