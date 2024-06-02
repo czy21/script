@@ -26,7 +26,7 @@ if __name__ == '__main__':
     log_util.init_logger(file=log_file)
     private_key = tmp_path.joinpath("private-key")
     ansible_host_file = pwd.joinpath("ansible-host").as_posix()
-    parser = argparse.ArgumentParser(formatter_class=share.CustomHelpFormatter, conflict_handler="resolve")
+    parser = argparse.ArgumentParser(formatter_class=share.ArgParseHelpFormatter, conflict_handler="resolve")
     share.Installer.set_common_argument(parser)
     parser.add_argument('--ansible-host', required=False, type=str, help="ansible host file (default=ansible-host)")
     parser.add_argument('-f', '--file', required=True, type=str, help="inventory file")
