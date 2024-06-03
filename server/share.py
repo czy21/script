@@ -187,18 +187,19 @@ class ArgParseHelpFormatter(argparse.MetavarTypeHelpFormatter):
 
 class AbstractRole(metaclass=ABCMeta):
 
-    def __init__(self,
-                 home_path: pathlib.Path = None,
-                 root_path: pathlib.Path = None,
-                 namespace: str = None,
-                 role_title: str = None,
-                 role_name: str = None,
-                 role_path: pathlib.Path = None,
-                 role_output_path: pathlib.Path = None,
-                 role_env: dict = None,
-                 role_env_output_file: pathlib.Path = None,
-                 args=None
-                 ) -> None:
+    def __init__(
+            self,
+            home_path: pathlib.Path = None,
+            root_path: pathlib.Path = None,
+            namespace: str = None,
+            role_title: str = None,
+            role_name: str = None,
+            role_path: pathlib.Path = None,
+            role_output_path: pathlib.Path = None,
+            role_env: dict = None,
+            role_env_output_file: pathlib.Path = None,
+            args=None
+    ) -> None:
         self.home_path = home_path
         self.root_path = root_path
         self.role_title = role_title
