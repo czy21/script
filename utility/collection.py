@@ -27,10 +27,10 @@ def flat_dict(
 def _build_flat_dict(
         result: dict,
         source: dict,
-        path,
+        path: typing.Union[str, None],
         key_wrap_func: typing.Callable[[str], str],
         val_predicate: typing.Callable[[typing.Any], bool],
-        value_empty: typing.Literal["origin", "", None] = "origin"
+        value_empty: typing.Literal["origin", "", None]
 ):
     for key, value in source.items():
         if path and str.strip(path):
@@ -41,14 +41,14 @@ def _build_flat_dict(
         elif isinstance(value, dict):
             if not value and val_predicate(value):
                 result[key] = value if value_empty == "origin" else value_empty
-            _build_flat_dict(result, value, key, key_wrap_func, val_predicate)
+            _build_flat_dict(result, value, key, key_wrap_func, val_predicate, value_empty)
         elif isinstance(value, list):
             if not value and val_predicate(value):
                 result[key] = value if value_empty == "origin" else value_empty
             else:
                 count = 0
                 for obj in value:
-                    _build_flat_dict(result, {'[{}]'.format(count): obj}, key, key_wrap_func, val_predicate)
+                    _build_flat_dict(result, {'[{}]'.format(count): obj}, key, key_wrap_func, val_predicate, value_empty)
                     count += 1
         else:
             if val_predicate(value):
