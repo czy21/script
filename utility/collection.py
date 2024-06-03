@@ -17,9 +17,10 @@ def flat_dict(
         source: dict,
         key_wrap_func: typing.Callable[[str], str] = lambda k: '.' + k,
         val_predicate: typing.Callable[[typing.Any], bool] = lambda v: True,
+        value_empty: typing.Literal["origin", "", None] = "origin"
 ) -> dict:
     result = {}
-    _build_flat_dict(result, source, None, key_wrap_func, val_predicate)
+    _build_flat_dict(result, source, None, key_wrap_func, val_predicate, value_empty)
     return result
 
 
@@ -28,7 +29,8 @@ def _build_flat_dict(
         source: dict,
         path,
         key_wrap_func: typing.Callable[[str], str],
-        val_predicate: typing.Callable[[typing.Any], bool]
+        val_predicate: typing.Callable[[typing.Any], bool],
+        value_empty: typing.Literal["origin", "", None] = "origin"
 ):
     for key, value in source.items():
         if path and str.strip(path):
@@ -38,11 +40,11 @@ def _build_flat_dict(
                 result[key] = value
         elif isinstance(value, dict):
             if not value and val_predicate(value):
-                result[key] = value
+                result[key] = value if value_empty == "origin" else value_empty
             _build_flat_dict(result, value, key, key_wrap_func, val_predicate)
         elif isinstance(value, list):
             if not value and val_predicate(value):
-                result[key] = value
+                result[key] = value if value_empty == "origin" else value_empty
             else:
                 count = 0
                 for obj in value:
@@ -50,7 +52,7 @@ def _build_flat_dict(
                     count += 1
         else:
             if val_predicate(value):
-                result[key] = value
+                result[key] = value if value_empty == "origin" else value_empty
 
 
 def print_grid(items: list, col_num: int = 0, msg: str = ""):
