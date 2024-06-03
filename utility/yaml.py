@@ -45,8 +45,9 @@ class OriginTrackedMapPropertySource(abs.PropertySource[dict]):
         super().__init__(name, source)
         self.flatten = collection_util.flat_dict(
             source,
-            lambda key: "['{0}']".format(key),
-            lambda val: val and isinstance(val, str) and jinja2.defaults.VARIABLE_START_STRING in val
+            key_wrap_func=lambda key: "['{0}']".format(key),
+            val_predicate=lambda val: val and isinstance(val, str) and jinja2.defaults.VARIABLE_START_STRING in val,
+            value_empty=""
         )
 
     def getProperty(self, name: str):
