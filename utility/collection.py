@@ -37,10 +37,12 @@ def _build_flat_dict(
             if val_predicate(value):
                 result[key] = value
         elif isinstance(value, dict):
+            if not value and val_predicate(value):
+                result[key] = value
             _build_flat_dict(result, value, key, key_wrap_func, val_predicate)
         elif isinstance(value, list):
-            if not value:
-                result[key] = ""
+            if not value and val_predicate(value):
+                result[key] = value
             else:
                 count = 0
                 for obj in value:
@@ -48,7 +50,7 @@ def _build_flat_dict(
                     count += 1
         else:
             if val_predicate(value):
-                result[key] = value if value else ""
+                result[key] = value
 
 
 def print_grid(items: list, col_num: int = 0, msg: str = ""):
