@@ -42,7 +42,7 @@ if __name__ == '__main__':
         logger.error("ssh private-key not exists")
         sys.exit(0)
     private_key = private_key.as_posix()
-    env_dict = share.Installer.load_env_file(args.env_active) | args.param
+    env_dict = share.Installer.load_env_file(args.env_active, args.param)
     file_util.write_text(pwd.joinpath("vars/env.yml"), yaml_util.dump(env_dict))
     if not args.user:
         args.user = env_dict["param_user_ops"]
