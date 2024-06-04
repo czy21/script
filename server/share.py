@@ -268,7 +268,7 @@ class Installer:
         self.build_path.mkdir(exist_ok=True)
 
     @staticmethod
-    def load_env_file(env_active: list[str]) -> dict:
+    def load_env_file(env_active: list[str], env_extra: dict = None) -> dict:
         server_path = pathlib.Path(__file__).parent
         root_path = server_path.parent
         env_files = []
@@ -283,7 +283,7 @@ class Installer:
         scan_env_files(list(root_path.glob("env*")))
         scan_env_files(list(server_path.glob("env*")))
 
-        return yaml_util.YamlPropertySourceLoader(env_files).load()
+        return yaml_util.YamlPropertySourceLoader(env_files).load(env_extra)
 
     @staticmethod
     def set_common_argument(parser: argparse.ArgumentParser):
@@ -388,16 +388,18 @@ class Installer:
                         target_file = role_output_path.joinpath(args.target)
                         if target_file.exists():
                             _cmds.append("sh {0} {1}".format(target_file.as_posix(), " ".join(args.build_args)))
-                role_instance = self.role_class(home_path=self.home_path,
-                                                root_path=self.root_path,
-                                                role_title=role_title,
-                                                role_name=role_name,
-                                                role_path=role_path,
-                                                role_output_path=role_output_path,
-                                                role_env=role_env,
-                                                role_env_output_file=role_env_output_file,
-                                                namespace=namespace,
-                                                args=args)
+                role_instance = self.role_class(
+                    home_path=self.home_path,
+                    root_path=self.root_path,
+                    role_title=role_title,
+                    role_name=role_name,
+                    role_path=role_path,
+                    role_output_path=role_output_path,
+                    role_env=role_env,
+                    role_env_output_file=role_env_output_file,
+                    namespace=namespace,
+                    args=args
+                )
                 _cmds.extend(getattr(role_instance, args.command)())
                 execute(collection_util.flat_to_str(_cmds, delimiter=" && "), dry_run=args.dry_run)
 
@@ -412,7 +414,7 @@ class Installer:
         logger.info("args: {0}".format(args))
         if args.debug:
             logger.setLevel(logging.DEBUG)
-        global_env = self.load_env_file(args.env_active)
+        global_env = self.load_env_file(args.env_active, args.param)
         global_env["param_command"] = args.command
         global_jinja2ignore_rules = file_util.read_text(self.jinja2ignore_file).split("\n") if self.jinja2ignore_file and self.jinja2ignore_file.exists() else []
         namespaces = select_namespace(self.root_path, self.role_deep, args=args)
