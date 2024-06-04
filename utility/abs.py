@@ -30,13 +30,18 @@ class PropertySource(Generic[T]):
 
 class PropertySourcesPlaceholdersResolver:
     sources: list[PropertySource[T]] = None
+    extra: dict = None
 
-    def __init__(self, sources):
+    def __init__(self, sources, extra):
         self.sources = sources
+        self.extra = extra
 
     def resolve_placeholder(self, source, name, value):
-        for s in self.sources:
-            resolved = template_util.Template(value, undefined=template_util.Undefined).render(**s.source)
+        sources = [r.source for r in self.sources]
+        if self.extra:
+            sources.insert(0, self.extra)
+        for s in sources:
+            resolved = template_util.Template(value, undefined=template_util.Undefined).render(**s)
             if jinja2.defaults.VARIABLE_START_STRING not in resolved:
                 exec(name + "=resolved", locals(), source.source)
                 return

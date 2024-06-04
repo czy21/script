@@ -13,6 +13,7 @@ from utility import (
     basic as basic_util,
     abs
 )
+from utility.abs import PropertySource
 
 logger = logging.getLogger()
 
@@ -64,12 +65,12 @@ class YamlPropertySourceLoader:
     def __init__(self, resources):
         self.resources = resources
 
-    def load(self) -> dict:
+    def load(self, extra: dict = None) -> dict:
         sources = []
         for r in self.resources:
             if r.suffix and r.suffix[1:] in self.file_extensions:
                 sources.append(OriginTrackedMapPropertySource(r.as_posix(), load(r)))
-        resolver = abs.PropertySourcesPlaceholdersResolver(sources)
+        resolver = abs.PropertySourcesPlaceholdersResolver(sources, extra)
         for t in sources:
             for name in t.getPropertyNames():
                 resolver.resolve_placeholder(t, name, t.getProperty(name))
@@ -77,4 +78,5 @@ class YamlPropertySourceLoader:
         for t in reversed(sources):
             logger.info("load env_file: %s" % t.name)
             d |= t.source
+        d |= extra if extra is not None else {}
         return d
