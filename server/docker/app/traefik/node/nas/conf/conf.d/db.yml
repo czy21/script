@@ -21,9 +21,6 @@ http:
     kafka-eagle:
       rule: Host(`ke.czy21-internal.com`)
       service: kafka-eagle@docker
-    rocketmq-web:
-      rule: Host(`rocketmq-web.czy21-internal.com`)
-      service: rocketmq-web@docker
     minio:
       rule: Host(`minio.czy21-internal.com`)
       service: minio-api@docker
