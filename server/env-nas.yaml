@@ -1,7 +1,0 @@
-param_cluster_name: nas
-
-param_hosts:
-  - ip: 192.168.2.17
-    name: k3s-node-17
-  - ip: 192.168.2.22
-    name: k8s-node-22
