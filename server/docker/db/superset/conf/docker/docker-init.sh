@@ -39,11 +39,10 @@ EOF
 }
 ADMIN_PASSWORD="admin"
 # If Cypress run – overwrite the password for admin and export env variables
-if [ "$CYPRESS_CONFIG" = "true" ]; then
+if [ "$CYPRESS_CONFIG" == "true" ]; then
     ADMIN_PASSWORD="general"
-    export SUPERSET_CONFIG=tests.superset_test_config
+    export SUPERSET_CONFIG=tests.integration_tests.superset_test_config
     export SUPERSET_TESTENV=true
-    export ENABLE_REACT_CRUD_VIEWS=true
     export SUPERSET__SQLALCHEMY_DATABASE_URI=postgresql+psycopg2://superset:superset@db:5432/superset
 fi
 # Initialize the database
@@ -69,11 +68,11 @@ if [ "$SUPERSET_LOAD_EXAMPLES" = "yes" ]; then
     # Load some data to play with
     echo_step "4" "Starting" "Loading examples"
     # If Cypress run which consumes superset_test_config – load required data for tests
-    if [ "$CYPRESS_CONFIG" = "true" ]; then
+    if [ "$CYPRESS_CONFIG" == "true" ]; then
         superset load_test_users
         superset load_examples --load-test-data
     else
-        superset load_examples
+        superset load_examples --force
     fi
     echo_step "4" "Complete" "Loading examples"
 fi
