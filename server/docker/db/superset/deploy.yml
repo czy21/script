@@ -28,6 +28,7 @@ x-superset-env: &superset-env
   PYTHONPATH: /app/pythonpath:/app/docker/pythonpath
   REDIS_HOST: "{{ param_db_redis_host }}"
   REDIS_PORT: "{{ param_db_redis_port }}"
+  REDIS_PASSWORD: "{{ param_db_redis_password }}"
   FLASK_ENV: true
   SUPERSET_ENV: production
   SUPERSET_SECRET_KEY: production
