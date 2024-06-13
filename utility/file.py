@@ -4,7 +4,6 @@ import filecmp
 import pathlib
 import shutil
 import typing
-from typing import NoReturn
 
 
 def get_files(path: pathlib.Path, remove_prefix: str = "") -> list:
@@ -15,9 +14,11 @@ def read_text(file: pathlib.Path) -> str:
     return file.read_text(encoding="utf-8")
 
 
-def write_text(file: pathlib.Path, text: str):
+def write_text(file: pathlib.Path, text: str, st_mode: int = None):
     file.parent.mkdir(parents=True, exist_ok=True)
     file.write_text(text, encoding="utf-8")
+    if st_mode:
+        file.chmod(st_mode)
 
 
 def copy(src: pathlib.Path, dst: pathlib.Path):

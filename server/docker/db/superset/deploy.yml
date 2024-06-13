@@ -1,117 +1,75 @@
 version: "3.9"
+
+x-superset-image: &superset-image apache/superset:4.0.1
+x-superset-volumes: &superset-volumes
+  - {{ param_docker_data }}/{{ param_role_name }}/conf/docker/:/app/docker/
+  - {{ param_docker_data }}/{{ param_role_name }}/data/superset/:/app/superset_home
+
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 8088
+
+x-superset-env: &superset-env
+  DATABASE_DB: superset
+  DATABASE_HOST: "{{ param_db_mysql_host }}"
+  DATABASE_PORT: "{{ param_db_mysql_port }}"
+  DATABASE_USER: "{{ param_db_mysql_username }}"
+  DATABASE_PASSWORD: "{{ param_db_mysql_password }}"
+  EXAMPLES_DB: superset
+  EXAMPLES_HOST: "{{ param_db_mysql_host }}"
+  EXAMPLES_PORT: "{{ param_db_mysql_port }}"
+  EXAMPLES_USER: "{{ param_db_mysql_username }}"
+  EXAMPLES_PASSWORD: "{{ param_db_mysql_password }}"
+  DATABASE_DIALECT: mysql
+  MYSQL_DB: superset
+  MYSQL_USER: "{{ param_db_mysql_username }}"
+  MYSQL_PASSWORD: "{{ param_db_mysql_password }}"
+  PYTHONPATH: /app/pythonpath:/app/docker/pythonpath
+  REDIS_HOST: "{{ param_db_redis_host }}"
+  REDIS_PORT: "{{ param_db_redis_port }}"
+  FLASK_ENV: true
+  SUPERSET_ENV: production
+  SUPERSET_SECRET_KEY: production
+  SUPERSET_PORT: 8088
+  SUPERSET_LOAD_EXAMPLES: "yes"
+  CYPRESS_CONFIG: "false"
+
 services:
 
+#  {{ param_role_name }}-init:
+#    image: *superset-image
+#    container_name: "{{ param_role_name }}-init"
+#    command: ["/app/docker/docker-init.sh"]
+#    user: "root"
+#    volumes: *superset-volumes
+#    environment: *superset-env
+
   superset:
-    image: apache/superset:latest-dev
-    container_name: superset_app
+    image: *superset-image
+    container_name: superset-app
     command: ["/app/docker/docker-bootstrap.sh", "app-gunicorn"]
     user: "root"
-    restart: unless-stopped
-    ports:
-      - 8088:8088
-    volumes: 
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/docker/:/app/docker/
-      - {{ param_docker_data }}/{{ param_role_name }}/data/superset/:/app/superset_home
-    environment:
-      DATABASE_DB: superset
-      DATABASE_HOST: {{ param_db_pgsql_host }}
-      DATABASE_PASSWORD: {{ param_db_pgsql_password }}
-      DATABASE_USER: {{ param_db_pgsql_username }}
-      DATABASE_PORT: {{ param_db_pgsql_port }}
-      DATABASE_DIALECT: postgresql
-      POSTGRES_DB: superset
-      POSTGRES_USER: {{ param_db_pgsql_username }}
-      POSTGRES_PASSWORD: {{ param_db_pgsql_password }}
-      PYTHONPATH: /app/pythonpath:/app/docker/pythonpath_dev
-      REDIS_HOST: {{ param_db_redis_host }}
-      REDIS_PORT: {{ param_db_redis_port }}
-      FLASK_ENV: production
-      SUPERSET_ENV: production
-      SUPERSET_LOAD_EXAMPLES: "yes"
-      CYPRESS_CONFIG: "false"
-      SUPERSET_PORT: 8088
-
-  {{ param_role_name }}-init:
-    image: apache/superset:latest-dev
-    container_name: superset_init
-    command: ["/app/docker/docker-init.sh"]
-    user: "root"
-    volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/docker/:/app/docker/
-      - {{ param_docker_data }}/{{ param_role_name }}/data/superset/:/app/superset_home
-    environment:
-      DATABASE_DB: superset
-      DATABASE_HOST: {{ param_db_pgsql_host }}
-      DATABASE_PASSWORD: {{ param_db_pgsql_password }}
-      DATABASE_USER: {{ param_db_pgsql_username }}
-      DATABASE_PORT: {{ param_db_pgsql_port }}
-      DATABASE_DIALECT: postgresql
-      POSTGRES_DB: superset
-      POSTGRES_USER: {{ param_db_pgsql_username }}
-      POSTGRES_PASSWORD: {{ param_db_pgsql_password }}
-      PYTHONPATH: /app/pythonpath:/app/docker/pythonpath_dev
-      REDIS_HOST: {{ param_db_redis_host }}
-      REDIS_PORT: {{ param_db_redis_port }}
-      FLASK_ENV: production
-      SUPERSET_ENV: production
-      SUPERSET_LOAD_EXAMPLES: "yes"
-      CYPRESS_CONFIG: "false"
-      SUPERSET_PORT: 8088
+    restart: always
+    labels:
+      <<: *traefik-label
+    volumes: *superset-volumes
+    environment: *superset-env
 
   {{ param_role_name }}-worker:
-    image: apache/superset:latest-dev
-    container_name: superset_worker
+    image: *superset-image
+    container_name: "{{ param_role_name }}-worker"
     command: ["/app/docker/docker-bootstrap.sh", "worker"]
-    restart: unless-stopped
+    restart: always
     user: "root"
-    volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/docker/:/app/docker/
-      - {{ param_docker_data }}/{{ param_role_name }}/data/superset/:/app/superset_home
-    environment:
-      DATABASE_DB: superset
-      DATABASE_HOST: {{ param_db_pgsql_host }}
-      DATABASE_PASSWORD: {{ param_db_pgsql_password }}
-      DATABASE_USER: {{ param_db_pgsql_username }}
-      DATABASE_PORT: {{ param_db_pgsql_port }}
-      DATABASE_DIALECT: postgresql
-      POSTGRES_DB: superset
-      POSTGRES_USER: {{ param_db_pgsql_username }}
-      POSTGRES_PASSWORD: {{ param_db_pgsql_password }}
-      PYTHONPATH: /app/pythonpath:/app/docker/pythonpath_dev
-      REDIS_HOST: {{ param_db_redis_host }}
-      REDIS_PORT: {{ param_db_redis_port }}
-      FLASK_ENV: production
-      SUPERSET_ENV: production
-      SUPERSET_LOAD_EXAMPLES: "yes"
-      CYPRESS_CONFIG: "false"
-      SUPERSET_PORT: 8088
+    volumes: *superset-volumes
+    environment: *superset-env
 
   {{ param_role_name }}-worker-beat:
-    image: apache/superset:latest-dev
-    container_name: superset_worker_beat
+    image: *superset-image
+    container_name: "{{ param_role_name }}-worker-beat"
     command: ["/app/docker/docker-bootstrap.sh", "beat"]
-    restart: unless-stopped
+    restart: always
     user: "root"
-    volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/docker/:/app/docker/
-      - {{ param_docker_data }}/{{ param_role_name }}/data/superset/:/app/superset_home
-    environment:
-      DATABASE_DB: superset
-      DATABASE_HOST: {{ param_db_pgsql_host }}
-      DATABASE_PASSWORD: {{ param_db_pgsql_password }}
-      DATABASE_USER: {{ param_db_pgsql_username }}
-      DATABASE_PORT: {{ param_db_pgsql_port }}
-      DATABASE_DIALECT: postgresql
-      POSTGRES_DB: superset
-      POSTGRES_USER: {{ param_db_pgsql_username }}
-      POSTGRES_PASSWORD: {{ param_db_pgsql_password }}
-      PYTHONPATH: /app/pythonpath:/app/docker/pythonpath_dev
-      REDIS_HOST: {{ param_db_redis_host }}
-      REDIS_PORT: {{ param_db_redis_port }}
-      FLASK_ENV: production
-      SUPERSET_ENV: production
-      SUPERSET_LOAD_EXAMPLES: "yes"
-      CYPRESS_CONFIG: "false"
-      SUPERSET_PORT: 8088
-
-
+    volumes: *superset-volumes
+    environment: *superset-env

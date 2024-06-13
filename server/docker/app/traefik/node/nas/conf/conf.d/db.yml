@@ -30,6 +30,9 @@ http:
     chat2db:
       rule: Host(`chat2db.czy21-internal.com`)
       service: chat2db@docker
+    superset:
+      rule: Host(`superset.czy21-internal.com`)
+      service: superset@docker
     dbeaver:
       rule: Host(`dbeaver.czy21-internal.com`)
       service: dbeaver@docker
