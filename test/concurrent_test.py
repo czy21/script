@@ -1,3 +1,4 @@
+import json
 import multiprocessing
 from datetime import datetime
 from multiprocessing import Pool
@@ -6,7 +7,12 @@ import requests
 
 
 def get_session(sid):
-    r = requests.get(url="http://demo-dev.czy21-internal.com/api/demo-portal/test/lbTest")
+    r = requests.post(url="http://127.0.0.1:3000/api/cost/generic/list?tableCode=budget_cost_year_end",
+                      headers={
+                          'Content-Type': 'application/json',
+                      },
+                      data=json.dumps({})
+                      )
     print(r.json())
 
 
