@@ -10,7 +10,7 @@ change master to master_host='192.168.2.12',master_user='slave',master_password=
 ```
 ## Backup
 ```shell
-docker exec some-mysql sh -c 'exec mysqldump --databases <databases> -uroot -p<password>' > /volume1/storage/all-databases.sql
+docker exec mysql sh -c 'exec mysqldump --databases <databases> -uroot -p<password>' > /volume1/storage/all-databases.sql
 ```
 ## Restore
 ```shell
