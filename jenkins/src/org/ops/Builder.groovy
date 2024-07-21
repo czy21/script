@@ -50,7 +50,7 @@ def build() {
                 if ("gradle" == env.param_java_build_tool || fileExists("${env.param_project_context}/build.gradle")) {
                     pathMap.get("gradle").call()
                     configFileProvider([configFile(fileId: "gradle.config", variable: 'CONFIG_FILE')]) {
-                        sh "gradle -I ${CONFIG_FILE} -p ${env.param_project_context} clean build -U -x test"
+                        sh "gradle --no-daemon -I ${CONFIG_FILE} -p ${env.param_project_context} clean build -U -x test"
                     }
                 }
             },
