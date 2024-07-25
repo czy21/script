@@ -1,0 +1,5 @@
+http:
+  routers:
+    alisqlchatst:
+      rule: Host(`sqlchat.czy21-internal.com`)
+      service: sqlchat@docker
