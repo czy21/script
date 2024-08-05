@@ -6,3 +6,6 @@ http:
     youtrack:
       rule: Host(`youtrack.czy21-internal.com`)
       service: youtrack@docker
+    immich:
+      rule: Host(`immich.czy21-internal.com`)
+      service: immich-server@docker
