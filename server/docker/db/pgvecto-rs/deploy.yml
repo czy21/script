@@ -1,0 +1,19 @@
+version: "3.9"
+
+services:
+  pgvecto-rs:
+    image: tensorchord/pgvecto-rs:pg14-v0.2.0
+    container_name: pgvecto-rs
+    hostname: pgvecto-rs
+    privileged: true
+    user: root
+    ports:
+      - "5435:5432"
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/var/lib/postgresql/data/
+    environment:
+      TZ: Asia/Shanghai
+      POSTGRES_PASSWORD: '{{ param_db_pgsql_password }}'
+      POSTGRES_INITDB_ARGS: '--data-checksums'
+    command: ["postgres", "-c" ,"shared_preload_libraries=vectors.so", "-c", 'search_path="$$user", public, vectors', "-c", "logging_collector=on", "-c", "max_wal_size=2GB", "-c", "shared_buffers=512MB", "-c", "wal_compression=on"]
+    restart: always
