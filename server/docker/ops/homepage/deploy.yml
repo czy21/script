@@ -8,7 +8,7 @@ x-traefik-label: &traefik-label
 services:
 
   homepage:
-    image: "{{ param_registry_proxy_url }}/benphelps/homepage:v0.6.22" # ghcr.io/benphelps/homepage:latest
+    image: "{{ param_registry_proxy_url }}/gethomepage/homepage:v0.9.5" # ghcr.io/gethomepage/homepage:latest
     container_name: homepage
     hostname: homepage
     labels:
