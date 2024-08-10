@@ -55,7 +55,7 @@
         widget:
           type: emby
           url: http://emby.czy21-internal.com
-          key: 56203aaf7539480db7e938b9a0357fbe
+          key: 639ee66c6f054f50822c171443cf4809
     - qbittorrent:
         icon: qbittorrent.svg
         href: http://qb.czy21-internal.com
