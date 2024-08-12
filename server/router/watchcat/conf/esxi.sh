@@ -6,9 +6,9 @@ esxi_host_cmd="ssh esxi"
 
 function close_vms(){
     for t in $1;do
-        if [ `$esxi_host_cmd vim-cmd vmsvc/power.getstate $t | grep 'Powered on' -q && echo true` ];then
+        if `$esxi_host_cmd vim-cmd vmsvc/power.getstate $t | grep 'Powered on' -q`;then
             vm_name=`$esxi_host_cmd vim-cmd vmsvc/get.summary $t | grep name`
-            if [ `$esxi_host_cmd vim-cmd vmsvc/get.summary $t | grep toolsOk -q && echo true` ];then
+            if `$esxi_host_cmd vim-cmd vmsvc/get.summary $t | grep 'toolsOk' -q`;then
               logger -t "${LOG_TAG}" "id: $t $vm_name power.shutdown"
               $esxi_host_cmd vim-cmd vmsvc/power.shutdown $t
             else
@@ -24,7 +24,7 @@ function check_vms(){
     while [ $vms_off == false ]
     do
       for t in $1;do
-        vms_off=`$esxi_host_cmd vim-cmd vmsvc/power.getstate $t | grep 'Powered off' -q && echo true || false`
+        vms_off=`$esxi_host_cmd vim-cmd vmsvc/power.getstate $t | grep 'Powered off' -q && echo true || echo false`
       done
     done
 }
