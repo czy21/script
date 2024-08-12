@@ -11,5 +11,5 @@ if [ "backup" = "${param_command}" ];then
 fi
 
 if [ "restore" = "${param_command}" ];then
-  mkdir -p ${etc_app_path} && && cp -r {{ param_role_bak_path }}/* ${etc_app_path}
+  mkdir -p ${etc_app_path} && cp -r {{ param_role_bak_path }}/* ${etc_app_path}
 fi
