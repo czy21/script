@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   portainer-agent:
-    image: portainer/agent:2.15.1-alpine
+    image: portainer/agent:2.20.3-alpine
     container_name: portainer-agent
     privileged: true
     expose:
@@ -12,8 +12,3 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     restart: always
-    deploy:
-      mode: global
-      placement:
-        constraints:
-          - 'node.platform.os == linux'

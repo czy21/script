@@ -7,7 +7,7 @@ x-traefik-label: &traefik-label
 
 services:
   portainer:
-    image: portainer/portainer-ce:2.18.4-alpine
+    image: portainer/portainer-ce:2.20.3-alpine
     container_name: portainer
     labels:
       <<: *traefik-label

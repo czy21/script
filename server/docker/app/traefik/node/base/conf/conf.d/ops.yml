@@ -1,0 +1,5 @@
+http:
+  routers:
+    portainer:
+      rule: Host(`portainer.czy21-internal.com`)
+      service: portainer@docker

@@ -27,9 +27,6 @@ http:
     seata:
       rule: Host(`seata.czy21-internal.com`)
       service: seata@docker
-    portainer:
-      rule: Host(`portainer.czy21-internal.com`)
-      service: portainer@docker
     yearning:
       rule: Host(`yearning.czy21-internal.com`)
       service: yearning@docker
