@@ -8,6 +8,9 @@ x-redis-common: &redis-common
     TZ: Asia/Shanghai
   restart: always
 
+x-redis-exporter-common: &redis-exporter-common
+  image: oliver006/redis_exporter:v1.62.0-alpine
+
 x-traefik-exporter-label: &traefik-exporter-label
   traefik.enable: true
   traefik.http.routers.{{ param_role_name }}-exporter.service: {{ param_role_name }}-exporter
@@ -29,11 +32,11 @@ services:
         --requirepass {{ param_db_redis_password }}
         --appendonly yes
         --ignore-warnings ARM64-COW-BUG
-  redis-exporter-{{ param_db_redis_port }}:
-    image: oliver006/redis_exporter:alpine
+  redis-exporter:
+    <<: *redis-exporter-common
     labels:
       <<: *traefik-exporter-label
-    container_name: redis-exporter-{{ param_db_redis_port }}
+    container_name: redis-exporter
     user: root
     expose:
       - "9121"
@@ -64,11 +67,11 @@ services:
         --cluster-enabled yes
         --cluster-announce-ip {{ param_db_redis_cluster_ip }}
   {%- endfor %}
-  redis-exporter-{{ param_db_redis_cluster_start_port }}:
-    image: oliver006/redis_exporter:alpine
+  redis-exporter:
+    <<: *redis-exporter-common
     labels:
       <<: *traefik-exporter-label
-    container_name: redis-exporter-{{ param_db_redis_cluster_start_port }}
+    container_name: redis-exporter
     user: root
     expose:
       - "9121"
