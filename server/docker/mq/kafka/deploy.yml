@@ -1,30 +1,44 @@
 version: "3.9"
 
+x-kafka-common: &kafka-common
+  image: apache/kafka:3.8.0
+  privileged: true
+  user: root
+  pull_policy: always
+  restart: always
+
 services:
+  {%- set controller_quorum_voters=[] %}
+    {%- for i in range(1,param_mq_kafka_cluster_replicas | int + 1) %}
+      {%- set controller_quorum_voter = "".join([i|string,'@','kafka-'+i|string,':9093']) %}
+      {{- controller_quorum_voters.append(controller_quorum_voter) or '' }}
+    {%- endfor %}
   {%- for i in range(1,param_mq_kafka_cluster_replicas | int + 1) %}
-    {%- set j=i-1 %}
-    {%- set svc_port=j+9092 %}
-    {%- set jmx_port=j+9999 %}
-  {{ param_role_name }}-{{ i }}:
-    image: {{ param_registry_url }}/{{ param_registry_dir }}/kafka
-    pull_policy: always
-    container_name: {{ param_role_name }}-{{ i }}
-    privileged: true
-    user: root
+    {%- set svc_port = param_db_kafka_cluster_start_port | int+i-1 %}
+  kafka-{{ i }}:
+    <<: *kafka-common
+    container_name: kafka-{{ i }}
+    hostname: kafka-{{ i }}
     ports:
-      - "{{ svc_port }}:{{ svc_port }}"
-      - "{{ jmx_port }}:{{ jmx_port }}"
+      - {{ svc_port }}:9092
     volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/logs/{{ i }}:/logs/
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/{{ i }}/:/mnt/shared/config/
+      - {{ param_docker_data }}/{{ param_role_name }}/secrets/{{ i }}/:/etc/kafka/secrets/
+      - {{ param_docker_data }}/{{ param_role_name }}/data/{{ i }}/:/var/lib/kafka/data/
+      - {{ param_docker_data }}/{{ param_role_name }}/logs/{{ i }}/:/logs/
     environment:
-      JMX_PORT: {{ jmx_port }}
-      KAFKA_HEAP_OPTS: -Xms256M -Xmx512M
-      KAFKA_SERVER_broker.id: {{ i }}
-      KAFKA_SERVER_listeners: PLAINTEXT://{{ param_role_name }}-{{ i }}:{{ svc_port }}
-      KAFKA_SERVER_advertised.listeners: PLAINTEXT://{{ param_mq_kafka_cluster_host_ip }}:{{ svc_port }}
-      KAFKA_SERVER_zookeeper.connect: {{ param_mq_kafka_cluster_zk_servers }}/{{ param_mq_kafka_cluster_zk_root_path }}/{{ param_mq_kafka_cluster_name }}
-      KAFKA_SERVER_log.retention.hours: 720
-      KAFKA_SERVER_log.roll.hours: 4
-      KAFKA_SERVER_log.segment.bytes: 1073741824
-    restart: always
+      CLUSTER_ID: {{ param_mq_kafka_cluster_name }}
+      KAFKA_NODE_ID: {{ i }}
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: {{ controller_quorum_voters | join(',') }}
+      KAFKA_LISTENERS: PLAINTEXT://:19092,CONTROLLER://:9093,PLAINTEXT_HOST://:9092
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-{{ i }}:19092,PLAINTEXT_HOST://{{ param_mq_kafka_cluster_host_ip }}:{{ svc_port }}
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_LOG_DIRS: /logs/
   {%- endfor %}
