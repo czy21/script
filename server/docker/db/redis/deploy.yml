@@ -32,11 +32,11 @@ services:
         --requirepass {{ param_db_redis_password }}
         --appendonly yes
         --ignore-warnings ARM64-COW-BUG
-  redis-exporter:
+  redis-exporter-{{ param_db_redis_port }}:
     <<: *redis-exporter-common
     labels:
       <<: *traefik-exporter-label
-    container_name: redis-exporter
+    container_name: redis-exporter-{{ param_db_redis_port }}
     user: root
     expose:
       - "9121"
@@ -67,11 +67,11 @@ services:
         --cluster-enabled yes
         --cluster-announce-ip {{ param_db_redis_cluster_ip }}
   {%- endfor %}
-  redis-exporter:
+  redis-exporter-{{ param_db_redis_cluster_start_port }}:
     <<: *redis-exporter-common
     labels:
       <<: *traefik-exporter-label
-    container_name: redis-exporter
+    container_name: redis-exporter-{{ param_db_redis_cluster_start_port }}
     user: root
     expose:
       - "9121"

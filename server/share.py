@@ -177,12 +177,10 @@ class ArgParseHelpFormatter(argparse.MetavarTypeHelpFormatter):
         return ', '.join(t.strip() for t in parts)
 
     def _get_default_metavar_for_optional(self, action: argparse.Action) -> str:
-        if action.type:
-            return action.type.__name__
+        return action.type.__name__ if action.type and action.type.__name__ else str.__name__
 
     def _get_default_metavar_for_positional(self, action: argparse.Action) -> str:
-        if action.type:
-            return action.type.__name__
+        return action.type.__name__ if action.type and action.type.__name__ else str.__name__
 
 
 class AbstractRole(metaclass=ABCMeta):
@@ -255,7 +253,7 @@ class Installer:
         self.role_deep: int = role_deep
         self.arg_parser: argparse.ArgumentParser = argparse.ArgumentParser(formatter_class=ArgParseHelpFormatter, usage='%(prog)s [command] [options]')
         self.set_common_argument(self.arg_parser)
-        self.__command_parser = self.arg_parser.add_subparsers(title="commands", metavar="", dest="command")
+        self.__command_parser = self.arg_parser.add_subparsers(title="commands", metavar="", dest="command", required=True)
         self.__init_install_parser()
         self.__init_delete_parser()
         self.__init_build_parser()
@@ -377,7 +375,7 @@ class Installer:
                     _rules = regex_util.match_rules([*jinja2ignore_rules], t.as_posix(), ".jinja2ignore {0}".format(self.__loop_namespaces.__name__))
                     role_output_file = role_output_path.joinpath(t.relative_to(role_path))
                     if not any(_rules.values()):
-                        file_util.write_text(role_output_file, template_util.Template(file_util.read_text(t)).render(**role_env),t.stat().st_mode)
+                        file_util.write_text(role_output_file, template_util.Template(file_util.read_text(t)).render(**role_env), t.stat().st_mode)
                     else:
                         file_util.copy(t, role_output_file)
 
