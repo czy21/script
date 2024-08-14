@@ -45,3 +45,4 @@ check_vms "$vm_ids"
 # close win
 vm_ids=`$esxi_host_cmd vim-cmd vmsvc/getallvms | awk 'NR!=1 {if ($2 == "win") print $1}' | xargs`
 close_vms "$vm_ids"
+check_vms "$vm_ids"
