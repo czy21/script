@@ -1,7 +1,5 @@
 #!/bin/bash
 
-LOG_TAG="watchcat.esxi"
-
 esxi_host_cmd="ssh esxi"
 
 function close_vms(){
@@ -9,10 +7,10 @@ function close_vms(){
         if `$esxi_host_cmd vim-cmd vmsvc/power.getstate $t | grep 'Powered on' -q`;then
             vm_name=`$esxi_host_cmd vim-cmd vmsvc/get.summary $t | grep name`
             if `$esxi_host_cmd vim-cmd vmsvc/get.summary $t | grep 'toolsOk' -q`;then
-              logger -t "${LOG_TAG}" "id: $t $vm_name power.shutdown"
+              logger -p daemon.info -t "watchcat[$$]" "id: $t $vm_name power.shutdown"
               $esxi_host_cmd vim-cmd vmsvc/power.shutdown $t
             else
-              logger -t "${LOG_TAG}" "id: $t $vm_name power.off"
+              logger -p daemon.info -t "watchcat[$$]" "id: $t $vm_name power.off"
               $esxi_host_cmd vim-cmd vmsvc/power.off $t
             fi
         fi
@@ -27,8 +25,10 @@ function check_vms(){
       for t in $1;do
         if `$esxi_host_cmd vim-cmd vmsvc/power.getstate $t | grep 'Powered on' -q`;then
           vms_off=false
+          break
         fi
       done
+      [ $vms_off == false ] && sleep 10s
     done
 }
 
