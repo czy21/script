@@ -10,16 +10,14 @@
     ca_dir={{ param_remote_role_path }}/ca
     tls_dir={{ param_remote_role_path }}/tls
     mkdir -p $tls_dir
-    openssl genrsa -out $tls_dir/server-key.pem 4096
-    openssl req -subj "/CN=server" -sha256 -new -key $tls_dir/server-key.pem -out $tls_dir/server.csr
+    openssl genrsa -out $tls_dir/server.key 4096
+    openssl req -subj "/CN=server" -new -key $tls_dir/server.key -out $tls_dir/server.csr
     echo "subjectAltName = IP:{{ param_ansible_host_ipv4 }},IP:127.0.0.1\nextendedKeyUsage = serverAuth" > $tls_dir/extfile.cnf
-    openssl x509 -req -days {{ param_docker_tls_days }} -sha256 -passin pass:{{ param_docker_tls_ca_password }} \
-      -in $tls_dir/server.csr -CA $ca_dir/ca.pem -CAkey $ca_dir/ca-key.pem -CAcreateserial \
-      -out $tls_dir/server-cert.pem -extfile $tls_dir/extfile.cnf
+    openssl x509 -req -days {{ param_docker_tls_days }} -in $tls_dir/server.csr -CA $ca_dir/ca.crt -CAkey $ca_dir/ca.key -CAcreateserial -out $tls_dir/server.crt -extfile $tls_dir/extfile.cnf
     sudo mkdir -p /etc/docker/
-    sudo cat {{ param_remote_role_path }}/daemon.json > /etc/docker/daemon.json
+    cat {{ param_remote_role_path }}/daemon.json | sudo tee /etc/docker/daemon.json > /dev/null
     sudo mkdir -p /etc/docker/tls/
-    sudo cp -rv $ca_dir/ca.pem $tls_dir/*.pem /etc/docker/tls/
+    sudo cp -rv $ca_dir/ca.crt $tls_dir/server.crt $tls_dir/server.key /etc/docker/tls/
   when: param_docker_tls_verify
   tags:
     - '{{ param_role_name }}'
@@ -28,7 +26,7 @@
 - name: install
   shell: |
     sudo mkdir -p /etc/docker/
-    sudo cat {{ param_remote_role_path }}/daemon.json > /etc/docker/daemon.json
+    cat {{ param_remote_role_path }}/daemon.json | sudo tee /etc/docker/daemon.json > /dev/null
     sudo mkdir -p /etc/systemd/system/docker.service.d/
     sudo tee /etc/systemd/system/docker.service.d/docker.conf <<-'EOF'
     [Service]
@@ -42,7 +40,7 @@
 - name: buildx
   shell: |
     sudo mkdir -p /etc/buildkit/
-    sudo cat {{ param_remote_role_path }}/buildkitd.toml > /etc/buildkit/buildkitd.toml
+    cat {{ param_remote_role_path }}/buildkitd.toml | sudo tee /etc/buildkit/buildkitd.toml > /dev/null
     sudo -u {{ ansible_user_id }} sh -c "docker buildx ls | grep 'container' -q && docker buildx rm container;docker buildx create --use --bootstrap --name container --driver docker-container --config /etc/buildkit/buildkitd.toml"
   tags:
     - '{{ param_role_name }}'
