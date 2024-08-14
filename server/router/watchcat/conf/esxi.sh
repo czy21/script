@@ -1,7 +1,7 @@
 #!/bin/bash
 
 esxi_host_cmd="ssh esxi"
-esxi_host_ip=`$esxi_host_cmd -G | grep '^hostname ' | sed 's|hostname ||g'`
+esxi_hostname=`$esxi_host_cmd -G | sed -n 's/^hostname \(.*\)/\1/p'`
 
 function check_vms(){
     vms_off=false
@@ -46,5 +46,6 @@ close_vms "$vm_ids"
 vm_ids=`$esxi_host_cmd vim-cmd vmsvc/getallvms | awk 'NR!=1 {if ($2 == "win") print $1}' | xargs`
 close_vms "$vm_ids"
 
-user_mail=`grep '^user ' /etc/msmtprc | sed 's|user ||g'`
-echo -e "Subject: Watchcat `basename $BASH_SOURCE`\n\nHostName: $esxi_host_ip vms closed" | msmtp -f "$user_mail" "$user_mail"
+# notify
+user_mail=`sed -n 's/^user \(.*\)/\1/p' /etc/msmtprc`
+echo -e "Subject: Watchcat `basename $BASH_SOURCE`\n\nHostName: $esxi_hostname vms closed" | msmtp $user_mail
