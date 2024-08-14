@@ -6,9 +6,9 @@
   "hosts": {{ hosts | to_json }},
 {% if param_docker_tls_verify %}
   "tlsverify": true,
-  "tlscacert": "/etc/docker/tls/ca.pem",
-  "tlscert": "/etc/docker/tls/server-cert.pem",
-  "tlskey": "/etc/docker/tls/server-key.pem",
+  "tlscacert": "/etc/docker/tls/ca.crt",
+  "tlscert": "/etc/docker/tls/server.crt",
+  "tlskey": "/etc/docker/tls/server.key",
 {% endif %}
   "data-root": "{{ param_docker_root }}",
   "exec-opts": ["native.cgroupdriver=systemd"],
