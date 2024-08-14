@@ -23,8 +23,11 @@ function check_vms(){
     vms_off=false
     while [ $vms_off == false ]
     do
+      vms_off=true
       for t in $1;do
-        vms_off=`$esxi_host_cmd vim-cmd vmsvc/power.getstate $t | grep 'Powered off' -q && echo true || echo false`
+        if `$esxi_host_cmd vim-cmd vmsvc/power.getstate $t | grep 'Powered on' -q`;then
+          vms_off=false
+        fi
       done
     done
 }
