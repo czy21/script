@@ -4,13 +4,13 @@
 - name: etcd of kubelet init
   shell: |
     sudo mkdir -p /etc/systemd/system/kubelet.service.d/
-    cat << EOF > /etc/systemd/system/kubelet.service.d/20-etcd-service-manager.conf
+    cat <<EOF | sudo tee /etc/systemd/system/kubelet.service.d/20-etcd-service-manager.conf
     [Service]
     ExecStart=
     ExecStart=/usr/bin/kubelet --address=127.0.0.1 --pod-manifest-path=/etc/kubernetes/manifests --container-runtime=remote --cgroup-driver=systemd --container-runtime-endpoint={{ param_cri_socket }}
     Restart=always
     EOF
     sudo mkdir -p /etc/kubernetes/
-    sudo cp -r {{ param_remote_role_path }}/{{ param_k8s_etcd_cluster_name }}/{{ inventory_hostname }}/pki/ /etc/kubernetes/
+    sudo cp -rv {{ param_remote_role_path }}/{{ param_k8s_etcd_cluster_name }}/{{ inventory_hostname }}/pki/ /etc/kubernetes/
     sudo systemctl daemon-reload && sudo systemctl restart kubelet && sudo systemctl status kubelet
     sudo kubeadm init phase etcd local --config={{ param_remote_role_path }}/{{ param_k8s_etcd_cluster_name }}/{{ inventory_hostname }}/kubeadm-config.yaml
