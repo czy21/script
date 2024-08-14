@@ -8,7 +8,6 @@ function check_vms(){
     do
       vms_off=true
       for t in $1;do
-        echo $t
         if `$esxi_host_cmd vim-cmd vmsvc/power.getstate $t | grep 'Powered on' -q`;then
           vms_off=false
           break
