@@ -2,6 +2,22 @@
 
 esxi_host_cmd="ssh esxi"
 
+function check_vms(){
+    vms_off=false
+    while [ $vms_off == false ]
+    do
+      vms_off=true
+      for t in $1;do
+        echo $t
+        if `$esxi_host_cmd vim-cmd vmsvc/power.getstate $t | grep 'Powered on' -q`;then
+          vms_off=false
+          break
+        fi
+      done
+      [ $vms_off == false ] && sleep 10s
+    done
+}
+
 function close_vms(){
     for t in $1;do
         if `$esxi_host_cmd vim-cmd vmsvc/power.getstate $t | grep 'Powered on' -q`;then
@@ -15,34 +31,17 @@ function close_vms(){
             fi
         fi
     done
-}
-
-function check_vms(){
-    vms_off=false
-    while [ $vms_off == false ]
-    do
-      vms_off=true
-      for t in $1;do
-        if `$esxi_host_cmd vim-cmd vmsvc/power.getstate $t | grep 'Powered on' -q`;then
-          vms_off=false
-          break
-        fi
-      done
-      [ $vms_off == false ] && sleep 10s
-    done
+    check_vms $@
 }
 
 # close node
 vm_ids=`$esxi_host_cmd vim-cmd vmsvc/getallvms | awk 'NR!=1 {if ($2 ~ "^node") print $1}' | xargs`
 close_vms "$vm_ids"
-check_vms "$vm_ids"
 
 # close other
 vm_ids=`$esxi_host_cmd vim-cmd vmsvc/getallvms | awk 'NR!=1 {if ($2 != "win" && $2 !~ "^node") print $1}' | xargs`
 close_vms "$vm_ids"
-check_vms "$vm_ids"
 
 # close win
 vm_ids=`$esxi_host_cmd vim-cmd vmsvc/getallvms | awk 'NR!=1 {if ($2 == "win") print $1}' | xargs`
 close_vms "$vm_ids"
-check_vms "$vm_ids"
