@@ -1,6 +1,7 @@
 #!/bin/bash
 
 esxi_host_cmd="ssh esxi"
+esxi_host_ip=`$esxi_host_cmd -G | grep '^hostname ' | sed 's|hostname ||g'`
 
 function check_vms(){
     vms_off=false
@@ -20,12 +21,12 @@ function check_vms(){
 function close_vms(){
     for t in $1;do
         if `$esxi_host_cmd vim-cmd vmsvc/power.getstate $t | grep 'Powered on' -q`;then
-            vm_name=`$esxi_host_cmd vim-cmd vmsvc/get.summary $t | grep name`
+            vm_name=`$esxi_host_cmd vim-cmd vmsvc/get.summary $t | grep 'name' | sed -e 's/[[:blank:]]//g' -e 's/,//g' -e 's/"//g'`
             if `$esxi_host_cmd vim-cmd vmsvc/get.summary $t | grep 'toolsOk' -q`;then
-              logger -p daemon.info -t "watchcat[$$]" "id: $t $vm_name power.shutdown"
+              logger -p daemon.info -t "watchcat[$$]" "id=$t $vm_name power.shutdown"
               $esxi_host_cmd vim-cmd vmsvc/power.shutdown $t
             else
-              logger -p daemon.info -t "watchcat[$$]" "id: $t $vm_name power.off"
+              logger -p daemon.info -t "watchcat[$$]" "id=$t $vm_name power.off"
               $esxi_host_cmd vim-cmd vmsvc/power.off $t
             fi
         fi
@@ -44,3 +45,6 @@ close_vms "$vm_ids"
 # close win
 vm_ids=`$esxi_host_cmd vim-cmd vmsvc/getallvms | awk 'NR!=1 {if ($2 == "win") print $1}' | xargs`
 close_vms "$vm_ids"
+
+user_mail=`grep '^user ' /etc/msmtprc | sed 's|user ||g'`
+echo -e "Subject: Watchcat `basename $BASH_SOURCE`\n\nHostName: $esxi_host_ip vms closed" | msmtp -f "$user_mail" "$user_mail"
