@@ -1,0 +1,1 @@
+{{ param_manage_username }}:{{ param_manage_password_htpasswd }}

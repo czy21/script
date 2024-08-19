@@ -45,14 +45,3 @@ http:
     drawio:
       rule: Host(`drawio.czy21-internal.com`)
       service: drawio@docker
-      
-
-  middlewares:
-    force-https-header:
-      headers:
-        customRequestHeaders:
-          X-Forwarded-Proto: "https"
-    https-redirect:
-      redirectScheme:
-        scheme: https
-        permanent: true
