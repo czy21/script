@@ -6,9 +6,6 @@ http:
     flink-his:
       rule: Host(`flink-his.czy21-internal.com`)
       service: flink-his@docker
-    ndisk:
-      rule: Host(`ndisk.czy21-internal.com`)
-      service: ndisk@docker
     es:
       rule: Host(`es.czy21-internal.com`)
       service: es-1@docker
@@ -18,9 +15,6 @@ http:
     influxdb:
       rule: Host(`influxdb.czy21-internal.com`)
       service: influxdb@docker
-    kafka-eagle:
-      rule: Host(`ke.czy21-internal.com`)
-      service: kafka-eagle@docker
     minio:
       rule: Host(`minio.czy21-internal.com`)
       service: minio-api@docker
@@ -30,9 +24,6 @@ http:
     chat2db:
       rule: Host(`chat2db.czy21-internal.com`)
       service: chat2db@docker
-    superset:
-      rule: Host(`superset.czy21-internal.com`)
-      service: superset@docker
     dbeaver:
       rule: Host(`dbeaver.czy21-internal.com`)
       service: dbeaver@docker
