@@ -3,3 +3,7 @@ http:
     portainer:
       rule: Host(`portainer.czy21-internal.com`)
       service: portainer@docker
+    vaultwarden:
+      rule: Host(`vaultwarden.czy21.com`)
+      service: vaultwarden@docker
+      

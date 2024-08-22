@@ -7,6 +7,7 @@
           url: http://grafana.czy21-internal.com
           username: {{ param_manage_username }}
           password: {{ param_manage_password }}
+          
     - traefik-base:
         icon: traefik.svg
         href: http://traefik-base.czy21-internal.com
@@ -31,22 +32,6 @@
         widget:
           type: prometheus
           url: http://prom-nas.czy21-internal.com
-    - portainer-nas:
-        icon: portainer.svg
-        href: http://portainer.czy21-internal.com
-        widget:
-          type: portainer
-          url: http://portainer.czy21-internal.com
-          env: 2
-          key: ptr_V8YZL+4evqMYaJBysM4nwBm2ZQjHAtKAjJSwz1dK0pc=
-    - portainer-test:
-        icon: portainer.svg
-        href: http://portainer.czy21-internal.com
-        widget:
-          type: portainer
-          url: http://portainer.czy21-internal.com
-          env: 3
-          key: ptr_V8YZL+4evqMYaJBysM4nwBm2ZQjHAtKAjJSwz1dK0pc=
 
 - media:
     - emby:
@@ -55,7 +40,7 @@
         widget:
           type: emby
           url: http://emby.czy21-internal.com
-          key: 639ee66c6f054f50822c171443cf4809
+          key: 71af2771093846ef9b7de89b17b5a5f7
     - qbittorrent:
         icon: qbittorrent.svg
         href: http://qb.czy21-internal.com
