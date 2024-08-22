@@ -25,6 +25,11 @@ x-traefik-prowlarr-label: &traefik-prowlarr-label
   traefik.http.routers.prowlarr.service: prowlarr
   traefik.http.services.prowlarr.loadbalancer.server.port: 9696
 
+x-traefik-flaresolverr-label: &traefik-flaresolverr-label
+  traefik.enable: true
+  traefik.http.routers.flaresolverr.service: flaresolverr
+  traefik.http.services.flaresolverr.loadbalancer.server.port: 8191
+
 x-traefik-bazarr-label: &traefik-bazarr-label
   traefik.enable: true
   traefik.http.routers.bazarr.service: bazarr
@@ -37,7 +42,7 @@ x-traefik-chinesesubfinder-label: &traefik-chinesesubfinder-label
 
 services:
   qbittorrent:
-    image: linuxserver/qbittorrent:4.5.4
+    image: linuxserver/qbittorrent:4.6.6
     container_name: qbittorrent
     labels:
       <<: *traefik-qbittorrent-label
@@ -54,7 +59,7 @@ services:
     restart: always
 
   jackett:
-    image: linuxserver/jackett:0.21.361
+    image: linuxserver/jackett:0.22.497
     container_name: jackett
     labels:
       <<: *traefik-jackett-label
@@ -68,7 +73,7 @@ services:
     restart: always
 
   radarr:
-    image: linuxserver/radarr:4.6.4
+    image: linuxserver/radarr:5.9.1
     container_name: radarr
     labels:
       <<: *traefik-radarr-label
@@ -82,7 +87,7 @@ services:
     restart: always
 
   sonarr:
-    image: linuxserver/sonarr:3.0.10
+    image: linuxserver/sonarr:4.0.8
     container_name: sonarr
     labels:
       <<: *traefik-sonarr-label
@@ -108,8 +113,20 @@ services:
       TZ: Asia/Shanghai
     restart: always
 
+  flaresolverr:
+    image: flaresolverr/flaresolverr:v3.3.21
+    container_name: flaresolverr
+    labels:
+      <<: *traefik-flaresolverr-label
+    environment:
+      LOG_LEVEL: "info"
+      LOG_HTML: "false"
+      CAPTCHA_SOLVER: "none"
+      TZ: Asia/Shanghai
+    restart: always
+
   bazarr:
-    image: linuxserver/bazarr:1.2.2
+    image: linuxserver/bazarr:1.4.3
     container_name: bazarr
     labels:
       <<: *traefik-bazarr-label
@@ -123,7 +140,7 @@ services:
     restart: always
 
   chinesesubfinder:
-    image: allanpk716/chinesesubfinder:v0.53.3
+    image: allanpk716/chinesesubfinder:v0.55.2
     container_name: chinesesubfinder
     labels:
       <<: *traefik-chinesesubfinder-label
