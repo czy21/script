@@ -1,5 +1,8 @@
 http:
   routers:
+    nginx-exporter:
+      rule: Host(`nginx-exporter-{{ param_cluster_name }}.czy21-internal.com`)
+      service: nginx-exporter@docker
     portainer:
       rule: Host(`portainer.czy21-internal.com`)
       service: portainer@docker
