@@ -10,6 +10,7 @@ providers:
 log:
   level: ERROR # DEBUG, PANIC, FATAL, ERROR, WARN, INFO
   filePath: /dev/stdout
+  maxSize: 10
 
 accessLog:
   filePath: /dev/stdout
@@ -20,8 +21,13 @@ api:
 entryPoints:
   web:
     address: :80
+    forwardedHeaders:
+      insecure: true
   websecure:
     address: :443
+    forwardedHeaders:
+      insecure: true
+      
   traefik:
     address: :8080
   metrics:
