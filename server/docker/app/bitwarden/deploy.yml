@@ -1,0 +1,104 @@
+version: "3.9"
+
+services:
+  web:
+    image: bitwarden/web:latest
+    container_name: bitwarden-web
+    restart: always
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/web/:/etc/bitwarden/web/
+    env_file:
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/env/global.env
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/env/uid.env
+
+  attachments:
+    image: bitwarden/attachments:latest
+    container_name: bitwarden-attachments
+    restart: always
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/core/attachments/:/etc/bitwarden/core/attachments/
+    env_file:
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/env/global.env
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/env/uid.env
+
+  api:
+    image: bitwarden/api:latest
+    container_name: bitwarden-api
+    restart: always
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/core/:/etc/bitwarden/core/
+      - {{ param_docker_data }}/{{ param_role_name }}/logs/api/:/etc/bitwarden/logs/
+    env_file:
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/env/global.env
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/env/uid.env
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/env/global.override.env
+
+  identity:
+    image: bitwarden/identity:latest
+    container_name: bitwarden-identity
+    restart: always
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/identity/:/etc/bitwarden/identity/
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/core/:/etc/bitwarden/core/
+      - {{ param_docker_data }}/{{ param_role_name }}/logs/identity/:/etc/bitwarden/logs/
+    env_file:
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/env/global.env
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/env/uid.env
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/env/global.override.env
+
+  sso:
+    image: bitwarden/sso:latest
+    container_name: bitwarden-sso
+    restart: always
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/identity/:/etc/bitwarden/identity/
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/core/:/etc/bitwarden/core/
+      - {{ param_docker_data }}/{{ param_role_name }}/logs/sso/:/etc/bitwarden/logs/
+    env_file:
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/env/global.env
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/env/uid.env
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/env/global.override.env
+
+  admin:
+    image: bitwarden/admin:latest
+    container_name: bitwarden-admin
+    restart: always
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/core/:/etc/bitwarden/core/
+      - {{ param_docker_data }}/{{ param_role_name }}/logs/admin/:/etc/bitwarden/logs/
+    env_file:
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/env/global.env
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/env/uid.env
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/env/global.override.env
+
+  icons:
+    image: bitwarden/icons:latest
+    container_name: bitwarden-icons
+    restart: always
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/logs/icons/:/etc/bitwarden/logs/
+    env_file:
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/env/global.env
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/env/uid.env
+
+  notifications:
+    image: bitwarden/notifications:latest
+    container_name: bitwarden-notifications
+    restart: always
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/logs/notifications/:/etc/bitwarden/logs/
+    env_file:
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/env/global.env
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/env/uid.env
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/env/global.override.env
+
+  events:
+    image: bitwarden/events:latest
+    container_name: bitwarden-events
+    restart: always
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/logs/events/:/etc/bitwarden/logs/
+    env_file:
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/env/global.env
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/env/uid.env
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/env/global.override.env
