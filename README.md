@@ -1,3 +1,9 @@
+# After Clone
+```shell
+git config filter.secret_param.clean 'sh .gitignore-secret_param.sh %f'
+git config filter.secret_param.smudge 'sh .gitignore-secret_param.sh %f'
+```
+
 # linux(Centos Stream 9,Ubuntu 22.04)
 ```
 jenkins             # ci/cd share library pipeline template

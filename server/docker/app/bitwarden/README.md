@@ -1,0 +1,1 @@
+## [Guide](https://bitwarden.com/help/install-on-premise-manual/){:target=_blank}
