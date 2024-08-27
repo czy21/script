@@ -1,5 +1,5 @@
 
-params=("param_mail_smtp_password" "param_vaultwarden_admin_token")
+params=("param_mail_smtp_password" "param_vaultwarden_admin_token" "param_user_ops_ssh_public_key")
 param_sed_args="sed "
 for t in ${params[@]};do
   param_sed_args+=" -e \"s|^\($t:\)\(.*\)|\1|\""
