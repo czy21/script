@@ -1,4 +1,4 @@
-# After Clone
+# Clone After
 ```shell
 git config filter.secret_param.clean 'sh .gitignore-secret_param.sh %f'
 git config filter.secret_param.smudge 'sh .gitignore-secret_param.sh %f'
