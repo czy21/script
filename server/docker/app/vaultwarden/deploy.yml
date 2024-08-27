@@ -18,10 +18,10 @@ services:
       SIGNUPS_ALLOWED: false
       DOMAIN: "{{ param_vaultwarden_domain }}"
       ADMIN_TOKEN: "{{ param_vaultwarden_admin_token }}"
-      SMTP_HOST: "{{ param_vaultwarden_smtp_host }}"
-      SMTP_FROM: "{{ param_vaultwarden_smtp_from }}"
-      SMTP_PORT: "{{ param_vaultwarden_smtp_port }}"
-      SMTP_SSL: "{{ param_vaultwarden_smtp_ssl }}"
-      SMTP_USERNAME: "{{ param_vaultwarden_smtp_username }}"
-      SMTP_PASSWORD: "{{ param_vaultwarden_smtp_password }}"
+      SMTP_HOST: "{{ param_mail_smtp_host }}"
+      SMTP_FROM: "{{ param_mail_smtp_username }}"
+      SMTP_PORT: "{{ param_mail_smtp_port }}"
+      SMTP_SSL: "true"
+      SMTP_USERNAME: "{{ param_mail_smtp_username }}"
+      SMTP_PASSWORD: "{{ param_mail_smtp_password }}"
     restart: always
