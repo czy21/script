@@ -33,4 +33,5 @@ services:
       globalSettings__mail__smtp__ssl: true
       globalSettings__mail__smtp__username: "{{ param_mail_smtp_username }}"
       globalSettings__mail__smtp__password: "{{ param_mail_smtp_password }}"
+      adminSettings__admins: "{{ param_mail_smtp_username }}"
     restart: always
