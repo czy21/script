@@ -371,7 +371,7 @@ class Installer:
                 file_util.write_text(role_env_output_file, yaml_util.dump(role_env))
                 role_env |= args.param
                 # process template
-                for t in filter(lambda f: f.is_file() and not any(regex_util.match_rules(["build/", "___temp/", role_env_file.name], f.as_posix()).values()), role_path.rglob("*")):
+                for t in filter(lambda f: f.is_file() and not any(regex_util.match_rules(["build", "___temp", role_env_file.name], f.as_posix()).values()), role_path.rglob("*")):
                     _rules = regex_util.match_rules([*jinja2ignore_rules], t.as_posix(), ".jinja2ignore {0}".format(self.__loop_namespaces.__name__))
                     role_output_file = role_output_path.joinpath(t.relative_to(role_path))
                     if not any(_rules.values()):
