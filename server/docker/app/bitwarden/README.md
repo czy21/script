@@ -1,1 +1,1 @@
-## [Guide](https://bitwarden.com/help/install-on-premise-manual/){:target=_blank}
+## [Guide](https://bitwarden.com/help/install-and-deploy-unified-beta){:target=_blank}
