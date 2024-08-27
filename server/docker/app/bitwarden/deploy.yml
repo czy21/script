@@ -1,104 +1,36 @@
 version: "3.9"
 
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 8080
+
 services:
-  web:
-    image: bitwarden/web:latest
-    container_name: bitwarden-web
-    restart: always
-    volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/web/:/etc/bitwarden/web/
-    env_file:
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/env/global.env
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/env/uid.env
 
-  attachments:
-    image: bitwarden/attachments:latest
-    container_name: bitwarden-attachments
-    restart: always
+  bitwarden:
+    image: bitwarden/self-host:2024.8.1-beta
+    container_name: bitwarden
+    labels:
+      <<: *traefik-label
     volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/core/attachments/:/etc/bitwarden/core/attachments/
-    env_file:
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/env/global.env
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/env/uid.env
-
-  api:
-    image: bitwarden/api:latest
-    container_name: bitwarden-api
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/etc/bitwarden/
+      - {{ param_docker_data }}/{{ param_role_name }}/logs/:/var/log/bitwarden/
+    environment:
+      PUID: 1000
+      PGID: 1000
+      BW_DOMAIN: bitwarden.czy21.com
+      BW_DB_PROVIDER: mysql
+      BW_DB_DATABASE: bitwarden_vault
+      BW_DB_SERVER: "{{ param_db_mysql_host }}"
+      BW_DB_PORT: "{{ param_db_mysql_port }}"
+      BW_DB_USERNAME: "{{ param_db_mysql_username }}"
+      BW_DB_PASSWORD: "{{ param_db_mysql_password }}"
+      BW_INSTALLATION_ID: 0cdbf50e-b964-4e05-a9b7-b1d80044fcba
+      BW_INSTALLATION_KEY: qEpXxKJiPjwETG4HmX2b
+      globalSettings__mail__replyToEmail: "{{ param_mail_smtp_username }}"
+      globalSettings__mail__smtp__host: "{{ param_mail_smtp_host }}"
+      globalSettings__mail__smtp__port: "{{ param_mail_smtp_port }}"
+      globalSettings__mail__smtp__ssl: true
+      globalSettings__mail__smtp__username: "{{ param_mail_smtp_username }}"
+      globalSettings__mail__smtp__password: "{{ param_mail_smtp_password }}"
     restart: always
-    volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/core/:/etc/bitwarden/core/
-      - {{ param_docker_data }}/{{ param_role_name }}/logs/api/:/etc/bitwarden/logs/
-    env_file:
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/env/global.env
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/env/uid.env
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/env/global.override.env
-
-  identity:
-    image: bitwarden/identity:latest
-    container_name: bitwarden-identity
-    restart: always
-    volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/identity/:/etc/bitwarden/identity/
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/core/:/etc/bitwarden/core/
-      - {{ param_docker_data }}/{{ param_role_name }}/logs/identity/:/etc/bitwarden/logs/
-    env_file:
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/env/global.env
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/env/uid.env
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/env/global.override.env
-
-  sso:
-    image: bitwarden/sso:latest
-    container_name: bitwarden-sso
-    restart: always
-    volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/identity/:/etc/bitwarden/identity/
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/core/:/etc/bitwarden/core/
-      - {{ param_docker_data }}/{{ param_role_name }}/logs/sso/:/etc/bitwarden/logs/
-    env_file:
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/env/global.env
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/env/uid.env
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/env/global.override.env
-
-  admin:
-    image: bitwarden/admin:latest
-    container_name: bitwarden-admin
-    restart: always
-    volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/core/:/etc/bitwarden/core/
-      - {{ param_docker_data }}/{{ param_role_name }}/logs/admin/:/etc/bitwarden/logs/
-    env_file:
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/env/global.env
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/env/uid.env
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/env/global.override.env
-
-  icons:
-    image: bitwarden/icons:latest
-    container_name: bitwarden-icons
-    restart: always
-    volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/logs/icons/:/etc/bitwarden/logs/
-    env_file:
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/env/global.env
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/env/uid.env
-
-  notifications:
-    image: bitwarden/notifications:latest
-    container_name: bitwarden-notifications
-    restart: always
-    volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/logs/notifications/:/etc/bitwarden/logs/
-    env_file:
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/env/global.env
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/env/uid.env
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/env/global.override.env
-
-  events:
-    image: bitwarden/events:latest
-    container_name: bitwarden-events
-    restart: always
-    volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/logs/events/:/etc/bitwarden/logs/
-    env_file:
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/env/global.env
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/env/uid.env
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/env/global.override.env
