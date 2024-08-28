@@ -4,8 +4,6 @@ kind: Ingress
 metadata:
   name: ingress
   namespace: ops
-  annotations:
-    nginx.ingress.kubernetes.io/ssl-redirect: "false"
 spec:
   rules:
     - host: prom-{{ .Values.param_cluster_name }}.czy21-internal.com
@@ -28,8 +26,3 @@ spec:
                   number: 8080
             path: /
             pathType: Prefix
-  tls:
-    - hosts:
-        - prom-{{ .Values.param_cluster_name }}.czy21-internal.com
-        - xxl-job-{{ .Values.param_cluster_name }}.czy21-internal.com
-      secretName: czy21-internal.com-secret
