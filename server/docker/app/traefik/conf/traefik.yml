@@ -10,7 +10,7 @@ providers:
 log:
   level: ERROR # DEBUG, PANIC, FATAL, ERROR, WARN, INFO
   filePath: /dev/stdout
-  maxSize: 10
+  maxAge: 7
 
 accessLog:
   filePath: /dev/stdout
