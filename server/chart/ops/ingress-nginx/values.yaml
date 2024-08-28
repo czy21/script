@@ -2,6 +2,8 @@ ingress-nginx:
   commonLabels:
     sidecar.istio.io/inject: "false"
   controller:
+    updateStrategy:
+      type: Recreate
     config:
       use-forwarded-headers: true
     nodeSelector:
