@@ -21,12 +21,6 @@ spec:
       - name: docker-cmd
         hostPath:
           path: /usr/bin/docker
-      - name: gradle-init
-        configMap:
-          name: {{ .Release.Name }}
-          items:
-          - key: init.gradle
-            path: init.gradle
       containers:
       - name: {{ .Release.Name }}
         image: jenkins/jenkins:lts-jdk11
@@ -43,9 +37,6 @@ spec:
           mountPath: /usr/bin/docker
         - name: data
           mountPath: /var/jenkins_home/
-        - name: gradle-init
-          mountPath: /var/jenkins_home/tools/gradle/init.gradle
-          subPath: init.gradle
   volumeClaimTemplates:
   - metadata:
       name: data
