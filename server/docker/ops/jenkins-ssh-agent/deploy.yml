@@ -3,7 +3,7 @@ version: "3.9"
 services:
 
   jenkins-ssh-agent:
-    image: {{ param_registry_url }}/{{ param_registry_dir }}/jenkins-ssh-agent
+    image: "{{ param_registry_url }}/{{ param_registry_dir }}/jenkins-ssh-agent:jdk17"
     pull_policy: always
     container_name: jenkins-ssh-agent
     privileged: true
