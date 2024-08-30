@@ -120,16 +120,18 @@ class DockerRole(share.AbstractRole):
                 })
                 role_readme = self.role_output_path.joinpath("README.md")
                 file_util.write_text(self.role_output_path.joinpath("doc.md"), md_content + "\n" + (file_util.read_text(role_readme) if role_readme.exists() else ""))
+                file_util.write_text(self.role_output_path.joinpath("version"), self.role_env.get("param_role_version", "latest"))
             self.sync_to_git_repo("docker")
         return _cmds
 
     def get_image_tag(self, registry_url, registry_dir, role_dockerfile):
-        registry_tag = path_util.join_path(
+        image_tag = path_util.join_path(
             registry_url, registry_dir,
             "-".join(filter(lambda d: d != "", [self.role_name, role_dockerfile.name.replace("Dockerfile", "").lower()])))
-        if self.args.tag:
-            registry_tag += ":" + self.args.tag
-        return registry_tag
+        image_version = self.args.tag if self.args.tag else self.role_env.get("param_role_version")
+        if image_version:
+            image_tag += ":" + image_version
+        return image_tag
 
     def delete(self) -> list[str]:
         _cmds = []
