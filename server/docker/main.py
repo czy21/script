@@ -103,7 +103,7 @@ class DockerRole(share.AbstractRole):
         if self.args.target == "doc":
             if self.any_doc_exclude(self.role_output_path):
                 registry_git_repo_raw_format = self.role_env.get("param_registry_git_repo_raw") + "/main/{0}/docker/{1}"
-                md_content = template_util.Template(file_util.read_text(self.root_doc_template_file)).render(**{
+                md_param = {
                     "param_registry_git_repo_dict": {t["name"]: "{}/{}/{}".format(t["url"], "tree/main", self.role_name) for t in self.role_env.get("param_registry_git_repos")},
                     "param_docker_dockerfiles": [
                         {
@@ -117,10 +117,12 @@ class DockerRole(share.AbstractRole):
                         "command": "docker-compose --project-name {0} --file deploy.yml up --detach --remove-orphans".format(self.role_env.get("param_role_project_name", self.role_name)),
                         "rawUrl": registry_git_repo_raw_format.format(self.role_name, self.role_deploy_file.name)
                     } if self.role_deploy_file.exists() else None
-                })
+                }
+                md_content = template_util.Template(file_util.read_text(self.root_doc_template_file)).render(**md_param)
                 role_readme = self.role_output_path.joinpath("README.md")
                 file_util.write_text(self.role_output_path.joinpath("doc.md"), md_content + "\n" + (file_util.read_text(role_readme) if role_readme.exists() else ""))
-                file_util.write_text(self.role_output_path.joinpath("version"), self.role_env.get("param_role_version", "latest"))
+                if md_param.get("param_docker_dockerfiles"):
+                    file_util.write_text(self.role_output_path.joinpath("image-version"), self.role_env.get("param_role_image_version", "latest"))
             self.sync_to_git_repo("docker")
         return _cmds
 
@@ -128,10 +130,8 @@ class DockerRole(share.AbstractRole):
         image_tag = path_util.join_path(
             registry_url, registry_dir,
             "-".join(filter(lambda d: d != "", [self.role_name, role_dockerfile.name.replace("Dockerfile", "").lower()])))
-        image_version = self.args.tag if self.args.tag else self.role_env.get("param_role_version")
-        if image_version:
-            image_tag += ":" + image_version
-        return image_tag
+        image_version = self.args.tag if self.args.tag else self.role_env.get("param_role_image_version")
+        return image_tag + ":" + image_version if image_version else "latest"
 
     def delete(self) -> list[str]:
         _cmds = []
