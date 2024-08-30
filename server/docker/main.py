@@ -131,7 +131,7 @@ class DockerRole(share.AbstractRole):
             registry_url, registry_dir,
             "-".join(filter(lambda d: d != "", [self.role_name, role_dockerfile.name.replace("Dockerfile", "").lower()])))
         image_version = self.args.tag if self.args.tag else self.role_env.get("param_role_image_version")
-        return image_tag + ":" + image_version if image_version else "latest"
+        return image_tag + ":" + (image_version if image_version else "latest")
 
     def delete(self) -> list[str]:
         _cmds = []
