@@ -16,7 +16,7 @@ services:
     expose:
       - "8081"
     volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/data/:/nexus-data/
+      - {{ param_docker_data }}/{{ param_role_name }}/data1/:/nexus-data/
     environment:
       INSTALL4J_ADD_VM_PARAMS: -Xms4G -Xmx4G -XX:MaxDirectMemorySize=6717M
       NEXUS_SECURITY_INITIAL_PASSWORD: "{{ param_manage_password }}"
