@@ -23,5 +23,8 @@ openssl genrsa -out ${tmp_generate}/{{ param_ssl_generate_domain }}.key 2048
 openssl req -new -key ${tmp_generate}/{{ param_ssl_generate_domain }}.key -out ${tmp_generate}/{{ param_ssl_generate_domain }}.csr -config ${openssl_cnf} -nodes -subj "/C=CN/ST=SH/L=SH/O=Home/OU=IT/CN={{ param_ssl_generate_domain }}"
 openssl ca -batch -notext -in ${tmp_generate}/{{ param_ssl_generate_domain }}.csr -out ${tmp_generate}/{{ param_ssl_generate_domain }}.crt -cert ${tmp_ca}/ca.crt -keyfile ${tmp_ca}/ca.key -config ${openssl_cnf} -extfile ${openssl_ext}
 
+cat ${tmp_generate}/{{ param_ssl_generate_domain }}.crt ${tmp_ca}/ca.crt > ${tmp_generate}/{{ param_ssl_generate_domain }}.pem
+
 openssl base64 -A -in ${tmp_generate}/{{ param_ssl_generate_domain }}.key -out ${tmp_generate}/{{ param_ssl_generate_domain }}.key.base64
 openssl base64 -A -in ${tmp_generate}/{{ param_ssl_generate_domain }}.crt -out ${tmp_generate}/{{ param_ssl_generate_domain }}.crt.base64
+openssl base64 -A -in ${tmp_generate}/{{ param_ssl_generate_domain }}.pem -out ${tmp_generate}/{{ param_ssl_generate_domain }}.pem.base64
