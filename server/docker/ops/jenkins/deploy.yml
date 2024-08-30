@@ -8,7 +8,7 @@ x-traefik-label: &traefik-label
 services:
 
   jenkins:
-    image: {{ param_registry_url }}/{{ param_registry_dir }}/jenkins
+    image: "{{ param_registry_url }}/{{ param_registry_dir }}/jenkins:jdk17"
     pull_policy: always
     container_name: jenkins
     privileged: true
