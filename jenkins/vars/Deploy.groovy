@@ -12,10 +12,11 @@ def call() {
                   kind: Pod
                   spec:
                     containers:
-                    - name: jnlp
-                      image: 'registry.czy21-internal.com/library/jenkins-inbound-agent'
-                      securityContext:
-                        runAsUser: 0
+                      - name: jnlp
+                        image: 'registry.czy21-internal.com/library/jenkins-inbound-agent'
+                        imagePullPolicy: Always
+                        securityContext:
+                          runAsUser: 0
         '''
             }
         }
