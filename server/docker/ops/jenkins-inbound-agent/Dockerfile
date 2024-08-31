@@ -5,11 +5,6 @@ RUN wget -O - https://get.helm.sh/helm-v{{ param_helm_version }}-linux-amd64.tar
 
 FROM jenkins/inbound-agent:3261.v9c670a_4748a_9-2-alpine-jdk17
 
-LABEL org.opencontainers.image.url='https://github.com/czy21/container'
-LABEL org.opencontainers.image.source='https://github.com/czy21/container/tree/main/jenkins-inbound-agent'
-LABEL org.opencontainers.image.title='base on jenkins/inbound-agent:3261.v9c670a_4748a_9-2-alpine-jdk17'
-LABEL org.opencontainers.image.authors='a805899926@gmail.com>'
-
 USER root
 
 COPY --from=builder /root/helm /usr/local/bin/helm
