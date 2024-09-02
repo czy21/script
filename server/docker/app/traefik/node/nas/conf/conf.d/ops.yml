@@ -1,5 +1,8 @@
 http:
   routers:
+    gitea:
+      rule: Host(`gitea.czy21-internal.com`)
+      service: gitea@docker
     nginx-exporter:
       rule: Host(`nginx-exporter-{{ param_cluster_name }}.czy21-internal.com`)
       service: nginx-exporter@docker

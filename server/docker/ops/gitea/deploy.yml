@@ -8,17 +8,17 @@ x-traefik-label: &traefik-label
 services:
 
   gitea:
-    image: gitea/gitea:1.20.5
+    image: gitea/gitea:1.22.1
     container_name: gitea
     labels:
       <<: *traefik-label
     privileged: true
+    user: root
     expose:
       - "3000"
       - "22"
     ports:
       - "2226:22"
-    user: root
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/data/
     environment:
@@ -29,7 +29,11 @@ services:
       GITEA__server__HTTP_PORT: "3000"
       GITEA__server__LANDING_PAGE: explore
       GITEA__security__INSTALL_LOCK: true
-      GITEA__database__DB_TYPE: sqlite3
+      GITEA__database__DB_TYPE: mysql
+      GITEA__database__NAME: gitea
+      GITEA__database__HOST: "{{ param_db_mysql_host }}:{{ param_db_mysql_port }}"
+      GITEA__database__USER: "{{ param_db_mysql_username }}"
+      GITEA__database__PASSWD: "{{ param_db_mysql_password }}"
       GITEA__service__DISABLE_REGISTRATION: true
       GITEA__packages__ENABLED: "true"
       GITEA__repository__DEFAULT_REPO_UNITS: repo.code,repo.releases
@@ -37,8 +41,4 @@ services:
       GITEA__attachment__MAX_SIZE: 1024
       GITEA__attachment__MAX_FILES: 20
       GITEA__webhook__ALLOWED_HOST_LIST: "*"
-    deploy:
-      resources:
-        limits:
-          memory: 2g
     restart: always
