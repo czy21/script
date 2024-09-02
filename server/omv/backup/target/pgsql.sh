@@ -11,7 +11,7 @@ mkdir -p $DB_BACKUP_DIR
 
 for t in $databases;do
   echo "pgsql backuping $t"
-  docker exec pgsql -e PGPASSWORD=$DB_PASSWORD pg_dump --username=$DB_USERNAME --dbname=$t | gzip > $DB_BACKUP_DIR/$t.gz
+  docker exec -e PGPASSWORD=$DB_PASSWORD pgsql pg_dump --username=$DB_USERNAME --dbname=$t | gzip > $DB_BACKUP_DIR/$t.gz
 done
 
 scp -r $DB_BACKUP_DIR dsm:/volume1/public/backup/
