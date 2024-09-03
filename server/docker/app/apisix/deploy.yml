@@ -1,0 +1,25 @@
+version: "3.9"
+
+services:
+
+  apisix:
+    image: apache/apisix
+    container_name: apisix
+    ports:
+      - "9180:9180/tcp"
+      - "9080:9080/tcp"
+      - "9091:9091/tcp"
+      - "9443:9443/tcp"
+      - "9098:9092/tcp"
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/apisix.yaml:/usr/local/apisix/conf/config.yaml
+    restart: always
+
+  apisix-dashboard:
+    image: apache/apisix-dashboard
+    container_name: apisix-dashboard
+    ports:
+      - "9078:80"
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/dashboard.yaml:/usr/local/apisix-dashboard/conf/conf.yaml
+    restart: always
