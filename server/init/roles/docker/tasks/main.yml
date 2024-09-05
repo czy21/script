@@ -37,16 +37,6 @@
   tags:
     - '{{ param_role_name }}'
 
-- name: buildx
-  shell: |
-    sudo mkdir -p /etc/buildkit/
-    sudo cp -rv {{ param_remote_role_path }}/buildkitd.toml /etc/buildkit/buildkitd.toml
-    sudo -u {{ ansible_user_id }} sh -c "docker buildx ls | grep 'container' -q && docker buildx rm container;docker buildx create --use --bootstrap --name container --driver docker-container --config /etc/buildkit/buildkitd.toml"
-  tags:
-    - '{{ param_role_name }}'
-    - '{{ param_role_name }}-buildx'
-    - '{{ param_role_name }}-plugin'
-
 - name: compose
   shell: |
     sudo mkdir -p /usr/local/lib/docker/cli-plugins/
