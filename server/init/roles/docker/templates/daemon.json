@@ -17,6 +17,11 @@
   "log-opts": {
     "max-size": "100m"
   },
-  "registry-mirrors": {{ param_registry_mirrors | to_json }},
-  "insecure-registries": {{ param_insecure_registries | to_json }}
+  "registry-mirrors": [
+    "http://{{ param_registry_proxy_url }}"
+  ],
+  "insecure-registries": [
+    "{{ param_registry_url }}",
+    "{{ param_registry_proxy_url }}"
+  ]
 }
