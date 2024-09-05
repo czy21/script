@@ -1,3 +1,2 @@
-param_docker_version: 27.2.0
 param_docker_add_repo: true
 param_docker_tls_verify: true

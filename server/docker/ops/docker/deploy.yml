@@ -3,7 +3,7 @@ version: "3.9"
 services:
 
   docker:
-    image: "docker:27.2.0-dind"
+    image: "docker:{{ param_docker_version }}-dind"
     pull_policy: always
     container_name: docker
     hostname: docker
