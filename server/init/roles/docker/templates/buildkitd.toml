@@ -1,7 +1,0 @@
-debug = false
-
-{% for t in param_insecure_registries %}
-[registry."{{ t }}"]
-  http = true
-
-{% endfor %}

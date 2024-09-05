@@ -37,7 +37,6 @@
           tags:
             - '{{ param_role_name }}'
             - '{{ param_role_name }}-tls'
-            - "{{ param_role_name }}-buildx"
             - "{{ param_role_name }}-compose"
             - "{{ param_role_name }}-plugin"
         - import_role:
@@ -47,7 +46,6 @@
           tags:
             - '{{ param_role_name }}'
             - '{{ param_role_name }}-tls'
-            - "{{ param_role_name }}-buildx"
             - "{{ param_role_name }}-compose"
             - "{{ param_role_name }}-plugin"
 
