@@ -19,11 +19,14 @@ services:
       - "50000:50000"
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/var/jenkins_home/
-      - /var/run/docker.sock:/var/run/docker.sock
+      - {{ param_docker_data }}/docker/conf/certs/:/certs/client
     environment:
       JENKINS_UC: https://mirrors.aliyun.com/jenkins/updates/update-center.json
       JENKINS_UC_EXPERIMENTAL: https://mirrors.aliyun.com/jenkins/updates/experimental/update-center.json
       JAVA_OPTS: "-Xverify:none"
+      DOCKER_HOST: tcp://docker:2376
+      DOCKER_CERT_PATH: /certs/client
+      DOCKER_TLS_VERIFY: 1
     deploy:
       resources:
         limits:

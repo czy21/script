@@ -1,0 +1,4 @@
+{
+    "registry-mirrors": ["http://registry-proxy.czy21-internal.com"],
+    "insecure-registries": ["registry.czy21-internal.com", "registry-proxy.czy21-internal.com"]
+}

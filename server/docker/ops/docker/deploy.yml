@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+
+  docker:
+    image: "docker:27.2.0-dind"
+    pull_policy: always
+    container_name: docker
+    hostname: docker
+    privileged: true
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/daemon.json:/etc/docker/daemon.json
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/certs/:/certs/client
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/var/lib/docker
+    environment:
+      DOCKER_TLS_CERTDIR: /certs
+    restart: always
