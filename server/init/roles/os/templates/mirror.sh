@@ -11,7 +11,7 @@ if [ "centos" = "${os_distribution}" ]; then
               r_bak="${r}.bak"
               [ ! -f "${r_bak}" ] && cp -rv ${r} ${r_bak}
             done
-            cp -r {{ param_remote_role_path }}/*.repo /etc/yum.repos.d/
+            cp -r {{ param_remote_role_path }}/centos*.repo /etc/yum.repos.d/
             ;;
         *)
           echo "unknown os_major_version"
@@ -30,6 +30,14 @@ if [ "rocky" = "${os_distribution}" ]; then
         *)
           echo "unknown os_major_version"
     esac
+fi
+
+if [ "fedora" = "${os_distribution}" ]; then
+    for r in `find /etc/yum.repos.d/ -maxdepth 1 -name "fedora*.repo"`;do
+      r_bak="${r}.bak"
+      [ ! -f "${r_bak}" ] && cp -rv ${r} ${r_bak}
+    done
+    cp -r {{ param_remote_role_path }}/fedora*.repo /etc/yum.repos.d/
 fi
 
 if [ "ubuntu" = "${os_distribution}" ]; then
