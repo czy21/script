@@ -14,7 +14,7 @@ services:
       {{- controller_quorum_voters.append(controller_quorum_voter) or '' }}
     {%- endfor %}
   {%- for i in range(1,param_mq_kafka_cluster_replicas | int + 1) %}
-    {%- set svc_port = param_db_kafka_cluster_start_port | int+i-1 %}
+    {%- set svc_port = param_mq_kafka_cluster_start_port | int+i-1 %}
   kafka-{{ i }}:
     <<: *kafka-common
     container_name: kafka-{{ i }}
