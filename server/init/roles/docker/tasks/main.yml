@@ -34,6 +34,8 @@
     ExecStart=/usr/bin/dockerd
     EOF
     sh {{ param_remote_role_path }}/{{ param_ansible_os_family }}.sh
+    sudo groupadd -f docker
+    sudo usermod -aG docker $USER
   tags:
     - '{{ param_role_name }}'
 
