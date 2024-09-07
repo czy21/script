@@ -3,7 +3,7 @@ set -e
 
 # docker
 sudo yum install -y yum-utils
-sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+sudo yum-config-manager --add-repo https://download.docker.com/linux/{{ param_ansible_distribution }}/docker-ce.repo
 
 if [ "{{ param_mirror_use_proxy | lower }}" = true ];then
   sudo cp -rv /etc/yum.repos.d/docker-ce.repo /etc/yum.repos.d/docker-ce.repo.bak
