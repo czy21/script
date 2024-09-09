@@ -9,7 +9,7 @@ for t in {{ param_docker_host_ips | join (" ")}};do
 
   openssl genrsa -out $t_dir/server.key 4096
   openssl req -subj "/CN=server" -new -key $t_dir/server.key -out $t_dir/server.csr
-  echo "subjectAltName = IP:$t,IP:127.0.0.1\nextendedKeyUsage = serverAuth" > $t_dir/extfile.cnf
+  echo "subjectAltName = DNS:localhost,IP:127.0.0.1,IP:$t\nextendedKeyUsage = serverAuth" > $t_dir/extfile.cnf
   openssl x509 -req -days {{ param_docker_tls_days }} -in $t_dir/server.csr -CA $tmp_ca/ca.crt -CAkey $tmp_ca/ca.key -CAcreateserial -out $t_dir/server.crt -extfile $t_dir/extfile.cnf
 done
 
