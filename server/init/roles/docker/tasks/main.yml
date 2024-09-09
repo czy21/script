@@ -12,7 +12,7 @@
     mkdir -p $tls_dir
     openssl genrsa -out $tls_dir/server.key 4096
     openssl req -subj "/CN=server" -new -key $tls_dir/server.key -out $tls_dir/server.csr
-    echo "subjectAltName = IP:{{ param_ansible_host_ipv4 }},IP:127.0.0.1\nextendedKeyUsage = serverAuth" > $tls_dir/extfile.cnf
+    echo "subjectAltName = DNS:localhost,IP:127.0.0.1,IP:{{ param_ansible_host_ipv4 }}\nextendedKeyUsage = serverAuth" > $tls_dir/extfile.cnf
     openssl x509 -req -days {{ param_docker_tls_days }} -in $tls_dir/server.csr -CA $ca_dir/ca.crt -CAkey $ca_dir/ca.key -CAcreateserial -out $tls_dir/server.crt -extfile $tls_dir/extfile.cnf
     sudo mkdir -p /etc/docker/
     sudo cp -rv {{ param_remote_role_path }}/daemon.json /etc/docker/daemon.json
