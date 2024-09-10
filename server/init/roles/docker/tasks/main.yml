@@ -5,6 +5,7 @@
     - '{{ param_role_name }}'
     - '{{ param_role_name }}-tls'
 
+# updated tls need execute sudo systemctl daemon-reload && sudo systemctl restart docker.service
 - name: tls
   shell: |
     ca_dir={{ param_remote_role_path }}/ca
