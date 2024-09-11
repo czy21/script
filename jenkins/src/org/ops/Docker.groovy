@@ -12,8 +12,10 @@ def build() {
             env.param_docker_build_args.split(",").each { t -> docker_build_cmd += " --build-arg $t" }
         }
         docker_push_cmd = "docker --config ${docker_config_dir} push ${docker_image_tag}"
-        docker_rmi_cmd = "docker rmi ${docker_image_tag} && docker rmi \$(docker image ls --filter reference=${env.param_release_image} --filter dangling=true --format {{.ID}}) || true"
+        docker_rmi_cmd = "docker rmi ${docker_image_tag}"
+        docker_rmi_none_dangling = "image_ids=\$(docker image ls --filter \"reference=${env.param_release_image}\" --filter dangling=true --format \"{{.ID}}\" | xargs);[ ! -z \"\$image_ids\" ] && docker rmi \$image_ids || true"
         sh "${docker_build_cmd} && ${docker_push_cmd} && ${docker_rmi_cmd}"
+        sh "${docker_rmi_none_dangling}"
     }
 }
 
