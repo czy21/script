@@ -13,7 +13,7 @@ def build() {
         }
         docker_push_cmd = "docker --config ${docker_config_dir} push ${docker_image_tag}"
         sh "${docker_build_cmd} && ${docker_push_cmd}"
-        sh "image_ids=$(docker image ls --filter \"reference=${env.param_release_image}\" --format \"{{.ID}}\");[ ! -z $image_ids ] && docker rmi $image_ids || true"
+        sh "image_ids=$(docker image ls --filter "reference=${env.param_release_image}" --format "{{.ID}}");[ ! -z $image_ids ] && docker rmi $image_ids || true"
     }
 }
 
