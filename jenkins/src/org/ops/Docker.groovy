@@ -12,7 +12,7 @@ def build() {
             env.param_docker_build_args.split(",").each { t -> docker_build_cmd += " --build-arg $t" }
         }
         docker_push_cmd = "docker --config ${docker_config_dir} push ${docker_image_tag}"
-        docker_rmi_cmd = "docker rmi \$(docker image ls --filter reference=${env.param_release_image} --format {{.ID}}) || true"
+        docker_rmi_cmd = "docker rmi ${env.param_release_image} || true"
         sh "${docker_build_cmd} && ${docker_push_cmd} && ${docker_rmi_cmd}"
     }
 }
