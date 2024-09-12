@@ -16,3 +16,12 @@ param_etcd_external_endpoints:
 param_etcd_external_ca_file: "/etc/kubernetes/pki/etcd/ca.crt"
 param_etcd_external_cert_file: "/etc/kubernetes/pki/apiserver-etcd-client.crt"
 param_etcd_external_key_file: "/etc/kubernetes/pki/apiserver-etcd-client.key"
+
+param_vsphere_k8s_fcos_ova: /volume1/public/dev/coreos/fedora-coreos-40.20240808.3.0-vmware.x86_64.ova
+
+param_vsphere_k8s_coreos_network_gateway: 192.168.2.2
+param_vsphere_k8s_coreos_network_ips:
+  - name: fcos34
+    ip: 192.168.2.34
+    
+    
