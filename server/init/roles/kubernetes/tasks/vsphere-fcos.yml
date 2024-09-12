@@ -15,7 +15,7 @@
     {
       "NetworkMapping": [
         {
-          "Name": "{{ param_vsphere_network }}",
+          "Name": "bridged",
           "Network": "{{ param_vsphere_network }}"
         }
       ]
