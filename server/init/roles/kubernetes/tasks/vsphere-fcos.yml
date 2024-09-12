@@ -1,0 +1,26 @@
+- name: fcos build
+  file: path={{ role_path }}/build state=directory mode=0777
+
+- name: fcos build ignition.yml
+  template: src=fcos-ignition.yml dest={{ role_path }}/build/fcos-ignition-{{ item.name }}.yml
+  with_items: "{{ param_vsphere_k8s_coreos_network_ips }}"
+
+- name: fcos build ignition.json
+  shell: cat {{ role_path }}/build/fcos-ignition-{{ item.name }}.yml | docker run --rm -i coreos/butane:release > {{ role_path }}/build/fcos-ignition-{{ item.name }}.json
+  with_items: "{{ param_vsphere_k8s_coreos_network_ips }}"
+
+- name: fcos create
+  shell: |
+    GOVC_INSECURE=true govc import.ova -u '{{ param_vsphere_uri }}' -ds={{ param_vsphere_datastore }} -name {{ item.name }} -options - {{ param_vsphere_k8s_fcos_ova }} <<EOF
+    {
+      "NetworkMapping": [
+        {
+          "Name": "{{ param_vsphere_network }}",
+          "Network": "{{ param_vsphere_network }}"
+        }
+      ]
+    }
+    EOF
+    GOVC_INSECURE=true govc vm.change -u '{{ param_vsphere_uri }}' -vm {{ item.name }} -e "guestinfo.ignition.config.data.encoding=base64"
+    GOVC_INSECURE=true govc vm.change -u '{{ param_vsphere_uri }}' -vm {{ item.name }} -e "guestinfo.ignition.config.data=$(cat {{ role_path }}/build/fcos-ignition-{{ item.name }}.json | base64 --wrap=0)"
+  with_items: "{{ param_vsphere_k8s_coreos_network_ips }}"

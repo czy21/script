@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo -n "%wheel  ALL=(ALL)       ALL" > /etc/sudoers.d/99-custom
+echo -n "%wheel ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers.d/99-custom
 
 yum clean all && yum --refresh makecache -v
 
