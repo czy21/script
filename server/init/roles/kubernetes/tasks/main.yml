@@ -3,11 +3,6 @@
   tags:
     - 'k8s'
 
-- name: k8s vSphere Fedora Core OS
-  import_tasks: vsphere-fcos.yml
-  tags:
-    - 'k8s-vsphere-fcos'
-
 - name: ha init
   import_tasks: ha-init.yml
   tags:
