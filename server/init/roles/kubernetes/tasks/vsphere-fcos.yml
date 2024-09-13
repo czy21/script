@@ -11,16 +11,13 @@
 
 - name: fcos create
   shell: |
-    GOVC_INSECURE=true govc import.ova -u '{{ param_vsphere_uri }}' -ds={{ param_vsphere_datastore }} -name {{ item.name }} -options - {{ param_vsphere_k8s_fcos_ova }} <<EOF
-    {
-      "NetworkMapping": [
-        {
-          "Name": "bridged",
-          "Network": "{{ param_vsphere_network }}"
-        }
-      ]
-    }
-    EOF
-    GOVC_INSECURE=true govc vm.change -u '{{ param_vsphere_uri }}' -vm {{ item.name }} -e "guestinfo.ignition.config.data.encoding=base64"
-    GOVC_INSECURE=true govc vm.change -u '{{ param_vsphere_uri }}' -vm {{ item.name }} -e "guestinfo.ignition.config.data=$(cat {{ role_path }}/build/fcos-ignition-{{ item.name }}.json | base64 --wrap=0)"
+    {{ param_vsphere_ovftool_home }}/ovftool --noSSLVerify --powerOffTarget \
+    --name={{ item.name }} \
+    --datastore={{ param_vsphere_datastore }} \
+    --net:"VM Network={{ param_vsphere_network }}" \
+    --allowExtraConfig \
+    --extraConfig:guestinfo.ignition.config.data.encoding=base64 \
+    --extraConfig:guestinfo.ignition.config.data=$(cat {{ role_path }}/build/fcos-ignition-{{ item.name }}.json | base64 --wrap=0) \
+    --extraConfig:guestinfo.afterburn.initrd.network-kargs=ip={{ item.ip }}::{{ param_vsphere_k8s_coreos_network_gateway }}:255.255.255.0:{{ item.name }}:ens192:off:{{ param_vsphere_k8s_coreos_network_gateway }} \
+    {{ param_vsphere_k8s_fcos_ova }} 'vi:///{{ param_vsphere_uri }}'
   with_items: "{{ param_vsphere_k8s_coreos_network_ips }}"

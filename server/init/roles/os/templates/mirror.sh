@@ -19,25 +19,21 @@ if [ "centos" = "${os_distribution}" ]; then
 fi
 
 if [ "rocky" = "${os_distribution}" ]; then
-    case ${os_major_version} in
-        "9")
-            for r in `find /etc/yum.repos.d/ -maxdepth 1 -name "rocky*.repo"`;do
-              r_bak="${r}.bak"
-              [ ! -f "${r_bak}" ] && cp -rv ${r} ${r_bak}
-              sed -e 's|^mirrorlist=|#mirrorlist=|g' -e 's|^#baseurl=http://dl.rockylinux.org/$contentdir|baseurl=http://{{ param_mirror_yum }}/rocky|g' ${r_bak} | tee ${r} > /dev/null
-            done
-            ;;
-        *)
-          echo "unknown os_major_version"
-    esac
+    for r in `find /etc/yum.repos.d/ -maxdepth 1 -name "rocky*.repo"`;do
+      r_bak="${r}.bak"
+      [ ! -f "${r_bak}" ] && cp -rv ${r} ${r_bak}
+      sed -e 's|^mirrorlist=|#\0|g' -e "s|^#baseurl=http://dl.rockylinux.org/\$contentdir|baseurl=http://{{ param_mirror_yum }}/${os_distribution}|g" ${r_bak} | tee ${r} > /dev/null
+    done
 fi
 
 if [ "fedora" = "${os_distribution}" ]; then
-    for r in `find /etc/yum.repos.d/ -maxdepth 1 -name "fedora*.repo"`;do
+    for r in `find /etc/yum.repos.d/ -maxdepth 1 ! -name "fedora-cisco*.repo" -name "fedora*.repo"`;do
       r_bak="${r}.bak"
       [ ! -f "${r_bak}" ] && cp -rv ${r} ${r_bak}
+      sed -e "s|^metalink=|#\0|g" \
+          -e "s|#baseurl=http://download.example/pub/fedora/linux|baseurl=http://{{ param_mirror_yum }}/${os_distribution}|" \
+          -e "s|/SRPMS/|/source/tree/|" ${r_bak} | tee ${r} > /dev/null
     done
-    cp -r {{ param_remote_role_path }}/fedora*.repo /etc/yum.repos.d/
 fi
 
 if [ "ubuntu" = "${os_distribution}" ]; then
