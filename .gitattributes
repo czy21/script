@@ -1,1 +1,1 @@
-env*.yaml filter=secret_param
+env*.y*ml filter=secret_param
