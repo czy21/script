@@ -8,7 +8,6 @@ baseurl=https://pkgs.k8s.io/core:/stable:/v{{ param_k8s_minor_version }}/rpm/
 enabled=1
 gpgcheck=1
 gpgkey=https://pkgs.k8s.io/core:/stable:/v{{ param_k8s_minor_version }}/rpm/repodata/repomd.xml.key
-exclude=kubelet kubeadm kubectl kubernetes-cni
 EOF
 cat <<EOF | sudo tee /etc/yum.repos.d/cri-o.repo
 [cri-o]
@@ -26,5 +25,5 @@ if [ "{{ param_mirror_use_proxy | lower }}" = true ];then
   sed -e "s|https://pkgs.k8s.io|http://{{ param_mirror_k8s }}|g" /etc/yum.repos.d/cri-o.repo.bak | sudo tee /etc/yum.repos.d/cri-o.repo > /dev/null
 fi
 
-sudo yum install -y cri-o cri-tools kubelet-{{ param_k8s_patch_version }} kubeadm-{{ param_k8s_patch_version }} kubectl-{{ param_k8s_patch_version }} --disableexcludes=kubernetes
+sudo yum install -y cri-o cri-tools kubelet-{{ param_k8s_patch_version }} kubeadm-{{ param_k8s_patch_version }} kubectl-{{ param_k8s_patch_version }}
 sudo systemctl enable crio kubelet --now
