@@ -2,15 +2,22 @@
   assert:
     that: param_user_ops_ssh_public_key | trim != ""
     fail_msg: param_user_ops_ssh_public_key is empty
+  tags:
+    - "os"
 
 - name: mirror
   shell: sh {{ param_remote_role_path }}/mirror.sh
   when: param_mirror_use_proxy
+  tags:
+    - "os"
+    - "os-mirror"
 
 - name: install
   shell: |-
     timedatectl set-timezone Asia/Shanghai
     sh {{ param_remote_role_path }}/{{ param_ansible_os_family }}.sh
+  tags:
+    - "os"
 
 - name: sshd_config
   shell: |-
@@ -20,3 +27,6 @@
     PasswordAuthentication no
     ClientAliveInterval 30
     EOF
+  tags:
+    - "os"
+    - "os-sshd"

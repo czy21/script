@@ -1,6 +1,6 @@
 - name: fcos vsphere create
   shell: |
-    {{ param_vsphere_ovftool_home }}/ovftool --noSSLVerify --powerOffTarget \
+    ovftool --noSSLVerify --powerOffTarget --skipManifestCheck \
     --name={{ item.name }} \
     --datastore={{ param_vsphere_datastore }} \
     --net:"VM Network={{ param_vsphere_network }}" \
