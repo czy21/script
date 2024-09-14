@@ -6,11 +6,18 @@
   tasks:
     - block:
         - import_tasks: roles/common/tasks/copy.yml
+          tags:
+            - "os"
+            - "os-mirror"
+            - "os-sshd"
         - import_role:
             name: '{{ param_role_name }}'
       always:
         - import_tasks: roles/common/tasks/clean.yml
-      tags: ['{{ param_role_name }}']
+          tags:
+            - "os"
+            - "os-mirror"
+            - "os-sshd"
 
 - name: hosts
   hosts: all
