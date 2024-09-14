@@ -1,0 +1,87 @@
+variant: fcos
+version: 1.5.0
+passwd:
+  users:
+    - name: {{ param_user_ops }}
+      ssh_authorized_keys:
+        - {{ param_user_ops_ssh_public_key }}
+      groups:
+        - wheel
+        - docker
+
+systemd:
+  units:
+    - name: rpm-ostree-install-vim.service
+      enabled: true
+      contents: |
+        [Unit]
+        Description=Layer vim with rpm-ostree
+        Wants=network-online.target
+        After=network-online.target
+        # We run before `zincati.service` to avoid conflicting rpm-ostree
+        # transactions.
+        Before=zincati.service
+        ConditionPathExists=!/var/lib/%N.stamp
+
+        [Service]
+        Type=oneshot
+        RemainAfterExit=yes
+        # `--allow-inactive` ensures that rpm-ostree does not return an error
+        # if the package is already installed. This is useful if the package is
+        # added to the root image in a future Fedora CoreOS release as it will
+        # prevent the service from failing.
+        ExecStart=sh /etc/yum.repos.d/mirror.sh
+        ExecStart=/usr/bin/rpm-ostree install -y --allow-inactive vim wget python3 cri-o kubelet-{{ param_k8s_patch_version }} kubeadm-{{ param_k8s_patch_version }} kubectl-{{ param_k8s_patch_version }}
+        ExecStart=/bin/touch /var/lib/%N.stamp
+        ExecStart=/bin/systemctl --no-block reboot
+
+        [Install]
+        WantedBy=multi-user.target
+
+storage:
+  files:
+    - path: /etc/yum.repos.d/mirror.sh
+      contents:
+        inline: |
+          if [ "{{ param_mirror_use_proxy | lower }}" = true ];then
+            # os
+            for r in `find /etc/yum.repos.d/ -maxdepth 1 ! -name "fedora-cisco*.repo" -name "fedora*.repo"`;do
+              r_bak="${r}.bak"
+              [ ! -f "${r_bak}" ] && cp -rv ${r} ${r_bak}
+              sed -e "s|^metalink=|#\0|g" \
+                  -e "s|#baseurl=http://download.example/pub/fedora/linux|baseurl=http://{{ param_mirror_yum }}/fedora|" \
+                  -e "s|/SRPMS/|/source/tree/|" ${r_bak} | tee ${r} > /dev/null
+            done
+            # kubernetes
+            cp -rv /etc/yum.repos.d/kubernetes.repo /etc/yum.repos.d/kubernetes.repo.bak
+            sed -e "s|https://pkgs.k8s.io|http://{{ param_mirror_k8s }}|g" -e "s|^\(gpgcheck\).*|\1=0|" /etc/yum.repos.d/kubernetes.repo.bak | tee /etc/yum.repos.d/kubernetes.repo > /dev/null
+          fi
+    - path: /etc/profile.d/99-default-editor.sh
+      overwrite: true
+      contents:
+        inline: |
+          export EDITOR=vim
+    - path: /etc/sudoers.d/99-custom
+      contents:
+        inline: |
+          %wheel ALL=(ALL:ALL) NOPASSWD:ALL
+    - path: /etc/yum.repos.d/kubernetes.repo
+      contents:
+        inline: |
+          {{ lookup('ansible.builtin.template', '../kubernetes/templates/k8s.repo') | indent(10) }}
+    - path: /etc/containers/registries.conf.d/99-custom.conf
+      contents:
+        inline: |
+          {{ lookup('ansible.builtin.template', '../kubernetes/templates/crio-registries.conf') | indent(10) }}
+    - path: /etc/crio/crio.conf.d/99-custom.conf
+      contents:
+        inline: |
+          {{ lookup('ansible.builtin.template', '../kubernetes/templates/crio.conf') | indent(10)}}
+    - path: /etc/modules-load.d/k8s.conf
+      contents:
+        inline: |
+          {{ lookup('ansible.builtin.template', '../kubernetes/templates/k8s-modules.conf') | indent(10)}}
+    - path: /etc/sysctl.d/k8s.conf
+      contents:
+        inline: |
+          {{ lookup('ansible.builtin.template', '../kubernetes/templates/k8s-sysctl.conf') | indent(10)}}

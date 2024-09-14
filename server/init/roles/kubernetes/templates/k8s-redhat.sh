@@ -1,14 +1,7 @@
 #!/bin/bash
 set -e
 
-cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
-[kubernetes]
-name=Kubernetes
-baseurl=https://pkgs.k8s.io/core:/stable:/v{{ param_k8s_minor_version }}/rpm/
-enabled=1
-gpgcheck=1
-gpgkey=https://pkgs.k8s.io/core:/stable:/v{{ param_k8s_minor_version }}/rpm/repodata/repomd.xml.key
-EOF
+cat {{ param_remote_role_path }}/k8s.repo | sudo tee /etc/yum.repos.d/kubernetes.repo
 cat <<EOF | sudo tee /etc/yum.repos.d/cri-o.repo
 [cri-o]
 name=CRI-O

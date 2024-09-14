@@ -22,7 +22,7 @@ if [ "rocky" = "${os_distribution}" ]; then
     for r in `find /etc/yum.repos.d/ -maxdepth 1 -name "rocky*.repo"`;do
       r_bak="${r}.bak"
       [ ! -f "${r_bak}" ] && cp -rv ${r} ${r_bak}
-      sed -e 's|^mirrorlist=|#\0|g' -e "s|^#baseurl=http://dl.rockylinux.org/\$contentdir|baseurl=http://{{ param_mirror_yum }}/${os_distribution}|g" ${r_bak} | tee ${r} > /dev/null
+      sed -e 's|^mirrorlist=|#\0|g' -e "s|^#baseurl=http://dl.rockylinux.org/\$contentdir|baseurl=http://{{ param_mirror_yum }}/rocky|g" ${r_bak} | tee ${r} > /dev/null
     done
 fi
 
@@ -31,7 +31,7 @@ if [ "fedora" = "${os_distribution}" ]; then
       r_bak="${r}.bak"
       [ ! -f "${r_bak}" ] && cp -rv ${r} ${r_bak}
       sed -e "s|^metalink=|#\0|g" \
-          -e "s|#baseurl=http://download.example/pub/fedora/linux|baseurl=http://{{ param_mirror_yum }}/${os_distribution}|" \
+          -e "s|#baseurl=http://download.example/pub/fedora/linux|baseurl=http://{{ param_mirror_yum }}/fedora|" \
           -e "s|/SRPMS/|/source/tree/|" ${r_bak} | tee ${r} > /dev/null
     done
 fi
