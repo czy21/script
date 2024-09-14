@@ -146,7 +146,10 @@
 
 - name: vm
   hosts: all
-  vars_files: ["vars/env.yml","vars/main.yml"]
+  vars_files: 
+    - "vars/env.yml"
+    - "vars/main.yml"
+    - "roles/kubernetes/vars/main.yml"
   vars:
     param_role_name: vm
   tasks:
@@ -156,5 +159,5 @@
             name: '{{ param_role_name }}'
       always:
         - import_tasks: roles/common/tasks/clean.yml
-      tags: 
+      tags:
         - 'vm-fcos-vsphere'

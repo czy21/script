@@ -2,9 +2,6 @@ variant: fcos
 version: 1.5.0
 passwd:
   users:
-    - name: root
-      ssh_authorized_keys:
-        - {{ param_user_ops_ssh_public_key }}
     - name: {{ param_user_ops }}
       ssh_authorized_keys:
         - {{ param_user_ops_ssh_public_key }}
@@ -33,6 +30,7 @@ systemd:
         # if the package is already installed. This is useful if the package is
         # added to the root image in a future Fedora CoreOS release as it will
         # prevent the service from failing.
+        ExecStart=sh /etc/yum.repos.d/mirror.sh
         ExecStart=/usr/bin/rpm-ostree install -y --allow-inactive vim wget python3
         ExecStart=/bin/touch /var/lib/%N.stamp
         ExecStart=/bin/systemctl --no-block reboot
@@ -42,6 +40,18 @@ systemd:
 
 storage:
   files:
+    - path: /etc/yum.repos.d/mirror.sh
+      contents:
+        inline: |
+          if [ "{{ param_mirror_use_proxy | lower }}" = true ];then
+            for r in `find /etc/yum.repos.d/ -maxdepth 1 ! -name "fedora-cisco*.repo" -name "fedora*.repo"`;do
+              r_bak="${r}.bak"
+              [ ! -f "${r_bak}" ] && cp -rv ${r} ${r_bak}
+              sed -e "s|^metalink=|#\0|g" \
+                  -e "s|#baseurl=http://download.example/pub/fedora/linux|baseurl=http://{{ param_mirror_yum }}/fedora|" \
+                  -e "s|/SRPMS/|/source/tree/|" ${r_bak} | tee ${r} > /dev/null
+            done
+          fi
     - path: /etc/profile.d/99-default-editor.sh
       overwrite: true
       contents:

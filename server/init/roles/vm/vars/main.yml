@@ -1,5 +1,6 @@
 param_vm_fcos_vsphere_ova: /volume1/public/dev/coreos/fedora-coreos-40.20240808.3.0-vmware.x86_64.ova
 
+param_vm_ignition_target: k8s # os k8s
 param_vm_network_gateway: 192.168.2.2
 param_vm_network_ips:
   - name: fcos34
