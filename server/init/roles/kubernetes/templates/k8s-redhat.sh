@@ -9,7 +9,8 @@ enabled=1
 gpgcheck=1
 gpgkey=https://pkgs.k8s.io/core:/stable:/v{{ param_k8s_minor_version }}/rpm/repodata/repomd.xml.key
 EOF
-cat <<EOF | sudo tee /etc/yum.repos.d/cri-o.repo
+
+type yum &> /dev/null && cat <<EOF | sudo tee /etc/yum.repos.d/cri-o.repo
 [cri-o]
 name=CRI-O
 baseurl=https://pkgs.k8s.io/addons:/cri-o:/stable:/v{{ param_k8s_minor_version }}/rpm/
@@ -19,11 +20,14 @@ gpgkey=https://pkgs.k8s.io/addons:/cri-o:/stable:/v{{ param_k8s_minor_version }}
 EOF
 
 if [ "{{ param_mirror_use_proxy | lower }}" = true ];then
-  sudo cp -rv /etc/yum.repos.d/kubernetes.repo /etc/yum.repos.d/kubernetes.repo.bak
-  sed -e "s|https://pkgs.k8s.io|http://{{ param_mirror_k8s }}|g" /etc/yum.repos.d/kubernetes.repo.bak | sudo tee /etc/yum.repos.d/kubernetes.repo > /dev/null
-  sudo cp -rv /etc/yum.repos.d/cri-o.repo /etc/yum.repos.d/cri-o.repo.bak
-  sed -e "s|https://pkgs.k8s.io|http://{{ param_mirror_k8s }}|g" /etc/yum.repos.d/cri-o.repo.bak | sudo tee /etc/yum.repos.d/cri-o.repo > /dev/null
+  [ -f "/etc/yum.repos.d/kubernetes.repo" ] \
+    && sudo cp -rv /etc/yum.repos.d/kubernetes.repo /etc/yum.repos.d/kubernetes.repo.bak \
+    && sed -e "s|https://pkgs.k8s.io|http://{{ param_mirror_k8s }}|g" /etc/yum.repos.d/kubernetes.repo.bak | sudo tee /etc/yum.repos.d/kubernetes.repo > /dev/null
+  [ -f "/etc/yum.repos.d/cri-o.repo" ] \
+    && sudo cp -rv /etc/yum.repos.d/cri-o.repo /etc/yum.repos.d/cri-o.repo.bak \
+    && sed -e "s|https://pkgs.k8s.io|http://{{ param_mirror_k8s }}|g" /etc/yum.repos.d/cri-o.repo.bak | sudo tee /etc/yum.repos.d/cri-o.repo > /dev/null
 fi
 
-sudo yum install -y cri-o cri-tools kubelet-{{ param_k8s_patch_version }} kubeadm-{{ param_k8s_patch_version }} kubectl-{{ param_k8s_patch_version }}
+type yum &> /dev/null && sudo yum install -y cri-o cri-tools kubelet-{{ param_k8s_patch_version }} kubeadm-{{ param_k8s_patch_version }} kubectl-{{ param_k8s_patch_version }}
+type yum &> /dev/null || rpm-ostree install cri-o cri-tools kubelet-{{ param_k8s_patch_version }} kubeadm-{{ param_k8s_patch_version }} kubectl-{{ param_k8s_patch_version }}
 sudo systemctl enable crio kubelet --now

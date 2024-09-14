@@ -33,7 +33,7 @@ systemd:
         # if the package is already installed. This is useful if the package is
         # added to the root image in a future Fedora CoreOS release as it will
         # prevent the service from failing.
-        ExecStart=/usr/bin/rpm-ostree install -y --allow-inactive vim python3
+        ExecStart=/usr/bin/rpm-ostree install -y --allow-inactive vim wget python3
         ExecStart=/bin/touch /var/lib/%N.stamp
         ExecStart=/bin/systemctl --no-block reboot
 
