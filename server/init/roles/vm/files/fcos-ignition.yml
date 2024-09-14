@@ -1,0 +1,16 @@
+variant: fcos
+version: 1.5.0
+passwd:
+  users:
+    - name: {{ param_user_ops }}
+      ssh_authorized_keys:
+        - {{ param_user_ops_ssh_public_key }}
+      groups:
+        - wheel
+        - docker
+storage:
+  files:
+    - path: /etc/sudoers.d/99-custom
+      contents:
+        inline: |
+          %wheel ALL=(ALL:ALL) NOPASSWD:ALL

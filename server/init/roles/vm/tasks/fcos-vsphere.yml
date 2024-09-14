@@ -1,0 +1,12 @@
+- name: fcos vsphere create
+  shell: |
+    {{ param_vsphere_ovftool_home }}/ovftool --noSSLVerify --powerOffTarget \
+    --name={{ item.name }} \
+    --datastore={{ param_vsphere_datastore }} \
+    --net:"VM Network={{ param_vsphere_network }}" \
+    --allowExtraConfig \
+    --extraConfig:guestinfo.ignition.config.data.encoding=base64 \
+    --extraConfig:guestinfo.ignition.config.data=$(cat {{ role_path }}/build/fcos-ignition.json | base64 --wrap=0) \
+    --extraConfig:guestinfo.afterburn.initrd.network-kargs=ip={{ item.ip }}::{{ param_vm_network_gateway }}:255.255.255.0:{{ item.name }}:ens192:off:{{ param_vm_network_gateway }} \
+    {{ param_vm_fcos_vsphere_ova }} 'vi:///{{ param_vsphere_uri }}'
+  with_items: "{{ param_vm_network_ips }}"

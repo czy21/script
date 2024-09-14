@@ -136,3 +136,18 @@
         - import_tasks: roles/common/tasks/clean.yml
           tags:
             - '{{ param_role_name }}'
+
+- name: vm
+  hosts: all
+  vars_files: ["vars/env.yml","vars/main.yml"]
+  vars:
+    param_role_name: vm
+  tasks:
+    - block:
+        - import_tasks: roles/common/tasks/copy.yml
+        - import_role:
+            name: '{{ param_role_name }}'
+      always:
+        - import_tasks: roles/common/tasks/clean.yml
+      tags: 
+        - 'vm-fcos-vsphere'
