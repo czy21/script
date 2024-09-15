@@ -2,8 +2,8 @@
 
 param_sed_args="sed "
 function remove_secret_param() {
-    [ -z "$2" ] && $2="<secret_param>"
-    param_sed_args+=" -e \"s|^\($1:\)\(.*\)|\1 $2|\""
+    secret_value=${2:-"<secret_value>"}
+    param_sed_args+=" -e \"s|^\($1:\)\(.*\)|\1 $secret_value|\""
 }
 
 remove_secret_param 'param_manage_password'
