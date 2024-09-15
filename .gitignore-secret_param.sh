@@ -1,12 +1,18 @@
+#!/bin/bash
 
-params=("param_mail_smtp_password" "param_vaultwarden_admin_token" "param_user_ops_ssh_public_key")
 param_sed_args="sed "
-for t in ${params[@]};do
-  param_sed_args+=" -e \"s|^\($t:\)\(.*\)|\1|\""
-done
-param_sed_args+=" -e 's|^\(param_vsphere_uri:\)\(.*\)|\1 user:password@host|'"
+function remove_secret_param() {
+    param_sed_args+=" -e \"s|^\($1:\)\(.*\)|\1 $2|\""
+}
 
+remove_secret_param 'param_manage_password'
+remove_secret_param 'param_db_password'
 
+remove_secret_param 'param_mail_smtp_password'
+remove_secret_param 'param_user_ops_ssh_public_key'
+
+remove_secret_param 'param_vaultwarden_admin_token'
+remove_secret_param 'param_vsphere_uri' 'user:password@host'
 
 param_sed_args+=" $1"
 echo $param_sed_args > .gitignore-secret_param.log
