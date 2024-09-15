@@ -6,7 +6,7 @@ server:
 
 db:
   driver-name: mysql
-  url: admin:***REMOVED***@tcp(192.168.2.18:3306)/go-pulsar-manager?charset=utf8mb4&parseTime=True
+  url: {{ param_db_mysql_username }}:{{ param_db_mysql_password }}@tcp({{ param_db_mysql_host }}:{{ param_db_mysql_port }})/go-pulsar-manager?charset=utf8mb4&parseTime=True
 
 log:
 #  file: /app/log/app.log # if removed,log in console
