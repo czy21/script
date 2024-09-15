@@ -2,6 +2,7 @@
 
 param_sed_args="sed "
 function remove_secret_param() {
+    [ -z "$2" ] && $2="<secret_param>"
     param_sed_args+=" -e \"s|^\($1:\)\(.*\)|\1 $2|\""
 }
 
