@@ -5,4 +5,3 @@ subjectAltName=@alt_names
 [ alt_names ]
 DNS.1={{ param_ssl_generate_domain }}
 DNS.2=*.{{ param_ssl_generate_domain }}
-IP.1=192.168.2.15

@@ -9,5 +9,5 @@ curl \
    -H 'Cookie: XSRF-TOKEN=$CSRF_TOKEN;' \
    -H "Content-Type: application/json" \
    -X PUT http://pulsar-web.czy21-internal.com/pulsar-manager/users/superuser \
-   -d '{"name": "admin", "password": "<password>", "email": "username@test.org"}'
+   -d '{"name": "admin", "password": "<password>", "email": "username@test.org"}' 
 ```
