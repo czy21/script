@@ -7,3 +7,9 @@ param_vm_network_ips:
     ip: 192.168.2.34
   - name: fcos35
     ip: 192.168.2.35
+
+param_vm_vsphere_nodes:
+  - name: node41
+    template: 
+  - name: node42
+    template: 
