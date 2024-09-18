@@ -54,7 +54,7 @@ storage:
                   -e "s|/SRPMS/|/source/tree/|" ${r_bak} | tee ${r} > /dev/null
             done
             cp -rv /etc/yum.repos.d/docker-ce.repo /etc/yum.repos.d/docker-ce.repo.bak
-            sed -e "s|https://download.docker.com|http://{{ param_mirror_docker_ce }}|g" /etc/yum.repos.d/docker-ce.repo.bak | tee /etc/yum.repos.d/docker-ce.repo > /dev/null
+            sed -e "s|https://download.docker.com|http://{{ param_mirror_docker_ce }}|g" -e "s|^\(gpgcheck\).*|\1=0|" /etc/yum.repos.d/docker-ce.repo.bak | tee /etc/yum.repos.d/docker-ce.repo > /dev/null
           fi
     - path: /etc/profile.d/99-default-editor.sh
       overwrite: true
