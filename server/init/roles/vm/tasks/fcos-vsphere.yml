@@ -4,6 +4,8 @@
     --name={{ item.name }} \
     --datastore={{ param_vsphere_datastore }} \
     --net:"VM Network={{ param_vsphere_network }}" \
+    --numberOfCpus:{{ item.name }}=4 \
+    --memorySize:{{ item.name }}=8192 \
     --allowExtraConfig \
     --extraConfig:guestinfo.ignition.config.data.encoding=base64 \
     --extraConfig:guestinfo.ignition.config.data=$(cat {{ role_path }}/build/fcos-ignition.json | base64 --wrap=0) \
