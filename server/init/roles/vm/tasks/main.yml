@@ -1,7 +1,8 @@
-- name: fcos build
+- name: build
   file: path={{ role_path }}/build state=directory mode=0777
   tags:
     - 'vm-fcos-vsphere'
+    - 'vm-node-vsphere'
 
 - import_tasks: fcos-butane.yml
   tags:
@@ -10,3 +11,7 @@
 - import_tasks: fcos-vsphere.yml
   tags:
     - 'vm-fcos-vsphere'
+
+- import_tasks: node-vsphere.yml
+  tags:
+    - 'vm-node-vsphere'

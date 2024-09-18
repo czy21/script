@@ -155,9 +155,13 @@
   tasks:
     - block:
         - import_tasks: roles/common/tasks/copy.yml
+          tags:
+            - 'vm-fcos-vsphere'
+            - 'vm-node-vsphere'
         - import_role:
             name: '{{ param_role_name }}'
       always:
         - import_tasks: roles/common/tasks/clean.yml
-      tags:
-        - 'vm-fcos-vsphere'
+          tags:
+            - 'vm-fcos-vsphere'
+            - 'vm-node-vsphere'
