@@ -1,0 +1,4 @@
+- name: node vsphere create
+  shell: |
+    echo '{{ item | to_json }}'
+  with_items: "{{ param_vm_vsphere_nodes }}"
