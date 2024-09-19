@@ -7,7 +7,7 @@ DB_PASSWORD={{ param_db_mssql_password }}
 
 databases=$(docker exec mssql /opt/mssql-tools/bin/sqlcmd -U $DB_USERNAME -P $DB_PASSWORD -Q "set nocount on;select name from sys.databases where name not in ('master','model','msdb','tempdb')" -h -1 | xargs)
 
-DB_BACKUP_DIR=/volume2/backup/mssql
+DB_BACKUP_DIR=$1/mssql
 
 mkdir -p $DB_BACKUP_DIR
 
@@ -17,5 +17,3 @@ for t in $databases;do
   docker cp mssql:/var/opt/mssql/backup/$t.bak $DB_BACKUP_DIR
   docker exec mssql rm -vrf /var/opt/mssql/backup/$t.bak
 done
-
-scp -r $DB_BACKUP_DIR dsm:/volume1/public/backup/
