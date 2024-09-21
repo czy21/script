@@ -14,6 +14,10 @@ RUN apt install -y build-essential clang flex bison g++ gawk gcc-multilib g++-mu
 # addition pkg
 RUN apt install -y qemu-utils libelf-dev
 
+# tool
+RUN curl https://dl.min.io/client/mc/release/linux-amd64/mc -o /usr/local/bin/mc
+RUN chmod +x /usr/local/bin/mc && ln -sf /usr/local/bin/mc /usr/bin/mc
+
 RUN apt-get clean
 
 WORKDIR /data
