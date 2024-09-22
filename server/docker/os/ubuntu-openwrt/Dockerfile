@@ -12,7 +12,7 @@ RUN useradd -d /home/{{ param_user_ops }} -l -m -s /bin/bash {{ param_user_ops }
 RUN apt install -y build-essential clang flex bison g++ gawk gcc-multilib g++-multilib gettext git libncurses-dev libssl-dev python3-distutils python3-setuptools rsync swig unzip zlib1g-dev file wget
 
 # addition pkg
-RUN apt install -y qemu-utils libelf-dev
+RUN apt install -y python3-dev python3-pyelftools qemu-utils libelf-dev
 
 # tool
 RUN curl https://dl.min.io/client/mc/release/linux-amd64/mc -o /usr/local/bin/mc
