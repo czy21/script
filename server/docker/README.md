@@ -3,7 +3,7 @@
 -p param_registry_targets=github,dockerhub  # 推送目标
 ```
 
-## omv: /volume2 => es,minio,ch,ndisk
+## omv: /volume2 => es,minio,ch,ndisk,ubuntu-openwrt
 
 ## Use
 ```shell
