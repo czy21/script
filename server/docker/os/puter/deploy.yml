@@ -1,0 +1,23 @@
+version: "3.9"
+
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 4100
+
+services:
+  puter:
+    container_name: puter
+    image: heyputer/puter:latest # ghcr.io/heyputer/puter:latest
+    pull_policy: always
+    ports:
+      - "4100:4100"
+    labels:
+      <<: *traefik-label
+    environment:
+      PUID: 1000
+      PGID: 1000
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/:/etc/puter/
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/var/puter/
+    restart: always
