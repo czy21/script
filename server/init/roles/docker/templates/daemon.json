@@ -23,5 +23,6 @@
   "insecure-registries": [
     "{{ param_registry_url }}",
     "{{ param_registry_proxy_url }}"
-  ]
+  ],
+  "live-restore": true
 }

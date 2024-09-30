@@ -1,0 +1,4 @@
+param_disk_path: /vol1
+
+# default
+param_docker_root: "{{ param_disk_path }}/docker"
