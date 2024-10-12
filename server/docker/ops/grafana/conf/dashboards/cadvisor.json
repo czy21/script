@@ -293,6 +293,7 @@
             "type": "prometheus",
             "uid": "P047DE0F543C7E359"
           },
+          "editorMode": "code",
           "expr": "count(container_last_seen{name=~\"$name\",instance=~\"$instance\",image!=\"\"}) by (instance)",
           "format": "table",
           "instant": true,
@@ -353,6 +354,7 @@
             "type": "prometheus",
             "uid": "P047DE0F543C7E359"
           },
+          "editorMode": "code",
           "expr": "sum(machine_memory_bytes{instance=~\"$instance\"}) by (instance)",
           "format": "table",
           "instant": true,
@@ -673,7 +675,7 @@
       "description": "",
       "fieldConfig": {
         "defaults": {
-          "custom": {}
+          "links": []
         },
         "overrides": []
       },
@@ -705,11 +707,10 @@
       "linewidth": 2,
       "nullPointMode": "connected",
       "options": {
-        "alertThreshold": true,
-        "dataLinks": []
+        "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.3.3",
+      "pluginVersion": "9.2.2",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -773,7 +774,7 @@
       "description": "",
       "fieldConfig": {
         "defaults": {
-          "custom": {}
+          "links": []
         },
         "overrides": []
       },
@@ -806,11 +807,10 @@
       "linewidth": 2,
       "nullPointMode": "connected",
       "options": {
-        "alertThreshold": true,
-        "dataLinks": []
+        "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.3.3",
+      "pluginVersion": "9.2.2",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -874,7 +874,7 @@
       },
       "fieldConfig": {
         "defaults": {
-          "custom": {}
+          "links": []
         },
         "overrides": []
       },
@@ -907,11 +907,10 @@
       "linewidth": 2,
       "nullPointMode": "connected",
       "options": {
-        "alertThreshold": true,
-        "dataLinks": []
+        "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.3.3",
+      "pluginVersion": "9.2.2",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -973,7 +972,7 @@
       },
       "fieldConfig": {
         "defaults": {
-          "custom": {}
+          "links": []
         },
         "overrides": []
       },
@@ -1006,11 +1005,10 @@
       "linewidth": 2,
       "nullPointMode": "connected",
       "options": {
-        "alertThreshold": true,
-        "dataLinks": []
+        "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.3.3",
+      "pluginVersion": "9.2.2",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -1067,7 +1065,7 @@
   "schemaVersion": 37,
   "style": "dark",
   "tags": [
-    "docker",
+    "cadvisor",
     "Prometheus"
   ],
   "templating": {
@@ -1075,8 +1073,8 @@
       {
         "current": {
           "selected": false,
-          "text": "cadvisor",
-          "value": "cadvisor"
+          "text": "docker-cadvisor",
+          "value": "docker-cadvisor"
         },
         "datasource": {
           "type": "prometheus",
@@ -1105,9 +1103,48 @@
       {
         "allValue": ".*",
         "current": {
-          "selected": false,
-          "text": "All",
-          "value": "$__all"
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "P047DE0F543C7E359"
+        },
+        "definition": "label_values(container_cpu_user_seconds_total{name=~\"$name\"}, instance)",
+        "hide": 0,
+        "includeAll": true,
+        "label": "instance",
+        "multi": true,
+        "name": "instance",
+        "options": [],
+        "query": {
+          "query": "label_values(container_cpu_user_seconds_total{name=~\"$name\"}, instance)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 5,
+        "tagValuesQuery": "",
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": ".*",
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
         },
         "datasource": {
           "type": "prometheus",
@@ -1136,44 +1173,9 @@
       {
         "allValue": ".*",
         "current": {
-          "selected": true,
-          "text": [
-            "cadvisor-nas.czy21-internal.com:80"
-          ],
-          "value": [
-            "cadvisor-nas.czy21-internal.com:80"
-          ]
-        },
-        "datasource": {
-          "type": "prometheus",
-          "uid": "P047DE0F543C7E359"
-        },
-        "definition": "label_values(container_cpu_user_seconds_total{name=~\"$name\"}, instance)",
-        "hide": 0,
-        "includeAll": true,
-        "label": "instance",
-        "multi": true,
-        "name": "instance",
-        "options": [],
-        "query": {
-          "query": "label_values(container_cpu_user_seconds_total{name=~\"$name\"}, instance)",
-          "refId": "nas-instance-Variable-Query"
-        },
-        "refresh": 2,
-        "regex": "",
-        "skipUrlSync": false,
-        "sort": 5,
-        "tagValuesQuery": "",
-        "tagsQuery": "",
-        "type": "query",
-        "useTags": false
-      },
-      {
-        "allValue": ".*",
-        "current": {
           "selected": false,
-          "text": "br-59b046961f6c",
-          "value": "br-59b046961f6c"
+          "text": "eth0",
+          "value": "eth0"
         },
         "datasource": {
           "type": "prometheus",
@@ -1202,7 +1204,10 @@
       {
         "allValue": "",
         "current": {
-          "text": "All",
+          "selected": true,
+          "text": [
+            "All"
+          ],
           "value": [
             "$__all"
           ]
@@ -1245,6 +1250,7 @@
           }
         ],
         "query": "unsum,instance,image,container_label_restartcount,device",
+        "queryValue": "",
         "skipUrlSync": false,
         "type": "custom"
       }
@@ -1269,8 +1275,8 @@
     ]
   },
   "timezone": "browser",
-  "title": "docker",
+  "title": "cadvisor",
   "uid": "htoVWdxGt",
-  "version": 1,
+  "version": 9,
   "weekStart": ""
 }
