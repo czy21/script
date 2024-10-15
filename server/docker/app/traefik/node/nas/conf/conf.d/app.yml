@@ -3,16 +3,16 @@ http:
     alist:
       rule: Host(`alist.czy21-internal.com`)
       service: alist@docker
-    openwrt-download:
-      rule: Host(`openwrt-download.czy21-internal.com`)
-      service: openwrt-content@docker
-      middlewares:
-        - openwrt-download-proxy
     openwrt-firmware:
       rule: Host(`openwrt-firmware.czy21-internal.com`)
       service: openwrt-content@docker
       middlewares:
         - openwrt-firmware-proxy
+    openwrt-download:
+      rule: Host(`openwrt-download.czy21-internal.com`)
+      service: openwrt-content@docker
+      middlewares:
+        - openwrt-download-proxy
 
   middlewares:
     openwrt-download-proxy:
