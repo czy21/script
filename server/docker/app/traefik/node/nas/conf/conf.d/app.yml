@@ -17,9 +17,9 @@ http:
   middlewares:
     openwrt-download-proxy:
       replacePathRegex:
-        regex: "^/(.*)/"
-        replacement: "/download/${1}/"
+        regex: "^/"
+        replacement: "/download/"
     openwrt-firmware-proxy:
       replacePathRegex:
-        regex: "^/(.*)/"
-        replacement: "/download/${1}/"
+        regex: "^/"
+        replacement: "/firmware/"
