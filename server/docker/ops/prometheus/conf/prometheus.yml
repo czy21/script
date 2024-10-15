@@ -42,7 +42,7 @@ scrape_configs:
         labels:
           origin_prometheus: nas
 
-  - job_name: cadvisor
+  - job_name: docker-cadvisor
     static_configs:
       - targets: ['cadvisor-nas.czy21-internal.com']
       - targets: ['cadvisor-base.czy21-internal.com']
