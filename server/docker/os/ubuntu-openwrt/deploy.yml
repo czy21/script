@@ -2,8 +2,8 @@ version: "3.9"
 
 x-traefik-label: &traefik-label
   traefik.enable: true
-  traefik.http.routers.openwrt-content.service: openwrt-content
-  traefik.http.services.openwrt-content.loadbalancer.server.port: 80
+  traefik.http.routers.openwrt-firmware.service: openwrt-content
+  traefik.http.services.openwrt-firmware.loadbalancer.server.port: 80
 
 services:
   openwrt-builder:
@@ -17,13 +17,13 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/data/
     restart: always
 
-  openwrt-content:
+  openwrt-firmware:
     image: nginx:1.27.0-alpine
     labels:
       <<: *traefik-label
     pull_policy: always
-    container_name: openwrt-content
-    hostname: openwrt-builder
+    container_name: openwrt-firmware
+    hostname: openwrt-firmware
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/data/
