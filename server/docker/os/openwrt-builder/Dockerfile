@@ -20,4 +20,5 @@ RUN chmod +x /usr/local/bin/mc && ln -sf /usr/local/bin/mc /usr/bin/mc
 
 RUN apt-get clean
 
+USER buildbot
 WORKDIR /data
