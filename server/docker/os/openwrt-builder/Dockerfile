@@ -5,7 +5,7 @@ RUN apt-get update
 RUN apt install -y wget vim git bash-completion make gcc sudo curl
 
 RUN echo -n "%sudo   ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers.d/99-custom
-RUN useradd -d /home/{{ param_user_ops }} -l -m -s /bin/bash {{ param_user_ops }} && usermod -aG sudo {{ param_user_ops }}
+RUN useradd -d /home/buildbot -l -m -s /bin/bash buildbot && usermod -aG sudo buildbot
 
 # https://openwrt.org/docs/guide-developer/toolchain/install-buildsystem
 # official pkg
