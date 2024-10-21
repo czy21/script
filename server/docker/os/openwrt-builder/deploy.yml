@@ -6,7 +6,7 @@ x-traefik-label: &traefik-label
   traefik.http.services.openwrt-firmware.loadbalancer.server.port: 80
 
 services:
-  openwrt-builder:
+  {{ param_role_name }}:
     image: {{ param_registry_url }}/{{ param_registry_dir }}/{{ param_role_name }}
     pull_policy: always
     container_name: openwrt-builder
