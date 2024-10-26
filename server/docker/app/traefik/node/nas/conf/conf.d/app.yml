@@ -3,6 +3,3 @@ http:
     alist:
       rule: Host(`alist.czy21-internal.com`)
       service: alist@docker
-    openwrt-firmware:
-      rule: Host(`openwrt-firmware.czy21-internal.com`)
-      service: openwrt-firmware@docker
