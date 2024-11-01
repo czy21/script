@@ -33,7 +33,9 @@ jobs:
       - name: Push to container repository
         run: |
           cd $HOME/container/
-          [[ ! -z $(git status -s) ]] && git pull && git add . && git commit -m "# generate" && git push
+          if [ -n "$(git status -s)" ];then
+            git pull && git add . && git commit -m "CI: sync code" && git push
+          fi
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v5
