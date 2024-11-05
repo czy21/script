@@ -62,6 +62,9 @@ def build() {
             web   : {
                 pathMap.get("node").call()
                 cmd = StringUtils.format("{0} install --no-package-lock && {0} run build",StringUtils.format("npm --prefix {0} --registry {1}", env.param_project_context, env.param_npm_repo))
+                if (StringUtils.isNotEmpty(env.param_project_module)) {
+                    cmd = StringUtils.format("{0} install --no-package-lock && {0} -w {1} run build",StringUtils.format("npm --prefix {0} --registry {1}", env.param_project_root, env.param_npm_repo),env.param_project_module)
+                }
                 sh "${cmd}"
             },
             yarn   : {
