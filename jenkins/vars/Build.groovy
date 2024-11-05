@@ -20,8 +20,17 @@ def call() {
         }
         parameters {
             booleanParam defaultValue: false, name: 'param_code_analysis'
+            booleanParam defaultValue: false, name: 'param_clean'
         }
         stages {
+            stage('clean') {
+                when {
+                    expression { params.param_clean == true }
+                }
+                steps {
+                    cleanWs()
+                }
+            }
             stage('clone') {
                 steps {
                     script {
