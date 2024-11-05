@@ -26,7 +26,7 @@ def build() {
                 env.PATH = "${GO_HOME}/bin:${PATH}"
             },
             node   : {
-                env.NODEJS_HOME = "${tool 'node-v20.12.0'}"
+                env.NODEJS_HOME = "${tool 'node-v20.18.0'}"
                 env.PATH = "${NODEJS_HOME}/bin:${PATH}"
             },
             dotnet: {
