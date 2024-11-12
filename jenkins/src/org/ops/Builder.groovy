@@ -26,7 +26,7 @@ def build() {
                 env.PATH = "${GO_HOME}/bin:${PATH}"
             },
             node   : {
-                env.NODEJS_HOME = "${tool 'node-v20.12.0'}"
+                env.NODEJS_HOME = "${tool 'node-v20.18.0'}"
                 env.PATH = "${NODEJS_HOME}/bin:${PATH}"
             },
             dotnet: {
@@ -61,12 +61,10 @@ def build() {
             },
             web   : {
                 pathMap.get("node").call()
-                cmd = StringUtils.format("{0} install --no-package-lock && {0} run build",StringUtils.format("npm --prefix {0} --registry {1}", env.param_project_context, env.param_npm_repo))
-                sh "${cmd}"
-            },
-            yarn   : {
-                pathMap.get("node").call()
-                cmd = StringUtils.format("{0} install --no-lockfile --update-checksums && {0} --ignore-engines build",StringUtils.format("yarn --cwd {0} --registry {1}", env.param_project_context, env.param_npm_repo))
+                cmd = StringUtils.format("rimraf {0}/node_modules && {1} install --no-package-lock && {1} run build",env.param_project_context,StringUtils.format("npm --prefix {0} --registry {1}", env.param_project_context, env.param_npm_repo))
+                if (StringUtils.isNotEmpty(env.param_project_module)) {
+                    cmd = StringUtils.format("rimraf {0}/node_modules && {1} install --no-package-lock && {1} -w {1} run build",env.param_project_root,StringUtils.format("npm --prefix {0} --registry {1}", env.param_project_root, env.param_npm_repo),env.param_project_module)
+                }
                 sh "${cmd}"
             },
             dotnet: {
