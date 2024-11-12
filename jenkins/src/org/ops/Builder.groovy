@@ -63,7 +63,7 @@ def build() {
                 pathMap.get("node").call()
                 cmd = StringUtils.format("rimraf {0}/node_modules && {1} install --no-package-lock && {1} run build",env.param_project_context,StringUtils.format("npm --prefix {0} --registry {1}", env.param_project_context, env.param_npm_repo))
                 if (StringUtils.isNotEmpty(env.param_project_module)) {
-                    cmd = StringUtils.format("rimraf {0}/node_modules && {1} install --no-package-lock && {1} -w {1} run build",env.param_project_root,StringUtils.format("npm --prefix {0} --registry {1}", env.param_project_root, env.param_npm_repo),env.param_project_module)
+                    cmd = StringUtils.format("rimraf {0}/node_modules && {1} install --no-package-lock && {1} -w {2} run build",env.param_project_root,StringUtils.format("npm --prefix {0} --registry {1}", env.param_project_root, env.param_npm_repo),env.param_project_module)
                 }
                 sh "${cmd}"
             },
