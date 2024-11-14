@@ -69,7 +69,7 @@ def build() {
             },
             yarn   : {
                 pathMap.get("node").call()
-                cmd = StringUtils.format("{0} install --no-lockfile --update-checksums && {0} --ignore-engines build",StringUtils.format("yarn --cwd {0} --registry {1}", env.param_project_context, env.param_npm_repo))
+                cmd = StringUtils.format("rimraf {0}/node_modules && {1} install --no-lockfile --update-checksums && {1} --ignore-engines build",env.param_project_context,StringUtils.format("yarn --cwd {0} --registry {1}", env.param_project_context, env.param_npm_repo))
                 sh "${cmd}"
             },
             dotnet: {
