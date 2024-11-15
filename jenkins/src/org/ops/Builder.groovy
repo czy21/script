@@ -25,7 +25,7 @@ def build() {
                 env.CGO_ENABLED = "0"
                 env.PATH = "${GO_HOME}/bin:${PATH}"
             },
-            node   : {
+            node  : {
                 env.NODEJS_HOME = "${tool 'node-v20.18.0'}"
                 env.PATH = "${NODEJS_HOME}/bin:${PATH}"
             },
@@ -61,15 +61,17 @@ def build() {
             },
             web   : {
                 pathMap.get("node").call()
-                cmd = StringUtils.format("rimraf {0}/node_modules && {1} install --no-package-lock && {1} run build",env.param_project_context,StringUtils.format("npm --prefix {0} --registry {1}", env.param_project_context, env.param_npm_repo))
+                def getPrefix = (prefix) -> StringUtils.format("rimraf {0}/node_modules && npm --prefix {0} --registry {1} install --no-package-lock && npm --prefix {0}", prefix, env.param_npm_repo)
+                cmd = StringUtils.format("{0} run build", getPrefix(env.param_project_context))
                 if (StringUtils.isNotEmpty(env.param_project_module)) {
-                    cmd = StringUtils.format("rimraf {0}/node_modules && {1} install --no-package-lock && {1} -w {2} run build",env.param_project_root,StringUtils.format("npm --prefix {0} --registry {1}", env.param_project_root, env.param_npm_repo),env.param_project_module)
+                    cmd = StringUtils.format("{0} -w {1} run build", getPrefix(env.param_project_root), env.param_project_module)
                 }
                 sh "${cmd}"
             },
-            yarn   : {
+            yarn  : {
                 pathMap.get("node").call()
-                cmd = StringUtils.format("rimraf {0}/node_modules && {1} install --no-lockfile --update-checksums && {1} --ignore-engines build",env.param_project_context,StringUtils.format("yarn --cwd {0} --registry {1}", env.param_project_context, env.param_npm_repo))
+                def getPrefix = (prefix) -> StringUtils.format("rimraf {0}/node_modules && yarn --cwd {0} --registry {1} && yarn --cwd {0} --ignore-engines", prefix, env.param_npm_repo)
+                cmd = StringUtils.format("{0} run build", getPrefix(env.param_project_context))
                 sh "${cmd}"
             },
             dotnet: {
