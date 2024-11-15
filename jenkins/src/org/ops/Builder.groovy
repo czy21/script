@@ -61,7 +61,7 @@ def build() {
             },
             web   : {
                 pathMap.get("node").call()
-                def getPrefix = (prefix) -> StringUtils.format("rimraf {0}/node_modules && npm --prefix {0} --registry {1} install --no-package-lock && npm --prefix {0}", prefix, env.param_npm_repo)
+                def getPrefix = { prefix -> StringUtils.format("rimraf {0}/node_modules && npm --prefix {0} --registry {1} install --no-package-lock && npm --prefix {0}", prefix, env.param_npm_repo) }
                 cmd = StringUtils.format("{0} run build", getPrefix(env.param_project_context))
                 if (StringUtils.isNotEmpty(env.param_project_module)) {
                     cmd = StringUtils.format("{0} -w {1} run build", getPrefix(env.param_project_root), env.param_project_module)
@@ -70,7 +70,7 @@ def build() {
             },
             yarn  : {
                 pathMap.get("node").call()
-                def getPrefix = (prefix) -> StringUtils.format("rimraf {0}/node_modules && yarn --cwd {0} --registry {1} && yarn --cwd {0} --ignore-engines", prefix, env.param_npm_repo)
+                def getPrefix = { prefix -> StringUtils.format("rimraf {0}/node_modules && yarn --cwd {0} --registry {1} && yarn --cwd {0} --ignore-engines", prefix, env.param_npm_repo) }
                 cmd = StringUtils.format("{0} run build", getPrefix(env.param_project_context))
                 sh "${cmd}"
             },
