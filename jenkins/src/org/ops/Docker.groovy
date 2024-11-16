@@ -1,20 +1,30 @@
 package org.ops
 
+
 import org.ops.util.PathUtils
 import org.ops.util.StringUtils
 
 def build() {
-    configFileProvider([configFile(fileId: "docker.config", targetLocation: '.jenkins/docker/config.json')]) {
-        docker_config_dir = PathUtils.ofPath("${env.WORKSPACE}", ".jenkins/docker/")
-        docker_image_tag = "${env.param_release_image}:${env.param_release_version}"
-        docker_build_cmd = "docker build --tag ${docker_image_tag} --file ${env.param_docker_file} ${env.param_docker_context} --pull"
-        if (StringUtils.isNotEmpty(env.param_docker_build_args)) {
-            env.param_docker_build_args.split(",").each { t -> docker_build_cmd += " --build-arg $t" }
-        }
-        docker_push_cmd = "docker --config ${docker_config_dir} push ${docker_image_tag}"
-        docker_rmi_cmd = "docker rmi ${docker_image_tag}"
-        sh "${docker_build_cmd} && ${docker_push_cmd} && ${docker_rmi_cmd}"
+    configFileProvider([configFile(fileId: "docker.config", targetLocation: '.jenkins/docker/config.json')]) {}
+
+    def docker_file = "${env.param_docker_file}"
+
+    if (!fileExists(docker_file)) {
+        def docker_file_type = ["web", "yarn"].contains("${env.param_code_type}") ? "spa" : "${env.param_code_type}"
+        def docker_file_content = libraryResource "org/ops/Dockerfile-${docker_file_type}"
+        writeFile file: ".jenkins/Dockerfile-${docker_file_type}", text: docker_file_content, encoding: 'utf-8'
+        docker_file = ".jenkins/Dockerfile-${docker_file_type}"
     }
+
+    docker_config_dir = PathUtils.ofPath("${env.WORKSPACE}", ".jenkins/docker/")
+    docker_image_tag = "${env.param_release_image}:${env.param_release_version}"
+    docker_build_cmd = "docker build --tag ${docker_image_tag} --file ${docker_file} ${env.param_docker_context} --pull"
+    if (StringUtils.isNotEmpty(env.param_docker_build_args)) {
+        env.param_docker_build_args.split(",").each { t -> docker_build_cmd += " --build-arg $t" }
+    }
+    docker_push_cmd = "docker --config ${docker_config_dir} push ${docker_image_tag}"
+    docker_rmi_cmd = "docker rmi ${docker_image_tag}"
+    sh "${docker_build_cmd} && ${docker_push_cmd} && ${docker_rmi_cmd}"
 }
 
 def deploy() {
