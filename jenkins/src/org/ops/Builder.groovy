@@ -61,17 +61,7 @@ def build() {
             },
             web   : {
                 pathMap.get("node").call()
-                def getPrefix = { prefix -> StringUtils.format("rimraf {0}/node_modules && npm --prefix {0} --registry {1} install --no-package-lock && npm --prefix {0}", prefix, env.param_npm_repo) }
-                cmd = StringUtils.format("{0} run build", getPrefix(env.param_project_context))
-                if (StringUtils.isNotEmpty(env.param_project_module)) {
-                    cmd = StringUtils.format("{0} -w {1} run build", getPrefix(env.param_project_root), env.param_project_module)
-                }
-                sh "${cmd}"
-            },
-            yarn  : {
-                pathMap.get("node").call()
-                def getPrefix = { prefix -> StringUtils.format("rimraf {0}/node_modules && yarn --cwd {0} --registry {1} && yarn --cwd {0} --ignore-engines", prefix, env.param_npm_repo) }
-                cmd = StringUtils.format("{0} run build", getPrefix(env.param_project_context))
+                cmd = StringUtils.format("npm_config_registry={1} npm_config_node_linker=hoisted rimraf {0}/node_modules && pnpm --dir {0} install --no-lockfile && pnpm --dir {0} run build", env.param_project_context, env.param_npm_repo)
                 sh "${cmd}"
             },
             dotnet: {
