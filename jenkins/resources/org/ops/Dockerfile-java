@@ -1,0 +1,2 @@
+FROM registry.czy21-internal.com/library/jdk-17
+COPY ./build/api.jar ${JAR}
