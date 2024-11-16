@@ -61,7 +61,7 @@ def build() {
             },
             web   : {
                 pathMap.get("node").call()
-                cmd = StringUtils.format("npm_config_registry={1} npm_config_node_linker=hoisted rimraf {0}/node_modules && pnpm --dir {0} install --no-lockfile && pnpm --dir {0} run build", env.param_project_context, env.param_npm_repo)
+                cmd = StringUtils.format("npm_config_registry={1} npm_config_node_linker=hoisted pnpm --dir {0} install --no-lockfile --force && pnpm --dir {0} run build", env.param_project_context, env.param_npm_repo)
                 sh "${cmd}"
             },
             dotnet: {

@@ -10,10 +10,9 @@ def build() {
     def docker_file = "${env.param_docker_file}"
 
     if (!fileExists(docker_file)) {
-        def docker_file_type = ["web", "yarn"].contains(env.param_code_type) ? "spa" : env.param_code_type
-        def docker_file_content = libraryResource "org/ops/Dockerfile-${docker_file_type}"
-        writeFile file: ".jenkins/Dockerfile-${docker_file_type}", text: docker_file_content, encoding: 'utf-8'
-        docker_file = ".jenkins/Dockerfile-${docker_file_type}"
+        def docker_file_content = libraryResource "org/ops/Dockerfile-${env.param_code_type}"
+        writeFile file: ".jenkins/Dockerfile-${env.param_code_type}", text: docker_file_content, encoding: 'utf-8'
+        docker_file = ".jenkins/Dockerfile-${env.param_code_type}"
     }
 
     docker_config_dir = PathUtils.ofPath("${env.WORKSPACE}", ".jenkins/docker/")
