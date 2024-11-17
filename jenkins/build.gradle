@@ -1,6 +1,6 @@
 plugins {
     id 'groovy'
-    id 'io.spring.dependency-management' version "1.1.0"
+    id 'io.spring.dependency-management' version "1.1.6"
 }
 
 group 'org.ops'
@@ -14,17 +14,17 @@ repositories {
 
 dependencyManagement {
     imports {
-        mavenBom "io.jenkins.tools.bom:bom-2.387.x:1887.vda_d0ddb_c15c4"
+        mavenBom "io.jenkins.tools.bom:bom-2.462.x:3387.v0f2773fa_3200"
     }
     dependencies {
-        dependency "org.apache.groovy:groovy:4.0.10"
+        dependency "org.apache.groovy:groovy:4.0.24"
     }
 }
 
 dependencies {
     implementation 'org.apache.groovy:groovy'
     implementation "org.jenkins-ci.plugins.workflow:workflow-cps"
-    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
+    implementation 'org.apache.commons:commons-lang3:3.17.0'
 
 }
 
@@ -33,10 +33,15 @@ sourceSets {
         groovy {
             srcDirs = ['src', "vars"]
         }
+        resources {
+            srcDirs = ['resources']
+        }
     }
+
     test {
         groovy {
             srcDirs = ['test']
         }
     }
+
 }
