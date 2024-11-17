@@ -1,4 +1,4 @@
-FROM jenkins/jenkins:2.474-jdk17
+FROM jenkins/jenkins:2.485-jdk17
 
 USER root
 RUN apt-get update -y && apt-get install -y lsb-release
