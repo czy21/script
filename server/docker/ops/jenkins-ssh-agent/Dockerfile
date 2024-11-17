@@ -1,4 +1,4 @@
-FROM jenkins/ssh-agent:6.1.0-jdk17
+FROM jenkins/ssh-agent:{{ param_role_image_version }}
 
 USER root
 RUN apt-get update && apt-get install -y git curl lsb-release
