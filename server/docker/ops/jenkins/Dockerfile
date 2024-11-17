@@ -1,4 +1,4 @@
-FROM jenkins/jenkins:2.485-jdk17
+FROM jenkins/jenkins:{{ param_role_image_version }}
 
 USER root
 RUN apt-get update -y && apt-get install -y lsb-release
