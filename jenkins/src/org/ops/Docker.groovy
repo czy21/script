@@ -7,43 +7,38 @@ import org.ops.util.StringUtils
 def build() {
     configFileProvider([configFile(fileId: "docker.config", targetLocation: '.jenkins/docker/config.json')]) {}
 
-    def docker_file = "${env.param_docker_file}"
+    def docker_file = env.param_docker_file
 
     if (!fileExists(docker_file)) {
         docker_file = ".jenkins/Dockerfile-${env.param_code_type}"
-        def docker_file_content = libraryResource "org/ops/Dockerfile-${env.param_code_type}"
-        writeFile file: docker_file, text: docker_file_content, encoding: 'utf-8'
+        def content = libraryResource "org/ops/Dockerfile-${env.param_code_type}"
+        writeFile file: docker_file, text: content, encoding: 'utf-8'
     }
 
-    docker_config_dir = PathUtils.ofPath("${env.WORKSPACE}", ".jenkins/docker/")
-    docker_image_tag = "${env.param_release_image}:${env.param_release_version}"
-    docker_build_cmd = "docker build --tag ${docker_image_tag} --file ${docker_file} ${env.param_docker_context} --pull"
+    def docker_config_dir = PathUtils.ofPath("${env.WORKSPACE}", ".jenkins/docker/")
+    def docker_image_tag = "${env.param_release_image}:${env.param_release_version}"
+    def docker_build_cmd = "docker build --tag ${docker_image_tag} --file ${docker_file} ${env.param_docker_context} --pull"
     if (StringUtils.isNotEmpty(env.param_docker_build_args)) {
         env.param_docker_build_args.split(",").each { t -> docker_build_cmd += " --build-arg $t" }
     }
-    docker_push_cmd = "docker --config ${docker_config_dir} push ${docker_image_tag}"
-    docker_rmi_cmd = "docker rmi ${docker_image_tag}"
+    def docker_push_cmd = "docker --config ${docker_config_dir} push ${docker_image_tag}"
+    def docker_rmi_cmd = "docker rmi ${docker_image_tag}"
     sh "${docker_build_cmd} && ${docker_push_cmd} && ${docker_rmi_cmd}"
 }
 
 def deploy() {
-    deployMap = [
-            java: {
-                configFileProvider([configFile(fileId: "docker-compose-java-v1.yaml", targetLocation: '.jenkins/docker-compose.yaml')]) {}
-            },
-            web : {
-                configFileProvider([configFile(fileId: "docker-compose-web-v1.yaml", targetLocation: '.jenkins/docker-compose.yaml')]) {}
-            }
-    ]
-    if (fileExists("${env.param_docker_compose_file}")) {
-        sh "cp ${env.param_docker_compose_file} .jenkins/docker-compose.yaml"
-    } else {
-        deployMap.get(env.param_code_type).call()
+
+    def compose_file = env.param_docker_compose_file
+
+    if (!fileExists(compose_file)) {
+        compose_file = ".jenkins/docker-compose-${env.param_code_type}.yaml"
+        def content = libraryResource "org/ops/docker-compose-${env.param_code_type}.yaml"
+        writeFile file: compose_file, text: content, encoding: 'utf-8'
     }
+
     withCredentials([dockerCert(credentialsId: 'docker-client', variable: 'DOCKER_CERT_PATH')]) {
-        param_file = PathUtils.ofPath("${env.WORKSPACE}", ".jenkins/param.yaml")
-        docker_compose_file = PathUtils.ofPath("${env.WORKSPACE}", ".jenkins/docker-compose.yaml")
-        cmd = "DOCKER_TLS_VERIFY=1 DOCKER_HOST=tcp://${env.param_docker_deploy_host}:2376 docker-compose --project-name ${env.param_release_name} --file ${docker_compose_file} --env-file ${param_file} up --detach --remove-orphans"
+        def param_file = PathUtils.ofPath("${env.WORKSPACE}", ".jenkins/param.yaml")
+        cmd = "DOCKER_TLS_VERIFY=1 DOCKER_HOST=tcp://${env.param_docker_deploy_host}:2376 docker-compose --project-name ${env.param_release_name} --file ${compose_file} --env-file ${param_file} up --detach --remove-orphans"
         sh "${cmd}"
     }
 }

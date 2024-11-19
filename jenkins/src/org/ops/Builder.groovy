@@ -56,18 +56,18 @@ def build() {
             },
             go    : {
                 pathMap.get("go").call()
-                cmd = StringUtils.format("cd {0};go build -o build main.go;", env.param_project_context)
+                def cmd = StringUtils.format("cd {0};go build -o build main.go;", env.param_project_context)
                 sh "${cmd}"
             },
             web   : {
                 pathMap.get("node").call()
-                cmd = StringUtils.format("npm_config_registry={1} npm_config_node_linker=hoisted pnpm --dir {0} install && pnpm --dir {0} run build", env.param_project_context, env.param_npm_repo)
+                def cmd = StringUtils.format("npm_config_registry={1} npm_config_node_linker=hoisted pnpm --dir {0} install && pnpm --dir {0} run build", env.param_project_context, env.param_npm_repo)
                 sh "${cmd}"
             },
             dotnet: {
                 pathMap.get("dotnet").call()
                 configFileProvider([configFile(fileId: "nuget.config", variable: 'CONFIG_FILE_NUGET')]) {
-                    cmd = StringUtils.format(
+                    def cmd = StringUtils.format(
                             "rm -rf {0}/build && dotnet publish --configfile {1} -c Release {0} -o {0}/build",
                             env.param_project_root,
                             "${CONFIG_FILE_NUGET}"
@@ -76,7 +76,7 @@ def build() {
                 }
             },
             shell : {
-                cmd = StringUtils.format("chmod +x {0};{0}", PathUtils.ofPath(env.param_project_root, env.param_project_shell_file))
+                def cmd = StringUtils.format("chmod +x {0};{0}", PathUtils.ofPath(env.param_project_root, env.param_project_shell_file))
                 sh "${cmd}"
             }
     ]
