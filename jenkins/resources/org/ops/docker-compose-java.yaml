@@ -1,0 +1,25 @@
+version: "3.9"
+
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.${param_release_name}.service: ${param_release_name}
+  traefik.http.services.${param_release_name}.loadbalancer.server.port: 8080
+
+services:
+  app:
+    image: ${param_registry_repo}/library/${param_release_name}:${param_release_version}
+    pull_policy: always
+    container_name: ${param_release_name}
+    labels:
+      <<: *traefik-label
+    expose:
+      - "8080"
+    volumes:
+      - ${param_docker_data}/${param_release_name}/data/:/app/data/
+      - ${param_docker_data}/${param_release_name}/log/:/app/log/
+    restart: always
+
+networks:
+  default:
+    name: local
+    external: true
