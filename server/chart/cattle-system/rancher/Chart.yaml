@@ -4,5 +4,5 @@ version: 0.1.0
 
 dependencies:
   - name: rancher
-    version: 2.9.1
+    version: 2.9.3
     repository: "https://releases.rancher.com/server-charts/stable"
