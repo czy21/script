@@ -1,13 +1,27 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Release.Name }}-admin
+  namespace: {{ .Release.Namespace }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Release.Name }}-admin
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    kubernetes.io/service-account.name: {{ .Release.Name }}-admin
+type: kubernetes.io/service-account-token  
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: {{ .Values.dashboard.serviceAccount.name}}
+  name: {{ .Release.Name }}-admin
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
   name: cluster-admin
 subjects:
   - kind: ServiceAccount
-    name: {{ .Values.dashboard.serviceAccount.name }}
+    name: {{ .Release.Name }}-admin
     namespace: {{ .Release.Namespace }}

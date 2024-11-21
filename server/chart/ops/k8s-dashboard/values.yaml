@@ -1,8 +1,5 @@
 dashboard:
-  service:
-    externalPort: 8080
-  protocolHttp: true
-  serviceAccount:
-    name: k8s-dashboard
-  extraArgs:
-    - --enable-skip-login
+  kong:
+    proxy:
+      http:
+        enabled: true
