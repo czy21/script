@@ -3,7 +3,7 @@
     sudo ln -sf /usr/local/bin/k3s /usr/bin/k3s
     sudo ln -sf /usr/local/bin/kubectl /usr/bin/kubectl
     sudo ln -sf /usr/local/bin/crictl /usr/bin/crictl
-    kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
-    crictl completion bash | sudo tee /etc/bash_completion.d/crictl > /dev/null    
+    sudo kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
+    sudo crictl completion bash | sudo tee /etc/bash_completion.d/crictl > /dev/null    
 
 - import_tasks: roles/kubernetes/tasks/tool.yml

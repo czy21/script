@@ -13,7 +13,7 @@
     cat {{ param_remote_role_path }}/k8s-sysctl.conf | sudo tee /etc/sysctl.d/k8s.conf > /dev/null
     sudo sysctl --system
     sh {{ param_remote_role_path }}/k8s-{{ param_ansible_os_family }}.sh
-    crictl completion bash | sudo tee /etc/bash_completion.d/crictl > /dev/null
-    kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
+    sudo crictl completion bash | sudo tee /etc/bash_completion.d/crictl > /dev/null
+    sudo kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
 
 - import_tasks: tool.yml
