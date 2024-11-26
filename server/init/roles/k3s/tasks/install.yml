@@ -1,5 +1,0 @@
-- name: config
-  shell: |
-    sudo mkdir -p /etc/rancher/k3s
-    sudo cp {{ param_remote_role_path }}/registries.yaml /etc/rancher/k3s/registries.yaml
-    sudo cp {{ param_remote_role_path }}/k3s-config.yaml /etc/rancher/k3s/config.yaml

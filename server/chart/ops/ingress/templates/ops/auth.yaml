@@ -10,13 +10,3 @@ metadata:
     nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required - admin'
 spec:
   rules:
-    - host: k8s-dashboard-{{ .Values.param_cluster_name }}.czy21-internal.com
-      http:
-        paths:
-        - pathType: Prefix
-          path: /
-          backend:
-            service:
-              name: k8s-dashboard
-              port:
-                number: 8080
