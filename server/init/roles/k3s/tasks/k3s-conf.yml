@@ -1,0 +1,4 @@
+- name: config
+  shell: |
+    sudo mkdir -p /etc/rancher/k3s
+    sudo cp {{ param_remote_role_path }}/registries.yaml /etc/rancher/k3s/registries.yaml

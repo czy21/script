@@ -1,7 +1,8 @@
-- name: k3s
-  import_tasks: install.yml
+- name: k3s conf
+  import_tasks: k3s-conf.yml
   tags:
-    - 'k3s'
+    - 'k3s-init'
+    - 'k3s-join'
 
 - name: k3s init
   import_tasks: k3s-init.yml
@@ -16,4 +17,6 @@
 - name: k3s post
   import_tasks: k3s-post.yml
   tags:
+    - 'k3s-init'
+    - 'k3s-join'
     - 'k3s-post'
