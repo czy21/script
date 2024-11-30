@@ -2,7 +2,7 @@
   shell: |
     sudo mkdir -p /etc/rancher/k3s
     sudo cp {{ param_remote_role_path }}/k3s-config.yaml /etc/rancher/k3s/config.yaml
-    curl -sfL https://rancher-mirror.rancher.cn/k3s/k3s-install.sh | INSTALL_K3S_MIRROR=cn INSTALL_K3S_VERSION="v{{ param_k3s_version }}" INSTALL_K3S_EXEC="server --flannel-backend none" K3S_TOKEN="{{ param_k3s_token }}" sh -s -
+    curl -sfL https://rancher-mirror.rancher.cn/k3s/k3s-install.sh | INSTALL_K3S_MIRROR=cn INSTALL_K3S_VERSION="v{{ param_k3s_version }}" INSTALL_K3S_EXEC="server" K3S_TOKEN="{{ param_k3s_token }}" sh -s -
     sudo -i eval '[ -z ${KUBECONFIG} ] && echo 'export KUBECONFIG=/etc/rancher/k3s/k3s.yaml' >> ~/.bashrc;'
     sudo -u {{ param_user_ops }} bash -c "[ -z ${KUBECONFIG} ] && echo 'export KUBECONFIG=.kube/config' >> ~/.bashrc;set -e;cd;mkdir -p .kube;sudo cat /etc/rancher/k3s/k3s.yaml | tee .kube/config > /dev/null"
   when: inventory_hostname == groups["master"][0]

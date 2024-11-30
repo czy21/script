@@ -1,4 +1,4 @@
 - name: k3s worker join
   shell: |
     curl -sfL https://rancher-mirror.rancher.cn/k3s/k3s-install.sh | INSTALL_K3S_MIRROR=cn INSTALL_K3S_VERSION="v{{ param_k3s_version }}" INSTALL_K3S_EXEC="agent" K3S_TOKEN="{{ param_k3s_token }}" sh -s - --server https://192.168.2.21:6443
-  when: 'inventory_hostname in groups["worker"]'
+  when: inventory_hostname in groups["worker"]
