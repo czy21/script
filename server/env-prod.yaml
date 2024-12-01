@@ -1,7 +1,1 @@
 param_cluster_name: prod
-
-param_ops_nacos_mysql_host: 192.168.2.18
-param_ops_nacos_mysql_db_name: nacos_prod
-param_ops_nacos_mysql_port: 3306
-param_ops_nacos_mysql_username: admin
-param_ops_nacos_mysql_password: !decrypt ["Q3p5LjE5MDgxNQo="]
