@@ -2,10 +2,10 @@
   shell: |
     sudo kubeadm join k8s-vip:16433 --token 22493h.sms1g99ed6mb5q3x --discovery-token-ca-cert-hash sha256:4dd60b6c4a49b357efd56475ecb354fba74bba37697d8d09c7bf56d702d030f6 --control-plane --certificate-key 96ae161fe0417c91a732cbdbc323ed3c918a9b4cae599397553ebf475ae780d9
     sudo -i eval 'if [ -z ${KUBECONFIG} ];then echo 'export KUBECONFIG=/etc/kubernetes/admin.conf' >> ~/.bashrc; fi;'
-    sudo -u {{ param_user_ops }} bash -c "set -e;cd;mkdir -p .kube && sudo cp --force /etc/kubernetes/admin.conf .kube/config && sudo chown {{ param_user_ops }}:{{ param_user_ops }} .kube/config"
+    sudo -u {{ param_user_ops }} bash -c "[ -z ${KUBECONFIG} ] && echo 'export KUBECONFIG=.kube/config' >> ~/.bashrc;set -e;cd;mkdir -p .kube;sudo cat /etc/kubernetes/admin.conf | tee .kube/config > /dev/null"
   when: 'inventory_hostname in groups["master"][1:]'
 
 - name: kubeadm worker join
   shell: |
-    sudo kubeadm join k8s-vip:16433 --token 22493h.sms1g99ed6mb5q3x --discovery-token-ca-cert-hash sha256:4dd60b6c4a49b357efd56475ecb354fba74bba37697d8d09c7bf56d702d030f6
-  when: 'inventory_hostname in groups["worker"]'
+    sudo kubeadm join {{ groups["master"][0] }}:6443 --token ldndlz.9ix7oongsrc2v4dk --discovery-token-ca-cert-hash sha256:a73dcdaaa91d96199a73ddc2ece3685c60505c3d7266c1a9a0365079578da257
+  when: inventory_hostname in groups["worker"]
