@@ -21,6 +21,12 @@ http:
     minio-web:
       rule: Host(`minio-web.czy21-internal.com`)
       service: minio-web@docker
+    metabase:
+      rule: Host(`metabase.czy21-internal.com`)
+      service: metabase@docker
+    superset:
+      rule: Host(`superset.czy21-internal.com`)
+      service: superset@docker
     chat2db:
       rule: Host(`chat2db.czy21-internal.com`)
       service: chat2db@docker

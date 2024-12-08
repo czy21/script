@@ -38,13 +38,13 @@ x-superset-env: &superset-env
 
 services:
 
-#  {{ param_role_name }}-init:
-#    image: *superset-image
-#    container_name: "{{ param_role_name }}-init"
-#    command: ["/app/docker/docker-init.sh"]
-#    user: "root"
-#    volumes: *superset-volumes
-#    environment: *superset-env
+  # superset-init:
+  #   image: *superset-image
+  #   container_name: "{{ param_role_name }}-init"
+  #   command: ["/app/docker/docker-init.sh"]
+  #   user: "root"
+  #   volumes: *superset-volumes
+  #   environment: *superset-env
 
   superset:
     image: *superset-image
