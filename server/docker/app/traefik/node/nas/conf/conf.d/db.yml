@@ -27,6 +27,9 @@ http:
     superset:
       rule: Host(`superset.czy21-internal.com`)
       service: superset@docker
+    airflow:
+      rule: Host(`airflow.czy21-internal.com`)
+      service: airflow@docker
     chat2db:
       rule: Host(`chat2db.czy21-internal.com`)
       service: chat2db@docker
