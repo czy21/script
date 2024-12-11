@@ -24,6 +24,9 @@ http:
     metabase:
       rule: Host(`metabase.czy21-internal.com`)
       service: metabase@docker
+    kaoto:
+      rule: Host(`kaoto.czy21-internal.com`)
+      service: kaoto@docker
     superset:
       rule: Host(`superset.czy21-internal.com`)
       service: superset@docker
