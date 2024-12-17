@@ -1,0 +1,25 @@
+version: "3.9"
+
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 8080
+
+services:
+
+  hop:
+    image: apache/hop-web:2.11.0
+    container_name: hop
+    labels:
+      <<: *traefik-label
+    privileged: true
+    user: root
+    volumes:
+      - '{{ param_docker_data }}/{{ param_role_name }}/conf/:/config/'
+      - '{{ param_docker_data }}/{{ param_role_name }}/data/:/data/'
+    environment:
+      HOP_PROJECT_FOLDER: /data
+      HOP_PROJECT_NAME: default
+      HOP_ENVIRONMENT_NAME: default
+      HOP_ENVIRONMENT_CONFIG_FILE_NAME_PATHS: /config/default.json
+    restart: always

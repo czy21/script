@@ -24,6 +24,9 @@ http:
     metabase:
       rule: Host(`metabase.czy21-internal.com`)
       service: metabase@docker
+    hop:
+      rule: Host(`hop.czy21-internal.com`)
+      service: hop@docker
     kaoto:
       rule: Host(`kaoto.czy21-internal.com`)
       service: kaoto@docker
