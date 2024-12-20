@@ -3,7 +3,7 @@ set -e
 
 echo -n "%wheel ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers.d/99-custom
 
-yum clean all && yum --refresh makecache -v
+yum clean all && yum --refresh makecache
 
 yum -y install tar wget vim nfs-utils bash-completion git jq rsync nc net-tools
 
@@ -25,7 +25,7 @@ sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
 # fix: Missing privilege separation directory: /run/sshd
 echo 'd /var/run/sshd 0755 root' > /usr/lib/tmpfiles.d/sshd.conf
 
-# fedora disable swap
+fedora disable swap
 if [ "fedora" == "{{ param_ansible_distribution }}" ];then
   systemctl mask systemd-zram-setup@zram0
 fi
