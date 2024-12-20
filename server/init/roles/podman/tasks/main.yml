@@ -1,0 +1,10 @@
+- name: install
+  shell: |
+    sudo mkdir -p /etc/containers/registries.conf.d
+
+    sudo tee /etc/containers/registries.conf.d/99-custom.conf << EOF
+    {{ lookup('ansible.builtin.template', '../kubernetes/templates/crio-registries.conf') }}
+    EOF
+    sh {{ param_remote_role_path }}/{{ param_ansible_os_family }}.sh
+  tags:
+    - '{{ param_role_name }}'

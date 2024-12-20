@@ -18,7 +18,7 @@ if [ "${LEAD_IPV4}" = "${HOST_IPV4}" ];then
   PRIORITY=100
 fi
 
-sudo bash -c "cat > /etc/keepalived/keepalived.conf" << EOF
+sudo tee /etc/keepalived/keepalived.conf << EOF
 ! /etc/keepalived/keepalived.conf
 ! Configuration File for keepalived
 global_defs {
@@ -50,7 +50,7 @@ vrrp_instance VI_1 {
 }
 EOF
 
-sudo bash -c "cat > /etc/keepalived/check_apiserver.sh" << EOF
+sudo tee /etc/keepalived/check_apiserver.sh << EOF
 #!/bin/sh
 
 errorExit() {
@@ -64,7 +64,7 @@ if ip addr | grep -q ${APISERVER_VIP}; then
 fi
 EOF
 
-sudo bash -c "cat > /etc/haproxy/conf.d/k8s.cfg" << EOF
+sudo tee /etc/haproxy/conf.d/k8s.cfg << EOF
 #---------------------------------------------------------------------
 # apiserver frontend which proxys to the control plane nodes
 #---------------------------------------------------------------------
