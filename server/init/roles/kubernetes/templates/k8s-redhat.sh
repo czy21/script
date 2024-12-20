@@ -2,7 +2,7 @@
 set -e
 
 cat {{ param_remote_role_path }}/k8s.repo | sudo tee /etc/yum.repos.d/kubernetes.repo
-cat <<EOF | sudo tee /etc/yum.repos.d/cri-o.repo
+sudo tee /etc/yum.repos.d/cri-o.repo << EOF
 [cri-o]
 name=CRI-O
 baseurl=https://pkgs.k8s.io/addons:/cri-o:/stable:/v{{ param_k8s_minor_version }}/rpm/

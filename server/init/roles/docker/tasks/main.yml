@@ -29,7 +29,7 @@
     sudo mkdir -p /etc/docker/
     sudo cp -rv {{ param_remote_role_path }}/daemon.json /etc/docker/daemon.json
     sudo mkdir -p /etc/systemd/system/docker.service.d/
-    sudo tee /etc/systemd/system/docker.service.d/docker.conf <<-'EOF'
+    sudo tee /etc/systemd/system/docker.service.d/docker.conf << EOF
     [Service]
     ExecStart=
     ExecStart=/usr/bin/dockerd
@@ -43,7 +43,7 @@
 - name: compose
   shell: |
     sudo mkdir -p /usr/local/lib/docker/cli-plugins/
-    sudo curl -L "https://github.com/docker/compose/releases/download/v{{ param_compose_version }}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/lib/docker/cli-plugins/docker-compose
+    sudo curl -L "https://github.com/docker/compose/releases/download/v{{ param_docker_compose_version }}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/lib/docker/cli-plugins/docker-compose
     sudo chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
     sudo ln -sf /usr/local/lib/docker/cli-plugins/docker-compose /usr/bin/docker-compose
   tags:

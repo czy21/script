@@ -21,7 +21,7 @@
 
 - name: sshd_config
   shell: |-
-    cat << EOF > /etc/ssh/sshd_config.d/99-custom.conf
+    tee /etc/ssh/sshd_config.d/99-custom.conf << EOF
     UseDNS no
     PermitRootLogin yes
     PasswordAuthentication no
