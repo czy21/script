@@ -16,7 +16,7 @@ for i in "${!IPV4S[@]}"; do
   IPV4_DIR=${DIR}/${IPV4}
   KUBE_CFG=${IPV4_DIR}/kubeadm-config.yaml
   mkdir -p ${IPV4_DIR}
-  cat << EOF > ${KUBE_CFG}
+  tee ${KUBE_CFG} << EOF
 ---
 apiVersion: "kubeadm.k8s.io/v1beta3"
 kind: InitConfiguration

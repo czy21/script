@@ -56,6 +56,23 @@
             - "{{ param_role_name }}-compose"
             - "{{ param_role_name }}-plugin"
 
+- name: podman
+  hosts: all
+  vars_files: ["vars/env.yml","vars/main.yml"]
+  vars:
+    param_role_name: podman
+  tasks:
+    - block:
+        - import_tasks: roles/common/tasks/copy.yml
+          tags:
+            - '{{ param_role_name }}'
+        - import_role:
+            name: '{{ param_role_name }}'
+      always:
+        - import_tasks: roles/common/tasks/clean.yml
+          tags:
+            - '{{ param_role_name }}'
+
 - name: haproxy
   hosts: all
   vars_files: ["vars/env.yml","vars/main.yml"]
