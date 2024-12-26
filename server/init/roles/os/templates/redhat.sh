@@ -25,7 +25,7 @@ sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
 # fix: Missing privilege separation directory: /run/sshd
 echo 'd /var/run/sshd 0755 root' > /usr/lib/tmpfiles.d/sshd.conf
 
-fedora disable swap
+# fedora disable swap
 if [ "fedora" == "{{ param_ansible_distribution }}" ];then
   systemctl mask systemd-zram-setup@zram0
 fi
