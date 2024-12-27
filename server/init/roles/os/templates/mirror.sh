@@ -37,6 +37,10 @@ if [ "fedora" = "${os_distribution}" ]; then
 fi
 
 if [ "ubuntu" = "${os_distribution}" ]; then
-  [ ! -f "/etc/apt/sources.list.bak" ] && cp -rv /etc/apt/sources.list /etc/apt/sources.list.bak
-  sed "s,\(http\|https\)://.*.ubuntu.com,http://{{ param_mirror_apt }},g" /etc/apt/sources.list.bak | tee /etc/apt/sources.list > /dev/null
+  sources_file=/etc/apt/sources.list
+  if [ "24" = "${os_major_version}" ];then
+    sources_file=/etc/apt/sources.list.d/ubuntu.sources
+  fi
+  [ ! -f "${sources_file}.bak" ] && cp -rv ${sources_file} ${sources_file}.bak
+  sed "s,\(http\|https\)://.*.ubuntu.com,http://{{ param_mirror_apt }}," ${sources_file}.bak | tee ${sources_file} > /dev/null
 fi
