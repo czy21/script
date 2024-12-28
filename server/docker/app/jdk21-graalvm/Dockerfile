@@ -1,4 +1,4 @@
-FROM container-registry.oracle.com/graalvm/jdk:21.0.5-ol9-20241015
+FROM ghcr.io/graalvm/jdk-community:21.0.2
 
 WORKDIR /app
 ENV JAR=/app/api.jar
