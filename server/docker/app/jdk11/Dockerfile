@@ -1,4 +1,4 @@
-FROM eclipse-temurin:11.0.21_9-jdk-jammy
+FROM eclipse-temurin:11.0.25_9-jdk-noble
 
 WORKDIR /app
 ENV JAR=/app/api.jar
