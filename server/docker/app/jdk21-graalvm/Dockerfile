@@ -1,4 +1,4 @@
-FROM ghcr.io/graalvm/graalvm-community:21.0.2-ol9-20240116
+FROM container-registry.oracle.com/graalvm/jdk:21.0.5-ol9-20241015
 
 WORKDIR /app
 ENV JAR=/app/api.jar
