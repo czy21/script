@@ -1,4 +1,4 @@
-FROM eclipse-temurin:21.0.2_13-jdk-jammy
+FROM ghcr.io/graalvm/jdk-community:23.0.1
 
 WORKDIR /app
 ENV JAR=/app/api.jar
@@ -9,5 +9,5 @@ COPY docker-entrypoint.sh /
 RUN chmod +x /docker-entrypoint.sh
 
 VOLUME ["/app/data/","/app/log"]
-EXPOSE 8080 9999
+EXPOSE 8080
 ENTRYPOINT ["/docker-entrypoint.sh"]
