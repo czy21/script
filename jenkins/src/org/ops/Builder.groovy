@@ -9,6 +9,7 @@ def build() {
             java  : {
                 env.JAVA_HOME = "${tool 'jdk-21-graalvm'}"
                 env.PATH = "${JAVA_HOME}/bin:${PATH}"
+                sh "java --version"
             },
             maven : {
                 env.MAVEN_HOME = "${tool 'mvn-3.9'}"
