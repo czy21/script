@@ -3,3 +3,6 @@ http:
     alisqlchatst:
       rule: Host(`sqlchat.czy21-internal.com`)
       service: sqlchat@docker
+    open-webui:
+      rule: Host(`open-webui.czy21-internal.com`)
+      service: open-webui@docker
