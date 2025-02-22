@@ -48,6 +48,3 @@ http:
     metatube:
       rule: Host(`metatube.czy21-internal.com`)
       service: metatube@docker
-    bitwarden:
-      rule: Host(`bitwarden.czy21.com`)
-      service: bitwarden@docker

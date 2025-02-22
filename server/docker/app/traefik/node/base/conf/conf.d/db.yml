@@ -1,0 +1,5 @@
+http:
+  routers:
+    bitwarden:
+      rule: Host(`bitwarden.czy21.com`)
+      service: bitwarden@docker
