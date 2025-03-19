@@ -1,0 +1,3 @@
+FROM registry.czy21-internal.com/library/aspnet9
+COPY ./build/ /app/
+RUN ls -al /app
