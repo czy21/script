@@ -31,7 +31,7 @@ def build() {
                 env.PATH = "${NODEJS_HOME}/bin:${PATH}"
             },
             dotnet: {
-                env.DOTNET_HOME = "${tool 'net7.0-linux-64'}"
+                env.DOTNET_HOME = "${tool 'net9.0-linux-64'}"
                 env.DOTNET_SYSTEM_GLOBALIZATION_INVARIANT = 1
                 env.PATH = "${DOTNET_HOME}:${PATH}"
             }
@@ -69,7 +69,7 @@ def build() {
                 pathMap.get("dotnet").call()
                 configFileProvider([configFile(fileId: "nuget.config", variable: 'CONFIG_FILE_NUGET')]) {
                     def cmd = StringUtils.format(
-                            "rm -rf {0}/build && dotnet publish --configfile {1} -c Release {0} -o {0}/build",
+                            "rm -rf {0}/build && dotnet publish --configfile {1} -c Release {0} -r linux-x64 --self-contained false -p:PublishSingleFile=true -p:AssemblyName=api -o {0}/build",
                             env.param_project_root,
                             "${CONFIG_FILE_NUGET}"
                     )
