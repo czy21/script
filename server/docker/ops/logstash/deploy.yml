@@ -7,6 +7,8 @@ services:
     hostname: logstash
     privileged: true
     user: root
+    ports:
+      - 4560:4560 # spring
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/usr/share/logstash/data/
       - {{ param_docker_data }}/{{ param_role_name }}/conf/logstash.yml:/usr/share/logstash/config/logstash.yml
