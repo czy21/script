@@ -17,6 +17,8 @@ services:
     volumes:
       - ${param_docker_data}/${param_release_name}/data/:/app/data/
       - ${param_docker_data}/${param_release_name}/log/:/app/log/
+    environment:
+      JAVA_OPTS: ${param_app_args}
     restart: always
 
 networks:
