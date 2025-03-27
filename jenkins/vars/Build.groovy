@@ -63,6 +63,7 @@ def call() {
                         env.param_docker_compose_file = PathUtils.ofPath(env.param_docker_context, "docker-compose.yaml")
                         env.param_release_image = PathUtils.ofPath(env.param_registry_repo, env.param_registry_dir, env.param_release_name)
                         env.param_release_version = StringUtils.defaultIfEmpty(env.param_release_version, params.param_git_branch)
+                        env.param_docker_build_enabled=StringUtils.defaultIfEmpty(env.param_docker_build_enabled, "true")
                         common.writeParamToYaml()
                     }
                 }
@@ -95,6 +96,9 @@ def call() {
                 }
             }
             stage('dockerBuild') {
+                when {
+                    expression { env.param_docker_build == "true" }
+                }
                 steps {
                     script {
                         new Docker().build()
