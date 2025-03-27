@@ -11,7 +11,7 @@ scp ${SSH_ARGS} .jenkins/host-start-api.sh ${SSH_HOST}:
 if [ "${code_type}" == "dotnet" ];then
   (
     cd ${project_root}/build
-    tar -zcf - | ssh ${SSH_ARGS} ${SSH_HOST} "mkdir -p /app/${param_release_name}/;tar -zxf - -C /app/${param_release_name}/;ls -al /app/${param_release_name}/;chmod +x /app/${param_release_name}/api"
+    tar -zcf - . | ssh ${SSH_ARGS} ${SSH_HOST} "mkdir -p /app/${param_release_name}/ && tar -zxf - -C /app/${param_release_name}/ && ls -al /app/${param_release_name}/ && chmod +x /app/${param_release_name}/api"
   )
 fi
 
