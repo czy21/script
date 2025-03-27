@@ -15,7 +15,7 @@ if [ "${code_type}" == "dotnet" ];then
 fi
 
 if [ -f "${archive_file}" ];then
-
+  echo "${archive_file}"
 #   ssh opsor@${param_deploy_host} "mkdir -p /app/${param_release_name}/"
 #   scp ${archive_file} opsor@${param_deploy_host}:/app/${param_release_name}/
 #   ssh opsor@${param_deploy_host} "cd /app/${param_release_name}/;tar -zxvf ${archive_name};chmod +x api;rm -fv ${archive_name}"
