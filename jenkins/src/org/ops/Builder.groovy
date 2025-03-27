@@ -69,7 +69,7 @@ def build() {
                 pathMap.get("dotnet").call()
                 configFileProvider([configFile(fileId: "nuget.config", variable: 'CONFIG_FILE_NUGET')]) {
                     def cmd = StringUtils.format(
-                            "rm -rf {0}/build && dotnet publish --configfile {1} -c Release {0} -r linux-x64 --self-contained false -p:PublishSingleFile=true -p:AssemblyName=api -o {0}/build",
+                            "rm -rf {0}/build;(cd {0};dotnet publish --configfile {1} -c Release -r linux-x64 -p:DebugType=None -p:DebugSymbols=false)",
                             env.param_project_root,
                             "${CONFIG_FILE_NUGET}"
                     )
