@@ -1,4 +1,4 @@
 #!/bin/bash
 
 chmod +x ${API_FILE}
-${API_FILE} ${DOTNET_OPTS}
+echo "${DOTNET_OPTS}" | xargs ${API_FILE}
