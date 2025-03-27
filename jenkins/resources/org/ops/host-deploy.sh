@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -x
+
 project_root=${param_project_root}
 code_type=${param_code_type}
 
