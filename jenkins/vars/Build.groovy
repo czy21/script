@@ -3,6 +3,7 @@ import org.ops.Analysis
 import org.ops.Builder
 import org.ops.Common
 import org.ops.Docker
+import org.ops.Host
 import org.ops.util.PathUtils
 import org.ops.util.StringUtils
 
@@ -80,6 +81,16 @@ def call() {
                 steps {
                     script {
                         new Analysis().scan()
+                    }
+                }
+            }
+            stage('hostDeploy') {
+                when {
+                    expression { StringUtils.isNotEmpty(env.param_deploy_host) }
+                }
+                steps {
+                    script {
+                        new Host().deploy()
                     }
                 }
             }
