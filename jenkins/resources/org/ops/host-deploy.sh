@@ -14,8 +14,8 @@ if [ "${code_type}" == "dotnet" ];then
 fi
 
 SSH_ARGS="-o StrictHostKeyChecking=no -i ${SSH_PRIVATE_KEY}"
-
-scp ${SSH_ARGS} host-start-api.sh opsor@${param_deploy_host}:
+pwd
+scp ${SSH_ARGS} .jenkins/host-start-api.sh opsor@${param_deploy_host}:
 
 if [ -f "${archive_file}" ];then
 
