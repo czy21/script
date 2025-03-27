@@ -6,15 +6,17 @@ import org.ops.util.StringUtils
 
 def deploy() {
     
-    def archive_file = ".jenkins/host-archive.sh"
-    def archive_content = libraryResource "org/ops/host-archive.sh"
-    writeFile file: archive_file, text: archive_content, encoding: 'utf-8'
+    def deploy_file = ".jenkins/host-deploy.sh"
+    def deploy_content = libraryResource "org/ops/host-deploy.sh"
+    writeFile file: deploy_file, text: deploy_content, encoding: 'utf-8'
 
     def start_api_file = ".jenkins/host-start-api.sh"
     def start_api_content = libraryResource "org/ops/host-start-api.sh"
     writeFile file: start_api_file, text: start_api_content, encoding: 'utf-8'
 
-    sh "chmod +x ${archive_file};${archive_file}"
+    withCredentials([sshUserPrivateKey(credentialsId: 'opsor', keyFileVariable: 'SSH_PRIVATE_KEY')]) {
+        sh "chmod +x ${deploy_file};${deploy_file}"
+    }
 }
 
 return this
