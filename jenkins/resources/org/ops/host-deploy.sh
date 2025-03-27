@@ -27,6 +27,6 @@ if [ -f "${archive_file}" ];then
     ssh ${SSH_ARGS} -i ${SSH_PRIVATE_KEY} ${SSH_HOST} "cd /app/${param_release_name}/;tar -zxvf ${archive_name};chmod +x api;rm -fv ${archive_name}"
   fi
 
-  ssh ${SSH_ARGS} ${SSH_HOST} "chmod +x host-start-api.sh && host-start-api.sh -n ${param_release_name} -c ${code_type} -d /app/${param_release_name}"
+  ssh ${SSH_ARGS} ${SSH_HOST} "chmod +x host-start-api.sh && ./host-start-api.sh -n ${param_release_name} -c ${code_type} -d /app/${param_release_name}"
 
 fi
