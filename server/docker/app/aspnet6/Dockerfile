@@ -1,4 +1,5 @@
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
+
 WORKDIR /app
 
 ENV API_FILE=/app/api
