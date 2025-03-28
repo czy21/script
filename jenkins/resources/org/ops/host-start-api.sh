@@ -2,12 +2,14 @@
 
 target_name=
 target_code=
+target_args=
 target_dir=
 
-while getopts "n:c:d:" opt;do
+while getopts "n:c:d:p::" opt;do
     case $opt in
         n) target_name=$OPTARG;;
         c) target_code=$OPTARG;;
+        p) target_args=$OPTARG;;
         d) target_dir=$OPTARG;;
     esac
 done;
@@ -20,7 +22,7 @@ After=network.target
 
 [Service]
 WorkingDirectory=${target_dir}
-ExecStart=${target_dir}/api
+ExecStart=${target_dir}/api $target_args
 Restart=always
 User=opsor
 
