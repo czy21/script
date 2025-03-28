@@ -6,7 +6,7 @@ SSH_HOST="${SSH_HOST:-opsor@${param_deploy_host}}"
 SSH_ARGS="-o StrictHostKeyChecking=no"
 
 if [ -n "${SSH_PRIVATE_KEY}" ];then
-  SSH_ARGS+="-i ${SSH_PRIVATE_KEY}"
+  SSH_ARGS+=" -i ${SSH_PRIVATE_KEY}"
 fi
 
 if [ "${param_code_type}" == "dotnet" ];then
