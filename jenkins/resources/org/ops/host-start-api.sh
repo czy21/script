@@ -24,7 +24,7 @@ After=network.target
 
 [Service]
 WorkingDirectory=${target_dir}
-ExecStart=${target_dir}/api $target_args
+ExecStart=${target_dir}/api
 Restart=always
 User=opsor
 
