@@ -5,8 +5,6 @@ set -x
 SSH_HOST="opsor@${param_deploy_host}"
 SSH_ARGS="-o StrictHostKeyChecking=no -i ${SSH_PRIVATE_KEY}"
 
-scp ${SSH_ARGS} .jenkins/host-start-api.sh ${SSH_HOST}:
-
 if [ "${param_code_type}" == "dotnet" ];then
   (
     cd ${param_project_root}/build
@@ -14,4 +12,25 @@ if [ "${param_code_type}" == "dotnet" ];then
   )
 fi
 
-ssh ${SSH_ARGS} ${SSH_HOST} "chmod +x host-start-api.sh && ./host-start-api.sh -n ${param_release_name} -c ${param_code_type} -d /app/${param_release_name} -p '${param_app_args}'"
+ssh ${SSH_ARGS} ${SSH_HOST} << SSHEOF
+if [ "$param_code_type" == "dotnet" ];then
+    sudo tee /etc/systemd/system/${param_release_name}.service << EOF
+[Unit]
+Description=.NET Application
+After=network.target
+
+[Service]
+WorkingDirectory=/app/${param_release_name}
+ExecStart=/app/${param_release_name}/api ${param_app_args}
+Restart=always
+User=opsor
+
+[Install]
+WantedBy=multi-user.target
+
+EOF
+fi
+sudo systemctl daemon-reload
+sudo systemctl restart ${param_release_name}
+sudo systemctl enable ${param_release_name}
+SSHEOF
