@@ -14,7 +14,4 @@ if [ "${param_code_type}" == "dotnet" ];then
   )
 fi
 
-ssh ${SSH_ARGS} ${SSH_HOST} << EOF
-chmod +x host-start-api.sh
-./host-start-api.sh -n ${param_release_name} -c ${param_code_type} -d /app/${param_release_name} -p "${param_app_args}"
-EOF
+ssh ${SSH_ARGS} ${SSH_HOST} "chmod +x host-start-api.sh && ./host-start-api.sh -n ${param_release_name} -c ${param_code_type} -d /app/${param_release_name} -p '${param_app_args}'"
