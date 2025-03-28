@@ -14,7 +14,7 @@ while getopts "n:c:d:p::" opt;do
     esac
 done;
 
-echo ${target_args[@]}
+echo "${target_args}"
 
 if [ "$target_code" == "dotnet" ];then
     sudo tee /etc/systemd/system/${target_name}.service << EOF
