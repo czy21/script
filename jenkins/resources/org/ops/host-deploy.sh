@@ -12,7 +12,7 @@ if [ "${param_code_type}" == "dotnet" ];then
   )
 fi
 
-ssh ${SSH_ARGS} ${SSH_HOST} << SSHEOF
+ssh ${SSH_ARGS} ${SSH_HOST} << SCRIPT
 if [ "$param_code_type" == "dotnet" ];then
     sudo tee /etc/systemd/system/${param_release_name}.service << EOF
 [Unit]
@@ -33,4 +33,4 @@ fi
 sudo systemctl daemon-reload
 sudo systemctl restart ${param_release_name}
 sudo systemctl enable ${param_release_name}
-SSHEOF
+SCRIPT
