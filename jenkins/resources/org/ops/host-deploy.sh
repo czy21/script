@@ -23,7 +23,7 @@ if [ "${param_code_type}" == "midway" ];then
     --exclude='*.sh'  \
     --exclude='build' \
     --exclude='logs' \
-    --exclude='node_modules' . | ssh ${SSH_ARGS} ${SSH_HOST} "mkdir -p /app/${param_release_name}/ && tar -zxf - -C /app/${param_release_name}/"
+    --exclude='node_modules' . | ssh ${SSH_ARGS} ${SSH_HOST} "mkdir -p /app/${param_release_name}/ && tar -zxf - -C /app/${param_release_name}/ && npm --prefix install /app/${param_release_name}/"
   )
 fi
 
