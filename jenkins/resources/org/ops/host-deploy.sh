@@ -49,7 +49,7 @@ fi
 if [ "$param_code_type" == "midway" ];then
     sudo tee /etc/systemd/system/${param_release_name}.service << EOF
 [Unit]
-Description=.NET Application
+Description=NodeJS Application
 After=network.target
 
 [Service]
