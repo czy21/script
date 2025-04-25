@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# set -x
+set -x
 
 SSH_HOST="${SSH_HOST:-opsor@${param_deploy_host}}"
 SSH_ARGS="-o StrictHostKeyChecking=no"
