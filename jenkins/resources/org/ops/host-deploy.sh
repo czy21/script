@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -x
+# set -x
 
 SSH_HOST="${SSH_HOST:-opsor@${param_deploy_host}}"
 SSH_ARGS="-o StrictHostKeyChecking=no"
@@ -16,14 +16,15 @@ if [ "${param_code_type}" == "dotnet" ];then
   )
 fi
 
-if [ "${param_code_type}" == "midway" ];then
+if [ "${param_code_type}" == "nodejs" ];then
+  TAR_EXCLUDES="${TAR_EXCLUDES:-"build logs node_modules *.sh"}"
+  TAR_EXCLUDES_ARGS=""
+  for t in ${TAR_EXCLUDES};do
+    TAR_EXCLUDES_ARGS+="--exclude='${t}' "
+  done
   (
     cd ${param_project_root}
-    tar zcf - \
-    --exclude='*.sh'  \
-    --exclude='build' \
-    --exclude='logs' \
-    --exclude='node_modules' . | ssh ${SSH_ARGS} ${SSH_HOST} "mkdir -p /app/${param_release_name}/ && tar -zxf - -C /app/${param_release_name}/ && npm --prefix /app/${param_release_name}/ install"
+    tar zcf - ${TAR_EXCLUDES_ARGS} . | ssh ${SSH_ARGS} ${SSH_HOST} "mkdir -p /app/${param_release_name}/ && tar -zxf - -C /app/${param_release_name}/ && npm --prefix /app/${param_release_name}/ install"
   )
 fi
 
@@ -46,7 +47,7 @@ WantedBy=multi-user.target
 EOF
 fi
 
-if [ "$param_code_type" == "midway" ];then
+if [ "$param_code_type" == "nodejs" ];then
     sudo tee /etc/systemd/system/${param_release_name}.service << EOF
 [Unit]
 Description=NodeJS Application
