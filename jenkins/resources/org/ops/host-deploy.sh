@@ -12,7 +12,7 @@ fi
 if [ "${param_code_type}" == "dotnet" ];then
   (
     cd ${param_project_root}/build
-    tar -zcvf - . | ssh ${SSH_ARGS} ${SSH_HOST} "mkdir -p /app/${param_release_name}/ && tar -zxf - -C /app/${param_release_name}/ && ls -al /app/${param_release_name}/ && chmod +x /app/${param_release_name}/api"
+    tar -zcvf - . | ssh ${SSH_ARGS} ${SSH_HOST} "mkdir -p /app/${param_release_name}/ && tar -zxf - -C /app/${param_release_name}/ && chmod +x /app/${param_release_name}/api"
   )
 fi
 
