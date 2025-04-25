@@ -20,7 +20,7 @@ if [ "${param_code_type}" == "nodejs" ];then
   TAR_EXCLUDES="${TAR_EXCLUDES:-"build logs node_modules *.sh"}"
   TAR_EXCLUDES_ARGS=""
   for t in ${TAR_EXCLUDES};do
-    TAR_EXCLUDES_ARGS+="--exclude='${t}' "
+    TAR_EXCLUDES_ARGS+="--exclude=${t} "
   done
   (
     cd ${param_project_root}
