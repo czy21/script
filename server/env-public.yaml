@@ -1,8 +1,8 @@
 param_disk_path: /volume5
 
 param_manage_username: <username>
-param_manage_password: <password>
+param_manage_password: <secret_value>
 
 param_db_host: <db_host>
 param_db_username: <username>
-param_db_password: <password>
+param_db_password: <secret_value>
