@@ -9,7 +9,7 @@ if [ -n "${SSH_PRIVATE_KEY}" ];then
   SSH_ARGS+=" -i ${SSH_PRIVATE_KEY}"
 fi
 
-TAR_CMD="mkdir -p /app/${param_release_name}/ && tar -zxvf - -C /app/${param_release_name}/ && chmod 777 /app/${param_release_name}/"
+TAR_CMD="mkdir -p /app/${param_release_name}/ && tar --warning=no-timestamp -zxvf - -C /app/${param_release_name}/ && chmod 777 /app/${param_release_name}/"
 
 if [ "${param_code_type}" == "dotnet" ];then
   (
