@@ -41,7 +41,7 @@ After=network.target
 WorkingDirectory=/app/${param_release_name}
 ExecStart=/app/${param_release_name}/api ${param_app_args}
 Restart=always
-User=opsor
+User=\$USER
 
 [Install]
 WantedBy=multi-user.target
@@ -59,7 +59,7 @@ After=network.target
 WorkingDirectory=/app/${param_release_name}
 ExecStart=npm --prefix /app/${param_release_name}/ run start
 Restart=always
-User=opsor
+User=\$USER
 
 [Install]
 WantedBy=multi-user.target
