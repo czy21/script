@@ -8,7 +8,7 @@ x-traefik-log-metrics-label: &traefik-log-metrics-label
 services:
 
   fluent-bit:
-    image: fluent/fluent-bit:2.1.7
+    image: fluent/fluent-bit:4.0.1
     pull_policy: always
     container_name: fluent-bit
     privileged: true
@@ -21,6 +21,8 @@ services:
     ports:
       - "24224:24224" # input
       - "24224:24224/udp"
+      # - "4560:4560" # input
+      # - "4560:4560/udp"
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/:/fluent-bit/etc/
     restart: always
