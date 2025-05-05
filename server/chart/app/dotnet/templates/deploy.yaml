@@ -1,0 +1,83 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    prometheus.io/port: "8080"
+    prometheus.io/scrape: "true"
+    prometheus.io/path: "actuator/prometheus"
+    helm.sh/revision: "{{ .Release.Revision }}"
+spec:
+  selector:
+    app: {{ .Release.Name }}
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 8080
+      targetPort: http
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    helm.sh/revision: "{{ .Release.Revision }}"
+spec:
+  replicas: {{ .Values.param_replicas | default 2 }}
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+      annotations:
+        helm.sh/revision: "{{ .Release.Revision }}"
+    spec:
+      containers:
+        - name: {{ .Release.Name }}
+          image: {{ .Values.param_registry_repo }}/{{ .Values.param_registry_dir }}/{{ .Release.Name }}:{{ .Values.param_release_version }}
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 8080
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: TZ
+              value: Asia/Shanghai
+            - name: DOTNET_OPTS
+              value: {{ .Values.param_app_args }}
+          volumeMounts:
+            - name: data
+              mountPath: /app/data/
+              subPath: data
+          # readinessProbe:
+          #   httpGet:
+          #     path: /actuator/health
+          #     port: 8080
+          #   initialDelaySeconds: 30
+          #   periodSeconds: 10
+          #   timeoutSeconds: 5
+          #   successThreshold: 1
+          #   failureThreshold: 3
+          # livenessProbe:
+          #   httpGet:
+          #     path: /actuator/health
+          #     port: 8080
+          #   initialDelaySeconds: 30
+          #   periodSeconds: 10
+          #   timeoutSeconds: 5
+          #   successThreshold: 1
+          #   failureThreshold: 3
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ .Values.param_data_claim_name }}

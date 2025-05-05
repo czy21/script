@@ -11,6 +11,10 @@ def deploy() {
                 env.param_release_chart_name = env.param_helm_java_chart_name
                 env.param_release_chart_version = env.param_helm_java_chart_version
             },
+            dotnet: {
+                env.param_release_chart_name = env.param_helm_dotnet_chart_name
+                env.param_release_chart_version = env.param_helm_dotnet_chart_version
+            },
             go  : {
                 env.param_release_chart_name = env.param_helm_go_chart_name
                 env.param_release_chart_version = env.param_helm_go_chart_version
