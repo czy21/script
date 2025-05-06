@@ -3,3 +3,4 @@ xpack.monitoring.enabled: true
 xpack.monitoring.elasticsearch.hosts: [ "http://{{ param_db_es_host }}:80" ]
 xpack.monitoring.elasticsearch.username: {{ param_db_es_username }}
 xpack.monitoring.elasticsearch.password: {{ param_db_es_password }}
+pipeline.ecs_compatibility: disabled
