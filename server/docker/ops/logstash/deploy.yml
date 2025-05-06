@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   logstash:
-    image: logstash:7.17.28
+    image: logstash:7.17.10
     container_name: logstash
     hostname: logstash
     privileged: true
