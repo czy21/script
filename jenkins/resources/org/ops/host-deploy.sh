@@ -12,10 +12,7 @@ fi
 TAR_CMD="mkdir -p /app/${param_release_name}/ && tar -zxvf - -C /app/${param_release_name}/ && chmod 777 /app/${param_release_name}/"
 
 if [ "${param_code_type}" == "dotnet" ];then
-  (
-    cd ${param_project_root}/build
-    tar -zcf - . | ssh ${SSH_ARGS} ${SSH_HOST} "${TAR_CMD} && chmod +x /app/${param_release_name}/api"
-  )
+  tar -zcf - -C ${param_project_root}/build . | ssh ${SSH_ARGS} ${SSH_HOST} "${TAR_CMD} && chmod +x /app/${param_release_name}/api"
 fi
 
 if [ "${param_code_type}" == "nodejs" ];then
