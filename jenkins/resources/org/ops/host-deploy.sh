@@ -2,7 +2,7 @@
 
 set -x
 
-APP_DIR="${APP_DIR:"/app"}"
+APP_DIR="${APP_DIR:-"/app"}"
 SSH_HOST="${SSH_HOST:-opsor@${param_deploy_host}}"
 SSH_ARGS="-o StrictHostKeyChecking=no"
 
