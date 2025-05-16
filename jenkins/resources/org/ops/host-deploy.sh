@@ -2,6 +2,7 @@
 
 set -x
 
+APP_DIR="${APP_DIR:"/app"}"
 SSH_HOST="${SSH_HOST:-opsor@${param_deploy_host}}"
 SSH_ARGS="-o StrictHostKeyChecking=no"
 
@@ -9,10 +10,10 @@ if [ -n "${SSH_PRIVATE_KEY}" ];then
   SSH_ARGS+=" -i ${SSH_PRIVATE_KEY}"
 fi
 
-TAR_CMD="mkdir -p /app/${param_release_name}/ && tar -zxvf - -C /app/${param_release_name}/ && chmod 777 /app/${param_release_name}/"
+TAR_CMD="mkdir -p ${APP_DIR}/${param_release_name}/ && tar -zxvf - -C ${APP_DIR}/${param_release_name}/ && chmod 777 ${APP_DIR}/${param_release_name}/"
 
 if [ "${param_code_type}" == "dotnet" ];then
-  tar -zcf - -C ${param_project_root}/build . | ssh ${SSH_ARGS} ${SSH_HOST} "${TAR_CMD} && chmod +x /app/${param_release_name}/api"
+  tar -zcf - -C ${param_project_root}/build . | ssh ${SSH_ARGS} ${SSH_HOST} "${TAR_CMD} && chmod +x ${APP_DIR}/${param_release_name}/api"
 fi
 
 if [ "${param_code_type}" == "nodejs" ];then
@@ -23,7 +24,7 @@ if [ "${param_code_type}" == "nodejs" ];then
   done
   (
     cd ${param_project_root}
-    tar -zcf - ${TAR_EXCLUDES_ARGS} . | ssh ${SSH_ARGS} ${SSH_HOST} "${TAR_CMD} && npm --prefix /app/${param_release_name}/ install"
+    tar -zcf - ${TAR_EXCLUDES_ARGS} . | ssh ${SSH_ARGS} ${SSH_HOST} "${TAR_CMD} && npm --prefix ${APP_DIR}/${param_release_name}/ install"
   )
 fi
 
@@ -35,8 +36,8 @@ Description=.NET Application
 After=network.target
 
 [Service]
-WorkingDirectory=/app/${param_release_name}
-ExecStart=/app/${param_release_name}/api ${param_app_args}
+WorkingDirectory=${APP_DIR}/${param_release_name}
+ExecStart=${APP_DIR}/${param_release_name}/api ${param_app_args}
 Restart=always
 User=\$USER
 
@@ -53,8 +54,8 @@ Description=NodeJS Application
 After=network.target
 
 [Service]
-WorkingDirectory=/app/${param_release_name}
-ExecStart=npm --prefix /app/${param_release_name}/ run start
+WorkingDirectory=${APP_DIR}/${param_release_name}
+ExecStart=npm --prefix ${APP_DIR}/${param_release_name}/ run start
 Restart=always
 User=\$USER
 
