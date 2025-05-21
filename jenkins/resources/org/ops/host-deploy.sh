@@ -5,6 +5,7 @@ set -x
 APP_DIR="${APP_DIR:-"/app"}"
 SSH_HOST="${SSH_HOST:-opsor@${param_deploy_host}}"
 SSH_ARGS="-o StrictHostKeyChecking=no"
+NPM_RUN_SCRIPT="${NPM_RUN_SCRIPT:-"start"}"
 
 if [ -n "${SSH_PRIVATE_KEY}" ];then
   SSH_ARGS+=" -i ${SSH_PRIVATE_KEY}"
@@ -55,7 +56,7 @@ After=network.target
 
 [Service]
 WorkingDirectory=${APP_DIR}/${param_release_name}
-ExecStart=npm --prefix ${APP_DIR}/${param_release_name}/ run start
+ExecStart=npm --prefix ${APP_DIR}/${param_release_name}/ run ${NPM_RUN_SCRIPT}
 Restart=always
 User=\$USER
 
