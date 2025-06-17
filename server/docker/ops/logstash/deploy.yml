@@ -14,4 +14,4 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/logstash.yml:/usr/share/logstash/config/logstash.yml
       - {{ param_docker_data }}/{{ param_role_name }}/conf/pipeline/:/usr/share/logstash/pipeline/
       - {{ param_docker_data }}/app/log/:/app/log/
-    restart: always
+    restart: no # 避免连接不上es,cpu负载高以及产生大量jruby文件
