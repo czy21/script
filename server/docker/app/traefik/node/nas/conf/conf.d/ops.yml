@@ -48,3 +48,6 @@ http:
     drawio:
       rule: Host(`drawio.czy21-internal.com`)
       service: drawio@docker
+    go-backup:
+      rule: Host(`go-backup.czy21-internal.com`)
+      service: go-backup@docker
