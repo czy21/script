@@ -14,4 +14,7 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/var/lib/docker
     environment:
       DOCKER_TLS_CERTDIR: /certs
+    tmpfs:
+      - /run
+      - /var/run
     restart: always
