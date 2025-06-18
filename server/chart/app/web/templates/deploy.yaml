@@ -11,7 +11,7 @@ metadata:
     version: {{ .Values.param_app_version | default .Values.param_release_version }}
 spec:
   revisionHistoryLimit: 3
-  replicas: 2
+  replicas: {{ .Values.param_replicas | default 2 }}
   strategy:
     type: RollingUpdate
   selector:
