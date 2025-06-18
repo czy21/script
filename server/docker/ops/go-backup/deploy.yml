@@ -1,0 +1,24 @@
+version: "3.9"
+
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 2703
+
+services:
+
+  go-backup:
+    image: huacnlee/gobackup:v2.15.3
+    container_name: go-backup
+    labels:
+      <<: *traefik-label
+    privileged: true
+    expose:
+      - "2703"
+    user: root
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/config.yml:/etc/gobackup/gobackup.yml
+      - {{ param_docker_data }}/{{ param_role_name }}/backup/:/root/backup/
+    restart: always
+
+
