@@ -3,8 +3,9 @@ version: "3.9"
 services:
 
   wxedge:
-    image: images-cluster.xycloud.com/wxedge/wxedge:latest
+    image: images-cluster.xycloud.com/wxedge/wxedge:3.3.1
     container_name: wxedge
+    network_mode: host
     privileged: true
     user: root
     volumes:
