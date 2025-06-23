@@ -1,0 +1,15 @@
+version: "3.9"
+
+services:
+
+  wxedge:
+    image: images-cluster.xycloud.com/wxedge/wxedge:latest
+    container_name: wxedge
+    privileged: true
+    user: root
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/storage
+    tmpfs:
+      - /run
+      - /tmp
+    restart: always
