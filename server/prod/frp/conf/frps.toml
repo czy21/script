@@ -1,0 +1,10 @@
+bindPort = 7000
+vhostHTTPPort = 8000
+subDomainHost = 'frp.czy21.com'
+
+auth.method = 'token'
+auth.token = 'cb5e0942-62b2-4578-a32f-3fd17444db26'
+
+webServer.port = 7500
+webServer.user = '{{ param_manage_username }}'
+webServer.password = ''
