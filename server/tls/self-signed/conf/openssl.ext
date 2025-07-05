@@ -5,3 +5,11 @@ subjectAltName=@alt_names
 [ alt_names ]
 DNS.1={{ param_ssl_generate_domain }}
 DNS.2=*.{{ param_ssl_generate_domain }}
+
+{%- for t in param_ssl_generate_domain_extra %}
+  {%- set i = loop.index - 1 %}
+  {%- set dns_code = 'DNS.'+(i*2+3)|string %}
+  {%- set dns_code_generic = 'DNS.'+(i*2+3+1)|string %}
+{{ dns_code }}={{ t }}
+{{ dns_code_generic }}=*.{{ t }}
+{%- endfor %}
