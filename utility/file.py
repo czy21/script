@@ -11,7 +11,11 @@ def get_files(path: pathlib.Path, remove_prefix: str = "") -> list:
 
 
 def read_text(file: pathlib.Path) -> str:
-    return file.read_text(encoding="utf-8")
+    try:
+        return file.read_text(encoding="utf-8")
+    except Exception as e:
+        print(f"file read error {file}: {e}")
+
 
 
 def write_text(file: pathlib.Path, text: str, st_mode: int = None):
