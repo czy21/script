@@ -17,3 +17,8 @@ order by r.name
 # batch update .git/config
 find -maxdepth 2 -name 'config' -exec sed -i 's|<origin>|<target>|g' {} \;
 ```
+
+## FAQ
+```text
+待官方修复SSH_DOMAIN自动解析浏览器DOMAIN
+```
