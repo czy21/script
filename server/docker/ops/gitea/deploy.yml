@@ -8,7 +8,7 @@ x-traefik-label: &traefik-label
 services:
 
   gitea:
-    image: gitea/gitea:1.23.4
+    image: gitea/gitea:1.24.2
     container_name: gitea
     labels:
       <<: *traefik-label
@@ -35,10 +35,7 @@ services:
       GITEA__database__HOST: "{{ param_db_mysql_host }}:{{ param_db_mysql_port }}"
       GITEA__database__USER: "{{ param_db_mysql_username }}"
       GITEA__database__PASSWD: "{{ param_db_mysql_password }}"
-      GITEA__service__DISABLE_REGISTRATION: true
       GITEA__packages__ENABLED: "true"
-      GITEA__repository__DEFAULT_REPO_UNITS: repo.code,repo.releases
-      GITEA__repository__DISABLED_REPO_UNITS: repo.issues, repo.ext_issues, repo.pulls, repo.wiki, repo.ext_wiki
       GITEA__attachment__MAX_SIZE: 1024
       GITEA__attachment__MAX_FILES: 20
       GITEA__webhook__ALLOWED_HOST_LIST: "*"
