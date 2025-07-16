@@ -11,10 +11,10 @@ if [ -n "${SSH_PRIVATE_KEY}" ];then
   SSH_ARGS+=" -i ${SSH_PRIVATE_KEY}"
 fi
 
-TAR_CMD="mkdir -p ${APP_DIR}/${param_release_name}/ && tar -zxvf - -C ${APP_DIR}/${param_release_name}/ && chmod 777 ${APP_DIR}/${param_release_name}/"
+APP_CMD="mkdir -p ${APP_DIR}/${param_release_name}/ && tar -zxvf - -C ${APP_DIR}/${param_release_name}/ && chmod 777 ${APP_DIR}/${param_release_name}/"
 
 if [ "${param_code_type}" == "dotnet" ];then
-  tar -zcf - -C ${param_project_root}/build . | ssh ${SSH_ARGS} ${SSH_HOST} "${TAR_CMD} && chmod +x ${APP_DIR}/${param_release_name}/api"
+  tar -zcf - -C ${param_project_root}/build . | ssh ${SSH_ARGS} ${SSH_HOST} "${APP_CMD} && chmod +x ${APP_DIR}/${param_release_name}/api"
 fi
 
 if [ "${param_code_type}" == "nodejs" ];then
@@ -25,7 +25,7 @@ if [ "${param_code_type}" == "nodejs" ];then
   done
   (
     cd ${param_project_root}
-    tar -zcf - ${TAR_EXCLUDES_ARGS} . | ssh ${SSH_ARGS} ${SSH_HOST} "${TAR_CMD} && npm --prefix ${APP_DIR}/${param_release_name}/ install"
+    tar -zcf - ${TAR_EXCLUDES_ARGS} . | ssh ${SSH_ARGS} ${SSH_HOST} "${APP_CMD} && npm --prefix ${APP_DIR}/${param_release_name}/ install"
   )
 fi
 
