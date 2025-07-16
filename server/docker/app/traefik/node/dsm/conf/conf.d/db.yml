@@ -1,22 +1,22 @@
 http:
   routers:
     nexus:
-      rule: Host(`nexus.czy21-internal.com`)
+      rule: Host(`nexus.czy21-internal.com`) || Host(`nexus.czy21.com`)
       service: nexus@docker
     nexus-repository:
-      rule: Host(`nexus.czy21-internal.com`) && PathPrefix(`/repository`)
+      rule: (Host(`nexus.czy21-internal.com`) || Host(`nexus.czy21.com`)) && PathPrefix(`/repository`)
       service: nexus@docker
       middlewares:
         - raw-proxy
         - apt-proxy
         - yum-proxy
     registry:
-      rule: Host(`registry.czy21-internal.com`)
+      rule: Host(`registry.czy21-internal.com`) || Host(`registry.czy21.com`)
       service: nexus@docker
       middlewares:
         - registry-hosted
     registry-proxy:
-      rule: Host(`registry-proxy.czy21-internal.com`)
+      rule: Host(`registry-proxy.czy21-internal.com`) || Host(`registry-proxy.czy21.com`)
       service: nexus@docker
       middlewares:
         - registry-proxy-group
