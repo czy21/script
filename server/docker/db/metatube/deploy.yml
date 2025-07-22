@@ -7,7 +7,7 @@ x-traefik-label: &traefik-label
 
 services:
   metatube:
-    image: metatube/metatube-server:1.2.3
+    image: "{{ param_registry_proxy_url }}/metatube-community/metatube-server:1.2.3" # ghcr.io/metatube-community/metatube-server:1.2.3
     container_name: metatube
     labels:
       <<: *traefik-label

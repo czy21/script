@@ -8,7 +8,7 @@ x-traefik-label: &traefik-label
 services:
 
   open-webui:
-    image: open-webui/open-webui:main # ghcr.io/open-webui/open-webui:main
+    image: "{{ param_registry_proxy_url }}/open-webui/open-webui:main" # ghcr.io/open-webui/open-webui:main
     container_name: open-webui
     hostname: open-webui
     labels:
