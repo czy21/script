@@ -1,12 +1,12 @@
 param_vm_fcos_vsphere_ova: /volume1/public/dev/coreos/fedora-coreos-40.20240808.3.0-vmware.x86_64.ova
 
 param_vm_ignition_target: docker # os docker k8s
-param_vm_network_gateway: 192.168.2.2
+param_vm_network_gateway: 192.168.20.2
 param_vm_network_ips:
   - name: fcos34
-    ip: 192.168.2.34
+    ip: 192.168.20.34
   - name: fcos35
-    ip: 192.168.2.35
+    ip: 192.168.20.35
 
 param_vm_vsphere_nodes:
   - name: node41

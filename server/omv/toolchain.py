@@ -5,19 +5,19 @@ import subprocess
 nodes = [
     {
         "user": "bruce",
-        "host": "192.168.2.21"
+        "host": "192.168.20.21"
     },
     {
         "user": "bruce",
-        "host": "192.168.2.22"
+        "host": "192.168.20.22"
     },
     {
         "user": "bruce",
-        "host": "192.168.2.25"
+        "host": "192.168.20.25"
     },
     {
         "user": "bruce",
-        "host": "192.168.2.26"
+        "host": "192.168.20.26"
     },
 ]
 
