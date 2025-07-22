@@ -19,17 +19,17 @@ PHPLDAPADMIN_TRUST_PROXY_SSL: false
 PHPLDAPADMIN_SSL_HELPER_PREFIX: phpldapadmin # ssl-helper first search config from PHPLDAPADMIN_SSL_HELPER_* variables, before SSL_HELPER_* variables.
 
 PHPLDAPADMIN_LDAP_HOSTS:
-  - 192.168.2.2:
+  - 192.168.20.2:
       - server:
           - tls: false
       - login:
           - bind_id: cn=admin,dc=example,dc=com
-  - 192.168.2.12:
+  - 192.168.20.12:
       - server:
           - tls: false
       - login:
           - bind_id: cn=admin,dc=nodomain
-  - 192.168.2.16:
+  - 192.168.20.16:
       - server:
           - tls: false
       - login:

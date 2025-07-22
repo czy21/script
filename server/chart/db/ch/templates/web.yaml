@@ -23,7 +23,7 @@ spec:
             - name: CH_NAME
               value: "ck-cluster"
             - name: CH_HOST
-              value: "192.168.2.25:8123"
+              value: "192.168.20.25:8123"
             - name: CH_LOGIN
               value: "default"
             - name: CH_PASSWORD

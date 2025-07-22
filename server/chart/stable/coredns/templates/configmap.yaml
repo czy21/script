@@ -14,7 +14,7 @@ data:
         # 泛解析第一种方式
         template IN A kafka.db.svc.cluster.local {
           match .*\.kafka\.db\.svc\.cluster\.local
-          answer "{{ .Name }} 60 IN A 192.168.2.25"
+          answer "{{ .Name }} 60 IN A 192.168.20.25"
           fallthrough
         }
         kubernetes cluster.local in-addr.arpa ip6.arpa {
@@ -35,5 +35,5 @@ data:
     kafka.db.svc.cluster.local:53 {
         errors
         cache 30
-        forward . 192.168.2.25
+        forward . 192.168.20.25
     }

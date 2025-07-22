@@ -23,5 +23,5 @@ services:
     command: --admin-password-file /tmp/portainer_password
 #    networks:
 #      macvlan100:
-#        ipv4_address: 192.168.2.147
+#        ipv4_address: 192.168.20.147
     restart: always

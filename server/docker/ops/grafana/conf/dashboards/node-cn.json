@@ -3659,8 +3659,8 @@
         "allValue": null,
         "current": {
           "selected": false,
-          "text": "192.168.2.18:9100",
-          "value": "192.168.2.18:9100"
+          "text": "192.168.20.18:9100",
+          "value": "192.168.20.18:9100"
         },
         "datasource": "nas",
         "definition": "label_values(node_uname_info{origin_prometheus=~\"$origin_prometheus\",job=~\"$job\",nodename=~\"$hostname\"},instance)",

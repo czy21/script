@@ -1,2 +1,2 @@
 hdfs_address: hadoop-namenode:9000
-zk_address: 192.168.2.18
+zk_address: 192.168.20.18
