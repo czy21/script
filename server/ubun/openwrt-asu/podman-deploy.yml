@@ -1,0 +1,21 @@
+
+
+services:
+  server:
+    image: "docker.io/openwrt/asu:latest"
+    command: uvicorn --host 0.0.0.0 asu.main:app
+    volumes:
+      - $PUBLIC_PATH/store:$PUBLIC_PATH/store:ro
+    ports:
+      - "8000:8000"
+    env_file: .env
+    restart: always
+
+  worker:
+    image: "docker.io/openwrt/asu:latest"
+    command: rqworker --logging_level INFO
+    volumes:
+      - $PUBLIC_PATH:$PUBLIC_PATH:rw
+      - $CONTAINER_SOCKET_PATH:$CONTAINER_SOCKET_PATH:rw
+    env_file: .env
+    restart: always
