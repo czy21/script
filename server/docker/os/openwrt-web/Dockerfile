@@ -1,7 +1,5 @@
-FROM nginx:1.28.0-alpine
+FROM nginx:1.29.0-alpine-perl
 
-RUN apk add --no-cache fcgiwrap spawn-fcgi perl perl-cgi
+RUN apk add --no-cache fcgiwrap spawn-fcgi perl-json
 
-COPY docker-entrypoint.sh /
-RUN chmod +x /docker-entrypoint.sh
-ENTRYPOINT ["/docker-entrypoint.sh"]
+COPY 99-docker-entrypoint-fcgiwrap.sh /docker-entrypoint.d
