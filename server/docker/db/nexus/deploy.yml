@@ -20,4 +20,5 @@ services:
     environment:
       INSTALL4J_ADD_VM_PARAMS: -Xms4G -Xmx4G -XX:MaxDirectMemorySize=6717M
       NEXUS_SECURITY_INITIAL_PASSWORD: "{{ param_manage_password }}"
+      NEXUS_DATASTORE_NEXUS_JDBCURL: jdbc:postgresql://{{ param_db_pgsql_host }}:{{ param_db_pgsql_port }}/nexus?user={{ param_db_pgsql_username }}&password={{ param_db_pgsql_password }}
     restart: always
