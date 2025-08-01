@@ -6,4 +6,6 @@ http:
     portainer:
       rule: Host(`portainer.czy21-internal.com`)
       service: portainer@docker
-      
+    youtrack:
+      rule: Host(`youtrack.czy21.com`)
+      service: youtrack@docker

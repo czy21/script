@@ -8,11 +8,13 @@ x-traefik-label: &traefik-label
 services:
 
   youtrack:
-    image: jetbrains/youtrack:2022.3.63553
+    image: jetbrains/youtrack:2025.2.89748
     container_name: youtrack
     hostname: youtrack
     expose:
       - "8080"
+    ports:
+      - "8088:8080"
     labels:
       <<: *traefik-label
     privileged: true
