@@ -14,6 +14,8 @@ remove_secret_param 'param_user_ops_ssh_public_key'
 
 remove_secret_param 'param_vaultwarden_admin_token'
 remove_secret_param 'param_vsphere_uri' 'user:password@host'
+remove_secret_param 'param_authelia_secret' 
+remove_secret_param 'param_authelia_user_00_password'
 
 param_sed_args+=" $1"
 echo $param_sed_args > .gitignore-secret_param.log

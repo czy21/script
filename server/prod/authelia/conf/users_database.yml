@@ -1,0 +1,7 @@
+users:
+  zhaoyu.chen:
+    displayname: "Bruce Chen"
+    password: {{ param_authelia_user_00_password }}
+    email: 805899926@qq.com
+    groups:
+      - admin
