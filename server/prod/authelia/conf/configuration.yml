@@ -1,0 +1,57 @@
+theme: light
+server:
+  address: tcp://0.0.0.0:9091/
+
+log:
+  level: 'info'
+
+identity_validation:
+  reset_password:
+    jwt_secret: {{ param_authelia_secret }}
+
+authentication_backend:
+  file:
+    path: /etc/authelia/users_database.yml
+    password:
+      algorithm: 'argon2'
+      argon2:
+        variant: 'argon2id'
+        iterations: 3
+        memory: 65536
+        parallelism: 4
+        key_length: 32
+        salt_length: 16
+      
+session:
+  secret: {{ param_authelia_secret }}
+  name: 'authelia_session'
+  same_site: 'lax'
+  inactivity: '5m'
+  expiration: '1h'
+  remember_me: '1M'
+  cookies:
+    - domain: 'czy21.com'
+      authelia_url: 'https://auth.czy21.com'
+      name: 'authelia_session'
+      same_site: 'lax'
+      inactivity: '5m'
+      expiration: '1h'
+      remember_me: '1d'
+
+storage:
+  encryption_key: {{ param_authelia_secret }}
+  local:
+    path: /etc/authelia/db.sqlite3
+
+notifier:
+  smtp:
+    address: submissions://{{ param_mail_smtp_host }}:465
+    username: {{ param_mail_smtp_username }}
+    password: {{ param_mail_smtp_password }}
+    sender: {{ param_mail_smtp_username }}
+
+access_control:
+  default_policy: deny
+  rules:
+    - domain: '*.frp.czy21.com'
+      policy: one_factor
