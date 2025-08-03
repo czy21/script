@@ -7,7 +7,7 @@ log:
 
 identity_validation:
   reset_password:
-    jwt_secret: {{ param_authelia_secret }}
+    jwt_secret: {{ param_jwt_secret }}
 
 authentication_backend:
   file:
@@ -23,7 +23,7 @@ authentication_backend:
         salt_length: 16
       
 session:
-  secret: {{ param_authelia_secret }}
+  secret: {{ param_jwt_secret }}
   name: 'authelia_session'
   same_site: 'lax'
   inactivity: '5m'
@@ -39,7 +39,7 @@ session:
       remember_me: '1d'
 
 storage:
-  encryption_key: {{ param_authelia_secret }}
+  encryption_key: {{ param_jwt_secret }}
   local:
     path: /etc/authelia/db.sqlite3
 
