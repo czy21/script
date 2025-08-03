@@ -18,24 +18,11 @@ services:
       - "{{ param_docker_data }}/{{ param_role_name }}/data/:/data/"
     environment:
       TZ: Asia/ShangHai
-      LLDAP_JWT_SECRET: REPLACE_WITH_RANDOM
-      LLDAP_KEY_SEED: REPLACE_WITH_RANDOM
+      LLDAP_JWT_SECRET: {{ param_jwt_secret }}
+      LLDAP_KEY_SEED: {{ param_jwt_secret }}
+      LLDAP_FORCE_UPDATE_PRIVATE_KEY: "false"
+      LLDAP_FORCE_LDAP_USER_PASS_RESET: "false"
       LLDAP_LDAP_BASE_DN: dc=czy21,dc=com
       LLDAP_LDAP_USER_PASS: {{ param_manage_password }}
-      # If using LDAPS, set enabled true and configure cert and key path
-      # LLDAP_LDAPS_OPTIONS__ENABLED: true
-      # LLDAP_LDAPS_OPTIONS__CERT_FILE: /path/to/certfile.crt
-      # LLDAP_LDAPS_OPTIONS__KEY_FILE: /path/to/keyfile.key
-      # You can also set a different database:
       LLDAP_DATABASE_URL: mysql://{{ param_db_mysql_username }}:{{ param_db_mysql_password }}@{{ param_db_mysql_host }}:{{ param_db_mysql_port }}/lldap
-      # LLDAP_DATABASE_URL: postgres://postgres-user:password@postgres-server/my-database
-      # If using SMTP, set the following variables
-      LLDAP_SMTP_OPTIONS__ENABLE_PASSWORD_RESET: true
-      LLDAP_SMTP_OPTIONS__SERVER: {{ param_mail_smtp_host }}
-      LLDAP_SMTP_OPTIONS__PORT: 465 # Check your smtp provider's documentation for this setting
-      LLDAP_SMTP_OPTIONS__SMTP_ENCRYPTION: TLS # How the connection is encrypted, either "NONE" (no encryption, port 25), "TLS" (sometimes called SSL, port 465) or "STARTTLS" (sometimes called TLS, port 587).
-      LLDAP_SMTP_OPTIONS__USER: {{ param_mail_smtp_username }} # The SMTP user, usually your email address
-      LLDAP_SMTP_OPTIONS__PASSWORD: {{ param_mail_smtp_password }} # The SMTP password
-      LLDAP_SMTP_OPTIONS__FROM: no-reply <no-reply@qq.com> # The header field, optional: how the sender appears in the email. The first is a free-form name, followed by an email between <>.
-      LLDAP_SMTP_OPTIONS__TO: admin <admin@qq.com> # Same for reply-to, optional.
     restart: always
