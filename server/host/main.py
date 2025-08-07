@@ -4,7 +4,7 @@ import pathlib
 from server import share
 
 
-class ProdRole(share.AbstractRole):
+class HostRole(share.AbstractRole):
 
     def __init__(self, context: share.RoleContext) -> None:
         super().__init__(context)
@@ -29,7 +29,7 @@ class ProdRole(share.AbstractRole):
         return get_cmds(self)
 
 
-def get_cmds(role: ProdRole) -> list[str]:
+def get_cmds(role: HostRole) -> list[str]:
     _cmds = []
     if role.role_init_sh.exists():
         _cmds.append("bash {}".format(role.role_init_sh.as_posix()))
@@ -37,4 +37,4 @@ def get_cmds(role: ProdRole) -> list[str]:
 
 
 if __name__ == '__main__':
-    share.Installer(pathlib.Path(__file__).parent, ProdRole).run()
+    share.Installer(pathlib.Path(__file__).parent, HostRole,role_deep=2).run()
