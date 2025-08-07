@@ -17,7 +17,8 @@ from utility import (
     template as template_util,
     yaml as yaml_util,
     log as log_util,
-    basic as basic_util
+    basic as basic_util,
+    path as path_util
 )
 
 logger = logging.getLogger()
@@ -183,31 +184,25 @@ class ArgParseHelpFormatter(argparse.MetavarTypeHelpFormatter):
         return action.type.__name__ if action.type and action.type.__name__ else str.__name__
 
 
+class RoleContext(typing.NamedTuple):
+    home_path: pathlib.Path
+    root_path: pathlib.Path
+    namespace: str
+    role_title: str
+    role_name: str
+    role_path: pathlib.Path
+    role_output_path: pathlib.Path
+    role_node_name: str
+    role_node_target_path: pathlib.Path
+    role_env: dict
+    role_env_output_file: pathlib.Path
+    args: argparse.Namespace
+
+
 class AbstractRole(metaclass=ABCMeta):
 
-    def __init__(
-            self,
-            home_path: pathlib.Path = None,
-            root_path: pathlib.Path = None,
-            namespace: str = None,
-            role_title: str = None,
-            role_name: str = None,
-            role_path: pathlib.Path = None,
-            role_output_path: pathlib.Path = None,
-            role_env: dict = None,
-            role_env_output_file: pathlib.Path = None,
-            args=None
-    ) -> None:
-        self.home_path = home_path
-        self.root_path = root_path
-        self.role_title = role_title
-        self.role_name = role_name
-        self.role_path = role_path
-        self.role_output_path = role_output_path
-        self.role_env = role_env
-        self.role_env_output_file = role_env_output_file
-        self.namespace = namespace
-        self.args = args
+    def __init__(self, context: RoleContext) -> None:
+        self.context = context
 
     def install(self) -> list[str]:
         pass
@@ -227,18 +222,21 @@ class AbstractRole(metaclass=ABCMeta):
     def push(self) -> list[str]:
         pass
 
+    def get_merge_ignore_pattern(self):
+        return []
+
     def sync_to_git_repo(self, role_platform_name):
-        registry_git_repo_url: urllib3.util.Url = urllib3.util.parse_url(self.role_env.get("param_registry_git_repo"))
+        registry_git_repo_url: urllib3.util.Url = urllib3.util.parse_url(self.context.role_env.get("param_registry_git_repo"))
         registry_git_repo_name: str = pathlib.Path(registry_git_repo_url.path).name
-        registry_git_repo_dir: pathlib.Path = self.home_path.joinpath(registry_git_repo_name)
+        registry_git_repo_dir: pathlib.Path = self.context.home_path.joinpath(registry_git_repo_name)
         if not registry_git_repo_dir.exists():
             execute("git clone ssh://{0} {1}".format(registry_git_repo_url, registry_git_repo_dir))
-        registry_git_repo_role_dir = registry_git_repo_dir.joinpath(self.role_name).joinpath(role_platform_name)
+        registry_git_repo_role_dir = registry_git_repo_dir.joinpath(self.context.role_name).joinpath(role_platform_name)
         registry_git_repo_role_dir.mkdir(exist_ok=True, parents=True)
-        file_util.sync(self.role_output_path, self.any_doc_exclude, registry_git_repo_role_dir)
+        file_util.sync(self.context.role_output_path, self.any_doc_exclude, registry_git_repo_role_dir)
 
     def any_doc_exclude(self, f: pathlib.Path):
-        return not any(regex_util.match_rules(self.role_env["param_doc_excludes"], f.as_posix()).values())
+        return not any(regex_util.match_rules(self.context.role_env["param_doc_excludes"], f.as_posix()).values())
 
 
 class Installer:
@@ -386,18 +384,24 @@ class Installer:
                         target_file = role_output_path.joinpath(args.target)
                         if target_file.exists():
                             _cmds.append("sh {0} {1}".format(target_file.as_posix(), " ".join(args.build_args)))
-                role_instance = self.role_class(
+                role_node_name = role_env.get("param_cluster_name", "null")
+                role_context = RoleContext(
                     home_path=self.home_path,
                     root_path=self.root_path,
                     role_title=role_title,
                     role_name=role_name,
                     role_path=role_path,
                     role_output_path=role_output_path,
+                    role_node_name=role_node_name,
+                    role_node_target_path=role_output_path.joinpath("node").joinpath(role_node_name),
                     role_env=role_env,
                     role_env_output_file=role_env_output_file,
                     namespace=namespace,
                     args=args
                 )
+                role_instance = self.role_class(context=role_context)
+                if role_context.role_node_target_path.exists():
+                    path_util.merge_dir(role_context.role_node_target_path, role_context.role_output_path, role_instance.get_merge_ignore_pattern())
                 _cmds.extend(getattr(role_instance, args.command)())
                 execute(collection_util.flat_to_str(_cmds, delimiter=" && "), dry_run=args.dry_run)
 

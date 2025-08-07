@@ -35,13 +35,16 @@ def join_path(*paths) -> str:
 
 
 def merge_dir(src: pathlib.Path, dst: pathlib.Path, ignore_pattern: list[str]):
-    resources: dict[pathlib.Path, pathlib.Path] = {
-        r: dst.joinpath(r.relative_to(src))
-        for r in src.rglob("*")
-        if not any(regex_util.match_rules(ignore_pattern, r.as_posix()).values())
-    }
-    for k, v in resources.items():
-        if k.is_dir():
-            v.mkdir(parents=True, exist_ok=True)
-        elif k.is_file() and not v.exists():
-            file_util.copy(k, v)
+    if not dst.exists():
+        dst.mkdir(parents=True, exist_ok=True)
+
+    for t in src.iterdir():
+
+        dest = dst.joinpath(t.name)
+
+        if t.is_dir():
+            merge_dir(t, dest, ignore_pattern)
+        else:
+            if not any(regex_util.match_rules(ignore_pattern, t.as_posix()).values()):
+                logger.debug(f"{t.as_posix()} => {dest.as_posix()}")
+                file_util.copy(t, dest)
