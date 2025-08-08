@@ -15,6 +15,7 @@ services:
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/nginx.conf:/etc/nginx/nginx.conf
       - {{ param_docker_data }}/{{ param_role_name }}/conf/conf.d/:/etc/nginx/conf.d/
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/snippets/:/etc/nginx/snippets/
       - {{ param_docker_data }}/{{ param_role_name }}/conf/cert/:/etc/nginx/cert/
       - {{ param_docker_data }}/{{ param_role_name }}/conf/static/:/usr/share/nginx/static/
     restart: always
