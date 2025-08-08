@@ -18,11 +18,7 @@
     "max-size": "100m"
   },
   "registry-mirrors": [
-    "http://{{ param_registry_proxy_url }}"
-  ],
-  "insecure-registries": [
-    "{{ param_registry_url }}",
-    "{{ param_registry_proxy_url }}"
+    "https://{{ param_registry_proxy_url }}"
   ],
   "live-restore": true
 }
