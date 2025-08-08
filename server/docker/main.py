@@ -48,10 +48,7 @@ class DockerRole(share.AbstractRole):
         if self.role_conf_path.exists() or self.role_node_target_conf_path.exists():
             if self.context.args.rm_conf and self.role_target_conf_path.exists():
                 _cmds.append("sudo rm -rfv {0}".format(self.role_target_conf_path.as_posix()))
-            _cmds.append('sudo mkdir -p {1} && sudo cp -rv {0} {1}'.format(
-                self.role_node_target_conf_path if self.role_node_target_conf_path.exists() else self.role_conf_path.as_posix(),
-                self.role_target_path.as_posix())
-            )
+            _cmds.append('sudo mkdir -p {1} && sudo cp -rv {0} {1}'.format(self.role_conf_path.as_posix(),self.role_target_path.as_posix()))
         if self.role_init_sh.exists():
             _cmds.append("bash {}".format(self.role_init_sh.as_posix()))
         if self.role_deploy_file.exists():
