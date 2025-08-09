@@ -1,5 +1,5 @@
 rancher:
-  hostname: rancher-{{ param_cluster_name }}.czy21-internal.com
+  hostname: rancher-{{ param_cluster_name }}.czy21.com
   bootstrapPassword: {{ param_manage_password }}
   ingress:
     ingressClassName: "nginx"

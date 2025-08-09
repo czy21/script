@@ -14,10 +14,10 @@ http:
       rule: Host(`flink-his.czy21-internal.com`)
       service: flink-his@docker
     es:
-      rule: Host(`es.czy21-internal.com`)
+      rule: Host(`es.czy21.com`)
       service: es-1@docker
     kb:
-      rule: Host(`kb.czy21-internal.com`)
+      rule: Host(`kb.czy21.com`)
       service: es-1-kb@docker
     influxdb:
       rule: Host(`influxdb.czy21-internal.com`)
