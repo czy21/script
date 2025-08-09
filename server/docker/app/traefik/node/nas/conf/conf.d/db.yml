@@ -1,5 +1,12 @@
 http:
   routers:
+    nexus:
+      rule: Host(`nexus.czy21.com`)
+      service: nexus@docker
+      middlewares:
+        - raw-proxy
+        - apt-proxy
+        - yum-proxy
     flink-jmr:
       rule: Host(`flink-jmr.czy21-internal.com`)
       service: flink-jmr@docker
@@ -48,3 +55,17 @@ http:
     metatube:
       rule: Host(`metatube.czy21-internal.com`)
       service: metatube@docker
+
+  middlewares:
+    raw-proxy:
+      replacePathRegex:
+        regex: "^/repository/raw-proxy/(.*)/"
+        replacement: "/repository/raw-proxy-${1}/"
+    apt-proxy:
+      replacePathRegex:
+        regex: "^/repository/apt-proxy/(.*)/"
+        replacement: "/repository/apt-proxy-${1}/"
+    yum-proxy:
+      replacePathRegex:
+        regex: "^/repository/yum-proxy/(.*)/"
+        replacement: "/repository/yum-proxy-$1/"
