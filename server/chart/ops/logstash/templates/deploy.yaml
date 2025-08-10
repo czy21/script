@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: {{ .Release.Name }}
-          image: logstash:7.17.10
+          image: logstash:8.11.3
           ports:
             - name: spring
               containerPort: 4560

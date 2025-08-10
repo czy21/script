@@ -14,7 +14,7 @@ param.param_helm_python_chart_version = "0.1.0"
 param.param_helm_web_chart_name="web-template"
 param.param_helm_web_chart_version = "0.1.0"
 
-param.param_registry_repo= 'registry.czy21-internal.com'
+param.param_registry_repo= 'registry.czy21.com'
 param.param_registry_dir= 'library'
 
 param.param_go_proxy="http://nexus.czy21-internal.com/repository/go-proxy-group/,direct"
