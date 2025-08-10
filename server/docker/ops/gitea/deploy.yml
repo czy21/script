@@ -37,6 +37,7 @@ services:
       GITEA__database__PASSWD: "{{ param_db_mysql_password }}"
       GITEA__packages__ENABLED: "true"
       GITEA__repository__USE_COMPAT_SSH_URI: "true"
+      GITEA__ssh.minimum_key_sizes__RSA: 2048
       GITEA__attachment__MAX_SIZE: 1024
       GITEA__attachment__MAX_FILES: 20
       GITEA__webhook__ALLOWED_HOST_LIST: "*"
