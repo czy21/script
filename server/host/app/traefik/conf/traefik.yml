@@ -1,35 +1,38 @@
 providers:
-  docker:
-    endpoint: "unix:///var/run/docker.sock"
-    exposedByDefault: false
-    defaultRule: ""
+  # docker:
+  #     endpoint: "unix:///var/run/docker.sock"
+  #     exposedByDefault: false
+  #     defaultRule: ""
   file:
     directory: /etc/traefik/conf.d/
     watch: true
 
 log:
   level: ERROR # DEBUG, PANIC, FATAL, ERROR, WARN, INFO
-  filePath: /dev/stdout
-  maxAge: 7
+  filePath: /var/log/traefik/traefik.log
+  maxAge: 3
+  maxSize: 5
 
 accessLog:
-  filePath: /dev/stdout
+  filePath: /var/log/traefik/traefik.log
 
 api:
   insecure: true
+  dashboard: true
 
 entryPoints:
   web:
-    address: :80
+    address: :8082
     forwardedHeaders:
       insecure: true
   websecure:
-    address: :443
+    address: :8083
     forwardedHeaders:
       insecure: true
-      
+    http:
+      tls: {}
   traefik:
-    address: :8080
+    address: :8000
 
 metrics:
   prometheus:
