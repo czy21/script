@@ -1,0 +1,21 @@
+{
+    log {
+        output file /var/log/caddy/caddy.log {
+            roll_size 5mb
+            roll_keep 2
+            roll_keep_for 1d
+        }
+        format json {
+            time_format "iso8601"
+        }
+        level DEBUG
+    }
+}
+
+:2016 {
+        respond "Good, world!"
+}
+
+:2020 {
+        reverse_proxy 127.0.0.1:8080
+}

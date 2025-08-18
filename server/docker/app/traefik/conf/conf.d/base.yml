@@ -1,8 +1,5 @@
 http:
   routers:
-    metrics:
-      rule: Host(`traefik-{{ param_cluster_name }}.czy21-internal.com`) && PathPrefix(`/metrics`)
-      service: prometheus@internal
     traefik:
       rule: Host(`traefik-{{ param_cluster_name }}.czy21-internal.com`)
       service: traefik@docker
@@ -10,14 +7,6 @@ http:
       rule: Host(`cadvisor-{{ param_cluster_name }}.czy21-internal.com`)
       service: cadvisor@docker
   middlewares:
-    force-https-header:
-      headers:
-        customRequestHeaders:
-          X-Forwarded-Proto: "https"
-    https-redirect:
-      redirectScheme:
-        scheme: https
-        permanent: true
     basic-auth:
       basicAuth:
         usersFile: "/etc/traefik/conf.d/basic-auth.txt"
