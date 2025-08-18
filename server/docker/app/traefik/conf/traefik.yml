@@ -10,21 +10,17 @@ providers:
 log:
   level: ERROR # DEBUG, PANIC, FATAL, ERROR, WARN, INFO
   filePath: /dev/stdout
-  maxAge: 7
 
 accessLog:
   filePath: /dev/stdout
 
 api:
   insecure: true
+  dashboard: true
 
 entryPoints:
   web:
     address: :80
-    forwardedHeaders:
-      insecure: true
-  websecure:
-    address: :443
     forwardedHeaders:
       insecure: true
       
@@ -33,4 +29,4 @@ entryPoints:
 
 metrics:
   prometheus:
-    entryPoint: web
+    entryPoint: traefik
