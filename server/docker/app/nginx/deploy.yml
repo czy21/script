@@ -30,5 +30,5 @@ services:
       - "9113"
     extra_hosts: 
       - "host.docker.internal:host-gateway"
-    command: --nginx.scrape-uri=http://host.docker.internal:81/stub_status
+    command: --nginx.scrape-uri=http://host.docker.internal:80/stub_status
     restart: always
