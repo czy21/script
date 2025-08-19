@@ -30,3 +30,33 @@
   tags:
     - "os"
     - "os-sshd"
+
+- name: dotnet
+  shell: |-
+    sh {{ param_remote_role_path }}/{{ param_ansible_os_family }}-dotnet.sh
+  tags:
+    - "os-dotnet"
+
+- name: nginx
+  shell: |-
+    sh {{ param_remote_role_path }}/{{ param_ansible_os_family }}-nginx.sh
+  tags:
+    - "os-nginx"
+
+- name: redis
+  shell: |-
+    sh {{ param_remote_role_path }}/{{ param_ansible_os_family }}-redis.sh
+  tags:
+    - "os-redis"
+
+- name: mysql
+  shell: |-
+    sh {{ param_remote_role_path }}/{{ param_ansible_os_family }}-mysql.sh
+  tags:
+    - "os-mysql"
+
+- name: mongo
+  shell: |-
+    sh {{ param_remote_role_path }}/{{ param_ansible_os_family }}-mongo.sh
+  tags:
+    - "os-mongo"
