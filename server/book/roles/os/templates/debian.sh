@@ -3,10 +3,10 @@ set -e
 
 echo -n "%sudo   ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers.d/99-custom
 
-NEEDRESTART_SUSPEND=1 apt remove needrestart -y && apt autoclean -y && apt autoremove -y
+NEEDRESTART_SUSPEND=1 apt-get remove needrestart -y && apt-get autoclean -y && apt-get autoremove -y
 
-apt -y update
-apt -y install wget vim git nfs-common cifs-utils net-tools make gcc iputils-ping bash-completion systemd-timesyncd rsync ncdu nload
+apt-get -y update
+apt-get -y install ca-certificates lsb-release curl wget vim git nfs-common cifs-utils net-tools make gcc iputils-ping bash-completion systemd-timesyncd rsync ncdu nload
 
 # postgres repo
 #sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
