@@ -10,11 +10,13 @@
             - "os"
             - "os-mirror"
             - "os-sshd"
-            - "os-dotnet"
-            - "os-nginx"
-            - "os-redis"
-            - "os-mysql"
-            - "os-mongo"
+            - "sdk-go"
+            - "sdk-java"
+            - "sdk-dotnet"
+            - "svc-nginx"
+            - "svc-redis"
+            - "svc-mysql"
+            - "svc-mongo"
         - import_role:
             name: '{{ param_role_name }}'
       always:
@@ -23,11 +25,13 @@
             - "os"
             - "os-mirror"
             - "os-sshd"
-            - "os-dotnet"
-            - "os-nginx"
-            - "os-redis"
-            - "os-mysql"
-            - "os-mongo"
+            - "sdk-go"
+            - "sdk-java"
+            - "sdk-dotnet"
+            - "svc-nginx"
+            - "svc-redis"
+            - "svc-mysql"
+            - "svc-mongo"
 
 - name: hosts
   hosts: all
