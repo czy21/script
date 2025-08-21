@@ -31,32 +31,44 @@
     - "os"
     - "os-sshd"
 
+- name: go
+  shell: |-
+    sh {{ param_remote_role_path }}/sdk-go.sh
+  tags:
+    - "sdk-go"
+
+- name: java
+  shell: |-
+    sh {{ param_remote_role_path }}/sdk-java.sh
+  tags:
+    - "sdk-java"
+
 - name: dotnet
   shell: |-
     sh {{ param_remote_role_path }}/{{ param_ansible_os_family }}-dotnet.sh
   tags:
-    - "os-dotnet"
+    - "sdk-dotnet"
 
 - name: nginx
   shell: |-
     sh {{ param_remote_role_path }}/{{ param_ansible_os_family }}-nginx.sh
   tags:
-    - "os-nginx"
+    - "svc-nginx"
 
 - name: redis
   shell: |-
     sh {{ param_remote_role_path }}/{{ param_ansible_os_family }}-redis.sh
   tags:
-    - "os-redis"
+    - "svc-redis"
 
 - name: mysql
   shell: |-
     sh {{ param_remote_role_path }}/{{ param_ansible_os_family }}-mysql.sh
   tags:
-    - "os-mysql"
+    - "svc-mysql"
 
 - name: mongo
   shell: |-
     sh {{ param_remote_role_path }}/{{ param_ansible_os_family }}-mongo.sh
   tags:
-    - "os-mongo"
+    - "svc-mongo"

@@ -2,13 +2,18 @@
 set -e
 
 sudo tee /etc/yum.repos.d/mongo.repo << EOF
-[mongodb-org-8.0]
+[mongodb-org-{{ param_db_mongo_minor_version }}]
 name=MongoDB Repository
-baseurl=https://repo.mongodb.org/yum/redhat/\$releasever/mongodb-org/8.0/x86_64/
-gpgcheck=1
+baseurl=https://repo.mongodb.org/yum/redhat/\$releasever/mongodb-org/{{ param_db_mongo_minor_version }}/x86_64/
 enabled=1
-gpgkey=https://pgp.mongodb.com/server-8.0.asc
+gpgcheck=1
+gpgkey=https://pgp.mongodb.com/server-{{ param_db_mongo_minor_version }}.asc
 EOF
 
-sudo yum -y install mongodb-org
-sudo systemctl daemon-reload && sudo systemctl restart mongod && sudo systemctl enable mongod
+if [ "{{ param_mirror_use_proxy | lower }}" = true ];then
+  sudo cp -rv /etc/yum.repos.d/mongo.repo /etc/yum.repos.d/mongo.repo.bak
+  sed -e "s|https://repo.mongodb.org/yum|https://{{ param_mirror_raw }}/mongo/yum|g" /etc/yum.repos.d/mongo.repo.bak | sudo tee /etc/yum.repos.d/mongo.repo
+fi
+
+sudo yum -y install mongodb-org-{{ param_db_mongo_patch_version }}
+sudo systemctl daemon-reload && sudo systemctl enable mongod && sudo systemctl restart mongod
