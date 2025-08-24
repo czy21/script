@@ -49,7 +49,7 @@ def execute(
         shell=os.name == 'nt',
         dry_run=False
 ):
-    logger.debug("\n{0}".format(re.sub(r'&&\s+', '&&\n', cmd)))
+    logger.info("\n{0}".format(re.sub(r'&&\s+', '&&\n', cmd)))
     if is_input:
         input_exec = str(input("Are you sure you want to execute (y/n)?").strip())
         if input_exec != "y":
