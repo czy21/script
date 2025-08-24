@@ -6,6 +6,7 @@ import os
 import pathlib
 import re
 import subprocess
+import typing
 from typing import TextIO
 
 import jinja2
@@ -16,7 +17,7 @@ from utility import basic as basic_util, log as log_util, path as path_util, fil
 logger = logging.getLogger()
 
 
-def assemble_ql(s_path: pathlib.Path, t_file: pathlib.Path, db_meta: {}, file_suffix: str, prep: str = None, post: str = None) -> None:
+def assemble_ql(s_path: pathlib.Path, t_file: pathlib.Path, db_meta: typing.Any, file_suffix: str, prep: str = None, post: str = None) -> None:
     db_file_paths = path_util.dfs_dir(s_path.as_posix(), re.compile(r".*" + file_suffix))
     db_file_content = []
     for s in db_file_paths:
@@ -44,9 +45,6 @@ def print_ql_msg(msg_lines, proc: subprocess.Popen, func_param) -> None:
             execute_match = re.compile(r"^\s*(executing:|executed:)").match(line)
             if execute_match:
                 exec_file_tuple.append(line)
-            if os.environ.run_args.debug:
-                logger.debug(line, is_sleep=False)
-            if not os.environ.run_args.debug and execute_match:
                 logger.info(line)
     if math.modf(len(exec_file_tuple) / 2)[0] > 0:
         logger.error(str(exec_file_tuple[len(exec_file_tuple) - 1].strip()).replace("executing:", "error_file"))

@@ -3,14 +3,14 @@ import argparse
 import importlib
 import importlib.machinery
 import importlib.util
+import inspect
 import logging
-import os
 import pathlib
 import sys
+from types import SimpleNamespace
 
-import yaml
-
-from utility import log as log_util, file as file_util
+from domain.source.base import ExecutionContext, EnhancedNamespace
+from utility import log as log_util, file as file_util, yaml as yaml_util
 
 sys.path.append(pathlib.Path(__file__).parent.parent.as_posix())
 
@@ -19,41 +19,25 @@ logger = logging.getLogger()
 
 def execute():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--param', nargs="+", default=[])
-    parser.add_argument('--init', action="store_true")
     parser.add_argument('--debug', action="store_true")
-    parser.add_argument('--env', required=True)
-    parser.add_argument('--log-file')
-    parser.add_argument('--cmd')
+    parser.add_argument('--file', required=True)
+    parser.add_argument('--exec', required=True)
+    parser.add_argument('--env-file', nargs="+", default=[])
     args = parser.parse_args()
-    param_iter = iter(args.param)
-    param_input: dict = dict(zip(param_iter, param_iter))
-    os.environ.__setattr__("run_args", args)
 
-    env_path = pathlib.Path(args.env).resolve()
-    env_stem = env_path.parent.stem
+    log_util.init_logger(file=pathlib.Path(args.file).with_suffix(".log"))
 
-    log_file = os.environ.run_args.log_file
-    log_util.init_logger(file=env_path.parent.joinpath(log_file).resolve() if log_file is not None else None)
-
-    # empty source log
     default_path_module = importlib.import_module("domain.default.path")
-
-    # injected param to global
-    env_pwd_mod = importlib.import_module("".join(["shell.", env_stem, "._env"]))
-    env_common_mod = env_pwd_mod.env_common
-    default_common_mod = importlib.import_module("domain.default.common")
-    env_output_yaml = pathlib.Path(getattr(default_path_module, "output")).joinpath("env.yaml")
-
-    if args.init:
-        env_common_mod.__dict__.update(dict({k: v for k, v in env_pwd_mod.__dict__.items() if k.startswith("param")}).items(), **param_input)
-        default_common_mod.__dict__.update(dict({k: v for k, v in env_common_mod.__dict__.items() if k.startswith("param")}))
-        default_common_param = dict({k: v for k, v in default_common_mod.__dict__.items() if k.startswith("param")})
-        file_util.write_text(env_output_yaml, yaml.dump(default_common_param))
-    else:
-        default_common_mod.__dict__.update(yaml.full_load(file_util.read_text(env_output_yaml)))
-    if args.cmd:
-        exec(args.cmd)
+    default_path_params = {name: value.as_posix() for name, value in inspect.getmembers(default_path_module) if isinstance(value, pathlib.Path)}
+    getattr(default_path_module, "create_dir")()
+    env_param = yaml_util.YamlPropertySourceLoader([pathlib.Path(t).resolve() for t in args.env_file]).load(default_path_params)
+    context = ExecutionContext(
+        root_path=pathlib.Path(default_path_params["root_path"]),
+        output_path=pathlib.Path(default_path_params["output_path"]),
+        param=EnhancedNamespace(**env_param)
+    )
+    file_util.write_text(context.output_path.joinpath("env.yml"), yaml_util.dump(context.param))
+    exec(args.exec, globals(), {'context': context})
 
 
 if __name__ == '__main__':

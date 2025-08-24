@@ -69,7 +69,7 @@ class YamlPropertySourceLoader:
         sources = []
         for r in self.resources:
             if r.suffix and r.suffix[1:] in self.file_extensions:
-                sources.append(OriginTrackedMapPropertySource(r.as_posix(), load(r)))
+                sources.append(OriginTrackedMapPropertySource(r.as_posix(), load(r) or {}))
         resolver = abs.PropertySourcesPlaceholdersResolver(sources, extra)
         for t in sources:
             for name in t.getPropertyNames():

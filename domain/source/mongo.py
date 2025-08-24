@@ -2,7 +2,7 @@
 import logging
 import pathlib
 
-from domain.db_meta import mongo as mongo_meta
+from domain.meta import mongo as mongo_meta
 from domain.default import common as default_common
 from domain.default import path as default_path
 from utility import db as db_util, collection as list_util, basic as basic_util

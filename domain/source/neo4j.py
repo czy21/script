@@ -3,7 +3,7 @@ import logging
 import os
 import pathlib
 
-from domain.db_meta import neo4j as neo4j_meta
+from domain.meta import neo4j as neo4j_meta
 from domain.default import common as default_common
 from domain.default import path as default_path
 from utility import db as db_util, collection as list_util, basic as basic_util, log
