@@ -1,4 +1,5 @@
 import argparse
+import json
 import logging
 import os
 import pathlib
@@ -9,7 +10,6 @@ from abc import ABCMeta
 from enum import Enum
 
 import urllib3
-
 from utility import (
     collection as collection_util,
     file as file_util,
@@ -55,14 +55,6 @@ def dfs_dir(path: pathlib.Path, deep=1, exclude_rules: list = None, parent_key: 
         ret.append({"path": p, "deep": deep, "key": key})
         ret += dfs_dir(p, deep + 1, exclude_rules, key)
     return ret
-
-
-def split_kv_str(kv_str) -> (str, str):
-    for i in range(len(kv_str)):
-        if kv_str[i] == "=":
-            k = ''.join(kv_str[0:i])
-            v = ''.join(kv_str[i + 1:])
-            return k, v
 
 
 def get_match_dirs(rules, items):
@@ -284,7 +276,7 @@ class Installer:
     @staticmethod
     def set_common_argument(parser: argparse.ArgumentParser):
         parser.add_argument('-n', '--namespace', type=str)
-        parser.add_argument('-p', '--param', nargs="+", default=[], type=lambda s: dict({split_kv_str(s)}), help="k1=v1 k2=v2")
+        parser.add_argument('-p', '--param', nargs="+", default=[], type=lambda s: s.split("=", 1) if "=" in s else (s, ""), help="k1=v1 k2=v2")
         parser.add_argument('--env-active', nargs="+", default=[], help="list of env active")
         parser.add_argument('--all-roles', action="store_true")
         parser.add_argument('--all-namespaces', action="store_true")
@@ -412,8 +404,8 @@ class Installer:
 
     def run(self, **kwargs):
         args: argparse.Namespace = self.arg_parser.parse_args()
-        args.param = {k: v for t in args.param for (k, v) in t.items()}
-        logger.info("args: {0}".format(args))
+        args.param = dict(args.param)
+        logger.info("args: {0}".format(json.dumps(vars(args), indent=2)))
         if args.debug:
             logger.setLevel(logging.DEBUG)
         global_env = self.load_env_file(args.env_active, args.param)
