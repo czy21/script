@@ -2,17 +2,14 @@
 import io
 import logging
 import math
-import os
 import pathlib
 import re
 import subprocess
 import typing
-from typing import TextIO
 
 import jinja2
-from colorama import Fore
 
-from utility import basic as basic_util, log as log_util, path as path_util, file as file_util
+from utility import basic as basic_util, path as path_util, file as file_util
 
 logger = logging.getLogger()
 

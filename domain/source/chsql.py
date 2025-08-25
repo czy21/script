@@ -3,63 +3,70 @@ import logging
 import pathlib
 
 from domain.meta import chsql as chsql_meta
-from domain.default import common as default_common
-from domain.default import path as default_path
+from domain.source import base as base_source
 from utility import db as db_util, collection as list_util, basic as basic_util
 
 logger = logging.getLogger()
-
-chsql_cmd = "mysql"
-
-
-def assemble() -> None:
-    db_util.assemble_ql(pathlib.Path(default_common.param_main_db_chsql_file_path), pathlib.Path(default_path.output_db_all_in_one_chsql), chsql_meta, "sql")
+mysql_cmd = "mysql"
 
 
-def recreate() -> None:
-    command = get_recreate_command(default_common.param_main_db_chsql_host,
-                                   default_common.param_main_db_chsql_port,
-                                   default_common.param_main_db_chsql_user,
-                                   default_common.param_main_db_chsql_pass,
-                                   default_common.param_main_db_name)
-    basic_util.execute(command)
+class ChSQLSource(base_source.AbstractSource):
 
+    def __init__(self, context: base_source.ExecutionContext) -> None:
+        super().__init__(context)
+        self.host = self.context.param.param_main_db_chsql_host
+        self.port = self.context.param.param_main_db_chsql_port
+        self.username = self.context.param.param_main_db_chsql_username
+        self.password = self.context.param.param_main_db_chsql_password
+        self.database = self.context.param.param_main_db_chsql_database
 
-def get_basic_param(host, port, user, password, db_name) -> str:
-    param = ["--default-character-set=utf8mb4",
-             "--host=" + host,
-             "--port=" + port,
-             "--user=" + user,
-             "--password=" + password
-             ]
-    if db_name:
-        param.append("--database=" + db_name)
-    return list_util.flat_to_str(param)
+    def assemble(self) -> None:
+        db_util.assemble_ql(pathlib.Path(self.context.paraam.param_main_db_chsql_file_path), pathlib.Path(self.context.paraam.output_db_all_in_one_chsql), chsql_meta, "sql")
 
+    def get_basic_param(self, with_database=False) -> str:
+        param = [
+            "--default-character-set=utf8mb4",
+            f"--host={self.host}",
+            f"--port={self.port}",
+            f"--user={self.username}",
+            f"--password={self.password}"
+        ]
+        if with_database:
+            param.append(f"--database={self.database}")
+        return list_util.flat_to_str(param)
 
-def get_main_db_param_dict() -> str:
-    return get_basic_param(default_common.param_main_db_chsql_host,
-                           default_common.param_main_db_chsql_port,
-                           default_common.param_main_db_chsql_user,
-                           default_common.param_main_db_chsql_pass,
-                           default_common.param_main_db_name)
+    def get_recreate_command(self) -> str:
+        return list_util.flat_to_str([mysql_cmd, self.get_basic_param(False), [
+            "--execute \"{0}\"".format("".join(
+                [
+                    "drop database if exists {0};".format(self.database),
+                    "create database if not exists {0} default charset utf8mb4 collate utf8mb4_unicode_ci;".format(self.database),
+                ])
+            )
+        ]])
 
+    def recreate(self) -> None:
+        command = self.get_recreate_command()
+        basic_util.execute(command)
 
-def execute() -> None:
-    extra_param_dict = [
-        "--skip-column-names",
-        "< " + default_path.output_db_all_in_one_chsql
-    ]
-    command = list_util.flat_to_str(chsql_cmd, get_main_db_param_dict(), extra_param_dict)
-    basic_util.execute(command, db_util.print_ql_msg)
+    def execute(self) -> None:
+        command = list_util.flat_to_str([mysql_cmd, self.get_basic_param(True), [
+            "--skip-column-names",
+            f"< {self.context.param.output_db_all_in_one_mysql}"
+        ]])
+        basic_util.execute(command, db_util.print_ql_msg)
 
+    def backup(self) -> None:
+        command = list_util.flat_to_str("mysqldump",
+                                        self.get_basic_param(False),
+                                        f"--databases {self.database}",
+                                        f"| gzip > {self.context.param.output_db_bak_gz_chsql}"
+                                        )
+        basic_util.execute(command)
 
-def get_recreate_command(host, port, user, password, db_name) -> str:
-    extra_param_dict = [
-        "--execute",
-        "\"",
-        "drop database if exists {0};".format(db_name),
-        "create database if not exists {0} ENGINE = Atomic;".format(db_name),
-        "\""
-    ]
-    return list_util.flat_to_str(chsql_cmd, get_basic_param(host, port, user, password, None), extra_param_dict)
+    def restore(self) -> None:
+        command = list_util.flat_to_str(self.get_recreate_command(),
+                                        f"&& gzip -d < {self.context.param.output_db_bak_gz_chsql}",
+                                        "| mysql", self.get_basic_param(True)
+                                        )
+        basic_util.execute(command)
