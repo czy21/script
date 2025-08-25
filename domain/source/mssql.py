@@ -4,8 +4,7 @@ import pathlib
 from pathlib import Path
 
 from domain.meta import mssql as mssql_meta
-from domain.default import common as default_common
-from domain.default import path as default_path
+from domain.source import base as base_source
 from utility import db as db_util, collection as list_util, basic as basic_util
 
 logger = logging.getLogger()
@@ -13,57 +12,49 @@ logger = logging.getLogger()
 mssql_cmd = "sqlcmd"
 
 
-def assemble() -> None:
-    db_util.assemble_ql(pathlib.Path(default_common.param_main_db_mssql_file_path), pathlib.Path(default_path.output_db_all_in_one_mssql), mssql_meta, "sql")
+class MsSQLSource(base_source.AbstractSource):
 
+    def __init__(self, context: base_source.ExecutionContext) -> None:
+        super().__init__(context)
+        self.host = self.context.param.param_main_db_mssql_host
+        self.port = self.context.param.param_main_db_mssql_port
+        self.username = self.context.param.param_main_db_mssql_username
+        self.password = self.context.param.param_main_db_mssql_password
+        self.database = self.context.param.param_main_db_mssql_database
 
-def recreate() -> None:
-    command = get_recreate_command(default_common.param_main_db_mssql_host,
-                                   default_common.param_main_db_mssql_port,
-                                   default_common.param_main_db_mssql_user,
-                                   default_common.param_main_db_mssql_pass,
-                                   default_common.param_main_db_name)
-    basic_util.execute(command)
+    def assemble(self) -> None:
+        db_util.assemble_ql(pathlib.Path(self.context.param.param_main_db_mssql_file_path), pathlib.Path(self.context.param.output_db_all_in_one_mssql), mssql_meta, "sql")
 
+    def get_basic_param(self, with_database=False) -> str:
+        param = [
+            f"-S {self.host},{self.port}",
+            f"-U {self.username}",
+            f"-P {self.password}",
+            "-f 65001 -b -r -j"
+        ]
+        if with_database:
+            param.append(f"-d {self.database}")
+        return list_util.flat_to_str(param)
 
-def get_basic_param(host, port, user, password, db_name) -> str:
-    param = [
-        "-S {0},{1}".format(host, port),
-        "-U " + user,
-        "-P " + password,
-        "-f 65001 -b -r -j"
-    ]
-    if db_name:
-        param.append("-d " + db_name)
-    return list_util.flat_to_str(param)
+    def get_recreate_command(self) -> str:
+        return list_util.flat_to_str(mssql_cmd, self.get_basic_param(False), [
+            "-Q \"{0}\"".format("".join(
+                [
+                    "declare @db_name varchar(100);set @db_name = (SELECT name FROM Master.dbo.SysDatabases where name = '{0}');".format(self.database),
+                    "if @db_name is not null ALTER DATABASE {0} SET SINGLE_USER WITH ROLLBACK IMMEDIATE;".format(self.database),
+                    "drop database if exists {0};".format(self.database),
+                    "create database {0};".format(self.database)
+                ])
+            )
+        ])
 
+    def recreate(self) -> None:
+        command = self.get_recreate_command()
+        basic_util.execute(command)
 
-def get_main_db_param_dict() -> str:
-    return get_basic_param(default_common.param_main_db_mssql_host,
-                           default_common.param_main_db_mssql_port,
-                           default_common.param_main_db_mssql_user,
-                           default_common.param_main_db_mssql_pass,
-                           default_common.param_main_db_name)
-
-
-def execute() -> None:
-    extra_param_dict = [
-        "-e",
-        "-i \"{0}\"".format(Path(default_path.output_db_all_in_one_mssql).__fspath__())
-    ]
-    command = list_util.flat_to_str(mssql_cmd, get_main_db_param_dict(), extra_param_dict)
-    basic_util.execute(command, db_util.print_ql_msg)
-
-
-def get_recreate_command(host, port, user, password, db_name) -> str:
-    extra_param = [
-        "-Q \"{0}\"".format("".join(
-            [
-                "declare @db_name varchar(100);set @db_name = (SELECT name FROM Master.dbo.SysDatabases where name = '{0}');".format(db_name),
-                "if @db_name is not null ALTER DATABASE {0} SET SINGLE_USER WITH ROLLBACK IMMEDIATE;".format(db_name),
-                "drop database if exists {0};".format(db_name),
-                "create database {0};".format(db_name)
-            ])
-        )
-    ]
-    return list_util.flat_to_str(mssql_cmd, get_basic_param(host, port, user, password, None), extra_param)
+    def execute(self) -> None:
+        command = list_util.flat_to_str(mssql_cmd, self.get_main_db_param_dict(), [
+            "-e",
+            "-i \"{0}\"".format(Path(self.context.param.output_db_all_in_one_mssql).__fspath__())
+        ])
+        basic_util.execute(command, db_util.print_ql_msg)
