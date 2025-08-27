@@ -47,7 +47,7 @@ class MongoSource(base_source.AbstractSource):
 
     def backup(self) -> None:
         command = list_util.flat_to_str(
-            "mongodump", f"--uri={self.get_main_db_uri(True)}",
+            "mongodump", f"--uri={self.get_basic_uri(True)}",
             f"--archive={self.context.param.output_db_bak_gz_mongo}",
             "--gzip"
         )
