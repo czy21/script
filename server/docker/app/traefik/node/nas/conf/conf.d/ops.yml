@@ -19,7 +19,7 @@ http:
       rule: Host(`gbc.czy21-internal.com`)
       service: gradle-build-cache@docker
     jenkins:
-      rule: Host(`jenkins.czy21-internal.com`)
+      rule: Host(`jenkins.czy21.com`)
       service: jenkins@docker
     jms:
       rule: Host(`jms.czy21-internal.com`)

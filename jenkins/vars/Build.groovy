@@ -3,7 +3,7 @@ import org.ops.Analysis
 import org.ops.Builder
 import org.ops.Common
 import org.ops.Docker
-import org.ops.Host
+import org.ops.Server
 import org.ops.util.PathUtils
 import org.ops.util.StringUtils
 
@@ -36,19 +36,24 @@ def call() {
                 steps {
                     script {
                         if (StringUtils.isEmpty("${env.param_git_branch}")) {
-                          env.param_git_branch = params.param_git_branch
+                            env.param_git_branch = params.param_git_branch
                         }
-                        checkout([$class           : 'GitSCM',
-                                  branches         : [
-                                          [name: "${env.param_git_branch}"]
-                                  ],
-                                  extensions       : [
-                                          [$class: 'SubmoduleOption', disableSubmodules: false, parentCredentials: true, recursiveSubmodules: true, reference: '', trackingSubmodules: false]
-                                  ],
-                                  userRemoteConfigs: [
-                                          [credentialsId: "${env.param_git_credential_id}", url: "${env.param_git_repository_url}"]
-                                  ]
-                        ])
+                        def gitExtensions = []
+                        def sparseCheckoutPaths = StringUtils.defaultIfEmpty("${env.param_git_sparse_checkout}", "").split(" ").collect { t -> [path: t] }
+                        if (sparseCheckoutPaths.size() > 0) {
+                            gitExtensions.add(sparseCheckout(sparseCheckoutPaths))
+                        } else {
+                            gitExtensions.add(submodule(parentCredentials: true, recursiveSubmodules: true, reference: ''))
+                        }
+                        checkout scmGit(
+                                branches: [
+                                        [name: "${env.param_git_branch}"]
+                                ],
+                                extensions: gitExtensions,
+                                userRemoteConfigs: [
+                                        [credentialsId: "${env.param_git_credential_id}", url: "${env.param_git_repository_url}"]
+                                ]
+                        )
                     }
                 }
             }
@@ -85,17 +90,7 @@ def call() {
                     }
                 }
             }
-            stage('hostDeploy') {
-                when {
-                    expression { StringUtils.isNotEmpty(env.param_deploy_host) }
-                }
-                steps {
-                    script {
-                        new Host().deploy()
-                    }
-                }
-            }
-            stage('dockerBuild') {
+            stage('image') {
                 when {
                     expression { env.param_docker_build_enabled == "true" }
                 }
@@ -105,13 +100,27 @@ def call() {
                     }
                 }
             }
-            stage('dockerDeploy') {
-                when {
-                    expression { StringUtils.isNotEmpty(env.param_docker_deploy_host) }
-                }
-                steps {
-                    script {
-                        new Docker().deploy()
+            stage('deploy') {
+                parallel {
+                    stage('server') {
+                        when {
+                            expression { StringUtils.isNotEmpty(env.param_server_deploy_host) }
+                        }
+                        steps {
+                            script {
+                                new Server().deploy()
+                            }
+                        }
+                    }
+                    stage('docker') {
+                        when {
+                            expression { StringUtils.isNotEmpty(env.param_docker_deploy_host) }
+                        }
+                        steps {
+                            script {
+                                new Docker().deploy()
+                            }
+                        }
                     }
                 }
             }
