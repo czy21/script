@@ -1,2 +1,5 @@
-FROM registry.czy21.com/library/jdk21-graalvm
+ARG SDK_VERSION=jdk21-graalvm
+
+FROM registry.czy21.com/library/${SDK_VERSION}
+
 COPY ./build/api.jar ${JAR}

@@ -17,7 +17,8 @@ def build() {
 
     def docker_config_dir = PathUtils.ofPath("${env.WORKSPACE}", ".jenkins/docker/")
     def docker_image_tag = "${env.param_release_image}:${env.param_release_version}"
-    def docker_build_cmd = "docker build --tag ${docker_image_tag} --file ${docker_file} ${env.param_docker_context} --pull"
+    def sdk_version = env.getProperty("param_tool_${env.param_code_type}_version")
+    def docker_build_cmd = "docker build --build-arg SDK_VERSION=${sdk_version} --tag ${docker_image_tag} --file ${docker_file} ${env.param_docker_context} --pull"
     if (StringUtils.isNotEmpty(env.param_docker_build_args)) {
         env.param_docker_build_args.split(",").each { t -> docker_build_cmd += " --build-arg $t" }
     }

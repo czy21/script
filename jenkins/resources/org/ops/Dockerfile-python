@@ -1,0 +1,3 @@
+ARG SDK_VERSION=python-3.13
+
+FROM registry.czy21.com/library/${SDK_VERSION}

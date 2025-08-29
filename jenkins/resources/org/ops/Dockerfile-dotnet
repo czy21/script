@@ -1,3 +1,6 @@
-FROM registry.czy21.com/library/aspnet9
+ARG SDK_VERSION=dotnet-9
+
+FROM registry.czy21.com/library/${SDK_VERSION}
+
 COPY ./build/ /app/
 RUN ls -al /app

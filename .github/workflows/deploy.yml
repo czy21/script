@@ -27,6 +27,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: |
+          rm -rf cd $HOME/container/
           $HOME/.python3/bin/python3 -m pip install -r server/requirements.txt
           $HOME/.python3/bin/python3 -m pip install mkdocs mkdocs-material
           $HOME/.python3/bin/python3 -B main.py
@@ -34,7 +35,7 @@ jobs:
         run: |
           cd $HOME/container/
           if [ -n "$(git status -s)" ];then
-            git pull && git add . && git commit -m "CI: sync code" && git push
+            git add . && git commit --amend -m "CI: sync code" && git push --force
           fi
       - name: Setup Pages
         id: pages
