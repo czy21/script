@@ -7,30 +7,36 @@ import org.ops.util.StringUtils
 def build() {
     def pathMap = [
             java  : {
-                env.JAVA_HOME = "${tool 'jdk-21-graalvm'}"
+                env.param_tool_java_version = StringUtils.defaultIfEmpty("${env.param_tool_java_version}",'jdk-21-graalvm')
+                env.JAVA_HOME = tool env.param_tool_java_version
                 env.PATH = "${JAVA_HOME}/bin:${PATH}"
             },
             maven : {
-                env.MAVEN_HOME = "${tool 'mvn-3.9'}"
+                env.param_tool_maven_version = StringUtils.defaultIfEmpty("${env.param_tool_maven_version}",'mvn-3.9')
+                env.MAVEN_HOME = tool env.param_tool_maven_version
                 env.PATH = "${MAVEN_HOME}/bin:${PATH}"
             },
             gradle: {
-                env.GRADLE_HOME = "${tool 'gradle-8.5'}"
+                env.param_tool_gradle_version = StringUtils.defaultIfEmpty("${env.param_tool_gradle_version}",'gradle-8.5')
+                env.GRADLE_HOME = tool env.param_tool_gradle_version
                 env.PATH = "${GRADLE_HOME}/bin:${PATH}"
             },
             go    : {
-                env.GO_HOME = "${tool 'go-v1.20'}"
+                env.param_tool_go_version = StringUtils.defaultIfEmpty("${env.param_tool_go_version}",'go-1.20')
+                env.GO_HOME = tool StringUtils.defaultIfEmpty("${env.param_tool_go_version}",'go-1.20')
                 env.GOPROXY = env.param_go_proxy
                 env.GOSUMDB = "off"
                 env.CGO_ENABLED = "0"
                 env.PATH = "${GO_HOME}/bin:${PATH}"
             },
             node  : {
-                env.NODEJS_HOME = "${tool 'node-v20.18'}"
+                env.param_tool_node_version = StringUtils.defaultIfEmpty("${env.param_tool_node_version}",'node-20.18')
+                env.NODEJS_HOME = tool env.param_tool_node_version
                 env.PATH = "${NODEJS_HOME}/bin:${PATH}"
             },
             dotnet: {
-                env.DOTNET_HOME = "${tool 'net9.0-linux-64'}"
+                env.param_tool_dotnet_version = StringUtils.defaultIfEmpty("${env.param_tool_dotnet_version}",'dotnet-9.0')
+                env.DOTNET_HOME = tool env.param_tool_dotnet_version
                 env.DOTNET_SYSTEM_GLOBALIZATION_INVARIANT = 1
                 env.PATH = "${DOTNET_HOME}:${PATH}"
             }
@@ -68,7 +74,7 @@ def build() {
                 pathMap.get("dotnet").call()
                 configFileProvider([configFile(fileId: "nuget.config", variable: 'CONFIG_FILE_NUGET')]) {
                     def cmd = StringUtils.format(
-                            "rm -rf {0}/build;(cd {0};dotnet publish --configfile {1} -c Release -r linux-x64 -p:DebugType=None -p:DebugSymbols=false)",
+                            "(cd {0} && rm -rf bin build && dotnet publish --configfile {1} -c Release -r linux-x64 -p:PublishDir=build -p:SelfContained=false -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false)",
                             env.param_project_root,
                             "${CONFIG_FILE_NUGET}"
                     )

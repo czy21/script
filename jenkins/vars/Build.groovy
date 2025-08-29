@@ -39,9 +39,9 @@ def call() {
                             env.param_git_branch = params.param_git_branch
                         }
                         def gitExtensions = []
-                        env.param_git_sparse_checkout = StringUtils.defaultIfEmpty("${env.param_git_sparse_checkout}", "")
+                        env.param_git_sparse_checkout = StringUtils.defaultIfEmpty("${env.param_git_sparse_checkout}", "").trim()
                         if (StringUtils.isNotEmpty("${env.param_git_sparse_checkout}")) {
-                            def sparseCheckoutPaths = StringUtils.defaultIfEmpty("${env.param_git_sparse_checkout}", "").split(" ").collect { t -> [path: t] }
+                            def sparseCheckoutPaths = env.param_git_sparse_checkout.split(" ").collect { t -> [path: t] }
                             gitExtensions.add(sparseCheckout(sparseCheckoutPaths))
                         } else {
                             gitExtensions.add(submodule(parentCredentials: true, recursiveSubmodules: true, reference: ''))

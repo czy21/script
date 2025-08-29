@@ -29,6 +29,7 @@ services:
       GITEA__server__HTTP_PORT: "3000"
       GITEA__server__LANDING_PAGE: explore
       GITEA__server__LFS_START_SERVER: true
+      GITEA__server__LFS_ALLOW_PURE_SSH: true
       GITEA__security__INSTALL_LOCK: true
       GITEA__database__DB_TYPE: mysql
       GITEA__database__NAME: gitea
