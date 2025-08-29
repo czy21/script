@@ -24,7 +24,7 @@ def call() {
             booleanParam defaultValue: false, name: 'param_clean'
         }
         stages {
-            stage('clean') {
+            stage('Clean') {
                 when {
                     expression { params.param_clean == true }
                 }
@@ -32,15 +32,16 @@ def call() {
                     cleanWs()
                 }
             }
-            stage('clone') {
+            stage('Clone') {
                 steps {
                     script {
                         if (StringUtils.isEmpty("${env.param_git_branch}")) {
                             env.param_git_branch = params.param_git_branch
                         }
                         def gitExtensions = []
-                        def sparseCheckoutPaths = StringUtils.defaultIfEmpty("${env.param_git_sparse_checkout}", "").split(" ").collect { t -> [path: t] }
-                        if (sparseCheckoutPaths.size() > 0) {
+                        env.param_git_sparse_checkout = StringUtils.defaultIfEmpty("${env.param_git_sparse_checkout}", "")
+                        if (StringUtils.isNotEmpty("${env.param_git_sparse_checkout}")) {
+                            def sparseCheckoutPaths = StringUtils.defaultIfEmpty("${env.param_git_sparse_checkout}", "").split(" ").collect { t -> [path: t] }
                             gitExtensions.add(sparseCheckout(sparseCheckoutPaths))
                         } else {
                             gitExtensions.add(submodule(parentCredentials: true, recursiveSubmodules: true, reference: ''))
@@ -57,7 +58,7 @@ def call() {
                     }
                 }
             }
-            stage('param') {
+            stage('Param') {
                 steps {
                     script {
                         def common = new Common()
@@ -73,14 +74,14 @@ def call() {
                     }
                 }
             }
-            stage('build') {
+            stage('Build') {
                 steps {
                     script {
                         new Builder().build()
                     }
                 }
             }
-            stage('analysis') {
+            stage('Analysis') {
                 when {
                     expression { params.param_code_analysis == true }
                 }
@@ -90,7 +91,7 @@ def call() {
                     }
                 }
             }
-            stage('image') {
+            stage('Image') {
                 when {
                     expression { env.param_docker_build_enabled == "true" }
                 }
@@ -100,9 +101,9 @@ def call() {
                     }
                 }
             }
-            stage('deploy') {
+            stage('Deploy') {
                 parallel {
-                    stage('server') {
+                    stage('Server') {
                         when {
                             expression { StringUtils.isNotEmpty(env.param_server_deploy_host) }
                         }
@@ -112,7 +113,7 @@ def call() {
                             }
                         }
                     }
-                    stage('docker') {
+                    stage('Docker') {
                         when {
                             expression { StringUtils.isNotEmpty(env.param_docker_deploy_host) }
                         }
