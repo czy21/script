@@ -62,23 +62,16 @@ def build() {
             },
             go    : {
                 pathMap.get("go").call()
-                def cmd = StringUtils.format("cd {0};go build -o build main.go;", env.param_project_context)
-                sh "${cmd}"
+                sh "cd ${env.param_project_context};go build -o build main.go;"
             },
             web   : {
                 pathMap.get("node").call()
-                def cmd = StringUtils.format("npm_config_registry={1} npm_config_node_linker=hoisted pnpm --dir {0} install && pnpm --dir {0} run build", env.param_project_context, env.param_npm_repo)
-                sh "${cmd}"
+                sh "npm_config_registry=${env.param_npm_repo} npm_config_node_linker=hoisted pnpm --dir ${env.param_project_context} install && pnpm --dir ${env.param_project_context} run build"
             },
             dotnet: {
                 pathMap.get("dotnet").call()
                 configFileProvider([configFile(fileId: "nuget.config", variable: 'CONFIG_FILE_NUGET')]) {
-                    def cmd = StringUtils.format(
-                            "(cd {0} && rm -rf bin build && dotnet publish --configfile {1} -c Release -r linux-x64 -p:PublishDir=build -p:SelfContained=false -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false)",
-                            env.param_project_root,
-                            "${CONFIG_FILE_NUGET}"
-                    )
-                    sh "${cmd}"
+                    sh "(cd ${env.param_project_root} && rm -rf bin build && dotnet publish --configfile ${CONFIG_FILE_NUGET} -c Release -r linux-x64 -p:PublishDir=build -p:DebugType=None -p:DebugSymbols=false)"
                 }
             },
             shell : {
