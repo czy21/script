@@ -44,19 +44,42 @@ def build() {
     if (StringUtils.isNotEmpty(env.param_tools)) {
         env.param_tools.split(",").each { pathMap.get(it).call() }
     }
+
+    env.SONARQUBE_HOME = tool 'sonarqube-7.2'
+    env.PATH = "${SONARQUBE_HOME}/bin:${PATH}"
+
+    env.param_sonarqube_project_key = StringUtils.defaultIfEmpty("${env.param_sonarqube_project_key}","${env.param_release_name}")
+
+    def sonarCmdPrefix = StringUtils.format(
+            "sonar-scanner -Dsonar.projectKey={0} -Dsonar.projectVersion={1} -Dsonar.sources={2}",
+            "${env.param_sonarqube_project_key}",
+            "${env.param_release_version}",
+            PathUtils.relativize("${env.WORKSPACE}", "${env.param_project_root}")
+    )
+
     def buildMap = [
             java  : {
                 pathMap.get("java").call()
-                if ("mvn" == env.param_java_build_tool || fileExists("${env.param_project_context}/pom.xml")) {
+                if ("mvn" == env.param_java_build_tool || fileExists("${env.param_project_root}/pom.xml")) {
                     pathMap.get("maven").call()
                     configFileProvider([configFile(fileId: "mvn.config", variable: 'CONFIG_FILE')]) {
-                        sh "mvn -s ${CONFIG_FILE} -f ${env.param_project_context}/pom.xml clean install -U -e -Dmaven.test.skip=true"
+                        sh "mvn -B -s ${CONFIG_FILE} -f ${env.param_project_root}/pom.xml clean install -U -e -Dmaven.test.skip=true"
+                        if (params.param_code_analysis == true) {
+                            withSonarQubeEnv("${env.param_sonarqube_server}") {
+                                sh "mvn -B -s ${CONFIG_FILE} -f ${env.param_project_root}/pom.xml org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=${env.param_sonarqube_project_key} -Dsonar.projectVersion=${env.param_release_version} -Dsonar.host.url=${SONAR_HOST_URL} -Dsonar.token=${SONAR_AUTH_TOKEN}"
+                            }
+                        }
                     }
                 }
-                if ("gradle" == env.param_java_build_tool || fileExists("${env.param_project_context}/build.gradle")) {
+                if ("gradle" == env.param_java_build_tool || fileExists("${env.param_project_root}/build.gradle")) {
                     pathMap.get("gradle").call()
                     configFileProvider([configFile(fileId: "gradle.config", variable: 'CONFIG_FILE')]) {
-                        sh "gradle --no-daemon -I ${CONFIG_FILE} -p ${env.param_project_context} clean build -U -x test"
+                        sh "gradle --no-daemon -I ${CONFIG_FILE} -p ${env.param_project_root} clean build -U -x test"
+                        if (params.param_code_analysis == true) {
+                            withSonarQubeEnv("${env.param_sonarqube_server}") {
+                                sh "gradle --no-daemon -I ${CONFIG_FILE} -p ${env.param_project_root} sonar -Dsonar.projectKey=${env.param_sonarqube_project_key} -Dsonar.projectVersion=${env.param_release_version} -Dsonar.host.url=${SONAR_HOST_URL} -Dsonar.token=${SONAR_AUTH_TOKEN}"
+                            }
+                        }
                     }
                 }
             },
@@ -67,11 +90,29 @@ def build() {
             web   : {
                 pathMap.get("node").call()
                 sh "npm_config_registry=${env.param_npm_repo} npm_config_node_linker=hoisted pnpm --dir ${env.param_project_context} install && pnpm --dir ${env.param_project_context} run build"
+                if (params.param_code_analysis == true) {
+                    withSonarQubeEnv("${env.param_sonarqube_server}") {
+                        def cmd = StringUtils.format("{0}", sonarCmdPrefix)
+                        sh "${cmd}"
+                    }
+                }
             },
             dotnet: {
                 pathMap.get("dotnet").call()
                 configFileProvider([configFile(fileId: "nuget.config", variable: 'CONFIG_FILE_NUGET')]) {
+                    if (params.param_code_analysis == true) {
+                        withSonarQubeEnv("${env.param_sonarqube_server}") {
+                            sh "dotnet new tool-manifest --force"
+                            sh "dotnet tool install dotnet-sonarscanner --configfile ${CONFIG_FILE_NUGET}"
+                            sh "(cd ${env.param_project_root};dotnet tool run dotnet-sonarscanner begin /k:${env.param_sonarqube_project_key} /v:${env.param_release_version} /d:sonar.host.url=${SONAR_HOST_URL} /d:sonar.token=${SONAR_AUTH_TOKEN} /d:sonar.scanner.scanAll=false)"
+                        }
+                    }
                     sh "(cd ${env.param_project_root} && rm -rf bin build && dotnet publish --configfile ${CONFIG_FILE_NUGET} -c Release -r linux-x64 -p:PublishDir=build -p:DebugType=None -p:DebugSymbols=false)"
+                    if (params.param_code_analysis == true) {
+                        withSonarQubeEnv("${env.param_sonarqube_server}") {
+                            sh "(cd ${env.param_project_root};dotnet tool run dotnet-sonarscanner end /d:sonar.token=${SONAR_AUTH_TOKEN})"
+                        }
+                    }
                 }
             },
             shell : {

@@ -81,16 +81,6 @@ def call() {
                     }
                 }
             }
-            stage('Analysis') {
-                when {
-                    expression { params.param_code_analysis == true }
-                }
-                steps {
-                    script {
-                        new Analysis().scan()
-                    }
-                }
-            }
             stage('Image') {
                 when {
                     expression { env.param_docker_build_enabled == "true" }
