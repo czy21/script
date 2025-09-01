@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 import org.ops.Kubernetes
-import org.ops.Common
+import org.ops.Basic
 
 def call() {
     pipeline {
@@ -24,7 +24,7 @@ def call() {
             stage('deploy') {
                 steps {
                     script {
-                        new Common().loadParam()
+                        new Basic().loadParam()
                         new Kubernetes().deploy()
                     }
                 }

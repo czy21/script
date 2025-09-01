@@ -5,7 +5,7 @@ package org.ops
 import org.ops.util.StringUtils
 
 def deploy() {
-    def common = new Common()
+    def common = new Basic()
     def chartMap = [
             java: {
                 env.param_release_chart_name = env.param_helm_java_chart_name
