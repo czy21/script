@@ -15,7 +15,7 @@ def build() {
         writeFile file: docker_file, text: content, encoding: 'utf-8'
     }
 
-    def docker_config_dir = PathUtils.ofPath("${env.WORKSPACE}", ".jenkins/docker/")
+    def docker_config_dir = PathUtils.ofPath(env.WORKSPACE, ".jenkins/docker/")
     def docker_image_tag = "${env.param_release_image}:${env.param_release_version}"
     def sdk_version = env.getProperty("param_tool_${env.param_code_type}_version")
     def docker_build_cmd = "docker build --build-arg SDK_VERSION=${sdk_version} --tag ${docker_image_tag} --file ${docker_file} ${env.param_docker_context} --pull"
@@ -38,7 +38,7 @@ def deploy() {
     }
 
     withCredentials([dockerCert(credentialsId: 'docker-client', variable: 'DOCKER_CERT_PATH')]) {
-        def param_file = PathUtils.ofPath("${env.WORKSPACE}", ".jenkins/param.yaml")
+        def param_file = PathUtils.ofPath(env.WORKSPACE, ".jenkins/param.yaml")
         cmd = "DOCKER_TLS_VERIFY=1 DOCKER_HOST=tcp://${env.param_docker_deploy_host}:2376 docker-compose --project-name ${env.param_release_name} --file ${compose_file} --env-file ${param_file} up --detach --remove-orphans"
         sh "${cmd}"
     }
