@@ -24,5 +24,8 @@ if [ "{{ param_mirror_use_proxy | lower }}" = true ];then
   sed -e "s|https://packages.redis.io/rpm|https://{{ param_mirror_raw }}/redis/rpm|g" /etc/yum.repos.d/redis.repo.bak | sudo tee /etc/yum.repos.d/redis.repo
 fi
 
+sudo yum -y install yum-plugin-versionlock
+sudo yum versionlock delete redis
 sudo yum -y install redis-{{ param_db_redis_version }}
+sudo yum versionlock redis
 sudo systemctl daemon-reload && sudo systemctl enable redis && sudo systemctl restart redis
