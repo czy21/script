@@ -5,8 +5,8 @@ import org.ops.util.CollectionUtils
 import org.ops.util.StringUtils
 
 def loadParam() {
-    configFileProvider([configFile(fileId: "${env.param_global_env_file_id}", variable: 'param')]) {
-        param = load "${param}"
+    configFileProvider([configFile(fileId: "${env.param_global_env_file_id}", variable: 'paramVar')]) {
+        def param = load "${paramVar}"
         param.each { k, v ->
             if (env.getProperty(k) == null) {
                 env.setProperty(k, v)
