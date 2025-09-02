@@ -29,7 +29,7 @@ def call() {
                     script {
 
                         ValidateUtils.validateRequiredParams(env,["param_git_repository_url"])
-
+                        
                         env.param_git_branch = StringUtils.defaultIfEmpty(env.param_git_branch, params.param_git_branch)
 
                         def gitExtensions = []

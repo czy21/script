@@ -18,5 +18,8 @@ grep '{{ param_user_ops }}' /etc/passwd -q || useradd -m {{ param_user_ops }} -s
 public_key="set -e;cd;mkdir -p .ssh;chmod 700 .ssh;echo {{ param_user_ops_ssh_public_key }} > .ssh/authorized_keys;chmod 644 .ssh/authorized_keys"
 sudo -u {{ param_user_ops }} bash -c "${public_key}"
 
+# fix: Missing privilege separation directory: /run/sshd
+echo 'd /var/run/sshd 0755 root' > /usr/lib/tmpfiles.d/sshd.conf
+
 swapoff -a
 sed -i -r "s|^/swap.img|#\0|" /etc/fstab

@@ -22,7 +22,7 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/var/jenkins_home/
       - {{ param_docker_data }}/docker/conf/certs/:/docker-certs/client:ro
     environment:
-      JAVA_OPTS: "-Xverify:none -Dhudson.model.UpdateCenter.updateCenterUrl=https://{{ param_mirror_raw }}/jenkins/ -Dhudson.model.DownloadService.noSignatureCheck=true -Djava.util.logging.config.file=/conf/logging.properties"
+      JAVA_OPTS: "-Xverify:none -Dhudson.model.UpdateCenter.updateCenterUrl=https://{{ param_mirror_host }}/raw-hosted/jenkins/ -Dhudson.model.DownloadService.noSignatureCheck=true -Djava.util.logging.config.file=/conf/logging.properties"
       DOCKER_HOST: tcp://docker:2376
       DOCKER_CERT_PATH: /docker-certs/client
       DOCKER_TLS_VERIFY: 1
