@@ -5,11 +5,6 @@ x-traefik-qbittorrent-label: &traefik-qbittorrent-label
   traefik.http.routers.qbittorrent.service: qbittorrent
   traefik.http.services.qbittorrent.loadbalancer.server.port: 8080
 
-x-traefik-jackett-label: &traefik-jackett-label
-  traefik.enable: true
-  traefik.http.routers.jackett.service: jackett
-  traefik.http.services.jackett.loadbalancer.server.port: 9117
-
 x-traefik-radarr-label: &traefik-radarr-label
   traefik.enable: true
   traefik.http.routers.radarr.service: radarr
@@ -41,8 +36,9 @@ x-traefik-chinesesubfinder-label: &traefik-chinesesubfinder-label
   traefik.http.services.chinesesubfinder.loadbalancer.server.port: 19035
 
 services:
+
   qbittorrent:
-    image: linuxserver/qbittorrent:4.6.6
+    image: linuxserver/qbittorrent:5.1.2
     container_name: qbittorrent
     labels:
       <<: *traefik-qbittorrent-label
@@ -58,22 +54,8 @@ services:
       WEBUI_PORT: 8080
     restart: always
 
-  jackett:
-    image: linuxserver/jackett:0.22.497
-    container_name: jackett
-    labels:
-      <<: *traefik-jackett-label
-    volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/data/jackett/:/config/
-    environment:
-      PUID: {{ param_user_ops_uid }}
-      PGID: {{ param_user_ops_gid }}
-      TZ: Asia/Shanghai
-      AUTO_UPDATE: "true"
-    restart: always
-
   radarr:
-    image: linuxserver/radarr:5.9.1
+    image: linuxserver/radarr:5.27.5
     container_name: radarr
     labels:
       <<: *traefik-radarr-label
@@ -87,7 +69,7 @@ services:
     restart: always
 
   sonarr:
-    image: linuxserver/sonarr:4.0.8
+    image: linuxserver/sonarr:4.0.15
     container_name: sonarr
     labels:
       <<: *traefik-sonarr-label
@@ -101,7 +83,7 @@ services:
     restart: always
 
   prowlarr:
-    image: linuxserver/prowlarr:1.6.3
+    image: linuxserver/prowlarr:2.0.5
     container_name: prowlarr
     labels:
       <<: *traefik-prowlarr-label
@@ -113,20 +95,8 @@ services:
       TZ: Asia/Shanghai
     restart: always
 
-  flaresolverr:
-    image: flaresolverr/flaresolverr:v3.3.21
-    container_name: flaresolverr
-    labels:
-      <<: *traefik-flaresolverr-label
-    environment:
-      LOG_LEVEL: "info"
-      LOG_HTML: "false"
-      CAPTCHA_SOLVER: "none"
-      TZ: Asia/Shanghai
-    restart: always
-
   bazarr:
-    image: linuxserver/bazarr:1.4.3
+    image: linuxserver/bazarr:1.5.2
     container_name: bazarr
     labels:
       <<: *traefik-bazarr-label
@@ -139,8 +109,20 @@ services:
       TZ: Asia/Shanghai
     restart: always
 
+  flaresolverr:
+    image: flaresolverr/flaresolverr:v3.4.0
+    container_name: flaresolverr
+    labels:
+      <<: *traefik-flaresolverr-label
+    environment:
+      LOG_LEVEL: "info"
+      LOG_HTML: "false"
+      CAPTCHA_SOLVER: "none"
+      TZ: Asia/Shanghai
+    restart: always
+
   chinesesubfinder:
-    image: allanpk716/chinesesubfinder:v0.55.2
+    image: allanpk716/chinesesubfinder:v0.55.3
     container_name: chinesesubfinder
     labels:
       <<: *traefik-chinesesubfinder-label
