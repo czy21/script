@@ -3,9 +3,6 @@ http:
     qbittorrent:
       rule: Host(`qb.czy21-internal.com`)
       service: qbittorrent@docker
-    jackett:
-      rule: Host(`jackett.czy21-internal.com`)
-      service: jackett@docker
     radarr:
       rule: Host(`radarr.czy21-internal.com`)
       service: radarr@docker
