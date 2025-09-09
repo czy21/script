@@ -36,8 +36,18 @@ if [ $is_debug ];then
   set -x
 fi
 
+host_cmd="ssh ${ssh_opt} ${host}"
+
+[ $host = "local" ] && host_cmd="eval"
+os_name=$($host_cmd "uname -s")
+
 PYTHON_HOME="\$HOME/.python3"
 PYTHON_EXEC="${PYTHON_HOME}/bin/python3"
+
+if [[ "$os_name" =~ "NT" ]];then
+  PYTHON_EXEC="${PYTHON_HOME}/Scripts/python3"
+fi
+
 src_path=$(pwd)
 dst_name=$(basename ${src_path})
 tmp_name=___temp
@@ -58,10 +68,6 @@ if [ ${is_requirement} ];then
   cmd+="${PYTHON_EXEC} -m pip install ${pypi} -r \$HOME/${dst_name}/server/requirements.txt && "
 fi
 cmd+="${PYTHON_EXEC} -B \$HOME/${dst_name}/main.py $args"
-
-host_cmd="ssh ${ssh_opt} ${host}"
-
-[ $host = "local" ] && host_cmd="eval"
 
 tar -zcf - --exclude="__pycache__" --exclude="${build_name}" \
 -C ${src_path} . \

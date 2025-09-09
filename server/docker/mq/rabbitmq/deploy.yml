@@ -1,5 +1,10 @@
 version: "3.9"
 
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 15672
+
 services:
   rabbitmq:
     image: rabbitmq:3.11.16-management-alpine
@@ -10,6 +15,8 @@ services:
       - "5672"
       - "15672"
       - "1883"
+    labels:
+      <<: *traefik-label
     ports:
       - "5672:5672"
       - "1883:1883"

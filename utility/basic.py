@@ -13,19 +13,23 @@ logger = logging.getLogger()
 
 
 def getpwnam_uid(name, default=1000):
+    if os.name == "nt":
+        return name
     try:
         return pwd.getpwnam(name).pw_uid
     except KeyError as e:
         logger.warning(e)
-        return default
+    return default
 
 
 def getpwnam_gid(name, default=1000):
+    if os.name == "nt":
+        return name
     try:
         return pwd.getpwnam(name).pw_gid
     except KeyError as e:
         logger.warning(e)
-        return default
+    return default
 
 
 def action_formatter(action_name: str, message=None):
@@ -49,6 +53,8 @@ def execute(
         shell=os.name == 'nt',
         dry_run=False
 ):
+    if os.name == 'nt':
+      cmd = cmd.replace('sudo ',' ')
     logger.info("\n{0}".format(re.sub(r'&&\s+', '&&\n', cmd)))
     if is_input:
         input_exec = str(input("Are you sure you want to execute (y/n)?").strip())
