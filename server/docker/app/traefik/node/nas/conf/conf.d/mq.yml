@@ -1,0 +1,5 @@
+http:
+  routers:
+    rabbitmq:
+      rule: Host(`rabbitmq-dev.czy21.com`)
+      service: rabbitmq@docker

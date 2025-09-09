@@ -35,7 +35,7 @@ class DockerRole(share.AbstractRole):
 
     def docker_compose_cmd(self, option):
         role_deploy_files = [
-            self.root_deploy_file,
+            self.root_deploy_file.as_posix(),
             self.role_deploy_file.as_posix()
         ]
         if self.role_node_target_deploy_file.exists():

@@ -1,0 +1,3 @@
+param_disk_path: /c
+
+param_docker_data: "{{ param_disk_path }}/docker-data"
