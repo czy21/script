@@ -23,8 +23,7 @@
 - name: machine
   hosts: all
   remote_user: opsor
-  vars_files:
-    - "vars/main.yml"
+  vars_files: ["vars/env.yml","vars/main.yml"]
   become: yes
   vars:
     param_users: 
@@ -50,11 +49,10 @@
 - name: manual
   hosts: all
   remote_user: opsor
-  vars_files:
-    - "vars/main.yml"
+  vars_files: ["vars/env.yml","vars/main.yml"]
   tasks:
     - name: cmd
       shell: |
-        echo {{ param_ansible_os_family }}
+        echo 'abc'
   tags:
     - manual
