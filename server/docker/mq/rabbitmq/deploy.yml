@@ -26,3 +26,4 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: admin
       RABBITMQ_DEFAULT_PASS: "{{ param_db_password }}"
+    restart: always

@@ -49,25 +49,26 @@ if [[ "$os_name" =~ "NT" ]];then
 fi
 
 src_path=$(pwd)
-dst_name=$(basename ${src_path})
+dst_name=script-$(basename ${src_path})
 tmp_name=___temp
 build_name=build
 utility_path=$(realpath ${src_path}/../../utility)
 del_cmd="rm -rf \$HOME/${dst_name}"
 ssh_opt="-o StrictHostKeyChecking=no"
-src_path_parent_path=$(realpath ${src_path}/../)
-src_path_server_files=$(cd ${src_path_parent_path};find . -maxdepth 1 -type f -not -name "share.sh" -not -name "README.md" -exec sh -c 'f={};echo ./server/$(basename $f)' \;)
+src_path_server_files=$(cd ${src_path}/../;find . -maxdepth 1 -type f ! -name "share.sh" -and ! -name "README.md" -exec sh -c 'f={};echo ./server/$(basename $f)' \;)
 
 pypi="-i https://pypi.tuna.tsinghua.edu.cn/simple/"
 
-cmd=""
-cmd+="if [ ! -f ${PYTHON_EXEC} ];then "
-cmd+="python3 -m venv ${PYTHON_HOME} --without-pip --system-site-packages && wget -nv -O - https://bootstrap.pypa.io/get-pip.py | ${PYTHON_EXEC} - ${pypi}"
-cmd+=";fi &&"
-if [ ${is_requirement} ];then
-  cmd+="${PYTHON_EXEC} -m pip install ${pypi} -r \$HOME/${dst_name}/server/requirements.txt && "
+cmd=$(cat <<EOF
+if [ ! -f ${PYTHON_EXEC} ];then
+  python3 -m venv ${PYTHON_HOME} --without-pip --system-site-packages && wget -nv -O - https://bootstrap.pypa.io/get-pip.py | ${PYTHON_EXEC} - ${pypi}
 fi
-cmd+="${PYTHON_EXEC} -B \$HOME/${dst_name}/main.py $args"
+if [ "${is_requirement}" = "true" ];then
+  ${PYTHON_EXEC} -m pip install ${pypi} -r \$HOME/${dst_name}/server/requirements.txt
+fi
+${PYTHON_EXEC} -B \$HOME/${dst_name}/main.py $args
+EOF
+)
 
 tar -zcf - --exclude="__pycache__" --exclude="${build_name}" \
 -C ${src_path} . \
