@@ -16,7 +16,7 @@ if __name__ == '__main__':
     parser.add_argument('--debug', action="store_true")
     parser.add_argument('--file', required=True)
     parser.add_argument('--exec', required=True)
-    parser.add_argument('--env', required=True)
+    parser.add_argument('--env', required=False)
     parser.add_argument('-p', '--param', nargs="+", default=[], type=lambda s: s.split("=", 1) if "=" in s else (s, ""), help="k1=v1 k2=v2")
     args = parser.parse_args()
     args.param = dict(args.param)
@@ -26,9 +26,8 @@ if __name__ == '__main__':
 
     logger.info("args: {0}".format(json.dumps(vars(args), indent=2)))
     env_files = [shell_cwd.joinpath("_env.yml")]
-    env_file_active = shell_cwd.joinpath(f"_env-{args.env}.yml")
-    if env_file_active.exists():
-        env_files.append(env_file_active)
+    env_files.extend(filter(lambda f: f.exists(),[shell_cwd.joinpath(f"_env-{t}.yml") for t in (args.env or '').split(',')]))
+    
     default_params = {}
     default_path_module = importlib.import_module("domain.default.path")
     getattr(default_path_module, "create_dir")()
