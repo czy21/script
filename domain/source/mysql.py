@@ -19,9 +19,11 @@ class MySQLSource(base_source.AbstractSource):
         self.username = self.context.param.param_main_db_mysql_username
         self.password = self.context.param.param_main_db_mysql_password
         self.database = self.context.param.param_main_db_mysql_database
+        self.output_db_all_in_one_mysql = pathlib.Path(self.context.param.output_db_all_in_one,f'mysql-{self.database}.sql').as_posix()
+        self.output_db_bak_gz_mysql = pathlib.Path(self.context.param.output_db_bak).joinpath(f'mysql-{self.database}.gz').as_posix()
 
     def assemble(self) -> None:
-        db_util.assemble_ql(pathlib.Path(self.context.param.param_main_db_mysql_file_path), pathlib.Path(self.context.param.output_db_all_in_one_mysql), mysql_meta, "sql")
+        db_util.assemble_ql(pathlib.Path(self.context.param.param_main_db_mysql_file_path), pathlib.Path(self.output_db_all_in_one_mysql), mysql_meta, "sql")
 
     def get_basic_param(self, with_database=False) -> str:
         param = [
@@ -52,7 +54,7 @@ class MySQLSource(base_source.AbstractSource):
     def execute(self) -> None:
         command = list_util.flat_to_str([mysql_cmd, self.get_basic_param(True), [
             "--skip-column-names",
-            f"< {self.context.param.output_db_all_in_one_mysql}"
+            f"< {self.output_db_all_in_one_mysql}"
         ]])
         basic_util.execute(command, db_util.print_ql_msg)
 
@@ -60,13 +62,13 @@ class MySQLSource(base_source.AbstractSource):
         command = list_util.flat_to_str("mysqldump",
                                         self.get_basic_param(False),
                                         f"--databases {self.database}",
-                                        f"| gzip > {self.context.param.output_db_bak_gz_mysql}"
+                                        f"| gzip > {self.context.output_db_bak_gz_mysql}"
                                         )
         basic_util.execute(command)
 
     def restore(self) -> None:
         command = list_util.flat_to_str(self.get_recreate_command(),
-                                        f"&& gzip -d < {self.context.param.output_db_bak_gz_mysql}",
+                                        f"&& gzip -d < {self.context.output_db_bak_gz_mysql}",
                                         "| mysql", self.get_basic_param(True)
                                         )
         basic_util.execute(command)
