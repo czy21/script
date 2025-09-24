@@ -44,4 +44,4 @@ def print_ql_msg(msg_lines, proc: subprocess.Popen, func_param) -> None:
                 exec_file_tuple.append(line)
                 logger.info(line)
     if math.modf(len(exec_file_tuple) / 2)[0] > 0:
-        logger.error(str(exec_file_tuple[len(exec_file_tuple) - 1].strip()).replace("executing:", "error_file"))
+        logger.error(str(exec_file_tuple[len(exec_file_tuple) - 1].strip()).replace("executing:", "exec_fail:"))
