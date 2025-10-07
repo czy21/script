@@ -1,0 +1,31 @@
+version: "3.9"
+
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 8080
+
+x-db-env: &db-env
+  BUILDBOT_DB_URL: postgresql+psycopg2://{{ param_db_pgsql_username }}:{{ param_db_pgsql_password }}@{{ param_db_pgsql_host }}:{{ param_db_pgsql_port }}/buildbot
+
+services:
+
+  buildbot-master:
+    image: "buildbot/buildbot-master:master"
+    pull_policy: always
+    container_name: buildbot-master
+    hostname: buildbot-master
+    privileged: true
+    labels:
+      <<: *traefik-label
+    ports:
+      - "8010:8010"
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/master.cfg:/buildbot/master.cfg
+    environment:
+      <<: *db-env
+      BUILDBOT_CONFIG_DIR: config
+      BUILDBOT_WORKER_PORT: 9989
+      BUILDBOT_WEB_URL: http://localhost:8010/
+      BUILDBOT_WEB_PORT: tcp:port=8010
+    restart: always

@@ -60,11 +60,7 @@ def dfs_dir(path: pathlib.Path, deep=1, exclude_rules: list = None, parent_key: 
 def get_match_dirs(rules, items):
     _dirs = []
     for p in items:
-        _rules = regex_util.match_rules(
-            rules,
-            p.as_posix(),
-            ".jinja2ignore {0}".format(dfs_dir.__name__)
-        )
+        _rules = regex_util.match_rules(rules, p.as_posix() +  "/", ".jinja2ignore {0}".format(dfs_dir.__name__))
         if not any(_rules.values()):
             _dirs.append(p)
     return _dirs
@@ -92,7 +88,7 @@ def get_dir_dict(path: pathlib.Path, exclude_rules: list = None, select_tip="", 
 
 def select_namespace(root_path: pathlib.Path, deep: int = 1, exclude_rules=None, args: argparse.Namespace = None) -> list[Namespace]:
     exclude_rules = exclude_rules if exclude_rules else []
-    exclude_rules.extend(["/___temp", "/build", root_path.joinpath("utility").as_posix(), root_path.joinpath("server").as_posix()])
+    exclude_rules.extend(["___temp/", "build/", root_path.joinpath("utility").as_posix(), root_path.joinpath("server").as_posix()])
     flat_dirs = dfs_dir(root_path, exclude_rules=exclude_rules)
     deep_index = 1
     namespaces = []
