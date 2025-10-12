@@ -4,7 +4,7 @@ import pathlib
 
 from domain.meta import mysql as mysql_meta
 from domain.source import base as base_source
-from utility import db as db_util, collection as list_util, basic as basic_util
+from utility import db as db_util, collection as list_util, basic as basic_util, file as file_util
 
 logger = logging.getLogger()
 mysql_cmd = "mysql"
@@ -23,7 +23,19 @@ class MySQLSource(base_source.AbstractSource):
         self.output_db_bak_gz_mysql = pathlib.Path(self.context.param.output_db_bak).joinpath(f'mysql-{self.database}.gz').as_posix()
 
     def assemble(self) -> None:
-        db_util.assemble_ql(pathlib.Path(self.context.param.param_main_db_mysql_file_path), pathlib.Path(self.output_db_all_in_one_mysql), mysql_meta, "sql")
+        everyone_content = db_util.assemble_ql(pathlib.Path(self.context.param.param_main_db_mysql_everyone_path), mysql_meta, "sql") 
+        version_content = db_util.assemble_ql(pathlib.Path(self.context.param.param_main_db_mysql_version_path), mysql_meta, "sql")
+        file_util.write_text(pathlib.Path(self.output_db_all_in_one_mysql), u'{}'.format("\n\n".join([*everyone_content,*version_content])))
+
+    def assemble_release(self) -> None:
+        everyone_content = db_util.assemble_ql(pathlib.Path(self.context.param.param_main_db_mysql_everyone_path), mysql_meta, "sql")
+        release_path = pathlib.Path(self.context.param.param_main_db_mysql_version_path).joinpath(self.context.param.param_main_db_mysql_release_name)
+        if not self.context.param.param_main_db_mysql_release_name:
+            raise Exception(f"param_main_db_mysql_release_name must be not null")
+        if not release_path.exists():
+            raise Exception(f"{release_path.as_posix()} not exist")
+        release_content = db_util.assemble_ql(release_path, mysql_meta, "sql")
+        file_util.write_text(pathlib.Path(self.output_db_all_in_one_mysql), u'{}'.format("\n\n".join([*everyone_content,*release_content])))
 
     def get_basic_param(self, with_database=False) -> str:
         param = [

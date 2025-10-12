@@ -14,24 +14,22 @@ from utility import basic as basic_util, path as path_util, file as file_util
 logger = logging.getLogger()
 
 
-def assemble_ql(s_path: pathlib.Path, t_file: pathlib.Path, db_meta: typing.Any, file_suffix: str, prep: str = None, post: str = None) -> None:
-    db_file_paths = path_util.dfs_dir(s_path.as_posix(), re.compile(r".*" + file_suffix))
+def assemble_ql(s_path: pathlib.Path, db_meta: typing.Any, file_suffix: str, prep: str = None, post: str = None) -> None:
+    db_file_paths = sorted(pathlib.Path(s_path.as_posix()).rglob(f"*.{file_suffix}"))
     db_file_content = []
     for s in db_file_paths:
         logger.info(basic_util.action_formatter("loading", s))
         with io.open(s, "r", encoding="utf-8") as cf:
             db_file_template = "\n".join([db_meta.self["header"], cf.read(), db_meta.self["footer"]])
             db_file_content.append(jinja2.Template(source=db_file_template).render(**{
-                **{"file_path": s},
+                **{"file_path": s.as_posix()},
                 **db_meta.self["substitution"]
             }))
-
     if prep:
         db_file_content.insert(0, prep)
     if post:
         db_file_content.append(post)
-
-    file_util.write_text(t_file, u'{}'.format("\n\n".join(db_file_content)))
+    return db_file_content
 
 
 def print_ql_msg(msg_lines, proc: subprocess.Popen, func_param) -> None:
