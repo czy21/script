@@ -28,7 +28,7 @@ if [ "${param_code_type}" = "nodejs" ];then
   APP_CMD+="&& npm --prefix ${APP_DIR}/${param_release_name}/ install"
 fi
 
-(cd ${param_project_root}/build && tar -zcf - ${TAR_SRC} | ssh ${SSH_ARGS} ${SSH_HOST} "${APP_CMD}")
+(cd ${param_project_root}/${param_project_module}/build && tar -zcf - ${TAR_SRC} | ssh ${SSH_ARGS} ${SSH_HOST} "${APP_CMD}")
 
 ssh ${SSH_ARGS} ${SSH_HOST} << SCRIPT
 env_file=${APP_DIR}/${param_release_name}/.env
@@ -43,7 +43,7 @@ After=network.target
 [Service]
 EnvironmentFile=\$env_file
 WorkingDirectory=${APP_DIR}/${param_release_name}
-ExecStart=java ${param_app_args} -jar ${APP_DIR}/${param_release_name}/api.jar
+ExecStart=${param_app_java_home}/bin/java ${param_app_args} -jar ${APP_DIR}/${param_release_name}/api.jar
 Restart=always
 User=\$USER
 
