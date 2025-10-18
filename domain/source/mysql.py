@@ -23,19 +23,21 @@ class MySQLSource(base_source.AbstractSource):
         self.output_db_bak_gz_mysql = pathlib.Path(self.context.param.output_db_bak).joinpath(f'mysql-{self.database}.gz').as_posix()
 
     def assemble(self) -> None:
-        everyone_content = db_util.assemble_ql(pathlib.Path(self.context.param.param_main_db_mysql_everyone_path), mysql_meta, "sql") 
+        everyone_prep_content = db_util.assemble_ql(pathlib.Path(self.context.param.param_main_db_mysql_everyone_path).joinpath("prep"), mysql_meta, "sql")
         version_content = db_util.assemble_ql(pathlib.Path(self.context.param.param_main_db_mysql_version_path), mysql_meta, "sql")
-        file_util.write_text(pathlib.Path(self.output_db_all_in_one_mysql), u'{}'.format("\n\n".join([*everyone_content,*version_content])))
+        everyone_post_content = db_util.assemble_ql(pathlib.Path(self.context.param.param_main_db_mysql_everyone_path).joinpath("post"), mysql_meta, "sql")
+        file_util.write_text(pathlib.Path(self.output_db_all_in_one_mysql), u'{}'.format("\n\n".join([*everyone_prep_content,*version_content,*everyone_post_content])))
 
     def assemble_release(self) -> None:
-        everyone_content = db_util.assemble_ql(pathlib.Path(self.context.param.param_main_db_mysql_everyone_path), mysql_meta, "sql")
+        everyone_prep_content = db_util.assemble_ql(pathlib.Path(self.context.param.param_main_db_mysql_everyone_path).joinpath("prep"), mysql_meta, "sql")
         release_path = pathlib.Path(self.context.param.param_main_db_mysql_version_path).joinpath(self.context.param.param_main_db_mysql_release_name)
+        everyone_post_content = db_util.assemble_ql(pathlib.Path(self.context.param.param_main_db_mysql_everyone_path).joinpath("post"), mysql_meta, "sql")
         if not self.context.param.param_main_db_mysql_release_name:
             raise Exception(f"param_main_db_mysql_release_name must be not null")
         if not release_path.exists():
             raise Exception(f"{release_path.as_posix()} not exist")
         release_content = db_util.assemble_ql(release_path, mysql_meta, "sql")
-        file_util.write_text(pathlib.Path(self.output_db_all_in_one_mysql), u'{}'.format("\n\n".join([*everyone_content,*release_content])))
+        file_util.write_text(pathlib.Path(self.output_db_all_in_one_mysql), u'{}'.format("\n\n".join([*everyone_prep_content,*release_content,everyone_post_content])))
 
     def get_basic_param(self, with_database=False) -> str:
         param = [
