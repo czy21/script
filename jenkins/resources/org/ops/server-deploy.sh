@@ -7,7 +7,7 @@ SSH_HOST="${SSH_HOST:-opsor@${param_server_deploy_host}}"
 SSH_ARGS="-o StrictHostKeyChecking=no"
 NPM_RUN_SCRIPT="${NPM_RUN_SCRIPT:-"start"}"
 
-[ -n "${param_release_name}" ] && return
+[ -n "${param_release_name}" ] || exit 0
 
 if [ -n "${SSH_PRIVATE_KEY}" ];then
   SSH_ARGS+=" -i ${SSH_PRIVATE_KEY}"
