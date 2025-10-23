@@ -30,14 +30,17 @@ class MySQLSource(base_source.AbstractSource):
 
     def assemble_release(self) -> None:
         everyone_prep_content = db_util.assemble_ql(pathlib.Path(self.context.param.param_main_db_mysql_everyone_path).joinpath("prep"), mysql_meta, "sql")
-        release_path = pathlib.Path(self.context.param.param_main_db_mysql_version_path).joinpath(self.context.param.param_main_db_mysql_release_name)
-        everyone_post_content = db_util.assemble_ql(pathlib.Path(self.context.param.param_main_db_mysql_everyone_path).joinpath("post"), mysql_meta, "sql")
-        if not self.context.param.param_main_db_mysql_release_name:
+        version_file = pathlib.Path(self.context.param.version_file)
+        release_path = None
+        release_name = self.context.param.get('param_main_db_mysql_release_name',f"release-{version_file.read_text()}" if version_file.exists() else "")
+        release_path = pathlib.Path(self.context.param.param_main_db_mysql_version_path).joinpath(release_name)
+        if not self.context.param.get('param_main_db_mysql_release_name') and not version_file.exists():
             raise Exception(f"param_main_db_mysql_release_name must be not null")
         if not release_path.exists():
             raise Exception(f"{release_path.as_posix()} not exist")
         release_content = db_util.assemble_ql(release_path, mysql_meta, "sql")
-        file_util.write_text(pathlib.Path(self.output_db_all_in_one_mysql), u'{}'.format("\n\n".join([*everyone_prep_content,*release_content,everyone_post_content])))
+        everyone_post_content = db_util.assemble_ql(pathlib.Path(self.context.param.param_main_db_mysql_everyone_path).joinpath("post"), mysql_meta, "sql")
+        file_util.write_text(pathlib.Path(self.output_db_all_in_one_mysql), u'{}'.format("\n\n".join([*everyone_prep_content,*release_content,*everyone_post_content])))
 
     def get_basic_param(self, with_database=False) -> str:
         param = [
