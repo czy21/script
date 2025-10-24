@@ -68,7 +68,7 @@ def exec() {
                         sh "gradle --no-daemon -I ${CONFIG_FILE} -p ${env.param_project_root} clean build -U -x test"
                         if (params.param_code_analysis == true) {
                             withSonarQubeEnv(env.param_sonarqube_server) {
-                                sh "gradle --no-daemon -I ${CONFIG_FILE} -p ${env.param_project_root} sonar -Dsonar.projectKey=${env.param_sonarqube_project_key} -Dsonar.projectVersion=${env.param_release_version} -Dsonar.host.url=${SONAR_HOST_URL} -Dsonar.token=${SONAR_AUTH_TOKEN}"
+                                sh "gradle --no-daemon -I ${CONFIG_FILE} -p ${env.param_project_root} sonar -Dsonar.projectKey=${env.param_sonarqube_project_key} -Dsonar.projectName=${env.param_sonarqube_project_key} -Dsonar.projectVersion=${env.param_release_version} -Dsonar.host.url=${SONAR_HOST_URL} -Dsonar.token=${SONAR_AUTH_TOKEN}"
                             }
                         }
                     }
