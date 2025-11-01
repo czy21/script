@@ -11,9 +11,8 @@ if [ "{{ param_docker_add_repo | lower }}" = true ];then
 
   if [ "{{ param_mirror_use_proxy | lower }}" = true ];then
     sudo cp -rv /etc/apt/sources.list.d/docker.list /etc/apt/sources.list.d/docker.list.bak
-    sed -e "s|https://download.docker.com|http://{{ param_mirror_docker_ce }}|g" /etc/apt/sources.list.d/docker.list.bak | sudo tee /etc/apt/sources.list.d/docker.list
+    sed -e "s|https://download.docker.com|https://{{ param_mirror_docker_ce }}|g" /etc/apt/sources.list.d/docker.list.bak | sudo tee /etc/apt/sources.list.d/docker.list
   fi
-
 fi
 
 sudo apt-get update -y

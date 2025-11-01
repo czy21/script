@@ -1,0 +1,37 @@
+- name: install
+  win_shell: |
+    Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+    choco install git -y
+  tags:
+    - "os"
+
+- name: global path environment append
+  ansible.windows.win_path:
+    elements:
+      - 'C:\Program Files\Git\bin'
+  tags:
+    - "os"
+
+- win_copy: src=/home/opsor/{{ param_jdk_from }} dest={{ param_remote_path }}
+  tags:
+    - "sdk-java"
+
+- win_shell: bash {{ param_remote_role_path }}/sdk-java.sh
+  tags:
+    - "sdk-java"
+
+- name: Set JAVA_HOME
+  ansible.windows.win_powershell:
+    script: |
+      $java_home="{{ (param_jdk_root[0] | upper) + param_jdk_root[1:] + '/' + param_jdk_home }}"
+      $java_home=$java_home -replace '/', '\'
+      [Environment]::SetEnvironmentVariable("JAVA_HOME", "$java_home", "Machine")
+  tags:
+    - "sdk-java"
+
+- name: global path environment append JAVA_HOME
+  ansible.windows.win_path:
+    elements:
+      - "%JAVA_HOME%\\bin"
+  tags:
+    - "sdk-java"

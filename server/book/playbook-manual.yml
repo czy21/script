@@ -53,6 +53,17 @@
   tasks:
     - name: cmd
       shell: |
-        echo 'abc'
+        dir
   tags:
     - manual
+
+- name: win
+  hosts: all
+  remote_user: opsor
+  vars_files: ["vars/env.yml","vars/main.yml"]
+  tasks:
+    - name: cmd
+      win_shell: |
+        dir
+  tags:
+    - win
