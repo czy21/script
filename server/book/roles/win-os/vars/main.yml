@@ -1,0 +1,15 @@
+---
+param_jdk_versions:
+  - name: jdk-1.8
+    link: https://mirrors.tuna.tsinghua.edu.cn/Adoptium/8/jdk/x64/windows/OpenJDK8U-jdk_x64_windows_hotspot_8u472b08.zip
+  - name: jdk-17-graalvm
+    link: https://github.com/graalvm/graalvm-ce-builds/releases/download/jdk-17.0.9/graalvm-community-jdk-17.0.9_windows-x64_bin.zip
+  - name: jdk-21-graalvm
+    link: https://github.com/graalvm/graalvm-ce-builds/releases/download/jdk-21.0.2/graalvm-community-jdk-21.0.2_windows-x64_bin.zip
+  - name: jdk-24-graalvm
+    link: https://github.com/graalvm/graalvm-ce-builds/releases/download/jdk-24.0.2/graalvm-community-jdk-24.0.2_windows-x64_bin.zip
+
+param_jdk_root: c:/Lang/java
+param_jdk_from: jdk
+param_jdk_home: jdk-1.8
+param_jdk_need: []

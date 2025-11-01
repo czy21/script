@@ -47,3 +47,12 @@ kubectl label nodes k8s-nodeX slave=X
 # show node label
 kubectl get node --show-labels
 ```
+
+## Windows
+```powershell
+# openssh enable
+Get-WindowsCapability -Online | Where-Object Name -like 'OpenSSH.Server*'
+Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
+Start-Service sshd
+Set-Service -Name sshd -StartupType 'Automatic'
+```

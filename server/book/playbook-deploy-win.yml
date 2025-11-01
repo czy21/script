@@ -1,0 +1,30 @@
+- name: os
+  hosts: all
+  vars_files: ["vars/env.yml","vars/main.yml"]
+  vars:
+    param_role_name: win-os
+  tasks:
+    - block:
+        - import_tasks: roles/common/tasks/win-copy.yml
+          tags:
+            - "os"
+            - "sdk-go"
+            - "sdk-java"
+            - "sdk-dotnet"
+            - "svc-nginx"
+            - "svc-redis"
+            - "svc-mysql"
+            - "svc-mongo"
+        - import_role:
+            name: '{{ param_role_name }}'
+      always:
+        - import_tasks: roles/common/tasks/win-clean.yml
+          tags:
+            - "os"
+            - "sdk-go"
+            - "sdk-java"
+            - "sdk-dotnet"
+            - "svc-nginx"
+            - "svc-redis"
+            - "svc-mysql"
+            - "svc-mongo"
