@@ -10,6 +10,6 @@ param_jdk_versions:
     link: https://github.com/graalvm/graalvm-ce-builds/releases/download/jdk-24.0.2/graalvm-community-jdk-24.0.2_windows-x64_bin.zip
 
 param_jdk_root: c:/Lang/java
-param_jdk_from: jdk
+param_jdk_from: win-jdk
 param_jdk_home: jdk-1.8
 param_jdk_need: []

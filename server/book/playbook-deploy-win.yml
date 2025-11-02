@@ -8,6 +8,7 @@
         - import_tasks: roles/common/tasks/win-copy.yml
           tags:
             - "os"
+            - "win-app"
             - "sdk-go"
             - "sdk-java"
             - "sdk-dotnet"
@@ -21,6 +22,7 @@
         - import_tasks: roles/common/tasks/win-clean.yml
           tags:
             - "os"
+            - "win-app"
             - "sdk-go"
             - "sdk-java"
             - "sdk-dotnet"
@@ -28,3 +30,20 @@
             - "svc-redis"
             - "svc-mysql"
             - "svc-mongo"
+            
+- name: svc
+  hosts: all
+  vars_files: ["vars/env.yml","vars/main.yml"]
+  vars:
+    param_role_name: win-svc
+  tasks:
+    - block:
+        - import_tasks: roles/common/tasks/win-copy.yml
+          tags:
+            - "svc"
+        - import_role:
+            name: '{{ param_role_name }}'
+      always:
+        - import_tasks: roles/common/tasks/win-clean.yml
+          tags:
+            - "svc"

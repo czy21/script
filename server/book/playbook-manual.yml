@@ -64,6 +64,6 @@
   tasks:
     - name: cmd
       win_shell: |
-        dir
+        Restart-Computer -Force
   tags:
     - win
