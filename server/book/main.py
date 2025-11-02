@@ -75,7 +75,7 @@ if __name__ == '__main__':
     if not args.no_step:
         ansible_playbook_cmd.append("--step")
     if args.debug:
-        ansible_playbook_cmd.append("-vv")
+        ansible_playbook_cmd.append("-vvvv")
     if args.dry_run:
         ansible_playbook_cmd.append("--check")
     _cmds.append(collection_util.flat_to_str(ansible_playbook_cmd))

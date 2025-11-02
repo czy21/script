@@ -1,0 +1,34 @@
+- name: Upload archive file
+  win_copy: src=/home/opsor/{{ param_win_deploy_archive_file }} dest={{ param_win_deploy_extract_path }}/
+  tags:
+    - "svc"
+
+- name: Extract deploy script
+  win_shell: bash -c "unzip -p {{ param_win_deploy_extract_path }}/{{ param_win_deploy_archive_file }} {{ param_win_deploy_service_script }} > {{ param_remote_path }}/{{ param_win_deploy_archive_file | basename | splitext | first }}-deploy.ps1"
+  tags:
+    - "svc"
+
+- name: Stop Process
+  ansible.windows.win_powershell:
+    chdir: "{{ param_remote_path }}"
+    script: |
+      ./{{ param_win_deploy_archive_file | basename | splitext | first }}-deploy.ps1 init
+      ./{{ param_win_deploy_archive_file | basename | splitext | first }}-deploy.ps1 stop
+    remote_src: true
+  tags:
+    - "svc"
+
+- name: Extract archive file
+  win_shell: bash -c "unzip -qo {{ param_win_deploy_extract_path }}/{{ param_win_deploy_archive_file }} -d {{ param_win_deploy_extract_path }}/{{ param_win_deploy_archive_file | basename | splitext | first }}"
+  tags:
+    - "svc"
+
+- name: Upload overrite file
+  win_copy: src=/home/opsor/{{ param_win_deploy_archive_file | basename | splitext | first }}-overrite dest={{ param_win_deploy_extract_path }}/
+  tags:
+    - "svc"
+
+- name: Overrite file
+  win_shell: bash -c "cp -rvf {{ param_win_deploy_extract_path }}/{{ param_win_deploy_archive_file | basename | splitext | first }}-overrite/* {{ param_win_deploy_extract_path }}/{{ param_win_deploy_archive_file | basename | splitext | first }}/"
+  tags:
+    - "svc"

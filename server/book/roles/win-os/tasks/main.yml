@@ -1,7 +1,7 @@
 - name: install
   win_shell: |
     Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
-    choco install git -y
+    choco install git nssm -y
   tags:
     - "os"
 
@@ -12,7 +12,31 @@
   tags:
     - "os"
 
-- win_copy: src=/home/opsor/{{ param_jdk_from }} dest={{ param_remote_path }}
+- win_copy: src=/home/opsor/win-app dest={{ param_remote_path }}/
+  tags:
+    - "win-app"
+
+- ansible.windows.win_find:
+    paths: 
+      - "{{ param_remote_path }}/win-app"
+    patterns: 
+      - "*.exe"
+    recurse: yes
+    file_type: file
+  register: install_files
+  tags:
+    - "win-app"
+
+- ansible.windows.win_package:
+    path: "{{ item.path }}"
+    arguments: /S /quiet /norestart
+    state: present
+  loop: "{{ install_files.files }}"
+  when: install_files.files | length > 0
+  tags:
+    - "win-app"
+
+- win_copy: src=/home/opsor/{{ param_jdk_from }} dest={{ param_remote_path }}/
   tags:
     - "sdk-java"
 
