@@ -1,4 +1,5 @@
 ---
+param_source_home: "{{ lookup('env', 'HOME') }}"
 param_remote_path: "{{ inventory_dir | basename }}"
 param_remote_role_path: "{{ (param_remote_path,param_role_name) | path_join }}"
 param_ansible_distribution: "{{ ansible_distribution | lower}}"

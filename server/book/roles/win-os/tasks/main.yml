@@ -12,7 +12,7 @@
   tags:
     - "os"
 
-- win_copy: src=/home/opsor/win-app dest={{ param_remote_path }}/
+- win_copy: src={{ param_source_home }}/win-app dest={{ param_remote_path }}/
   tags:
     - "win-app"
 
@@ -36,7 +36,7 @@
   tags:
     - "win-app"
 
-- win_copy: src=/home/opsor/{{ param_jdk_from }} dest={{ param_remote_path }}/
+- win_copy: src={{ param_source_home }}/{{ param_jdk_from }} dest={{ param_remote_path }}/
   tags:
     - "sdk-java"
 
@@ -53,7 +53,7 @@
   tags:
     - "sdk-java"
 
-- name: global path environment append JAVA_HOME
+- name: Global path environment append JAVA_HOME
   ansible.windows.win_path:
     elements:
       - "%JAVA_HOME%\\bin"
