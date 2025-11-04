@@ -1,4 +1,6 @@
 ---
 param_win_deploy_archive_file: wxhook.zip
+param_win_deploy_extract_name: "{{ param_win_deploy_archive_file | basename | splitext | first }}"
+param_win_deploy_extract_part: 'client/**'
 param_win_deploy_extract_path: 'c:'
 param_win_deploy_service_script: client/deploy.ps1 # powershell script from param_win_deploy_archive_file
