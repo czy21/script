@@ -36,26 +36,15 @@
   tags:
     - "win-app"
 
-- win_copy: src={{ param_source_home }}/{{ param_jdk_from }} dest={{ param_remote_path }}/
+- name: java
+  import_tasks: sdk-java.yml
   tags:
-    - "sdk-java"
+    - "sdk-java"    
 
-- win_shell: bash {{ param_remote_role_path }}/sdk-java.sh
+- name: dotnet
+  win_chocolatey:
+    name: dotnet-sdk
+    version: '9.0.306'
+    state: reinstalled
   tags:
-    - "sdk-java"
-
-- name: Set JAVA_HOME
-  ansible.windows.win_powershell:
-    script: |
-      $java_home="{{ (param_jdk_root[0] | upper) + param_jdk_root[1:] + '/' + param_jdk_home }}"
-      $java_home=$java_home -replace '/', '\'
-      [Environment]::SetEnvironmentVariable("JAVA_HOME", "$java_home", "Machine")
-  tags:
-    - "sdk-java"
-
-- name: Global path environment append JAVA_HOME
-  ansible.windows.win_path:
-    elements:
-      - "%JAVA_HOME%\\bin"
-  tags:
-    - "sdk-java"
+    - "sdk-dotnet"

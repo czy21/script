@@ -1,0 +1,17 @@
+- win_copy: src={{ param_source_home }}/{{ param_jdk_from }} dest={{ param_remote_path }}/
+
+- win_shell: bash {{ param_remote_role_path }}/sdk-java.sh
+
+- name: Set JAVA_HOME
+  ansible.windows.win_powershell:
+    script: |
+      $java_home="{{ (param_jdk_root[0] | upper) + param_jdk_root[1:] + '/' + param_jdk_home }}"
+      $java_home=$java_home -replace '/', '\'
+      [Environment]::SetEnvironmentVariable("JAVA_HOME", "$java_home", "Machine")
+
+- name: Global path environment append JAVA_HOME
+  ansible.windows.win_path:
+    elements:
+      - "%JAVA_HOME%\\bin"
+
+    
