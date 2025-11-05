@@ -98,7 +98,7 @@ def exec() {
                             sh "(cd ${env.param_project_root};dotnet tool run dotnet-sonarscanner begin /k:${env.param_sonarqube_project_key} /v:${env.param_release_version} /d:sonar.host.url=${SONAR_HOST_URL} /d:sonar.token=${SONAR_AUTH_TOKEN} /d:sonar.scanner.scanAll=false)"
                         }
                     }
-                    sh "(cd ${env.param_project_root} && rm -rf bin build && dotnet publish --configfile ${CONFIG_FILE_NUGET} -c Release -r linux-x64 -p:PublishDir=build -p:DebugType=None -p:DebugSymbols=false)"
+                    sh "(cd ${env.param_project_root} && rm -rf bin build && dotnet publish --configfile ${CONFIG_FILE_NUGET} -c Release -r linux-x64 -p:DebugType=None -p:DebugSymbols=false)"
                     if (params.param_code_analysis == true) {
                         withSonarQubeEnv(env.param_sonarqube_server) {
                             sh "(cd ${env.param_project_root};dotnet tool run dotnet-sonarscanner end /d:sonar.token=${SONAR_AUTH_TOKEN})"
