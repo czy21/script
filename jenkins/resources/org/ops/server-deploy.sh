@@ -39,6 +39,7 @@ fi
 (cd ${param_project_root}/${param_project_module}/build && tar -zcf - ${TAR_SRC} --ignore-failed-read | ssh ${SSH_ARGS} ${SSH_HOST} "${APP_CMD}")
 
 ssh ${SSH_ARGS} ${SSH_HOST} << SCRIPT
+set -xe
 env_file=${APP_DIR}/${param_release_name}/.env
 [ -f "\$env_file" ] || touch \$env_file
 
@@ -103,5 +104,6 @@ if [ -f "/etc/systemd/system/${param_release_name}.service" ];then
   sudo systemctl daemon-reload
   sudo systemctl restart ${param_release_name}
   sudo systemctl enable ${param_release_name}
+  sudo systemctl status ${param_release_name} -n 50
 fi
 SCRIPT
