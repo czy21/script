@@ -19,6 +19,10 @@ if [ "${param_code_type}" = "web" ];then
   APP_CMD+="rm -rf ${APP_DIR}/${param_release_name}/* && "
 fi
 
+if [ "${param_code_type}" = "python" ];then
+  APP_CMD+="rm -rf ${APP_DIR}/${param_release_name}/app && "
+fi
+
 APP_CMD+="mkdir -p ${APP_DIR}/${param_release_name}/ && tar -zxvf - -C ${APP_DIR}/${param_release_name}/ && chmod 777 ${APP_DIR}/${param_release_name}/"
 TAR_SRC="${TAR_SRC:-.}"
 
@@ -34,6 +38,11 @@ fi
 
 if [ "${param_code_type}" = "nodejs" ];then
   APP_CMD+="&& npm --prefix ${APP_DIR}/${param_release_name}/ install"
+fi
+
+if [ "${param_code_type}" = "python" ];then
+  # need apt install python3.xx-venv
+  APP_CMD+="&& cd ${APP_DIR}/${param_release_name} && rm -rf .pyenv && python3 -m venv .pyenv && .pyenv/bin/python3 -m pip install -i https://pypi.tuna.tsinghua.edu.cn/simple/ -r requirements.txt"
 fi
 
 (cd ${param_project_root}/${param_project_module}/build && tar -zcf - ${TAR_SRC} --ignore-failed-read | ssh ${SSH_ARGS} ${SSH_HOST} "${APP_CMD}")
@@ -91,6 +100,25 @@ After=network.target
 EnvironmentFile=\$env_file
 WorkingDirectory=${APP_DIR}/${param_release_name}
 ExecStart=npm --prefix ${APP_DIR}/${param_release_name}/ run ${NPM_RUN_SCRIPT}
+Restart=always
+User=\$USER
+
+[Install]
+WantedBy=multi-user.target
+
+EOF
+fi
+
+if [ "$param_code_type" = "python" ];then
+    sudo tee /etc/systemd/system/${param_release_name}.service << EOF
+[Unit]
+Description=Python Application
+After=network.target
+
+[Service]
+EnvironmentFile=\$env_file
+WorkingDirectory=${APP_DIR}/${param_release_name}
+ExecStart=${APP_DIR}/${param_release_name}/.pyenv/bin/python main.py ${param_app_args}
 Restart=always
 User=\$USER
 
