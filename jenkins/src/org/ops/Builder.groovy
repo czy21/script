@@ -106,6 +106,9 @@ def exec() {
                     }
                 }
             },
+            python: {
+                sh "(cd ${env.param_project_root} && rm -rf build && mkdir -p build && find app -name '*.py' | xargs -I {} cp -rv --parents {} build/ && cp -rv main.py requirements.txt config/ build/)"
+            },
             shell : {
                 def cmd = StringUtils.format("chmod +x {0};{0}", PathUtils.ofPath(env.param_project_root, env.param_project_shell_file))
                 sh "${cmd}"
