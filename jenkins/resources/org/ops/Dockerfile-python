@@ -1,3 +1,7 @@
 ARG SDK_VERSION=python-3.13
 
 FROM registry.czy21.com/library/${SDK_VERSION}
+
+COPY ./build/ /app/
+
+RUN python3 -m venv .pyenv && .pyenv/bin/python3 -m pip install -i https://pypi.tuna.tsinghua.edu.cn/simple/ -r requirements.txt
