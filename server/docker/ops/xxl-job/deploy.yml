@@ -8,7 +8,7 @@ x-traefik-label: &traefik-label
 services:
 
   xxl-job:
-    image: xuxueli/xxl-job-admin:2.4.0
+    image: xuxueli/xxl-job-admin:3.2.0
     container_name: xxl-job
     labels:
       <<: *traefik-label

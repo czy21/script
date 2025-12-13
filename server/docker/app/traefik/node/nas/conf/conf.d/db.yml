@@ -23,10 +23,10 @@ http:
       rule: Host(`influxdb.czy21-internal.com`)
       service: influxdb@docker
     minio:
-      rule: Host(`minio.czy21-internal.com`)
+      rule: Host(`minio.czy21.com`)
       service: minio-api@docker
     minio-web:
-      rule: Host(`minio-web.czy21-internal.com`)
+      rule: Host(`minio-web.czy21.com`)
       service: minio-web@docker
     metabase:
       rule: Host(`metabase.czy21-internal.com`)

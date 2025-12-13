@@ -51,3 +51,6 @@ http:
     go-backup:
       rule: Host(`go-backup.czy21-internal.com`)
       service: go-backup@docker
+    xxl-job:
+      rule: Host(`xxl-job-dev.czy21.com`)
+      service: xxl-job@docker      
