@@ -1,0 +1,35 @@
+version: "3.9"
+
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 8080
+
+services:
+  paddleocr-vl-api:
+    image: ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddleocr-vl:${API_IMAGE_TAG_SUFFIX}
+    container_name: paddleocr-vl-api
+    labels:
+      <<: *traefik-label
+    depends_on:
+      paddleocr-vlm-server:
+        condition: service_healthy
+    user: root
+    environment:
+      - VLM_BACKEND=${VLM_BACKEND:-vllm}
+      - CUDA_VISIBLE_DEVICES=-1
+      - FLAGS_use_cuda=false
+    command: /bin/bash -c "paddlex --serve --pipeline /home/paddleocr/pipeline_config_${VLM_BACKEND}.yaml"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://paddleocr-vl-api:8080/health || exit 1"]
+
+  paddleocr-vlm-server:
+    image: ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddleocr-genai-${VLM_BACKEND}-server:${VLM_IMAGE_TAG_SUFFIX}
+    container_name: paddleocr-vlm-server
+    user: root
+    environment:
+      - CUDA_VISIBLE_DEVICES=-1
+      - FLAGS_use_cuda=false
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://paddleocr-vl-api:8080/health || exit 1"]
+      start_period: 300s

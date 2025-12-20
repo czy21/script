@@ -8,7 +8,7 @@ x-traefik-label: &traefik-label
 services:
 
   heimdall:
-    image: linuxserver/heimdall:2.5.6
+    image: linuxserver/heimdall:2.7.6
     container_name: heimdall
     hostname: heimdall
     labels:
@@ -21,4 +21,10 @@ services:
       PUID: {{ param_user_ops_uid }}
       PGID: {{ param_user_ops_gid }}
       TZ: Asia/Shanghai
+      DB_CONNECTION: mysql
+      DB_HOST: "{{ param_db_mysql_host }}"
+      DB_PORT: "{{ param_db_mysql_port }}"
+      DB_DATABASE: heimdall
+      DB_USERNAME: "{{ param_db_mysql_username }}"
+      DB_PASSWORD: "{{ param_db_mysql_password }}"
     restart: always

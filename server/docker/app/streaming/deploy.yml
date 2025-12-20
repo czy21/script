@@ -38,7 +38,7 @@ x-traefik-chinesesubfinder-label: &traefik-chinesesubfinder-label
 services:
 
   qbittorrent:
-    image: linuxserver/qbittorrent:5.1.2
+    image: linuxserver/qbittorrent:5.1.4
     container_name: qbittorrent
     labels:
       <<: *traefik-qbittorrent-label
@@ -55,7 +55,7 @@ services:
     restart: always
 
   radarr:
-    image: linuxserver/radarr:5.27.5
+    image: linuxserver/radarr:6.0.4
     container_name: radarr
     labels:
       <<: *traefik-radarr-label
@@ -69,7 +69,7 @@ services:
     restart: always
 
   sonarr:
-    image: linuxserver/sonarr:4.0.15
+    image: linuxserver/sonarr:4.0.16
     container_name: sonarr
     labels:
       <<: *traefik-sonarr-label
@@ -83,7 +83,7 @@ services:
     restart: always
 
   prowlarr:
-    image: linuxserver/prowlarr:2.0.5
+    image: linuxserver/prowlarr:2.3.0
     container_name: prowlarr
     labels:
       <<: *traefik-prowlarr-label
@@ -96,7 +96,7 @@ services:
     restart: always
 
   bazarr:
-    image: linuxserver/bazarr:1.5.2
+    image: linuxserver/bazarr:1.5.3
     container_name: bazarr
     labels:
       <<: *traefik-bazarr-label
