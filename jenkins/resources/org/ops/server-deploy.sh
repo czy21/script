@@ -3,7 +3,11 @@
 set -x
 
 APP_DIR="${APP_DIR:-"/app"}"
-SSH_HOST="${SSH_HOST:-opsor@${param_server_deploy_host}}"
+
+SSH_PORT="${param_server_deploy_port:-22}"
+SSH_USER="${param_server_deploy_user:-opsor}"
+SSH_HOST="${SSH_USER}@${param_server_deploy_host}"
+
 SSH_ARGS="-o StrictHostKeyChecking=no"
 NPM_RUN_SCRIPT="${NPM_RUN_SCRIPT:-"start"}"
 
@@ -45,7 +49,7 @@ if [ "${param_code_type}" = "python" ];then
   APP_CMD+="&& cd ${APP_DIR}/${param_release_name} && rm -rf .pyenv && python3 -m venv .pyenv && .pyenv/bin/python3 -m pip install -i https://pypi.tuna.tsinghua.edu.cn/simple/ -r requirements.txt"
 fi
 
-(cd ${param_project_root}/${param_project_module}/build && tar -zcf - ${TAR_SRC} --ignore-failed-read | ssh ${SSH_ARGS} ${SSH_HOST} "${APP_CMD}")
+(cd ${param_project_root}/${param_project_module}/build && tar -zcf - ${TAR_SRC} --ignore-failed-read | ssh -p $SSH_PORT ${SSH_ARGS} ${SSH_HOST} "${APP_CMD}")
 
 ssh ${SSH_ARGS} ${SSH_HOST} << SCRIPT
 set -xe
