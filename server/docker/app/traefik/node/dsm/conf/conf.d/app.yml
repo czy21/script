@@ -1,8 +1,0 @@
-http:
-  routers:
-    phpldapadmin:
-      rule: Host(`pla.czy21-internal.com`)
-      service: phpldapadmin@docker
-    immich:
-      rule: Host(`immich.czy21-internal.com`)
-      service: immich-server@docker

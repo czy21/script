@@ -37,23 +37,6 @@ x-traefik-chinesesubfinder-label: &traefik-chinesesubfinder-label
 
 services:
 
-  qbittorrent:
-    image: linuxserver/qbittorrent:5.1.4
-    container_name: qbittorrent
-    labels:
-      <<: *traefik-qbittorrent-label
-    ports:
-      - "6881:6881" # bt port
-    volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/data/qbittorrent/:/config/
-      - {{ param_public_path }}/media/:{{ param_public_path }}/media/
-    environment:
-      PUID: {{ param_user_ops_uid }}
-      PGID: {{ param_user_ops_gid }}
-      TZ: Asia/Shanghai
-      WEBUI_PORT: 8080
-    restart: always
-
   radarr:
     image: linuxserver/radarr:6.0.4
     container_name: radarr
@@ -61,7 +44,7 @@ services:
       <<: *traefik-radarr-label
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/data/radarr/:/config/
-      - {{ param_public_path }}/media/:{{ param_public_path }}/media/
+      - {{ param_media_path }}:/data/media/
     environment:
       PUID: {{ param_user_ops_uid }}
       PGID: {{ param_user_ops_gid }}
@@ -75,20 +58,7 @@ services:
       <<: *traefik-sonarr-label
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/data/sonarr/:/config/
-      - {{ param_public_path }}/media/:{{ param_public_path }}/media/
-    environment:
-      PUID: {{ param_user_ops_uid }}
-      PGID: {{ param_user_ops_gid }}
-      TZ: Asia/Shanghai
-    restart: always
-
-  prowlarr:
-    image: linuxserver/prowlarr:2.3.0
-    container_name: prowlarr
-    labels:
-      <<: *traefik-prowlarr-label
-    volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/data/prowlarr/:/config/
+      - {{ param_media_path }}:/data/media/
     environment:
       PUID: {{ param_user_ops_uid }}
       PGID: {{ param_user_ops_gid }}
@@ -102,22 +72,10 @@ services:
       <<: *traefik-bazarr-label
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/data/bazarr/:/config/
-      - {{ param_public_path }}/media/:{{ param_public_path }}/media/
+      - {{ param_media_path }}:/data/media/
     environment:
       PUID: {{ param_user_ops_uid }}
       PGID: {{ param_user_ops_gid }}
-      TZ: Asia/Shanghai
-    restart: always
-
-  flaresolverr:
-    image: flaresolverr/flaresolverr:v3.4.0
-    container_name: flaresolverr
-    labels:
-      <<: *traefik-flaresolverr-label
-    environment:
-      LOG_LEVEL: "info"
-      LOG_HTML: "false"
-      CAPTCHA_SOLVER: "none"
       TZ: Asia/Shanghai
     restart: always
 
@@ -128,7 +86,7 @@ services:
       <<: *traefik-chinesesubfinder-label
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/data/chinesesubfinder/:/config/
-      - {{ param_public_path }}/media/:/media/
+      - {{ param_media_path }}:/media/
     environment:
       PUID: {{ param_user_ops_uid }}    
       PGID: {{ param_user_ops_gid }}        
