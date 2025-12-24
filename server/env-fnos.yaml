@@ -3,4 +3,4 @@ param_disk_path: /volume1
 # default
 param_docker_root: "{{ param_disk_path }}/docker"
 
-param_public_path: "{{ param_disk_path }}/public"
+param_media_path: "{{ param_disk_path }}/@team/media"
