@@ -1,5 +1,8 @@
 http:
   routers:
+    memos:
+      rule: Host(`memos.czy21.com`)
+      service: memos@docker
     heimdall:
       rule: Host(`heimdall.czy21-internal.com`)
       service: heimdall@docker
