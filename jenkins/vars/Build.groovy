@@ -75,7 +75,7 @@ def call() {
                         env.param_sonarqube_project_key = StringUtils.defaultIfEmpty(env.param_sonarqube_project_key,env.param_release_name)
                         env.param_tool_java_version = StringUtils.defaultIfEmpty(env.param_tool_java_version,'jdk-21-graalvm')
                         env.param_tool_maven_version = StringUtils.defaultIfEmpty(env.param_tool_maven_version,'mvn-3.9')
-                        env.param_tool_gradle_version = StringUtils.defaultIfEmpty(env.param_tool_gradle_version,'gradle-8.5')
+                        env.param_tool_gradle_version = StringUtils.defaultIfEmpty(env.param_tool_gradle_version,'gradle-9.3')
                         env.param_tool_golang_version = StringUtils.defaultIfEmpty(env.param_tool_golang_version,'go-1.20')
                         env.param_tool_node_version = StringUtils.defaultIfEmpty(env.param_tool_node_version,'node-20.18')
                         env.param_tool_dotnet_version = StringUtils.defaultIfEmpty(env.param_tool_dotnet_version,'dotnet-9.0')
