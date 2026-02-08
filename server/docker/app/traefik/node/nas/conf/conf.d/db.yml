@@ -55,6 +55,9 @@ http:
     metatube:
       rule: Host(`metatube.czy21-internal.com`)
       service: metatube@docker
+    databasus:
+      rule: Host(`databasus.czy21.com`)
+      service: databasus@docker
 
   middlewares:
     raw-proxy:
