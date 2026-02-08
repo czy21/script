@@ -1,0 +1,18 @@
+version: "3.9"
+
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 4005
+
+services:
+  databasus:
+    image: databasus/databasus:latest
+    container_name: databasus
+    labels:
+      <<: *traefik-label
+    privileged: true
+    user: root
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/databasus-data
+    restart: always
