@@ -1,0 +1,33 @@
+version: "3.9"
+
+x-rustfs-common: &rustfs-common
+  image: rustfs/rustfs:1.0.0-alpha.85
+  privileged: true
+  user: root
+  expose:
+    - "9000"
+    - "9001"
+  environment:
+    RUSTFS_ACCESS_KEY: {{ param_db_rustfs_username }}
+    RUSTFS_SECRET_KEY: {{ param_db_rustfs_password }}
+    RUSTFS_CONSOLE_ENABLE: "true"
+  restart: always
+
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}-api.service: {{ param_role_name }}-api
+  traefik.http.services.{{ param_role_name }}-api.loadbalancer.server.port: 9000
+  traefik.http.routers.{{ param_role_name }}-web.service: {{ param_role_name }}-web
+  traefik.http.services.{{ param_role_name }}-web.loadbalancer.server.port: 9001
+
+services:
+  {%- if 'single' == param_db_rustfs_deploy_role %}
+  rustfs:
+    <<: *rustfs-common
+    container_name: rustfs
+    labels:
+      <<: *traefik-label
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/data/single:/data/
+  {%- endif %}
+
