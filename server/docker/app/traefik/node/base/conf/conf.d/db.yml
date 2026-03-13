@@ -3,3 +3,6 @@ http:
     bitwarden:
       rule: Host(`bitwarden.czy21.com`)
       service: bitwarden@docker
+    authentik:
+      rule: Host(`authentik.czy21.com`)
+      service: authentik@docker

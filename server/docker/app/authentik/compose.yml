@@ -12,10 +12,17 @@ x-authentik-common: &authentik-common
     AUTHENTIK_SECRET_KEY: {{ param_authentik_secret_key }}
   restart: always
 
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 9000
+
 services:
   authentik-server:
     <<: *authentik-common
     container_name: authentik-server
+    labels:
+      <<: *traefik-label
     expose:
       - 9000
       - 9443
