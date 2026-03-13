@@ -1,0 +1,35 @@
+
+x-authentik-common: &authentik-common
+  image: authentik/server:2026.2.1
+  privileged: true
+  user: root
+  environment:
+    AUTHENTIK_POSTGRESQL__NAME: authentik
+    AUTHENTIK_POSTGRESQL__HOST: {{ param_db_pgsql_host }}
+    AUTHENTIK_POSTGRESQL__PORT: {{ param_db_pgsql_port }}
+    AUTHENTIK_POSTGRESQL__USER: {{ param_db_pgsql_username }}
+    AUTHENTIK_POSTGRESQL__PASSWORD: {{ param_db_pgsql_password }}
+    AUTHENTIK_SECRET_KEY: {{ param_authentik_secret_key }}
+  restart: always
+
+services:
+  authentik-server:
+    <<: *authentik-common
+    container_name: authentik-server
+    expose:
+      - 9000
+      - 9443
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/templates:/templates
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/data
+    command: server
+    restart: always
+
+  authentik-worker:
+    <<: *authentik-common
+    container_name: authentik-worker
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/templates:/templates
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/data
+    command: worker
