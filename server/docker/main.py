@@ -18,15 +18,15 @@ class DockerRole(share.AbstractRole):
 
     def __init__(self,context:share.RoleContext) -> None:
         super().__init__(context)
-        self.root_deploy_file = context.root_path.joinpath("deploy.yml")
+        self.root_deploy_file = context.root_path.joinpath("compose.yml")
         self.root_doc_template_file = context.root_path.joinpath("doc-template.md")
 
-        self.role_deploy_file = context.role_output_path.joinpath("deploy.yml")
+        self.role_deploy_file = context.role_output_path.joinpath("compose.yml")
         self.role_conf_path = context.role_output_path.joinpath("conf")
         self.role_init_sh = context.role_output_path.joinpath("init.sh")
 
         self.role_node_target_conf_path = self.context.role_node_target_path.joinpath("conf")
-        self.role_node_target_deploy_file = self.context.role_node_target_path.joinpath("deploy.yml")
+        self.role_node_target_deploy_file = self.context.role_node_target_path.joinpath("compose.yml")
 
         self.role_target_path = pathlib.Path(self.context.role_env.get("param_role_target_path", self.context.role_env.get("param_docker_data") + "/" + self.context.role_name))
         if self.role_target_path.parents.__len__() <= 1:
@@ -96,7 +96,7 @@ class DockerRole(share.AbstractRole):
                     ],
                     "param_docker_compose": {
                         "name": self.role_deploy_file.name,
-                        "command": "docker-compose --project-name {0} --file deploy.yml up --detach --remove-orphans".format(self.context.role_env.get("param_role_project_name", self.context.role_name)),
+                        "command": "docker-compose --project-name {0} --file compose.yml up --detach --remove-orphans".format(self.context.role_env.get("param_role_project_name", self.context.role_name)),
                         "rawUrl": registry_git_repo_raw_format.format(self.context.role_name, self.role_deploy_file.name)
                     } if self.role_deploy_file.exists() else None
                 }
@@ -131,7 +131,7 @@ class DockerRole(share.AbstractRole):
         return []
 
     def get_merge_ignore_pattern(self):
-        return ["deploy.yml"]
+        return ["compose.yml"]
 
 
 if __name__ == '__main__':
