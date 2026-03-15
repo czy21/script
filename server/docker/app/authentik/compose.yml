@@ -1,6 +1,6 @@
 
 x-authentik-common: &authentik-common
-  image: authentik/server:2026.2.1
+  image: authentik/server:{{ param_authentik_version }}
   privileged: true
   user: root
   environment:
@@ -30,7 +30,6 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/templates:/templates
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/data
     command: server
-    restart: always
 
   authentik-worker:
     <<: *authentik-common
@@ -40,3 +39,26 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/templates:/templates
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/data
     command: worker
+
+  authentik-ldap:
+    image: authentik/ldap:{{ param_authentik_version }}
+    container_name: authentik-ldap
+    ports:
+        - 3389:3389
+        - 6636:6636
+    environment:
+      AUTHENTIK_HOST: http://authentik-server:9000
+      AUTHENTIK_INSECURE: "true"
+      AUTHENTIK_TOKEN: KHBLUruTxYoEofHCxZ48pZdikdoN0jr6n5TGii2wNt0GSpLbnPFFqH5xdfdx
+    restart: always
+
+  authentik-radius:
+    image: authentik/radius:{{ param_authentik_version }}
+    container_name: authentik-radius
+    ports:
+      - 1812:1812/udp
+    environment:
+      AUTHENTIK_HOST: http://authentik-server:9000
+      AUTHENTIK_INSECURE: "true"
+      AUTHENTIK_TOKEN: wePAbJ4ulUWXVjRCZJNE7EIjLWsaRU5U9kduF5eyT1ZuGXyCrJVsNrOIoNT6
+    restart: always
