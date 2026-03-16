@@ -1,0 +1,21 @@
+
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 8000
+
+services:
+  casdoor:
+    image: casbin/casdoor:latest
+    container_name: casdoor
+    labels:
+      <<: *traefik-label
+    privileged: true
+    user: root
+    ports:
+      - "1389:389"
+      - "1812:1812"
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/conf:/conf
+      - {{ param_docker_data }}/{{ param_role_name }}/logs:/logs
+    restart: always

@@ -23,9 +23,6 @@ services:
     container_name: authentik-server
     labels:
       <<: *traefik-label
-    expose:
-      - 9000
-      - 9443
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/templates:/templates
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/data
