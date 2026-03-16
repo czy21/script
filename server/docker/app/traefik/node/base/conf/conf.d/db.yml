@@ -6,3 +6,6 @@ http:
     authentik:
       rule: Host(`authentik.czy21.com`)
       service: authentik@docker
+    casdoor:
+      rule: Host(`casdoor.czy21.com`)
+      service: casdoor@docker
