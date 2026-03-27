@@ -23,6 +23,8 @@ services:
     container_name: authentik-server
     labels:
       <<: *traefik-label
+    ports:
+      - "9000:9000"
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/templates:/templates
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/data
