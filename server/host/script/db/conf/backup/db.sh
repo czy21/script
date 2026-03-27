@@ -3,7 +3,19 @@ CURRENT_DIR=$(cd "$(dirname "$0")"; pwd)
 
 DB_BACKUP_DIR=/volume2/@team/backup/db
 
-bash $CURRENT_DIR/db-mysql.sh "$DB_BACKUP_DIR"
-bash $CURRENT_DIR/db-pgsql.sh "$DB_BACKUP_DIR"
-bash $CURRENT_DIR/db-mssql.sh "$DB_BACKUP_DIR"
-bash $CURRENT_DIR/db-mongo.sh "$DB_BACKUP_DIR"
+source=$(find $CURRENT_DIR -name 'db-*.sh' -exec sh -c 'f={}; echo "${f#*db-}" | sed "s|\.sh$||"' \;)
+
+target=
+while getopts "t:c" opt;do
+    case $opt in
+        t) target=$OPTARG;;
+    esac
+done;
+
+target=$(echo $target | tr ',' ' ')
+
+[ -z "$target" ] && target=$source
+
+for t in $target;do
+  bash $CURRENT_DIR/db-${t}.sh "$DB_BACKUP_DIR"
+done

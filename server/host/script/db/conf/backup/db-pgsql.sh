@@ -29,5 +29,5 @@ function backup(){
   done
 }
 
-backup db.czy21.com 5432
+backup db.czy21.com 15432
 backup db02.czy21.com 5432
