@@ -6,5 +6,5 @@ auth.method = 'token'
 auth.token = 'cb5e0942-62b2-4578-a32f-3fd17444db26'
 
 webServer.port = 7500
-webServer.user = '{{ param_manage_username }}'
-webServer.password = '{{ param_manage_password }}'
+webServer.user = ''
+webServer.password = ''
