@@ -53,17 +53,17 @@
   tasks:
     - name: cmd
       shell: |
-        dir
+        ls -al
   tags:
-    - manual
+    - linux
 
-- name: win
+- name: manual
   hosts: all
   remote_user: opsor
   vars_files: ["vars/env.yml","vars/main.yml"]
   tasks:
     - name: cmd
       win_shell: |
-        Restart-Computer -Force
+        echo '{{ ansible_facts }}'
   tags:
     - win
