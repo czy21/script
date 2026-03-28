@@ -56,7 +56,7 @@ if __name__ == '__main__':
         "ANSIBLE_SUDO_PASS=0",
         "ANSIBLE_HOST_KEY_CHECKING=0",
         "ANSIBLE_FORCE_COLOR=1",
-        "ANSIBLE_STDOUT_CALLBACK=yaml",
+        "ANSIBLE_CALLBACK_RESULT_FORMAT=yaml",
         "ANSIBLE_CHECK_MODE_MARKERS=yes",
         "ANSIBLE_LOG_PATH={0}".format(log_file),
         "$HOME/.python3/bin/ansible-playbook",

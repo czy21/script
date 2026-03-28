@@ -57,14 +57,15 @@ del_cmd="rm -rf \$HOME/${dst_name}"
 ssh_opt="-o StrictHostKeyChecking=no"
 src_path_server_files=$(cd ${src_path}/../;find . -maxdepth 1 -type f ! -name "share.sh" -and ! -name "README.md" -exec sh -c 'f={};echo ./server/$(basename $f)' \;)
 
-pypi="-i https://pypi.tuna.tsinghua.edu.cn/simple/"
+pypi="https://pypi.tuna.tsinghua.edu.cn/simple/"
 
 cmd=$(cat <<EOF
 if [ ! -f ${PYTHON_EXEC} ];then
-  python3 -m venv ${PYTHON_HOME} --without-pip --system-site-packages && wget -nv -O - https://bootstrap.pypa.io/get-pip.py | ${PYTHON_EXEC} - ${pypi}
+  python3 -m venv ${PYTHON_HOME} --without-pip --system-site-packages && wget -nv -O - https://bootstrap.pypa.io/get-pip.py | ${PYTHON_EXEC} - -i ${pypi}
 fi
 if [ "${is_requirement}" = "true" ];then
-  ${PYTHON_EXEC} -m pip install ${pypi} -r \$HOME/${dst_name}/server/requirements.txt
+  ${PYTHON_EXEC} -m pip config set global.index-url ${pypi}
+  ${PYTHON_EXEC} -m pip install -r \$HOME/${dst_name}/server/requirements.txt
 fi
 ${PYTHON_EXEC} -B \$HOME/${dst_name}/main.py $args
 EOF
