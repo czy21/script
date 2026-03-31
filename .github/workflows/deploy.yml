@@ -25,7 +25,7 @@ jobs:
   build:
     runs-on: self-hosted
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - run: |
           rm -rf cd $HOME/container/
           $HOME/.python3/bin/python3 -m pip install -r server/requirements.txt
@@ -39,11 +39,11 @@ jobs:
           fi
       - name: Setup Pages
         id: pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
       - name: Build with Mkdocs
         run: $HOME/.python3/bin/mkdocs build -d build/doc
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: ./build/doc
   deploy:
@@ -55,4 +55,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
