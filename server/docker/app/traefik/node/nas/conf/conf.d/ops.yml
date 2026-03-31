@@ -10,7 +10,7 @@ http:
       rule: Host(`fluent-bit-{{ param_cluster_name }}-log-metrics.czy21-internal.com`)
       service: fluent-bit-log-metrics@docker
     grafana:
-      rule: Host(`grafana.czy21-internal.com`)
+      rule: Host(`grafana.czy21.com`)
       service: grafana@docker
     consul:
       rule: Host(`consul.czy21-internal.com`)
