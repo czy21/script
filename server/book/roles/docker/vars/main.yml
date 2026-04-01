@@ -1,2 +1,2 @@
 param_docker_add_repo: true
-param_docker_tls_verify: true
+param_docker_tls_verify: false
