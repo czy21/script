@@ -1,0 +1,39 @@
+services:
+  
+  netbird-dashboard:
+    image: netbirdio/dashboard:v2.36.0
+    container_name: netbird-dashboard
+    ports:
+      - '8080:80'
+    environment:
+      # Endpoints
+      - NETBIRD_MGMT_API_ENDPOINT={{ param_netbird_endpoint }}
+      - NETBIRD_MGMT_GRPC_API_ENDPOINT={{ param_netbird_endpoint }}
+      # OIDC - using embedded IdP
+      - AUTH_AUDIENCE=netbird-dashboard
+      - AUTH_CLIENT_ID=netbird-dashboard
+      - AUTH_CLIENT_SECRET=
+      - AUTH_AUTHORITY={{ param_netbird_endpoint }}/oauth2
+      - USE_AUTH0=false
+      - AUTH_SUPPORTED_SCOPES=openid profile email groups
+      - AUTH_REDIRECT_URI=/nb-auth
+      - AUTH_SILENT_REDIRECT_URI=/nb-silent-auth
+      # SSL
+      - NGINX_SSL_PORT=443
+      # Letsencrypt
+      - LETSENCRYPT_DOMAIN=none
+    restart: always
+
+  netbird-server:
+    image: netbirdio/netbird-server:0.67.1
+    container_name: netbird-server
+    ports:
+      - '8081:80'
+      - '3478:3478/udp'
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/config.yaml:/etc/netbird/config.yaml
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/var/lib/netbird
+    environment:
+      - NB_DISABLE_GEOLOCATION=true
+    command: ["--config", "/etc/netbird/config.yaml"]
+    restart: always
