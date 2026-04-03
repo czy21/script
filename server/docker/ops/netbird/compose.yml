@@ -25,7 +25,7 @@ services:
     restart: always
 
   netbird-server:
-    image: netbirdio/netbird-server:0.67.1
+    image: netbirdio/netbird-server:0.67.3
     container_name: netbird-server
     ports:
       - '8081:80'
