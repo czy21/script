@@ -8,14 +8,12 @@ x-traefik-label: &traefik-label
 services:
 
   bitwarden:
-    image: ghcr.io/bitwarden/self-host:2025.10.0-beta
+    image: ghcr.io/bitwarden/lite:2026.3.2
     container_name: bitwarden
     labels:
       <<: *traefik-label
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/etc/bitwarden/
-      - {{ param_docker_data }}/{{ param_role_name }}/logs/bitwarden/:/var/log/bitwarden/
-      - {{ param_docker_data }}/{{ param_role_name }}/logs/nginx/:/var/log/nginx/
     environment:
       PUID: 1000
       PGID: 1000
@@ -28,7 +26,7 @@ services:
       BW_DB_PASSWORD: "{{ param_db_mysql_password }}"
       BW_INSTALLATION_ID: 0cdbf50e-b964-4e05-a9b7-b1d80044fcba
       BW_INSTALLATION_KEY: qEpXxKJiPjwETG4HmX2b
-      BW_REAL_IPS: 172.19.0.0/16,10.8.5.0/24
+      BW_REAL_IPS: 172.19.0.0/16,100.64.0.0/16
       globalSettings__mail__replyToEmail: "{{ param_mail_smtp_username }}"
       globalSettings__mail__smtp__host: "{{ param_mail_smtp_host }}"
       globalSettings__mail__smtp__port: "{{ param_mail_smtp_port }}"
