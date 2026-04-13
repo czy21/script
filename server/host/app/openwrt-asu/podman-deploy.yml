@@ -3,10 +3,13 @@
 services:
   server:
     image: "docker.io/openwrt/asu:latest"
-    pull_policy: always
-    command: uvicorn --host 0.0.0.0 asu.main:app
+    build:
+      context: .
+      dockerfile: Containerfile
+    command: uv run uvicorn --host 0.0.0.0 asu.main:app
     volumes:
       - $PUBLIC_PATH/store:$PUBLIC_PATH/store:ro
+      - $PUBLIC_PATH/key:$PUBLIC_PATH/key:ro
     ports:
       - "8000:8000"
     env_file: .env
@@ -14,10 +17,14 @@ services:
 
   worker:
     image: "docker.io/openwrt/asu:latest"
-    pull_policy: always
-    command: rqworker --logging_level INFO
+    build:
+      context: .
+      dockerfile: Containerfile
+    command: uv run rqworker --logging_level INFO
     volumes:
       - $PUBLIC_PATH:$PUBLIC_PATH:rw
       - $CONTAINER_SOCKET_PATH:$CONTAINER_SOCKET_PATH:rw
     env_file: .env
     restart: always
+    deploy:
+      replicas: 3
