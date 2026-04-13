@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+
+        <title>OpenWrt Sysupgrade Server</title>
+        <link href="/static/style.css" rel="stylesheet" />
+    </head>
+    <body>
+        <header>
+            <div>
+                <img src="/static/logo.png" alt="OpenWrt Firmware logo" />
+            </div>
+        </header>
+        <div class="container">
+            <h1>OpenWrt Sysupgrade Server ({{ version }})</h1>
+
+            <div class="grid-container">
+                <div class="grid-item">
+                    <h2>About the Sysupgrade Server</h2>
+                    <p>
+                        This server listens for requests to build custom OpenWrt
+                        sysupgrade images. It starts an ImageBuilder process for
+                        the specified target, incorporates any requested
+                        packages, and returns that image to the requestor. The
+                        server also provides an
+                        <a href="/docs/" target="_blank">API</a> (or
+                        <a href="/redoc/" target="_blank">Redoc</a>) for common
+                        operations. Learn more on
+                        <a href="https://github.com/openwrt/asu" target="_blank"
+                            >Github.</a
+                        >
+                        Please
+                        <a
+                            href="https://github.com/openwrt/asu/issues"
+                            target="_blank"
+                            >report issues!</a
+                        >
+                    </p>
+                    <p>
+                        <b>How to use this server:</b> There are at least three
+                        clients that can request a new image from the Sysupgrade
+                        Server:
+                    </p>
+                    <ul>
+                        <li>
+                            <a
+                                href="https://github.com/openwrt/asu#luci-app"
+                                target="_blank"
+                                >LuCI Package:</a
+                            >
+                            <code
+                                >opkg install luci-app-attendedsysupgrade</code
+                            >
+                        </li>
+                        <li>
+                            <a
+                                href="https://github.com/openwrt/asu#cli"
+                                target="_blank"
+                                >Command line/SSH (OpenWrt >23.xx) :</a
+                            >
+                            <code>opkg install owut</code>
+                        </li>
+                        <li>
+                            <a
+                                href="https://github.com/openwrt/asu#cli"
+                                target="_blank"
+                                >Command line/SSH:</a
+                            >
+                            <code>opkg install auc</code>
+                        </li>
+                    </ul>
+
+                    {% if server_stats %}
+                    <div class="grid-item">
+                        <h2>Builds per Day (last 30 days)</h2>
+                        <canvas id="buildsChart" width="600" height="300"></canvas>
+                    </div>
+                    <div class="grid-item">
+                        <h2>Weekly build counts by branch (last 6 months)
+                            <select name="branchName" id="branchName" onchange="loadVersions()">
+                                <option value="">All</option>
+                                {% for branch in branches %}
+                                <option value="{{ branch }}">{{ branch }}</option>
+                                {%- endfor -%}
+                            </select>
+                        </h2>
+                        <canvas id="versionChart" width="600" height="300"></canvas>
+                    </div>
+                    {% endif %}
+
+                    <details>
+                        <summary><h2>Server Configuration</h2></summary>
+
+                    <p>
+                        <b>Allow custom UCI defaults:</b> {{ defaults }} <br />
+                        {% if defaults %}
+                        <b>Maximum UCI defaults script size:</b> {{
+                        max_defaults_length }} bytes <br />
+                        {% endif %}
+                        <b>Maximum requested root filesystem size:</b> {{
+                        max_custom_rootfs_size_mb }} MB <br />
+                        <b>Available versions on this server:</b>
+
+                    <ul>
+                        {% for version in versions %}
+                        <li>{{ version }}</li>
+                        {%- endfor -%}
+                    </ul>
+                    </p>
+
+                    </details>
+
+                    <details id="build-errors-details">
+                        <summary><h2>Build Errors</h2></summary>
+                        <p>Recent build failures to help diagnose upstream imagebuilder and package issues.</p>
+                        <pre id="build-errors-content" class="error-log">Click to load...</pre>
+                    </details>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            (function() {
+                const details = document.getElementById("build-errors-details");
+                const content = document.getElementById("build-errors-content");
+                let loaded = false;
+
+                details.addEventListener("toggle", async function() {
+                    if (details.open && !loaded) {
+                        content.textContent = "Loading...";
+                        try {
+                            const response = await fetch("/api/v1/build-errors");
+                            content.textContent = await response.text();
+                            loaded = true;
+                        } catch (error) {
+                            content.textContent = "Failed to load: " + error.message;
+                        }
+                    }
+                });
+            })();
+        </script>
+
+{% if server_stats %}
+        <script src="static/chart.js"></script>
+        <script>
+            async function loadChart(chartSource, canvas) {
+                const response = await fetch(`/api/v1/${chartSource}`);
+                const data = await response.json();
+
+                const oldChart = Chart.getChart(canvas);
+                if (oldChart !== undefined) {
+                    oldChart.destroy();
+                }
+
+                const countChart = new Chart(document.getElementById(canvas), {
+                    type: "line",
+                    data: {
+                        labels: data.labels,
+                        datasets: data.datasets.map(ds => ({
+                            data: ds.data,
+                            label: ds.label,
+                            backgroundColor: ds.color,
+                            borderColor: ds.color,
+                            borderJoinStyle: "round",
+                            fill: false
+                        }))
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            x: { display: false },
+                            y: { display: true }
+                        },
+                        plugins: {
+                            legend: { display: true },
+                            title:  { display: false }
+                        }
+                    }
+                });
+            }
+
+            loadChart("builds-per-day", "buildsChart");
+
+            function loadVersions() {
+                let branch = document.getElementById("branchName").value;
+                if (branch != "") {
+                    branch = `?branch=${branch}`;
+                }
+                loadChart(`builds-by-version${branch}`, "versionChart");
+            }
+
+            loadVersions();
+        </script>
+{% endif %}
+
+    </body>
+</html>
