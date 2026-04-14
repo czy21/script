@@ -4,3 +4,5 @@ grafana/conf/dashboards/
 homeassistant/conf/sensor.yaml
 nginx/node/base/conf/static/
 identity.pfx
+openwrt-asu/asu/
+openwrt-asu/pyproject.toml
