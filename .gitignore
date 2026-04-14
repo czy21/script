@@ -33,3 +33,5 @@ jenkins/lib/
 doc/public/docker
 doc/public/chart
 mkdocs.yaml
+
+apk.pub

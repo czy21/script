@@ -64,6 +64,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 
     public_path: Path = Path.cwd() / "public"
+    config_path: Path = Path.cwd() / "config"
     redis_url: str = "redis://localhost:6379"
     upstream_url: str = "https://downloads.openwrt.org"
     allow_defaults: bool = False

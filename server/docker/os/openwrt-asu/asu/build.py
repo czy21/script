@@ -133,8 +133,8 @@ def _build(build_request: BuildRequest, job=None):
     use_apk = any('apk_' in k for k in build_request.repositories.keys())
 
     if use_apk: 
-        apk_key: Path = settings.public_path / "key" / "apk.key"
-        apk_pub: Path = settings.public_path / "key" / "apk.pub"
+        apk_key: Path = settings.config_path / "key/apk.key"
+        apk_pub: Path = settings.config_path / "key/apk.pub"
         mounts.append(
             {
                 "type": "bind",
@@ -260,10 +260,9 @@ def _build(build_request: BuildRequest, job=None):
             container.kill()
             report_error(job, f"Could not set up ImageBuilder ({returncode=})")
 
-    if use_apk:
-        returncode, job.meta["stdout"], job.meta["stderr"] = run_cmd(
-            container, ["sed -i -e 's|$(APK) add|\\0 --force-overwrite|' Makefile"]
-        )
+    returncode, job.meta["stdout"], job.meta["stderr"] = run_cmd(
+        container, ["sed", "-i", "s|$(APK) add|\\0 --force-overwrite|", "Makefile"] if use_apk else ["sed", "-i", "s|$(OPKG) install $(BUILD_PACKAGES)|\\0 --force-overwrite|", "Makefile"]
+    )
 
     returncode, job.meta["stdout"], job.meta["stderr"] = run_cmd(
         container, ["make", "info"]

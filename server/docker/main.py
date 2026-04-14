@@ -18,10 +18,17 @@ class DockerRole(share.AbstractRole):
 
     def __init__(self,context:share.RoleContext) -> None:
         super().__init__(context)
+
+        self.container_compose = f"{self.gen_sudo()} docker-compose"
+        if self.context.role_env.get("param_container_engine") == 'podman':
+            self.container_compose = "podman-compose"
+
         self.root_deploy_file = context.root_path.joinpath("compose.yml")
         self.root_doc_template_file = context.root_path.joinpath("doc-template.md")
 
         self.role_deploy_file = context.role_output_path.joinpath("compose.yml")
+        self.role_deploy_env_file = context.role_output_path.joinpath(".env")
+
         self.role_conf_path = context.role_output_path.joinpath("conf")
         self.role_init_sh = context.role_output_path.joinpath("init.sh")
 
@@ -32,8 +39,12 @@ class DockerRole(share.AbstractRole):
         if self.role_target_path.parents.__len__() <= 1:
             raise Exception('role_target_path: {} parents length <= 1'.format(self.role_target_path))
         self.role_target_conf_path = self.role_target_path.joinpath("conf")
+    
+    def gen_sudo(self):
+        self.container_sudo = self.context.role_env.get("param_container_sudo",True)
+        return "sudo" if self.container_sudo else ""
 
-    def docker_compose_cmd(self, option):
+    def compose_cmd(self, option):
         role_deploy_files = [
             self.root_deploy_file.as_posix(),
             self.role_deploy_file.as_posix()
@@ -41,23 +52,35 @@ class DockerRole(share.AbstractRole):
         if self.role_node_target_deploy_file.exists():
             role_deploy_files.append(self.role_node_target_deploy_file)
         role_project_name = self.context.role_env.get("param_role_project_name", self.context.role_name)
-        return 'sudo docker-compose --project-name {0} {1} {2}'.format(role_project_name, " ".join(["--file {0}".format(t) for t in role_deploy_files]), option)
+        cmd = [
+            self.container_compose
+        ]
+        env_file = self.context.role_output_path.joinpath('.env')
+        if self.container_compose == 'podman-compose' and env_file.exists():
+            cmd.append(f'--env-file {env_file.as_posix()}')
+
+        cmd.append(f'--project-name {role_project_name}')
+        cmd.append(" ".join(["--file {0}".format(t) for t in role_deploy_files]))
+        cmd.append(option)
+
+        cmd = collection_util.flat_to_str(cmd)
+        return f'(cd {self.context.role_output_path.as_posix()};{cmd})'
 
     def install(self) -> list[str]:
         _cmds = []
         if self.role_conf_path.exists() or self.role_node_target_conf_path.exists():
             if self.context.args.rm_conf and self.role_target_conf_path.exists():
-                _cmds.append("sudo rm -rfv {0}".format(self.role_target_conf_path.as_posix()))
-            _cmds.append('sudo mkdir -p {1} && sudo cp -rv {0} {1}'.format(self.role_conf_path.as_posix(),self.role_target_path.as_posix()))
+                _cmds.append("{0} rm -rfv {1}".format(self.gen_sudo(),self.role_target_conf_path.as_posix()))
+            _cmds.append('{0} mkdir -p {2} && {0} cp -rv {1} {2}'.format(self.gen_sudo(),self.role_conf_path.as_posix(),self.role_target_path.as_posix()))
         if self.role_init_sh.exists():
             _cmds.append("bash {}".format(self.role_init_sh.as_posix()))
         if self.role_deploy_file.exists():
             if self.context.args.debug:
-                _cmds.append(self.docker_compose_cmd("config"))
+                _cmds.append(self.compose_cmd("config"))
             up_args = ["up --detach --build --remove-orphans"]
             if self.context.args.recreate:
                 up_args.append("--force-recreate")
-            _cmds.append(self.docker_compose_cmd(collection_util.flat_to_str(up_args)))
+            _cmds.append(self.compose_cmd(collection_util.flat_to_str(up_args)))
         return _cmds
 
     def build(self) -> list[str]:
@@ -96,7 +119,7 @@ class DockerRole(share.AbstractRole):
                     ],
                     "param_docker_compose": {
                         "name": self.role_deploy_file.name,
-                        "command": "docker-compose --project-name {0} --file compose.yml up --detach --remove-orphans".format(self.context.role_env.get("param_role_project_name", self.context.role_name)),
+                        "command": self.container_compose + " --project-name {0} --file compose.yml up --detach --remove-orphans".format(self.context.role_env.get("param_role_project_name", self.context.role_name)),
                         "rawUrl": registry_git_repo_raw_format.format(self.context.role_name, self.role_deploy_file.name)
                     } if self.role_deploy_file.exists() else None
                 }
@@ -118,7 +141,7 @@ class DockerRole(share.AbstractRole):
     def delete(self) -> list[str]:
         _cmds = []
         if self.role_deploy_file.exists():
-            _cmds.append(self.docker_compose_cmd("down --remove-orphans"))
+            _cmds.append(self.compose_cmd("down --remove-orphans"))
         return _cmds
 
     def backup(self) -> list[str]:

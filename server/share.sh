@@ -78,4 +78,7 @@ tar -zcf - --exclude="__pycache__" --exclude="${build_name}" \
 | ${host_cmd} "mkdir -p \$HOME/${dst_name};tar -zxf - -C \$HOME/${dst_name}"
 ${host_cmd} "${cmd}"
 ${host_cmd} "[ -d \$HOME/${dst_name} ]" && ${host_cmd} "tar -zcf - -C \$HOME/${dst_name} ${tmp_name} ${build_name}" | tar -zxf - -C ${src_path}
-${host_cmd} "${del_cmd}"
+
+if [ ! $is_debug ];then
+  ${host_cmd} "${del_cmd}"
+fi
