@@ -32,6 +32,9 @@ scrape_configs:
       - targets: ['prom-nas.czy21-internal.com']
         labels:
           origin_prometheus: nas
+      - targets: ['prom-test.czy21-internal.com']
+        labels:
+          origin_prometheus: prod
       - targets: ['prom-prod.czy21-internal.com']
         labels:
           origin_prometheus: prod
@@ -67,7 +70,7 @@ scrape_configs:
     metrics_path: /minio/v2/metrics/cluster
     scheme: http
     static_configs:
-      - targets: ['minio.czy21-internal.com']
+      - targets: ['minio.czy21.com']
 
   - job_name: traefik
     metrics_path: /metrics

@@ -30,4 +30,4 @@ ingress-nginx:
         image:
           registry: '{{ param_registry_proxy_url }}'
     extraArgs:
-      default-ssl-certificate: "ops/czy21-internal.com-secret"
+      default-ssl-certificate: "ops/czy21.com-secret"
