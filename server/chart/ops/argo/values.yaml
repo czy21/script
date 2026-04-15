@@ -1,0 +1,14 @@
+argo-workflows:
+  crds:
+    upgradeJob:
+      image:
+        repository: '{{ param_registry_proxy_url }}/kubectl'
+  controller:
+    image:
+      registry: '{{ param_registry_proxy_url }}'
+  server:
+    image:
+      registry: '{{ param_registry_proxy_url }}'
+  executor:
+    image:
+      registry: '{{ param_registry_proxy_url }}'
