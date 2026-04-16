@@ -6,17 +6,7 @@ metadata:
   namespace: ops
 spec:
   rules:
-    - host: k8s-dashboard-{{ .Values.param_cluster_name }}.czy21-internal.com
-      http:
-        paths:
-          - backend:
-              service:
-                name: k8s-dashboard-kong-proxy
-                port:
-                  number: 80
-            path: /
-            pathType: Prefix
-    - host: prom-{{ .Values.param_cluster_name }}.czy21-internal.com
+    - host: prom-{{ .Values.param_cluster_name }}.czy21.com
       http:
         paths:
         - pathType: Prefix
@@ -26,7 +16,7 @@ spec:
               name: prometheus
               port:
                 number: 9090
-    - host: xxl-job-{{ .Values.param_cluster_name }}.czy21-internal.com
+    - host: xxl-job-{{ .Values.param_cluster_name }}.czy21.com
       http:
         paths:
           - backend:
@@ -34,5 +24,23 @@ spec:
                 name: xxl-job
                 port:
                   number: 8080
+            path: /
+            pathType: Prefix
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress
+  namespace: cattle-system
+spec:
+  rules:
+    - host: rancher-{{ .Values.param_cluster_name }}.czy21.com
+      http:
+        paths:
+          - backend:
+              service:
+                name: rancher
+                port:
+                  number: 80
             path: /
             pathType: Prefix
