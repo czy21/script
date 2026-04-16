@@ -1,5 +1,0 @@
-dashboard:
-  kong:
-    proxy:
-      http:
-        enabled: true

@@ -6,4 +6,5 @@
     sudo kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
     sudo crictl completion bash | sudo tee /etc/bash_completion.d/crictl > /dev/null
 
-- import_tasks: roles/kubernetes/tasks/tool.yml
+- include_tasks: roles/kubernetes/tasks/tool.yml
+  when: inventory_hostname in groups["master"]
