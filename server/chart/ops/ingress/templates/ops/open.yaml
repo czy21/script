@@ -6,6 +6,16 @@ metadata:
   namespace: ops
 spec:
   rules:
+    - host: argo-workflows-{{ .Values.param_cluster_name }}.czy21.com
+      http:
+        paths:
+        - pathType: Prefix
+          path: /
+          backend:
+            service:
+              name: argo-workflows-server
+              port:
+                number: 2746
     - host: prom-{{ .Values.param_cluster_name }}.czy21.com
       http:
         paths:

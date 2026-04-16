@@ -32,10 +32,10 @@ scrape_configs:
       - targets: ['prom-nas.czy21-internal.com']
         labels:
           origin_prometheus: nas
-      - targets: ['prom-test.czy21-internal.com']
+      - targets: ['prom-test.czy21.com']
         labels:
-          origin_prometheus: prod
-      - targets: ['prom-prod.czy21-internal.com']
+          origin_prometheus: test
+      - targets: ['prom-prod.czy21.com']
         labels:
           origin_prometheus: prod
 
