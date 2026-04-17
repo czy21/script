@@ -5,7 +5,22 @@ package org.ops
 import org.ops.util.StringUtils
 
 def deploy() {
-    def common = new Basic()
+    
+    def helm_chart_file = env.param_helm_chart_file
+
+    if (fileExists(helm_chart_file)) {
+        withKubeConfig([credentialsId: env.param_kube_credential]) {
+            helm_cmd = StringUtils.format(
+                    "helm dep up {0} && helm upgrade --install {1} {0} --version {2} --namespace {3} --values .jenkins/param.yaml --output yaml",
+                    env.param_helm_chart_context,
+                    env.param_release_name,
+                    env.param_release_version,
+                    env.param_release_namespace
+            )
+            sh "${helm_cmd}"
+        }
+        return
+    }
     def chartMap = [
             java: {
                 env.param_release_chart_name = env.param_helm_java_chart_name
@@ -28,7 +43,6 @@ def deploy() {
                 env.param_release_chart_version = env.param_helm_web_chart_version
             }
     ]
-    common.writeParamToYaml()
     chartMap.get(env.param_code_type).call()
     withKubeConfig([credentialsId: env.param_kube_credential]) {
         helm_cmd = StringUtils.format(
