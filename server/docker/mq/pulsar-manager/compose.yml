@@ -8,7 +8,7 @@ x-traefik-label: &traefik-label
 services:
 
   pulsar-manager:
-    image: {{ param_registry_url }}/{{ param_registry_dir }}/pulsar-manager
+    image: {{ param_registry }}/{{ param_registry_dir }}/pulsar-manager
     container_name: pulsar-manager
     labels:
       <<: *traefik-label

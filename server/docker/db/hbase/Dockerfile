@@ -1,4 +1,4 @@
-FROM {{ param_registry_url }}/{{ param_registry_dir }}/hadoop-base
+FROM {{ param_registry }}/{{ param_registry_dir }}/hadoop-base
 
 COPY docker-entrypoint.sh /
 RUN chmod +x /docker-entrypoint.sh

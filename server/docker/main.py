@@ -85,7 +85,7 @@ class DockerRole(share.AbstractRole):
 
     def build(self) -> list[str]:
         _cmds = []
-        registry_source_url = self.context.role_env.get('param_registry_url')
+        registry_source_url = self.context.role_env.get('param_registry')
         registry_source_dir = self.context.role_env.get('param_registry_dir')
         if self.context.args.target.startswith("Dockerfile"):
             for rd in sorted(self.context.role_output_path.glob(self.context.args.target), reverse=True):

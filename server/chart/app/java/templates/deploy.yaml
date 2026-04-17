@@ -34,7 +34,7 @@ spec:
     spec:
       containers:
         - name: {{ include "app.fullname" . }}
-          image: "{{ .Values.param_registry_repo }}/{{ .Values.param_registry_dir }}/{{ include "app.fullname" . }}:{{ .Values.param_release_version }}"
+          image: "{{ .Values.param_registry }}/{{ .Values.param_registry_dir }}/{{ include "app.fullname" . }}:{{ .Values.param_release_version }}"
           imagePullPolicy: Always
           ports:
             - name: http
@@ -54,21 +54,20 @@ spec:
               subPath: data
           readinessProbe:
             httpGet:
-              path: /actuator/health
+              path: /actuator/health/readiness
               port: 8080
             initialDelaySeconds: 30
-            periodSeconds: 10
-            timeoutSeconds: 5
-            successThreshold: 1
+            periodSeconds: 5
+            timeoutSeconds: 3
             failureThreshold: 3
+            successThreshold: 1
           livenessProbe:
             httpGet:
-              path: /actuator/health
+              path: /actuator/health/liveness
               port: 8080
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            timeoutSeconds: 5
-            successThreshold: 1
+            initialDelaySeconds: 40
+            periodSeconds: 15
+            timeoutSeconds: 2
             failureThreshold: 3
       volumes:
         - name: data

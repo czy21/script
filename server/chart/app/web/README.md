@@ -3,10 +3,10 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Release.Name }}
-  namespace: {{ .Release.Namespace }}
+  name: {{ include "app.fullname" . }}
+  
   labels:
-    app: {{ .Release.Name }}
+    app: {{ include "app.fullname" . }}
 data:
   nginx.conf: |
     user  nginx;

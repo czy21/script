@@ -390,7 +390,7 @@ class Installer:
                 if role_context.role_node_target_path.exists():
                     path_util.merge_dir(role_context.role_node_target_path, role_context.role_output_path, role_instance.get_merge_ignore_pattern())
                 _cmds.extend(getattr(role_instance, args.command)())
-                execute(collection_util.flat_to_str(_cmds, delimiter=" && "), dry_run=args.dry_run)
+                execute(collection_util.flat_to_str(_cmds, delimiter=" && "))
 
                 def cp_role_to_root(src: pathlib.Path, dst: pathlib.Path):
                     return "mkdir -p {0} && cp -r {1} {0}".format(dst.joinpath(role_path.relative_to(self.root_path)).as_posix(), src.as_posix()) if any(src.iterdir()) else []

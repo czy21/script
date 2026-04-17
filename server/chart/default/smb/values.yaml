@@ -2,7 +2,7 @@ share_path: {{ param_smb_kube_server }}/{{ param_smb_kube_data }}-{{ param_clust
 
 csi-driver-smb:
   image:
-    baseRepo: '{{ param_registry_proxy_url }}' # registry.k8s.io
+    baseRepo: '{{ param_registry_proxy }}' # registry.k8s.io
     smb:
       repository: /sig-storage/smbplugin
     csiProvisioner:

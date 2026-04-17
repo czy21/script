@@ -19,7 +19,6 @@ class ChartRole(share.AbstractRole):
         file_util.write_text(self.role_values_override_file, yaml_util.dump(context.role_env))
 
     def install(self) -> list[str]:
-        _cmds = ['helm dep up {0}'.format(self.context.role_output_path.as_posix())]
         cmd = [
             "helm {0} {1} {2} --values {3}".format("upgrade --install", self.context.role_name, self.context.role_output_path.as_posix(), self.role_values_override_file)
         ]
@@ -27,9 +26,10 @@ class ChartRole(share.AbstractRole):
             cmd.append("--namespace {0}".format(self.context.namespace))
         if self.context.args.create_namespace:
             cmd.append("--create-namespace")
-        cmd.append("--dry-run")
-        _cmds.append(collection_util.flat_to_str(cmd))
-        return _cmds
+        if self.context.args.dry_run:
+            cmd.append("--dry-run")
+        cmd = collection_util.flat_to_str(cmd)
+        return ['helm dep up {0}'.format(self.context.role_output_path.as_posix()),cmd]
 
     def build(self) -> list[str]:
         _cmds = []

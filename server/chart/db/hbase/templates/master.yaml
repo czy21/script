@@ -51,7 +51,7 @@ spec:
           claimName: data-{{ .Release.Name }}-master
       containers:
       - name: hbase
-        image: {{ .Values.param_registry_url }}/{{ .Values.param_registry_dir }}/hbase
+        image: {{ .Values.param_registry }}/{{ .Values.param_registry_dir }}/hbase
         imagePullPolicy: Always
         ports:
         - containerPort: 16000

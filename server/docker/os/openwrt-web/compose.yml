@@ -8,7 +8,7 @@ x-traefik-label: &traefik-label
 services:
 
   openwrt-web:
-    image: '{{ param_registry_url }}/{{ param_registry_dir }}/openwrt-web'
+    image: '{{ param_registry }}/{{ param_registry_dir }}/openwrt-web'
     pull_policy: always
     container_name: openwrt-web
     privileged: true

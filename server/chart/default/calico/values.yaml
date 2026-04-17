@@ -1,8 +1,8 @@
 tigera-operator:
   tigeraOperator:
-    registry: {{ param_registry_proxy_url }}
+    registry: {{ param_registry_proxy }}
   calicoctl:
-    image: '{{ param_registry_proxy_url }}/calico/ctl' # docker.io/calico/ctl
+    image: '{{ param_registry_proxy }}/calico/ctl' # docker.io/calico/ctl
   ## k3s use https://docs.tigera.io/calico/latest/getting-started/kubernetes/k3s/multi-node-install
   # installation:
   #   calicoNetwork:

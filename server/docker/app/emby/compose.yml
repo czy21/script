@@ -7,7 +7,7 @@ x-traefik-label: &traefik-label
 
 services:
   emby:
-    image: {{ param_registry_url }}/{{ param_registry_dir }}/emby
+    image: {{ param_registry }}/{{ param_registry_dir }}/emby
     pull_policy: always
     container_name: emby
     hostname: emby

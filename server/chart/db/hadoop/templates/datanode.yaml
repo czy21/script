@@ -36,7 +36,7 @@ spec:
             path: hdfs-site.xml
       containers:
       - name: hadoop
-        image: {{ .Values.param_registry_url }}/{{ .Values.param_registry_dir }}/hadoop
+        image: {{ .Values.param_registry }}/{{ .Values.param_registry_dir }}/hadoop
         imagePullPolicy: Always
         ports:
         - containerPort: 22

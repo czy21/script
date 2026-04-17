@@ -2,16 +2,13 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}
-  namespace: {{ .Release.Namespace }}
-  annotations:
-    helm.sh/revision: "{{ .Release.Revision }}"
+  name: {{ include "app.fullname" . }}
   labels:
     app: {{ .Values.param_app_name | default .Release.Name }}
     version: {{ .Values.param_app_version | default .Values.param_release_version }}
 spec:
   revisionHistoryLimit: 3
-  replicas: {{ .Values.param_replicas | default 2 }}
+  replicas: {{ .Values.param_replicas }}
   strategy:
     type: RollingUpdate
   selector:
@@ -20,15 +17,13 @@ spec:
       version: {{ .Values.param_app_version | default .Values.param_release_version }}
   template:
     metadata:
-      annotations:
-        helm.sh/revision: "{{ .Release.Revision }}"
       labels:
         app: {{ .Values.param_app_name | default .Release.Name }}
         version: {{ .Values.param_app_version | default .Values.param_release_version }}
     spec:
       containers:
         - name: {{ .Values.param_app_name | default .Release.Name }}
-          image: "{{ .Values.param_registry_repo }}/{{ .Values.param_registry_dir }}/{{ .Values.param_image_name | default .Values.param_release_name }}:{{ .Values.param_image_version | default .Values.param_release_version }}"
+          image: "{{ .Values.param_registry }}/{{ .Values.param_registry_dir }}/{{ .Values.param_image_name | default .Values.param_release_name }}:{{ .Values.param_image_version | default .Values.param_release_version }}"
           imagePullPolicy: Always
           ports:
             - name: http
