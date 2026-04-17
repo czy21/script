@@ -1,11 +1,12 @@
 @Library('ops-library@master') _
 
-env.param_env_name="dev"
-env.param_global_env_file_id="dev.env"
-env.param_release_namespace="stable"
-env.param_release_name="demo-portal"
-env.param_data_claim_name="data-demo"
-env.param_release_version="master"
-env.param_code_type="java"
+inputs=[:]
+inputs.param_env_name="dev"
+inputs.param_global_env_file_id="dev.env"
+inputs.param_release_namespace="stable"
+inputs.param_release_name="demo-portal"
+inputs.param_data_claim_name="data-demo"
+inputs.param_release_version="master"
+inputs.param_code_type="java"
 
 Deploy()

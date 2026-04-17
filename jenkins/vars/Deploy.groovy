@@ -8,11 +8,11 @@ import org.ops.util.PathUtils
 import org.ops.util.StringUtils
 import org.ops.util.ValidateUtils
 
-def call() {
+def call(Map inputs) {
     pipeline {
         agent {
             kubernetes {
-                cloud env.param_env_name
+                cloud inputs.param_env_name
                 yaml '''
                   apiVersion: v1
                   kind: Pod
@@ -29,30 +29,30 @@ def call() {
         stages {
             stage('Clone') {
                 when {
-                    expression { StringUtils.isNotEmpty(env.param_git_repository_url) }
+                    expression { StringUtils.isNotEmpty(inputs.param_git_repository_url) }
                 }
                 steps {
                     script {
 
-                        ValidateUtils.validateRequiredParams(env,["param_git_repository_url"])
+                        ValidateUtils.validateRequiredParams(inputs,["param_git_repository_url"])
                         
-                        env.param_git_branch = StringUtils.defaultIfEmpty(env.param_git_branch, params.param_git_branch)
+                        inputs.param_git_branch = StringUtils.defaultIfEmpty(inputs.param_git_branch, params.param_git_branch)
 
                         def gitExtensions = []
-                        env.param_git_sparse_checkout = StringUtils.defaultIfEmpty(env.param_git_sparse_checkout, "").trim()
-                        if (StringUtils.isNotEmpty(env.param_git_sparse_checkout)) {
-                            def sparseCheckoutPaths = env.param_git_sparse_checkout.split(" ").collect { t -> [path: t] }
+                        inputs.param_git_sparse_checkout = StringUtils.defaultIfEmpty(inputs.param_git_sparse_checkout, "").trim()
+                        if (StringUtils.isNotEmpty(inputs.param_git_sparse_checkout)) {
+                            def sparseCheckoutPaths = inputs.param_git_sparse_checkout.split(" ").collect { t -> [path: t] }
                             gitExtensions.add(sparseCheckout(sparseCheckoutPaths))
                         } else {
                             gitExtensions.add(submodule(parentCredentials: true, recursiveSubmodules: true, reference: ''))
                         }
                         checkout scmGit(
                                 branches: [
-                                        [name: env.param_git_branch]
+                                        [name: inputs.param_git_branch]
                                 ],
                                 extensions: gitExtensions,
                                 userRemoteConfigs: [
-                                        [credentialsId: env.param_git_credential_id, url: env.param_git_repository_url]
+                                        [credentialsId: inputs.param_git_credential_id, url: inputs.param_git_repository_url]
                                 ]
                         )
                     }
@@ -61,25 +61,25 @@ def call() {
             stage('Param') {
                 steps {
                     script {
-                        ValidateUtils.validateRequiredParams(env,[
+                        ValidateUtils.validateRequiredParams(inputs,[
                                 "param_global_env_file_id"
                         ])
                         def basic = new Basic()
-                        basic.loadParam()
+                        basic.loadParam(inputs)
 
-                        env.param_project_root = PathUtils.ofPath(env.WORKSPACE, env.param_project_root)
-                        env.param_project_context = PathUtils.ofPath(env.param_project_root, env.param_project_module)
-                        env.param_helm_chart_context = StringUtils.isNotNull(env.param_helm_chart_context) ? PathUtils.ofPath(env.param_project_root, env.param_helm_chart_context) : env.param_project_context
-                        env.param_helm_chart_file = PathUtils.ofPath(env.param_helm_chart_context, "Chart.yaml")
+                        inputs.param_project_root = PathUtils.ofPath(env.WORKSPACE, inputs.param_project_root)
+                        inputs.param_project_context = PathUtils.ofPath(inputs.param_project_root, inputs.param_project_module)
+                        inputs.param_helm_chart_context = StringUtils.isNotNull(inputs.param_helm_chart_context) ? PathUtils.ofPath(inputs.param_project_root, inputs.param_helm_chart_context) : inputs.param_project_context
+                        inputs.param_helm_chart_file = PathUtils.ofPath(inputs.param_helm_chart_context, "Chart.yaml")
 
-                        basic.writeParamToYaml()
+                        basic.writeParamToYaml(inputs)
                     }
                 }
             }
             stage('Deploy') {
                 steps {
                     script {
-                        new Kubernetes().deploy()
+                        new Kubernetes().deploy(inputs)
                     }
                 }
             }
