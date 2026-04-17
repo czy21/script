@@ -32,7 +32,7 @@ spec:
         spec:
           containers:
             - name: elasticsearch
-              image: {{ .Values.param_registry_proxy_url | default "docker.elastic.co" }}/elasticsearch/elasticsearch:{{ .Values.version }}
+              image: {{ .Values.param_registry_proxy | default "docker.elastic.co" }}/elasticsearch/elasticsearch:{{ .Values.version }}
               securityContext:
                 capabilities:
                   add: ["SYS_CHROOT"]
@@ -61,7 +61,7 @@ spec:
     spec:
       containers:
         - name: kibana
-          image: {{ .Values.param_registry_proxy_url | default "docker.elastic.co" }}/kibana/kibana:{{ .Values.version }}
+          image: {{ .Values.param_registry_proxy | default "docker.elastic.co" }}/kibana/kibana:{{ .Values.version }}
   http:
     tls:
       selfSignedCertificate:

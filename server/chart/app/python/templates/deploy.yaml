@@ -2,13 +2,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}
-  namespace: {{ .Release.Namespace }}
-  annotations:
-    helm.sh/revision: "{{ .Release.Revision }}"
+  name: {{ include "app.fullname" . }}
 spec:
   selector:
-    app: {{ .Release.Name }}
+    app: {{ include "app.fullname" . }}
   type: ClusterIP
   ports:
     - name: "http"
@@ -18,37 +15,29 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}
-  namespace: {{ .Release.Namespace }}
-  annotations:
-    helm.sh/revision: "{{ .Release.Revision }}"
+  name: {{ include "app.fullname" . }}
 spec:
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: {{ .Release.Name }}
+      app: {{ include "app.fullname" . }}
   template:
     metadata:
-      annotations:
-        helm.sh/revision: "{{ .Release.Revision }}"
       labels:
-        app: {{ .Release.Name }}
+        app: {{ include "app.fullname" . }}
     spec:
-      volumes:
-        - name: conf
-          configMap:
-            name: {{ .Release.Name }}
-        - name: data
-          persistentVolumeClaim:
-            claimName: {{ .Values.param_data_claim_name }}
       containers:
-        - name: {{ .Release.Name }}
-          image: {{ .Values.param_registry_repo }}/{{ .Values.param_registry_dir }}/{{ .Release.Name }}:{{ .Values.param_release_version }}
+        - name: {{ include "app.fullname" . }}
+          image: "{{ .Values.param_registry }}/{{ .Values.param_registry_dir }}/{{ include "app.fullname" . }}:{{ .Values.param_release_version }}"
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
           env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
             - name: TZ
               value: Asia/Shanghai
             - name: APP_ARGS
@@ -59,3 +48,10 @@ spec:
             - name: data
               mountPath: /app/data/
               subPath: data
+      volumes:
+        - name: conf
+          configMap:
+            name: {{ include "app.fullname" . }}
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ .Values.param_data_claim_name }}

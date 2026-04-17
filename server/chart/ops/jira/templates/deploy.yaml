@@ -23,7 +23,7 @@ spec:
                 path: dbconfig.xml
       containers:
       - name: {{ .Release.Name }}
-        image: {{ .Values.param_registry_url }}/{{ .Values.param_registry_dir }}/jira
+        image: {{ .Values.param_registry }}/{{ .Values.param_registry_dir }}/jira
         imagePullPolicy: Always
         resources:
           limits:

@@ -1,5 +1,5 @@
 {
     "registry-mirrors": [
-        "https://{{ param_registry_proxy_url }}"
+        "https://{{ param_registry_proxy }}"
     ]
 }

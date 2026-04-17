@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: {{ .Release.Name }}
-          image: {{ .Values.param_registry_url }}/{{ .Values.param_registry_dir }}/kafka
+          image: {{ .Values.param_registry }}/{{ .Values.param_registry_dir }}/kafka
           imagePullPolicy: Always
           args:
             - "--override broker.id=${HOSTNAME##*-} \

@@ -1,7 +1,7 @@
 version: "3.9"
 
 x-flink-common: &flink-common
-  image: {{ param_registry_url }}/{{ param_registry_dir }}/flink
+  image: {{ param_registry }}/{{ param_registry_dir }}/flink
   privileged: true
   user: root
   pull_policy: always

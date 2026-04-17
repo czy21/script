@@ -1,10 +1,10 @@
 mirrors:
   docker.io:
     endpoint:
-      - "https://{{ param_registry_proxy_url }}"
-  {{ param_registry_proxy_url }}:
+      - "https://{{ param_registry_proxy }}"
+  {{ param_registry_proxy }}:
     endpoint:
-      - "https://{{ param_registry_proxy_url }}"
-  {{ param_registry_url }}:
+      - "https://{{ param_registry_proxy }}"
+  {{ param_registry }}:
     endpoint:
-      - "https://{{ param_registry_url }}"
+      - "https://{{ param_registry }}"

@@ -29,7 +29,7 @@ localAPIEndpoint:
 apiVersion: "kubeadm.k8s.io/v1beta3"
 kind: ClusterConfiguration
 kubernetesVersion: "v{{ param_k8s_patch_version }}"
-imageRepository: "{{ param_registry_proxy_url }}"
+imageRepository: "{{ param_registry_proxy }}"
 certificatesDir: "${PKI}"
 etcd:
   local:

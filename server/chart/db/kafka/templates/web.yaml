@@ -22,7 +22,7 @@ spec:
             path: system-config.properties
       containers:
         - name: '{{ .Release.Name }}-web'
-          image: {{ .Values.param_registry_url }}/{{ .Values.param_registry_dir }}/kafka-web
+          image: {{ .Values.param_registry }}/{{ .Values.param_registry_dir }}/kafka-web
           args:
           - /bin/bash
           - -c
