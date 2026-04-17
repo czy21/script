@@ -1,11 +1,11 @@
 @Library('ops-library@master') _
 
-
-env.param_global_env_file_id="dev.env"
-env.param_git_repository_url="http://gitea.czy21-internal.com/czyhome/example.git"
-env.param_project_root="code/web/vue"
-env.param_project_module="vite"
-env.param_code_type="web"
-env.param_release_name="demo-operation-vue"
+inputs=[:]
+inputs.param_global_env_file_id="dev.env"
+inputs.param_git_repository_url="http://gitea.czy21-internal.com/czyhome/example.git"
+inputs.param_project_root="code/web/vue"
+inputs.param_project_module="vite"
+inputs.param_code_type="web"
+inputs.param_release_name="demo-operation-vue"
 
 Build()

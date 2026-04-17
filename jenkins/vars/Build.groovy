@@ -8,7 +8,7 @@ import org.ops.util.PathUtils
 import org.ops.util.StringUtils
 import org.ops.util.ValidateUtils
 
-def call() {
+def call(Map inputs) {
     pipeline {
         agent any
         parameters {
@@ -28,25 +28,25 @@ def call() {
                 steps {
                     script {
 
-                        ValidateUtils.validateRequiredParams(env,["param_git_repository_url"])
+                        ValidateUtils.validateRequiredParams(inputs,["param_git_repository_url"])
                         
-                        env.param_git_branch = StringUtils.defaultIfEmpty(env.param_git_branch, params.param_git_branch)
+                        inputs.param_git_branch = StringUtils.defaultIfEmpty(inputs.param_git_branch, params.param_git_branch)
 
                         def gitExtensions = []
-                        env.param_git_sparse_checkout = StringUtils.defaultIfEmpty(env.param_git_sparse_checkout, "").trim()
-                        if (StringUtils.isNotEmpty(env.param_git_sparse_checkout)) {
-                            def sparseCheckoutPaths = env.param_git_sparse_checkout.split(" ").collect { t -> [path: t] }
+                        inputs.param_git_sparse_checkout = StringUtils.defaultIfEmpty(inputs.param_git_sparse_checkout, "").trim()
+                        if (StringUtils.isNotEmpty(inputs.param_git_sparse_checkout)) {
+                            def sparseCheckoutPaths = inputs.param_git_sparse_checkout.split(" ").collect { t -> [path: t] }
                             gitExtensions.add(sparseCheckout(sparseCheckoutPaths))
                         } else {
                             gitExtensions.add(submodule(parentCredentials: true, recursiveSubmodules: true, reference: ''))
                         }
                         checkout scmGit(
                                 branches: [
-                                        [name: env.param_git_branch]
+                                        [name: inputs.param_git_branch]
                                 ],
                                 extensions: gitExtensions,
                                 userRemoteConfigs: [
-                                        [credentialsId: env.param_git_credential_id, url: env.param_git_repository_url]
+                                        [credentialsId: inputs.param_git_credential_id, url: inputs.param_git_repository_url]
                                 ]
                         )
                     }
@@ -55,49 +55,49 @@ def call() {
             stage('Param') {
                 steps {
                     script {
-                        ValidateUtils.validateRequiredParams(env,[
+                        ValidateUtils.validateRequiredParams(inputs,[
                                 "param_global_env_file_id"
                         ])
                         def basic = new Basic()
-                        basic.loadParam()
+                        basic.loadParam(inputs)
 
-                        env.param_project_root = PathUtils.ofPath(env.WORKSPACE, env.param_project_root)
-                        env.param_project_context = PathUtils.ofPath(env.param_project_root, env.param_project_module)
+                        inputs.param_project_root = PathUtils.ofPath(env.WORKSPACE, inputs.param_project_root)
+                        inputs.param_project_context = PathUtils.ofPath(inputs.param_project_root, inputs.param_project_module)
 
-                        env.param_docker_build_enabled = StringUtils.defaultIfEmpty(env.param_docker_build_enabled, "true")
-                        env.param_docker_context = StringUtils.isNotNull(env.param_docker_context) ? PathUtils.ofPath(env.param_project_root, env.param_docker_context) : env.param_project_context
-                        env.param_docker_file = PathUtils.ofPath(env.param_docker_context, "Dockerfile")
-                        env.param_docker_compose_file = PathUtils.ofPath(env.param_docker_context, "docker-compose.yaml")
-                        env.param_release_image = PathUtils.ofPath(env.param_registry_repo, env.param_registry_dir, env.param_release_name)
-                        env.param_release_version = StringUtils.defaultIfEmpty(env.param_release_version, params.param_git_branch)
+                        inputs.param_docker_build_enabled = StringUtils.defaultIfEmpty(inputs.param_docker_build_enabled, "true")
+                        inputs.param_docker_context = StringUtils.isNotNull(inputs.param_docker_context) ? PathUtils.ofPath(inputs.param_project_root, inputs.param_docker_context) : inputs.param_project_context
+                        inputs.param_docker_file = PathUtils.ofPath(inputs.param_docker_context, "Dockerfile")
+                        inputs.param_docker_compose_file = PathUtils.ofPath(inputs.param_docker_context, "docker-compose.yaml")
+                        inputs.param_release_image = PathUtils.ofPath(inputs.param_registry_repo, inputs.param_registry_dir, inputs.param_release_name)
+                        inputs.param_release_version = StringUtils.defaultIfEmpty(inputs.param_release_version, params.param_git_branch)
 
-                        env.param_sonarqube_server = StringUtils.defaultIfEmpty(env.param_sonarqube_server, "sonarqube")
-                        env.param_sonarqube_project_key = StringUtils.defaultIfEmpty(env.param_sonarqube_project_key,env.param_release_name)
-                        env.param_tool_java_version = StringUtils.defaultIfEmpty(env.param_tool_java_version,'jdk-21-graalvm')
-                        env.param_tool_maven_version = StringUtils.defaultIfEmpty(env.param_tool_maven_version,'mvn-3.9')
-                        env.param_tool_gradle_version = StringUtils.defaultIfEmpty(env.param_tool_gradle_version,'gradle-9.4')
-                        env.param_tool_golang_version = StringUtils.defaultIfEmpty(env.param_tool_golang_version,'go-1.20')
-                        env.param_tool_node_version = StringUtils.defaultIfEmpty(env.param_tool_node_version,'node-20.18')
-                        env.param_tool_dotnet_version = StringUtils.defaultIfEmpty(env.param_tool_dotnet_version,'dotnet-9.0')
+                        inputs.param_sonarqube_server = StringUtils.defaultIfEmpty(inputs.param_sonarqube_server, "sonarqube")
+                        inputs.param_sonarqube_project_key = StringUtils.defaultIfEmpty(inputs.param_sonarqube_project_key,inputs.param_release_name)
+                        inputs.param_tool_java_version = StringUtils.defaultIfEmpty(inputs.param_tool_java_version,'jdk-21-graalvm')
+                        inputs.param_tool_maven_version = StringUtils.defaultIfEmpty(inputs.param_tool_maven_version,'mvn-3.9')
+                        inputs.param_tool_gradle_version = StringUtils.defaultIfEmpty(inputs.param_tool_gradle_version,'gradle-9.4')
+                        inputs.param_tool_golang_version = StringUtils.defaultIfEmpty(inputs.param_tool_golang_version,'go-1.20')
+                        inputs.param_tool_node_version = StringUtils.defaultIfEmpty(inputs.param_tool_node_version,'node-20.18')
+                        inputs.param_tool_dotnet_version = StringUtils.defaultIfEmpty(inputs.param_tool_dotnet_version,'dotnet-9.0')
 
-                        basic.writeParamToYaml()
+                        basic.writeParamToYaml(inputs)
                     }
                 }
             }
             stage('Build') {
                 steps {
                     script {
-                        new Builder().exec()
+                        new Builder().exec(inputs)
                     }
                 }
             }
             stage('Image') {
                 when {
-                    expression { env.param_docker_build_enabled == "true" }
+                    expression { inputs.param_docker_build_enabled }
                 }
                 steps {
                     script {
-                        new Docker().build()
+                        new Docker().build(inputs)
                     }
                 }
             }
@@ -105,21 +105,21 @@ def call() {
                 parallel {
                     stage('Server') {
                         when {
-                            expression { StringUtils.isNotEmpty(env.param_server_deploy_host) }
+                            expression { StringUtils.isNotEmpty(inputs.param_server_deploy_host) }
                         }
                         steps {
                             script {
-                                new Server().deploy()
+                                new Server().deploy(inputs)
                             }
                         }
                     }
                     stage('Docker') {
                         when {
-                            expression { StringUtils.isNotEmpty(env.param_docker_deploy_host) }
+                            expression { StringUtils.isNotEmpty(inputs.param_docker_deploy_host) }
                         }
                         steps {
                             script {
-                                new Docker().deploy()
+                                new Docker().deploy(inputs)
                             }
                         }
                     }

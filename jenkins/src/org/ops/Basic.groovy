@@ -4,25 +4,20 @@ package org.ops
 import org.ops.util.CollectionUtils
 import org.ops.util.StringUtils
 
-def loadParam() {
-    configFileProvider([configFile(fileId: "${env.param_global_env_file_id}", variable: 'paramVar')]) {
-        def param = load "${paramVar}"
-        param.each { k, v ->
-            if (env.getProperty(k) == null) {
-                env.setProperty(k, v)
-            }
+def loadParam(Map inputs) {
+    configFileProvider([configFile(fileId: "${inputs.param_global_env_file_id}", variable: 't')]) {
+        def global_inputs = load(t)
+        inputs.putAll(global_inputs.findAll { k, v -> !inputs.containsKey(k) })
+    }
+    inputs.each { k, v ->
+        if (v instanceof Closure) {
+            inputs[k] = v()
         }
     }
 }
 
-def writeParamToYaml() {
-    Map<String, Object> param = readProperties text: sh(script: 'env | grep \'^param_\'', returnStdout: true).trim()
-    param.each { k, v ->
-        if (StringUtils.isNull(v as String)) {
-            param.put(k, null)
-        }
-    }
-    writeYaml file: '.jenkins/param.yaml', data: CollectionUtils.sortMapByKey(param), charset: 'UTF-8', overwrite: true
+def writeParamToYaml(Map inputs) {
+    writeYaml file: '.jenkins/inputs.yaml', data: CollectionUtils.sortMapByKey(inputs), charset: 'UTF-8', overwrite: true
 }
 
 return this

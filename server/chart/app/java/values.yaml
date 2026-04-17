@@ -1,5 +1,6 @@
-param_release_version: ""
-param_registry_repo: ""
-param_registry_dir: ""
-param_data_claim_name: ""
+param_release_version:
+param_registry_repo:
+param_registry_dir:
+param_data_claim_name: "data-app"
+param_replicas: 2
 param_app_args: -Xms128m -Xmx512m -XX:MetaspaceSize=256m -XX:MaxMetaspaceSize=256m

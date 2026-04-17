@@ -27,6 +27,7 @@ class ChartRole(share.AbstractRole):
             cmd.append("--namespace {0}".format(self.context.namespace))
         if self.context.args.create_namespace:
             cmd.append("--create-namespace")
+        cmd.append("--dry-run")
         _cmds.append(collection_util.flat_to_str(cmd))
         return _cmds
 
