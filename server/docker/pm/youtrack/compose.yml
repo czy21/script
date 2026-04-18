@@ -8,7 +8,7 @@ x-traefik-label: &traefik-label
 services:
 
   youtrack:
-    image: jetbrains/youtrack:2025.2.89748
+    image: jetbrains/youtrack:2026.1.12135
     container_name: youtrack
     hostname: youtrack
     expose:
