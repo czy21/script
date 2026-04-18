@@ -4,3 +4,4 @@
 [worker]
 192.168.20.22 param_node_name=k8s-worker-1
 192.168.20.23 param_node_name=k8s-worker-2
+192.168.48.4 param_node_name=k8s-worker-3
