@@ -8,12 +8,21 @@ argo-workflows:
     image:
       registry: '{{ param_registry_proxy }}'
     workflowNamespaces: []
-    workflowDefaults: 
-      spec:
-        serviceAccountName: argo-workflows-admin
   server:
     image:
       registry: '{{ param_registry_proxy }}'
   executor:
     image:
       registry: '{{ param_registry_proxy }}'
+  artifactRepository:
+    archiveLogs: true
+    s3: 
+      endpoint: "{{ param_s3_endpoint }}"
+      bucket: argo
+      keyFormat: "{{ '{{' }} workflow.uid {{ '}}' }}"
+      accessKeySecret:
+        name: argo-artifact-credentials
+        key: accessKey
+      secretKeySecret:
+        name: argo-artifact-credentials
+        key: secretKey

@@ -12,8 +12,8 @@ velero:
     secretContents:
       cloud: |
         [default]
-        aws_access_key_id={{ param_db_minio_username }}
-        aws_secret_access_key={{ param_db_minio_password }}
+        aws_access_key_id={{ param_s3_access_key }}
+        aws_secret_access_key={{ param_s3_secret_key }}
   configuration:
     backupStorageLocation:
       - name: default
@@ -21,7 +21,7 @@ velero:
         bucket: velero
         config:
           region: minio
-          s3Url: http://{{ param_db_minio_host }}
+          s3Url: http://{{ param_s3_endpoint }}
           s3ForcePathStyle: true
   snapshotsEnabled: false
   upgradeCRDs: false

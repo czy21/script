@@ -23,5 +23,8 @@ roleRef:
   name: cluster-admin
 subjects:
   - kind: ServiceAccount
+    name: default
+    namespace: {{ .Release.Namespace }}
+  - kind: ServiceAccount
     name: {{ index .Values "argo-workflows" "fullnameOverride" }}-admin
     namespace: {{ .Release.Namespace }}
