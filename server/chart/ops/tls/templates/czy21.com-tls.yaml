@@ -1,9 +1,0 @@
-apiVersion: v1
-kind: Secret
-type: kubernetes.io/tls
-metadata:
-  name: czy21.com-secret
-  namespace: {{ .Release.Namespace }}
-data:
-  tls.crt: {{ .Files.Get "cert/czy21.com.cer" | b64enc }}
-  tls.key: {{ .Files.Get "cert/czy21.com.key" | b64enc }}
