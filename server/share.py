@@ -339,6 +339,7 @@ class Installer:
                 role_env_file = role_path.joinpath("env.yaml")
                 role_env_output_file = role_output_path.joinpath("env.yaml")
                 role_env = {} | global_env | {
+                    "param_namespace": namespace,
                     "param_role_name": role_name,
                     "param_role_path": role_path.as_posix(),
                     "param_role_title": role_title,

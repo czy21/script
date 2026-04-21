@@ -14,11 +14,17 @@ class ChartRole(share.AbstractRole):
 
     def __init__(self, context: share.RoleContext) -> None:
         super().__init__(context)
+
+        self.role_init_sh = context.role_output_path.joinpath("init.sh")
         self.root_doc_template_file = context.root_path.joinpath("doc-template.md")
         self.role_values_override_file = context.role_output_path.joinpath("values.override.yaml")
         file_util.write_text(self.role_values_override_file, yaml_util.dump(context.role_env))
 
     def install(self) -> list[str]:
+        _cmds = []
+        if self.role_init_sh.exists():
+            _cmds.append("bash {}".format(self.role_init_sh.as_posix()))
+        _cmds.append('helm dep up {0}'.format(self.context.role_output_path.as_posix()))
         cmd = [
             "helm {0} {1} {2} --values {3}".format("upgrade --install", self.context.role_name, self.context.role_output_path.as_posix(), self.role_values_override_file)
         ]
@@ -29,7 +35,8 @@ class ChartRole(share.AbstractRole):
         if self.context.args.dry_run:
             cmd.append("--dry-run")
         cmd = collection_util.flat_to_str(cmd)
-        return ['helm dep up {0}'.format(self.context.role_output_path.as_posix()),cmd]
+        _cmds.append(cmd)
+        return _cmds
 
     def build(self) -> list[str]:
         _cmds = []
