@@ -16,9 +16,12 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "app.fullname" . }}
+  annotations:
+    helm.sh/revision: "{{ .Release.Revision }}"
 spec:
+  replicas: {{ .Values.param_replicas }}
   strategy:
-    type: Recreate
+    type: RollingUpdate
   selector:
     matchLabels:
       app: {{ include "app.fullname" . }}
@@ -26,6 +29,8 @@ spec:
     metadata:
       labels:
         app: {{ include "app.fullname" . }}
+      annotations:
+        helm.sh/revision: "{{ .Release.Revision }}"
     spec:
       containers:
         - name: {{ include "app.fullname" . }}
