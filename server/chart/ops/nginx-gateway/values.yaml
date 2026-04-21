@@ -3,12 +3,7 @@ nginx-gateway-fabric:
     name: nginx-gateway
   nginx:
     service:
-      type: NodePort
-      nodePorts:
-        - port: 80
-          listenerPort: 80
-        - port: 443
-          listenerPort: 443
+      loadBalancerIP: 192.168.20.30
     pod:
       nodeSelector:
         kubernetes.io/hostname: k8s-worker-1
@@ -32,8 +27,8 @@ nginx-gateway-fabric:
             tls:
               certificateRefs:
                 - name: czy21.com-secret
-                  group: ''
                   kind: Secret
+                  group: ''
               mode: Terminate
             allowedRoutes:
               namespaces:

@@ -1,0 +1,3 @@
+apiVersion: v2
+name: metallb-pool
+version: 0.1.0
