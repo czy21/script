@@ -1,0 +1,40 @@
+nginx-gateway-fabric:
+  nginxGateway:
+    name: nginx-gateway
+  nginx:
+    service:
+      type: NodePort
+      nodePorts:
+        - port: 80
+          listenerPort: 80
+        - port: 443
+          listenerPort: 443
+    pod:
+      nodeSelector:
+        kubernetes.io/hostname: k8s-worker-1
+  gateways:
+    - name: nginx
+      namespace: ops
+      spec:
+        gatewayClassName: nginx
+        listeners:
+          - name: http
+            port: 80
+            protocol: HTTP
+            hostname: '*.czy21.com'
+            allowedRoutes:
+              namespaces:
+                from: All
+          - name: https
+            port: 443
+            protocol: HTTPS
+            hostname: '*.czy21.com'
+            tls:
+              certificateRefs:
+                - name: czy21.com-secret
+                  group: ''
+                  kind: Secret
+              mode: Terminate
+            allowedRoutes:
+              namespaces:
+                from: All

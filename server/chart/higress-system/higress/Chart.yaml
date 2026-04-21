@@ -4,5 +4,5 @@ version: 0.1.0
 
 dependencies:
   - name: higress
-    version: 1.3.5
+    version: 2.2.1
     repository: "https://higress.io/helm-charts"
