@@ -1,0 +1,11 @@
+metallb:
+  fullnameOverride: metallb
+  controller: 
+    image:
+      repository: "{{ param_registry_proxy }}/metallb/controller" # quay.io/metallb/controller
+  speaker:
+    image:
+      repository: "{{ param_registry_proxy }}/metallb/speaker" # quay.io/metallb/speaker
+    frr:
+      image:
+        repository: "{{ param_registry_proxy }}/frrouting/frr" # quay.io/frrouting/frr

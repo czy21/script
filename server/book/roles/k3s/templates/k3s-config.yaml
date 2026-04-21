@@ -1,4 +1,5 @@
 disable: 
+  - servicelb
   - traefik
   - local-storage
 datastore-endpoint: mysql://{{ param_db_mysql_username }}:{{ param_db_mysql_password }}@tcp({{ param_db_mysql_host }}:{{ param_db_mysql_port }})/k3s_{{ param_cluster_name }}
