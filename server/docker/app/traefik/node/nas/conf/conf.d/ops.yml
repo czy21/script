@@ -3,12 +3,6 @@ http:
     gitea:
       rule: Host(`gitea.czy21.com`)
       service: gitea@docker
-    nginx-exporter:
-      rule: Host(`nginx-exporter-{{ param_cluster_name }}.czy21-internal.com`)
-      service: nginx-exporter@docker
-    fluent-bit-log-metrics:
-      rule: Host(`fluent-bit-{{ param_cluster_name }}-log-metrics.czy21-internal.com`)
-      service: fluent-bit-log-metrics@docker
     grafana:
       rule: Host(`grafana.czy21.com`)
       service: grafana@docker
@@ -37,20 +31,14 @@ http:
       rule: Host(`sonarqube.czy21-internal.com`)
       service: sonarqube@docker
     prometheus:
-      rule: Host(`prom-{{ param_cluster_name }}.czy21-internal.com`)
+      rule: Host(`prom-{{ param_cluster_name }}.czy21.com`)
       service: prometheus@docker
     node-red:
       rule: Host(`node-red.czy21-internal.com`)
       service: node-red@docker
-    onedev:
-      rule: Host(`onedev.czy21-internal.com`)
-      service: onedev@docker
     drawio:
       rule: Host(`drawio.czy21-internal.com`)
       service: drawio@docker
-    go-backup:
-      rule: Host(`go-backup.czy21-internal.com`)
-      service: go-backup@docker
     xxl-job:
       rule: Host(`xxl-job-dev.czy21.com`)
       service: xxl-job@docker      

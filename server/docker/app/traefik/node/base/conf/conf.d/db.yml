@@ -9,3 +9,9 @@ http:
     casdoor:
       rule: Host(`casdoor.czy21.com`)
       service: casdoor@docker
+    mysql-exporter-3306:
+      rule: Host(`mysql-exporter-3306-{{ param_cluster_name }}.czy21-internal.com`)
+      service: mysql-exporter-3306@docker
+    pgsql-exporter-5432:
+      rule: Host(`pgsql-exporter-5432-{{ param_cluster_name }}.czy21-internal.com`)
+      service: pgsql-exporter-5432@docker

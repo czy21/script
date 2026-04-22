@@ -58,6 +58,9 @@ http:
     redis-exporter:
       rule: Host(`redis-exporter-{{ param_cluster_name }}.czy21-internal.com`)
       service: redis-exporter@docker
+    mysql-exporter-3306:
+      rule: Host(`mysql-exporter-3306-{{ param_cluster_name }}.czy21-internal.com`)
+      service: mysql-exporter-3306@docker
     metatube:
       rule: Host(`metatube.czy21-internal.com`)
       service: metatube@docker
