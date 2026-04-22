@@ -29,7 +29,7 @@ scrape_configs:
         - '{job="spring"}'
         - '{job=~"k8s-.*"}'
     static_configs:
-      - targets: ['prom-nas.czy21-internal.com']
+      - targets: ['prom-nas.czy21.com']
         labels:
           origin_prometheus: nas
       - targets: ['prom-test.czy21.com']
@@ -53,12 +53,13 @@ scrape_configs:
   - job_name: mysql
     static_configs:
       - targets:
-          - 'mysql-exporter-{{ param_db_mysql_port }}:9104'
+          - 'mysql-exporter-3306-base.czy21-internal.com'
+          - 'mysql-exporter-3306-nas.czy21-internal.com'
 
   - job_name: pgsql
     static_configs:
       - targets:
-          - 'pgsql-exporter-{{ param_db_pgsql_port }}:9187'
+          - 'pgsql-exporter-5432-base.czy21-internal.com'
 
   - job_name: redis
     static_configs:

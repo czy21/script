@@ -1,4 +1,7 @@
-version: "3.9"
+x-traefik-exporter-label: &traefik-exporter-label
+  traefik.enable: true
+  traefik.http.routers.mysql-exporter-{{ param_db_mysql_port }}.service: mysql-exporter-{{ param_db_mysql_port }}
+  traefik.http.services.mysql-exporter-{{ param_db_mysql_port }}.loadbalancer.server.port: 9104
 
 services:
 
@@ -25,8 +28,10 @@ services:
     restart: always
 
   mysql-exporter-{{ param_db_mysql_port }}:
-    image: prom/mysqld-exporter:v0.15.0
+    image: prom/mysqld-exporter:v0.19.0
     container_name: mysql-exporter-{{ param_db_mysql_port }}
+    labels:
+      <<: *traefik-exporter-label
     command: --mysqld.address=mysql:{{ param_db_mysql_port }} --mysqld.username={{ param_db_mysql_username }}
     environment:
       MYSQLD_EXPORTER_PASSWORD: {{ param_db_mysql_password }}
