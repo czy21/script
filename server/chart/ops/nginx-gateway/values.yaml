@@ -1,12 +1,6 @@
 nginx-gateway-fabric:
   nginxGateway:
     name: nginx-gateway
-  nginx:
-    service:
-      loadBalancerIP: 192.168.20.30
-    pod:
-      nodeSelector:
-        kubernetes.io/hostname: k8s-worker-1
   gateways:
     - name: nginx
       namespace: ops

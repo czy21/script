@@ -8,7 +8,7 @@ x-traefik-label: &traefik-label
 services:
 
   prometheus:
-    image: prom/prometheus
+    image: prom/prometheus:v3.11.2
     container_name: prometheus
     labels:
       <<: *traefik-label

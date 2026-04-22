@@ -1,12 +1,6 @@
 version: "3.9"
 
-x-traefik-exporter-label: &traefik-exporter-label
-  traefik.enable: true
-  traefik.http.routers.{{ param_role_name }}-exporter.service: {{ param_role_name }}-exporter
-  traefik.http.services.{{ param_role_name }}-exporter.loadbalancer.server.port: 9113
-
 services:
-
   nginx:
     image: nginx:1.29.0-alpine
     container_name: nginx
@@ -19,16 +13,4 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/snippets/:/etc/nginx/snippets/
       - {{ param_docker_data }}/{{ param_role_name }}/conf/cert/:/etc/nginx/cert/
       - {{ param_docker_data }}/{{ param_role_name }}/static/:/usr/share/nginx/static/
-    restart: always
-
-  nginx-exporter:
-    image: nginx/nginx-prometheus-exporter:1.4.2
-    container_name: nginx-exporter
-    labels:
-      <<: *traefik-exporter-label
-    expose:
-      - "9113"
-    extra_hosts: 
-      - "host.docker.internal:host-gateway"
-    command: --nginx.scrape-uri=http://host.docker.internal:80/stub_status
     restart: always
