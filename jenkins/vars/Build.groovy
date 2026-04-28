@@ -64,7 +64,6 @@ def call(Map inputs) {
                         inputs.param_project_root = PathUtils.ofPath(env.WORKSPACE, inputs.param_project_root)
                         inputs.param_project_context = PathUtils.ofPath(inputs.param_project_root, inputs.param_project_module)
 
-                        inputs.param_docker_build_enabled = StringUtils.defaultIfEmpty(inputs.param_docker_build_enabled, "true")
                         inputs.param_docker_context = StringUtils.isNotNull(inputs.param_docker_context) ? PathUtils.ofPath(inputs.param_project_root, inputs.param_docker_context) : inputs.param_project_context
                         inputs.param_docker_file = PathUtils.ofPath(inputs.param_docker_context, "Dockerfile")
                         inputs.param_docker_compose_file = PathUtils.ofPath(inputs.param_docker_context, "docker-compose.yaml")
