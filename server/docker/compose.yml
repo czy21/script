@@ -1,6 +1,6 @@
 networks:
   default:
-    name: local
+    name: local # param_swarm ? 'swarm' : 'local'
     external: true
 #  vlan2:
 #    external:

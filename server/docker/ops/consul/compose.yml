@@ -8,14 +8,16 @@ x-traefik-label: &traefik-label
 services:
 
   consul:
-    image: hashicorp/consul:1.20.6
+    image: hashicorp/consul:1.22.6
     container_name: consul
     labels:
       <<: *traefik-label
     privileged: true
     user: root
+    ports:
+      - "8500:8500"
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/consul/data/
       - {{ param_docker_data }}/{{ param_role_name }}/conf/:/consul/config/
-    command: 'agent -server -ui -node=server-1 -bootstrap-expect=1 -client=0.0.0.0 -datacenter=nas'
+    command: 'agent -server -ui -node=server-1 -bootstrap-expect=1 -client=0.0.0.0 -datacenter=default'
     restart: always
