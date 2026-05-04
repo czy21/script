@@ -20,12 +20,12 @@ api:
 
 entryPoints:
   web:
-    address: :80
+    address: :8000
     forwardedHeaders:
       insecure: true
       
   traefik:
-    address: :8081
+    address: :8080
 
 metrics:
   prometheus:

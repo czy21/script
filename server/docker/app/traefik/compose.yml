@@ -3,7 +3,7 @@ version: "3.9"
 x-traefik-label: &traefik-label
   traefik.enable: true
   traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
-  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 8081
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 8080
 
 services:
 
@@ -15,11 +15,11 @@ services:
     privileged: true
     user: root
     expose:
-      - "80"
+      - "8000"
       - "8080"
     ports:
-      - "8080:80"
-      - "8081:8081"
+      - "8000:8000"
+      - "8080:8080"
     extra_hosts: 
       - "host.docker.internal:host-gateway"
     volumes:

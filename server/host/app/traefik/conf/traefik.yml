@@ -22,17 +22,17 @@ api:
 
 entryPoints:
   web:
-    address: :8082
+    address: :8000
     forwardedHeaders:
       insecure: true
   websecure:
-    address: :8083
+    address: :8003
     forwardedHeaders:
       insecure: true
     http:
       tls: {}
   traefik:
-    address: :8000
+    address: :8080
 
 metrics:
   prometheus:
