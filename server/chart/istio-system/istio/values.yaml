@@ -2,6 +2,10 @@ istiod:
   pilot:
     env:
       PILOT_HTTP10: true
+  # meshConfig:
+  #   defaultConfig:
+  #     gatewayTopology:
+  #       numTrustedProxies: 2
 component:
   jaeger: false
   kiali: true
