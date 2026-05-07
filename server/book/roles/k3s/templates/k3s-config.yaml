@@ -6,3 +6,5 @@ datastore-endpoint: mysql://{{ param_db_mysql_username }}:{{ param_db_mysql_pass
 service-node-port-range: 0-65535
 service-cidr: "{{ param_k3s_svc_network_cidr }}"
 cluster-cidr: "{{ param_k3s_pod_network_cidr }}"
+# additional ip or dns for client access 6443 tls X509v3 Subject Alternative Name
+tls-san:

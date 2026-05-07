@@ -64,7 +64,8 @@ def exec(Map inputs) {
                 }
                 else {
                     pathMap.get("gradle").call()
-                    configFileProvider([configFile(fileId: "gradle.config", variable: 'CONFIG_FILE')]) {
+                    def gradleConfigId = inputs.param_gradle_config_env ? "${inputs.param_gradle_config_env}-gradle.config" : 'gradle.config'
+                    configFileProvider([configFile(fileId: gradleConfigId, variable: 'CONFIG_FILE')]) {
                         sh "gradle --no-daemon -I ${CONFIG_FILE} -p ${inputs.param_project_root} clean build -U -x test"
                         if (params.param_code_analysis == true) {
                             withSonarQubeEnv(inputs.param_sonarqube_server) {

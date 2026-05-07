@@ -1,29 +1,13 @@
 nginx-gateway-fabric:
   nginxGateway:
     name: nginx-gateway
-  gateways:
-    - name: nginx
-      namespace: ops
-      spec:
-        gatewayClassName: nginx
-        listeners:
-          - name: http
-            port: 80
-            protocol: HTTP
-            hostname: '*.czy21.com'
-            allowedRoutes:
-              namespaces:
-                from: All
-          - name: https
-            port: 443
-            protocol: HTTPS
-            hostname: '*.czy21.com'
-            tls:
-              certificateRefs:
-                - name: czy21.com-secret
-                  kind: Secret
-                  group: ''
-              mode: Terminate
-            allowedRoutes:
-              namespaces:
-                from: All
+{% if 'NodePort' == param_nginx_service_type %}
+  nginx:
+    service:
+      type: NodePort
+      nodePorts:
+        - port: 80
+          listenerPort: 80
+        - port: 443
+          listenerPort: 443
+{% endif %}

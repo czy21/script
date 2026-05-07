@@ -3,7 +3,7 @@ set -e
 
 sudo install -m 0755 -d /etc/apt/keyrings
 
-sudo curl -fsSL https://repo.mysql.com/RPM-GPG-KEY-mysql-2023 -o /etc/apt/keyrings/mysql.asc
+sudo curl -fsSL https://repo.mysql.com/RPM-GPG-KEY-mysql-2025 -o /etc/apt/keyrings/mysql.asc
 sudo chmod a+r /etc/apt/keyrings/mysql.asc
 
 mysql_repo_version="{{ param_db_mysql_minor_version }}"
@@ -22,4 +22,3 @@ fi
 sudo apt-get -y update
 mysql_version=`sudo apt-cache madison mysql-server | awk '{ print $3 }' | grep "{{ param_db_mysql_patch_version }}" | head -n 1`
 sudo apt-get -y install mysql-server=${mysql_version}
-sudo systemctl daemon-reload && sudo systemctl enable mysql-server && sudo systemctl restart mysql-server

@@ -1,7 +1,9 @@
 nfs-subdir-external-provisioner:
   replicaCount: 1
+{% if param_mirror_use_proxy %}
   image:
     repository: {{ param_registry_proxy }}/sig-storage/nfs-subdir-external-provisioner
+{% endif %}
   storageClass:
     name: nfs
     defaultClass: true

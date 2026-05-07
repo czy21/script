@@ -17,6 +17,7 @@
             - "svc-redis"
             - "svc-mysql"
             - "svc-mongo"
+            - "svc-cockpit"
         - import_role:
             name: '{{ param_role_name }}'
       always:
@@ -32,6 +33,7 @@
             - "svc-redis"
             - "svc-mysql"
             - "svc-mongo"
+            - "svc-cockpit"
 
 - name: hosts
   hosts: all

@@ -1,5 +1,7 @@
 mirrors:
   docker.io:
     endpoint:
+{% if param_mirror_use_proxy %}
       - "https://{{ param_registry_proxy }}"
+{% endif %}
       - "https://registry-1.docker.io"

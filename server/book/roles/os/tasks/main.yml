@@ -72,3 +72,9 @@
     sh {{ param_remote_role_path }}/{{ param_ansible_os_family }}-mongo.sh
   tags:
     - "svc-mongo"
+
+- name: cockpit
+  shell: |-
+    sh {{ param_remote_role_path }}/{{ param_ansible_os_family }}-cockpit.sh
+  tags:
+    - "svc-cockpit"

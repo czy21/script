@@ -5,7 +5,10 @@ import org.ops.util.PathUtils
 import org.ops.util.StringUtils
 
 def build(Map inputs) {
-    configFileProvider([configFile(fileId: "docker.config", targetLocation: '.jenkins/docker/config.json')]) {}
+
+    def dockerConfigId = inputs.param_docker_config_env ? "${inputs.param_gradle_config_env}-docker.config" : 'docker.config'
+    configFileProvider([configFile(fileId: dockerConfigId, targetLocation: '.jenkins/docker/config.json')]) {}
+    env.DOCKER_CONFIG=PathUtils.ofPath(env.WORKSPACE, ".jenkins/docker/")
 
     def docker_file = inputs.param_docker_file
 
@@ -15,16 +18,18 @@ def build(Map inputs) {
         writeFile file: docker_file, text: content, encoding: 'utf-8'
     }
 
-    def docker_config_dir = PathUtils.ofPath(env.WORKSPACE, ".jenkins/docker/")
     def docker_image_tag = "${inputs.param_release_image}:${inputs.param_release_version}"
-    def sdk_version = inputs.get("param_tool_"+inputs.param_code_type+"_version")
-    def docker_build_cmd = "docker build --build-arg SDK_VERSION=${sdk_version} --tag ${docker_image_tag} --file ${docker_file} ${inputs.param_docker_context} --pull"
+    def cmd = [
+        "docker build",
+        "--build-arg REGISTRY=${inputs.param_registry}",
+        "--build-arg REGISTRY_DIR=${inputs.param_registry_dir}",
+        "--build-arg SDK_VERSION=${inputs.get('param_tool_' + inputs.param_code_type + '_version')}",
+    ]
     if (StringUtils.isNotEmpty(inputs.param_docker_build_args)) {
-        inputs.param_docker_build_args.split(",").each { t -> docker_build_cmd += " --build-arg $t" }
+        cmd.add(inputs.param_docker_build_args)
     }
-    def docker_push_cmd = "docker --config ${docker_config_dir} push ${docker_image_tag}"
-    def docker_rmi_cmd = "docker rmi ${docker_image_tag}"
-    sh "${docker_build_cmd} && ${docker_push_cmd} && ${docker_rmi_cmd}"
+    cmd.add("--tag ${docker_image_tag} --file ${docker_file} ${inputs.param_docker_context} --pull")
+    sh "${cmd.join(' ')} && docker push ${docker_image_tag} && docker rmi ${docker_image_tag}"
 }
 
 def deploy(Map inputs) {
@@ -39,8 +44,12 @@ def deploy(Map inputs) {
 
     withCredentials([dockerCert(credentialsId: 'docker-client', variable: 'DOCKER_CERT_PATH')]) {
         def param_file = PathUtils.ofPath(env.WORKSPACE, ".jenkins/inputs.yaml")
-        cmd = "DOCKER_TLS_VERIFY=1 DOCKER_HOST=tcp://${inputs.param_docker_deploy_host}:2376 docker-compose --project-name ${inputs.param_release_name} --file ${compose_file} --env-file ${param_file} up --detach --remove-orphans"
-        sh "${cmd}"
+        def cmd = [
+            "DOCKER_TLS_VERIFY=1 DOCKER_HOST=tcp://${inputs.param_docker_deploy_host}:2376",
+            "docker-compose --project-name ${inputs.param_release_name} --file ${compose_file} --env-file ${param_file}",
+            "up --detach --remove-orphans",
+        ]
+        sh "${cmd.join(' ')}"
     }
 }
 

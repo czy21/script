@@ -10,7 +10,9 @@ import org.ops.util.ValidateUtils
 
 def call(Map inputs) {
     pipeline {
-        agent any
+        agent {
+            label "${inputs.param_agent_label ?: ''}"
+        }
         parameters {
             booleanParam defaultValue: false, name: 'param_code_analysis'
             booleanParam defaultValue: false, name: 'param_clean'

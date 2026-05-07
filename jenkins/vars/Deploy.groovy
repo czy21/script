@@ -13,17 +13,18 @@ def call(Map inputs) {
         agent {
             kubernetes {
                 cloud inputs.param_env_name
-                yaml '''
+                yaml """
                   apiVersion: v1
                   kind: Pod
                   spec:
+                    serviceAccountName: jenkins-agent
                     containers:
                       - name: jnlp
-                        image: 'registry.czy21.com/library/jenkins-inbound-agent:3355.v388858a_47b_33-18-jdk21'
+                        image: "czy21/jenkins-inbound-agent:3355.v388858a_47b_33-18-jdk21"
                         imagePullPolicy: Always
                         securityContext:
                           runAsUser: 0
-        '''
+                    """
             }
         }
         stages {

@@ -4,8 +4,10 @@ services:
 
   jenkins-ssh-agent:
     image: "{{ param_registry }}/{{ param_registry_dir }}/jenkins-ssh-agent:{{ param_role_image_version }}"
-    pull_policy: always
     container_name: jenkins-ssh-agent
+    build:
+      context: {{ param_role_output_path }}
+      dockerfile: Dockerfile
     privileged: true
     ports:
       - "5022:22"

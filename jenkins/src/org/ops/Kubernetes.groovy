@@ -7,16 +7,14 @@ def deploy(Map inputs) {
     def helm_chart_file = inputs.param_helm_chart_file
 
     if (fileExists(helm_chart_file)) {
-        withKubeConfig([credentialsId: inputs.param_kube_credential]) {
-            helm_cmd = StringUtils.format(
-                    "helm dep up {0} && helm upgrade --install {1} {0} --version {2} --namespace {3} --values .jenkins/inputs.yaml --force --output yaml",
-                    inputs.param_helm_chart_context,
-                    inputs.param_release_name,
-                    inputs.param_release_version,
-                    inputs.param_release_namespace
-            )
-            sh "${helm_cmd}"
-        }
+        helm_cmd = StringUtils.format(
+                "helm dep up {0} && helm upgrade --install {1} {0} --version {2} --namespace {3} --values .jenkins/inputs.yaml --force --output yaml",
+                inputs.param_helm_chart_context,
+                inputs.param_release_name,
+                inputs.param_release_version,
+                inputs.param_release_namespace
+        )
+        sh "${helm_cmd}"
         return
     }
     def chartMap = [
@@ -42,17 +40,15 @@ def deploy(Map inputs) {
             }
     ]
     chartMap.get(inputs.param_code_type).call()
-    withKubeConfig([credentialsId: inputs.param_kube_credential]) {
-        helm_cmd = StringUtils.format(
-                "helm upgrade --install {0} {1} --version {2} --namespace {3} --repo {4} --values .jenkins/inputs.yaml --force --output yaml",
-                inputs.param_release_name,
-                inputs.param_release_chart_name,
-                inputs.param_release_chart_version,
-                inputs.param_release_namespace,
-                inputs.param_helm_repo
-        )
-        sh "${helm_cmd}"
-    }
+    helm_cmd = StringUtils.format(
+            "helm upgrade --install {0} {1} --version {2} --namespace {3} --repo {4} --values .jenkins/inputs.yaml --force --output yaml",
+            inputs.param_release_name,
+            inputs.param_release_chart_name,
+            inputs.param_release_chart_version,
+            inputs.param_release_namespace,
+            inputs.param_helm_repo
+    )
+    sh "${helm_cmd}"
 }
 
 return this;

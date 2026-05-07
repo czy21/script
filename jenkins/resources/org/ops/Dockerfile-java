@@ -1,5 +1,7 @@
+ARG REGISTRY=
+ARG REGISTRY_DIR=
 ARG SDK_VERSION=jdk21-graalvm
 
-FROM registry.czy21.com/library/${SDK_VERSION}
+FROM ${REGISTRY}/${REGISTRY_DIR}/${SDK_VERSION}
 
 COPY ./build/api.jar ${JAR}

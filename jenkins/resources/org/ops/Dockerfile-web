@@ -1,2 +1,6 @@
-FROM registry.czy21.com/library/nginx-spa
+ARG REGISTRY=
+ARG REGISTRY_DIR=
+
+FROM ${REGISTRY}/${REGISTRY_DIR}/nginx-spa
+
 COPY ./build/ .

@@ -98,8 +98,8 @@ class DockerRole(share.AbstractRole):
                 registry_targets = self.context.args.param.get("param_registry_targets").split(",") if self.context.args.param.get("param_registry_targets") else []
                 registry_target_tags = []
                 for t in registry_targets:
-                    registry_target_url = self.context.role_env.get("param_registry_{0}_url".format(t))
-                    registry_target_dir = self.context.role_env.get("param_registry_{0}_dir".format(t))
+                    registry_target_url = self.context.role_env.get("param_registry_target_{0}".format(t))
+                    registry_target_dir = self.context.role_env.get("param_registry_target_{0}_dir".format(t))
                     if not registry_target_url:
                         logger.warning("registry target: {} not exist".format(t))
                         continue
@@ -108,8 +108,9 @@ class DockerRole(share.AbstractRole):
                 _cmds.append("docker build --tag {0} --file {1} {2} --pull".format(registry_source_tag, rd.as_posix(), self.context.role_output_path.as_posix()))
                 _cmds.extend(["docker tag {} {}".format(registry_source_tag, t[1]) for t in registry_target_tags])
                 if self.context.args.push:
-                    _cmds.append("docker push {0}".format(registry_source_tag))
-                    _cmds.extend(["docker --config $HOME/.docker/{0} push {1}".format(t[0], t[1]) if "dockerhub" == t[0] else "docker push {0}".format(t[1]) for t in registry_target_tags])
+                    if not registry_target_tags:
+                        _cmds.append("docker push {0}".format(registry_source_tag))
+                    _cmds.extend(["docker --config $HOME/.docker/registry/{0} push {1}".format(t[0], t[1]) for t in registry_target_tags])
         if self.context.args.target == "doc":
             if self.any_doc_exclude(self.context.role_output_path):
                 registry_git_repo_raw_format = self.context.role_env.get("param_registry_git_repo_raw") + "/main/{0}/docker/{1}"
