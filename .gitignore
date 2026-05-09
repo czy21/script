@@ -36,3 +36,8 @@ doc/public/chart
 mkdocs.yaml
 
 apk.pub
+
+server/env-test*.yaml
+server/env-prod*.yaml
+server/book/ansible-host-test*
+server/book/ansible-host-prod*

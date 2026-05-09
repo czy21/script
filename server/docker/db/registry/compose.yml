@@ -13,10 +13,6 @@ services:
       - 5000:5000
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/var/lib/registry
-      - {{ param_docker_data }}/{{ param_role_name }}/conf/auth/htpasswd:/auth/htpasswd
     environment:
       REGISTRY_LOG_LEVEL: info
-      REGISTRY_AUTH: htpasswd
-      REGISTRY_AUTH_HTPASSWD_PATH: /auth/htpasswd
-      REGISTRY_AUTH_HTPASSWD_REALM: Registry Realm
     restart: always

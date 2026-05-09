@@ -49,19 +49,63 @@
   tags:
     - "sdk-dotnet"
 
+- name: dnsmasq conf
+  template: src=files/dnsmasq.conf dest={{ role_path }}/dnsmasq.conf
+  tags:
+    - "svc-dnsmasq-conf"
+    - "svc-dnsmasq"
+
+- name: dnsmasq conf
+  shell: |-
+    mkdir -p /etc/dnsmasq.d && cat {{ role_path }}/dnsmasq.conf | sudo tee /etc/dnsmasq.d/dnsmasq.conf > /dev/null && sudo chmod 644 /etc/dnsmasq.d/dnsmasq.conf
+  tags:
+    - "svc-dnsmasq-conf"
+    - "svc-dnsmasq"
+
+- name: dnsmasq install
+  shell: |-
+    sh {{ param_remote_role_path }}/{{ param_ansible_os_family }}-dnsmasq.sh
+  tags:
+    - "svc-dnsmasq"
+
 - name: nginx
   shell: |-
     sh {{ param_remote_role_path }}/{{ param_ansible_os_family }}-nginx.sh
   tags:
     - "svc-nginx"
 
-- name: redis
+- name: redis conf
+  template: src=files/redis.conf dest={{ role_path }}/redis.conf
+  tags:
+    - "svc-redis-conf"
+    - "svc-redis"
+
+- name: redis conf
+  shell: |-
+    mkdir -p /etc/redis && cat {{ role_path }}/redis.conf | sudo tee /etc/redis/redis.conf > /dev/null && sudo chmod 640 /etc/redis/redis.conf
+  tags:
+    - "svc-redis-conf"
+
+- name: redis install
   shell: |-
     sh {{ param_remote_role_path }}/{{ param_ansible_os_family }}-redis.sh
   tags:
     - "svc-redis"
 
-- name: mysql
+- name: mysql conf
+  template: src=files/mysqld.cnf dest={{ role_path }}/mysqld.cnf
+  tags:
+    - "svc-mysql-conf"
+    - "svc-mysql"
+
+- name: mysql conf
+  shell: |-
+    mkdir -p /etc/mysql/mysql.conf.d && cat {{ role_path }}/mysqld.cnf | sudo tee /etc/mysql/mysql.conf.d/mysqld.cnf > /dev/null && sudo chmod 644 /etc/mysql/mysql.conf.d/mysqld.cnf
+  tags:
+    - "svc-mysql-conf"
+    - "svc-mysql"
+
+- name: mysql install
   shell: |-
     sh {{ param_remote_role_path }}/{{ param_ansible_os_family }}-mysql.sh
   tags:
