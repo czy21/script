@@ -1,7 +1,7 @@
 services:
   
   netbird-dashboard:
-    image: netbirdio/dashboard:v2.36.0
+    image: netbirdio/dashboard:v2.37.0
     container_name: netbird-dashboard
     ports:
       - '8080:80'
@@ -25,7 +25,7 @@ services:
     restart: always
 
   netbird-server:
-    image: netbirdio/netbird-server:0.67.3
+    image: netbirdio/netbird-server:0.70.5
     container_name: netbird-server
     ports:
       - '8081:80'

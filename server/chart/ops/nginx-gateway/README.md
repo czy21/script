@@ -26,8 +26,6 @@ spec:
       protocol: HTTPS
       tls:
         certificateRefs:
-          - name: czy21.com-secret
-            kind: Secret
           - name: cf-czy21.net-secret
             kind: Secret
 ```

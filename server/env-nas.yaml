@@ -1,8 +1,0 @@
-param_disk2_path: /volume2
-
-# default
-param_docker_root: "{{ param_disk_path }}/docker"
-
-param_media_path: "{{ param_disk2_path }}/@team/media"
-
-param_user_ops: admin
