@@ -13,8 +13,12 @@ unset -v args
 unset -v is_requirement
 unset -v is_debug
 
-host=$1
-shift
+name=$1
+host=$2
+
+shift 2
+
+main_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 while [ $# -gt 0 ];do
   case "$1" in
@@ -48,14 +52,18 @@ if [[ "$os_name" =~ "NT" ]];then
   PYTHON_EXEC="${PYTHON_HOME}/Scripts/python3"
 fi
 
-src_path=$(pwd)
-dst_name=script-$(basename ${src_path})
+src_path=$main_dir/$name
+if [ ! -d "$src_path" ];then
+  echo "${name} not found"
+  exit 1
+fi
+
+dst_name=script-$name
 tmp_name=___temp
 build_name=build
 utility_path=$(realpath ${src_path}/../../utility)
 del_cmd="rm -rf \$HOME/${dst_name}"
 ssh_opt="-o StrictHostKeyChecking=no"
-src_path_server_files=$(cd ${src_path}/../;find . -maxdepth 1 -type f ! -name "share.sh" -and ! -name "README.md" -exec sh -c 'f={};echo ./server/$(basename $f)' \;)
 
 pypi="https://pypi.tuna.tsinghua.edu.cn/simple/"
 
@@ -71,11 +79,18 @@ ${PYTHON_EXEC} -B \$HOME/${dst_name}/main.py $args
 EOF
 )
 
-tar -zcf - --exclude="__pycache__" --exclude="${build_name}" \
--C ${src_path} . \
--C $(realpath ${utility_path}/../) ./$(basename ${utility_path}) \
--C $(realpath ${src_path}/../../) ${src_path_server_files} \
-| ${host_cmd} "mkdir -p \$HOME/${dst_name};tar -zxf - -C \$HOME/${dst_name}"
+tar_args=
+tar_args+="-C $(realpath ${utility_path}/../) ./$(basename ${utility_path}) "
+tar_args+="-C $(realpath ${src_path}/../../) `cd ${src_path}/../;find . -maxdepth 1 -type f ! -name "main.sh" -and ! -name "README.md" -exec sh -c 'f={};echo ./server/$(basename $f)' \;` "
+tar_args+="-C ${src_path} . "
+
+if [ -d "$main_dir_ext" ];then
+  src_path_ext=$main_dir_ext/$name
+  tar_args+="-C $(realpath ${src_path_ext}/../../) `cd ${src_path_ext}/../;find . -maxdepth 1 -type f ! -name "main.sh" -and ! -name "README.md" -exec sh -c 'f={};echo ./server/$(basename $f)' \;` "
+  [ -d "$src_path_ext" ] && tar_args+="-C ${src_path_ext} . "
+fi
+
+tar -zcf - --exclude="__pycache__" --exclude="${build_name}" ${tar_args} | ${host_cmd} "mkdir -p \$HOME/${dst_name};tar -zxf - -C \$HOME/${dst_name}"
 ${host_cmd} "${cmd}"
 ${host_cmd} "[ -d \$HOME/${dst_name} ]" && ${host_cmd} "tar -zcf - -C \$HOME/${dst_name} ${tmp_name} ${build_name}" | tar -zxf - -C ${src_path}
 
