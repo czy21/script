@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# bash main.sh [name] [user@host]
 # -r              install requirements.txt
 
 shopt -s expand_aliases
@@ -59,7 +60,7 @@ if [ ! -d "$src_path" ];then
 fi
 
 dst_name=script-$name
-tmp_name=___temp
+tmp_name=.temp
 build_name=build
 utility_path=$(realpath ${src_path}/../../utility)
 del_cmd="rm -rf \$HOME/${dst_name}"
@@ -79,6 +80,13 @@ ${PYTHON_EXEC} -B \$HOME/${dst_name}/main.py $args
 EOF
 )
 
+tar_exts=
+tar_exts+="--exclude=__pycache__ --exclude=${build_name} --exclude=.DS_Store "
+
+if echo "$*" | grep -qE 'build[[:space:]]+--target[[:space:]]+doc'; then
+  tar_exts+="--exclude=README.md "
+fi
+
 tar_args=
 tar_args+="-C $(realpath ${utility_path}/../) ./$(basename ${utility_path}) "
 tar_args+="-C $(realpath ${src_path}/../../) `cd ${src_path}/../;find . -maxdepth 1 -type f ! -name "main.sh" -and ! -name "README.md" -exec sh -c 'f={};echo ./server/$(basename $f)' \;` "
@@ -90,7 +98,7 @@ if [ -d "$main_dir_ext" ];then
   [ -d "$src_path_ext" ] && tar_args+="-C ${src_path_ext} . "
 fi
 
-tar -zcf - --exclude="__pycache__" --exclude="${build_name}" ${tar_args} | ${host_cmd} "mkdir -p \$HOME/${dst_name};tar -zxf - -C \$HOME/${dst_name}"
+tar -zcf - ${tar_exts} ${tar_args} | ${host_cmd} "mkdir -p \$HOME/${dst_name};tar -zxf - -C \$HOME/${dst_name}"
 ${host_cmd} "${cmd}"
 ${host_cmd} "[ -d \$HOME/${dst_name} ]" && ${host_cmd} "tar -zcf - -C \$HOME/${dst_name} ${tmp_name} ${build_name}" | tar -zxf - -C ${src_path}
 

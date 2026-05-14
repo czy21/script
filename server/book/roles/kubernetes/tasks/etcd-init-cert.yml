@@ -5,6 +5,6 @@
 - name: etcd pull cert
   synchronize:
     src: "{{ param_remote_role_path }}/{{ param_k8s_etcd_cluster_name }}"
-    dest: "___temp/"
+    dest: ".temp/"
     mode: pull
   when: inventory_hostname == groups["master"][0]

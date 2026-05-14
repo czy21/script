@@ -20,7 +20,7 @@ if __name__ == '__main__':
     pwd = pathlib.Path(__file__).parent
     build_path = pwd.joinpath("build")
     build_path.mkdir(exist_ok=True)
-    tmp_path = pwd.joinpath("___temp")
+    tmp_path = pwd.joinpath(".temp")
     tmp_path.mkdir(exist_ok=True)
     log_file = build_path.joinpath("share.log")
     log_util.init_logger(file=log_file)

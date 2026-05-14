@@ -14,7 +14,7 @@ RUN apt-get install --yes nginx wget \
  && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p ${PULSAR_MANAGER_HOME}
-#COPY ___temp/apache-pulsar-manager-${PULSAR_MANAGER_VERSION}-bin.tar.gz ${PULSAR_MANAGER_HOME}/src.tgz
+#COPY .temp/apache-pulsar-manager-${PULSAR_MANAGER_VERSION}-bin.tar.gz ${PULSAR_MANAGER_HOME}/src.tgz
 RUN wget -nv -O ${PULSAR_MANAGER_HOME}/src.tgz ${PULSAR_MANAGER_TGZ_URL};
 RUN tar -xf ${PULSAR_MANAGER_HOME}/src.tgz --strip-components=1 -C ${PULSAR_MANAGER_HOME} \
  && tar -xf ${PULSAR_MANAGER_HOME}/pulsar-manager.tar --strip-components=1 -C ${PULSAR_MANAGER_HOME} \

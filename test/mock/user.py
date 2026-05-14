@@ -15,7 +15,7 @@ def write_sql(items, file):
 
 def generate(total: int):
     fake: Faker = Faker(locale="zh-CN")
-    temp_dir = pathlib.Path(__file__).parent.joinpath("___temp")
+    temp_dir = pathlib.Path(__file__).parent.joinpath(".temp")
     csv_file = temp_dir.joinpath("customer.csv")
     sql_file = temp_dir.joinpath("customer.sql")
     data = []

@@ -13,6 +13,7 @@
     - "os"
 
 - win_copy: src={{ param_source_home }}/win-app dest={{ param_remote_path }}/
+  when: 'inventory_hostname not in ["127.0.0.1","localhost"]'
   tags:
     - "win-app"
 

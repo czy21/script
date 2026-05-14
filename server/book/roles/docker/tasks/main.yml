@@ -1,5 +1,5 @@
 - name: ca
-  synchronize: src=___temp/ca dest={{ param_remote_role_path }}
+  synchronize: src=.temp/ca dest={{ param_remote_role_path }}
   when: param_docker_tls_verify
   tags:
     - '{{ param_role_name }}'

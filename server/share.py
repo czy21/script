@@ -88,7 +88,7 @@ def get_dir_dict(path: pathlib.Path, exclude_rules: list = None, select_tip="", 
 
 def select_namespace(root_path: pathlib.Path, deep: int = 1, exclude_rules=None, args: argparse.Namespace = None) -> list[Namespace]:
     exclude_rules = exclude_rules if exclude_rules else []
-    exclude_rules.extend(["___temp/", "build/", root_path.joinpath("utility").as_posix(), root_path.joinpath("server").as_posix()])
+    exclude_rules.extend([".temp/", "build/", root_path.joinpath("utility").as_posix(), root_path.joinpath("server").as_posix()])
     flat_dirs = dfs_dir(root_path, exclude_rules=exclude_rules)
     deep_index = 1
     namespaces = []
@@ -232,7 +232,7 @@ class Installer:
         self.home_path: pathlib.Path = root_path.joinpath("..").resolve()
         self.root_path: pathlib.Path = root_path
         self.build_path: pathlib.Path = root_path.joinpath("build")
-        self.tmp_path: pathlib.Path = root_path.joinpath("___temp")
+        self.tmp_path: pathlib.Path = root_path.joinpath(".temp")
         self.bak_path: pathlib.Path = self.tmp_path.joinpath("bak")
         self.jinja2ignore_file: pathlib.Path = root_path.joinpath(".jinja2ignore")
         self.role_class: typing.Type[AbstractRole] = role_class
@@ -329,7 +329,7 @@ class Installer:
                 role_path: pathlib.Path = r.path
                 role_title = "%s.%s" % (role_key, role_name)
                 role_log_prefix = role_title
-                role_temp_path = role_path.joinpath("___temp")
+                role_temp_path = role_path.joinpath(".temp")
                 role_temp_path.mkdir(parents=True, exist_ok=True)
                 role_bak_path = role_temp_path.joinpath("bak")
                 role_build_path = role_path.joinpath("build")
@@ -357,7 +357,7 @@ class Installer:
                 file_util.write_text(role_env_output_file, yaml_util.dump(role_env))
                 role_env |= args.param
                 # process template
-                for t in filter(lambda f: f.is_file() and not any(regex_util.match_rules(["build/", "___temp/", role_env_file.name], f.as_posix()).values()), role_path.rglob("*")):
+                for t in filter(lambda f: f.is_file() and not any(regex_util.match_rules(["build/", ".temp/", role_env_file.name], f.as_posix()).values()), role_path.rglob("*")):
                     _rules = regex_util.match_rules([*jinja2ignore_rules], t.as_posix(), ".jinja2ignore {0}".format(self.__loop_namespaces.__name__))
                     role_output_file = role_output_path.joinpath(t.relative_to(role_path))
                     if not any(_rules.values()):
@@ -419,7 +419,7 @@ class Installer:
 
 
 if __name__ == '__main__':
-    log_util.init_logger(file=pathlib.Path(__file__).parent.joinpath("___temp/share.log"))
+    log_util.init_logger(file=pathlib.Path(__file__).parent.joinpath(".temp/share.log"))
     logger.setLevel(logging.DEBUG)
     # select_namespace(pathlib.Path(__file__).parent.joinpath("docker"), deep=2)
     Installer(pathlib.Path(__file__).parent).run()

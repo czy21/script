@@ -7,7 +7,7 @@ ENV KE_HOME=/opt/kafka-eagle
 ENV PATH=$KE_HOME/bin:$PATH
 
 RUN mkdir -p $KE_HOME
-#COPY ___temp/efak-web-${KE_VERSION}-bin.tar.gz $KE_HOME/src.gz
+#COPY .temp/efak-web-${KE_VERSION}-bin.tar.gz $KE_HOME/src.gz
 RUN wget -nv -O $KE_HOME/src.gz $KE_TGZ_URL;
 RUN tar -xf $KE_HOME/src.gz --strip-components=1 -C $KE_HOME && rm $KE_HOME/src.gz && chown -R root:root $KE_HOME
 

@@ -5,4 +5,5 @@
   with_fileglob:
     - "roles/{{ param_role_name }}/templates/*"
 
-- copy: src={{ inventory_dir }}/___temp/private-key dest={{ param_remote_path }}/___temp/ mode=600
+- copy: src={{ inventory_dir }}/.temp/private-key dest={{ param_remote_path }}/.temp/ mode=600
+  when: 'inventory_hostname not in ["127.0.0.1","localhost"]'

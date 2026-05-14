@@ -8,7 +8,7 @@ from utility import file as file_util, template as template_util
 
 def collect_doc(source_name):
     source_path = root_path.joinpath("server/{0}".format(source_name))
-    share.execute(f"rm -rf {source_path.as_posix()}/build && sh {source_path.parent.as_posix()}/main.sh {source_name} local build --target doc --env-active public --all-namespace")
+    share.execute(f"rm -rf {source_path.as_posix()}/build && bash {source_path.parent.as_posix()}/main.sh {source_name} local build --target doc --env-active public --all-namespace")
     source_build_dir = source_path.joinpath("build")
     target_dir = doc_public.joinpath(source_name)
     shutil.rmtree(target_dir, ignore_errors=True)
