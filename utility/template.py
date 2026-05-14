@@ -2,7 +2,7 @@ import typing
 
 import jinja2
 
-from utility.basic import getpwnam_uid, getpwnam_gid
+from utility.basic import get_user,get_uid, get_gid
 from utility.path import join_path
 from utility.safe import decrypt, htpasswd
 
@@ -21,8 +21,9 @@ class Template:
         env.filters["decrypt"] = lambda value: value if isinstance(value, Undefined) else decrypt(value)
         env.filters["htpasswd"] = lambda value: value if isinstance(value, Undefined) else htpasswd(value)
         env.filters["format_args"] = lambda value, pattern: value if isinstance(value, Undefined) else pattern.format(value) if isinstance(value, str) else pattern.format(*value)
-        env.filters["get_uid"] = lambda value: value if isinstance(value, Undefined) else getpwnam_uid(value)
-        env.filters["get_gid"] = lambda value: value if isinstance(value, Undefined) else getpwnam_gid(value)
+        env.filters["get_user"] = lambda value: get_user()
+        env.filters["get_uid"] = lambda value: value if isinstance(value, Undefined) else get_uid(value)
+        env.filters["get_gid"] = lambda value: value if isinstance(value, Undefined) else get_gid(value)
         self.text = text
         self._templator = env.from_string(text)
 

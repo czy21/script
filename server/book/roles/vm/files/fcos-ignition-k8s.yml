@@ -2,9 +2,9 @@ variant: fcos
 version: 1.5.0
 passwd:
   users:
-    - name: {{ param_user_ops }}
+    - name: {{ param_user }}
       ssh_authorized_keys:
-        - {{ param_user_ops_ssh_public_key }}
+        - {{ param_user_ssh_public_key }}
       groups:
         - wheel
         - docker

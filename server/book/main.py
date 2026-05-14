@@ -32,7 +32,7 @@ if __name__ == '__main__':
     parser.add_argument('-f', '--file', required=True, type=str, help="inventory file")
     parser.add_argument('-t', '--tag', required=True, type=str, help="t1,t2")
     parser.add_argument('-k', '--ask-pass', action="store_true", help="ask for connection password")
-    parser.add_argument('-u', '--user', required=False, type=str, help="connect as this user (default=[param_user_ops])")
+    parser.add_argument('-u', '--user', required=False, type=str, help="connect as this user (default=[param_user])")
     parser.add_argument('--no-step', action="store_true", help="disable one-step-at-a-time")
     args = parser.parse_args()
     args.param = dict(args.param)
@@ -45,7 +45,7 @@ if __name__ == '__main__':
     env_dict = share.Installer.load_env_file(args.env_active, args.param)
     file_util.write_text(pwd.joinpath("vars/env.yml"), yaml_util.dump(env_dict))
     if not args.user:
-        args.user = env_dict["param_user_ops"]
+        args.user = env_dict["param_user"]
     if args.ansible_host:
         ansible_host_file = pwd.joinpath(args.ansible_host).as_posix()
     ansible_inventory_file = pathlib.Path(args.file).as_posix() if pathlib.Path(args.file).is_absolute() else pwd.joinpath(args.file).as_posix()

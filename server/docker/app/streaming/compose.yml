@@ -46,8 +46,8 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/data/radarr/:/config/
       - {{ param_media_path }}:/data/media/
     environment:
-      PUID: {{ param_user_ops_uid }}
-      PGID: {{ param_user_ops_gid }}
+      PUID: {{ param_user_uid }}
+      PGID: {{ param_user_gid }}
       TZ: Asia/Shanghai
     restart: always
 
@@ -60,8 +60,8 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/data/sonarr/:/config/
       - {{ param_media_path }}:/data/media/
     environment:
-      PUID: {{ param_user_ops_uid }}
-      PGID: {{ param_user_ops_gid }}
+      PUID: {{ param_user_uid }}
+      PGID: {{ param_user_gid }}
       TZ: Asia/Shanghai
     restart: always
 
@@ -74,8 +74,8 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/data/bazarr/:/config/
       - {{ param_media_path }}:/data/media/
     environment:
-      PUID: {{ param_user_ops_uid }}
-      PGID: {{ param_user_ops_gid }}
+      PUID: {{ param_user_uid }}
+      PGID: {{ param_user_gid }}
       TZ: Asia/Shanghai
     restart: always
 
@@ -88,7 +88,7 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/data/chinesesubfinder/:/config/
       - {{ param_media_path }}:/media/
     environment:
-      PUID: {{ param_user_ops_uid }}    
-      PGID: {{ param_user_ops_gid }}        
+      PUID: {{ param_user_uid }}    
+      PGID: {{ param_user_gid }}        
       TZ: Asia/Shanghai
     restart: always

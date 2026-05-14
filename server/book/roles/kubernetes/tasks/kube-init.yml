@@ -10,5 +10,5 @@
   shell: |
     sudo kubeadm init --config {{ param_remote_role_path }}/k8s-config.yml --upload-certs
     sudo -i eval '[ -z ${KUBECONFIG} ] && echo 'export KUBECONFIG=/etc/kubernetes/admin.conf' >> ~/.bashrc;'
-    sudo -u {{ param_user_ops }} bash -c "[ -z ${KUBECONFIG} ] && echo 'export KUBECONFIG=.kube/config' >> ~/.bashrc;set -e;cd;mkdir -p .kube;sudo cat /etc/kubernetes/admin.conf | tee .kube/config > /dev/null"
+    sudo -u {{ param_user }} bash -c "[ -z ${KUBECONFIG} ] && echo 'export KUBECONFIG=.kube/config' >> ~/.bashrc;set -e;cd;mkdir -p .kube;sudo cat /etc/kubernetes/admin.conf | tee .kube/config > /dev/null"
   when: inventory_hostname == groups["master"][0]

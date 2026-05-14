@@ -28,6 +28,7 @@ def load(stream: Union[str, pathlib.Path]) -> dict:
     yaml.add_constructor('!decrypt', lambda loader, node: safe_util.decrypt(*loader.construct_sequence(node, deep=True)), loader1)
     yaml.add_constructor('!htpasswd', lambda loader, node: safe_util.htpasswd(*loader.construct_sequence(node, deep=True)), loader1)
     yaml.add_constructor("!join_path", lambda loader, node: path_util.join_path(*loader.construct_sequence(node, deep=True)), loader1)
+    yaml.add_constructor("!get_user", lambda loader, node: basic_util.get_user(), loader1)
     yaml.add_constructor("!get_uid", lambda loader, node: basic_util.getpwnam_uid(*loader.construct_sequence(node, deep=True)), loader1)
     yaml.add_constructor("!get_gid", lambda loader, node: basic_util.getpwnam_gid(*loader.construct_sequence(node, deep=True)), loader1)
 

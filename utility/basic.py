@@ -5,14 +5,17 @@ import os
 import pathlib
 import subprocess
 import re
+import getpass
 
 if os.name != "nt":
     import pwd
 
 logger = logging.getLogger()
 
+def get_user():
+    return getpass.getuser()
 
-def getpwnam_uid(name, default=1000):
+def get_uid(name, default=1000):
     if os.name == "nt":
         return name
     try:
@@ -22,7 +25,7 @@ def getpwnam_uid(name, default=1000):
     return default
 
 
-def getpwnam_gid(name, default=1000):
+def get_gid(name, default=1000):
     if os.name == "nt":
         return name
     try:

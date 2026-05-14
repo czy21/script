@@ -6,7 +6,7 @@ services:
     pull_policy: always
     container_name: {{ param_role_name }}
     hostname: {{ param_role_name }}
-    user: {{ param_user_ops }}
+    user: {{ param_user }}
     tty: true
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/data/

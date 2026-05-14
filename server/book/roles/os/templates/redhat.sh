@@ -11,11 +11,11 @@ if [ "centos" == "{{ param_ansible_distribution }}" ];then
   dnf -y install python39
 fi
 
-grep '{{ param_user_ops }}' /etc/passwd -q || useradd -m {{ param_user_ops }} && usermod -aG wheel {{ param_user_ops }} && passwd -d {{ param_user_ops }} && chown {{ param_user_ops }}:{{ param_user_ops }} /home/{{ param_user_ops }}
+grep '{{ param_user }}' /etc/passwd -q || useradd -m {{ param_user }} && usermod -aG wheel {{ param_user }} && passwd -d {{ param_user }} && chown {{ param_user }}:{{ param_user }} /home/{{ param_user }}
 
-public_key="set -e;cd;mkdir -p .ssh;chmod 700 .ssh;echo {{ param_user_ops_ssh_public_key }} > .ssh/authorized_keys;chmod 644 .ssh/authorized_keys"
+public_key="set -e;cd;mkdir -p .ssh;chmod 700 .ssh;echo {{ param_user_ssh_public_key }} > .ssh/authorized_keys;chmod 644 .ssh/authorized_keys"
 sudo -u root bash -c "${public_key}"
-sudo -u {{ param_user_ops }} bash -c "${public_key}"
+sudo -u {{ param_user }} bash -c "${public_key}"
 
 systemctl stop firewalld && systemctl disable firewalld
 

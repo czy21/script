@@ -18,8 +18,8 @@ services:
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/data/config/:/config/
     environment:
-      PUID: {{ param_user_ops_uid }}
-      PGID: {{ param_user_ops_gid }}
+      PUID: {{ param_user_uid }}
+      PGID: {{ param_user_gid }}
       TZ: Asia/Shanghai
       DB_CONNECTION: mysql
       DB_HOST: "{{ param_db_mysql_host }}"

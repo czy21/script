@@ -14,9 +14,9 @@ apt-get -y install ca-certificates lsb-release curl wget vim git nfs-common cifs
 
 # install optional
 #apt -y install mysql-client postgresql-client
-grep '{{ param_user_ops }}' /etc/passwd -q || useradd -m {{ param_user_ops }} -s /bin/bash && usermod -aG sudo {{ param_user_ops }}
-public_key="set -e;cd;mkdir -p .ssh;chmod 700 .ssh;echo {{ param_user_ops_ssh_public_key }} > .ssh/authorized_keys;chmod 644 .ssh/authorized_keys"
-sudo -u {{ param_user_ops }} bash -c "${public_key}"
+grep '{{ param_user }}' /etc/passwd -q || useradd -m {{ param_user }} -s /bin/bash && usermod -aG sudo {{ param_user }}
+public_key="set -e;cd;mkdir -p .ssh;chmod 700 .ssh;echo {{ param_user_ssh_public_key }} > .ssh/authorized_keys;chmod 644 .ssh/authorized_keys"
+sudo -u {{ param_user }} bash -c "${public_key}"
 
 # fix: Missing privilege separation directory: /run/sshd
 echo 'd /var/run/sshd 0755 root' > /usr/lib/tmpfiles.d/sshd.conf

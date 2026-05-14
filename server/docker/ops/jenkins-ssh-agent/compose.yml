@@ -20,7 +20,7 @@ services:
       - /var/run/:/var/run/
       - /tmp/:/tmp/
     environment:
-      JENKINS_AGENT_SSH_PUBKEY: "{{ param_user_ops_ssh_public_key }}"
+      JENKINS_AGENT_SSH_PUBKEY: "{{ param_user_ssh_public_key }}"
       DOCKER_HOST: tcp://docker:2376
       DOCKER_CERT_PATH: /docker-certs/client
       DOCKER_TLS_VERIFY: 1
