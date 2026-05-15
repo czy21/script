@@ -7,6 +7,7 @@ import shutil
 import sys
 import typing
 from abc import ABCMeta
+from box import Box
 from enum import Enum
 
 import urllib3
@@ -266,7 +267,7 @@ class Installer:
 
         scan_env_files(list(server_path.glob("env*")))
         scan_env_files(list(root_path.glob("env*")))
-        return yaml_util.YamlPropertySourceLoader(env_files).load(env_extra)
+        return Box(yaml_util.YamlPropertySourceLoader(env_files).load(env_extra))
 
     @staticmethod
     def set_common_argument(parser: argparse.ArgumentParser):
@@ -372,7 +373,7 @@ class Installer:
                         target_file = role_output_path.joinpath(args.target)
                         if target_file.exists():
                             _cmds.append("sh {0} {1}".format(target_file.as_posix(), " ".join(args.build_args)))
-                role_node_name = role_env.get("param_cluster_name", "null")
+                role_node_name = role_env.get("param_node_name", "null")
                 role_context = RoleContext(
                     home_path=self.home_path,
                     root_path=self.root_path,

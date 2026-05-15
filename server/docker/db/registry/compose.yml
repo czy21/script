@@ -1,14 +1,7 @@
-x-traefik-label: &traefik-label
-  traefik.enable: true
-  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
-  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 5000
-
 services:
   registry:
-    image: registry:3
+    image: registry:3.1.1
     container_name: registry
-    labels:
-      <<: *traefik-label
     ports:
       - 5000:5000
     volumes:
