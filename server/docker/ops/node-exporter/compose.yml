@@ -5,9 +5,7 @@ services:
   node-exporter:
     image: prom/node-exporter:v1.11.1
     container_name: node-exporter
-    network_mode: host
-    ports:
-      - "9100:9100"
+    network_mode: host # 9100
     volumes:
       - '/:/host:ro,rslave'
     command:

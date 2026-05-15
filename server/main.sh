@@ -89,12 +89,12 @@ fi
 
 tar_args=
 tar_args+="-C $(realpath ${utility_path}/../) ./$(basename ${utility_path}) "
-tar_args+="-C $(realpath ${src_path}/../../) `cd ${src_path}/../;find . -maxdepth 1 -type f ! -name "main.sh" -and ! -name "README.md" -exec sh -c 'f={};echo ./server/$(basename $f)' \;` "
+tar_args+="-C $(realpath ${main_dir}/../) `cd ${main_dir};find . -maxdepth 1 -type f ! -name "main.sh" -and ! -name "README.md" -exec sh -c 'f={};echo ./server/$(basename $f)' \;` "
 tar_args+="-C ${src_path} . "
 
 if [ -d "$main_dir_ext" ];then
   src_path_ext=$main_dir_ext/$name
-  tar_args+="-C $(realpath ${src_path_ext}/../../) `cd ${src_path_ext}/../;find . -maxdepth 1 -type f ! -name "main.sh" -and ! -name "README.md" -exec sh -c 'f={};echo ./server/$(basename $f)' \;` "
+  tar_args+="-C $(realpath ${main_dir_ext}/../) `cd ${main_dir_ext};find . -maxdepth 1 -type f ! -name "main.sh" -and ! -name "README.md" -exec sh -c 'f={};echo ./server/$(basename $f)' \;` "
   [ -d "$src_path_ext" ] && tar_args+="-C ${src_path_ext} . "
 fi
 

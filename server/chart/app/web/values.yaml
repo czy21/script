@@ -1,7 +1,6 @@
-param_release_version: ""
+param_registry:
+param_registry_dir:
+param_release_version:
+param_release_image:
 param_app_name: ""
 param_app_version: v1
-param_image_name: ""
-param_image_version: ""
-param_registry: ""
-param_registry_dir: ""

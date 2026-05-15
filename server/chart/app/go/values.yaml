@@ -1,6 +1,7 @@
-param_release_version:
 param_registry:
 param_registry_dir:
+param_release_version:
+param_release_image:
 param_replicas: 2
 param_data_claim_name: "data-app"
 param_app_args: ""

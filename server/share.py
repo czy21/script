@@ -267,7 +267,7 @@ class Installer:
 
         scan_env_files(list(server_path.glob("env*")))
         scan_env_files(list(root_path.glob("env*")))
-        return Box(yaml_util.YamlPropertySourceLoader(env_files).load(env_extra))
+        return yaml_util.YamlPropertySourceLoader(env_files).load(env_extra)
 
     @staticmethod
     def set_common_argument(parser: argparse.ArgumentParser):
