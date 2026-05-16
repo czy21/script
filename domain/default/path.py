@@ -2,7 +2,7 @@
 import pathlib
 
 root_path = pathlib.Path(__file__, "../../../../").resolve()
-output_path = pathlib.Path(root_path, "___output")
+output_path = pathlib.Path(root_path, ".output")
 
 source_db = pathlib.Path(root_path, "db")
 

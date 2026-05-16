@@ -11,3 +11,10 @@
     sudo chown root:root /usr/local/bin/velero && sudo chmod +x /usr/local/bin/velero
     sudo ln -sf /usr/local/bin/velero /usr/bin/velero
     velero completion bash | sudo tee /etc/bash_completion.d/velero > /dev/null
+
+- name: sops install
+  shell: |
+    sudo wget -O /usr/local/bin/sops https://github.com/getsops/sops/releases/download/v{{ param_sops_version }}/sops-v{{ param_sops_version }}.linux.amd64
+    sudo chown root:root /usr/local/bin/sops && sudo chmod +x /usr/local/bin/sops
+    sudo ln -sf /usr/local/bin/sops /usr/bin/sops
+    sops completion bash | sudo tee /etc/bash_completion.d/sops > /dev/null
