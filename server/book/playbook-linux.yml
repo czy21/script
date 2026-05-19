@@ -20,6 +20,7 @@
             - "svc-redis"
             - "svc-mysql-conf"
             - "svc-mysql"
+            - "svc-mongo-conf"
             - "svc-mongo"
             - "svc-cockpit"
         - import_role:
@@ -40,6 +41,7 @@
             - "svc-redis"
             - "svc-mysql-conf"
             - "svc-mysql"
+            - "svc-mongo-conf"
             - "svc-mongo"
             - "svc-cockpit"
 

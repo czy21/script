@@ -57,7 +57,7 @@
 
 - name: dnsmasq conf
   shell: |-
-    mkdir -p /etc/dnsmasq.d && cat {{ role_path }}/dnsmasq.conf | sudo tee /etc/dnsmasq.d/dnsmasq.conf > /dev/null && sudo chmod 644 /etc/dnsmasq.d/dnsmasq.conf
+    sudo mkdir -p /etc/dnsmasq.d && cat {{ role_path }}/dnsmasq.conf | sudo tee /etc/dnsmasq.d/dnsmasq.conf > /dev/null && sudo chmod 644 /etc/dnsmasq.d/dnsmasq.conf
   tags:
     - "svc-dnsmasq-conf"
     - "svc-dnsmasq"
@@ -82,7 +82,7 @@
 
 - name: redis conf
   shell: |-
-    mkdir -p /etc/redis && cat {{ role_path }}/redis.conf | sudo tee /etc/redis/redis.conf > /dev/null && sudo chmod 640 /etc/redis/redis.conf
+    sudo mkdir -p /etc/redis && cat {{ role_path }}/redis.conf | sudo tee /etc/redis/redis.conf > /dev/null && sudo chmod 640 /etc/redis/redis.conf
   tags:
     - "svc-redis-conf"
 
@@ -100,7 +100,7 @@
 
 - name: mysql conf
   shell: |-
-    mkdir -p /etc/mysql/mysql.conf.d && cat {{ role_path }}/mysqld.cnf | sudo tee /etc/mysql/mysql.conf.d/mysqld.cnf > /dev/null && sudo chmod 644 /etc/mysql/mysql.conf.d/mysqld.cnf
+    sudo mkdir -p /etc/mysql/mysql.conf.d && cat {{ role_path }}/mysqld.cnf | sudo tee /etc/mysql/mysql.conf.d/mysqld.cnf > /dev/null && sudo chmod 644 /etc/mysql/mysql.conf.d/mysqld.cnf
   tags:
     - "svc-mysql-conf"
     - "svc-mysql"
@@ -110,6 +110,19 @@
     sh {{ param_remote_role_path }}/{{ param_ansible_os_family }}-mysql.sh
   tags:
     - "svc-mysql"
+
+- name: mysql conf
+  template: src=files/mongod.cnf dest={{ role_path }}/mongod.cnf
+  tags:
+    - "svc-mysql-conf"
+    - "svc-mysql"
+
+- name: mongo conf
+  shell: |-
+    cat {{ role_path }}/mongod.conf | sudo tee /etc/mongod.conf > /dev/null && sudo chmod 644 /etc/mongod.conf
+  tags:
+    - "svc-mongo-conf"
+    - "svc-mongo"
 
 - name: mongo
   shell: |-
