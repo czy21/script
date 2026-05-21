@@ -17,7 +17,7 @@ argo-workflows:
   artifactRepository:
     s3: 
       endpoint: "{{ param_s3_endpoint }}"
-      bucket: argo
+      bucket: "{{ param_s3_bucket or 'argo' }}"
       accessKeySecret:
         name: argo-artifact-credentials
         key: accessKey

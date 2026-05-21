@@ -76,7 +76,7 @@ class YamlPropertySourceLoader:
                 resolver.resolve_placeholder(t, name, t.getProperty(name))
         d = {}
         for t in reversed(sources):
-            logger.info("load env_file: %s" % t.name)
             d |= t.source
+        logger.info("load env_files: "+ ",".join([t.name for t in reversed(sources)]))
         d |= extra if extra is not None else {}
         return d

@@ -94,7 +94,7 @@ tar_args+="-C ${src_path} . "
 
 if [ -d "$main_dir_ext" ];then
   src_path_ext=$main_dir_ext/$name
-  tar_args+="-C $(realpath ${main_dir_ext}/../) `cd ${main_dir_ext};find . -maxdepth 1 -type f ! -name "main.sh" -and ! -name "README.md" -exec sh -c 'f={};echo ./server/$(basename $f)' \;` "
+  tar_args+="-C $(realpath ${main_dir_ext}/../) ./server/config "
   [ -d "$src_path_ext" ] && tar_args+="-C ${src_path_ext} . "
 fi
 

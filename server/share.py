@@ -264,9 +264,10 @@ class Installer:
                     env_files.append(se)
             for e in env_active:
                 env_files.extend([se for se in src_env_files if se.stem == "env-{0}".format(e)])
-
-        scan_env_files(list(server_path.glob("env*")))
+        
         scan_env_files(list(root_path.glob("env*")))
+        scan_env_files(list(server_path.glob("env*")))
+        scan_env_files(list(server_path.joinpath("config").glob("env*")))
         return yaml_util.YamlPropertySourceLoader(env_files).load(env_extra)
 
     @staticmethod

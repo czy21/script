@@ -53,6 +53,8 @@ spec:
             - name: JAVA_OPTS
               value: {{ .Values.param_app_args }}
           volumeMounts:
+            - name: conf
+              mountPath: /app/config
             - name: data
               mountPath: /app/data/
               subPath: data
@@ -74,6 +76,9 @@ spec:
             timeoutSeconds: 2
             failureThreshold: 3
       volumes:
+        - name: conf
+          configMap:
+            name: {{ include "app.fullname" . }}
         - name: data
           persistentVolumeClaim:
             claimName: {{ .Values.param_data_claim_name }}
