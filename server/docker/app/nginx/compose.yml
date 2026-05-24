@@ -13,4 +13,5 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/snippets/:/etc/nginx/snippets/
       - {{ param_docker_data }}/{{ param_role_name }}/conf/cert/:/etc/nginx/cert/
       - {{ param_docker_data }}/{{ param_role_name }}/static/:/usr/share/nginx/static/
+      - {{ param_docker_data }}/{{ param_role_name }}/cache/:/var/cache/nginx
     restart: always
