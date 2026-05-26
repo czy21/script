@@ -1,0 +1,17 @@
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 8080
+
+services:
+  termix:
+    image: lukegus/termix # ghcr.io/lukegus/termix
+    container_name: termix
+    labels:
+      <<: *traefik-label
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/app/data
+    environment:
+      LOG_LEVEL: info
+      ENABLE_GUACAMOLE: false
+    restart: always
