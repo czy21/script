@@ -5,9 +5,23 @@ argo-workflows:
       image:
         repository: "{{ param_registry_proxy if param_mirror_use_proxy else 'registry.k8s.io' }}/kubectl"
   controller:
+    rbac:
+      accessAllSecrets: true
+      writeConfigMaps: true
     image:
       registry: "{{ param_registry_proxy if param_mirror_use_proxy else 'quay.io' }}"
     workflowNamespaces: []
+    synchronization:
+      mysql:
+        host: {{ param_db_mysql_host }}
+        port: {{ param_db_mysql_port }}
+        database: argo
+        userNameSecret:
+          name: argo-mysql-config
+          key: username
+        passwordSecret:
+          name: argo-mysql-config
+          key: password
   server:
     image:
       registry: "{{ param_registry_proxy if param_mirror_use_proxy else 'quay.io' }}"
