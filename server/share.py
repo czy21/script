@@ -88,6 +88,7 @@ def get_dir_dict(path: pathlib.Path, exclude_rules: list = None, select_tip="", 
 
 
 def select_namespace(root_path: pathlib.Path, deep: int = 1, exclude_rules=None, args: argparse.Namespace = None) -> list[Namespace]:
+    col_num = 5
     exclude_rules = exclude_rules if exclude_rules else []
     exclude_rules.extend([".temp/", "build/", root_path.joinpath("utility").as_posix(), root_path.joinpath("server").as_posix()])
     flat_dirs = dfs_dir(root_path, exclude_rules=exclude_rules)
@@ -106,7 +107,7 @@ def select_namespace(root_path: pathlib.Path, deep: int = 1, exclude_rules=None,
     while deep > deep_index:
         role_dict = {str(i): p for i, p in
                      enumerate(map(lambda a: a["path"], filter(lambda a: a["deep"] == deep_index, flat_dirs)), start=1)}
-        collection_util.print_grid(["{0}.{1}".format(k, v.name) for k, v in role_dict.items()], col_num=5, msg=next(iter(role_dict.items()))[1].parent.as_posix())
+        collection_util.print_grid(["{0}.{1}".format(k, v.name) for k, v in role_dict.items()], col_num=col_num, msg=next(iter(role_dict.items()))[1].parent.as_posix())
         if args.all_namespaces:
             app_paths = list(role_dict.values())
         else:
@@ -117,12 +118,10 @@ def select_namespace(root_path: pathlib.Path, deep: int = 1, exclude_rules=None,
             app_paths = [role_dict[t] for t in selected.split()]
         deep_index += 1
     namespaces.extend([
-        Namespace(args.namespace if args.namespace else p.name,
-                  [RoleMeta("%s.%s" % (next(filter(lambda t: t["path"] == p, flat_dirs), None)["key"], rk),
-                            rv.name,
-                            rv, p) for rk, rv in
-                   get_dir_dict(p, exclude_rules=exclude_rules, select_tip="role num(example:1 2 ...)",
-                                args=args).items()])
+        Namespace(args.namespace if args.namespace else p.name,[
+                    RoleMeta("%s.%s" % (next(filter(lambda t: t["path"] == p, flat_dirs), None)["key"], rk),rv.name,rv, p) 
+                    for rk, rv in get_dir_dict(p, exclude_rules=exclude_rules, select_tip="role num(example:1 2 ...)",col_num=col_num,args=args).items()
+        ])
         for p in app_paths
     ])
     return namespaces

@@ -1,7 +1,7 @@
 services:
   
   netbird-dashboard:
-    image: netbirdio/dashboard:v2.38.1
+    image: netbirdio/dashboard:v2.39.0
     container_name: netbird-dashboard
     ports:
       - '8080:80'
@@ -25,7 +25,7 @@ services:
     restart: always
 
   netbird-server:
-    image: netbirdio/netbird-server:0.71.4
+    image: netbirdio/netbird-server:0.72.4
     container_name: netbird-server
     ports:
       - '8081:80'
@@ -33,7 +33,5 @@ services:
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/config.yaml:/etc/netbird/config.yaml
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/var/lib/netbird
-    environment:
-      - NB_DISABLE_GEOLOCATION=true
     command: ["--config", "/etc/netbird/config.yaml"]
     restart: always

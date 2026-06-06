@@ -11,6 +11,8 @@ server:
   logLevel: "info"
   logFile: "console"
 
+  disableGeoliteUpdate: true
+
   authSecret: {{ param_netbird_server_authSecret }}
   dataDir: "/var/lib/netbird"
 
