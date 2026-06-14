@@ -1,0 +1,15 @@
+version: "3.9"
+
+services:
+  homebridge:
+    image: homebridge/homebridge:2026-06-05
+    container_name: homebridge
+    privileged: true
+    network_mode: host
+    user: root
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/homebridge
+    environment: 
+      TZ: Asia/Shanghai
+      ENABLE_AVAHI: '0'
+    restart: always

@@ -1,6 +1,7 @@
 README.md
 grafana/conf/dashboards/
-homeassistant/conf/sensor.yaml
+homeassistant/(?:.*/)?sensor.yaml
+homeassistant/(?:.*/)?homekit.yaml
 nginx/node/base/conf/static/
 identity.pfx
 openwrt-asu/asu/

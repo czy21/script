@@ -1,0 +1,17 @@
+{
+    "bridge": {
+        "name": "Homebridge EE15",
+        "username": "0E:06:05:85:EE:15",
+        "port": 51826,
+        "pin": "283-12-207",
+        "advertiser": "ciao"
+    },
+    "accessories": [],
+    "platforms": [
+        {
+            "name": "Config",
+            "port": 8581,
+            "platform": "config"
+        }
+    ]
+}
