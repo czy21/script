@@ -8,7 +8,7 @@ for t in $certs;do
 
   t_name=$(basename $t)
 
-  t_crt=$t/${t_name}.cer
+  t_crt=$t/${t_name}.crt
   t_key=$t/${t_name}.key
 
   t_crt_base64=$(openssl base64 -A -in $t_crt)
