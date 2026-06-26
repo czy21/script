@@ -1,7 +1,7 @@
 services:
   
   netbird-dashboard:
-    image: netbirdio/dashboard:v2.39.0
+    image: netbirdio/dashboard:v2.80.0
     container_name: netbird-dashboard
     ports:
       - '8080:80'
