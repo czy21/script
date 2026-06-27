@@ -27,5 +27,6 @@ docker exec -i openwrt-sdk-$target-dev bash <<EOF
   make defconfig
   ./scripts/feeds install -p ci -f -a
 
-  make -j1 package/$pkg/compile
+  make -j1 package/$pkg/${2:-compile} V=s
+  ls -al bin/packages/x86_64/ci/ 2>/dev/null || true
 EOF
