@@ -13,9 +13,11 @@ http:
 #     custom_components.xiaomi_miot: debug
 
 recorder: !include recorder.yaml
-automation: !include automations.yaml
+automation: !include automation.yaml
+command_line: !include command_line.yaml
 sensor: !include sensor.yaml
-script: !include scripts.yaml
-scene: !include scenes.yaml
+script: !include script.yaml
+scene: !include scene.yaml
+shell_command: !include shell_command.yaml
 homekit: !include homekit.yaml
 remote_homeassistant: !include remote_homeassistant.yaml

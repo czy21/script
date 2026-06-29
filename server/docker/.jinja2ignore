@@ -1,6 +1,7 @@
 README.md
 grafana/conf/dashboards/
 homeassistant/(?:.*/)?sensor.yaml
+homeassistant/(?:.*/)?shell_command.yaml
 homeassistant/(?:.*/)?homekit.yaml
 nginx/node/base/conf/static/
 identity.pfx
