@@ -38,7 +38,7 @@ x-traefik-chinesesubfinder-label: &traefik-chinesesubfinder-label
 services:
 
   radarr:
-    image: linuxserver/radarr:6.0.4
+    image: linuxserver/radarr:6.2.1
     container_name: radarr
     labels:
       <<: *traefik-radarr-label
@@ -52,7 +52,7 @@ services:
     restart: always
 
   sonarr:
-    image: linuxserver/sonarr:4.0.16
+    image: linuxserver/sonarr:4.0.19
     container_name: sonarr
     labels:
       <<: *traefik-sonarr-label
@@ -66,7 +66,7 @@ services:
     restart: always
 
   bazarr:
-    image: linuxserver/bazarr:1.5.3
+    image: linuxserver/bazarr:1.5.6
     container_name: bazarr
     labels:
       <<: *traefik-bazarr-label
