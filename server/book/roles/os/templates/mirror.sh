@@ -44,3 +44,9 @@ if [ "ubuntu" = "${os_distribution}" ]; then
   [ ! -f "${sources_file}.bak" ] && cp -rv ${sources_file} ${sources_file}.bak
   sed "s,\(http\|https\)://.*.ubuntu.com,https://{{ param_mirror_apt }}," ${sources_file}.bak | tee ${sources_file} > /dev/null
 fi
+
+if [ "kali" = "${os_distribution}" ]; then
+  sources_file=/etc/apt/sources.list.d/kali.sources
+  [ ! -f "${sources_file}.bak" ] && cp -rv ${sources_file} ${sources_file}.bak
+  sed "s,\(http\|https\)://.*.kali.org,https://{{ param_mirror_apt }}," ${sources_file}.bak | tee ${sources_file} > /dev/null
+fi

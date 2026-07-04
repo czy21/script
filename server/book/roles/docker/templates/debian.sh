@@ -1,13 +1,21 @@
 #!/bin/bash
 set -e
 
+os_distribution="{{ param_ansible_distribution }}"
+os_codename=$(lsb_release -cs)
+
+if [ "kali" = "${os_distribution}" ]; then
+  os_distribution=debian
+  os_codename=trixie
+fi
+
 if [ "{{ param_docker_add_repo | lower }}" = true ];then
   sudo install -m 0755 -d /etc/apt/keyrings
-  sudo curl -fsSL https://download.docker.com/linux/{{ param_ansible_distribution }}/gpg -o /etc/apt/keyrings/docker.asc
+  sudo curl -fsSL https://download.docker.com/linux/${os_distribution}/gpg -o /etc/apt/keyrings/docker.asc
   sudo chmod a+r /etc/apt/keyrings/docker.asc
 
   # Add the repository to Apt sources:
-  echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/{{ param_ansible_distribution }} $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list
+  echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/${os_distribution} ${os_codename} stable" | sudo tee /etc/apt/sources.list.d/docker.list
 
   if [ "{{ param_mirror_use_proxy | lower }}" = true ];then
     sudo cp -rv /etc/apt/sources.list.d/docker.list /etc/apt/sources.list.d/docker.list.bak
