@@ -1,4 +1,4 @@
-FROM jenkins/jenkins:{{ param_role_image_version }}
+FROM jenkins/jenkins:{{ param_role_version }}
 
 USER root
 RUN apt-get update -y && apt-get install -y lsb-release
