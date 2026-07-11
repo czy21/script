@@ -3,9 +3,6 @@
 services:
   server:
     image: "docker.io/openwrt/asu:latest"
-    build:
-      context: {{ param_role_output_path }}
-      dockerfile: Dockerfile
     command: uv run uvicorn --host 0.0.0.0 asu.main:app
     volumes:
       - $PUBLIC_PATH/store:$PUBLIC_PATH/store:ro
@@ -17,9 +14,6 @@ services:
 
   worker:
     image: "docker.io/openwrt/asu:latest"
-    build:
-      context: {{ param_role_output_path }}
-      dockerfile: Dockerfile
     command: uv run rqworker --logging_level INFO
     volumes:
       - $PUBLIC_PATH:$PUBLIC_PATH:rw

@@ -21,7 +21,7 @@ class DockerRole(share.AbstractRole):
 
         self.container_compose = f"{self.gen_sudo()} docker-compose"
         if self.context.role_env.get("param_container_engine") == 'podman':
-            self.container_compose = "podman-compose"
+            self.container_compose = "podman compose"
 
         self.root_deploy_file = context.root_path.joinpath("compose.yml")
         self.root_doc_template_file = context.root_path.joinpath("doc-template.md")
@@ -57,7 +57,7 @@ class DockerRole(share.AbstractRole):
             self.container_compose
         ]
         env_file = self.context.role_output_path.joinpath('.env')
-        if self.container_compose == 'podman-compose' and env_file.exists():
+        if self.container_compose == 'podman compose' and env_file.exists():
             cmd.append(f'--env-file {env_file.as_posix()}')
 
         cmd.append(f'--project-name {project_name}')
