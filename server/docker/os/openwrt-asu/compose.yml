@@ -3,23 +3,28 @@
 services:
   server:
     image: "docker.io/openwrt/asu:latest"
-    command: uv run uvicorn --host 0.0.0.0 asu.main:app
+    command: uv run uvicorn --host 0.0.0.0 --reload --reload-include asu.toml asu.main:app
     volumes:
-      - $PUBLIC_PATH/store:$PUBLIC_PATH/store:ro
-      - $CONFIG_PATH:$CONFIG_PATH:ro
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/asu.toml:/app/asu.toml:ro
+      - {{ param_docker_data }}/{{ param_role_name }}/data/public/store:/public/store:ro
+    env_file: {{ param_role_output_path }}/.env
     ports:
       - "8000:8000"
-    env_file: {{ param_role_output_path }}/.env
     restart: always
 
   worker:
     image: "docker.io/openwrt/asu:latest"
     command: uv run rqworker --logging_level INFO
     volumes:
-      - $PUBLIC_PATH:$PUBLIC_PATH:rw
-      - $CONFIG_PATH:$CONFIG_PATH:rw
-      - $CONTAINER_SOCKET_PATH:$CONTAINER_SOCKET_PATH:rw
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/asu.toml:/app/asu.toml:ro
+      - {{ param_docker_data }}/{{ param_role_name }}/data/public:/public:rw
+      - /run/user/1000/podman/podman.sock:/var/podman.sock:rw
     env_file: {{ param_role_output_path }}/.env
     restart: always
     deploy:
       replicas: 3
+      
+networks:
+  default:
+    name: asu-build
+    external: true

@@ -23,11 +23,11 @@ class DockerRole(share.AbstractRole):
         if self.context.role_env.get("param_container_engine") == 'podman':
             self.container_compose = "podman compose"
 
-        self.root_deploy_file = context.root_path.joinpath("compose.yml")
+        self.root_compose_file = context.root_path.joinpath("compose.yml")
         self.root_doc_template_file = context.root_path.joinpath("doc-template.md")
 
         self.role_deploy_env_file = context.role_output_path.joinpath(".env")
-        self.role_deploy_file = context.role_output_path.joinpath("compose.yml")
+        self.role_compose_file = context.role_output_path.joinpath("compose.yml")
         self.role_deploy_swarm_file = context.role_output_path.joinpath("compose-swarm.yml")
 
         self.role_conf_path = context.role_output_path.joinpath("conf")
@@ -47,12 +47,12 @@ class DockerRole(share.AbstractRole):
         return "sudo" if self.container_sudo else ""
 
     def compose_cmd(self, project_name, option):
-        role_deploy_files = [
-            self.root_deploy_file.as_posix(),
-            self.role_deploy_file.as_posix()
-        ]
+        role_compose_files = []
+        if self.context.role_env.get('param_include_root_compose',True):
+            role_compose_files.append(self.root_compose_file.as_posix())
+        role_compose_files.append(self.role_compose_file.as_posix())
         if self.role_node_target_deploy_file.exists():
-            role_deploy_files.append(self.role_node_target_deploy_file)
+            role_compose_files.append(self.role_node_target_deploy_file)
         cmd = [
             self.container_compose
         ]
@@ -61,7 +61,7 @@ class DockerRole(share.AbstractRole):
             cmd.append(f'--env-file {env_file.as_posix()}')
 
         cmd.append(f'--project-name {project_name}')
-        cmd.append(" ".join(["--file {0}".format(t) for t in role_deploy_files]))
+        cmd.append(" ".join(["--file {0}".format(t) for t in role_compose_files]))
         cmd.append(option)
 
         cmd = collection_util.flat_to_str(cmd)
@@ -75,7 +75,7 @@ class DockerRole(share.AbstractRole):
             _cmds.append('{0} mkdir -p {2} && {0} cp -rv {1} {2}'.format(self.gen_sudo(),self.role_conf_path.as_posix(),self.role_target_path.as_posix()))
         if self.role_init_sh.exists():
             _cmds.append("bash {}".format(self.role_init_sh.as_posix()))
-        if self.role_deploy_file.exists():
+        if self.role_compose_file.exists():
             if self.context.args.debug:
                 _cmds.append(self.compose_cmd(self.role_project_name,"config"))
             if self.context.role_env.get("param_swarm",False):
@@ -124,10 +124,10 @@ class DockerRole(share.AbstractRole):
                         } for t in sorted(self.context.role_output_path.glob("Dockerfile*"), reverse=True)
                     ],
                     "param_docker_compose": {
-                        "name": self.role_deploy_file.name,
+                        "name": self.role_compose_file.name,
                         "command": self.container_compose + " --project-name {0} --file compose.yml up --detach --remove-orphans".format(self.role_project_name),
-                        "rawUrl": registry_git_repo_raw_format.format(self.context.role_name, self.role_deploy_file.name)
-                    } if self.role_deploy_file.exists() else None
+                        "rawUrl": registry_git_repo_raw_format.format(self.context.role_name, self.role_compose_file.name)
+                    } if self.role_compose_file.exists() else None
                 }
                 md_content = template_util.Template(file_util.read_text(self.root_doc_template_file)).render(**md_param)
                 role_readme = self.context.role_output_path.joinpath("README.md")
@@ -144,7 +144,7 @@ class DockerRole(share.AbstractRole):
 
     def delete(self) -> list[str]:
         _cmds = []
-        if self.role_deploy_file.exists():
+        if self.role_compose_file.exists():
             _cmds.append(self.compose_cmd("down --remove-orphans"))
         return _cmds
 

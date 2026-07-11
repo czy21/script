@@ -1,0 +1,15 @@
+upstream_url = "https://openwrt-dlc.czy21.com/openwrt"
+allow_defaults = true
+log_level = "INFO"
+base_container = "docker.io/openwrt/imagebuilder"
+
+build_ttl = "7d"
+build_ttl_unversioned = "24h"
+build_defaults_ttl = "30m"
+build_failure_ttl = "1m"
+max_pending_jobs = 200
+job_timeout = "2h"
+
+repository_allow_list = [
+    "https://openwrt-download.czy21.com"
+]
