@@ -60,7 +60,7 @@ class DockerRole(share.AbstractRole):
         if self.container_compose == 'podman compose' and env_file.exists():
             cmd.append(f'--env-file {env_file.as_posix()}')
 
-        cmd.append(f'--project-name {project_name}')
+        cmd.append(f'--progress plain --project-name {project_name}')
         cmd.append(" ".join(["--file {0}".format(t) for t in role_compose_files]))
         cmd.append(option)
 

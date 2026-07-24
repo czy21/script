@@ -1,0 +1,10 @@
+version: "3.9"
+
+services:
+  {{ param_role_name }}:
+    image: openwrt/imagebuilder:x86-64
+    container_name: {{ param_role_name }}
+    tty: true
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/:/builder/
+    restart: always
