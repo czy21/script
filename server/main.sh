@@ -9,25 +9,22 @@ if [ -n "$(type -p gtar)" ];then
   alias tar='gtar'
 fi
 
-unset -v host
-unset -v args
-unset -v is_requirement
-unset -v is_debug
-
 name=$1
 host=$2
-
 shift 2
 
 main_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+setup=false
+debug=false
+args=
 while [ $# -gt 0 ];do
   case "$1" in
     -r)
-      is_requirement=true
+      setup=true
       ;;
     --debug)
-      is_debug=true
+      debug=true
       ;;
      *)
       args+=" $1"
@@ -36,7 +33,7 @@ while [ $# -gt 0 ];do
   shift
 done
 
-if [ $is_debug ];then
+if [ "$debug" = true ];then
   args+=" --debug"
   set -x
 fi
@@ -69,10 +66,9 @@ ssh_opt="-o StrictHostKeyChecking=no"
 pypi="https://pypi.tuna.tsinghua.edu.cn/simple/"
 
 cmd=$(cat <<EOF
-if [ ! -f ${PYTHON_EXEC} ];then
-  python3 -m venv ${PYTHON_HOME} --without-pip --system-site-packages && wget -nv -O - https://bootstrap.pypa.io/get-pip.py | ${PYTHON_EXEC} - -i ${pypi}
-fi
-if [ "${is_requirement}" = "true" ];then
+[ -f ${PYTHON_EXEC} ] || (python3 -m venv ${PYTHON_HOME} --without-pip --system-site-packages && wget -nv -O - https://bootstrap.pypa.io/get-pip.py | ${PYTHON_EXEC} - -i ${pypi})
+
+if [ "${setup}" = true ];then
   ${PYTHON_EXEC} -m pip config set global.index-url ${pypi}
   ${PYTHON_EXEC} -m pip install -r \$HOME/${dst_name}/server/requirements.txt
 fi
@@ -102,6 +98,6 @@ tar -zcf - ${tar_exts} ${tar_args} | ${host_cmd} "mkdir -p \$HOME/${dst_name};ta
 ${host_cmd} "${cmd}"
 ${host_cmd} "[ -d \$HOME/${dst_name} ]" && ${host_cmd} "tar -zcf - -C \$HOME/${dst_name} ${tmp_name} ${build_name}" | tar -zxf - -C ${src_path}
 
-if [ ! $is_debug ];then
+if [ "$debug" = true ];then
   ${host_cmd} "${del_cmd}"
 fi
