@@ -7,4 +7,4 @@ sudo docker run --rm \
 -v {{ param_docker_data }}/{{ param_role_name }}/data/:/compose_location/ \
 -v {{ param_docker_data }}/{{ param_role_name }}/data/common/config/:/config/ \
 --privileged \
-goharbor/prepare:v2.5.3 sh -c "if [ ! -f /compose_location/docker-compose.yml ];then python3 main.py prepare;fi"
+goharbor/prepare:v2.5.3 sh -c "[ -f /compose_location/docker-compose.yml ] || python3 main.py prepare"

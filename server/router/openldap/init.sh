@@ -15,9 +15,7 @@ cp -rv {{ param_role_output_path }}/conf/ldap.init /etc/init.d/ldap
 /etc/init.d/ldap restart
 
 if [ "install" = "${param_command}" ];then
-  if [ ! -f "${config_ldif_etc_file}" ]; then
-      slaptest -f ${ldap_etc_path}/slapd.conf -F ${ldap_etc_path}/slapd.d
-  fi
+  [ -f "${config_ldif_etc_file}" ] || slaptest -f ${ldap_etc_path}/slapd.conf -F ${ldap_etc_path}/slapd.d
   sed -i 's|^olcAccess.*|olcAccess: {0}to * by dn.exact=gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth manage by * none|g' ${config_ldif_etc_file}
   sed -i 's|^olcDbDirectory.*|olcDbDirectory: {{ param_ldap_data }}|g' ${mdb_ldif_etc_file}
   /etc/init.d/ldap restart
