@@ -14,5 +14,3 @@ services:
       - 7000:7000
     volumes:
       - {{ param_config_dir }}/frp/:/usr/local/frp/conf/
-
-

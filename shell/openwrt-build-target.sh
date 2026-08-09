@@ -141,16 +141,6 @@ fi
   exit 0
 }
 
-if [ "$update" = true ];then
-  [ -f "feeds.conf.default.bak" ] || cp -rv feeds.conf.default feeds.conf.default.bak
-  sed -e "s|https://git.openwrt.org/\(.*\)/|$origin/openwrt/|g" \
-      -e "s|https://github.com/openwrt/|$origin/openwrt/|g" feeds.conf.default.bak > feeds.conf.default
-  ./scripts/feeds update -a
-  ./scripts/feeds install -a
-fi
-
-set -x
-
 ln -snf /data/apk.key private-key.pem
 ln -snf /data/pri.key key-build
 
@@ -159,21 +149,32 @@ version=$(git describe --tags --exact-match 2>/dev/null | sed 's/^v//')
 version_path=snapshots
 
 # https://s3-ccache.openwrt-ci.ansuel.com
-ccache_from=https://openwrt-dlc.czy21.com/openwrt-ci/s3-ccache
+ccache_from=https://openwrt-dlc.czy21.com/openwrt-ccache
 ccache_type=kernel
-ccache_tag=
 
-if [ -n "$version" ];then
-  version_path=releases/$version
-  ccache_tag="-$branch"
-fi
+[ -n "$version" ] && version_path=releases/$version
 
 download_release_dir=/data/download/$version_path
 
-ccache_name=ccache-${ccache_type}-${target}-${subtarget}${ccache_tag}
-CCACHE_DIR=$(pwd)/.ccache
-CCACHE_CONFIGPATH2=$(pwd)/staging_dir/host/etc/ccache.conf
-set +x
+echo '===== Prepare prebuilt tools ====='
+mkdir -p staging_dir build_dir
+
+rm -rf staging_dir/host build_dir/host
+ln -snf /prebuilt_tools/staging_dir/host staging_dir/host
+ln -snf /prebuilt_tools/build_dir/host build_dir/host
+
+./scripts/ext-tools.sh --refresh
+
+ls -al staging_dir build_dir
+
+[ -f "feeds.conf.default.bak" ] || cp -rv feeds.conf.default feeds.conf.default.bak
+sed -e "s|https://git.openwrt.org/\(.*\)/|$origin/openwrt/|g" \
+    -e "s|https://github.com/openwrt/|$origin/openwrt/|g" feeds.conf.default.bak > feeds.conf.default
+
+if [ "$update" = true ];then
+  ./scripts/feeds update -a
+  ./scripts/feeds install -a
+fi
 
 > .config
 cat >> .config << EOF
@@ -190,18 +191,19 @@ grep -q '^CONFIG_TARGET_DEVICE_' .config || {
 }
 
 cat >> .config << EOF
-CONFIG_PACKAGE_luci=y
-CONFIG_PACKAGE_luci-app-attendedsysupgrade=y
-EOF
-
-cat >> .config << EOF
 CONFIG_ALL_KMODS=y
 CONFIG_TARGET_PER_DEVICE_ROOTFS=y
 CONFIG_DEVEL=y
 CONFIG_AUTOREMOVE=y
-CONFIG_LOCALMIRROR="https://openwrt-dlc.czy21.com/sources"
+CONFIG_LOCALMIRROR="https://openwrt-dlc.czy21.com/openwrt-sources"
 # CONFIG_KERNEL_KALLSYMS is not set
 CONFIG_IMAGEOPT=y
+EOF
+
+cat >> .config << EOF
+CONFIG_PACKAGE_luci=y
+CONFIG_PACKAGE_luci-ssl=y
+CONFIG_PACKAGE_luci-app-attendedsysupgrade=y
 EOF
 
 if [ "$patch" = true ];then
@@ -211,80 +213,51 @@ if [ "$patch" = true ];then
   apply_device_patch target/linux/
 fi
 
-if [ "$prebuilt" = true ];then
+SUMS_FILE="$mirror/${version_path}/targets/${target}/${subtarget}/sha256sums"
+echo "SUMS_FILE: $SUMS_FILE"
 
-  SUMS_FILE="$mirror/${version_path}/targets/${target}/${subtarget}/sha256sums"
-  echo "SUMS_FILE: $SUMS_FILE"
+echo '===== Download external toolchain/sdk ====='
+TOOLCHAIN_STRING="$( curl ${SUMS_FILE} | grep -P ".*openwrt-toolchain.*tar.(xz|zst)")"
+TOOLCHAIN_FILE=$(echo "$TOOLCHAIN_STRING" | sed -n -E -e 's/.*(openwrt-toolchain.*.tar.(xz|zst))$/\1/p')
+TOOLCHAIN_NAME=$(echo $TOOLCHAIN_FILE | sed -E -e 's/.tar.(xz|zst)$//')
+[ -d "${TOOLCHAIN_NAME}" ] || (wget -nv -O - $mirror/${version_path}/targets/${target}/${subtarget}/${TOOLCHAIN_FILE} | tar --zstd -xf -)
 
-  echo '===== Prepare prebuilt tools ====='
-  mkdir -p staging_dir build_dir
-  
-  rm -rf staging_dir/host build_dir/host
-  ln -snf /prebuilt_tools/staging_dir/host staging_dir/host
-  ln -snf /prebuilt_tools/build_dir/host build_dir/host
-  
-  ./scripts/ext-tools.sh --refresh
+echo '===== Download and extract prebuilt llvm ====='
+LLVM_STRING="$( curl ${SUMS_FILE} | grep -P ".*llvm-bpf.*tar.(xz|zst)")"
+LLVM_FILE=$(echo "$LLVM_STRING" | sed -n -E -e 's/.*(llvm-bpf.*.tar.(xz|zst))$/\1/p')
+LLVM_NAME=$(echo $LLVM_FILE | sed -E -e 's/.tar.(xz|zst)$//')
+[ -d "${LLVM_NAME}" ] || (wget -nv -O - $mirror/${version_path}/targets/${target}/${subtarget}/${LLVM_FILE} | tar --zstd -xf -)
 
-  ls -al staging_dir build_dir
+echo '===== Download and extract ccache cache from s3 ====='
+ccache_name=ccache-${ccache_type}-${target}-${subtarget}$([ -n "$version" ] && echo "-$branch")
+CCACHE_DIR=$(pwd)/.ccache
+CCACHE_CONFIGPATH2=$(pwd)/staging_dir/host/etc/ccache.conf
+[ -d "$CCACHE_DIR" ] || (wget -nv -O - $ccache_from/${ccache_name}.tar | tar -xf -)
 
-  echo '===== Download external toolchain/sdk ====='
-  TOOLCHAIN_STRING="$( curl ${SUMS_FILE} | grep -P ".*openwrt-toolchain.*tar.(xz|zst)")"
-  TOOLCHAIN_FILE=$(echo "$TOOLCHAIN_STRING" | sed -n -E -e 's/.*(openwrt-toolchain.*.tar.(xz|zst))$/\1/p')
-  TOOLCHAIN_NAME=$(echo $TOOLCHAIN_FILE | sed -E -e 's/.tar.(xz|zst)$//')
-  echo "TOOLCHAIN_FILE: $TOOLCHAIN_FILE"
-  if [ ! -d "${TOOLCHAIN_NAME}" ];then
-    wget -nv $mirror/${version_path}/targets/${target}/${subtarget}/${TOOLCHAIN_FILE}
-    tar -xf ${TOOLCHAIN_FILE}
-    rm -f ${TOOLCHAIN_FILE}
-  fi
+echo '===== Configure ccache and apply fixes ====='
+> $CCACHE_CONFIGPATH2
 
-  echo '===== Download and extract prebuilt llvm ====='
-  LLVM_STRING="$( curl ${SUMS_FILE} | grep -P ".*llvm-bpf.*tar.(xz|zst)")"
-  LLVM_FILE=$(echo "$LLVM_STRING" | sed -n -E -e 's/.*(llvm-bpf.*.tar.(xz|zst))$/\1/p')
-  LLVM_NAME=$(echo $LLVM_FILE | sed -E -e 's/.tar.(xz|zst)$//')
-  echo "LLVM_FILE: $LLVM_FILE"
-  if [ ! -d "${LLVM_NAME}" ];then
-    wget -nv $mirror/${version_path}/targets/${target}/${subtarget}/${LLVM_FILE}
-    tar -xf ${LLVM_FILE}
-    rm -f ${LLVM_FILE}
-  fi
+echo compiler_type=gcc >> $CCACHE_CONFIGPATH2
+[ kernel = 'kernel' ] && echo max_size=1G >> $CCACHE_CONFIGPATH2
+[ kernel = 'packages' ] && echo max_size=8G >> $CCACHE_CONFIGPATH2
 
-  echo '===== Download and extract ccache cache from s3 ====='
-  S3_LINK=$ccache_from
-  CCACHE_TAR=${ccache_name}.tar
-  echo "CCACHE_TAR: $CCACHE_TAR"
-  if curl -o /dev/null -s --head --fail $S3_LINK/$CCACHE_TAR; then
-    if [ ! -d "$CCACHE_DIR" ];then
-      wget -nv -O - $S3_LINK/$CCACHE_TAR | tar -xf -
-    fi
-  fi
+echo depend_mode=true >> $CCACHE_CONFIGPATH2
+echo sloppiness=file_macro,locale,time_macros,include_file_ctime,include_file_mtime >> $CCACHE_CONFIGPATH2
 
-  echo '===== Configure ccache and apply fixes ====='
-  > $CCACHE_CONFIGPATH2
+echo CONFIG_CCACHE=y >> .config
 
-  echo compiler_type=gcc >> $CCACHE_CONFIGPATH2
-  [ kernel = 'kernel' ] && echo max_size=1G >> $CCACHE_CONFIGPATH2
-  [ kernel = 'packages' ] && echo max_size=8G >> $CCACHE_CONFIGPATH2
+echo '===== Reset ccache stats ====='
+staging_dir/host/bin/ccache --zero-stats
 
-  echo depend_mode=true >> $CCACHE_CONFIGPATH2
-  echo sloppiness=file_macro,locale,time_macros,include_file_ctime,include_file_mtime >> $CCACHE_CONFIGPATH2
+echo '===== Configure external toolchain ====='
+./scripts/ext-toolchain.sh \
+  --toolchain ${TOOLCHAIN_NAME}/toolchain-* \
+  --overwrite-config \
+  --config ${target}/${subtarget}
 
-  echo CONFIG_CCACHE=y >> .config
+echo '===== Configure prebuilt llvm ====='
+echo CONFIG_USE_LLVM_PREBUILT=y >> .config
 
-  echo '===== Reset ccache stats ====='
-  staging_dir/host/bin/ccache --zero-stats
-
-  echo '===== Configure external toolchain ====='
-  ./scripts/ext-toolchain.sh \
-    --toolchain ${TOOLCHAIN_NAME}/toolchain-* \
-    --overwrite-config \
-    --config ${target}/${subtarget}
-
-  echo '===== Configure prebuilt llvm ====='
-  echo CONFIG_USE_LLVM_PREBUILT=y >> .config
-fi
-
-make defconfig
 ./scripts/diffconfig.sh > /ci/diff.config
 
 if [ "$build" = true ];then
