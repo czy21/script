@@ -98,6 +98,6 @@ tar -zcf - ${tar_exts} ${tar_args} | ${host_cmd} "mkdir -p \$HOME/${dst_name};ta
 ${host_cmd} "${cmd}"
 ${host_cmd} "[ -d \$HOME/${dst_name} ]" && ${host_cmd} "tar -zcf - -C \$HOME/${dst_name} ${tmp_name} ${build_name}" | tar -zxf - -C ${src_path}
 
-if [ "$debug" = true ];then
+if [ "$debug" = false ];then
   ${host_cmd} "${del_cmd}"
 fi

@@ -14,12 +14,20 @@ if [ "{{ param_docker_add_repo | lower }}" = true ];then
   sudo curl -fsSL https://download.docker.com/linux/${os_distribution}/gpg -o /etc/apt/keyrings/docker.asc
   sudo chmod a+r /etc/apt/keyrings/docker.asc
 
-  # Add the repository to Apt sources:
-  echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/${os_distribution} ${os_codename} stable" | sudo tee /etc/apt/sources.list.d/docker.list
+  sudo rm -rf /etc/apt/sources.list.d/docker.list*
+
+  sudo tee /etc/apt/sources.list.d/docker.sources <<EOF
+Types: deb
+URIs: https://download.docker.com/linux/${os_distribution}
+Suites: ${os_codename}
+Components: stable
+Architectures: $(dpkg --print-architecture)
+Signed-By: /etc/apt/keyrings/docker.asc
+EOF
 
   if [ "{{ param_mirror_use_proxy | lower }}" = true ];then
-    sudo cp -rv /etc/apt/sources.list.d/docker.list /etc/apt/sources.list.d/docker.list.bak
-    sed -e "s|https://download.docker.com|https://{{ param_mirror_docker_ce }}|g" /etc/apt/sources.list.d/docker.list.bak | sudo tee /etc/apt/sources.list.d/docker.list
+    sudo cp -rv /etc/apt/sources.list.d/docker.sources /etc/apt/sources.list.d/docker.sources.bak
+    sed -e "s|https://download.docker.com|https://{{ param_mirror_docker_ce }}|g" /etc/apt/sources.list.d/docker.sources.bak | sudo tee /etc/apt/sources.list.d/docker.sources
   fi
 fi
 

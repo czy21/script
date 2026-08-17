@@ -66,8 +66,8 @@ def call(Map inputs) {
                         inputs.param_project_root = PathUtils.ofPath(env.WORKSPACE, inputs.param_project_root)
                         inputs.param_project_context = PathUtils.ofPath(inputs.param_project_root, inputs.param_project_module)
 
-                        inputs.param_docker_context = StringUtils.isNotNull(inputs.param_docker_context) ? PathUtils.ofPath(inputs.param_project_root, inputs.param_docker_context) : inputs.param_project_context
-                        inputs.param_docker_file = PathUtils.ofPath(inputs.param_docker_context, "Dockerfile")
+                        inputs.param_docker_context = StringUtils.defaultIfNull(inputs.param_docker_context,PathUtils.ofPath(inputs.param_project_root, inputs.param_docker_context))
+                        inputs.param_docker_file = StringUtils.defaultIfNull(inputs.param_docker_file, PathUtils.ofPath(inputs.param_docker_context, "Dockerfile"))
                         inputs.param_docker_compose_file = PathUtils.ofPath(inputs.param_docker_context, "docker-compose.yaml")
                         inputs.param_release_image = StringUtils.defaultIfEmpty(inputs.param_release_image,PathUtils.ofPath(inputs.param_registry, inputs.param_registry_dir, inputs.param_release_name))
                         inputs.param_release_version = StringUtils.defaultIfEmpty(inputs.param_release_version, params.param_git_branch)
