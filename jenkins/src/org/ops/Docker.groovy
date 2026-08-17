@@ -11,6 +11,7 @@ def build(Map inputs) {
     env.DOCKER_CONFIG=PathUtils.ofPath(env.WORKSPACE, ".jenkins/docker/")
 
     def docker_file = inputs.param_docker_file
+    sh "echo ${docker_file}"
 
     if (!fileExists(docker_file)) {
         docker_file = ".jenkins/Dockerfile-${inputs.param_code_type}"

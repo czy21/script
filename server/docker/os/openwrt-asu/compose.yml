@@ -2,7 +2,8 @@
 
 services:
   server:
-    image: "docker.io/openwrt/asu:latest"
+    image: registry.czy21.com/openwrt/asu:self # docker.io/openwrt/asu:latest
+    pull_policy: always
     command: uv run uvicorn --host 0.0.0.0 --reload --reload-include asu.toml asu.main:app
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/asu.toml:/app/asu.toml:ro
@@ -13,7 +14,8 @@ services:
     restart: always
 
   worker:
-    image: "docker.io/openwrt/asu:latest"
+    image: registry.czy21.com/openwrt/asu:self
+    pull_policy: always
     command: uv run rqworker --logging_level INFO
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/asu.toml:/app/asu.toml:ro
@@ -23,7 +25,7 @@ services:
     restart: always
     deploy:
       replicas: 3
-      
+
 networks:
   default:
     name: asu-build

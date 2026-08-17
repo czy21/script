@@ -1,4 +1,5 @@
 upstream_url = "https://openwrt-dlc.czy21.com/openwrt"
+cache_url = "https://openwrt-dlc.czy21.com/openwrt"
 allow_defaults = true
 log_level = "INFO"
 base_container = "docker.io/openwrt/imagebuilder"
