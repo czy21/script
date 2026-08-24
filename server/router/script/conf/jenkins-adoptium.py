@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
+
+import argparse
 import itertools
 import json
+import pathlib
 import subprocess
 from itertools import chain
 from typing import TypeVar, Generic, Callable, List, Optional
@@ -8,8 +11,11 @@ from urllib.parse import urlparse
 
 import requests
 
-T = TypeVar('T')
+parser = argparse.ArgumentParser()
+parser.add_argument('--updates-dir', required=True)
+args: argparse.Namespace = parser.parse_args()
 
+T = TypeVar('T')
 
 class PageIterator(Generic[T]):
     def __init__(self, page_index: int, page_size: int, load_func: Callable[[int, int], List[T]]):
@@ -52,17 +58,15 @@ class PageIterator(Generic[T]):
         self.page_index += 1
         return True
 
-
 def flatmap(func, iterable):
     return chain.from_iterable(map(func, iterable))
-
 
 def get_adoptium_jdks():
     filelist_cmd = 'rsync -r --list-only --include=*/ --include="OpenJDK*-jdk*" --exclude=* rsync://mirror.nju.edu.cn/adoptium/ | awk \'$NF ~ /OpenJDK/\' | awk \'{print $NF}\''
     result = subprocess.run(filelist_cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     file_list = result.stdout.strip().splitlines()
-    file_text = requests.get('https://archives.jenkins.io/updates/updates/io.jenkins.plugins.adoptopenjdk.AdoptOpenJDKInstaller.json')
-    file_text = file_text.text.replace("downloadService.post('io.jenkins.plugins.adoptopenjdk.AdoptOpenJDKInstaller',", '').rstrip(')')
+    file_text = pathlib.Path(args.updates_dir).joinpath('io.jenkins.plugins.adoptopenjdk.AdoptOpenJDKInstaller.json').read_text(encoding="utf-8")
+    file_text = file_text.replace("downloadService.post('io.jenkins.plugins.adoptopenjdk.AdoptOpenJDKInstaller',{", '{').replace('})','}')
     openjdk_list = json.loads(file_text).get('data')
     for j in openjdk_list:
         for r in j['releases']:
@@ -72,7 +76,6 @@ def get_adoptium_jdks():
                 if target_file is not None:
                     b['binary_link'] = f'https://mirrors.nju.edu.cn/adoptium/{target_file}'
     return openjdk_list
-
 
 def get_graalvm_jdks():
     def get_ext(asset, release):
@@ -118,12 +121,8 @@ def get_graalvm_jdks():
     ]
     return releases
 
-
 jdks = []
 jdks.extend(get_adoptium_jdks())
 jdks.extend(get_graalvm_jdks())
 
-html_template = f'''<!DOCTYPE html><html><head><meta http-equiv='Content-Type' content='text/html;charset=UTF-8' /></head><body><script>window.onload = function () {{ window.parent.postMessage(JSON.stringify(
-{json.dumps({'data': jdks}, indent=2)}
-),'*'); }};</script></body></html>)'''
-print(html_template)
+print(f'''downloadService.post('io.jenkins.plugins.adoptopenjdk.AdoptOpenJDKInstaller',{json.dumps({'data': jdks}, indent=2)})''')

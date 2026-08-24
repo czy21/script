@@ -47,15 +47,27 @@ def call(Map inputs) {
                         } else {
                             gitExtensions.add(submodule(parentCredentials: true, recursiveSubmodules: true, reference: ''))
                         }
-                        checkout scmGit(
-                                branches: [
-                                        [name: inputs.param_git_branch]
-                                ],
-                                extensions: gitExtensions,
-                                userRemoteConfigs: [
-                                        [credentialsId: inputs.param_git_credential_id, url: inputs.param_git_repository_url]
-                                ]
-                        )
+                        dir('main') {
+                            checkout scmGit(
+                                    branches: [
+                                            [name: inputs.param_git_branch]
+                                    ],
+                                    extensions: gitExtensions,
+                                    userRemoteConfigs: [
+                                            [url: inputs.param_git_repository_url, credentialsId: inputs.param_git_credential_id]
+                                    ]
+                            )
+                        }
+                        dir('script') {
+                            checkout scmGit(
+                                    branches: [
+                                            [name: 'main']
+                                    ],
+                                    userRemoteConfigs: [
+                                            [url: 'https://gitea.czy21.com:8443/czy21/script.git']
+                                    ]
+                            )
+                        }
                     }
                 }
             }
@@ -65,12 +77,13 @@ def call(Map inputs) {
                         ValidateUtils.validateRequiredParams(inputs,[
                                 "param_global_env_file_id"
                         ])
+
                         def basic = new Basic()
                         basic.loadParam(inputs)
 
-                        inputs.param_project_root = PathUtils.ofPath(env.WORKSPACE, inputs.param_project_root)
-                        inputs.param_project_context = PathUtils.ofPath(inputs.param_project_root, inputs.param_project_module)
-                        inputs.param_helm_chart_context = StringUtils.isNotNull(inputs.param_helm_chart_context) ? PathUtils.ofPath(inputs.param_project_root, inputs.param_helm_chart_context) : inputs.param_project_context
+                        inputs.param_project_root = PathUtils.ofPath(env.WORKSPACE, 'main', inputs.param_project_root)
+
+                        inputs.param_helm_chart_context = StringUtils.defaultIfEmpty(inputs.param_helm_chart_context, PathUtils.ofPath(inputs.param_project_root, inputs.param_helm_chart_context))
                         inputs.param_helm_chart_file = PathUtils.ofPath(inputs.param_helm_chart_context, "Chart.yaml")
 
                         basic.writeParamToYaml(inputs)

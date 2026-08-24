@@ -11,4 +11,8 @@ static def relativize(String p1, String p2) {
     return Path.of(p1 as String).relativize(Path.of(p2 as String)).toString()
 }
 
+static def basename(String p) {
+    return Path.of(p).getFileName().toString()
+}
+
 return this

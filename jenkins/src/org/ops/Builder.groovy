@@ -26,7 +26,7 @@ def exec(Map inputs) {
                 env.PATH = "${GO_HOME}/bin:${PATH}"
             },
             node  : {
-                env.NODEJS_HOME = tool inputs.param_tool_node_version
+                env.NODEJS_HOME = tool inputs.param_tool_nodejs_version
                 env.PATH = "${NODEJS_HOME}/bin:${PATH}"
             },
             dotnet: {
@@ -44,8 +44,8 @@ def exec(Map inputs) {
     env.PATH = "${SONARQUBE_HOME}/bin:${PATH}"
 
     def sonarCmdPrefix = StringUtils.format(
-            "sonar-scanner -Dsonar.projectKey=${inputs.param_sonarqube_project_key} -Dsonar.projectVersion=${inputs.param_release_version} -Dsonar.sources={0}",
-            PathUtils.relativize(env.WORKSPACE, inputs.param_project_root)
+            "sonar-scanner -Dsonar.projectKey=${inputs.param_sonarqube_project_key} -Dsonar.projectVersion=${inputs.param_release_version} -Dsonar.projectBaseDir={0} -Dsonar.sources=.",
+            inputs.param_project_root
     )
 
     def buildMap = [
@@ -77,11 +77,11 @@ def exec(Map inputs) {
             },
             go    : {
                 pathMap.get("go").call()
-                sh "cd ${inputs.param_project_context};go build -o build main.go;"
+                sh "cd ${inputs.param_project_root};go build -o build main.go;"
             },
             web   : {
                 pathMap.get("node").call()
-                sh "npm_config_registry=${inputs.param_npm_repo} npm_config_node_linker=hoisted pnpm --dir ${inputs.param_project_context} install && pnpm --dir ${inputs.param_project_context} run build"
+                sh "npm_config_registry=${inputs.param_npm_repo} npm_config_node_linker=hoisted pnpm --dir ${inputs.param_project_root} install && pnpm --dir ${inputs.param_project_root} run build"
                 if (params.param_code_analysis == true) {
                     withSonarQubeEnv(inputs.param_sonarqube_server) {
                         def cmd = StringUtils.format("{0}", sonarCmdPrefix)

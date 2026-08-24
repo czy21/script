@@ -8,7 +8,7 @@ def build(Map inputs) {
 
     def dockerConfigId = inputs.param_docker_config_env ? "${inputs.param_gradle_config_env}-docker.config" : 'docker.config'
     configFileProvider([configFile(fileId: dockerConfigId, targetLocation: '.jenkins/docker/config.json')]) {}
-    env.DOCKER_CONFIG=PathUtils.ofPath(env.WORKSPACE, ".jenkins/docker/")
+    env.DOCKER_CONFIG = PathUtils.ofPath(env.WORKSPACE, ".jenkins/docker/")
 
     def docker_file = inputs.param_docker_file
     sh "echo ${docker_file}"
