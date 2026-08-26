@@ -1,20 +1,19 @@
 #!/usr/bin/env python3
 
 import argparse
-import requests
+import requests,re
 
 common_parser = argparse.ArgumentParser(add_help=False)
 common_parser.add_argument('--endpoint')
-common_parser.add_argument('--print', action='store_false')
 
 
-def cmd_host_gen(args):
+def cmd_host_show(args):
     res = requests.get(f"{args.endpoint}/api/http/routers")
     for t in res.json():
         rule = t.get('rule')
-        if 'Host' in rule and any([i in rule for i in args.domain]):
-            host = rule.replace('Host(`', '').replace('`)', '')
-            print(f'{args.ip} {host}')
+        for d in args.domain:
+            for h in re.findall(rf"Host\(`([^`]*{re.escape(d)})`\)", rule):
+                print(f'{args.ip} {h}')
 
 
 def cmd_host_push(args):
@@ -54,10 +53,10 @@ if __name__ == "__main__":
     host_subparsers = p_host.add_subparsers(dest="host_cmd")
     host_subparsers.required = True
 
-    p_host_gen = host_subparsers.add_parser("gen", parents=[common_parser])
-    p_host_gen.add_argument('--ip', required=True)
-    p_host_gen.add_argument('--domain', required=True, nargs="+", default=[])
-    p_host_gen.set_defaults(func=cmd_host_gen)
+    p_host_show = host_subparsers.add_parser("show", parents=[common_parser])
+    p_host_show.add_argument('--ip', required=True)
+    p_host_show.add_argument('--domain', required=True, nargs="+", default=[])
+    p_host_show.set_defaults(func=cmd_host_show)
 
     p_host_push = host_subparsers.add_parser("push", parents=[common_parser])
     p_host_push.add_argument('--consul-server')

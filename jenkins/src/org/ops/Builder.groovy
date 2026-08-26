@@ -66,10 +66,10 @@ def exec(Map inputs) {
                     pathMap.get("gradle").call()
                     def gradleConfigId = inputs.param_gradle_config_env ? "${inputs.param_gradle_config_env}-gradle.config" : 'gradle.config'
                     configFileProvider([configFile(fileId: gradleConfigId, variable: 'CONFIG_FILE')]) {
-                        sh "gradle --no-daemon -I ${CONFIG_FILE} -p ${inputs.param_project_root} clean build -U -x test"
+                        sh "gradle --no-daemon -Pdevelopment=false -I ${CONFIG_FILE} -p ${inputs.param_project_root} clean build -U -x test"
                         if (params.param_code_analysis == true) {
                             withSonarQubeEnv(inputs.param_sonarqube_server) {
-                                sh "gradle --no-daemon -I ${CONFIG_FILE} -p ${inputs.param_project_root} sonar -Dsonar.projectKey=${inputs.param_sonarqube_project_key} -Dsonar.projectName=${inputs.param_sonarqube_project_key} -Dsonar.projectVersion=${inputs.param_release_version} -Dsonar.host.url=${SONAR_HOST_URL} -Dsonar.token=${SONAR_AUTH_TOKEN}"
+                                sh "gradle --no-daemon -Pdevelopment=false -I ${CONFIG_FILE} -p ${inputs.param_project_root} sonar -Dsonar.projectKey=${inputs.param_sonarqube_project_key} -Dsonar.projectName=${inputs.param_sonarqube_project_key} -Dsonar.projectVersion=${inputs.param_release_version} -Dsonar.host.url=${SONAR_HOST_URL} -Dsonar.token=${SONAR_AUTH_TOKEN}"
                             }
                         }
                     }

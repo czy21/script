@@ -12,8 +12,6 @@ services:
     container_name: trafficserver
     labels:
       <<: *traefik-label
-    ports:
-      - "8078:8080"
     # volumes:
     #   - {{ param_docker_data }}/{{ param_role_name }}/conf/:/opt/etc/trafficserver
     restart: always

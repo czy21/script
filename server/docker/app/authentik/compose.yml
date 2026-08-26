@@ -10,6 +10,7 @@ x-authentik-common: &authentik-common
     AUTHENTIK_POSTGRESQL__USER: {{ param_db_pgsql_username }}
     AUTHENTIK_POSTGRESQL__PASSWORD: {{ param_db_pgsql_password }}
     AUTHENTIK_SECRET_KEY: {{ param_authentik_secret_key }}
+    AUTHENTIK_OUTPOSTS__CONTAINER_IMAGE_BASE: authentik/%(type)s:%(version)s
   restart: always
 
 x-traefik-label: &traefik-label
