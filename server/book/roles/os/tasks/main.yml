@@ -135,3 +135,15 @@
     sh {{ param_remote_role_path }}/{{ param_ansible_os_family }}-cockpit.sh
   tags:
     - "svc-cockpit"
+
+- name: gitea runner conf
+  template: src=files/gitea-runner.yaml dest={{ role_path }}/gitea-runner.yaml
+  tags:
+    - "svc-gitea-runner"
+
+- name: gitea runner
+  shell: |-
+    cat {{ role_path }}/gitea-runner.yaml | sudo tee /etc/gitea-runner/config.yaml > /dev/null && sudo chmod 644 /etc/gitea-runner/config.yaml
+    sh {{ param_remote_role_path }}/{{ param_ansible_os_family }}-gitea-runner.sh
+  tags:
+    - "svc-gitea-runner"

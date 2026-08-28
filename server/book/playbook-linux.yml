@@ -23,6 +23,7 @@
             - "svc-mongo-conf"
             - "svc-mongo"
             - "svc-cockpit"
+            - "svc-gitea-runner"
         - import_role:
             name: '{{ param_role_name }}'
       always:
@@ -44,6 +45,7 @@
             - "svc-mongo-conf"
             - "svc-mongo"
             - "svc-cockpit"
+            - "svc-gitea-runner"
 
 - name: hosts
   hosts: all
