@@ -33,5 +33,9 @@ fi
 
 sudo apt-get update -y
 docker_version=`sudo apt-cache madison docker-ce | awk '{ print $3 }' | grep "{{ param_docker_version }}" | head -n 1`
-sudo apt-get install -y docker-ce=${docker_version} docker-ce-cli=${docker_version} containerd.io docker-buildx-plugin
+[ -n "$docker_version" ] && docker_version="=$docker_version"
+
+sudo apt-get install -y docker-ce${docker_version} docker-ce-cli${docker_version} containerd.io docker-buildx-plugin docker-compose-plugin
+[ -f /usr/libexec/docker/cli-plugins/docker-compose ] && sudo ln -sf /usr/libexec/docker/cli-plugins/docker-compose /usr/bin/docker-compose
+
 sudo systemctl daemon-reload && sudo systemctl restart docker && sudo systemctl enable docker

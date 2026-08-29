@@ -44,7 +44,7 @@ fi
 
 if [ "ubuntu" = "${os_distribution}" ]; then
   sources_file=/etc/apt/sources.list
-  if [ "24" = "${os_major_version}" ];then
+  if [ "${os_major_version}" -ge 24 ];then
     sources_file=/etc/apt/sources.list.d/ubuntu.sources
   fi
   [ -f "${sources_file}.bak" ] || cp -rv ${sources_file} ${sources_file}.bak

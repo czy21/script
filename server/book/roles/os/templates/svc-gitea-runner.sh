@@ -29,11 +29,7 @@ ExecStart=/usr/local/bin/gitea-runner daemon --config /etc/gitea-runner/config.y
 WorkingDirectory=$HOME
 User=$USER
 Group=$USER
-Restart=on-failure
-RestartSec=5s
-# Allow running jobs to finish before the runner is stopped. Keep this in sync
-# with runner.shutdown_timeout in the config.
-TimeoutStopSec=3h
+Restart=always
 
 [Install]
 WantedBy=multi-user.target

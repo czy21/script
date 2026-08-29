@@ -57,7 +57,7 @@
 
 - name: dnsmasq conf
   shell: |-
-    sudo mkdir -p /etc/dnsmasq.d && cat {{ role_path }}/dnsmasq.conf | sudo tee /etc/dnsmasq.d/dnsmasq.conf > /dev/null && sudo chmod 644 /etc/dnsmasq.d/dnsmasq.conf
+    sudo install -m 0755 -d /etc/dnsmasq.d && cat {{ role_path }}/dnsmasq.conf | sudo tee /etc/dnsmasq.d/dnsmasq.conf > /dev/null && sudo chmod 644 /etc/dnsmasq.d/dnsmasq.conf
   tags:
     - "svc-dnsmasq-conf"
     - "svc-dnsmasq"
@@ -82,7 +82,7 @@
 
 - name: redis conf
   shell: |-
-    sudo mkdir -p /etc/redis && cat {{ role_path }}/redis.conf | sudo tee /etc/redis/redis.conf > /dev/null && sudo chmod 640 /etc/redis/redis.conf
+    sudo install -m 0755 -d /etc/redis && cat {{ role_path }}/redis.conf | sudo tee /etc/redis/redis.conf > /dev/null && sudo chmod 640 /etc/redis/redis.conf
   tags:
     - "svc-redis-conf"
 
@@ -100,7 +100,7 @@
 
 - name: mysql conf
   shell: |-
-    sudo mkdir -p /etc/mysql/mysql.conf.d && cat {{ role_path }}/mysqld.cnf | sudo tee /etc/mysql/mysql.conf.d/mysqld.cnf > /dev/null && sudo chmod 644 /etc/mysql/mysql.conf.d/mysqld.cnf
+    sudo install -m 0755 -d /etc/mysql/mysql.conf.d && cat {{ role_path }}/mysqld.cnf | sudo tee /etc/mysql/mysql.conf.d/mysqld.cnf > /dev/null && sudo chmod 644 /etc/mysql/mysql.conf.d/mysqld.cnf
   tags:
     - "svc-mysql-conf"
     - "svc-mysql"
@@ -143,7 +143,13 @@
 
 - name: gitea runner
   shell: |-
-    cat {{ role_path }}/gitea-runner.yaml | sudo tee /etc/gitea-runner/config.yaml > /dev/null && sudo chmod 644 /etc/gitea-runner/config.yaml
-    sh {{ param_remote_role_path }}/{{ param_ansible_os_family }}-gitea-runner.sh
+    sudo install -m 0755 -d /etc/gitea-runner && cat {{ role_path }}/gitea-runner.yaml | sudo tee /etc/gitea-runner/config.yaml > /dev/null && sudo chmod 644 /etc/gitea-runner/config.yaml
+    sh {{ param_remote_role_path }}/svc-gitea-runner.sh
   tags:
     - "svc-gitea-runner"
+
+- name: tool
+  shell: |-
+    sh {{ param_remote_role_path }}/tool.sh
+  tags:
+    - "tool"

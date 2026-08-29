@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo -n "%wheel ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers.d/99-custom
+echo "%wheel ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers.d/99-custom
 
 grep -q '{{ param_user }}' /etc/passwd || useradd -m {{ param_user }} -s /bin/bash && chown {{ param_user }}:{{ param_user }} /home/{{ param_user }} && usermod -aG wheel {{ param_user }}
 public_key="set -e;cd;mkdir -p .ssh;chmod 700 .ssh;echo {{ param_user_ssh_public_key }} > .ssh/authorized_keys;chmod 644 .ssh/authorized_keys"

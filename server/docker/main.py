@@ -19,7 +19,7 @@ class DockerRole(share.AbstractRole):
     def __init__(self,context:share.RoleContext) -> None:
         super().__init__(context)
 
-        self.container_compose = f"{self.gen_sudo()} docker-compose"
+        self.container_compose = f"{self.gen_sudo()} docker compose"
         if self.context.role_env.get("param_container_engine") == 'podman':
             self.container_compose = "podman compose"
 
