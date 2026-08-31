@@ -20,10 +20,10 @@ def assemble_ql(s_path: pathlib.Path, db_meta: typing.Any, file_suffix: str, pre
     for s in db_file_paths:
         logger.info(basic_util.action_formatter("loading", s))
         with io.open(s, "r", encoding="utf-8") as cf:
-            db_file_template = "\n".join([db_meta.self["header"], cf.read(), db_meta.self["footer"]])
+            db_file_template = "\n".join([db_meta["header"], cf.read(), db_meta["footer"]])
             db_file_content.append(jinja2.Template(source=db_file_template).render(**{
                 **{"file_path": s.as_posix()},
-                **db_meta.self["substitution"]
+                **db_meta["substitution"]
             }))
     if prep:
         db_file_content.insert(0, prep)
