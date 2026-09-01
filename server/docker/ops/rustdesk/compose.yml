@@ -1,0 +1,20 @@
+services:
+  rustdesk-hbbs:
+    image: rustdesk/rustdesk-server:{{ param_rustdesk_version }}
+    container_name: rustdesk-hbbs
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/hbbs/:/root
+    network_mode: "host"
+    depends_on:
+      - rustdesk-hbbr
+    command: hbbs
+    restart: always
+
+  rustdesk-hbbr:
+    image: rustdesk/rustdesk-server:{{ param_rustdesk_version }}
+    container_name: rustdesk-hbbr
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/hbbr/:/root
+    network_mode: "host"
+    command: hbbr
+    restart: always
