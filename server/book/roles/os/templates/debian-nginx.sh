@@ -14,6 +14,8 @@ if [ "{{ param_mirror_use_proxy | lower }}" = true ];then
 fi
 
 sudo apt-get -y update
-nginx_version=`sudo apt-cache madison nginx | awk '{ print $3 }' | grep "{{ param_app_nginx_version }}" | head -n 1`
-sudo apt-get -y install nginx=${nginx_version}
+nginx_version=`sudo apt-cache madison nginx | awk '{ print $3 }' | grep "{{ param_svc_nginx_version }}" | head -n 1`
+[ -n "$nginx_version" ] && nginx_version="=$nginx_version"
+
+sudo apt-get -y install nginx${nginx_version}
 sudo systemctl daemon-reload && sudo systemctl enable nginx && sudo systemctl restart nginx

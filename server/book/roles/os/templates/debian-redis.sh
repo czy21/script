@@ -15,5 +15,7 @@ fi
 
 sudo apt-get -y update
 redis_version=`sudo apt-cache madison redis-server | awk '{ print $3 }' | grep "{{ param_db_redis_version }}" | head -n 1`
-sudo apt-get -y install redis-server=${redis_version} redis-tools=${redis_version}
+[ -n "$redis_version" ] && redis_version="=$redis_version"
+
+sudo apt-get -y install redis-server${redis_version} redis-tools${redis_version}
 sudo systemctl daemon-reload && sudo systemctl enable redis-server && sudo systemctl restart redis-server

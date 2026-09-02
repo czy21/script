@@ -15,5 +15,7 @@ fi
 
 sudo apt-get -y update
 mongo_version=`sudo apt-cache madison mongodb-org | awk '{ print $3 }' | grep "{{ param_db_mongo_patch_version }}" | head -n 1`
-sudo apt-get -y install mongodb-org=${mongo_version}
+[ -n "$mongo_version" ] && mongo_version="=$mongo_version"
+
+sudo apt-get -y install mongodb-org${mongo_version}
 sudo systemctl daemon-reload && sudo systemctl enable mongod && sudo systemctl restart mongod

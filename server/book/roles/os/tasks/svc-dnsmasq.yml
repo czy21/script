@@ -1,0 +1,16 @@
+- name: dnsmasq conf
+  template: src=files/dnsmasq.conf dest={{ role_path }}/dnsmasq.conf
+  tags:
+    - "svc-dnsmasq-conf"
+    - "svc-dnsmasq"
+
+- name: dnsmasq conf
+  shell: sudo install -m 0755 -d /etc/dnsmasq.d && cat {{ role_path }}/dnsmasq.conf | sudo tee /etc/dnsmasq.d/dnsmasq.conf > /dev/null && sudo chmod 644 /etc/dnsmasq.d/dnsmasq.conf
+  tags:
+    - "svc-dnsmasq-conf"
+    - "svc-dnsmasq"
+
+- name: dnsmasq install
+  shell: sh {{ param_remote_role_path }}/{{ param_ansible_os_family }}-dnsmasq.sh
+  tags:
+    - "svc-dnsmasq"

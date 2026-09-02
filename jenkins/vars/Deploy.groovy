@@ -83,7 +83,7 @@ def call(Map inputs) {
 
                         inputs.param_project_root = PathUtils.ofPath(env.WORKSPACE, 'main', inputs.param_project_root)
 
-                        inputs.param_helm_chart_context = StringUtils.defaultIfEmpty(inputs.param_helm_chart_context, PathUtils.ofPath(inputs.param_project_root, inputs.param_helm_chart_context))
+                        inputs.param_helm_chart_context = PathUtils.ofPath(inputs.param_project_root, inputs.param_helm_chart_context)
                         inputs.param_helm_chart_file = PathUtils.ofPath(inputs.param_helm_chart_context, "Chart.yaml")
 
                         basic.writeParamToYaml(inputs)

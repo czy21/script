@@ -1,0 +1,16 @@
+- name: mysql conf
+  template: src=files/mysqld.cnf dest={{ role_path }}/mysqld.cnf
+  tags:
+    - "svc-mysql-conf"
+    - "svc-mysql"
+
+- name: mysql conf
+  shell: sudo install -m 0755 -d /etc/mysql/mysql.conf.d && cat {{ role_path }}/mysqld.cnf | sudo tee /etc/mysql/mysql.conf.d/mysqld.cnf > /dev/null && sudo chmod 644 /etc/mysql/mysql.conf.d/mysqld.cnf
+  tags:
+    - "svc-mysql-conf"
+    - "svc-mysql"
+
+- name: mysql install
+  shell: sh {{ param_remote_role_path }}/{{ param_ansible_os_family }}-mysql.sh
+  tags:
+    - "svc-mysql"

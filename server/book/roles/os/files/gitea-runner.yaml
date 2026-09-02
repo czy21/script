@@ -23,7 +23,7 @@ runner:
   # With `container.network` empty, each concurrent docker job takes a subnet from the
   # daemon's address pool, so a high capacity can exhaust it. See `default-address-pools`
   # in the docker daemon config.
-  #capacity: 1
+  capacity: 5
   # Extra environment variables to run jobs.
   #envs:
   #  A_TEST_ENV_NAME_1: a_test_env_value_1
@@ -95,8 +95,9 @@ runner:
   # Find more images provided by Gitea at https://gitea.com/gitea/runner-images .
   # If it's empty when registering, it will ask for inputting labels.
   # If it's empty when execute `daemon`, will use labels in `.runner` file.
-  #labels:
-  #  - "ubuntu-latest:docker://docker.gitea.com/runner-images:ubuntu-latest"
+  labels:
+   - self-hosted:host
+   - ubuntu-latest:docker://gitea/runner-images:ubuntu-latest
   #  - "ubuntu-24.04:docker://docker.gitea.com/runner-images:ubuntu-24.04"
   #  - "ubuntu-22.04:docker://docker.gitea.com/runner-images:ubuntu-22.04"
   # Allocate a pseudo-TTY for each step's process. Applies to both host and docker backends.

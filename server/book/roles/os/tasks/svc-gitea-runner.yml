@@ -1,0 +1,16 @@
+- name: gitea runner conf
+  template: src=files/gitea-runner.yaml dest={{ role_path }}/gitea-runner.yaml
+  tags:
+    - "svc-gitea-runner-conf"
+    - "svc-gitea-runner"
+
+- name: gitea runner conf
+  shell: sudo install -m 0755 -d /etc/gitea-runner && cat {{ role_path }}/gitea-runner.yaml | sudo tee /etc/gitea-runner/config.yaml > /dev/null && sudo chmod 644 /etc/gitea-runner/config.yaml
+  tags:
+    - "svc-gitea-runner-conf"
+    - "svc-gitea-runner"
+
+- name: gitea runner install
+  shell: sh {{ param_remote_role_path }}/svc-gitea-runner.sh
+  tags:
+    - "svc-gitea-runner"

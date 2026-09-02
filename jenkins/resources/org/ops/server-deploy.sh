@@ -71,12 +71,13 @@ After=network.target
 EnvironmentFile=\$env_file
 WorkingDirectory=${APP_DIR}/${param_release_name}
 ExecStart=${param_app_java_home}/bin/java ${param_app_args} -jar ${APP_DIR}/${param_release_name}/api.jar
-Restart=always
 User=\$USER
+
+Restart=always
+RestartSec=5
 
 [Install]
 WantedBy=multi-user.target
-
 EOF
 fi
 
@@ -90,12 +91,13 @@ After=network.target
 EnvironmentFile=\$env_file
 WorkingDirectory=${APP_DIR}/${param_release_name}
 ExecStart=${APP_DIR}/${param_release_name}/api ${param_app_args}
-Restart=always
 User=\$USER
+
+Restart=always
+RestartSec=5
 
 [Install]
 WantedBy=multi-user.target
-
 EOF
 fi
 
@@ -109,12 +111,13 @@ After=network.target
 EnvironmentFile=\$env_file
 WorkingDirectory=${APP_DIR}/${param_release_name}
 ExecStart=npm --prefix ${APP_DIR}/${param_release_name}/ run ${NPM_RUN_SCRIPT}
-Restart=always
 User=\$USER
+
+Restart=always
+RestartSec=5
 
 [Install]
 WantedBy=multi-user.target
-
 EOF
 fi
 
@@ -128,12 +131,13 @@ After=network.target
 EnvironmentFile=\$env_file
 WorkingDirectory=${APP_DIR}/${param_release_name}
 ExecStart=${APP_DIR}/${param_release_name}/.pyenv/bin/python main.py ${param_app_args}
-Restart=always
 User=\$USER
+
+Restart=always
+RestartSec=5
 
 [Install]
 WantedBy=multi-user.target
-
 EOF
 fi
 

@@ -21,4 +21,6 @@ fi
 
 sudo apt-get -y update
 mysql_version=`sudo apt-cache madison mysql-server | awk '{ print $3 }' | grep "{{ param_db_mysql_patch_version }}" | head -n 1`
-sudo apt-get -y install mysql-server=${mysql_version}
+[ -n "$mysql_version" ] && mysql_version="=$mysql_version"
+
+sudo apt-get -y install mysql-server${mysql_version}

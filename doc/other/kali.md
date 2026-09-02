@@ -1,7 +1,7 @@
 ```shell
 sudo update-rc.d ssh enable
 sudo sed -i.bak 's|http.kali.org|nexus.czy21-internal.com/repository/apt-proxy|g' /etc/apt/sources.list
-wget -O - https://gitlab.com/kalilinux/build-scripts/kali-wsl-chroot/-/raw/master/xfce4.sh | sudo bash
+wget -nv -O - https://gitlab.com/kalilinux/build-scripts/kali-wsl-chroot/-/raw/master/xfce4.sh | sudo bash
 sudo update-rc.d xrdp enable
 
 echo 1 >/proc/sys/net/ipv4/ip_forward

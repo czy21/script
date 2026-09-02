@@ -10,7 +10,7 @@ sudo ln -sf /usr/local/bin/gitea-runner /usr/bin/gitea-runner
 (
     cd
     rm -f .runner*
-    gitea-runner register --no-interactive --instance {{ param_gitea_instance_url }} --token {{ param_gitea_runner_token }} --name $(hostname) --labels {{ param_gitea_runner_label }},self-hosted:host
+    gitea-runner register --no-interactive --instance {{ param_gitea_instance_url }} --token {{ param_gitea_runner_token }} --name $(hostname)
 )
 
 sudo tee /etc/systemd/system/gitea-runner.service << EOF
@@ -29,7 +29,9 @@ ExecStart=/usr/local/bin/gitea-runner daemon --config /etc/gitea-runner/config.y
 WorkingDirectory=$HOME
 User=$USER
 Group=$USER
+
 Restart=always
+RestartSec=5
 
 [Install]
 WantedBy=multi-user.target

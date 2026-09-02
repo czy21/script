@@ -1,0 +1,14 @@
+- name: go
+  shell: sh {{ param_remote_role_path }}/sdk-go.sh
+  tags:
+    - "sdk-go"
+
+- name: java
+  shell: sh {{ param_remote_role_path }}/sdk-java.sh
+  tags:
+    - "sdk-java"
+
+- name: dotnet
+  shell: sh {{ param_remote_role_path }}/{{ param_ansible_os_family }}-dotnet.sh
+  tags:
+    - "sdk-dotnet"

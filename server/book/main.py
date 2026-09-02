@@ -30,7 +30,10 @@ if __name__ == '__main__':
     share.Installer.set_common_argument(parser)
     parser.add_argument('--ansible-host', required=False, type=str, help="ansible host file (default=ansible-host)")
     parser.add_argument('-f', '--file', required=True, type=str, help="inventory file")
-    parser.add_argument('-t', '--tag', required=True, type=str, help="t1,t2")
+    parser.add_argument('--list-tags', action="store_true", help="list all available tags")
+    parser.add_argument('--list-tasks', action="store_true", help="list all available tasks")
+
+    parser.add_argument('-t', '--tags', required=False, type=str, help="t1,t2")
     parser.add_argument('-k', '--ask-pass', action="store_true", help="ask for connection password")
     parser.add_argument('-u', '--user', required=False, type=str, help="connect as this user (default=[param_user])")
     parser.add_argument('--no-step', action="store_true", help="disable one-step-at-a-time")
@@ -64,18 +67,24 @@ if __name__ == '__main__':
         "--ssh-extra-args \'-o StrictHostKeyChecking=no\'",
         "--scp-extra-args \'-o StrictHostKeyChecking=no\'",
         "--inventory", ansible_host_file, ansible_inventory_file,
-        "--tags", args.tag,
-        "--ask-pass" if args.ask_pass else ["--private-key", private_key],
-        "--flush-cache"
+        "--flush-cache",
+        "--ask-pass" if args.ask_pass else ["--private-key", private_key]
     ]
-    if args.param:
-        ansible_playbook_cmd.append("--extra-vars \"{0}\"".format(args.param))
+
+    if args.list_tags:
+        ansible_playbook_cmd.append("--list-tags")
+    if args.list_tasks:
+        ansible_playbook_cmd.append("--list-tasks")
+    if args.tags:
+        ansible_playbook_cmd.append(f"--tags {args.tags}")
     if args.user:
-        ansible_playbook_cmd.append("--user {0}".format(args.user))
+        ansible_playbook_cmd.append(f"--user {args.user}")
+    if args.param:
+        ansible_playbook_cmd.append(f"--extra-vars \"{args.param}\"")
+
     if not args.no_step:
         ansible_playbook_cmd.append("--step")
-    if args.debug:
-        ansible_playbook_cmd.append("-vvvv")
+    ansible_playbook_cmd.append("-v")
     if args.dry_run:
         ansible_playbook_cmd.append("--check")
     _cmds.append(collection_util.flat_to_str(ansible_playbook_cmd))

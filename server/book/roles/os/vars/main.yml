@@ -1,5 +1,5 @@
 ---
-param_app_nginx_version: 1.28.0
+param_svc_nginx_version: 1.28.0
 
 param_db_mongo_patch_version: 8.0.12
 param_db_mongo_minor_version: "{{ param_db_mongo_patch_version.split('.')[:2] | join('.') }}"
@@ -8,3 +8,5 @@ param_db_mysql_patch_version: 8.0.46
 param_db_mysql_minor_version: "{{ param_db_mysql_patch_version.split('.')[:2] | join('.') }}"
 
 param_db_redis_version: 6.2.19
+
+param_sdk_java_versions: 17.0.9,21.0.2,24.0.2,25.0.2

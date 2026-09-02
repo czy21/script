@@ -7,7 +7,7 @@ os_major_version="{{ param_ansible_distribution_major_version }}"
 if [ "centos" = "${os_distribution}" ]; then
     case ${os_major_version} in
         "9")
-            for r in `find /etc/yum.repos.d/ -maxdepth 1 -name "centos*.repo"`;do
+            find /etc/yum.repos.d/ -type f -name 'centos*.repo' -print0 | while IFS= read -r -d '' r;do
               r_bak="${r}.bak"
               [ -f "${r_bak}" ] || cp -rv ${r} ${r_bak}
             done
@@ -19,7 +19,7 @@ if [ "centos" = "${os_distribution}" ]; then
 fi
 
 if [ "rocky" = "${os_distribution}" ]; then
-    for r in `find /etc/yum.repos.d/ -maxdepth 1 -name "rocky*.repo"`;do
+    find /etc/yum.repos.d/ -type f -name 'rocky*.repo' -print0 | while IFS= read -r -d '' r;do
       r_bak="${r}.bak"
       [ -f "${r_bak}" ] || cp -rv ${r} ${r_bak}
       sed -e 's|^mirrorlist=|#\0|g' -e "s|^#baseurl=http://dl.rockylinux.org/\$contentdir|baseurl=https://{{ param_mirror_yum }}/rocky|g" ${r_bak} | tee ${r} > /dev/null
@@ -27,7 +27,7 @@ if [ "rocky" = "${os_distribution}" ]; then
 fi
 
 if [ "fedora" = "${os_distribution}" ]; then
-    for r in `find /etc/yum.repos.d/ -maxdepth 1 ! -name "fedora-cisco*.repo" -name "fedora*.repo"`;do
+    find /etc/yum.repos.d/ -type f ! -name "fedora-cisco*.repo" -name "fedora*.repo" -print0 | while IFS= read -r -d '' r;do
       r_bak="${r}.bak"
       [ -f "${r_bak}" ] || cp -rv ${r} ${r_bak}
       sed -e "s|^metalink=|#\0|g" \

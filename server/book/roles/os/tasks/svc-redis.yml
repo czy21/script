@@ -1,0 +1,16 @@
+- name: redis conf
+  template: src=files/redis.conf dest={{ role_path }}/redis.conf
+  tags:
+    - "svc-redis-conf"
+    - "svc-redis"
+
+- name: redis conf
+  shell: sudo install -m 0755 -d /etc/redis && cat {{ role_path }}/redis.conf | sudo tee /etc/redis/redis.conf > /dev/null && sudo chmod 640 /etc/redis/redis.conf
+  tags:
+    - "svc-redis-conf"
+    - "svc-redis"
+
+- name: redis install
+  shell: sh {{ param_remote_role_path }}/{{ param_ansible_os_family }}-redis.sh
+  tags:
+    - "svc-redis"

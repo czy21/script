@@ -3,193 +3,168 @@
   vars_files: ["vars/env.yml","vars/main.yml"]
   vars:
     param_role_name: os
+    param_role_tags:
+      - "os"
+      - "os-mirror"
+      - "os-sshd"
+      - "tool"
+      - "sdk-go"
+      - "sdk-java"
+      - "sdk-dotnet"
+      - "svc-cockpit"
+      - "svc-nginx"
+      - "svc-dnsmasq-conf"
+      - "svc-dnsmasq"
+      - "svc-redis-conf"
+      - "svc-redis"
+      - "svc-mysql-conf"
+      - "svc-mysql"
+      - "svc-mongo-conf"
+      - "svc-mongo"
+      - "svc-gitea-runner-conf"
+      - "svc-gitea-runner"
   tasks:
     - block:
         - import_tasks: roles/common/tasks/copy.yml
-          tags:
-            - "os"
-            - "os-mirror"
-            - "os-sshd"
-            - "tool"
-            - "sdk-go"
-            - "sdk-java"
-            - "sdk-dotnet"
-            - "svc-dnsmasq-conf"
-            - "svc-dnsmasq"
-            - "svc-nginx"
-            - "svc-redis-conf"
-            - "svc-redis"
-            - "svc-mysql-conf"
-            - "svc-mysql"
-            - "svc-mongo-conf"
-            - "svc-mongo"
-            - "svc-cockpit"
-            - "svc-gitea-runner"
+          tags: "{{ param_role_tags }}"
         - import_role:
-            name: '{{ param_role_name }}'
+            name: "{{ param_role_name }}"
       always:
         - import_tasks: roles/common/tasks/clean.yml
-          tags:
-            - "os"
-            - "os-mirror"
-            - "os-sshd"
-            - "tool"
-            - "sdk-go"
-            - "sdk-java"
-            - "sdk-dotnet"
-            - "svc-dnsmasq-conf"
-            - "svc-dnsmasq"
-            - "svc-nginx"
-            - "svc-redis-conf"
-            - "svc-redis"
-            - "svc-mysql-conf"
-            - "svc-mysql"
-            - "svc-mongo-conf"
-            - "svc-mongo"
-            - "svc-cockpit"
-            - "svc-gitea-runner"
+          tags: "{{ param_role_tags }}"
 
 - name: hosts
   hosts: all
   vars_files: ["vars/env.yml","vars/main.yml"]
   vars:
     param_role_name: hosts
+    param_role_tags:
+      - "{{ param_role_name }}"
   tasks:
     - block:
         - import_tasks: roles/common/tasks/copy.yml
+          tags: "{{ param_role_tags }}"
         - import_role:
-            name: '{{ param_role_name }}'
+            name: "{{ param_role_name }}"
       always:
         - import_tasks: roles/common/tasks/clean.yml
-      tags: ['{{ param_role_name }}']
+          tags: "{{ param_role_tags }}"
 
 - name: docker
   hosts: all
   vars_files: ["vars/env.yml","vars/main.yml"]
   vars:
     param_role_name: docker
+    param_role_tags:
+      - "{{ param_role_name }}"
+      - "{{ param_role_name }}-tls"
+      - "{{ param_role_name }}-compose"
+      - "{{ param_role_name }}-plugin"
   tasks:
     - block:
         - import_tasks: roles/common/tasks/copy.yml
-          tags:
-            - '{{ param_role_name }}'
-            - '{{ param_role_name }}-tls'
-            - "{{ param_role_name }}-compose"
-            - "{{ param_role_name }}-plugin"
+          tags: "{{ param_role_tags }}"
         - import_role:
-            name: '{{ param_role_name }}'
+            name: "{{ param_role_name }}"
       always:
         - import_tasks: roles/common/tasks/clean.yml
-          tags:
-            - '{{ param_role_name }}'
-            - '{{ param_role_name }}-tls'
-            - "{{ param_role_name }}-compose"
-            - "{{ param_role_name }}-plugin"
+          tags: "{{ param_role_tags }}"
 
 - name: podman
   hosts: all
   vars_files: ["vars/env.yml","vars/main.yml"]
   vars:
     param_role_name: podman
+    param_role_tags:
+      - "{{ param_role_name }}"
   tasks:
     - block:
         - import_tasks: roles/common/tasks/copy.yml
-          tags:
-            - '{{ param_role_name }}'
+          tags: "{{ param_role_tags }}"
         - import_role:
-            name: '{{ param_role_name }}'
+            name: "{{ param_role_name }}"
       always:
         - import_tasks: roles/common/tasks/clean.yml
-          tags:
-            - '{{ param_role_name }}'
+          tags: "{{ param_role_tags }}"
 
 - name: haproxy
   hosts: all
   vars_files: ["vars/env.yml","vars/main.yml"]
   vars:
     param_role_name: haproxy
+    param_role_tags:
+      - "ha"
+      - "ha-init"
   tasks:
     - block:
         - import_tasks: roles/common/tasks/copy.yml
-          tags:
-            - "ha"
-            - "ha-init"
+          tags: "{{ param_role_tags }}"
         - import_role:
-            name: '{{ param_role_name }}'
+            name: "{{ param_role_name }}"
       always:
         - import_tasks: roles/common/tasks/clean.yml
-          tags:
-            - "ha"
-            - "ha-init"
+          tags: "{{ param_role_tags }}"
 
 - name: kubernetes
   hosts: all
   vars_files: ["vars/env.yml","vars/main.yml"]
   vars:
     param_role_name: kubernetes
-    param_k8s_backup_name: '{{ param_backup_prefix }}-k8s'
-    param_k8s_etcd_cluster_name: 'etcd'
+    param_role_tags:
+      - "k8s"
+      - "k8s-tool"
+      - "k8s-init-ha"
+      - "k8s-init-etcd-cert"
+      - "k8s-init-etcd"
+      - "k8s-init-kube"
+      - "k8s-join"
+    param_k8s_backup_name: "{{ param_backup_prefix }}-k8s"
+    param_k8s_etcd_cluster_name: "etcd"
   tasks:
     - block:
         - import_tasks: roles/common/tasks/copy.yml
-          tags:
-            - 'k8s'
-            - 'k8s-tool'
-            - 'k8s-init-ha'
-            - 'k8s-init-etcd-cert'
-            - 'k8s-init-etcd'
-            - 'k8s-init-kube'
-            - 'k8s-join'
+          tags: "{{ param_role_tags }}"
         - import_role:
-            name: '{{ param_role_name }}'
+            name: "{{ param_role_name }}"
       always:
         - import_tasks: roles/common/tasks/clean.yml
-          tags:
-            - 'k8s'
-            - 'k8s-tool'
-            - 'k8s-init-ha'
-            - 'k8s-init-etcd-cert'
-            - 'k8s-init-etcd'
-            - 'k8s-init-kube'
-            - 'k8s-join'
+          tags: "{{ param_role_tags }}"
 
 - name: k3s
   hosts: all
   vars_files: ["vars/env.yml","vars/main.yml"]
   vars:
     param_role_name: k3s
+    param_role_tags:
+      - "{{ param_role_name }}-init"
+      - "{{ param_role_name }}-join"
+      - "{{ param_role_name }}-post"
   tasks:
     - block:
         - import_tasks: roles/common/tasks/copy.yml
-          tags:
-            - '{{ param_role_name }}-init'
-            - '{{ param_role_name }}-join'
-            - '{{ param_role_name }}-post'
+          tags: "{{ param_role_tags }}"
         - import_role:
-            name: '{{ param_role_name }}'
+            name: "{{ param_role_name }}"
       always:
         - import_tasks: roles/common/tasks/clean.yml
-          tags:
-            - '{{ param_role_name }}-init'
-            - '{{ param_role_name }}-join'
-            - '{{ param_role_name }}-post'
+          tags: "{{ param_role_tags }}"
 
 - name: truenas
   hosts: all
   vars_files: ["vars/env.yml","vars/main.yml"]
   vars:
     param_role_name: truenas
+    param_role_tags:
+      - "{{ param_role_name }}"
   tasks:
     - block:
         - import_tasks: roles/common/tasks/copy.yml
-          tags:
-            - '{{ param_role_name }}'
+          tags: "{{ param_role_tags }}"
         - import_role:
-            name: '{{ param_role_name }}'
+            name: "{{ param_role_name }}"
       always:
         - import_tasks: roles/common/tasks/clean.yml
-          tags:
-            - '{{ param_role_name }}'
+          tags: "{{ param_role_tags }}"
 
 - name: vm
   hosts: all
@@ -199,16 +174,15 @@
     - "roles/kubernetes/vars/main.yml"
   vars:
     param_role_name: vm
+    param_role_tags:
+      - "vm-fcos-vsphere"
+      - "vm-node-vsphere"
   tasks:
     - block:
         - import_tasks: roles/common/tasks/copy.yml
-          tags:
-            - 'vm-fcos-vsphere'
-            - 'vm-node-vsphere'
+          tags: "{{ param_role_tags }}"
         - import_role:
-            name: '{{ param_role_name }}'
+            name: "{{ param_role_name }}"
       always:
         - import_tasks: roles/common/tasks/clean.yml
-          tags:
-            - 'vm-fcos-vsphere'
-            - 'vm-node-vsphere'
+          tags: "{{ param_role_tags }}"
