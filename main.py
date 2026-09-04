@@ -15,11 +15,13 @@ def collect_doc(source_name):
     namespaces = []
     for s in filter(lambda f: f.is_dir(), source_build_dir.iterdir()):
         roles = []
-        for sd in filter(lambda f: f.is_file, s.rglob("**/output/doc.md")):
-            t = target_dir.joinpath("{}/{}.md".format(s.name, sd.parent.parent.parent.name))
+        for sd in filter(lambda f: f.is_file, s.rglob("build/out/doc.md")):
             role_name = sd.parent.parent.parent.name
+            role_doc_path = sd.parent.parent.joinpath('doc')
             roles.append({"name": role_name, "file": "{}/{}/{}.md".format(source_name, s.name, role_name)})
-            file_util.copy(sd, t)
+            file_util.copy(sd, target_dir.joinpath("{}/{}.md".format(s.name, sd.parent.parent.parent.name)))
+            if role_doc_path.exists():
+                shutil.copytree(role_doc_path, container_path.joinpath(role_name).joinpath(source_name), dirs_exist_ok=True)
         roles.sort(key=lambda k: k.get('name'))
         if roles:
             namespaces.append({"namespace": s.name, "roles": roles})
@@ -32,6 +34,8 @@ logger = logging.getLogger()
 if __name__ == '__main__':
     logger.setLevel(logging.DEBUG)
     root_path = pathlib.Path(__file__).parent
+    container_path = root_path.joinpath('build/container')
+    shutil.rmtree(container_path, ignore_errors=True)
     mkdocs = root_path.joinpath("mkdocs.yaml")
     doc = root_path.joinpath("doc")
     doc_public = doc.joinpath("public")

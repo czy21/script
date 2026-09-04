@@ -1,4 +1,6 @@
-FROM mcr.microsoft.com/dotnet/sdk:9.0.304-noble
+ARG BASE_IMAGE=mcr.microsoft.com/dotnet/sdk:6.0.428-1-jammy
+
+FROM $BASE_IMAGE
 
 WORKDIR /app
 

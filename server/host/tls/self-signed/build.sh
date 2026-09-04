@@ -14,7 +14,7 @@ ${tmp_demo_ca}/private
 touch ${tmp_demo_ca}/index.txt
 echo "01" > ${tmp_demo_ca}/serial
 
-conf_file={{ param_role_output_path }}/conf
+conf_file={{ param_role_out_path }}/conf
 
 openssl_cnf=${conf_file}/openssl.cnf
 openssl_ext=${conf_file}/openssl.ext

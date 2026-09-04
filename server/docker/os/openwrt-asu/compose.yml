@@ -8,7 +8,7 @@ services:
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/asu.toml:/app/asu.toml:ro
       - {{ param_docker_data }}/{{ param_role_name }}/data/public/store:/public/store:ro
-    env_file: {{ param_role_output_path }}/.env
+    env_file: {{ param_role_out_path }}/.env
     ports:
       - "8000:8000"
     restart: always
@@ -21,7 +21,7 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/asu.toml:/app/asu.toml:ro
       - {{ param_docker_data }}/{{ param_role_name }}/data/public:/public:rw
       - /run/user/1000/podman/podman.sock:/var/podman.sock:rw
-    env_file: {{ param_role_output_path }}/.env
+    env_file: {{ param_role_out_path }}/.env
     restart: always
     deploy:
       replicas: 3

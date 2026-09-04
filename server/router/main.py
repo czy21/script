@@ -12,8 +12,8 @@ class RouterRole(share.AbstractRole):
 
     def __init__(self, context: share.RoleContext) -> None:
         super().__init__(context)
-        self.role_init_sh = context.role_output_path.joinpath("init.sh")
-        self.role_env_output_json = context.role_output_path.joinpath("env.json")
+        self.role_init_sh = context.role_out_path.joinpath("init.sh")
+        self.role_env_output_json = context.role_out_path.joinpath("env.json")
 
     def install(self) -> list[str]:
         return get_cmds(self)

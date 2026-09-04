@@ -2,15 +2,15 @@
 
 param_command="{{ param_command }}"
 ldap_etc_path="{{ param_ldap_etc_path }}"
-config_ldif_file="{{ param_role_output_path }}/conf/config.ldif"
-domain_ldif_file="{{ param_role_output_path }}/conf/domain.ldif"
+config_ldif_file="{{ param_role_out_path }}/conf/config.ldif"
+domain_ldif_file="{{ param_role_out_path }}/conf/domain.ldif"
 config_ldif_bak_file="{{ param_role_bak_path }}/config.ldif"
 domain_ldif_bak_file="{{ param_role_bak_path }}/domain.ldif"
 config_ldif_etc_file="${ldap_etc_path}/slapd.d/cn=config/olcDatabase={0}config.ldif"
 mdb_ldif_etc_file="${ldap_etc_path}/slapd.d/cn=config/olcDatabase={1}mdb.ldif"
 mkdir -p {{ param_ldap_data }}/ ${ldap_etc_path}/slapd.d/
 
-cp -rv {{ param_role_output_path }}/conf/ldap.init /etc/init.d/ldap
+cp -rv {{ param_role_out_path }}/conf/ldap.init /etc/init.d/ldap
 
 /etc/init.d/ldap restart
 

@@ -1,4 +1,6 @@
-FROM ghcr.io/graalvm/jdk-community:17.0.9
+ARG BASE_IMAGE=eclipse-temurin:8u462-b08-jdk-noble
+
+FROM $BASE_IMAGE
 
 WORKDIR /app
 ENV JAR=/app/api.jar

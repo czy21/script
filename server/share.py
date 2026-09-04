@@ -179,7 +179,9 @@ class RoleContext(typing.NamedTuple):
     role_title: str
     role_name: str
     role_path: pathlib.Path
-    role_output_path: pathlib.Path
+    role_build_path: pathlib.Path
+    role_doc_path: pathlib.Path
+    role_out_path: pathlib.Path
     role_node_name: str
     role_node_target_path: pathlib.Path
     role_env: dict
@@ -214,14 +216,8 @@ class AbstractRole(metaclass=ABCMeta):
         return []
 
     def sync_to_git_repo(self, role_platform_name):
-        registry_git_repo_url: urllib3.util.Url = urllib3.util.parse_url(self.context.role_env.get("param_registry_git_repo"))
-        registry_git_repo_name: str = pathlib.Path(registry_git_repo_url.path).name
-        registry_git_repo_dir: pathlib.Path = self.context.home_path.joinpath(registry_git_repo_name)
-        if not registry_git_repo_dir.exists():
-            execute("git clone ssh://{0} {1}".format(registry_git_repo_url, registry_git_repo_dir))
-        registry_git_repo_role_dir = registry_git_repo_dir.joinpath(self.context.role_name).joinpath(role_platform_name)
-        registry_git_repo_role_dir.mkdir(exist_ok=True, parents=True)
-        file_util.sync(self.context.role_output_path, self.any_doc_exclude, registry_git_repo_role_dir)
+        shutil.rmtree(self.context.role_doc_path, ignore_errors=True)
+        file_util.sync(self.context.role_out_path, self.any_doc_exclude, self.context.role_doc_path)
 
     def any_doc_exclude(self, f: pathlib.Path):
         return not any(regex_util.match_rules(self.context.role_env["param_doc_excludes"], f.as_posix()).values())
@@ -335,17 +331,19 @@ class Installer:
                 role_bak_path = role_temp_path.joinpath("bak")
                 role_build_path = role_path.joinpath("build")
                 role_build_path.mkdir(parents=True, exist_ok=True)
-                role_output_path = role_build_path.joinpath("output")
-                shutil.rmtree(role_output_path, ignore_errors=True)
+                role_doc_path = role_build_path.joinpath("doc")
+                role_out_path = role_build_path.joinpath("out")
+                shutil.rmtree(role_out_path, ignore_errors=True)
                 role_env_file = role_path.joinpath("env.yaml")
-                role_env_output_file = role_output_path.joinpath("env.yaml")
+                role_env_output_file = role_out_path.joinpath("env.yaml")
                 role_env = {} | global_env | {
                     "param_namespace": namespace,
                     "param_role_name": role_name,
                     "param_role_path": role_path.as_posix(),
                     "param_role_title": role_title,
                     "param_role_build_path": role_build_path.as_posix(),
-                    "param_role_output_path": role_output_path.as_posix(),
+                    "param_role_doc_path": role_doc_path.as_posix(),
+                    "param_role_out_path": role_out_path.as_posix(),
                     "param_role_temp_path": role_temp_path.as_posix(),
                     "param_role_bak_path": role_bak_path.as_posix()
                 }
@@ -360,7 +358,7 @@ class Installer:
                 # process template
                 for t in filter(lambda f: f.is_file() and not any(regex_util.match_rules(["build/", ".temp/", role_env_file.name], f.as_posix()).values()), role_path.rglob("*")):
                     _rules = regex_util.match_rules([*jinja2ignore_rules], t.as_posix(), ".jinja2ignore {0}".format(self.__loop_namespaces.__name__))
-                    role_output_file = role_output_path.joinpath(t.relative_to(role_path))
+                    role_output_file = role_out_path.joinpath(t.relative_to(role_path))
                     if not any(_rules.values()):
                         file_util.write_text(role_output_file, template_util.Template(file_util.read_text(t)).render(**role_env), t.stat().st_mode)
                     else:
@@ -370,7 +368,7 @@ class Installer:
                 _cmds = []
                 if args.command == Command.build.value:
                     if args.target == "build.sh":
-                        target_file = role_output_path.joinpath(args.target)
+                        target_file = role_out_path.joinpath(args.target)
                         if target_file.exists():
                             _cmds.append("sh {0} {1}".format(target_file.as_posix(), " ".join(args.build_args)))
                 role_node_name = role_env.get("param_node_name", "null")
@@ -380,9 +378,11 @@ class Installer:
                     role_title=role_title,
                     role_name=role_name,
                     role_path=role_path,
-                    role_output_path=role_output_path,
+                    role_build_path=role_build_path,
+                    role_doc_path=role_doc_path,
+                    role_out_path=role_out_path,
                     role_node_name=role_node_name,
-                    role_node_target_path=role_output_path.joinpath("node").joinpath(role_node_name),
+                    role_node_target_path=role_out_path.joinpath("node").joinpath(role_node_name),
                     role_env=role_env,
                     role_env_output_file=role_env_output_file,
                     namespace=namespace,
@@ -390,9 +390,9 @@ class Installer:
                 )
                 role_instance = self.role_class(context=role_context)
                 if role_context.role_node_target_path.exists():
-                    path_util.merge_dir(role_context.role_node_target_path, role_context.role_output_path, role_instance.get_merge_ignore_pattern())
+                    path_util.merge_dir(role_context.role_node_target_path, role_context.role_out_path, role_instance.get_merge_ignore_pattern())
                 _cmds.extend(getattr(role_instance, args.command)())
-                execute(collection_util.flat_to_str(_cmds, delimiter=" && "))
+                execute(collection_util.flat_to_str(_cmds, delimiter=" && "), dry_run=args.dry_run)
 
                 def cp_role_to_root(src: pathlib.Path, dst: pathlib.Path):
                     return "mkdir -p {0} && cp -r {1} {0}".format(dst.joinpath(role_path.relative_to(self.root_path)).as_posix(), src.as_posix()) if any(src.iterdir()) else []

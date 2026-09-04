@@ -15,18 +15,18 @@ class ChartRole(share.AbstractRole):
     def __init__(self, context: share.RoleContext) -> None:
         super().__init__(context)
 
-        self.role_init_sh = context.role_output_path.joinpath("init.sh")
+        self.role_init_sh = context.role_out_path.joinpath("init.sh")
         self.root_doc_template_file = context.root_path.joinpath("doc-template.md")
-        self.role_values_override_file = context.role_output_path.joinpath("values.override.yaml")
+        self.role_values_override_file = context.role_out_path.joinpath("values.override.yaml")
         file_util.write_text(self.role_values_override_file, yaml_util.dump(context.role_env))
 
     def install(self) -> list[str]:
         _cmds = []
         if self.role_init_sh.exists():
             _cmds.append("bash {}".format(self.role_init_sh.as_posix()))
-        _cmds.append('helm dep up {0}'.format(self.context.role_output_path.as_posix()))
+        _cmds.append('helm dep up {0}'.format(self.context.role_out_path.as_posix()))
         cmd = [
-            "helm {0} {1} {2} --values {3}".format("upgrade --install", self.context.role_name, self.context.role_output_path.as_posix(), self.role_values_override_file)
+            "helm {0} {1} {2} --values {3}".format("upgrade --install", self.context.role_name, self.context.role_out_path.as_posix(), self.role_values_override_file)
         ]
         if not self.context.args.ignore_namespace:
             cmd.append("--namespace {0}".format(self.context.namespace))
@@ -41,12 +41,12 @@ class ChartRole(share.AbstractRole):
     def build(self) -> list[str]:
         _cmds = []
         if self.context.args.target == "doc":
-            if self.any_doc_exclude(self.context.role_output_path):
+            if self.any_doc_exclude(self.context.role_out_path):
                 md_content = template_util.Template(file_util.read_text(self.root_doc_template_file)).render(**{
                     "param_registry_git_repo_dict": {t["name"]: "{}/{}/{}".format(t["url"], "tree/main", self.context.role_name) for t in self.context.role_env.get("param_registry_git_repos")}
                 })
-                role_readme = self.context.role_output_path.joinpath("README.md")
-                file_util.write_text(self.context.role_output_path.joinpath("doc.md"), md_content + "\n" + (file_util.read_text(role_readme) if role_readme.exists() else ""))
+                role_readme = self.context.role_out_path.joinpath("README.md")
+                file_util.write_text(self.context.role_out_path.joinpath("doc.md"), md_content + "\n" + (file_util.read_text(role_readme) if role_readme.exists() else ""))
             self.sync_to_git_repo("chart")
         return _cmds
 
@@ -69,7 +69,7 @@ class ChartRole(share.AbstractRole):
         _cmds.append("helm repo   list | if [ -z \"$(grep -w {0})\" ];then helm repo add {0} {1};fi".format(helm_repo_name, helm_repo_url))
         _cmds.append(
             "helm package {0} --destination {0} | sed 's/Successfully packaged chart and saved it to: //g' | xargs helm nexus-push {1}  --username {2} --password {3}".format(
-                self.context.role_output_path, helm_repo_name,
+                self.context.role_out_path, helm_repo_name,
                 helm_username,
                 helm_password
             )

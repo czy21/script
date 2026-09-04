@@ -8,7 +8,7 @@ class HostRole(share.AbstractRole):
 
     def __init__(self, context: share.RoleContext) -> None:
         super().__init__(context)
-        self.role_init_sh = context.role_output_path.joinpath("init.sh")
+        self.role_init_sh = context.role_out_path.joinpath("init.sh")
 
     def install(self) -> list[str]:
         return get_cmds(self)

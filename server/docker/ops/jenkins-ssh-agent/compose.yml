@@ -6,7 +6,7 @@ services:
     image: "{{ param_registry }}/{{ param_registry_dir }}/jenkins-ssh-agent:{{ param_role_version }}"
     container_name: jenkins-ssh-agent
     build:
-      context: {{ param_role_output_path }}
+      context: {{ param_role_out_path }}
       dockerfile: Dockerfile
     privileged: true
     ports:
