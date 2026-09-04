@@ -81,7 +81,7 @@ def exec(Map inputs) {
             },
             web   : {
                 pathMap.get("node").call()
-                sh "npm_config_registry=${inputs.param_npm_repo} npm_config_node_linker=hoisted pnpm --dir ${inputs.param_project_root} install && pnpm --dir ${inputs.param_project_root} run build"
+                sh "pnpm_config_registry=${inputs.param_npm_repo} pnpm_config_node_linker=hoisted pnpm --dir ${inputs.param_project_root} install && pnpm --dir ${inputs.param_project_root} run build"
                 if (params.param_code_analysis == true) {
                     withSonarQubeEnv(inputs.param_sonarqube_server) {
                         def cmd = StringUtils.format("{0}", sonarCmdPrefix)

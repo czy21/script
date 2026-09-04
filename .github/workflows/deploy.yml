@@ -18,12 +18,18 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - run: |
-          rm -rf cd $HOME/container/
           $HOME/.python3/bin/python3 -m pip install -r server/requirements.txt
           $HOME/.python3/bin/python3 -m pip install mkdocs mkdocs-material
           $HOME/.python3/bin/python3 -B main.py
       - name: Push to container repository
         run: |
+          find $HOME/container/ -mindepth 1 -maxdepth 1 \
+            ! -name '.git' \
+            ! -name '.github' \
+            ! -name 'LICENSE' \
+            ! -name 'README.md' \
+            -exec rm -rf -- {} +
+          mv build/container/* $HOME/container/
           cd $HOME/container/
           if [ -n "$(git status -s)" ];then
             git add . && git commit --amend -m "CI: sync code" && git push --force

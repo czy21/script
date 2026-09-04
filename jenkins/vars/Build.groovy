@@ -90,7 +90,7 @@ def call(Map inputs) {
                         inputs.param_tool_java_version = StringUtils.defaultIfEmpty(inputs.param_tool_java_version,'jdk-25-graalvm')
                         inputs.param_tool_maven_version = StringUtils.defaultIfEmpty(inputs.param_tool_maven_version,'mvn-3.9')
                         inputs.param_tool_gradle_version = StringUtils.defaultIfEmpty(inputs.param_tool_gradle_version,'gradle-9.7')
-                        inputs.param_tool_nodejs_version = StringUtils.defaultIfEmpty(inputs.param_tool_nodejs_version,'nodejs-20.18')
+                        inputs.param_tool_nodejs_version = StringUtils.defaultIfEmpty(inputs.param_tool_nodejs_version,'nodejs-24.20')
                         inputs.param_tool_golang_version = StringUtils.defaultIfEmpty(inputs.param_tool_golang_version,'go-1.20')
                         inputs.param_tool_dotnet_version = StringUtils.defaultIfEmpty(inputs.param_tool_dotnet_version,'dotnet-9.0')
 

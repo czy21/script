@@ -4,7 +4,7 @@ param_command="{{ param_command }}"
 etc_app_conf=/etc/msmtprc
 
 if [ "install" = "${param_command}" ];then
-  cp -r {{ param_role_output_path }}/conf/msmtprc ${etc_app_conf}
+  cp -r {{ param_role_out_path }}/conf/msmtprc ${etc_app_conf}
 fi
 
 if [ "backup" = "${param_command}" ];then
