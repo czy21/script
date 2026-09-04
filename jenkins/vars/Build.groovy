@@ -87,7 +87,7 @@ def call(Map inputs) {
 
                         inputs.param_sonarqube_server = StringUtils.defaultIfEmpty(inputs.param_sonarqube_server, "sonarqube")
                         inputs.param_sonarqube_project_key = StringUtils.defaultIfEmpty(inputs.param_sonarqube_project_key,inputs.param_release_name)
-                        inputs.param_tool_java_version = StringUtils.defaultIfEmpty(inputs.param_tool_java_version,'jdk-21-graalvm')
+                        inputs.param_tool_java_version = StringUtils.defaultIfEmpty(inputs.param_tool_java_version,'jdk-25-graalvm')
                         inputs.param_tool_maven_version = StringUtils.defaultIfEmpty(inputs.param_tool_maven_version,'mvn-3.9')
                         inputs.param_tool_gradle_version = StringUtils.defaultIfEmpty(inputs.param_tool_gradle_version,'gradle-9.7')
                         inputs.param_tool_nodejs_version = StringUtils.defaultIfEmpty(inputs.param_tool_nodejs_version,'nodejs-20.18')
