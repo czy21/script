@@ -5,3 +5,5 @@ colorlog==6.8.2
 urllib3==2.2.1
 pywinrm==0.5.0
 python-box==7.4.1
+mkdocs==1.6.1
+mkdocs-material==9.7.7

@@ -1,8 +1,6 @@
-ARG REGISTRY=
-ARG REGISTRY_DIR=
-ARG SDK_VERSION=python-3.13
+ARG BASE_IMAGE=registry.czy21.com/library/python-3.13
 
-FROM ${REGISTRY}/${REGISTRY_DIR}/${SDK_VERSION}
+FROM $BASE_IMAGE
 
 COPY ./build/ /app/
 

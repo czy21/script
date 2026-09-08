@@ -27,7 +27,7 @@ EOF
 
   if [ "{{ param_mirror_use_proxy | lower }}" = true ];then
     sudo cp -rv /etc/apt/sources.list.d/docker.sources /etc/apt/sources.list.d/docker.sources.bak
-    sed -e "s|https://download.docker.com|https://{{ param_mirror_docker_ce }}|g" /etc/apt/sources.list.d/docker.sources.bak | sudo tee /etc/apt/sources.list.d/docker.sources
+    sed -e "s|https://download.docker.com|https://{{ param_mirror_docker }}|g" /etc/apt/sources.list.d/docker.sources.bak | sudo tee /etc/apt/sources.list.d/docker.sources
   fi
 fi
 

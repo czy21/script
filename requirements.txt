@@ -9,8 +9,8 @@ PyMySQL==1.0.2
 SQLAlchemy==1.4.28
 Faker==10.0.0
 requests==2.31.0
-mkdocs==1.4.3
-mkdocs-material==9.1.18
+mkdocs==1.6.1
+mkdocs-material==9.7.7
 yfinance==0.2.33
 python-telegram-bot==20.7
 telethon==1.33.1

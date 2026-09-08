@@ -1,7 +1,5 @@
-ARG REGISTRY=
-ARG REGISTRY_DIR=
-ARG SDK_VERSION=jdk25-graalvm
+ARG BASE_IMAGE=registry.czy21.com/library/jdk25-graalvm
 
-FROM ${REGISTRY}/${REGISTRY_DIR}/${SDK_VERSION}
+FROM $BASE_IMAGE
 
 COPY ./build/api.jar ${JAR}

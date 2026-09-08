@@ -62,7 +62,7 @@ def flatmap(func, iterable):
     return chain.from_iterable(map(func, iterable))
 
 def get_adoptium_jdks():
-    filelist_cmd = 'rsync -r --list-only --include=*/ --include="OpenJDK*-jdk*" --exclude=* rsync://mirror.nju.edu.cn/adoptium/ | awk \'$NF ~ /OpenJDK/\' | awk \'{print $NF}\''
+    filelist_cmd = "rsync -r --list-only --include=*/ --include=OpenJDK*-jdk* --exclude=* rsync://mirrors.tuna.tsinghua.edu.cn/Adoptium/ | grep 'OpenJDK' | awk '{print $NF}'"
     result = subprocess.run(filelist_cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     file_list = result.stdout.strip().splitlines()
     file_text = pathlib.Path(args.updates_dir).joinpath('io.jenkins.plugins.adoptopenjdk.AdoptOpenJDKInstaller.json').read_text(encoding="utf-8")
@@ -74,7 +74,7 @@ def get_adoptium_jdks():
                 source_file = urlparse(b['binary_link']).path.split('/')[-1]
                 target_file = next(filter(lambda f: f.split('/')[-1] == source_file, file_list), None)
                 if target_file is not None:
-                    b['binary_link'] = f'https://mirrors.nju.edu.cn/adoptium/{target_file}'
+                    b['binary_link'] = f'https://mirrors.tuna.tsinghua.edu.cn/Adoptium/{target_file}'
     return openjdk_list
 
 def get_graalvm_jdks():
@@ -107,7 +107,7 @@ def get_graalvm_jdks():
                     'binaries': [
                         {
                             'architecture': b['arch'],
-                            'binary_link': b['browser_download_url'],
+                            'binary_link': 'https://nexus.czy21.com/repository/raw-proxy/github/'+ b['browser_download_url'],
                             'openjdk_impl': 'graalvm',
                             'os': b['os'],
                         }

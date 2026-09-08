@@ -10,7 +10,7 @@ sudo dnf config-manager --add-repo https://download.docker.com/linux/${os_distri
 
 if [ "{{ param_mirror_use_proxy | lower }}" = true ];then
   sudo cp -rv /etc/yum.repos.d/docker-ce.repo /etc/yum.repos.d/docker-ce.repo.bak
-  sed -e "s|https://download.docker.com|https://{{ param_mirror_docker_ce }}|g" /etc/yum.repos.d/docker-ce.repo.bak | sudo tee /etc/yum.repos.d/docker-ce.repo > /dev/null
+  sed -e "s|https://download.docker.com|https://{{ param_mirror_docker }}|g" /etc/yum.repos.d/docker-ce.repo.bak | sudo tee /etc/yum.repos.d/docker-ce.repo > /dev/null
 fi
 
 sudo yum update -y

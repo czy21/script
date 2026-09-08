@@ -1,0 +1,3 @@
+ARG BASE_IMAGE=registry.czy21.com/library/nodejs-20.18
+
+FROM $BASE_IMAGE

@@ -120,11 +120,10 @@ class DockerRole(share.AbstractRole):
                         continue
                     registry_target_tag = self.get_image_tag(registry_target_url, registry_target_dir, t.get('name'))
                     registry_target_tags.append((r, registry_target_tag))
-                _cmds.append(f"docker build {t.get('build_args','')} --tag {registry_source_tag} --file {t.get('Dockerfile').as_posix()} {self.context.role_out_path.as_posix()} --pull")
+                _cmds.append(f"docker build --progress=plain {t.get('build_args','')} --tag {registry_source_tag} --file {t.get('Dockerfile').as_posix()} {self.context.role_out_path.as_posix()} --pull")
                 _cmds.extend([f"docker tag {registry_source_tag} {t[1]}" for t in registry_target_tags])
                 if self.context.args.push:
-                    if not registry_target_tags:
-                        _cmds.append(f"docker push {registry_source_tag}")
+                    _cmds.append(f"docker push {registry_source_tag}")
                     _cmds.extend([f"docker --config $HOME/.docker/registry/{t[0]} push {t[1]}" for t in registry_target_tags])
         if self.context.args.target == "doc":
             if self.any_doc_exclude(self.context.role_out_path):

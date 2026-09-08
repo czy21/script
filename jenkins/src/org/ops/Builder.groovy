@@ -25,7 +25,7 @@ def exec(Map inputs) {
                 env.CGO_ENABLED = "0"
                 env.PATH = "${GO_HOME}/bin:${PATH}"
             },
-            node  : {
+            nodejs  : {
                 env.NODEJS_HOME = tool inputs.param_tool_nodejs_version
                 env.PATH = "${NODEJS_HOME}/bin:${PATH}"
             },
@@ -80,7 +80,7 @@ def exec(Map inputs) {
                 sh "cd ${inputs.param_project_root};go build -o build main.go;"
             },
             web   : {
-                pathMap.get("node").call()
+                pathMap.get("nodejs").call()
                 sh "pnpm_config_registry=${inputs.param_npm_repo} pnpm_config_node_linker=hoisted pnpm --dir ${inputs.param_project_root} install && pnpm --dir ${inputs.param_project_root} run build"
                 if (params.param_code_analysis == true) {
                     withSonarQubeEnv(inputs.param_sonarqube_server) {

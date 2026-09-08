@@ -1,6 +1,5 @@
-ARG REGISTRY=
-ARG REGISTRY_DIR=
+ARG BASE_IMAGE=registry.czy21.com/library/nginx-spa
 
-FROM ${REGISTRY}/${REGISTRY_DIR}/nginx-spa
+FROM $BASE_IMAGE
 
 COPY ./build/ .

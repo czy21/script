@@ -1,8 +1,6 @@
-ARG REGISTRY=
-ARG REGISTRY_DIR=
-ARG SDK_VERSION=dotnet-9
+ARG BASE_IMAGE=registry.czy21.com/library/dotnet-9
 
-FROM ${REGISTRY}/${REGISTRY_DIR}/${SDK_VERSION}
+FROM $BASE_IMAGE
 
 COPY ./build/ /app/
 RUN ls -al /app

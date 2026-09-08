@@ -1,0 +1,85 @@
+name: Build
+
+on:
+  push:
+    paths:
+      - server/docker/**
+      - server/chart/**
+  workflow_dispatch:
+    inputs:
+      targets:
+        type: string
+
+# Default to bash
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Build server/docker
+        run: |
+
+          PATHS=(
+              server/docker/app/hugo
+              server/docker/app/mkdoc
+              server/docker/app/nginx-spa
+              server/docker/ops/jenkins
+              server/docker/ops/jenkins-ssh-agent
+              server/docker/ops/jenkins-inbound-agent
+              server/docker/sdk/dotnet
+              server/docker/sdk/java
+              server/docker/sdk/nodejs
+              server/docker/sdk/python
+          )
+
+          source=server/docker
+          TARGETS="${{ inputs.targets }}"
+          if [ "${{ github.event_name }}" = "push" ];then
+            DIFFS=$(git diff --diff-filter=d --name-only HEAD~)
+  
+            for ROOT in "${PATHS[@]}"; do
+              for CHANGE in $DIFFS; do
+                if [[ "$CHANGE" == "$ROOT"* ]]; then
+                  TARGETS+="${ROOT#"$source/"} "
+                  break
+                fi
+              done
+            done
+          fi
+          echo "Build $TARGETS"
+          for t in $TARGETS;do
+            (cd $source;PYTHONPATH=../.. $HOME/.python3/bin/python3 -B main.py build --project $t --target Dockerfile --push -p param_registry_targets=docker)
+          done
+
+  build-doc:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v6
+      - run: $HOME/.python3/bin/python3 -B main.py
+      - name: Push to container repository
+        run: |
+          find $HOME/container/ -mindepth 1 -maxdepth 1 \
+            ! -name '.git' \
+            ! -name 'LICENSE' \
+            ! -name 'README.md' \
+            -exec rm -rf -- {} +
+          mv build/container/* $HOME/container/
+          cd $HOME/container/
+          if [ -n "$(git status -s)" ];then
+            git add . && git commit --amend -m "CI: sync code" && git push --force
+          fi
+      - name: Build with Mkdocs
+        run: $HOME/.python3/bin/mkdocs build -d build/doc
+      - name: Deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy build/doc --project-name=doc

@@ -9,8 +9,10 @@ services:
 
   jenkins:
     image: "{{ param_registry }}/{{ param_registry_dir }}/jenkins:{{ param_role_version }}"
-    pull_policy: always
     container_name: jenkins
+    build:
+      context: {{ param_role_out_path }}
+      dockerfile: Dockerfile
     privileged: true
     working_dir: /var/jenkins_home/
     labels:

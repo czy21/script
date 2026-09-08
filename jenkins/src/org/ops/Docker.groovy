@@ -22,9 +22,7 @@ def build(Map inputs) {
     def docker_image_tag = "${inputs.param_release_image}:${inputs.param_release_version}"
     def cmd = [
         "docker build",
-        "--build-arg REGISTRY=${inputs.param_registry}",
-        "--build-arg REGISTRY_DIR=${inputs.param_registry_dir}",
-        "--build-arg SDK_VERSION=${inputs.get('param_tool_' + inputs.param_code_type + '_version')}",
+        "--build-arg BASE_IMAGE=${inputs.param_registry}/${inputs.param_registry_dir}/${inputs.get('param_tool_' + inputs.param_code_type + '_version')}",
     ]
     if (StringUtils.isNotEmpty(inputs.param_docker_build_args)) {
         cmd.add(inputs.param_docker_build_args)

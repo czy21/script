@@ -78,9 +78,10 @@ def get_dir_dict(path: pathlib.Path, exclude_rules: list = None, select_tip="", 
     _dirs = get_match_dirs(exclude_rules, list(filter(lambda a: a.is_dir(), sorted(path.iterdir()))))
     dir_dict: dict = {str(i): t for i, t in enumerate(_dirs, start=1)}
     collection_util.print_grid(["{0}.{1}".format(str(k), v.name) for k, v in dir_dict.items()], col_num=col_num, msg=path.as_posix())
-    logger.info("\nplease select {0}:".format(select_tip))
+    if select_tip:
+        logger.info("\nplease select {0}:".format(select_tip))
     dir_nums = []
-    if args.all_namespaces or args.all_roles:
+    if args.all_namespaces or args.all_roles or args.project:
         dir_nums.extend(dir_dict.keys())
     else:
         dir_nums.extend(input().strip().split())
@@ -94,36 +95,49 @@ def select_namespace(root_path: pathlib.Path, deep: int = 1, exclude_rules=None,
     flat_dirs = dfs_dir(root_path, exclude_rules=exclude_rules)
     deep_index = 1
     namespaces = []
-    if deep == deep_index:
-        _root_path = pathlib.Path(root_path)
+    if args.project:
+        project_path = root_path.joinpath(args.project)
+        if not project_path.exists():
+            sys.exit()
         namespaces.extend([
-            Namespace(args.namespace if args.namespace else _root_path.name, [
-                RoleMeta(rk, rv.name, rv, _root_path)
-                for rk, rv in get_dir_dict(_root_path, exclude_rules=exclude_rules, select_tip="role num(example:1 2 ...)", args=args).items()
+            Namespace(args.namespace or (root_path.name if deep == deep_index else project_path.parent.name), [
+                    RoleMeta(rk, rv.name, rv, project_path.parent)
+                    for rk, rv in get_dir_dict(project_path.parent, exclude_rules=exclude_rules, select_tip="", args=args).items()
+                    if rv == project_path
             ])
         ])
-        return namespaces
-    app_paths: list[pathlib.Path] = []
-    while deep > deep_index:
-        role_dict = {str(i): p for i, p in
-                     enumerate(map(lambda a: a["path"], filter(lambda a: a["deep"] == deep_index, flat_dirs)), start=1)}
-        collection_util.print_grid(["{0}.{1}".format(k, v.name) for k, v in role_dict.items()], col_num=col_num, msg=next(iter(role_dict.items()))[1].parent.as_posix())
-        if args.all_namespaces:
-            app_paths = list(role_dict.values())
-        else:
-            logger.info("\nplease select options(example:1 2 ...)")
-            selected = input().strip()
-            if selected == '':
-                sys.exit()
-            app_paths = [role_dict[t] for t in selected.split()]
-        deep_index += 1
-    namespaces.extend([
-        Namespace(args.namespace if args.namespace else p.name,[
-                    RoleMeta("%s.%s" % (next(filter(lambda t: t["path"] == p, flat_dirs), None)["key"], rk),rv.name,rv, p) 
-                    for rk, rv in get_dir_dict(p, exclude_rules=exclude_rules, select_tip="role num(example:1 2 ...)",col_num=col_num,args=args).items()
+    else:
+        if deep == deep_index:
+            namespaces.extend([
+                Namespace(args.namespace if args.namespace else root_path.name, [
+                    RoleMeta(rk, rv.name, rv, root_path)
+                    for rk, rv in get_dir_dict(root_path, exclude_rules=exclude_rules, select_tip="role num(example:1 2 ...)", args=args).items()
+                ])
+            ])
+            return namespaces
+        app_paths: list[pathlib.Path] = []
+        while deep > deep_index:
+            role_dict = {
+                str(i): p
+                for i, p in enumerate(map(lambda a: a["path"], filter(lambda a: a["deep"] == deep_index, flat_dirs)), start=1)
+            }
+            collection_util.print_grid(["{0}.{1}".format(k, v.name) for k, v in role_dict.items()], col_num=col_num, msg=next(iter(role_dict.items()))[1].parent.as_posix())
+            if args.all_namespaces:
+                app_paths = list(role_dict.values())
+            else:
+                logger.info("\nplease select options(example:1 2 ...)")
+                selected = input().strip()
+                if selected == '':
+                    sys.exit()
+                app_paths = [role_dict[t] for t in selected.split()]
+            deep_index += 1
+        namespaces.extend([
+            Namespace(args.namespace or p.name, [
+                        RoleMeta("%s.%s" % (next(filter(lambda t: t["path"] == p, flat_dirs), None)["key"], rk),rv.name,rv, p) 
+                        for rk, rv in get_dir_dict(p, exclude_rules=exclude_rules, select_tip="role num(example:1 2 ...)", col_num=col_num,args=args).items()
+            ])
+            for p in app_paths
         ])
-        for p in app_paths
-    ])
     return namespaces
 
 
@@ -269,6 +283,7 @@ class Installer:
     def set_common_argument(parser: argparse.ArgumentParser):
         parser.add_argument('-n', '--namespace', type=str)
         parser.add_argument('-p', '--param', nargs="+", default=[], type=lambda s: s.split("=", 1) if "=" in s else (s, ""), help="k1=v1 k2=v2")
+        parser.add_argument('--project', type=str)
         parser.add_argument('--env-active', nargs="+", default=[], help="list of env active")
         parser.add_argument('--all-roles', action="store_true")
         parser.add_argument('--all-namespaces', action="store_true")
@@ -417,10 +432,3 @@ class Installer:
             jinja2ignore_rules=global_jinja2ignore_rules,
             args=args
         )
-
-
-if __name__ == '__main__':
-    log_util.init_logger(file=pathlib.Path(__file__).parent.joinpath(".temp/share.log"))
-    logger.setLevel(logging.DEBUG)
-    # select_namespace(pathlib.Path(__file__).parent.joinpath("docker"), deep=2)
-    Installer(pathlib.Path(__file__).parent).run()

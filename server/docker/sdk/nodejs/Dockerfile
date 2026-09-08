@@ -1,0 +1,7 @@
+ARG BASE_IMAGE=node:24.20.0-alpine
+
+FROM $BASE_IMAGE
+
+WORKDIR /app
+
+EXPOSE 8080
