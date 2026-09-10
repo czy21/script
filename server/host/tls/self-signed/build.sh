@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e
-tmp_generate={{ param_role_temp_path }}/generate
-tmp_demo_ca={{ param_role_temp_path }}/demoCA
-tmp_ca={{ param_role_temp_path }}/ca
+tmp_generate={{ param_role_tmp_path }}/generate
+tmp_demo_ca={{ param_role_tmp_path }}/demoCA
+tmp_ca={{ param_role_tmp_path }}/ca
 
 mkdir -p \
 ${tmp_generate} \

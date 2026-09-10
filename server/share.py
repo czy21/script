@@ -258,8 +258,7 @@ class Installer:
         self.__init_push_parser()
 
         log_util.init_logger(file=self.build_path.joinpath("share.log"))
-        self.tmp_path.mkdir(exist_ok=True)
-        self.build_path.mkdir(exist_ok=True)
+        [t.mkdir(exist_ok=True) for t in [self.build_path, self.tmp_path]]
 
     @staticmethod
     def load_env_file(env_active: list[str], env_extra: dict = None) -> dict:
@@ -341,14 +340,11 @@ class Installer:
                 role_path: pathlib.Path = r.path
                 role_title = "%s.%s" % (role_key, role_name)
                 role_log_prefix = role_title
-                role_temp_path = role_path.joinpath(".temp")
-                role_temp_path.mkdir(parents=True, exist_ok=True)
-                role_bak_path = role_temp_path.joinpath("bak")
                 role_build_path = role_path.joinpath("build")
-                role_build_path.mkdir(parents=True, exist_ok=True)
                 role_doc_path = role_build_path.joinpath("doc")
                 role_out_path = role_build_path.joinpath("out")
-                shutil.rmtree(role_out_path, ignore_errors=True)
+                role_tmp_path = role_path.joinpath(".temp")
+                role_bak_path = role_tmp_path.joinpath("bak")
                 role_env_file = role_path.joinpath("env.yaml")
                 role_env_output_file = role_out_path.joinpath("env.yaml")
                 role_env = {} | global_env | {
@@ -359,9 +355,11 @@ class Installer:
                     "param_role_build_path": role_build_path.as_posix(),
                     "param_role_doc_path": role_doc_path.as_posix(),
                     "param_role_out_path": role_out_path.as_posix(),
-                    "param_role_temp_path": role_temp_path.as_posix(),
+                    "param_role_tmp_path": role_tmp_path.as_posix(),
                     "param_role_bak_path": role_bak_path.as_posix()
                 }
+                [shutil.rmtree(t, ignore_errors=True) for t in [role_build_path]]
+                [t.mkdir(parents=True, exist_ok=True) for t in [role_build_path, role_tmp_path]]
                 logger.info(role_log_prefix)
                 if args.command == Command.backup.value:
                     role_bak_path.mkdir(exist_ok=True)
@@ -412,7 +410,7 @@ class Installer:
                 def cp_role_to_root(src: pathlib.Path, dst: pathlib.Path):
                     return "mkdir -p {0} && cp -r {1} {0}".format(dst.joinpath(role_path.relative_to(self.root_path)).as_posix(), src.as_posix()) if any(src.iterdir()) else []
 
-                execute(collection_util.flat_to_str([cp_role_to_root(role_build_path, self.build_path), cp_role_to_root(role_temp_path, self.tmp_path)], delimiter=" && "))
+                execute(collection_util.flat_to_str([cp_role_to_root(role_build_path, self.build_path), cp_role_to_root(role_tmp_path, self.tmp_path)], delimiter=" && "))
 
     def run(self, **kwargs):
         args: argparse.Namespace = self.arg_parser.parse_args()

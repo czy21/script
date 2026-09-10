@@ -16,7 +16,7 @@ defaults:
     shell: bash
 
 jobs:
-  build:
+  build-docker:
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v6
@@ -56,6 +56,43 @@ jobs:
           echo "Build $TARGETS"
           for t in $TARGETS;do
             (cd $source;PYTHONPATH=../.. $HOME/.python3/bin/python3 -B main.py build --project $t --target Dockerfile --push -p param_registry_targets=docker)
+          done
+
+  build-chart:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Build server/chart
+        run: |
+
+          PATHS=(
+              server/chart/app/dotnet
+              server/chart/app/go
+              server/chart/app/java
+              server/chart/app/python
+              server/chart/app/web
+          )
+
+          source=server/chart
+          TARGETS="${{ inputs.targets }}"
+          if [ "${{ github.event_name }}" = "push" ];then
+            DIFFS=$(git diff --diff-filter=d --name-only HEAD~)
+  
+            for ROOT in "${PATHS[@]}"; do
+              for CHANGE in $DIFFS; do
+                if [[ "$CHANGE" == "$ROOT"* ]]; then
+                  TARGETS+="${ROOT#"$source/"} "
+                  break
+                fi
+              done
+            done
+          fi
+          echo "Build $TARGETS"
+          for t in $TARGETS;do
+            (cd $source;PYTHONPATH=../.. $HOME/.python3/bin/python3 -B main.py build --project $t --target Chart --push)
           done
 
   build-doc:

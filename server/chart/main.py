@@ -40,6 +40,12 @@ class ChartRole(share.AbstractRole):
 
     def build(self) -> list[str]:
         _cmds = []
+        helm_repo_url = self.context.role_env.get("param_helm_repo_url")
+        if self.context.args.target == "Chart":
+            if self.context.args.push:
+                _cmds.append(f"helm package {self.context.role_out_path} --destination {self.context.role_out_path} | sed 's/Successfully\(.*\)to: //g' | xargs -I{{}} helm push {{}} {helm_repo_url}")
+            else:
+                _cmds.append(f"helm package {self.context.role_out_path} --destination {self.context.role_out_path}")
         if self.context.args.target == "doc":
             if self.any_doc_exclude(self.context.role_out_path):
                 md_content = template_util.Template(file_util.read_text(self.root_doc_template_file)).render(**{
@@ -60,22 +66,7 @@ class ChartRole(share.AbstractRole):
         return []
 
     def push(self) -> list[str]:
-        _cmds = []
-        helm_repo_name = self.context.role_env.get("param_helm_repo_name")
-        helm_repo_url = self.context.role_env.get("param_helm_repo_url")
-        helm_username = self.context.role_env.get("param_helm_username")
-        helm_password = self.context.role_env.get("param_helm_password")
-        _cmds.append("helm plugin list | if [ -z \"$(grep -w nexus-push)\" ];then helm plugin install --version master https://github.com/sonatype-nexus-community/helm-nexus-push.git;fi")
-        _cmds.append("helm repo   list | if [ -z \"$(grep -w {0})\" ];then helm repo add {0} {1};fi".format(helm_repo_name, helm_repo_url))
-        _cmds.append(
-            "helm package {0} --destination {0} | sed 's/Successfully packaged chart and saved it to: //g' | xargs helm nexus-push {1}  --username {2} --password {3}".format(
-                self.context.role_out_path, helm_repo_name,
-                helm_username,
-                helm_password
-            )
-        )
-        return _cmds
-
+        return []
 
 if __name__ == '__main__':
     share.Installer(pathlib.Path(__file__).parent, ChartRole, role_deep=2).run()

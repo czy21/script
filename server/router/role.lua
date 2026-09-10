@@ -21,7 +21,7 @@ then
     return
 end
 
-local config_json = envJson.param_role_temp_path .. "/config.json"
+local config_json = envJson.param_role_tmp_path .. "/config.json"
 local obj = {}
 
 function set_option_value(section, value)

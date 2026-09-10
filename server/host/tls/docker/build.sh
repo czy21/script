@@ -1,10 +1,10 @@
 #!/bin/bash
 
-tmp_ca={{ param_role_temp_path }}/ca
+tmp_ca={{ param_role_tmp_path }}/ca
 
 # server
 for t in {{ param_docker_host_ips | join (" ")}};do
-  t_dir={{ param_role_temp_path }}/$t
+  t_dir={{ param_role_tmp_path }}/$t
   mkdir -p $t_dir
 
   openssl genrsa -out $t_dir/server.key 4096
@@ -14,7 +14,7 @@ for t in {{ param_docker_host_ips | join (" ")}};do
 done
 
 # client
-client_dir={{ param_role_temp_path }}/client
+client_dir={{ param_role_tmp_path }}/client
 mkdir -p $client_dir
 openssl genrsa -out $client_dir/client.key 4096
 openssl req -subj '/CN=client' -new -key $client_dir/client.key -out $client_dir/client.csr
