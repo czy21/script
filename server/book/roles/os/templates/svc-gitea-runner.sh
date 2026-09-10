@@ -18,20 +18,18 @@ sudo tee /etc/systemd/system/gitea-runner.service << EOF
 Description=Gitea Actions runner
 Documentation=https://gitea.com/gitea/runner
 After=network-online.target
-Wants=network-online.target
-# Uncomment when jobs use the local Docker daemon:
-# After=docker.service
-# Requires=docker.service
 
 [Service]
 Type=simple
 ExecStart=/usr/local/bin/gitea-runner daemon --config /etc/gitea-runner/config.yaml
 WorkingDirectory=$HOME
 User=$USER
-Group=$USER
-
-Restart=always
-RestartSec=5
+GROUP=$USER
+Restart=on-failure
+RestartSec=5s
+# Allow running jobs to finish before the runner is stopped. Keep this in sync
+# with runner.shutdown_timeout in the config.
+TimeoutStopSec=3h
 
 [Install]
 WantedBy=multi-user.target

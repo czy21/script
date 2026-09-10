@@ -39,7 +39,7 @@ spec:
       containers:
         - name: {{ include "app.fullname" . }}
           image: "{{ include "app.image" . }}"
-          imagePullPolicy: Always
+          imagePullPolicy: "{{ include "app.imagePullPolicy" . }}"
           ports:
             - name: http
               containerPort: 8080

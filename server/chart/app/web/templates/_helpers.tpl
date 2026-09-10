@@ -14,3 +14,11 @@
     .Values.param_release_version }}
 {{- end }}
 {{- end }}
+
+{{- define "app.imagePullPolicy" -}}
+{{- if and .Values.param_release_image_pull_policy (ne .Values.param_release_image_pull_policy "") }}
+{{- .Values.param_release_image_pull_policy }}
+{{- else }}
+{{- printf "Always" }}
+{{- end }}
+{{- end }}
