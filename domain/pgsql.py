@@ -25,10 +25,13 @@ class PgSQLSource(base.AbstractDBSource):
         self.username = self.context.param.param_main_db_pgsql_username
         self.password = self.context.param.param_main_db_pgsql_password
         self.database = self.context.param.param_main_db_pgsql_database
-        self.output_db_all_in_one = pathlib.Path(self.context.param.output_db_all,f'pgsql-{self.database}.sql').as_posix()
-        self.output_db_bak_gz = pathlib.Path(self.context.param.output_db_bak).joinpath(f'pgsql-{self.database}.gz').as_posix()
 
-    def key(self): -> str:
+        self.out_db_ql = pathlib.Path(self.context.param.out_path).joinpath(f'{self.key()}-{self.database}.sql').as_posix()
+
+        self.out_db_bak_ql = pathlib.Path(self.context.param.out_path).joinpath(f'{self.key()}-{self.database}-bak.sql').as_posix()
+        self.out_db_bak_gz = pathlib.Path(self.context.param.out_path).joinpath(f'{self.key()}-{self.database}-bak.gz').as_posix()
+
+    def key(self) -> str:
         return 'pgsql'
 
     def meta(self):
@@ -79,7 +82,7 @@ class PgSQLSource(base.AbstractDBSource):
             f"PGPASSWORD={self.password}",
             pgsql_cmd,
             self.get_basic_param(True),
-            f"< {self.context.param.output_db_all_in_one}"
+            f"< {self.context.param.out_path_in_one}"
         )
         basic_util.execute(command, db_util.print_ql_msg, encoding="gbk" if os.name == 'nt' else "utf-8")
 
@@ -89,6 +92,6 @@ class PgSQLSource(base.AbstractDBSource):
             pgsqldump,
             self.get_basic_param(True),
             "--column-inserts",
-            f"| gzip > {self.context.param.output_db_bak_gz}"
+            f"| gzip > {self.context.param.out_db_bak_gz}"
         ])
         basic_util.execute(cmd)

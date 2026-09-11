@@ -72,6 +72,6 @@ class MsSQLSource(base.AbstractDBSource):
     def execute(self) -> None:
         command = list_util.flat_to_str(mssql_cmd, self.get_main_db_param_dict(), [
             "-e",
-            "-i \"{0}\"".format(pathlib.Path(self.context.param.output_db_all_in_one_mssql).__fspath__())
+            "-i \"{0}\"".format(pathlib.Path(self.context.param.out_path_in_one_mssql).__fspath__())
         ])
         basic_util.execute(command, db_util.print_ql_msg)

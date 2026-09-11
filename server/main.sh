@@ -51,13 +51,15 @@ if [[ "$os_name" =~ "NT" ]];then
 fi
 
 src_path=$main_dir/$name
+src_path_ext=
+
 if [ ! -d "$src_path" ];then
   echo "${name} not found"
   exit 1
 fi
 
 dst_name=script-$name
-tmp_name=.temp
+tmp_name=.tmp
 build_name=build
 utility_path=$(realpath ${src_path}/../../utility)
 del_cmd="rm -rf \$HOME/${dst_name}"
@@ -96,7 +98,7 @@ fi
 
 tar -zcf - ${tar_exts} ${tar_args} | ${host_cmd} "mkdir -p \$HOME/${dst_name};tar -zxf - -C \$HOME/${dst_name}"
 ${host_cmd} "${cmd}"
-${host_cmd} "[ -d \$HOME/${dst_name} ]" && ${host_cmd} "tar -zcf - -C \$HOME/${dst_name} ${tmp_name} ${build_name}" | tar -zxf - -C ${src_path}
+${host_cmd} "[ -d \$HOME/${dst_name} ]" && ${host_cmd} "tar -zcf - -C \$HOME/${dst_name} ${tmp_name} ${build_name}" | tar -zxf - -C ${src_path_ext:-src_path}
 
 if [ "$debug" = false ];then
   ${host_cmd} "${del_cmd}"

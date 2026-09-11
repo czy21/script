@@ -40,13 +40,13 @@ def validate(series, mapping_list: list):
 table = mongoClient["spi_local"]["ent_file_column_mapping"]
 
 
-def resolve_file(file_path: str, file_definitions: list, error_output_path: str):
+def resolve_file(file_path: str, file_definitions: list, error_out_path: str):
     print('子进程: {} - 任务{}'.format(os.getpid(), file_path))
 
     with pd.ExcelFile(path_or_buffer=file_path) as f:
         exist_definition_dicts = dict((d["businessType"], d) for d in filter(lambda t: t["businessType"] in f.sheet_names, file_definitions))
         df_dict = pd.read_excel(f, sheet_name=list(exist_definition_dicts.keys()))
-        error_path = path_util.join_path(error_output_path, Path(file_path).name)
+        error_path = path_util.join_path(error_out_path, Path(file_path).name)
         for d in df_dict.items():
             resolve_sheet(d, exist_definition_dicts.get(d[0]), error_path)
 
@@ -78,11 +78,11 @@ if __name__ == '__main__':
     print("start time:", start_time)
 
     all_excel_list = list(map(lambda p: p.resolve().as_posix(), Path("./files").glob("*")))
-    error_output_path = path_util.join_path("./errors")
+    error_out_path = path_util.join_path("./errors")
     file_mapping_definition = list(table.find())
     p = Pool(4)
     for f in all_excel_list:
-        p.apply_async(resolve_file, args=(f, file_mapping_definition, error_output_path,))
+        p.apply_async(resolve_file, args=(f, file_mapping_definition, error_out_path,))
     p.close()
     p.join()
     end_time = datetime.now()

@@ -3,7 +3,7 @@ import logging
 import pathlib
 
 from domain import base
-from utility import db as db_util, collection as list_util, basic as basic_util, file as file_util
+from utility import db as db_util, collection as list_util, basic as basic_util
 
 logger = logging.getLogger()
 
@@ -16,21 +16,25 @@ updateTimeColumn = "update_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON U
 updateUserColumn = "update_user varchar(255) NULL COMMENT '更新人'"
 deletedColumn = "deleted bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除'"
 
+
 class MySQLSource(base.AbstractDBSource):
 
-    def __init__(self, context: base.ExecutionContext) -> None:
+    def __init__(self, context: base.ExecutionContext):
         super().__init__(context)
         self.host = self.context.param.param_main_db_mysql_host
         self.port = self.context.param.param_main_db_mysql_port
         self.username = self.context.param.param_main_db_mysql_username
         self.password = self.context.param.param_main_db_mysql_password
         self.database = self.context.param.param_main_db_mysql_database
-        self.output_db_all_in_one = pathlib.Path(self.context.param.output_db_all,f'mysql-{self.database}.sql').as_posix()
-        self.output_db_bak_gz = pathlib.Path(self.context.param.output_db_bak).joinpath(f'mysql-{self.database}.gz').as_posix()
+
+        self.out_db_ql = pathlib.Path(self.context.param.out_path).joinpath(f'{self.key()}-{self.database}.sql').as_posix()
+
+        self.out_db_bak_ql = pathlib.Path(self.context.param.out_path).joinpath(f'{self.key()}-{self.database}-bak.sql').as_posix()
+        self.out_db_bak_gz = pathlib.Path(self.context.param.out_path).joinpath(f'{self.key()}-{self.database}-bak.gz').as_posix()
 
     def key(self) -> str:
         return 'mysql'
-    
+
     def meta(self):
         return {
             "header": "SELECT 'executing: {{ file_path }}' AS file;",
@@ -45,7 +49,7 @@ class MySQLSource(base.AbstractDBSource):
             }
         }
 
-    def get_basic_param(self, with_database=False) -> str:
+    def _source_param(self, with_database=False) -> str:
         param = [
             "--default-character-set=utf8mb4",
             f"--host={self.host}",
@@ -58,37 +62,21 @@ class MySQLSource(base.AbstractDBSource):
         return list_util.flat_to_str(param)
 
     def get_recreate_command(self) -> str:
-        return list_util.flat_to_str([mysql_cmd, self.get_basic_param(False), [
-            "--execute \"{0}\"".format("".join(
-                [
-                    "drop database if exists {0};".format(self.database),
-                    "create database if not exists {0} default charset utf8mb4 collate utf8mb4_unicode_ci;".format(self.database),
-                ])
-            )
-        ]])
+        ql = [
+            f'drop database if exists {self.database};',
+            f'create database if not exists {self.database} default charset utf8mb4 collate utf8mb4_unicode_ci;'
+        ]
+        return f'{mysql_cmd} {self._source_param(False)} --execute \'{"".join(ql)}\''
 
     def recreate(self) -> None:
-        command = self.get_recreate_command()
-        basic_util.execute(command)
+        basic_util.execute(self.get_recreate_command())
 
     def execute(self) -> None:
-        command = list_util.flat_to_str([mysql_cmd, self.get_basic_param(True), [
-            "--skip-column-names",
-            f"< {self.output_db_all_in_one}"
-        ]])
-        basic_util.execute(command, db_util.print_ql_msg)
+        basic_util.execute(f'{mysql_cmd} {self._source_param(True)} --skip-column-names < {self.out_db_ql}', db_util.print_ql_msg)
 
     def backup(self) -> None:
-        command = list_util.flat_to_str("mysqldump",
-                                        self.get_basic_param(False),
-                                        f"--databases {self.database}",
-                                        f"| gzip > {self.context.output_db_bak_gz}"
-                                        )
-        basic_util.execute(command)
+        basic_util.execute(f'{mysqldump} {self._source_param(False)} --databases {self.database} | gzip > {self.out_db_bak_gz}')
 
     def restore(self) -> None:
-        command = list_util.flat_to_str(self.get_recreate_command(),
-                                        f"&& gzip -d < {self.context.output_db_bak_gz}",
-                                        "| mysql", self.get_basic_param(True)
-                                        )
-        basic_util.execute(command)
+        basic_util.execute(self.get_recreate_command())
+        basic_util.execute(f'gzip -d < {self.out_db_bak_gz} | {mysql_cmd} {self._source_param(True)}')

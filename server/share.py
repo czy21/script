@@ -6,11 +6,11 @@ import pathlib
 import shutil
 import sys
 import typing
+import urllib3
 from abc import ABCMeta
 from box import Box
 from enum import Enum
 
-import urllib3
 from utility import (
     collection as collection_util,
     file as file_util,
@@ -61,7 +61,7 @@ def dfs_dir(path: pathlib.Path, deep=1, exclude_rules: list = None, parent_key: 
 def get_match_dirs(rules, items):
     _dirs = []
     for p in items:
-        _rules = regex_util.match_rules(rules, p.as_posix() +  "/", ".jinja2ignore {0}".format(dfs_dir.__name__))
+        _rules = regex_util.match_rules(rules, p.as_posix() + "/", ".jinja2ignore {0}".format(dfs_dir.__name__))
         if not any(_rules.values()):
             _dirs.append(p)
     return _dirs
@@ -91,7 +91,7 @@ def get_dir_dict(path: pathlib.Path, exclude_rules: list = None, select_tip="", 
 def select_namespace(root_path: pathlib.Path, deep: int = 1, exclude_rules=None, args: argparse.Namespace = None) -> list[Namespace]:
     col_num = 5
     exclude_rules = exclude_rules if exclude_rules else []
-    exclude_rules.extend([".temp/", "build/", root_path.joinpath("utility").as_posix(), root_path.joinpath("server").as_posix()])
+    exclude_rules.extend([".tmp/", "build/", root_path.joinpath("utility").as_posix(), root_path.joinpath("server").as_posix()])
     flat_dirs = dfs_dir(root_path, exclude_rules=exclude_rules)
     deep_index = 1
     namespaces = []
@@ -101,9 +101,9 @@ def select_namespace(root_path: pathlib.Path, deep: int = 1, exclude_rules=None,
             sys.exit()
         namespaces.extend([
             Namespace(args.namespace or (root_path.name if deep == deep_index else project_path.parent.name), [
-                    RoleMeta(rk, rv.name, rv, project_path.parent)
-                    for rk, rv in get_dir_dict(project_path.parent, exclude_rules=exclude_rules, select_tip="", args=args).items()
-                    if rv == project_path
+                RoleMeta(rk, rv.name, rv, project_path.parent)
+                for rk, rv in get_dir_dict(project_path.parent, exclude_rules=exclude_rules, select_tip="", args=args).items()
+                if rv == project_path
             ])
         ])
     else:
@@ -133,8 +133,8 @@ def select_namespace(root_path: pathlib.Path, deep: int = 1, exclude_rules=None,
             deep_index += 1
         namespaces.extend([
             Namespace(args.namespace or p.name, [
-                        RoleMeta("%s.%s" % (next(filter(lambda t: t["path"] == p, flat_dirs), None)["key"], rk),rv.name,rv, p) 
-                        for rk, rv in get_dir_dict(p, exclude_rules=exclude_rules, select_tip="role num(example:1 2 ...)", col_num=col_num,args=args).items()
+                RoleMeta("%s.%s" % (next(filter(lambda t: t["path"] == p, flat_dirs), None)["key"], rk), rv.name, rv, p)
+                for rk, rv in get_dir_dict(p, exclude_rules=exclude_rules, select_tip="role num(example:1 2 ...)", col_num=col_num, args=args).items()
             ])
             for p in app_paths
         ])
@@ -199,7 +199,6 @@ class RoleContext(typing.NamedTuple):
     role_node_name: str
     role_node_target_path: pathlib.Path
     role_env: dict
-    role_env_output_file: pathlib.Path
     args: argparse.Namespace
 
 
@@ -242,7 +241,7 @@ class Installer:
         self.home_path: pathlib.Path = root_path.joinpath("..").resolve()
         self.root_path: pathlib.Path = root_path
         self.build_path: pathlib.Path = root_path.joinpath("build")
-        self.tmp_path: pathlib.Path = root_path.joinpath(".temp")
+        self.tmp_path: pathlib.Path = root_path.joinpath(".tmp")
         self.bak_path: pathlib.Path = self.tmp_path.joinpath("bak")
         self.jinja2ignore_file: pathlib.Path = root_path.joinpath(".jinja2ignore")
         self.role_class: typing.Type[AbstractRole] = role_class
@@ -272,7 +271,7 @@ class Installer:
                     env_files.append(se)
             for e in env_active:
                 env_files.extend([se for se in src_env_files if se.stem == "env-{0}".format(e)])
-        
+
         scan_env_files(list(root_path.glob("env*")))
         scan_env_files(list(server_path.glob("env*")))
         scan_env_files(list(server_path.joinpath("config").glob("env*")))
@@ -341,22 +340,21 @@ class Installer:
                 role_title = "%s.%s" % (role_key, role_name)
                 role_log_prefix = role_title
                 role_build_path = role_path.joinpath("build")
-                role_doc_path = role_build_path.joinpath("doc")
                 role_out_path = role_build_path.joinpath("out")
-                role_tmp_path = role_path.joinpath(".temp")
+                role_doc_path = role_build_path.joinpath("doc")
+                role_tmp_path = role_path.joinpath(".tmp")
                 role_bak_path = role_tmp_path.joinpath("bak")
-                role_env_file = role_path.joinpath("env.yaml")
-                role_env_output_file = role_out_path.joinpath("env.yaml")
+                role_env_file = role_path.joinpath("env.yml")
                 role_env = {} | global_env | {
                     "param_namespace": namespace,
                     "param_role_name": role_name,
                     "param_role_path": role_path.as_posix(),
                     "param_role_title": role_title,
-                    "param_role_build_path": role_build_path.as_posix(),
-                    "param_role_doc_path": role_doc_path.as_posix(),
-                    "param_role_out_path": role_out_path.as_posix(),
                     "param_role_tmp_path": role_tmp_path.as_posix(),
-                    "param_role_bak_path": role_bak_path.as_posix()
+                    "param_role_bak_path": role_bak_path.as_posix(),
+                    "param_role_build_path": role_build_path.as_posix(),
+                    "param_role_out_path": role_out_path.as_posix(),
+                    "param_role_doc_path": role_doc_path.as_posix()
                 }
                 [shutil.rmtree(t, ignore_errors=True) for t in [role_build_path]]
                 [t.mkdir(parents=True, exist_ok=True) for t in [role_build_path, role_tmp_path]]
@@ -366,10 +364,10 @@ class Installer:
                 # process env
                 if role_env_file and role_env_file.exists():
                     role_env |= yaml_util.load(template_util.Template(file_util.read_text(role_env_file)).render(**role_env))
-                file_util.write_text(role_env_output_file, yaml_util.dump(role_env))
+                file_util.write_text(role_out_path.joinpath("env.yml"), yaml_util.dump(role_env))
                 role_env |= args.param
                 # process template
-                for t in filter(lambda f: f.is_file() and not any(regex_util.match_rules(["build/", ".temp/", role_env_file.name], f.as_posix()).values()), role_path.rglob("*")):
+                for t in filter(lambda f: f.is_file() and not any(regex_util.match_rules(["build/", ".tmp/", role_env_file.name], f.as_posix()).values()), role_path.rglob("*")):
                     _rules = regex_util.match_rules([*jinja2ignore_rules], t.as_posix(), ".jinja2ignore {0}".format(self.__loop_namespaces.__name__))
                     role_output_file = role_out_path.joinpath(t.relative_to(role_path))
                     if not any(_rules.values()):
@@ -397,7 +395,6 @@ class Installer:
                     role_node_name=role_node_name,
                     role_node_target_path=role_out_path.joinpath("node").joinpath(role_node_name),
                     role_env=role_env,
-                    role_env_output_file=role_env_output_file,
                     namespace=namespace,
                     args=args
                 )

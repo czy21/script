@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-import os
 import argparse
 import json
 import logging
+import os
 import pathlib
 
 from domain.base import ExecutionContext, EnhancedNamespace
@@ -25,34 +25,22 @@ if __name__ == '__main__':
 
     logger.info("args: {0}".format(json.dumps(vars(args), indent=2)))
     env_files = [shell_cwd.joinpath("_env.yml")]
-    env_files.extend(filter(lambda f: f.exists(),[shell_cwd.joinpath(f"_env-{t}.yml") for t in (args.env_active or '').split(',')]))
-    
-    root_path = pathlib.Path(os.environ.get('root_path', pathlib.Path(__file__).joinpath("../../").resolve()))
+    env_files.extend(filter(lambda f: f.exists(), [shell_cwd.joinpath(f"_env-{t}.yml") for t in (args.env_active or '').split(',')]))
 
-    source_db = root_path / "db"
+    root_path = pathlib.Path(os.environ.get('root_path', pathlib.Path(__file__).joinpath("../../").resolve()))
     version_file = root_path / "version"
 
-    output_path = root_path / ".output"
-    output_temp = output_path / "temp"
-    output_db = output_path / "db"
-    output_db_all = output_db / "all"
-    output_db_bak = output_db / "bak"
-
-    [p.mkdir(parents=True, exist_ok=True) for p in [output_temp, output_db_all, output_db_bak]]
+    out_path = root_path / ".out"
+    out_path.mkdir(parents=True, exist_ok=True)
 
     default_params = {
         'root_path': root_path,
-        'source_db': source_db,
         'version_file': version_file,
-        'output_path': output_path,
-        'output_temp': output_temp,
-        'output_db': output_db,
-        'output_db_all': output_db_all,
-        'output_db_bak': output_db_bak
+        'out_path': out_path
     }
-    default_params |= {k:v.as_posix() for k,v in default_params.items() if isinstance(v, pathlib.Path) }
+    default_params |= {k: v.as_posix() for k, v in default_params.items() if isinstance(v, pathlib.Path)}
     default_params |= args.param
     project_params = yaml_util.YamlPropertySourceLoader(env_files).load(default_params)
-    context = ExecutionContext(root_path=root_path, output_path=output_path, param=EnhancedNamespace(**project_params))
-    file_util.write_text(context.output_path.joinpath("env.yml"), yaml_util.dump(context.param.__dict__))
+    context = ExecutionContext(root_path=root_path, out_path=out_path, param=EnhancedNamespace(**project_params))
+    file_util.write_text(context.out_path.joinpath("env.yml"), yaml_util.dump(context.param.__dict__))
     exec(args.exec, globals(), {'context': context})

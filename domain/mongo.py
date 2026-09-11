@@ -52,14 +52,14 @@ class MongoSource(base.AbstractDBSource):
     def execute(self) -> None:
         command = list_util.flat_to_str(
             mongo_cmd, self.get_basic_uri(True),
-            self.context.param.output_db_all_in_one_mongo
+            self.context.param.out_path_in_one_mongo
         )
         basic_util.execute(command, db_util.print_ql_msg)
 
     def backup(self) -> None:
         command = list_util.flat_to_str(
             mongodump, f"--uri={self.get_basic_uri(True)}",
-            f"--archive={self.context.param.output_db_bak_gz_mongo}",
+            f"--archive={self.context.param.out_db_bak_gz_mongo}",
             "--gzip"
         )
         basic_util.execute(command)
