@@ -4,7 +4,7 @@ import os
 import pathlib
 import re
 
-from utility import (
+from util import (
     regex as regex_util,
     file as file_util
 )

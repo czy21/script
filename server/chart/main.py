@@ -2,7 +2,7 @@
 import pathlib
 
 from server import share
-from utility import (
+from util import (
     collection as collection_util,
     file as file_util,
     template as template_util,
@@ -43,7 +43,7 @@ class ChartRole(share.AbstractRole):
         helm_repo_url = self.context.role_env.get("param_helm_repo_url")
         if self.context.args.target == "Chart":
             if self.context.args.push:
-                _cmds.append(f"helm package {self.context.role_out_path} --destination {self.context.role_out_path} | sed 's/Successfully\(.*\)to: //g' | xargs -I{{}} helm push {{}} {helm_repo_url}")
+                _cmds.append(f"helm package {self.context.role_out_path} --destination {self.context.role_out_path} | sed 's/Successfully\\(.*\\)to: //g' | xargs -I{{}} helm push {{}} {helm_repo_url}")
             else:
                 _cmds.append(f"helm package {self.context.role_out_path} --destination {self.context.role_out_path}")
         if self.context.args.target == "doc":

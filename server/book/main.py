@@ -7,7 +7,7 @@ import sys
 import yaml
 
 from server import share
-from utility import (
+from util import (
     collection as collection_util,
     file as file_util,
     log as log_util,

@@ -2,9 +2,9 @@ import typing
 
 import jinja2
 
-from utility.basic import get_user,get_uid, get_gid
-from utility.path import join_path
-from utility.safe import decrypt, htpasswd
+from util.basic import get_user,get_uid, get_gid
+from util.path import join_path
+from util.safe import decrypt, htpasswd
 
 
 class Undefined(jinja2.Undefined):

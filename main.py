@@ -3,44 +3,42 @@ import pathlib
 import shutil
 
 from server import share
-from utility import file as file_util, template as template_util
+from util import file as file_util, template as template_util
 
 logger = logging.getLogger()
 
-def collect_doc(source_name):
-    source_path = root_path.joinpath("server/{0}".format(source_name))
-    share.execute(f"rm -rf {source_path.as_posix()}/build && bash {source_path.parent.as_posix()}/main.sh {source_name} local build --target doc --all-namespace")
-    source_build_dir = source_path.joinpath("build")
-    target_dir = doc_public.joinpath(source_name)
+def collect_doc(source_name, target_dir):
     shutil.rmtree(target_dir, ignore_errors=True)
-    namespaces = []
-    for s in filter(lambda f: f.is_dir(), source_build_dir.iterdir()):
-        roles = []
-        for sd in filter(lambda f: f.is_file, s.rglob("build/out/doc.md")):
-            role_name = sd.parent.parent.parent.name
-            role_doc_path = sd.parent.parent.joinpath('doc')
-            roles.append({"name": role_name, "file": "{}/{}/{}.md".format(source_name, s.name, role_name)})
-            file_util.copy(sd, target_dir.joinpath("{}/{}.md".format(s.name, sd.parent.parent.parent.name)))
-            if role_doc_path.exists():
-                shutil.copytree(role_doc_path, container_path.joinpath(role_name).joinpath(source_name), dirs_exist_ok=True)
-        roles.sort(key=lambda k: k.get('name'))
-        if roles:
-            namespaces.append({"namespace": s.name, "roles": roles})
-    namespaces.sort(key=lambda k: k.get('namespace'))
-    return namespaces
+    source_path = root_path.joinpath("server/{0}".format(source_name))
+    share.execute(f"cd {source_path.as_posix()};PYTHONPATH=../.. $HOME/.python3/bin/python3 -B main.py build --target doc --all-namespace")
+    namespaces = {}
+    for sd in filter(lambda f: f.is_file, source_path.rglob("build/out/doc.md")):
+        role_path = sd.parent.parent.parent
+        namespace = role_path.parent.name
+        role_name = role_path.name
+        role_doc_path = sd.parent.parent.joinpath('doc')
+        namespaces.setdefault(namespace, []).append({"name": role_name, "file": "{}/{}/{}.md".format(source_name, namespace, role_name)})
+        file_util.copy(sd, target_dir.joinpath("{}/{}.md".format(namespace, sd.parent.parent.parent.name)))
+        if role_doc_path.exists():
+            shutil.copytree(role_doc_path, container_path.joinpath(role_name).joinpath(source_name), dirs_exist_ok=True)
+    return [
+        {
+            "namespace": k,
+            "roles": sorted(v, key=lambda x: x.get('name'))
+        }
+        for k, v in sorted(namespaces.items(), key=lambda x: x)
+    ]
 
 if __name__ == '__main__':
     logger.setLevel(logging.DEBUG)
     root_path = pathlib.Path(__file__).parent
     container_path = root_path.joinpath('build/container')
     shutil.rmtree(container_path, ignore_errors=True)
-    mkdocs = root_path.joinpath("mkdocs.yaml")
     doc = root_path.joinpath("doc")
     doc_public = doc.joinpath("public")
-    mkdocs_template = doc.joinpath("mkdocs_template.yaml")
-    mkdocs_text = template_util.Template(file_util.read_text(mkdocs_template)).render(
+    doc_template = doc.joinpath("mkdocs_template.yaml")
+    file_util.write_text(root_path.joinpath("mkdocs.yaml"), template_util.Template(file_util.read_text(doc_template)).render(
         **{
-            "param_doc_nav": dict([t.capitalize(), collect_doc(t)] for t in ["docker", "chart"])
+            "param_doc_nav": dict([t.capitalize(), collect_doc(t,doc_public.joinpath(t))] for t in ["docker", "chart"])
         }
-    )
-    file_util.write_text(mkdocs, mkdocs_text)
+    ))

@@ -3,7 +3,7 @@ import logging
 import pathlib
 
 from domain import base
-from utility import db as db_util, collection as list_util, basic as basic_util
+from util import db as db_util, collection as list_util, basic as basic_util
 
 logger = logging.getLogger()
 

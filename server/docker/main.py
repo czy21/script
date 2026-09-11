@@ -4,7 +4,7 @@ import logging
 import pathlib
 
 from server import share
-from utility import (
+from util import (
     collection as collection_util,
     path as path_util,
     file as file_util,

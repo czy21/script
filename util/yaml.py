@@ -5,7 +5,7 @@ from typing import Union
 import jinja2.defaults
 import yaml
 
-from utility import (
+from util import (
     file as file_util,
     safe as safe_util,
     path as path_util,

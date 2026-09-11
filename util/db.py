@@ -9,7 +9,7 @@ import typing
 
 import jinja2
 
-from utility import basic as basic_util, path as path_util, file as file_util
+from util import basic as basic_util, path as path_util, file as file_util
 
 logger = logging.getLogger()
 

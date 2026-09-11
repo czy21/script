@@ -4,7 +4,7 @@ from typing import TypeVar, Generic
 
 import jinja2.defaults
 
-from utility import template as template_util
+from util import template as template_util
 
 logger = logging.getLogger()
 

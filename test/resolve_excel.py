@@ -10,7 +10,7 @@ from pymongo import MongoClient
 from sqlalchemy import create_engine
 
 import config
-from script.utility import path as path_util
+from script.util import path as path_util
 
 engine = create_engine(config.MYSQL_HOST)
 mongoClient = MongoClient(host=config.MONGO_HOST)
