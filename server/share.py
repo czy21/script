@@ -26,12 +26,9 @@ logger = logging.getLogger()
 
 
 class RoleMeta:
-    def __init__(self, key: str, name: str, path: pathlib.Path, parent_path: pathlib.Path):
-        self.key: str = key
+    def __init__(self, name: str, path: pathlib.Path):
         self.name: str = name
         self.path: pathlib.Path = path
-        self.parent_path: pathlib.Path = parent_path
-
 
 class Namespace:
     def __init__(self, name: str, roles: list[RoleMeta]):
@@ -101,7 +98,7 @@ def select_namespace(root_path: pathlib.Path, deep: int = 1, exclude_rules=None,
             sys.exit()
         namespaces.extend([
             Namespace(args.namespace or (root_path.name if deep == deep_index else project_path.parent.name), [
-                RoleMeta(rk, rv.name, rv, project_path.parent)
+                RoleMeta(rv.name, rv)
                 for rk, rv in get_dir_dict(project_path.parent, exclude_rules=exclude_rules, select_tip="", args=args).items()
                 if rv == project_path
             ])
@@ -109,8 +106,8 @@ def select_namespace(root_path: pathlib.Path, deep: int = 1, exclude_rules=None,
     else:
         if deep == deep_index:
             namespaces.extend([
-                Namespace(args.namespace if args.namespace else root_path.name, [
-                    RoleMeta(rk, rv.name, rv, root_path)
+                Namespace(args.namespace or root_path.name, [
+                    RoleMeta(rv.name, rv)
                     for rk, rv in get_dir_dict(root_path, exclude_rules=exclude_rules, select_tip="role num(example:1 2 ...)", args=args).items()
                 ])
             ])
@@ -133,7 +130,7 @@ def select_namespace(root_path: pathlib.Path, deep: int = 1, exclude_rules=None,
             deep_index += 1
         namespaces.extend([
             Namespace(args.namespace or p.name, [
-                RoleMeta("%s.%s" % (next(filter(lambda t: t["path"] == p, flat_dirs), None)["key"], rk), rv.name, rv, p)
+                RoleMeta(rv.name, rv)
                 for rk, rv in get_dir_dict(p, exclude_rules=exclude_rules, select_tip="role num(example:1 2 ...)", col_num=col_num, args=args).items()
             ])
             for p in app_paths
@@ -190,7 +187,6 @@ class RoleContext(typing.NamedTuple):
     home_path: pathlib.Path
     root_path: pathlib.Path
     namespace: str
-    role_title: str
     role_name: str
     role_path: pathlib.Path
     role_build_path: pathlib.Path
@@ -245,20 +241,11 @@ class Installer:
         self.jinja2ignore_file: pathlib.Path = root_path.joinpath(".jinja2ignore")
         self.role_class: typing.Type[AbstractRole] = role_class
         self.role_deep: int = role_deep
-        self.arg_parser: argparse.ArgumentParser = argparse.ArgumentParser(formatter_class=ArgParseHelpFormatter, usage='%(prog)s [command] [options]')
-        self.set_common_argument(self.arg_parser)
-        self.__command_parser = self.arg_parser.add_subparsers(title="commands", metavar="", dest="command", required=True)
-        self.__init_install_parser()
-        self.__init_delete_parser()
-        self.__init_build_parser()
-        self.__init_backup_parser()
-        self.__init_restore_parser()
-        self.__init_push_parser()
 
         log_util.init_logger(file=self.root_path.joinpath("build.log"))
         [t.mkdir(exist_ok=True) for t in [self.tmp_path]]
 
-    def __load_env_file(self, env_active: list[str], env_extra: dict) -> dict:
+    def load_env_file(self, env_active: list[str] = None, env_extra: dict = None) -> dict:
         env_files = []
 
         def scan_env_files(src_env_files):
@@ -332,11 +319,8 @@ class Installer:
         for n in namespaces:
             namespace = n.name
             for r in n.roles:
-                role_key = r.key
                 role_name = r.name
                 role_path: pathlib.Path = r.path
-                role_title = "%s.%s" % (role_key, role_name)
-                role_log_prefix = role_title
                 role_build_path = role_path.joinpath("build")
                 role_out_path = role_build_path.joinpath("out")
                 role_doc_path = role_build_path.joinpath("doc")
@@ -347,7 +331,6 @@ class Installer:
                     "param_namespace": namespace,
                     "param_role_name": role_name,
                     "param_role_path": role_path.as_posix(),
-                    "param_role_title": role_title,
                     "param_role_tmp_path": role_tmp_path.as_posix(),
                     "param_role_bak_path": role_bak_path.as_posix(),
                     "param_role_build_path": role_build_path.as_posix(),
@@ -356,7 +339,7 @@ class Installer:
                 }
                 [shutil.rmtree(t, ignore_errors=True) for t in [role_build_path]]
                 [t.mkdir(parents=True, exist_ok=True) for t in [role_build_path]]
-                logger.info(role_log_prefix)
+                logger.info(role_path.as_posix())
                 if args.command == Command.backup.value:
                     role_bak_path.mkdir(parents=True, exist_ok=True)
                 # process env
@@ -384,7 +367,6 @@ class Installer:
                 role_context = RoleContext(
                     home_path=self.home_path,
                     root_path=self.root_path,
-                    role_title=role_title,
                     role_name=role_name,
                     role_path=role_path,
                     role_build_path=role_build_path,
@@ -403,6 +385,15 @@ class Installer:
                 execute(collection_util.flat_to_str(_cmds, delimiter=" && "), dry_run=args.dry_run)
 
     def run(self, **kwargs):
+        self.arg_parser: argparse.ArgumentParser = argparse.ArgumentParser(formatter_class=ArgParseHelpFormatter, usage='%(prog)s [command] [options]')
+        self.set_common_argument(self.arg_parser)
+        self.__command_parser = self.arg_parser.add_subparsers(title="commands", metavar="", dest="command", required=True)
+        self.__init_install_parser()
+        self.__init_delete_parser()
+        self.__init_build_parser()
+        self.__init_backup_parser()
+        self.__init_restore_parser()
+        self.__init_push_parser()
         args: argparse.Namespace = self.arg_parser.parse_args()
         args.param = dict(args.param)
         logger.info("args: {0}".format(json.dumps(vars(args), indent=2)))
@@ -412,13 +403,10 @@ class Installer:
             for t in filter(lambda a: a.is_dir(), self.root_path.rglob('build')):
                 shutil.rmtree(t, ignore_errors=True)
                 logger.debug(f'removed {t.as_posix()}')
-        global_env = self.__load_env_file(args.env_active, args.param)
+        global_env = self.load_env_file(args.env_active, args.param)
         global_env["param_command"] = args.command
         global_jinja2ignore_rules = file_util.read_text(self.jinja2ignore_file).split("\n") if self.jinja2ignore_file and self.jinja2ignore_file.exists() else []
         namespaces = select_namespace(self.root_path, self.role_deep, args=args)
-        if not args.all_namespaces and not args.all_roles:
-            for n in namespaces:
-                logger.info("namespace: {0}; roles: {1}".format(n.name, ",".join(["%s.%s" % (r.key, r.name) for r in n.roles])))
         self.__loop_namespaces(
             namespaces=namespaces,
             global_env=global_env,
