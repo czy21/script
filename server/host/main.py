@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 import pathlib
 
-from server import share
+import server
 
 
-class HostRole(share.AbstractRole):
+class HostRole(server.AbstractRole):
 
-    def __init__(self, context: share.RoleContext) -> None:
+    def __init__(self, context: server.RoleContext) -> None:
         super().__init__(context)
         self.role_init_sh = context.role_out_path.joinpath("init.sh")
 
@@ -25,9 +25,6 @@ class HostRole(share.AbstractRole):
     def restore(self) -> list[str]:
         return get_cmds(self)
 
-    def push(self) -> list[str]:
-        return get_cmds(self)
-
 
 def get_cmds(role: HostRole) -> list[str]:
     _cmds = []
@@ -37,4 +34,4 @@ def get_cmds(role: HostRole) -> list[str]:
 
 
 if __name__ == '__main__':
-    share.Installer(pathlib.Path(__file__).parent, HostRole,role_deep=2).run()
+    server.Installer(pathlib.Path(__file__).parent, HostRole, role_deep=2).run()

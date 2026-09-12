@@ -8,31 +8,31 @@ def exec(Map inputs) {
     def pathMap = [
             java  : {
                 env.JAVA_HOME = tool inputs.param_tool_java_version
-                env.PATH = "${JAVA_HOME}/bin:${PATH}"
+                env.PATH = "${PATH}:${JAVA_HOME}/bin"
             },
             maven : {
                 env.MAVEN_HOME = tool inputs.param_tool_maven_version
-                env.PATH = "${MAVEN_HOME}/bin:${PATH}"
+                env.PATH = "${PATH}:${MAVEN_HOME}/bin"
             },
             gradle: {
                 env.GRADLE_HOME = tool inputs.param_tool_gradle_version
-                env.PATH = "${GRADLE_HOME}/bin:${PATH}"
+                env.PATH = "${PATH}:${GRADLE_HOME}/bin"
             },
             golang    : {
                 env.GO_HOME = tool inputs.param_tool_golang_version
                 env.GOPROXY = inputs.param_go_proxy
                 env.GOSUMDB = "off"
                 env.CGO_ENABLED = "0"
-                env.PATH = "${GO_HOME}/bin:${PATH}"
+                env.PATH = "${PATH}:${GO_HOME}/bin"
             },
             nodejs  : {
                 env.NODEJS_HOME = tool inputs.param_tool_nodejs_version
-                env.PATH = "${NODEJS_HOME}/bin:${PATH}"
+                env.PATH = "${PATH}:${NODEJS_HOME}/bin"
             },
             dotnet: {
                 env.DOTNET_HOME = tool inputs.param_tool_dotnet_version
                 env.DOTNET_SYSTEM_GLOBALIZATION_INVARIANT = 1
-                env.PATH = "${DOTNET_HOME}:${PATH}"
+                env.PATH = "${PATH}:${DOTNET_HOME}"
             }
     ]
 
