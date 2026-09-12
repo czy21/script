@@ -8,7 +8,7 @@ x-traefik-label: &traefik-label
 services:
 
   bitwarden:
-    image: ghcr.io/bitwarden/lite:2026.3.2
+    image: ghcr.io/bitwarden/lite:2026.8.2
     container_name: bitwarden
     labels:
       <<: *traefik-label

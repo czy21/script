@@ -1,4 +1,4 @@
-FROM nginx:1.29.0-alpine-perl
+FROM nginx:1.31.6-alpine-perl
 
 RUN apk add --no-cache fcgiwrap spawn-fcgi perl-json
 

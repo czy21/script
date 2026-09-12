@@ -9,8 +9,10 @@ services:
 
   openwrt-web:
     image: '{{ param_registry }}/{{ param_registry_dir }}/openwrt-web'
-    pull_policy: always
     container_name: openwrt-web
+    build:
+      context: {{ param_role_out_path }}
+      dockerfile: Dockerfile
     privileged: true
     user: root
     expose:

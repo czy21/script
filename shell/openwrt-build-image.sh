@@ -58,4 +58,4 @@ fi
 EOF
 fi
 # make image PROFILE=generic PACKAGES="" ROOTFS_PARTSIZE=1024 CONFIG_VMDK_IMAGES=y CONFIG_ISO_IMAGES=y FILES=files
-make image PROFILE=ikuai_q3000-ubi PACKAGES="-dnsmasq kmod-tcp-bbr kmod-nf-tproxy kmod-nf-socket kmod-ipt-ipset dnsmasq-full softethervpn5-server openssh-client luci luci-compat luci-proto-wireguard qrencode luci-app-uhttpd luci-app-nlbwmon luci-app-wol luci-app-vlmcsd luci-app-acme acme-acmesh-dnsapi acme-sync luci-app-ddns ddns-scripts ddns-scripts-aliyun ddns-scripts-cloudflare luci-app-watchcat luci-app-ttyd luci-app-commands"
+# make image PROFILE=ikuai_q3000-ubi PACKAGES="-dnsmasq kmod-tcp-bbr kmod-nf-tproxy kmod-nf-socket kmod-ipt-ipset dnsmasq-full softethervpn5-server openssh-client luci luci-compat luci-proto-wireguard qrencode luci-app-uhttpd luci-app-nlbwmon luci-app-wol luci-app-vlmcsd luci-app-acme acme-acmesh-dnsapi acme-sync luci-app-ddns ddns-scripts ddns-scripts-aliyun ddns-scripts-cloudflare luci-app-watchcat luci-app-ttyd luci-app-commands"

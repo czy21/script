@@ -112,7 +112,7 @@ jobs:
           if [ -n "$(git status -s)" ];then
             git add . && git commit --amend -m "CI: sync code" && git push --force
           fi
-      - name: Build with Mkdocs
+      - name: Build with mkdocs
         run: $HOME/.python3/bin/mkdocs build -d build/doc
       - name: Deploy
         uses: cloudflare/wrangler-action@v3

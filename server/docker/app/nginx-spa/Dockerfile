@@ -1,4 +1,4 @@
-FROM nginx:1.27.2-alpine
+FROM nginx:1.31.6-alpine
 RUN mv /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf.bak
 COPY ./nginx.conf /etc/nginx/conf.d/app.conf
 

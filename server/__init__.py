@@ -1,15 +1,14 @@
-import argparse
 import json
 import logging
 import os
-import pathlib
 import shutil
 import sys
 import typing
-import urllib3
 from abc import ABCMeta
-from box import Box
 from enum import Enum
+
+import argparse
+import pathlib
 
 from util import (
     collection as collection_util,
@@ -25,30 +24,22 @@ from util import (
 logger = logging.getLogger()
 
 
-class RoleMeta:
-    def __init__(self, key: str, name: str, path: pathlib.Path, parent_path: pathlib.Path):
-        self.key: str = key
-        self.name: str = name
-        self.path: pathlib.Path = path
-        self.parent_path: pathlib.Path = parent_path
-
-
-class Namespace:
-    def __init__(self, name: str, roles: list[RoleMeta]):
-        self.name = name
-        self.roles = roles
+class RoleMeta(typing.NamedTuple):
+    root_path: pathlib.Path
+    role_path: pathlib.Path
+    role_name: str
+    namespace: str
 
 
 class Command(Enum):
     install = "install"
+    restore = "restore"
     delete = "delete"
     backup = "backup"
-    restore = "restore"
     build = "build"
-    push = "push"
 
 
-def dfs_dir(path: pathlib.Path, deep=1, exclude_rules: list = None, parent_key: str = "") -> list:
+def dfs_dir(path: pathlib.Path, deep=1, exclude_rules: list | None = None, parent_key: str = "") -> list:
     ret = []
     _dirs = get_match_dirs(exclude_rules, filter(lambda a: a.is_dir(), sorted(path.iterdir())))
     for i, p in enumerate(_dirs, start=1):
@@ -74,7 +65,7 @@ def echo_action(role, content, exec_file=None) -> str:
     return 'echo "' + c + '"'
 
 
-def get_dir_dict(path: pathlib.Path, exclude_rules: list = None, select_tip="", col_num=5, args: argparse.Namespace = None) -> dict:
+def get_dir_dict(path: pathlib.Path, exclude_rules: list | None = None, select_tip="", col_num=5, args: argparse.Namespace | None = None) -> dict:
     _dirs = get_match_dirs(exclude_rules, list(filter(lambda a: a.is_dir(), sorted(path.iterdir()))))
     dir_dict: dict = {str(i): t for i, t in enumerate(_dirs, start=1)}
     if not args.all_namespaces and not args.all_roles and select_tip:
@@ -88,33 +79,29 @@ def get_dir_dict(path: pathlib.Path, exclude_rules: list = None, select_tip="", 
     return dict((t, dir_dict[t]) for t in dir_nums if t in dir_dict.keys())
 
 
-def select_namespace(root_path: pathlib.Path, deep: int = 1, exclude_rules=None, args: argparse.Namespace = None) -> list[Namespace]:
+def select_roles(root_path: pathlib.Path, deep: int = 1, exclude_rules=None, args: argparse.Namespace | None = None) -> list[RoleMeta]:
     col_num = 5
     exclude_rules = exclude_rules if exclude_rules else []
     exclude_rules.extend(["build/", ".tmp/", root_path.joinpath("util").as_posix(), root_path.joinpath("server").as_posix()])
     flat_dirs = dfs_dir(root_path, exclude_rules=exclude_rules)
     deep_index = 1
-    namespaces = []
+    roles = []
     if args.project:
         project_path = root_path.joinpath(args.project)
         if not project_path.exists():
             sys.exit()
-        namespaces.extend([
-            Namespace(args.namespace or (root_path.name if deep == deep_index else project_path.parent.name), [
-                RoleMeta(rk, rv.name, rv, project_path.parent)
-                for rk, rv in get_dir_dict(project_path.parent, exclude_rules=exclude_rules, select_tip="", args=args).items()
-                if rv == project_path
-            ])
+        roles.extend([
+            RoleMeta(root_path=root_path, role_path=rv, role_name=rv.name, namespace=args.namespace or (root_path.name if deep == deep_index else project_path.parent.name))
+            for rk, rv in get_dir_dict(project_path.parent, exclude_rules=exclude_rules, select_tip="", args=args).items()
+            if rv == project_path
         ])
     else:
         if deep == deep_index:
-            namespaces.extend([
-                Namespace(args.namespace if args.namespace else root_path.name, [
-                    RoleMeta(rk, rv.name, rv, root_path)
-                    for rk, rv in get_dir_dict(root_path, exclude_rules=exclude_rules, select_tip="role num(example:1 2 ...)", args=args).items()
-                ])
+            roles.extend([
+                RoleMeta(root_path=root_path, role_path=rv, role_name=rv.name, namespace=args.namespace or root_path.name)
+                for rk, rv in get_dir_dict(root_path, exclude_rules=exclude_rules, select_tip="role num(example:1 2 ...)", args=args).items()
             ])
-            return namespaces
+            return roles
         app_paths: list[pathlib.Path] = []
         while deep > deep_index:
             role_dict = {
@@ -131,14 +118,12 @@ def select_namespace(root_path: pathlib.Path, deep: int = 1, exclude_rules=None,
                     sys.exit()
                 app_paths = [role_dict[t] for t in selected.split()]
             deep_index += 1
-        namespaces.extend([
-            Namespace(args.namespace or p.name, [
-                RoleMeta("%s.%s" % (next(filter(lambda t: t["path"] == p, flat_dirs), None)["key"], rk), rv.name, rv, p)
+        for p in app_paths:
+            roles.extend([
+                RoleMeta(root_path=root_path, role_path=rv, role_name=rv.name, namespace=args.namespace or p.name)
                 for rk, rv in get_dir_dict(p, exclude_rules=exclude_rules, select_tip="role num(example:1 2 ...)", col_num=col_num, args=args).items()
             ])
-            for p in app_paths
-        ])
-    return namespaces
+    return roles
 
 
 def execute(cmd, is_return: bool = False, dry_run=False):
@@ -187,25 +172,26 @@ class ArgParseHelpFormatter(argparse.MetavarTypeHelpFormatter):
 
 
 class RoleContext(typing.NamedTuple):
-    home_path: pathlib.Path
     root_path: pathlib.Path
-    namespace: str
-    role_title: str
-    role_name: str
     role_path: pathlib.Path
+    role_name: str
+    namespace: str
+
+    args: argparse.Namespace
+    role_env: dict[str, typing.Any]
+    role_node_path: pathlib.Path
+
     role_build_path: pathlib.Path
     role_doc_path: pathlib.Path
     role_out_path: pathlib.Path
-    role_node_name: str
-    role_node_target_path: pathlib.Path
-    role_env: dict
-    args: argparse.Namespace
 
 
 class AbstractRole(metaclass=ABCMeta):
 
     def __init__(self, context: RoleContext) -> None:
         self.context = context
+        self.root_doc_template_file = context.root_path.joinpath("doc-template.md")
+        self.role_doc_content: str = ""
 
     def install(self) -> list[str]:
         pass
@@ -222,50 +208,37 @@ class AbstractRole(metaclass=ABCMeta):
     def restore(self) -> list[str]:
         pass
 
-    def push(self) -> list[str]:
-        pass
-
     def get_merge_ignore_pattern(self):
         return []
 
-    def sync_to_git_repo(self, role_platform_name):
-        shutil.rmtree(self.context.role_doc_path, ignore_errors=True)
-        file_util.sync(self.context.role_out_path, self.any_doc_exclude, self.context.role_doc_path)
-
-    def any_doc_exclude(self, f: pathlib.Path):
-        return not any(regex_util.match_rules(self.context.role_env["param_doc_excludes"], f.as_posix()).values())
-
 
 class Installer:
-    def __init__(self, root_path: pathlib.Path, role_class: typing.Type[AbstractRole] = None, role_deep: int = 1) -> None:
-        self.home_path: pathlib.Path = root_path.joinpath("..").resolve()
+    def __init__(self, root_path: pathlib.Path,
+                 arg_parser: argparse.ArgumentParser | None = None,
+                 role_impl: typing.Type[AbstractRole] | None = None,
+                 role_deep: int = 1) -> None:
         self.root_path: pathlib.Path = root_path
+
+        self.role_impl: typing.Type[AbstractRole] | None = role_impl
+        self.role_deep: int = role_deep
+        self.arg_parser: argparse.ArgumentParser = arg_parser or argparse.ArgumentParser(formatter_class=ArgParseHelpFormatter, usage='%(prog)s [command] [options]')
+        self.set_common_argument(self.arg_parser)
+
         self.tmp_path: pathlib.Path = root_path.joinpath(".tmp")
         self.bak_path: pathlib.Path = self.tmp_path.joinpath("bak")
         self.jinja2ignore_file: pathlib.Path = root_path.joinpath(".jinja2ignore")
-        self.role_class: typing.Type[AbstractRole] = role_class
-        self.role_deep: int = role_deep
-        self.arg_parser: argparse.ArgumentParser = argparse.ArgumentParser(formatter_class=ArgParseHelpFormatter, usage='%(prog)s [command] [options]')
-        self.set_common_argument(self.arg_parser)
-        self.__command_parser = self.arg_parser.add_subparsers(title="commands", metavar="", dest="command", required=True)
-        self.__init_install_parser()
-        self.__init_delete_parser()
-        self.__init_build_parser()
-        self.__init_backup_parser()
-        self.__init_restore_parser()
-        self.__init_push_parser()
 
         log_util.init_logger(file=self.root_path.joinpath("build.log"))
         [t.mkdir(exist_ok=True) for t in [self.tmp_path]]
 
-    def __load_env_file(self, env_active: list[str], env_extra: dict) -> dict:
+    def load_env_file(self, env_active: list[str] | None = None, env_extra: dict | None = None) -> dict:
         env_files = []
 
         def scan_env_files(src_env_files):
             for se in src_env_files:
                 if se.stem == "env":
                     env_files.append(se)
-            for e in env_active:
+            for e in env_active or []:
                 env_files.extend([se for se in src_env_files if se.stem == "env-{0}".format(e)])
 
         server_path = pathlib.Path(__file__).parent
@@ -324,85 +297,13 @@ class Installer:
         parser = self.__command_parser.add_parser(**self.__get_sub_parser_common_attr(Command.restore.value))
         self.set_common_argument(parser)
 
-    def __init_push_parser(self):
-        parser = self.__command_parser.add_parser(**self.__get_sub_parser_common_attr(Command.push.value))
-        self.set_common_argument(parser)
-
-    def __loop_namespaces(self, namespaces: list[Namespace], global_env: dict, args: argparse.Namespace, jinja2ignore_rules: list) -> None:
-        for n in namespaces:
-            namespace = n.name
-            for r in n.roles:
-                role_key = r.key
-                role_name = r.name
-                role_path: pathlib.Path = r.path
-                role_title = "%s.%s" % (role_key, role_name)
-                role_log_prefix = role_title
-                role_build_path = role_path.joinpath("build")
-                role_out_path = role_build_path.joinpath("out")
-                role_doc_path = role_build_path.joinpath("doc")
-                role_tmp_path = role_path.joinpath(".tmp")
-                role_bak_path = role_tmp_path.joinpath("bak")
-                role_env_file = role_path.joinpath("env.yml")
-                role_env = {} | global_env | {
-                    "param_namespace": namespace,
-                    "param_role_name": role_name,
-                    "param_role_path": role_path.as_posix(),
-                    "param_role_title": role_title,
-                    "param_role_tmp_path": role_tmp_path.as_posix(),
-                    "param_role_bak_path": role_bak_path.as_posix(),
-                    "param_role_build_path": role_build_path.as_posix(),
-                    "param_role_out_path": role_out_path.as_posix(),
-                    "param_role_doc_path": role_doc_path.as_posix()
-                }
-                [shutil.rmtree(t, ignore_errors=True) for t in [role_build_path]]
-                [t.mkdir(parents=True, exist_ok=True) for t in [role_build_path]]
-                logger.info(role_log_prefix)
-                if args.command == Command.backup.value:
-                    role_bak_path.mkdir(parents=True, exist_ok=True)
-                # process env
-                if role_env_file and role_env_file.exists():
-                    role_env |= yaml_util.load(template_util.Template(file_util.read_text(role_env_file)).render(**role_env))
-                file_util.write_text(role_out_path.joinpath("env.yml"), yaml_util.dump(role_env))
-                role_env |= args.param
-                # process template
-                for t in filter(lambda f: f.is_file() and not any(regex_util.match_rules(["build/", ".tmp/", role_env_file.name], f.as_posix()).values()), role_path.rglob("*")):
-                    _rules = regex_util.match_rules([*jinja2ignore_rules], t.as_posix(), ".jinja2ignore {0}".format(self.__loop_namespaces.__name__))
-                    role_output_file = role_out_path.joinpath(t.relative_to(role_path))
-                    if not any(_rules.values()):
-                        file_util.write_text(role_output_file, template_util.Template(file_util.read_text(t)).render(**role_env), t.stat().st_mode)
-                    else:
-                        file_util.copy(t, role_output_file)
-
-                # collect command
-                _cmds = []
-                if args.command == Command.build.value:
-                    if args.target == "build.sh":
-                        target_file = role_out_path.joinpath(args.target)
-                        if target_file.exists():
-                            _cmds.append("sh {0} {1}".format(target_file.as_posix(), " ".join(args.build_args)))
-                role_node_name = role_env.get("param_node_name", "null")
-                role_context = RoleContext(
-                    home_path=self.home_path,
-                    root_path=self.root_path,
-                    role_title=role_title,
-                    role_name=role_name,
-                    role_path=role_path,
-                    role_build_path=role_build_path,
-                    role_doc_path=role_doc_path,
-                    role_out_path=role_out_path,
-                    role_node_name=role_node_name,
-                    role_node_target_path=role_out_path.joinpath("node").joinpath(role_node_name),
-                    role_env=role_env,
-                    namespace=namespace,
-                    args=args
-                )
-                role_instance = self.role_class(context=role_context)
-                if role_context.role_node_target_path.exists():
-                    path_util.merge_dir(role_context.role_node_target_path, role_context.role_out_path, role_instance.get_merge_ignore_pattern())
-                _cmds.extend(getattr(role_instance, args.command)())
-                execute(collection_util.flat_to_str(_cmds, delimiter=" && "), dry_run=args.dry_run)
-
     def run(self, **kwargs):
+        self.__command_parser = self.arg_parser.add_subparsers(title="commands", metavar="", dest="command", required=True)
+        self.__init_install_parser()
+        self.__init_delete_parser()
+        self.__init_build_parser()
+        self.__init_backup_parser()
+        self.__init_restore_parser()
         args: argparse.Namespace = self.arg_parser.parse_args()
         args.param = dict(args.param)
         logger.info("args: {0}".format(json.dumps(vars(args), indent=2)))
@@ -412,16 +313,71 @@ class Installer:
             for t in filter(lambda a: a.is_dir(), self.root_path.rglob('build')):
                 shutil.rmtree(t, ignore_errors=True)
                 logger.debug(f'removed {t.as_posix()}')
-        global_env = self.__load_env_file(args.env_active, args.param)
+        global_env = self.load_env_file(args.env_active, args.param)
         global_env["param_command"] = args.command
-        global_jinja2ignore_rules = file_util.read_text(self.jinja2ignore_file).split("\n") if self.jinja2ignore_file and self.jinja2ignore_file.exists() else []
-        namespaces = select_namespace(self.root_path, self.role_deep, args=args)
-        if not args.all_namespaces and not args.all_roles:
-            for n in namespaces:
-                logger.info("namespace: {0}; roles: {1}".format(n.name, ",".join(["%s.%s" % (r.key, r.name) for r in n.roles])))
-        self.__loop_namespaces(
-            namespaces=namespaces,
-            global_env=global_env,
-            jinja2ignore_rules=global_jinja2ignore_rules,
-            args=args
-        )
+        jinja2ignore_rules = file_util.read_text(self.jinja2ignore_file).split("\n") if self.jinja2ignore_file and self.jinja2ignore_file.exists() else []
+        roles = select_roles(self.root_path, self.role_deep, args=args)
+
+        for r in roles:
+            role_build_path = r.role_path.joinpath("build")
+            role_out_path = role_build_path.joinpath("out")
+            role_doc_path = role_build_path.joinpath("doc")
+            role_tmp_path = r.role_path.joinpath(".tmp")
+            role_bak_path = role_tmp_path.joinpath("bak")
+            role_env_file = r.role_path.joinpath("env.yml")
+            role_env = {} | global_env | {
+                "param_namespace": r.namespace,
+                "param_role_name": r.role_name,
+                "param_role_path": r.role_path.as_posix(),
+                "param_role_tmp_path": role_tmp_path.as_posix(),
+                "param_role_bak_path": role_bak_path.as_posix(),
+                "param_role_build_path": role_build_path.as_posix(),
+                "param_role_out_path": role_out_path.as_posix(),
+                "param_role_doc_path": role_doc_path.as_posix()
+            }
+            [shutil.rmtree(t, ignore_errors=True) for t in [role_build_path]]
+            [t.mkdir(parents=True, exist_ok=True) for t in [role_build_path]]
+            logger.info(r.role_path.as_posix())
+            if args.command == Command.backup.value:
+                role_bak_path.mkdir(parents=True, exist_ok=True)
+            # process env
+            if role_env_file and role_env_file.exists():
+                role_env |= yaml_util.load(template_util.Template(file_util.read_text(role_env_file)).render(**role_env))
+            file_util.write_text(role_out_path.joinpath("env.yml"), yaml_util.dump(role_env))
+            role_env |= args.param
+            # process template
+            for t in filter(lambda f: f.is_file() and not any(regex_util.match_rules(["build/", ".tmp/", role_env_file.name], f.as_posix()).values()), r.role_path.rglob("*")):
+                _rules = regex_util.match_rules([*jinja2ignore_rules], t.as_posix())
+                role_output_file = role_out_path.joinpath(t.relative_to(r.role_path))
+                if not any(_rules.values()):
+                    file_util.write_text(role_output_file, template_util.Template(file_util.read_text(t)).render(**role_env), t.stat().st_mode)
+                else:
+                    file_util.copy(t, role_output_file)
+            role_context = RoleContext(
+                *r,
+                args=args,
+                role_env=role_env,
+                role_node_path=role_out_path / "node" / role_env.get("param_node_name", "null"),
+                role_build_path=role_build_path,
+                role_doc_path=role_doc_path,
+                role_out_path=role_out_path,
+            )
+            role_instance = self.role_impl(context=role_context)
+            if role_context.role_node_path.exists():
+                path_util.merge_dir(role_context.role_node_path, role_context.role_out_path, role_instance.get_merge_ignore_pattern())
+
+            # collect command
+            _cmds = []
+            if args.command == Command.build.value and args.target == "build.sh":
+                target_file = role_out_path.joinpath(args.target)
+                if target_file.exists():
+                    _cmds.append("bash {0} {1}".format(target_file.as_posix(), " ".join(args.build_args)))
+
+            _cmds.extend(getattr(role_instance, args.command)())
+            any_doc_exclude = lambda a: not any(regex_util.match_rules(role_env["param_doc_excludes"] or [], a.as_posix()).values())
+            if args.command == Command.build.name and args.target == 'doc' and any_doc_exclude(role_out_path):
+                shutil.rmtree(role_doc_path, ignore_errors=True)
+                file_util.sync(role_out_path, any_doc_exclude, role_doc_path)
+                role_role_readme = role_out_path.joinpath("README.md")
+                file_util.write_text(role_build_path.joinpath("doc.md"), role_instance.role_doc_content + "\n" + (file_util.read_text(role_role_readme) if role_role_readme.exists() else ""))
+            execute(collection_util.flat_to_str(_cmds, delimiter=" && "), dry_run=args.dry_run)

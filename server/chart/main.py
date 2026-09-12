@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import pathlib
 
-from server import share
+import server
 from util import (
     collection as collection_util,
     file as file_util,
@@ -10,13 +10,12 @@ from util import (
 )
 
 
-class ChartRole(share.AbstractRole):
+class ChartRole(server.AbstractRole):
 
-    def __init__(self, context: share.RoleContext) -> None:
+    def __init__(self, context: server.RoleContext) -> None:
         super().__init__(context)
 
         self.role_init_sh = context.role_out_path.joinpath("init.sh")
-        self.root_doc_template_file = context.root_path.joinpath("doc-template.md")
         self.role_values_override_file = context.role_out_path.joinpath("values.override.yaml")
         file_util.write_text(self.role_values_override_file, yaml_util.dump(context.role_env))
 
@@ -47,13 +46,9 @@ class ChartRole(share.AbstractRole):
             else:
                 _cmds.append(f"helm package {self.context.role_out_path} --destination {self.context.role_out_path}")
         if self.context.args.target == "doc":
-            if self.any_doc_exclude(self.context.role_out_path):
-                md_content = template_util.Template(file_util.read_text(self.root_doc_template_file)).render(**{
-                    "param_registry_git_repo_dict": {t["name"]: "{}/{}/{}".format(t["url"], "tree/main", self.context.role_name) for t in self.context.role_env.get("param_registry_git_repos")}
-                })
-                role_readme = self.context.role_out_path.joinpath("README.md")
-                file_util.write_text(self.context.role_out_path.joinpath("doc.md"), md_content + "\n" + (file_util.read_text(role_readme) if role_readme.exists() else ""))
-            self.sync_to_git_repo("chart")
+            self.role_doc_content = template_util.Template(file_util.read_text(self.root_doc_template_file)).render(**{
+                "param_registry_git_repo_dict": {t["name"]: "{}/{}/{}".format(t["url"], "tree/main", self.context.role_name) for t in self.context.role_env.get("param_registry_git_repos")}
+            })
         return _cmds
 
     def delete(self) -> list[str]:
@@ -65,8 +60,6 @@ class ChartRole(share.AbstractRole):
     def restore(self) -> list[str]:
         return []
 
-    def push(self) -> list[str]:
-        return []
 
 if __name__ == '__main__':
-    share.Installer(pathlib.Path(__file__).parent, ChartRole, role_deep=2).run()
+    server.Installer(pathlib.Path(__file__).parent, role_impl=ChartRole, role_deep=2).run()

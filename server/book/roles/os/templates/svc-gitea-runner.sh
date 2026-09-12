@@ -7,11 +7,13 @@ sudo wget -nv -O /usr/local/bin/gitea-runner https://dl.gitea.com/gitea-runner/{
 sudo chown root:root /usr/local/bin/gitea-runner && sudo chmod +x /usr/local/bin/gitea-runner
 sudo ln -sf /usr/local/bin/gitea-runner /usr/bin/gitea-runner
 
-(
-    cd
-    rm -f .runner*
-    gitea-runner register --no-interactive --instance {{ param_gitea_instance_url }} --token {{ param_gitea_runner_token }} --name $(hostname)
-)
+if [ "{{ param_gitea_runner_register | lower }}" = true ];then
+    (
+        cd
+        rm -f .runner*
+        gitea-runner register --no-interactive --instance {{ param_gitea_instance_url }} --token {{ param_gitea_runner_token }} --name $(hostname)
+    )
+fi
 
 sudo tee /etc/systemd/system/gitea-runner.service << EOF
 [Unit]
