@@ -1,8 +1,6 @@
-#!/usr/bin/env groovy
 package org.ops
 
 import org.ops.util.CollectionUtils
-import org.ops.util.StringUtils
 
 def loadParam(Map inputs) {
     configFileProvider([configFile(fileId: "${inputs.param_global_env_file_id}", variable: 't')]) {

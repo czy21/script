@@ -1,9 +1,6 @@
 #!/usr/bin/env groovy
-
-import org.ops.Builder
 import org.ops.Basic
 import org.ops.Kubernetes
-import org.ops.Server
 import org.ops.util.PathUtils
 import org.ops.util.StringUtils
 import org.ops.util.ValidateUtils
@@ -36,7 +33,7 @@ def call(Map inputs) {
                     script {
 
                         ValidateUtils.validateRequiredParams(inputs,["param_git_repository_url"])
-                        
+
                         inputs.param_git_branch = StringUtils.defaultIfEmpty(inputs.param_git_branch, params.param_git_branch)
 
                         def gitExtensions = []

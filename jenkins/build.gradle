@@ -1,10 +1,12 @@
 plugins {
     id 'groovy'
-    id 'io.spring.dependency-management' version "1.1.6"
+    id 'org.springframework.boot' version '4.0.3'
 }
 
+apply plugin: 'io.spring.dependency-management'
+
 group 'org.ops'
-version '1.0-SNAPSHOT'
+version '1.0.0-SNAPSHOT'
 
 repositories {
     maven {
@@ -14,17 +16,16 @@ repositories {
 
 dependencyManagement {
     imports {
-        mavenBom "io.jenkins.tools.bom:bom-2.462.x:3387.v0f2773fa_3200"
+        mavenBom "io.jenkins.tools.bom:bom-2.580.x:7020.vf38cb_40380d1"
     }
     dependencies {
-        dependency "org.apache.groovy:groovy:4.0.24"
+        dependency "org.apache.groovy:groovy:5.1.2"
     }
 }
 
 dependencies {
     implementation 'org.apache.groovy:groovy'
     implementation "org.jenkins-ci.plugins.workflow:workflow-cps"
-    implementation 'org.apache.commons:commons-lang3:3.17.0'
 
 }
 

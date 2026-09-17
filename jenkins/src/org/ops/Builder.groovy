@@ -1,4 +1,3 @@
-#!/usr/bin/env groovy
 package org.ops
 
 import org.ops.util.PathUtils
@@ -18,14 +17,14 @@ def exec(Map inputs) {
                 env.GRADLE_HOME = tool inputs.param_tool_gradle_version
                 env.PATH = "${PATH}:${GRADLE_HOME}/bin"
             },
-            golang    : {
+            golang: {
                 env.GO_HOME = tool inputs.param_tool_golang_version
                 env.GOPROXY = inputs.param_go_proxy
                 env.GOSUMDB = "off"
                 env.CGO_ENABLED = "0"
                 env.PATH = "${PATH}:${GO_HOME}/bin"
             },
-            nodejs  : {
+            nodejs: {
                 env.NODEJS_HOME = tool inputs.param_tool_nodejs_version
                 env.PATH = "${PATH}:${NODEJS_HOME}/bin"
             },
@@ -61,8 +60,7 @@ def exec(Map inputs) {
                             }
                         }
                     }
-                }
-                else {
+                } else {
                     pathMap.get("gradle").call()
                     def gradleConfigId = inputs.param_gradle_config_env ? "${inputs.param_gradle_config_env}-gradle.config" : 'gradle.config'
                     configFileProvider([configFile(fileId: gradleConfigId, variable: 'CONFIG_FILE')]) {

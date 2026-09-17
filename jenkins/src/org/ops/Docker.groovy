@@ -19,8 +19,8 @@ def build(Map inputs) {
 
     def docker_image_tag = "${inputs.param_release_image}:${inputs.param_release_version}"
     def cmd = [
-        "docker build",
-        "--build-arg BASE_IMAGE=${inputs.param_registry}/${inputs.param_registry_dir}/${inputs.get('param_tool_' + inputs.param_code_type + '_version')}",
+            "docker build",
+            "--build-arg BASE_IMAGE=${inputs.param_registry}/${inputs.param_registry_dir}/${inputs.get('param_tool_' + inputs.param_code_type + '_version')}",
     ]
     if (StringUtils.isNotEmpty(inputs.param_docker_build_args)) {
         cmd.add(inputs.param_docker_build_args)
@@ -42,9 +42,9 @@ def deploy(Map inputs) {
     withCredentials([dockerCert(credentialsId: 'docker-client', variable: 'DOCKER_CERT_PATH')]) {
         def param_file = PathUtils.ofPath(env.WORKSPACE, ".jenkins/inputs.yaml")
         def cmd = [
-            "DOCKER_TLS_VERIFY=1 DOCKER_HOST=tcp://${inputs.param_docker_deploy_host}:2376",
-            "docker-compose --project-name ${inputs.param_release_name} --file ${compose_file} --env-file ${param_file}",
-            "up --detach --remove-orphans",
+                "DOCKER_TLS_VERIFY=1 DOCKER_HOST=tcp://${inputs.param_docker_deploy_host}:2376",
+                "docker-compose --project-name ${inputs.param_release_name} --file ${compose_file} --env-file ${param_file}",
+                "up --detach --remove-orphans",
         ]
         sh "${cmd.join(' ')}"
     }

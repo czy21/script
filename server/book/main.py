@@ -52,7 +52,7 @@ if __name__ == '__main__':
         "ANSIBLE_FORCE_COLOR=1",
         "ANSIBLE_CALLBACK_RESULT_FORMAT=yaml",
         "ANSIBLE_CHECK_MODE_MARKERS=yes",
-        f"ANSIBLE_LOG_PATH={root_path.joinpath("build.log").as_posix()}",
+        "ANSIBLE_LOG_PATH=" + root_path.joinpath("build.log").as_posix(),
         "$HOME/.python3/bin/ansible-playbook",
         "--ssh-common-args \'-o StrictHostKeyChecking=no\'",
         "--ssh-extra-args \'-o StrictHostKeyChecking=no\'",

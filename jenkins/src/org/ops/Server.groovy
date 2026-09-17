@@ -1,12 +1,8 @@
 package org.ops
 
-
-import org.ops.util.PathUtils
-import org.ops.util.StringUtils
-
 def deploy(Map inputs) {
     withCredentials([sshUserPrivateKey(credentialsId: 'opsor', keyFileVariable: 'SSH_PRIVATE_KEY')]) {
-        withEnv(inputs.collect{ k, v -> "${k}=${v}" }) {
+        withEnv(inputs.collect { k, v -> "${k}=${v}" }) {
             sh(script: libraryResource('org/ops/server-deploy.sh'))
         }
     }

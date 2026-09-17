@@ -1,4 +1,3 @@
-#!/usr/bin/env groovy
 package org.ops.util
 
 import java.text.MessageFormat
@@ -28,7 +27,7 @@ static def format(String pattern, Object... arguments) {
 }
 
 static def defaultIfEmpty(String str, String defaultStr) {
-     return isEmpty(str) ? defaultStr : str;
+    return isEmpty(str) ? defaultStr : str;
 }
 
 static def defaultIfNull(String str, String defaultStr) {

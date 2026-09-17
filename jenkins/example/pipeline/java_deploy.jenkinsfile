@@ -1,4 +1,4 @@
-@Library('ops-library@master') _
+@Library('ops-library@main') _
 
 inputs=[:]
 inputs.param_env_name="dev"

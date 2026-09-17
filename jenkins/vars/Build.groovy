@@ -1,7 +1,6 @@
 #!/usr/bin/env groovy
-
-import org.ops.Builder
 import org.ops.Basic
+import org.ops.Builder
 import org.ops.Docker
 import org.ops.Server
 import org.ops.util.PathUtils
@@ -30,8 +29,8 @@ def call(Map inputs) {
                 steps {
                     script {
 
-                        ValidateUtils.validateRequiredParams(inputs,["param_git_repository_url"])
-                        
+                        ValidateUtils.validateRequiredParams(inputs, ["param_git_repository_url"])
+
                         inputs.param_git_branch = StringUtils.defaultIfEmpty(inputs.param_git_branch, params.param_git_branch)
 
                         def gitExtensions = []
@@ -69,7 +68,7 @@ def call(Map inputs) {
             stage('Param') {
                 steps {
                     script {
-                        ValidateUtils.validateRequiredParams(inputs,[
+                        ValidateUtils.validateRequiredParams(inputs, [
                                 "param_global_env_file_id"
                         ])
 
@@ -82,17 +81,17 @@ def call(Map inputs) {
                         inputs.param_docker_file = PathUtils.ofPath(inputs.param_project_root, StringUtils.defaultIfEmpty(inputs.param_docker_file, 'Dockerfile'))
                         inputs.param_docker_compose_file = PathUtils.ofPath(inputs.param_project_root, StringUtils.defaultIfEmpty(inputs.param_docker_compose_file, 'docker-compose.yaml'))
 
-                        inputs.param_release_image = StringUtils.defaultIfEmpty(inputs.param_release_image,PathUtils.ofPath(inputs.param_registry, inputs.param_registry_dir, inputs.param_release_name))
+                        inputs.param_release_image = StringUtils.defaultIfEmpty(inputs.param_release_image, PathUtils.ofPath(inputs.param_registry, inputs.param_registry_dir, inputs.param_release_name))
                         inputs.param_release_version = StringUtils.defaultIfEmpty(inputs.param_release_version, params.param_git_branch)
 
                         inputs.param_sonarqube_server = StringUtils.defaultIfEmpty(inputs.param_sonarqube_server, "sonarqube")
-                        inputs.param_sonarqube_project_key = StringUtils.defaultIfEmpty(inputs.param_sonarqube_project_key,inputs.param_release_name)
-                        inputs.param_tool_java_version = StringUtils.defaultIfEmpty(inputs.param_tool_java_version,'jdk-25-graalvm')
-                        inputs.param_tool_maven_version = StringUtils.defaultIfEmpty(inputs.param_tool_maven_version,'mvn-3.9')
-                        inputs.param_tool_gradle_version = StringUtils.defaultIfEmpty(inputs.param_tool_gradle_version,'gradle-9.7')
-                        inputs.param_tool_nodejs_version = StringUtils.defaultIfEmpty(inputs.param_tool_nodejs_version,'nodejs-24.20')
-                        inputs.param_tool_golang_version = StringUtils.defaultIfEmpty(inputs.param_tool_golang_version,'go-1.20')
-                        inputs.param_tool_dotnet_version = StringUtils.defaultIfEmpty(inputs.param_tool_dotnet_version,'dotnet-9.0')
+                        inputs.param_sonarqube_project_key = StringUtils.defaultIfEmpty(inputs.param_sonarqube_project_key, inputs.param_release_name)
+                        inputs.param_tool_java_version = StringUtils.defaultIfEmpty(inputs.param_tool_java_version, 'jdk-25-graalvm')
+                        inputs.param_tool_maven_version = StringUtils.defaultIfEmpty(inputs.param_tool_maven_version, 'mvn-3.9')
+                        inputs.param_tool_gradle_version = StringUtils.defaultIfEmpty(inputs.param_tool_gradle_version, 'gradle-9.7')
+                        inputs.param_tool_nodejs_version = StringUtils.defaultIfEmpty(inputs.param_tool_nodejs_version, 'nodejs-24.20')
+                        inputs.param_tool_golang_version = StringUtils.defaultIfEmpty(inputs.param_tool_golang_version, 'go-1.20')
+                        inputs.param_tool_dotnet_version = StringUtils.defaultIfEmpty(inputs.param_tool_dotnet_version, 'dotnet-9.0')
 
                         basic.writeParamToYaml(inputs)
                     }

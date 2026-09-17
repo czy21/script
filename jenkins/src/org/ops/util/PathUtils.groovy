@@ -1,4 +1,3 @@
-#!/usr/bin/env groovy
 package org.ops.util
 
 import java.nio.file.Path
