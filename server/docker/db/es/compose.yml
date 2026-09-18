@@ -1,4 +1,4 @@
-version: "3.9"
+
 
 {%- set setup_name = param_role_project_name + '-setup' %}
 

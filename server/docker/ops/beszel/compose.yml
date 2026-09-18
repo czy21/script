@@ -1,0 +1,18 @@
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 8090
+
+services:
+  beszel:
+    image: henrygd/beszel:{{ param_beszel_version }}
+    container_name: beszel
+    labels:
+      <<: *traefik-label
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/beszel_data/
+    environment:
+      APP_URL: "{{ param_beszel_url }}"
+      USER_EMAIL: "{{ param_manage_email }}"
+      USER_PASSWORD: "{{ param_manage_password }}"
+    restart: always

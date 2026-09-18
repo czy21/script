@@ -103,8 +103,20 @@ class DockerRole(server.AbstractRole):
                     'Dockerfile': t,
                     'name': "-".join(filter(lambda d: d != "", [self.context.role_name, t.name.replace("Dockerfile", "").lower()]))
                 }
-                for t in sorted(self.context.role_out_path.glob(self.context.args.target), reverse=True)
+                for t in sorted(self.context.role_out_path.glob("Dockerfile*"), reverse=True)
             ]
+        repositories = []
+        if self.context.args.check:
+            _check_cmds = []
+            images = self.context.role_build_path / 'images'
+            if self.role_compose_file.exists():
+                self.container_compose = 'docker compose'
+                _check_cmds.append(self.compose_cmd(self.role_project_name, f"config --images | sort -u >> {images.as_posix()}"))
+            for t in role_versions:
+                if t['Dockerfile'].exists():
+                    _check_cmds.append(f"docker build --progress=plain --call=outline {t.get('build_args', '')} {self.context.role_out_path.as_posix()} 2>&1 | sed -n 's/.*load metadata for //p' >> {images.as_posix()}")
+            server.execute(collection_util.flat_to_str(_check_cmds, delimiter=" && "))
+            repositories.extend(super().get_check_images(images))
         if self.context.args.target.startswith("Dockerfile"):
             for t in role_versions:
                 registry_source_tag = self.get_image_tag(registry_source_url, registry_source_dir, t.get('name'))

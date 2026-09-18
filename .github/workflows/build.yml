@@ -99,7 +99,7 @@ jobs:
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v6
-      - run: $HOME/.python3/bin/python3 -B main.py
+      - run: $HOME/.python3/bin/python3 -B main.py build
       - name: Push to container repository
         run: |
           find $HOME/container/ -mindepth 1 -maxdepth 1 \
@@ -114,8 +114,8 @@ jobs:
           fi
       - name: Build with mkdocs
         run: $HOME/.python3/bin/mkdocs build -d build/doc
-      - name: Deploy
-        uses: cloudflare/wrangler-action@v3
+      - name: Build & Deploy Worker
+        uses: cloudflare/wrangler-action@v4
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

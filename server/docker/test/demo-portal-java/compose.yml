@@ -1,4 +1,4 @@
-version: "3.9"
+
 
 x-traefik-label: &traefik-label
   traefik.enable: true
@@ -13,7 +13,6 @@ services:
     labels:
       <<: *traefik-label
     container_name: {{ param_role_name }}
-    pull_policy: always
     privileged: true
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/:/app/conf/

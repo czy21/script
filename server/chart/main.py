@@ -1,13 +1,22 @@
 #!/usr/bin/env python3
+
+import logging
+
+import json
 import pathlib
+import re
+import requests
 
 import server
 from util import (
+    basic as basic_util,
     collection as collection_util,
     file as file_util,
     template as template_util,
     yaml as yaml_util,
 )
+
+logger = logging.getLogger()
 
 
 class ChartRole(server.AbstractRole):
@@ -40,6 +49,15 @@ class ChartRole(server.AbstractRole):
     def build(self) -> list[str]:
         _cmds = []
         helm_repo_url = self.context.role_env.get("param_helm_repo_url")
+        repositories = []
+        if self.context.args.check:
+            _check_cmds = []
+            images = self.context.role_build_path / 'images'
+            charts = self.context.role_build_path / 'charts'
+            _check_cmds.append(f"helm dependency list {self.context.role_out_path} 2>/dev/null | sed '/^$/d;1d' | awk '{{if ($3 ~ /^oci:\\/\\//) print substr($3, 7) \"/\" $1 \":\" $2 >> \"{images.as_posix()}\"; else print $3 \" \" $1 \" \" $2 >> \"{charts.as_posix()}\"}}'")
+            server.execute(collection_util.flat_to_str(_check_cmds, delimiter=" && "))
+            repositories.extend(super().get_check_images(images))
+            repositories.extend(self.get_check_charts(charts))
         if self.context.args.target == "Chart":
             if self.context.args.push:
                 _cmds.append(f"helm package {self.context.role_out_path} --destination {self.context.role_out_path} | sed 's/Successfully\\(.*\\)to: //g' | xargs -I{{}} helm push {{}} {helm_repo_url}")
@@ -50,6 +68,46 @@ class ChartRole(server.AbstractRole):
                 "param_registry_git_repo_dict": {t["name"]: "{}/{}/{}".format(t["url"], "tree/main", self.context.role_name) for t in self.context.role_env.get("param_registry_git_repos")}
             })
         return _cmds
+
+    def get_check_charts(self, charts_file):
+        token_cache = {}
+        repositories = []
+        if not charts_file.exists():
+            return repositories
+
+        def get_repository_cache(repository_index):
+            if repository_index in token_cache:
+                return token_cache[repository_index]
+            response = requests.get(repository_index)
+            response.raise_for_status()
+            response.encoding = "utf-8"
+            token_cache[repository_index] = yaml_util.load(response.text)
+            return token_cache.get(repository_index)
+
+        for l in file_util.read_text(charts_file).splitlines():
+            repository, name, version = l.split(' ')
+            version_major_match = re.match(r'v?(\d+)', version)
+            version_major = int(version_major_match.group(1)) if version_major_match else None
+
+            try:
+                repository_index = f"{repository.rstrip('/')}/index.yaml"
+                repository_index = get_repository_cache(repository_index)
+                repository_list = sorted([x for x in repository_index.get('entries', {}).get(name, [])], key=lambda x: basic_util.get_version_number(x.get('version')), reverse=True)
+                repository_tags = [x.get('version') for x in repository_list]
+                latest = max((x for x in repository_tags if (v := basic_util.get_version_number(x)) and v[0] == version_major), key=basic_util.get_version_number, default=None)
+
+                repository = {
+                    'repository': repository,
+                    'name': name,
+                    'version': version,
+                    'latest': latest if latest else version,
+                    'releases': repository_tags[:5]
+                }
+                repositories.append(repository)
+                logger.debug(json.dumps(repository))
+            except Exception as e:
+                logger.error(f"{self.context.role_path}: {e}")
+        return repositories
 
     def delete(self) -> list[str]:
         return ["helm delete {0} {1}".format(self.context.role_name, "" if self.context.args.ignore_namespace else "--namespace {0}".format(self.context.namespace))]

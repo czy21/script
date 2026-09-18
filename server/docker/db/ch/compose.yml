@@ -1,4 +1,4 @@
-version: "3.9"
+
 
 x-app-common: &app-common
   image: clickhouse/clickhouse-server:{{ param_db_ch_version }}

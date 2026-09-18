@@ -1,4 +1,4 @@
-version: "3.9"
+
 
 x-traefik-label-server: &traefik-label-server
   traefik.enable: true

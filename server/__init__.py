@@ -1,6 +1,8 @@
 import json
 import logging
 import os
+import re
+import requests
 import shutil
 import sys
 import typing
@@ -199,6 +201,73 @@ class AbstractRole(metaclass=ABCMeta):
     def build(self) -> list[str]:
         pass
 
+    def get_check_images(self, images_file):
+        token_cache = {}
+        repositories = []
+        if not images_file.exists():
+            return repositories
+
+        def get_repository_cache(token_url, namespace, name):
+            url = f"{token_url}/token?service=registry.docker.io&scope=repository:{namespace}/{name}:pull"
+            repository_token = token_cache.get(url)
+            if not repository_token:
+                repository_token = requests.get(url).json().get("token")
+                token_cache[url] = repository_token
+            return repository_token
+
+        for l in file_util.read_text(images_file).splitlines():
+            l = l.rstrip(":")
+            parts = l.split("/")
+            registry = parts.pop(0) if "." in parts[0] or ":" in parts[0] or parts[0] == "localhost" else "docker.io"
+            if not parts: continue
+            namespace = "/".join(parts[:-1]) or "library"
+            name, version = parts[-1].rsplit(":", 1) if ":" in parts[-1] else (parts[-1], "latest")
+            if version == 'latest': continue
+            version_major_match = re.match(r'v?(\d+)', version)
+            version_major = int(version_major_match.group(1)) if version_major_match else None
+
+            if not registry.endswith(".io") and not registry.startswith('mcr'): continue
+
+            if registry == "docker.io":
+                api_url = "https://registry-1.docker.io"
+                web_url = "https://hub.docker.com/r"
+                token_url = "https://auth.docker.io"
+                proxy_url = "https://dockerproxy.net"
+
+            elif registry == "mcr.microsoft.com":
+                api_url = api_url = f"https://{registry}"
+                web_url = api_url
+                token_url = None
+                proxy_url = "https://mcr.dockerproxy.net"
+
+            else:
+                api_url = f"https://{registry}"
+                web_url = api_url
+                token_url = f"https://{registry}"
+                proxy_url = f"https://{registry.replace('.io', '')}.dockerproxy.net"
+
+            try:
+                repository_token = get_repository_cache(token_url, namespace, name) if token_url else None
+                repository_headers = {}
+                if repository_token:
+                    repository_headers["Authorization"] = f"Bearer {repository_token}"
+                repository_tags = requests.get(f"{proxy_url}/v2/{namespace}/{name}/tags/list?n=1000", headers=repository_headers).json()
+                repository_tags = sorted((x for x in repository_tags.get("tags", []) if basic_util.get_version_number(x)), key=basic_util.get_version_number, reverse=True)
+                latest = max((x for x in repository_tags if (v := basic_util.get_version_number(x)) and v[0] == version_major), key=basic_util.get_version_number, default=None)
+
+                repository = {
+                    'repository': f'{web_url}/{namespace}/{name}',
+                    'name': name,
+                    'version': version,
+                    'latest': latest if latest else version,
+                    'releases': repository_tags[:5]
+                }
+                repositories.append(repository)
+                logger.debug(json.dumps(repository))
+            except Exception as e:
+                logger.error(f"{self.context.role_path}: {e}")
+        return repositories
+
     def delete(self) -> list[str]:
         pass
 
@@ -285,6 +354,7 @@ class Installer:
         parser = self.__command_parser.add_parser(**self.__get_sub_parser_common_attr(Command.build.value))
         self.set_common_argument(parser)
         parser.add_argument("--target", type=str, default="build.sh", help="(default=build.sh)")
+        parser.add_argument('--check', action="store_true")
         parser.add_argument('--build-args', nargs="+", default=[])
         parser.add_argument('--tag')
         parser.add_argument('--push', action="store_true")
