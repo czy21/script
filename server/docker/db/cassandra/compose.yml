@@ -1,4 +1,4 @@
-version: "3.9"
+
 
 x-app-common: &app-common
   image: cassandra:{{ param_db_cassandra_version }}

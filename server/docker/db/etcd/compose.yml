@@ -1,4 +1,4 @@
-version: "3.9"
+
 
 {%- set etcd_clusters=[] %}
 {%- set pi=namespace(value=param_db_etcd_cluster_start_port) %}

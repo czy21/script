@@ -45,6 +45,9 @@ def print_default(msg_lines, proc: subprocess.Popen, func_param) -> None:
         if line:
             logger.info(line)
 
+def get_version_number(s):
+    m = re.match(r'v?\d+(?:\.\d+)+', s)
+    return tuple(map(int, m.group().lstrip('v').split('.'))) if m else None
 
 def execute(
         cmd,

@@ -1,4 +1,4 @@
-version: "3.9"
+
 
 x-app-common: &app-common
   image: crate:{{ param_db_crate_version }}

@@ -1,4 +1,4 @@
-version: "3.9"
+
 
 x-traefik-qbittorrent-label: &traefik-qbittorrent-label
   traefik.enable: true

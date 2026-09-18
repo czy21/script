@@ -5,6 +5,8 @@ repo_name: czy21/script
 repo_url: https://github.com/czy21/script
 copyright: Copyright &copy; 2019 - 2023 Bruce CHEN
 docs_dir: doc/public/
+extra_javascript:
+  - js/repository.js
 theme:
   name: material
   features:

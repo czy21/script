@@ -2,6 +2,12 @@
 {%- for k,v in param_registry_git_repo_dict.items() %}
 - [{{ k }}]({{ v }}){:target=_blank}
 {%- endfor %}
+{%- if param_repositories %}
+## Repositories
+{%- for t in param_repositories %}
+- [{{ t["name"] }}:{{ t["version"] }}]({{ t['repository'] }}){:target=_blank}
+{%- endfor %}
+{%- endif %}
 {%- if param_docker_dockerfiles %}
 ## Dockerfile
 {%- for t in param_docker_dockerfiles %}

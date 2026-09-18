@@ -1,4 +1,4 @@
-version: "3.9"
+
 
 {%- set zk_servers=[] %}
 {%- for i in range(1,param_db_zk_cluster_replicas | int + 1) %}

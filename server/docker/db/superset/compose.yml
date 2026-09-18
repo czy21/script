@@ -1,4 +1,4 @@
-version: "3.9"
+
 
 x-superset-image: &superset-image apache/superset:4.0.1
 x-superset-volumes: &superset-volumes

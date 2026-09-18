@@ -1,4 +1,4 @@
-version: "3.9"
+
 
 x-db-common: &db-common
   SPAN_STORAGE_TYPE: elasticsearch

@@ -1,4 +1,4 @@
-version: "3.9"
+
 
 x-traefik-log-metrics-label: &traefik-log-metrics-label
   traefik.enable: true

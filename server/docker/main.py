@@ -103,7 +103,7 @@ class DockerRole(server.AbstractRole):
                     'Dockerfile': t,
                     'name': "-".join(filter(lambda d: d != "", [self.context.role_name, t.name.replace("Dockerfile", "").lower()]))
                 }
-                for t in sorted(self.context.role_out_path.glob(self.context.args.target), reverse=True)
+                for t in sorted(self.context.role_out_path.glob("Dockerfile*"), reverse=True)
             ]
         if self.context.args.target.startswith("Dockerfile"):
             for t in role_versions:
@@ -123,10 +123,23 @@ class DockerRole(server.AbstractRole):
                 if self.context.args.push:
                     _cmds.append(f"docker push {registry_source_tag}")
                     _cmds.extend([f"docker --config $HOME/.docker/registry/{t[0]} push {t[1]}" for t in registry_target_tags])
+        repositories = []
+        if self.context.args.target == "doc" or self.context.args.check:
+            _check_cmds = []
+            images = self.context.role_build_path / 'images'
+            if self.role_compose_file.exists():
+                self.container_compose = 'docker compose'
+                _check_cmds.append(self.compose_cmd(self.role_project_name, f"config --images | sort -u >> {images.as_posix()}"))
+            for t in role_versions:
+                if t['Dockerfile'].exists():
+                    _check_cmds.append(f"docker build --progress=plain --call=outline {t.get('build_args', '')} {self.context.role_out_path.as_posix()} 2>&1 | sed -n 's/.*load metadata for //p' >> {images.as_posix()}")
+            server.execute(collection_util.flat_to_str(_check_cmds, delimiter=" && "))
+            repositories.extend(super().get_check_images(images))
         if self.context.args.target == "doc":
             registry_git_repo_raw_format = self.context.role_env.get("param_registry_git_repo_raw") + "/main/{0}/docker/{1}"
             md_param = {
                 "param_registry_git_repo_dict": {t["name"]: "{}/{}/{}".format(t["url"], "tree/main", self.context.role_name) for t in self.context.role_env.get("param_registry_git_repos")},
+                "param_repositories": repositories,
                 "param_docker_dockerfiles": [
                     {
                         "name": t.name,
