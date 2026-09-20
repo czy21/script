@@ -216,13 +216,16 @@ class AbstractRole(metaclass=ABCMeta):
             return repository_token
 
         for l in file_util.read_text(images_file).splitlines():
-            l = l.rstrip(":")
+            l = l.split("@", 1)[0].rstrip(":")
             parts = l.split("/")
-            registry = parts.pop(0) if "." in parts[0] or ":" in parts[0] or parts[0] == "localhost" else "docker.io"
+            registry = parts.pop(0) if len(parts) > 1 and ("." in parts[0] or ":" in parts[0] or parts[0] == "localhost") else "docker.io"
             if not parts: continue
             namespace = "/".join(parts[:-1]) or "library"
-            name, version = parts[-1].rsplit(":", 1) if ":" in parts[-1] else (parts[-1], "latest")
-            if version == 'latest': continue
+            name, sep, version = parts[-1].rpartition(":")
+            if not sep:
+                name = parts[-1]
+                version = "latest"
+            if version == "latest": continue
             version_major_match = re.match(r'v?(\d+)', version)
             version_major = int(version_major_match.group(1)) if version_major_match else None
 
@@ -405,7 +408,6 @@ class Installer:
                 "param_role_out_path": role_out_path.as_posix(),
                 "param_role_doc_path": role_doc_path.as_posix()
             }
-            [shutil.rmtree(t, ignore_errors=True) for t in [role_build_path]]
             [t.mkdir(parents=True, exist_ok=True) for t in [role_build_path]]
             logger.info(r.role_path.as_posix())
             if args.command == Command.backup.value:

@@ -65,7 +65,9 @@ class ChartRole(server.AbstractRole):
             repositories.extend(self.get_check_charts(charts))
         if self.context.args.target == "doc":
             self.role_doc_content = template_util.Template(file_util.read_text(self.root_doc_template_file)).render(**{
-                "param_registry_git_repo_dict": {t["name"]: "{}/{}/{}".format(t["url"], "tree/main", self.context.role_name) for t in self.context.role_env.get("param_registry_git_repos")}
+                "param_role_name": self.context.role_name,
+                "param_registry_git_repo_dict": {t["name"]: "{}/{}/{}".format(t["url"], "tree/main", self.context.role_name) for t in self.context.role_env.get("param_registry_git_repos")},
+                "param_repositories": repositories
             })
         return _cmds
 

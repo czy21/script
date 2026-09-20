@@ -138,6 +138,7 @@ class DockerRole(server.AbstractRole):
         if self.context.args.target == "doc":
             registry_git_repo_raw_format = self.context.role_env.get("param_registry_git_repo_raw") + "/main/{0}/docker/{1}"
             md_param = {
+                "param_role_name": self.context.role_name,
                 "param_registry_git_repo_dict": {t["name"]: "{}/{}/{}".format(t["url"], "tree/main", self.context.role_name) for t in self.context.role_env.get("param_registry_git_repos")},
                 "param_repositories": repositories,
                 "param_docker_dockerfiles": [

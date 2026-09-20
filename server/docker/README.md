@@ -8,7 +8,7 @@
 ## Use
 ```shell
 # nas
-bash main.sh <user@host> install -p param_cluster_name=nas
+bash main.sh <user@host> install -p param_node_name=nas
 # dsm
-bash main.sh <user@host> install -p param_cluster_name=dsm --env-active syno
+bash main.sh <user@host> install -p param_node_name=dsm --env-active syno
 ```

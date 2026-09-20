@@ -1,0 +1,48 @@
+name: Build page
+
+on:
+  push:
+    paths:
+      - server/docker/**
+      - server/chart/**
+      - doc/**
+  workflow_dispatch:
+
+# Default to bash
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - run: |
+          echo "/volume1/app/nvm/versions/node/v24.20.0/bin" >> "$GITHUB_PATH"
+          $HOME/.python3/bin/python3 -m pip install -r server/requirements.txt
+          $HOME/.python3/bin/python3 -B main.py build
+      - name: Push to container repository
+        run: |
+          find $HOME/container/ -mindepth 1 -maxdepth 1 \
+            ! -name '.git' \
+            ! -name 'LICENSE' \
+            ! -name 'README.md' \
+            -exec rm -rf -- {} +
+          mv build/container/* $HOME/container/
+          cd $HOME/container/
+          [ -n "$(git status -s)" ] && {
+            git add . && git commit --amend -m "CI: sync code" && git push --force
+          }
+      - name: Install dependencies
+        run: pnpm install
+      - name: Build with VitePress
+        run: npm run build
+      - name: Build & Deploy Worker
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy build/doc --project-name=doc

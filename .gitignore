@@ -19,7 +19,8 @@ __pycache__/
 
 # Build #
 .tmp/
-___pubs/
+node_modules/
+dist/
 
 # jenkins
 jenkins/lib/
@@ -30,11 +31,12 @@ jenkins/lib/
 *.key
 *.pem
 
-# doc
-doc/public/docker
-doc/public/chart
-mkdocs.yaml
+# VitePress
+.vitepress/cache/
+doc/server/docker/
+doc/server/chart/
 
+# ops
 apk.pub
 
 server/env-test*.yaml

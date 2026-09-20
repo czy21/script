@@ -16,4 +16,4 @@ output.elasticsearch:
   username: '${ELASTICSEARCH_USERNAME}'
   password: '${ELASTICSEARCH_PASSWORD}'
   indices:
-    - index: "docker-{{ param_cluster_name }}-log-%{+yyyy.MM.dd}"
+    - index: "docker-{{ param_node_name }}-log-%{+yyyy.MM.dd}"

@@ -62,7 +62,7 @@ def execute(
     if os.name == 'nt':
       cmd = cmd.replace('sudo ', '')
     if not cmd: return
-    logger.info("\n{0}".format(re.sub(r'&&\s+', '&&\n', cmd)))
+    logger.debug("\n{0}".format(re.sub(r'&&\s+', '&&\n', cmd)))
     if is_input:
         input_exec = str(input("Are you sure you want to execute (y/n)?").strip())
         if input_exec != "y":
