@@ -1,27 +1,23 @@
 # {{ param_role_name }}
-## Git Repository
-{%- for k,v in param_registry_git_repo_dict.items() %}
-- [{{ k }}]({{ v }})
-{%- endfor %}
+- {{ param_registry_git_repo }}
 {%- if param_repositories %}
-## Repositories
 {%- for t in param_repositories %}
 - [{{ t["name"] }}:{{ t["version"] }}]({{ t['repository'] }})
 {%- endfor %}
 {%- endif %}
-{%- if param_docker_dockerfiles %}
-## Dockerfile
-{%- for t in param_docker_dockerfiles %}
+{%- if param_role_build %}
+## Build
+{%- for t in param_role_build %}
 - [{{ t["name"] }}]({{ t['rawUrl'] }})
 ```bash
 {{ t["command"] }}
 ```
 {%- endfor %}
 {%- endif %}
-{%- if param_docker_compose %}
-## Docker Compose
-- [{{ param_docker_compose['name'] }}]({{ param_docker_compose['rawUrl'] }})
+{%- if param_role_install %}
+## Install
+- [{{ param_role_install['name'] }}]({{ param_role_install['rawUrl'] }})
 ```bash
-{{ param_docker_compose['command'] }}
+{{ param_role_install['command'] }}
 ```
 {%- endif %}

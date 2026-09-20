@@ -1,8 +1,8 @@
-# grafana
+# Grafana
 ![avatar](./static/grafana-dashboard.png)
-# docker
+# Docker
 ![avatar](./static/docker.png)
-# k8s
+# Kubernetes
 ![avatar](./static/grafana-k8s.png)
-# jvm
+# JVM
 ![avatar](./static/grafana-jvm.png)

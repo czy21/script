@@ -25,6 +25,7 @@ class ChartRole(server.AbstractRole):
         super().__init__(context)
 
         self.role_init_sh = context.role_out_path.joinpath("init.sh")
+        self.role_chart_file = self.context.role_path / "Chart.yaml"
         self.role_values_override_file = context.role_out_path.joinpath("values.override.yaml")
         file_util.write_text(self.role_values_override_file, yaml_util.dump(context.role_env))
 
@@ -32,9 +33,9 @@ class ChartRole(server.AbstractRole):
         _cmds = []
         if self.role_init_sh.exists():
             _cmds.append("bash {}".format(self.role_init_sh.as_posix()))
-        _cmds.append('helm dep up {0}'.format(self.context.role_out_path.as_posix()))
+        _cmds.append(f'helm dep up {self.context.role_out_path.as_posix()}')
         cmd = [
-            "helm {0} {1} {2} --values {3}".format("upgrade --install", self.context.role_name, self.context.role_out_path.as_posix(), self.role_values_override_file)
+            f"helm upgrade --install {self.context.role_name} {self.context.role_out_path.as_posix()} --values {self.role_values_override_file}"
         ]
         if not self.context.args.ignore_namespace:
             cmd.append("--namespace {0}".format(self.context.namespace))
@@ -64,10 +65,16 @@ class ChartRole(server.AbstractRole):
             repositories.extend(super().get_check_images(images))
             repositories.extend(self.get_check_charts(charts))
         if self.context.args.target == "doc":
+            registry_git_repo_raw_format = self.context.role_env.get("param_registry_git_repo_raw") + "/main/{0}/chart/{1}"
             self.role_doc_content = template_util.Template(file_util.read_text(self.root_doc_template_file)).render(**{
                 "param_role_name": self.context.role_name,
-                "param_registry_git_repo_dict": {t["name"]: "{}/{}/{}".format(t["url"], "tree/main", self.context.role_name) for t in self.context.role_env.get("param_registry_git_repos")},
-                "param_repositories": repositories
+                "param_registry_git_repo": "{}/{}/{}".format(self.context.role_env.get("param_registry_git_repo"), "tree/main", self.context.role_name),
+                "param_repositories": repositories,
+                "param_role_install": {
+                    "name": self.role_chart_file.name,
+                    "command": f'helm dep up && helm upgrade --install {self.context.role_name}',
+                    "rawUrl": registry_git_repo_raw_format.format(self.context.role_name, self.role_chart_file.name)
+                } if self.role_chart_file.exists() else None
             })
         return _cmds
 

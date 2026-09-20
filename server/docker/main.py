@@ -139,16 +139,16 @@ class DockerRole(server.AbstractRole):
             registry_git_repo_raw_format = self.context.role_env.get("param_registry_git_repo_raw") + "/main/{0}/docker/{1}"
             md_param = {
                 "param_role_name": self.context.role_name,
-                "param_registry_git_repo_dict": {t["name"]: "{}/{}/{}".format(t["url"], "tree/main", self.context.role_name) for t in self.context.role_env.get("param_registry_git_repos")},
+                "param_registry_git_repo": "{}/{}/{}".format(self.context.role_env.get("param_registry_git_repo"), "tree/main", self.context.role_name),
                 "param_repositories": repositories,
-                "param_docker_dockerfiles": [
+                "param_role_build": [
                     {
                         "name": t.name,
                         "command": "docker build --tag {0} --file {1} . --pull".format(self.get_image_tag(registry_source_url, registry_source_dir, "-".join(filter(lambda d: d != "", [self.context.role_name, t.name.replace("Dockerfile", "").lower()]))), t.name),
                         "rawUrl": registry_git_repo_raw_format.format(self.context.role_name, t.name)
                     } for t in sorted(self.context.role_out_path.glob("Dockerfile*"), reverse=True)
                 ],
-                "param_docker_compose": {
+                "param_role_install": {
                     "name": self.role_compose_file.name,
                     "command": self.container_compose + " --project-name {0} --file compose.yml up --detach --remove-orphans".format(self.role_project_name),
                     "rawUrl": registry_git_repo_raw_format.format(self.context.role_name, self.role_compose_file.name)

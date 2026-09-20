@@ -1,17 +1,14 @@
 # {{ param_role_name }}
-## Git Repository
-{%- for k,v in param_registry_git_repo_dict.items() %}
-- [{{ k }}]({{ v }})
-{%- endfor %}
+- {{ param_registry_git_repo }}
 {%- if param_repositories %}
-## Repositories
 {%- for t in param_repositories %}
-- [{{ t["name"] }}:{{ t["version"] }}]({{ t['repository'] }})
+- [{{ t["name"] }}:{{ t["version"] }}]({{ t['repository'] }}/index.yaml)
 {%- endfor %}
 {%- endif %}
-{%- if param_k8s_helm_command %}
-## Helm
+{%- if param_role_install %}
+## Install
+- [{{ param_role_install['name'] }}]({{ param_role_install['rawUrl'] }})
 ```bash
-{{ param_k8s_helm_command }}
+{{ param_role_install['command'] }}
 ```
 {%- endif %}

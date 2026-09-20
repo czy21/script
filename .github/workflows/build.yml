@@ -54,9 +54,9 @@ jobs:
             done
           fi
           echo "Build $TARGETS"
-          for t in $TARGETS;do
-            (cd $source;PYTHONPATH=../.. $HOME/.python3/bin/python3 -B main.py build --project $t --target Dockerfile --push -p param_registry_targets=docker)
-          done
+          if [ -n "$TARGETS" ]; then
+            (cd $source;PYTHONPATH=../.. $HOME/.python3/bin/python3 -B main.py build --roles $TARGETS --target Dockerfile --push -p param_registry_targets=docker --parallel)
+          fi
 
   build-chart:
     runs-on: self-hosted
@@ -91,6 +91,6 @@ jobs:
             done
           fi
           echo "Build $TARGETS"
-          for t in $TARGETS;do
-            (cd $source;PYTHONPATH=../.. $HOME/.python3/bin/python3 -B main.py build --project $t --target Chart --push)
-          done
+          if [ -n "$TARGETS" ]; then
+            (cd $source;PYTHONPATH=../.. $HOME/.python3/bin/python3 -B main.py build --roles $TARGETS --target Chart --push --parallel)
+          fi

@@ -1,3 +1,4 @@
+import asyncio
 import json
 import logging
 import os
@@ -11,6 +12,7 @@ from enum import Enum
 
 import argparse
 import pathlib
+from concurrent.futures import ThreadPoolExecutor
 
 from util import (
     collection as collection_util,
@@ -74,7 +76,7 @@ def get_dir_dict(path: pathlib.Path, exclude_rules: list | None = None, select_t
         collection_util.print_grid(["{0}.{1}".format(str(k), v.name) for k, v in dir_dict.items()], col_num=col_num, msg=path.as_posix())
         logger.info("\nplease select {0}:".format(select_tip))
     dir_nums = []
-    if args.all_namespaces or args.all_roles or args.project:
+    if args.all_namespaces or args.all_roles or args.roles:
         dir_nums.extend(dir_dict.keys())
     else:
         dir_nums.extend(input().strip().split())
@@ -88,15 +90,15 @@ def select_roles(root_path: pathlib.Path, deep: int = 1, exclude_rules=None, arg
     flat_dirs = dfs_dir(root_path, exclude_rules=exclude_rules)
     deep_index = 1
     roles = []
-    if args.project:
-        project_path = root_path.joinpath(args.project)
-        if not project_path.exists():
-            sys.exit()
-        roles.extend([
-            RoleMeta(root_path=root_path, role_path=rv, role_name=rv.name, namespace=args.namespace or (root_path.name if deep == deep_index else project_path.parent.name))
-            for rk, rv in get_dir_dict(project_path.parent, exclude_rules=exclude_rules, select_tip="", args=args).items()
-            if rv == project_path
-        ])
+    if args.roles:
+        for r in args.roles:
+            role_path = root_path.joinpath(r)
+            if not role_path.exists(): continue
+            roles.extend([
+                RoleMeta(root_path=root_path, role_path=rv, role_name=rv.name, namespace=args.namespace or (root_path.name if deep == deep_index else role_path.parent.name))
+                for rk, rv in get_dir_dict(role_path.parent, exclude_rules=exclude_rules, select_tip="", args=args).items()
+                if rv == role_path
+            ])
     else:
         if deep == deep_index:
             roles.extend([
@@ -229,8 +231,6 @@ class AbstractRole(metaclass=ABCMeta):
             version_major_match = re.match(r'v?(\d+)', version)
             version_major = int(version_major_match.group(1)) if version_major_match else None
 
-            if not registry.endswith(".io") and not registry.startswith('mcr'): continue
-
             if registry == "docker.io":
                 api_url = "https://registry-1.docker.io"
                 web_url = "https://hub.docker.com/r"
@@ -323,15 +323,16 @@ class Installer:
     def set_common_argument(parser: argparse.ArgumentParser):
         parser.add_argument('-n', '--namespace', type=str)
         parser.add_argument('-p', '--param', nargs="+", default=[], type=lambda s: s.split("=", 1) if "=" in s else (s, ""), help="k1=v1 k2=v2")
-        parser.add_argument('--project', type=str)
         parser.add_argument('--env-active', nargs="+", default=[], help="list of env active")
         parser.add_argument('--all-roles', action="store_true")
         parser.add_argument('--all-namespaces', action="store_true")
         parser.add_argument('--ignore-namespace', action="store_true")
         parser.add_argument('--create-namespace', action="store_true")
+        parser.add_argument('--roles', nargs="+", default=[])
         parser.add_argument('--debug', action="store_true", help="enable verbose output")
         parser.add_argument('--clean', action="store_true", help="clean build")
         parser.add_argument('--dry-run', action="store_true", help="only print not submit")
+        parser.add_argument('--parallel', type=int, nargs='?', const=8, default=1)
 
     @staticmethod
     def __get_sub_parser_common_attr(name):
@@ -391,8 +392,9 @@ class Installer:
         jinja2ignore_rules = file_util.read_text(self.jinja2ignore_file).split("\n") if self.jinja2ignore_file and self.jinja2ignore_file.exists() else []
         roles = select_roles(self.root_path, self.role_deep, args=args)
 
-        for r in roles:
+        def process(r):
             role_build_path = r.role_path.joinpath("build")
+            role_build_path.mkdir(parents=True, exist_ok=True)
             role_out_path = role_build_path.joinpath("out")
             role_doc_path = role_build_path.joinpath("doc")
             role_tmp_path = r.role_path.joinpath(".tmp")
@@ -408,7 +410,6 @@ class Installer:
                 "param_role_out_path": role_out_path.as_posix(),
                 "param_role_doc_path": role_doc_path.as_posix()
             }
-            [t.mkdir(parents=True, exist_ok=True) for t in [role_build_path]]
             logger.info(r.role_path.as_posix())
             if args.command == Command.backup.value:
                 role_bak_path.mkdir(parents=True, exist_ok=True)
@@ -453,3 +454,9 @@ class Installer:
                 role_role_readme = role_out_path.joinpath("README.md")
                 file_util.write_text(role_build_path.joinpath("doc.md"), role_instance.role_doc_content + "\n" + (file_util.read_text(role_role_readme) if role_role_readme.exists() else ""))
             execute(collection_util.flat_to_str(_cmds, delimiter=" && "), dry_run=args.dry_run)
+
+        if args.parallel > 1:
+            with ThreadPoolExecutor(max_workers=args.parallel) as executor:
+                list(executor.map(process, roles))
+        else:
+            list(map(process, roles))

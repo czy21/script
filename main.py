@@ -1,7 +1,9 @@
-import argparse
 import json
-import pathlib
+import os
 import shutil
+
+import argparse
+import pathlib
 
 import server
 from util import file as file_util
@@ -10,7 +12,7 @@ from util import file as file_util
 def collect_doc(root_path, container_path, source_name, target_dir):
     shutil.rmtree(target_dir, ignore_errors=True)
     source_path = root_path.joinpath("server/{0}".format(source_name))
-    server.execute(f"cd {source_path.as_posix()};PYTHONPATH={root_path.as_posix()} $HOME/.python3/bin/python3 -B main.py build --target doc --all-namespace --clean")
+    server.execute(f"cd {source_path.as_posix()};PYTHONPATH={root_path.as_posix()} $HOME/.python3/{'Scripts' if os.name == 'nt' else 'bin'}/python3 -B main.py build --target doc --all-namespace --clean --parallel")
     namespaces = {}
     for sd in filter(lambda f: f.is_file, source_path.rglob("build/doc.md")):
         role_path = sd.parent.parent
@@ -33,6 +35,7 @@ def collect_doc(root_path, container_path, source_name, target_dir):
             for k, v in sorted(namespaces.items(), key=lambda x: x)
         ]
     }
+
 
 def build_doc(root_path):
     container_path = root_path / 'build/container'
