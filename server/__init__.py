@@ -1,18 +1,17 @@
-import asyncio
 import json
 import logging
 import os
 import re
-import requests
 import shutil
 import sys
 import typing
 from abc import ABCMeta
+from concurrent.futures import ThreadPoolExecutor
 from enum import Enum
 
 import argparse
 import pathlib
-from concurrent.futures import ThreadPoolExecutor
+import requests
 
 from util import (
     collection as collection_util,
@@ -72,34 +71,22 @@ def echo_action(role, content, exec_file=None) -> str:
 def get_dir_dict(path: pathlib.Path, exclude_rules: list | None = None, select_tip="", col_num=5, args: argparse.Namespace | None = None) -> dict:
     _dirs = get_match_dirs(exclude_rules, list(filter(lambda a: a.is_dir(), sorted(path.iterdir()))))
     dir_dict: dict = {str(i): t for i, t in enumerate(_dirs, start=1)}
-    if not args.all_namespaces and not args.all_roles and select_tip:
+    if 'all' not in args.roles and select_tip:
         collection_util.print_grid(["{0}.{1}".format(str(k), v.name) for k, v in dir_dict.items()], col_num=col_num, msg=path.as_posix())
         logger.info("\nplease select {0}:".format(select_tip))
-    dir_nums = []
-    if args.all_namespaces or args.all_roles or args.roles:
-        dir_nums.extend(dir_dict.keys())
-    else:
-        dir_nums.extend(input().strip().split())
+    dir_nums = dir_dict.keys() if args.roles else input().strip().split()
     return dict((t, dir_dict[t]) for t in dir_nums if t in dir_dict.keys())
 
 
-def select_roles(root_path: pathlib.Path, deep: int = 1, exclude_rules=None, args: argparse.Namespace | None = None) -> list[RoleMeta]:
+def select_roles(root_path: pathlib.Path, deep: int, args: argparse.Namespace, exclude_rules=None) -> list[RoleMeta]:
     col_num = 5
-    exclude_rules = exclude_rules if exclude_rules else []
+    exclude_rules = exclude_rules or []
     exclude_rules.extend(["build/", ".tmp/", root_path.joinpath("util").as_posix(), root_path.joinpath("server").as_posix()])
     flat_dirs = dfs_dir(root_path, exclude_rules=exclude_rules)
     deep_index = 1
     roles = []
-    if args.roles:
-        for r in args.roles:
-            role_path = root_path.joinpath(r)
-            if not role_path.exists(): continue
-            roles.extend([
-                RoleMeta(root_path=root_path, role_path=rv, role_name=rv.name, namespace=args.namespace or (root_path.name if deep == deep_index else role_path.parent.name))
-                for rk, rv in get_dir_dict(role_path.parent, exclude_rules=exclude_rules, select_tip="", args=args).items()
-                if rv == role_path
-            ])
-    else:
+    
+    if not args.roles or 'all' in args.roles:
         if deep == deep_index:
             roles.extend([
                 RoleMeta(root_path=root_path, role_path=rv, role_name=rv.name, namespace=args.namespace or root_path.name)
@@ -112,7 +99,7 @@ def select_roles(root_path: pathlib.Path, deep: int = 1, exclude_rules=None, arg
                 str(i): p
                 for i, p in enumerate(map(lambda a: a["path"], filter(lambda a: a["deep"] == deep_index, flat_dirs)), start=1)
             }
-            if args.all_namespaces:
+            if 'all' in args.roles:
                 app_paths = list(role_dict.values())
             else:
                 collection_util.print_grid(["{0}.{1}".format(k, v.name) for k, v in role_dict.items()], col_num=col_num, msg=next(iter(role_dict.items()))[1].parent.as_posix())
@@ -126,6 +113,15 @@ def select_roles(root_path: pathlib.Path, deep: int = 1, exclude_rules=None, arg
             roles.extend([
                 RoleMeta(root_path=root_path, role_path=rv, role_name=rv.name, namespace=args.namespace or p.name)
                 for rk, rv in get_dir_dict(p, exclude_rules=exclude_rules, select_tip="role num(example:1 2 ...)", col_num=col_num, args=args).items()
+            ])
+    else:
+        for r in args.roles:
+            role_path = root_path.joinpath(r)
+            if not role_path.exists(): continue
+            roles.extend([
+                RoleMeta(root_path=root_path, role_path=rv, role_name=rv.name, namespace=args.namespace or (root_path.name if deep == deep_index else role_path.parent.name))
+                for rk, rv in get_dir_dict(role_path.parent, exclude_rules=exclude_rules, select_tip="", args=args).items()
+                if rv == role_path
             ])
     return roles
 
@@ -205,17 +201,17 @@ class AbstractRole(metaclass=ABCMeta):
 
     def get_check_images(self, images_file):
         token_cache = {}
-        repositories = []
+        images = []
         if not images_file.exists():
-            return repositories
+            return images
 
         def get_repository_cache(token_url, namespace, name):
             url = f"{token_url}/token?service=registry.docker.io&scope=repository:{namespace}/{name}:pull"
-            repository_token = token_cache.get(url)
-            if not repository_token:
-                repository_token = requests.get(url).json().get("token")
-                token_cache[url] = repository_token
-            return repository_token
+            token = token_cache.get(url)
+            if not token:
+                token = requests.get(url).json().get("token")
+                token_cache[url] = token
+            return token
 
         for l in file_util.read_text(images_file).splitlines():
             l = l.split("@", 1)[0].rstrip(":")
@@ -238,7 +234,7 @@ class AbstractRole(metaclass=ABCMeta):
                 proxy_url = "https://dockerproxy.net"
 
             elif registry == "mcr.microsoft.com":
-                api_url = api_url = f"https://{registry}"
+                api_url = f"https://{registry}"
                 web_url = api_url
                 token_url = None
                 proxy_url = "https://mcr.dockerproxy.net"
@@ -250,26 +246,23 @@ class AbstractRole(metaclass=ABCMeta):
                 proxy_url = f"https://{registry.replace('.io', '')}.dockerproxy.net"
 
             try:
-                repository = {
-                    'name': f'{registry}/{namespace}/{name}',
-                    'version': version
-                }
-                repository['repository'] = f"{web_url}/{namespace}/{name}"
+                image = {'name': f'{registry}/{namespace}/{name}', 'version': version, 'repository': f"{web_url}/{namespace}/{name}"}
                 if self.context.args.check:
-                    repository_token = get_repository_cache(token_url, namespace, name) if token_url else None
+                    if registry not in self.context.role_env.get('param_registry_checks', []):
+                        logger.debug(f"{image.get('name')}: ignore check")
+                        continue
+                    repository_token = get_repository_cache(token_url, namespace, name) if token_url and not self.context.args.proxy else None
                     repository_headers = {}
                     if repository_token:
                         repository_headers["Authorization"] = f"Bearer {repository_token}"
-                    repository_tags = requests.get(f"{proxy_url}/v2/{namespace}/{name}/tags/list?n=1000", headers=repository_headers).json()
-                    repository_tags = sorted((x for x in repository_tags.get("tags", []) if basic_util.get_version_number(x)), key=basic_util.get_version_number, reverse=True)
-                    repository['latest'] = max((x for x in repository_tags if (v := basic_util.get_version_number(x)) and v[0] == version_major), key=basic_util.get_version_number, default=None) or version
-                    repository['releases'] = repository_tags[:5]
-   
-                repositories.append(repository)
-                logger.debug(json.dumps(repository))
+                    image_tags = requests.get(f"{proxy_url if self.context.args.proxy else api_url}/v2/{namespace}/{name}/tags/list?n=1000", headers=repository_headers).json()
+                    image_tags = sorted((x for x in image_tags.get("tags", []) if basic_util.get_version_number(x)), key=basic_util.get_version_number, reverse=True)
+                    image['latest'] = max((x for x in image_tags if (v := basic_util.get_version_number(x)) and v[0] == version_major), key=basic_util.get_version_number, default=None) or version
+                    image['releases'] = image_tags[:5]
+                images.append(image)
             except Exception as e:
                 logger.error(f"{self.context.role_path}: {e}")
-        return repositories
+        return images
 
     def delete(self) -> list[str]:
         pass
@@ -324,8 +317,6 @@ class Installer:
         parser.add_argument('-n', '--namespace', type=str)
         parser.add_argument('-p', '--param', nargs="+", default=[], type=lambda s: s.split("=", 1) if "=" in s else (s, ""), help="k1=v1 k2=v2")
         parser.add_argument('--env-active', nargs="+", default=[], help="list of env active")
-        parser.add_argument('--all-roles', action="store_true")
-        parser.add_argument('--all-namespaces', action="store_true")
         parser.add_argument('--ignore-namespace', action="store_true")
         parser.add_argument('--create-namespace', action="store_true")
         parser.add_argument('--roles', nargs="+", default=[])
@@ -359,6 +350,7 @@ class Installer:
         self.set_common_argument(parser)
         parser.add_argument("--target", type=str, default="build.sh", help="(default=build.sh)")
         parser.add_argument('--check', action="store_true")
+        parser.add_argument('--proxy', action="store_true")
         parser.add_argument('--build-args', nargs="+", default=[])
         parser.add_argument('--tag')
         parser.add_argument('--push', action="store_true")
@@ -390,7 +382,7 @@ class Installer:
         global_env = self.load_env_file(args.env_active, args.param)
         global_env["param_command"] = args.command
         jinja2ignore_rules = file_util.read_text(self.jinja2ignore_file).split("\n") if self.jinja2ignore_file and self.jinja2ignore_file.exists() else []
-        roles = select_roles(self.root_path, self.role_deep, args=args)
+        roles = select_roles(self.root_path, self.role_deep, args)
 
         def process(r):
             role_build_path = r.role_path.joinpath("build")

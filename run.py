@@ -21,6 +21,9 @@ if __name__ == '__main__':
     args.param = dict(args.param)
     log_util.init_logger(file=pathlib.Path(args.file).with_suffix(".log"))
 
+    if args.debug:
+        logger.setLevel(logging.DEBUG)
+
     shell_cwd = pathlib.Path(args.file).parent.resolve()
 
     logger.info("args: {0}".format(json.dumps(vars(args), indent=2)))

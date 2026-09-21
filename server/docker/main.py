@@ -2,6 +2,7 @@
 
 import logging
 
+import json
 import pathlib
 
 import server
@@ -135,8 +136,9 @@ class DockerRole(server.AbstractRole):
                     _check_cmds.append(f"docker build --progress=plain --call=outline {t.get('build_args', '')} {self.context.role_out_path.as_posix()} 2>&1 | sed -n 's/.*load metadata for //p' >> {images.as_posix()}")
             server.execute(collection_util.flat_to_str(_check_cmds, delimiter=" && "))
             repositories.extend(super().get_check_images(images))
+            if self.context.args.check: file_util.write_text(self.context.role_build_path / 'repositories.json', json.dumps(repositories, indent=2))
         if self.context.args.target == "doc":
-            registry_git_repo_raw_format = self.context.role_env.get("param_registry_git_repo_raw") + "/main/{0}/docker/{1}"
+            registry_git_repo_raw_format = self.context.role_env.get("param_registry_git_repo_raw", '') + "/main/{0}/docker/{1}"
             md_param = {
                 "param_role_name": self.context.role_name,
                 "param_registry_git_repo": "{}/{}/{}".format(self.context.role_env.get("param_registry_git_repo"), "tree/main", self.context.role_name),

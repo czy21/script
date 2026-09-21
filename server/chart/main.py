@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
-import logging
-
 import json
-import pathlib
+import logging
 import re
+
+import pathlib
 import requests
 
 import server
@@ -64,8 +64,9 @@ class ChartRole(server.AbstractRole):
             server.execute(collection_util.flat_to_str(_check_cmds, delimiter=" && "))
             repositories.extend(super().get_check_images(images))
             repositories.extend(self.get_check_charts(charts))
+            if self.context.args.check: file_util.write_text(self.context.role_build_path / 'repositories.json', json.dumps(repositories, indent=2))
         if self.context.args.target == "doc":
-            registry_git_repo_raw_format = self.context.role_env.get("param_registry_git_repo_raw") + "/main/{0}/chart/{1}"
+            registry_git_repo_raw_format = self.context.role_env.get("param_registry_git_repo_raw", '') + "/main/{0}/chart/{1}"
             self.role_doc_content = template_util.Template(file_util.read_text(self.root_doc_template_file)).render(**{
                 "param_role_name": self.context.role_name,
                 "param_registry_git_repo": "{}/{}/{}".format(self.context.role_env.get("param_registry_git_repo"), "tree/main", self.context.role_name),
@@ -80,18 +81,18 @@ class ChartRole(server.AbstractRole):
 
     def get_check_charts(self, charts_file):
         token_cache = {}
-        repositories = []
+        charts = []
         if not charts_file.exists():
-            return repositories
+            return charts
 
-        def get_repository_cache(repository_index):
-            if repository_index in token_cache:
-                return token_cache[repository_index]
-            response = requests.get(repository_index)
+        def get_repository_cache(key):
+            if key in token_cache:
+                return token_cache[key]
+            response = requests.get(key)
             response.raise_for_status()
             response.encoding = "utf-8"
-            token_cache[repository_index] = yaml_util.load(response.text)
-            return token_cache.get(repository_index)
+            token_cache[key] = yaml_util.load(response.text)
+            return token_cache.get(key)
 
         for l in file_util.read_text(charts_file).splitlines():
             repository, name, version = l.split(' ')
@@ -99,24 +100,17 @@ class ChartRole(server.AbstractRole):
             version_major = int(version_major_match.group(1)) if version_major_match else None
 
             try:
-                repository_obj = {
-                    'repository': repository,
-                    'name': name,
-                    'version': version
-                }
-
-                repository_index = f"{repository.rstrip('/')}/index.yaml"
-                repository_index = get_repository_cache(repository_index)
-                repository_list = sorted([x for x in repository_index.get('entries', {}).get(name, [])], key=lambda x: basic_util.get_version_number(x.get('version')), reverse=True)
-                repository_tags = [x.get('version') for x in repository_list]
-                repository_obj['latest'] = max((x for x in repository_tags if (v := basic_util.get_version_number(x)) and v[0] == version_major), key=basic_util.get_version_number, default=None) or version
-                repository_obj['releases'] = repository_tags[:5]
-
-                repositories.append(repository_obj)
-                logger.debug(json.dumps(repository_obj))
+                chart = {'name': name, 'version': version, 'repository': repository}
+                if self.context.args.check:
+                    repository_index = get_repository_cache(f"{repository.rstrip('/')}/index.yaml") or {}
+                    chart_tags = sorted([x for x in repository_index.get('entries', {}).get(name, [])], key=lambda x: basic_util.get_version_number(x.get('version')), reverse=True)
+                    chart_tags = [x.get('version') for x in chart_tags]
+                    chart['latest'] = max((x for x in chart_tags if (v := basic_util.get_version_number(x)) and v[0] == version_major), key=basic_util.get_version_number, default=None) or version
+                    chart['releases'] = chart_tags[:5]
+                charts.append(chart)
             except Exception as e:
                 logger.error(f"{self.context.role_path}: {e}")
-        return repositories
+        return charts
 
     def delete(self) -> list[str]:
         return ["helm delete {0} {1}".format(self.context.role_name, "" if self.context.args.ignore_namespace else "--namespace {0}".format(self.context.namespace))]

@@ -2,23 +2,23 @@
 import io
 import logging
 import math
-import pathlib
 import re
 import subprocess
 import typing
 
 import jinja2
+import pathlib
 
-from util import basic as basic_util, path as path_util, file as file_util
+from util import basic as basic_util
 
 logger = logging.getLogger()
 
 
-def assemble_ql(s_path: pathlib.Path, db_meta: typing.Any, file_suffix: str, prep: str = None, post: str = None) -> None:
+def assemble_ql(s_path: pathlib.Path, db_meta: typing.Any, file_suffix: str, prep: str = "", post: str = "") -> list[str]:
     db_file_paths = sorted(pathlib.Path(s_path.as_posix()).rglob(f"*.{file_suffix}"))
     db_file_content = []
     for s in db_file_paths:
-        logger.info(basic_util.action_formatter("loading", s))
+        logger.info(basic_util.action_formatter("loading", s.as_posix()))
         with io.open(s, "r", encoding="utf-8") as cf:
             db_file_template = "\n".join([db_meta["header"], cf.read(), db_meta["footer"]])
             db_file_content.append(jinja2.Template(source=db_file_template).render(**{
