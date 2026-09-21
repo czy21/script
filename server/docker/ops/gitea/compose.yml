@@ -6,7 +6,7 @@ x-traefik-label: &traefik-label
 services:
 
   gitea:
-    image: gitea/gitea:1.27.2
+    image: gitea/gitea:1.27.3
     container_name: gitea
     labels:
       <<: *traefik-label
@@ -28,6 +28,7 @@ services:
       GITEA__server__LANDING_PAGE: explore
       GITEA__server__LFS_START_SERVER: true
       GITEA__server__LFS_ALLOW_PURE_SSH: true
+      GITEA__service__DISABLE_REGISTRATION: true
       GITEA__security__INSTALL_LOCK: true
       GITEA__security__ALLOWED_HOST_LIST: "*"
       GITEA__database__DB_TYPE: mysql
