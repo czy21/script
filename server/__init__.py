@@ -204,6 +204,8 @@ class AbstractRole(metaclass=ABCMeta):
         images = []
         if not images_file.exists():
             return images
+        
+        mirror_host = self.context.role_env.get('param_mirror_host')
 
         def get_repository_cache(token_url, namespace, name):
             url = f"{token_url}/token?service=registry.docker.io&scope=repository:{namespace}/{name}:pull"
@@ -231,19 +233,18 @@ class AbstractRole(metaclass=ABCMeta):
                 api_url = "https://registry-1.docker.io"
                 web_url = "https://hub.docker.com/r"
                 token_url = "https://auth.docker.io"
-                proxy_url = "https://dockerproxy.net"
+                proxy_url = f"https://{mirror_host}/docker-proxy"
 
             elif registry == "mcr.microsoft.com":
                 api_url = f"https://{registry}"
                 web_url = api_url
                 token_url = None
-                proxy_url = "https://mcr.dockerproxy.net"
-
+                proxy_url = f"https://{mirror_host}/docker-proxy-mcr"
             else:
                 api_url = f"https://{registry}"
                 web_url = api_url
                 token_url = f"https://{registry}"
-                proxy_url = f"https://{registry.replace('.io', '')}.dockerproxy.net"
+                proxy_url = f"https://{mirror_host}/docker-proxy-{registry.replace('.io', '')}"
 
             try:
                 image = {'name': f'{registry}/{namespace}/{name}', 'version': version, 'repository': f"{web_url}/{namespace}/{name}"}
@@ -255,10 +256,9 @@ class AbstractRole(metaclass=ABCMeta):
                     repository_headers = {}
                     if repository_token:
                         repository_headers["Authorization"] = f"Bearer {repository_token}"
-                    image_tags = requests.get(f"{proxy_url if self.context.args.proxy else api_url}/v2/{namespace}/{name}/tags/list?n=1000", headers=repository_headers).json()
+                    image_tags = requests.get(f"{proxy_url if self.context.args.proxy else api_url}/v2/{namespace}/{name}/tags/list?n=10000", headers=repository_headers).json()
                     image_tags = sorted((x for x in image_tags.get("tags", []) if basic_util.get_version_number(x)), key=basic_util.get_version_number, reverse=True)
                     image['latest'] = max((x for x in image_tags if (v := basic_util.get_version_number(x)) and v[0] == version_major), key=basic_util.get_version_number, default=None) or version
-                    image['releases'] = image_tags[:5]
                 images.append(image)
             except Exception as e:
                 logger.error(f"{self.context.role_path}: {e}")

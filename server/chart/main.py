@@ -106,7 +106,6 @@ class ChartRole(server.AbstractRole):
                     chart_tags = sorted([x for x in repository_index.get('entries', {}).get(name, [])], key=lambda x: basic_util.get_version_number(x.get('version')), reverse=True)
                     chart_tags = [x.get('version') for x in chart_tags]
                     chart['latest'] = max((x for x in chart_tags if (v := basic_util.get_version_number(x)) and v[0] == version_major), key=basic_util.get_version_number, default=None) or version
-                    chart['releases'] = chart_tags[:5]
                 charts.append(chart)
             except Exception as e:
                 logger.error(f"{self.context.role_path}: {e}")

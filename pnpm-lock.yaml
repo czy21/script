@@ -10,7 +10,7 @@ importers:
     devDependencies:
       vitepress:
         specifier: 2.0.0-alpha.20
-        version: 2.0.0-alpha.20(postcss@8.5.28)
+        version: 2.0.0-alpha.20(async-validator@4.2.5)(postcss@8.5.28)
 
 packages:
 
@@ -307,6 +307,9 @@ packages:
     resolution: {integrity: sha512-JRgY90Sz8DDtPMsaDflvPMp9xYk69JZAmbuDvAquUVXKr2gEjqtzGNTTthLfckH0BzBqvnu31gb4a8TGLRe79g==}
     peerDependencies:
       vue: ^3.5.0
+
+  async-validator@4.2.5:
+    resolution: {integrity: sha512-7HhHjtERjqlNbZtqNqy2rckN/SpOOlmDliet+lP7k+eKZEjPk3DgyeU9lIXLdeLz0uBbbVp+9Qdow9wJWgwwfg==}
 
   birpc@2.9.0:
     resolution: {integrity: sha512-KrayHS5pBi69Xi9JmvoqrIgYGDkD6mcSe/i6YKi3w5kekCLzrX4+nawcXqrj2tIp50Kw/mT/s3p+GVK0A0sKxw==}
@@ -853,12 +856,13 @@ snapshots:
       '@vueuse/shared': 14.4.0(vue@3.5.43)
       vue: 3.5.43
 
-  '@vueuse/integrations@14.4.0(focus-trap@8.2.2)(vue@3.5.43)':
+  '@vueuse/integrations@14.4.0(async-validator@4.2.5)(focus-trap@8.2.2)(vue@3.5.43)':
     dependencies:
       '@vueuse/core': 14.4.0(vue@3.5.43)
       '@vueuse/shared': 14.4.0(vue@3.5.43)
       vue: 3.5.43
     optionalDependencies:
+      async-validator: 4.2.5
       focus-trap: 8.2.2
 
   '@vueuse/metadata@14.4.0': {}
@@ -866,6 +870,9 @@ snapshots:
   '@vueuse/shared@14.4.0(vue@3.5.43)':
     dependencies:
       vue: 3.5.43
+
+  async-validator@4.2.5:
+    optional: true
 
   birpc@2.9.0: {}
 
@@ -1137,7 +1144,7 @@ snapshots:
     optionalDependencies:
       fsevents: 2.3.3
 
-  vitepress@2.0.0-alpha.20(postcss@8.5.28):
+  vitepress@2.0.0-alpha.20(async-validator@4.2.5)(postcss@8.5.28):
     dependencies:
       '@docsearch/css': 4.7.0
       '@docsearch/js': 4.7.0
@@ -1149,7 +1156,7 @@ snapshots:
       '@vue/devtools-api': 8.2.1
       '@vue/shared': 3.5.43
       '@vueuse/core': 14.4.0(vue@3.5.43)
-      '@vueuse/integrations': 14.4.0(focus-trap@8.2.2)(vue@3.5.43)
+      '@vueuse/integrations': 14.4.0(async-validator@4.2.5)(focus-trap@8.2.2)(vue@3.5.43)
       focus-trap: 8.2.2
       mark.js: 8.11.1
       minisearch: 7.2.0

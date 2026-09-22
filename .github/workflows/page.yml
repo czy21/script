@@ -8,6 +8,18 @@ on:
       - doc/**
   workflow_dispatch:
 
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
 # Default to bash
 defaults:
   run:
@@ -15,34 +27,53 @@ defaults:
 
 jobs:
   build:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          repository: czy21/container
+          path: build/container
+          token: ${{ secrets.PAT }}
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+          cache: 'pip'
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24.20.0
       - run: |
-          echo "/volume1/app/nvm/versions/node/v24.20.0/bin" >> "$GITHUB_PATH"
+          find build/container/ -mindepth 1 -maxdepth 1 ! -name '.git' ! -name 'LICENSE' ! -name 'README.md' -exec rm -rf -- {} +
+          npm install pnpm -g
+          python3 -m venv $HOME/.python3
           $HOME/.python3/bin/python3 -m pip install -r server/requirements.txt
           $HOME/.python3/bin/python3 -B main.py build
       - name: Push to container repository
+        working-directory: build/container/
         run: |
-          find $HOME/container/ -mindepth 1 -maxdepth 1 \
-            ! -name '.git' \
-            ! -name 'LICENSE' \
-            ! -name 'README.md' \
-            -exec rm -rf -- {} +
-          mv build/container/* $HOME/container/
-          cd $HOME/container/
-          [ -n "$(git status -s)" ] && {
-            git add . && git commit --amend -m "CI: sync code" && git push --force
-          }
+          date -Is > lastUpdate
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add -A && git commit --amend --no-edit && git push --force
       - name: Install dependencies
         run: pnpm install
       - name: Build with VitePress
         run: npm run build
-      - name: Build & Deploy Worker
-        uses: cloudflare/wrangler-action@v4
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v5
         with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy build/doc --project-name=doc
+          path: ./build/doc
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

@@ -1,8 +1,10 @@
 # {{ param_role_name }}
 - {{ param_registry_git_repo }}
-{%- if param_repositories %}
+{% if param_repositories %}
+| Name | Latest |
+| ---- | ------ |
 {%- for t in param_repositories %}
-- [{{ t["name"] }}:{{ t["version"] }}]({{ t['repository'] }}/index.yaml)
+| [{{ t["name"] }}:{{ t["version"] }}]({{ t['repository'] }}/index.yaml) | {{ t['latest'] }} |
 {%- endfor %}
 {%- endif %}
 {%- if param_role_install %}
