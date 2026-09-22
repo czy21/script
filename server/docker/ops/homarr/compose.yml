@@ -1,0 +1,18 @@
+x-traefik-label: &traefik-label
+  traefik.enable: true
+  traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
+  traefik.http.services.{{ param_role_name }}.loadbalancer.server.port: 7575
+
+services:
+  homarr:
+    image: ghcr.io/homarr-labs/homarr:v1.77.2
+    container_name: homarr
+    labels:
+      <<: *traefik-label
+    privileged: true
+    user: root
+    volumes:
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/appdata/
+    environment:
+      SECRET_ENCRYPTION_KEY: "{{ param_homarr_key }}"
+    restart: always
