@@ -50,13 +50,17 @@ jobs:
           python3 -m venv $HOME/.python3
           $HOME/.python3/bin/python3 -m pip install -r server/requirements.txt
           $HOME/.python3/bin/python3 -B main.py build
+
       - name: Push to container repository
         working-directory: build/container/
         run: |
           date -Is > lastUpdate
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git add -A && git commit --amend --no-edit && git push --force
+          git add .
+          git commit --amend --no-edit
+          git push --force
+
       - name: Install dependencies
         run: pnpm install
       - name: Build with VitePress
