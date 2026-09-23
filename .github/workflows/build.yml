@@ -57,6 +57,7 @@ jobs:
           if [ -n "$TARGETS" ]; then
             (cd $source;PYTHONPATH=../.. $HOME/.python3/bin/python3 -B main.py build --roles $TARGETS --target Dockerfile --push -p param_registry_targets=docker --parallel)
           fi
+          echo
 
   build-chart:
     runs-on: self-hosted
@@ -94,3 +95,4 @@ jobs:
           if [ -n "$TARGETS" ]; then
             (cd $source;PYTHONPATH=../.. $HOME/.python3/bin/python3 -B main.py build --roles $TARGETS --target Chart --push --parallel)
           fi
+          echo
