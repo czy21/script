@@ -10,7 +10,7 @@ curl -fsSL https://packages.microsoft.com/config/{{ param_ansible_distribution }
   | sed -e 's|\(signed-by=\)[^]]*|\1/etc/apt/keyrings/microsoft.asc|' \
   | sudo tee /etc/apt/sources.list.d/dotnet.list
 
-if [ "{{ param_mirror_use_proxy | lower }}" = true ];then
+if [ "{{ param_proxy | lower }}" = true ];then
   sudo cp -rv /etc/apt/sources.list.d/dotnet.list /etc/apt/sources.list.d/dotnet.list.bak
   sed -e "s|https://\(packages.microsoft.com\)|https://{{ param_mirror_raw }}/\1|g" /etc/apt/sources.list.d/dotnet.list.bak | sudo tee /etc/apt/sources.list.d/dotnet.list
 fi

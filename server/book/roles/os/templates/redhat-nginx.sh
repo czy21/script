@@ -19,7 +19,7 @@ gpgkey=https://nginx.org/keys/nginx_signing.key
 module_hotfixes=true
 EOF
 
-if [ "{{ param_mirror_use_proxy | lower }}" = true ];then
+if [ "{{ param_proxy | lower }}" = true ];then
   sudo cp -rv /etc/yum.repos.d/nginx.repo /etc/yum.repos.d/nginx.repo.bak
   sed -e "s|https://nginx.org/packages|https://{{ param_mirror_raw }}/nginx|g" /etc/yum.repos.d/nginx.repo.bak | sudo tee /etc/yum.repos.d/nginx.repo
 fi

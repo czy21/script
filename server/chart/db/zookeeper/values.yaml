@@ -1,5 +1,5 @@
 zookeeper:
   image:
-    registry: {{ param_registry_proxy | default("docker.io")}}
+    registry: {{ param_registry_proxy if param_proxy and param_registry_proxy else 'docker.io' }}
     repository: bitnami/zookeeper
   replicaCount: 1

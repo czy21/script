@@ -55,7 +55,7 @@ jobs:
           fi
           echo "Build $TARGETS"
           if [ -n "$TARGETS" ]; then
-            (cd $source;PYTHONPATH=../.. $HOME/.python3/bin/python3 -B main.py build --roles $TARGETS --target Dockerfile --push -p param_registry_targets=docker --parallel)
+            (cd $source;PYTHONPATH=../.. $HOME/.python3/bin/python3 -B main.py build --roles $TARGETS --target Dockerfile --push -p param_proxy=true param_registry_targets=docker --parallel)
           fi
           echo
 
@@ -93,6 +93,6 @@ jobs:
           fi
           echo "Build $TARGETS"
           if [ -n "$TARGETS" ]; then
-            (cd $source;PYTHONPATH=../.. $HOME/.python3/bin/python3 -B main.py build --roles $TARGETS --target Chart --push --parallel)
+            (cd $source;PYTHONPATH=../.. $HOME/.python3/bin/python3 -B main.py build --roles $TARGETS --target Chart --push param_proxy=true --parallel)
           fi
           echo

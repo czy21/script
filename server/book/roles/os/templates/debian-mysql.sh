@@ -14,7 +14,7 @@ fi
 
 echo "deb [signed-by=/etc/apt/keyrings/mysql.asc] http://repo.mysql.com/apt/{{ param_ansible_distribution }} $(lsb_release -cs) mysql-${mysql_repo_version} mysql-tools" | sudo tee /etc/apt/sources.list.d/mysql.list
 
-if [ "{{ param_mirror_use_proxy | lower }}" = true ];then
+if [ "{{ param_proxy | lower }}" = true ];then
   sudo cp -rv /etc/apt/sources.list.d/mysql.list /etc/apt/sources.list.d/mysql.list.bak
   sed -e "s|http://repo.mysql.com/apt|https://{{ param_mirror_raw }}/mysql/apt|g" /etc/apt/sources.list.d/mysql.list.bak | sudo tee /etc/apt/sources.list.d/mysql.list
 fi

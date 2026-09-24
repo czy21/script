@@ -204,7 +204,7 @@ class AbstractRole(metaclass=ABCMeta):
         images = []
         if not images_file.exists():
             return images
-        
+        proxy = self.context.role_env.get('param_proxy', False)
         mirror_host = self.context.role_env.get('param_mirror_host')
 
         def get_repository_cache(token_url, namespace, name):
@@ -252,11 +252,11 @@ class AbstractRole(metaclass=ABCMeta):
                     if registry not in self.context.role_env.get('param_registry_checks', []):
                         logger.debug(f"{image.get('name')}: ignore check")
                         continue
-                    repository_token = get_repository_cache(token_url, namespace, name) if token_url and not self.context.args.proxy else None
+                    repository_token = get_repository_cache(token_url, namespace, name) if token_url and not proxy else None
                     repository_headers = {}
                     if repository_token:
                         repository_headers["Authorization"] = f"Bearer {repository_token}"
-                    image_tags = requests.get(f"{proxy_url if self.context.args.proxy else api_url}/v2/{namespace}/{name}/tags/list?n=10000", headers=repository_headers).json()
+                    image_tags = requests.get(f"{proxy_url if proxy else api_url}/v2/{namespace}/{name}/tags/list?n=10000", headers=repository_headers).json()
                     image_tags = sorted((x for x in image_tags.get("tags", []) if basic_util.get_version_number(x)), key=basic_util.get_version_number, reverse=True)
                     image['latest'] = max((x for x in image_tags if (v := basic_util.get_version_number(x)) and v[0] == version_major), key=basic_util.get_version_number, default=None) or version
                 images.append(image)
@@ -315,7 +315,14 @@ class Installer:
     @staticmethod
     def set_common_argument(parser: argparse.ArgumentParser):
         parser.add_argument('-n', '--namespace', type=str)
-        parser.add_argument('-p', '--param', nargs="+", default=[], type=lambda s: s.split("=", 1) if "=" in s else (s, ""), help="k1=v1 k2=v2")
+        def parse_param(s):
+            key, value = s.split("=", 1) if "=" in s else (s, "")
+            if value.lower() == "true":
+                value = True
+            elif value.lower() == "false":
+                value = False
+            return key, value
+        parser.add_argument('-p', '--param', nargs="+", default=[], type=parse_param, help="k1=v1 k2=v2")
         parser.add_argument('--env-active', nargs="+", default=[], help="list of env active")
         parser.add_argument('--ignore-namespace', action="store_true")
         parser.add_argument('--create-namespace', action="store_true")
@@ -350,7 +357,6 @@ class Installer:
         self.set_common_argument(parser)
         parser.add_argument("--target", type=str, default="build.sh", help="(default=build.sh)")
         parser.add_argument('--check', action="store_true")
-        parser.add_argument('--proxy', action="store_true")
         parser.add_argument('--build-args', nargs="+", default=[])
         parser.add_argument('--tag')
         parser.add_argument('--push', action="store_true")

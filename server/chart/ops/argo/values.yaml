@@ -3,13 +3,13 @@ argo-workflows:
   crds:
     upgradeJob:
       image:
-        repository: "{{ param_registry_proxy if param_mirror_use_proxy else 'registry.k8s.io' }}/kubectl"
+        repository: {{ param_registry_proxy if param_proxy and param_registry_proxy else 'registry.k8s.io' }}/kubectl
   controller:
     rbac:
       accessAllSecrets: true
       writeConfigMaps: true
     image:
-      registry: "{{ param_registry_proxy if param_mirror_use_proxy else 'quay.io' }}"
+      registry: {{ param_registry_proxy if param_proxy and param_registry_proxy else 'quay.io' }}
     workflowNamespaces: []
     synchronization:
       mysql:
@@ -24,10 +24,10 @@ argo-workflows:
           key: password
   server:
     image:
-      registry: "{{ param_registry_proxy if param_mirror_use_proxy else 'quay.io' }}"
+      registry: {{ param_registry_proxy if param_proxy and param_registry_proxy else 'quay.io' }}
   executor:
     image:
-      registry: "{{ param_registry_proxy if param_mirror_use_proxy else 'quay.io' }}"
+      registry: {{ param_registry_proxy if param_proxy and param_registry_proxy else 'quay.io' }}
   artifactRepository:
     s3: 
       endpoint: "{{ param_s3_endpoint }}"

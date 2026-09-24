@@ -10,7 +10,7 @@ gpgcheck=1
 gpgkey=https://repo.mysql.com/RPM-GPG-KEY-mysql-2023
 EOF
 
-if [ "{{ param_mirror_use_proxy | lower }}" = true ];then
+if [ "{{ param_proxy | lower }}" = true ];then
   sudo cp -rv /etc/yum.repos.d/mysql.repo /etc/yum.repos.d/mysql.repo.bak
   sed -e "s|http://repo.mysql.com/yum|https://{{ param_mirror_raw }}/mysql/yum|g" /etc/yum.repos.d/mysql.repo.bak | sudo tee /etc/yum.repos.d/mysql.repo
 fi

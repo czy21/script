@@ -19,7 +19,7 @@ gpgcheck=1
 gpgkey=https://packages.redis.io/gpg
 EOF
 
-if [ "{{ param_mirror_use_proxy | lower }}" = true ];then
+if [ "{{ param_proxy | lower }}" = true ];then
   sudo cp -rv /etc/yum.repos.d/redis.repo /etc/yum.repos.d/redis.repo.bak
   sed -e "s|https://packages.redis.io/rpm|https://{{ param_mirror_raw }}/redis/rpm|g" /etc/yum.repos.d/redis.repo.bak | sudo tee /etc/yum.repos.d/redis.repo
 fi

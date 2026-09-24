@@ -1,5 +1,5 @@
 {
-{% if param_mirror_use_proxy %}
+{% if param_proxy %}
     "registry-mirrors": ["https://{{ param_registry_proxy }}"]
 {% endif %}
 }

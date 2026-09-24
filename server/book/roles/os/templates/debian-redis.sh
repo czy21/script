@@ -8,7 +8,7 @@ sudo chmod a+r /etc/apt/keyrings/redis.asc
 
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/redis.asc] https://packages.redis.io/deb $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/redis.list
 
-if [ "{{ param_mirror_use_proxy | lower }}" = true ];then
+if [ "{{ param_proxy | lower }}" = true ];then
   sudo cp -rv /etc/apt/sources.list.d/redis.list /etc/apt/sources.list.d/redis.list.bak
   sed -e "s|https://packages.redis.io/deb|https://{{ param_mirror_raw }}/redis/deb|g" /etc/apt/sources.list.d/redis.list.bak | sudo tee /etc/apt/sources.list.d/redis.list
 fi

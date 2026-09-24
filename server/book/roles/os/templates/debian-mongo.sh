@@ -8,7 +8,7 @@ sudo chmod a+r /etc/apt/keyrings/mongo.asc
 
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/mongo.asc] https://repo.mongodb.org/apt/{{ param_ansible_distribution }} $(lsb_release -cs)/mongodb-org/{{ param_db_mongo_minor_version }} multiverse" | sudo tee /etc/apt/sources.list.d/mongo.list
 
-if [ "{{ param_mirror_use_proxy | lower }}" = true ];then
+if [ "{{ param_proxy | lower }}" = true ];then
   sudo cp -rv /etc/apt/sources.list.d/mongo.list /etc/apt/sources.list.d/mongo.list.bak
   sed -e "s|https://repo.mongodb.org/apt|https://{{ param_mirror_raw }}/mongo/apt|g" /etc/apt/sources.list.d/mongo.list.bak | sudo tee /etc/apt/sources.list.d/mongo.list
 fi

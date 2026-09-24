@@ -8,7 +8,7 @@ x-traefik-label: &traefik-label
 services:
 
   kaoto:
-    image: kaotoio/kaoto-app:2.3.0 # quay.io/kaotoio/kaoto-app:2.3.0
+    image: {{ param_registry_proxy if param_proxy and param_registry_proxy else 'quay.io' }}/kaotoio/kaoto-app:2.3.0
     container_name: kaoto
     labels:
       <<: *traefik-label

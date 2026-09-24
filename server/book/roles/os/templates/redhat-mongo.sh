@@ -10,7 +10,7 @@ gpgcheck=1
 gpgkey=https://pgp.mongodb.com/server-{{ param_db_mongo_minor_version }}.asc
 EOF
 
-if [ "{{ param_mirror_use_proxy | lower }}" = true ];then
+if [ "{{ param_proxy | lower }}" = true ];then
   sudo cp -rv /etc/yum.repos.d/mongo.repo /etc/yum.repos.d/mongo.repo.bak
   sed -e "s|https://repo.mongodb.org/yum|https://{{ param_mirror_raw }}/mongo/yum|g" /etc/yum.repos.d/mongo.repo.bak | sudo tee /etc/yum.repos.d/mongo.repo
 fi

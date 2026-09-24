@@ -11,7 +11,7 @@ gpgcheck=1
 gpgkey=https://pkgs.k8s.io/addons:/cri-o:/stable:/v{{ param_k8s_minor_version }}/rpm/repodata/repomd.xml.key
 EOF
 
-if [ "{{ param_mirror_use_proxy | lower }}" = true ];then
+if [ "{{ param_proxy | lower }}" = true ];then
   sudo cp -rv /etc/yum.repos.d/kubernetes.repo /etc/yum.repos.d/kubernetes.repo.bak
   sed -e "s|https://pkgs.k8s.io|http://{{ param_mirror_k8s }}|g" /etc/yum.repos.d/kubernetes.repo.bak | sudo tee /etc/yum.repos.d/kubernetes.repo > /dev/null
   sudo cp -rv /etc/yum.repos.d/cri-o.repo /etc/yum.repos.d/cri-o.repo.bak

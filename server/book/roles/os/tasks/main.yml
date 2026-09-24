@@ -7,7 +7,7 @@
 
 - name: mirror
   shell: sh {{ param_remote_role_path }}/mirror.sh
-  when: param_mirror_use_proxy
+  when: param_proxy
   tags:
     - "os"
     - "os-mirror"

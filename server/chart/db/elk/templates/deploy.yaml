@@ -61,7 +61,7 @@ spec:
     spec:
       containers:
         - name: kibana
-          image: {{ .Values.param_registry_proxy | default "docker.elastic.co" }}/kibana/kibana:{{ .Values.version }}
+          image: {{ ternary .Values.param_registry_proxy "docker.elastic.co" (and .Values.param_proxy .Values.param_registry_proxy) }}/kibana/kibana:{{ .Values.version }}
   http:
     tls:
       selfSignedCertificate:

@@ -19,7 +19,7 @@ spec:
         app.kubernetes.io/version: {{ .Values.version }}
     spec:
       containers:
-      - image: {{ .Values.param_registry_proxy | default "k8s.gcr.io" }}/kube-state-metrics/kube-state-metrics:v{{ .Values.version }}
+      - image: {{ ternary .Values.param_registry_proxy "k8s.gcr.io" (and .Values.param_proxy .Values.param_registry_proxy) }}/kube-state-metrics/kube-state-metrics:v{{ .Values.version }}
         livenessProbe:
           httpGet:
             path: /healthz

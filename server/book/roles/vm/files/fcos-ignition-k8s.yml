@@ -43,7 +43,7 @@ storage:
     - path: /etc/yum.repos.d/mirror.sh
       contents:
         inline: |
-          if [ "{{ param_mirror_use_proxy | lower }}" = true ];then
+          if [ "{{ param_proxy | lower }}" = true ];then
             # os
             for r in `find /etc/yum.repos.d/ -maxdepth 1 ! -name "fedora-cisco*.repo" -name "fedora*.repo"`;do
               r_bak="${r}.bak"

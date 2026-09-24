@@ -8,7 +8,7 @@ sudo chmod a+r /etc/apt/keyrings/nginx.asc
 
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/nginx.asc] https://nginx.org/packages/{{ param_ansible_distribution }} $(lsb_release -cs) nginx" | sudo tee /etc/apt/sources.list.d/nginx.list
 
-if [ "{{ param_mirror_use_proxy | lower }}" = true ];then
+if [ "{{ param_proxy | lower }}" = true ];then
   sudo cp -rv /etc/apt/sources.list.d/nginx.list /etc/apt/sources.list.d/nginx.list.bak
   sed -e "s|https://nginx.org/packages|https://{{ param_mirror_raw }}/nginx|g" /etc/apt/sources.list.d/nginx.list.bak | sudo tee /etc/apt/sources.list.d/nginx.list
 fi
