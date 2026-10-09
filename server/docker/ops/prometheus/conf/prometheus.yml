@@ -51,11 +51,6 @@ scrape_configs:
         labels:
           origin_prometheus: nas
 
-  - job_name: docker-cadvisor
-    static_configs:
-      - targets: ['cadvisor-nas.czy21-internal.com']
-      - targets: ['cadvisor-base.czy21-internal.com']
-
   - job_name: mysql
     static_configs:
       - targets:
@@ -83,5 +78,5 @@ scrape_configs:
     metrics_path: /metrics
     scheme: http
     static_configs:
-      - targets: ['traefik-nas.czy21-internal.com']
-      - targets: ['traefik-base.czy21-internal.com']
+      - targets: ['traefik-nas.czy21.com']
+      - targets: ['traefik-base.czy21.com']

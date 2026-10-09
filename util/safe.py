@@ -1,19 +1,23 @@
 import base64
-import bcrypt
 import hashlib
 
+import bcrypt
 
-def decrypt(value: str, mode: str = "base64"):
+
+def encrypt(value: str, mode: str = "base64") -> str:
+    value_bytes = value.encode("utf-8")
     if mode == "base64":
-        return base64.b64decode(value).rstrip().decode("utf-8")
+        return base64.b64encode(value_bytes).decode("ascii")
+    if mode == "md5":
+        return hashlib.md5(value_bytes).hexdigest()
     return value
 
 
-def htpasswd(value: str):
-    return bcrypt.hashpw(value.encode(), bcrypt.gensalt(rounds=12)).decode()
+def decrypt(value: str, mode: str = "base64") -> str:
+    if mode == "base64":
+        return base64.b64decode(value, validate=True).decode("utf-8")
+    return value
 
 
-def md5_encrypt(text: str) -> str:
-    md5 = hashlib.md5()
-    md5.update(text.encode('utf-8'))
-    return md5.hexdigest()
+def htpasswd(value: str) -> str:
+    return bcrypt.hashpw(value.encode("utf-8"), bcrypt.gensalt(rounds=12)).decode("ascii")
