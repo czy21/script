@@ -38,15 +38,17 @@ def deploy(Map inputs) {
         def content = libraryResource "org/ops/docker-compose-${inputs.param_code_type}.yaml"
         writeFile file: compose_file, text: content, encoding: 'utf-8'
     }
+    def docker_ssh_text = libraryResource "org/ops/docker-ssh.sh"
+    writeFile file: '.jenkins/docker/docker-ssh.sh', text: docker_ssh_text, encoding: 'utf-8'
+    withCredentials([sshUserPrivateKey(credentialsId: 'opsor', keyFileVariable: 'SSH_FILE', usernameVariable: 'SSH_USER')]) {
+        inputs.param_docker_deploy_user = StringUtils.defaultIfEmpty(inputs.param_docker_deploy_user, "${SSH_USER}")
 
-    withCredentials([dockerCert(credentialsId: 'docker-client', variable: 'DOCKER_CERT_PATH')]) {
-        def param_file = PathUtils.ofPath(env.WORKSPACE, ".jenkins/inputs.yaml")
-        def cmd = [
-                "DOCKER_TLS_VERIFY=1 DOCKER_HOST=tcp://${inputs.param_docker_deploy_host}:2376",
-                "docker-compose --project-name ${inputs.param_release_name} --file ${compose_file} --env-file ${param_file}",
-                "up --detach --remove-orphans",
-        ]
-        sh "${cmd.join(' ')}"
+        sh """
+        export SSH_HOST=${inputs.param_docker_deploy_host}
+        export SSH_USER=${inputs.param_docker_deploy_user}
+        . .jenkins/docker/docker-ssh.sh
+        docker-compose --project-name ${inputs.param_release_name} --file ${compose_file} --env-file ${WORKSPACE}/.jenkins/inputs.yaml up --detach --remove-orphans
+        """
     }
 }
 

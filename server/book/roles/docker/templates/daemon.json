@@ -21,6 +21,6 @@
   "registry-mirrors": [
     "https://{{ param_registry_proxy }}"
   ],
-{%- endif %}
+{% endif %}
   "live-restore": true
 }

@@ -1,5 +1,5 @@
 - name: ca
-  synchronize: src=.temp/ca dest={{ param_remote_role_path }}
+  synchronize: src=.tmp/ca/ dest={{ param_remote_role_path }}/tls/
   when: param_docker_tls_verify
   tags:
     - '{{ param_role_name }}'
@@ -8,17 +8,16 @@
 # updated tls need execute sudo systemctl daemon-reload && sudo systemctl restart docker.service
 - name: tls
   shell: |
-    ca_dir={{ param_remote_role_path }}/ca
     tls_dir={{ param_remote_role_path }}/tls
     mkdir -p $tls_dir
     openssl genrsa -out $tls_dir/server.key 4096
     openssl req -subj "/CN=server" -new -key $tls_dir/server.key -out $tls_dir/server.csr
-    echo "subjectAltName = DNS:localhost,IP:127.0.0.1,IP:{{ param_ansible_host_ipv4 }}\nextendedKeyUsage = serverAuth" > $tls_dir/extfile.cnf
-    openssl x509 -req -days {{ param_docker_tls_days }} -in $tls_dir/server.csr -CA $ca_dir/ca.crt -CAkey $ca_dir/ca.key -CAcreateserial -out $tls_dir/server.crt -extfile $tls_dir/extfile.cnf
+    printf "subjectAltName = DNS:localhost,IP:127.0.0.1,IP:{{ param_ansible_host_ipv4 }}\nextendedKeyUsage = serverAuth\n" > $tls_dir/extfile.cnf
+    openssl x509 -req -days {{ param_docker_tls_days }} -in $tls_dir/server.csr -CA $tls_dir/ca.crt -CAkey $tls_dir/ca.key -CAcreateserial -out $tls_dir/server.crt -extfile $tls_dir/extfile.cnf
     sudo mkdir -p /etc/docker/
     sudo cp -rv {{ param_remote_role_path }}/daemon.json /etc/docker/daemon.json
     sudo mkdir -p /etc/docker/tls/
-    sudo cp -rv $ca_dir/ca.crt $tls_dir/server.crt $tls_dir/server.key /etc/docker/tls/
+    sudo cp -rv $tls_dir/ca.crt $tls_dir/server.crt $tls_dir/server.key /etc/docker/tls/
   when: param_docker_tls_verify
   tags:
     - '{{ param_role_name }}'
