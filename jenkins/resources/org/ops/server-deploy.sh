@@ -1,6 +1,5 @@
 #!/bin/bash
-
-set -x
+set -xe
 
 APP_DIR="${APP_DIR:-"/app"}"
 

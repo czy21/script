@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # bash main.sh [name] [host] [command]
 # -r           install requirements.txt
