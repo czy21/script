@@ -1,17 +1,17 @@
-colorama==0.4.4
-MarkupSafe==2.0.1
-pandas==2.2.2
-XlsxWriter==3.0.5
-xlrd==2.0.1
-openpyxl==3.1.0
-pymongo==4.0.1
-PyMySQL==1.0.2
-SQLAlchemy==1.4.28
-Faker==10.0.0
-requests==2.31.0
-yfinance==0.2.33
-python-telegram-bot==20.7
-telethon==1.33.1
+colorama
+MarkupSafe
+pandas
+XlsxWriter
+xlrd
+openpyxl
+pymongo
+PyMySQL
+SQLAlchemy
+Faker
+requests
+yfinance
+python-telegram-bot
+telethon
 
 # server
 requests

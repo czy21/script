@@ -46,7 +46,7 @@ fi
 if [ "${param_code_type}" = "python" ];then
   # need apt install python3.xx-venv
   PYTHON_EXEC="${param_code_python_exec:-python3}"
-  APP_CMD+="&& cd ${APP_DIR}/${param_release_name} && rm -rf .pyenv && ${PYTHON_EXEC} -m venv .pyenv && .pyenv/bin/python3 -m pip install -i https://pypi.tuna.tsinghua.edu.cn/simple/ -r requirements.txt"
+  APP_CMD+="&& cd ${APP_DIR}/${param_release_name} && rm -rf .pyenv && ${PYTHON_EXEC} -m venv .pyenv && .pyenv/bin/python3 -m pip install -i https://pypi.tuna.tsinghua.edu.cn/simple/ --no-cache-dir -r requirements.txt"
 fi
 
 (cd ${param_project_root}/${param_project_module}/build && tar -zcf - ${TAR_SRC} --ignore-failed-read | ssh -p $SSH_PORT ${SSH_ARGS} ${SSH_HOST} "${APP_CMD}")

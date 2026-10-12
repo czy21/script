@@ -72,7 +72,7 @@ pypi="https://pypi.tuna.tsinghua.edu.cn/simple/"
 
 run_cmd=$(cat <<EOF
 [ -f ${PYTHON_EXEC} ] || (python3 -m venv ${PYTHON_HOME} --without-pip --system-site-packages && wget -nv -O - https://bootstrap.pypa.io/get-pip.py | ${PYTHON_EXEC} - -i ${pypi})
-[ "${setup}" = true ] && ${PYTHON_EXEC} -m pip config set global.index-url ${pypi} && ${PYTHON_EXEC} -m pip install -r ${dst_path}/server/requirements.txt
+[ "${setup}" = true ] && ${PYTHON_EXEC} -m pip config set global.index-url ${pypi} && ${PYTHON_EXEC} -m pip install --no-cache-dir -r ${dst_path}/server/requirements.txt
 
 ${PYTHON_EXEC} -B ${dst_path}/main.py $args
 EOF

@@ -52,8 +52,10 @@ def exec(Map inputs) {
                 pathMap.get("java").call()
                 if ("mvn" == inputs.param_java_build_tool || fileExists("${inputs.param_project_root}/pom.xml")) {
                     pathMap.get("maven").call()
+                    inputs.param_java_build_phase = StringUtils.defaultIfEmpty(inputs.param_java_build_phase, "clean install -Dmaven.test.skip=true")
+                    
                     configFileProvider([configFile(fileId: "mvn.config", variable: 'CONFIG_FILE')]) {
-                        sh "mvn -B -s ${CONFIG_FILE} -f ${inputs.param_project_root}/pom.xml clean install -U -e -Dmaven.test.skip=true"
+                        sh "mvn -B -U -e -s ${CONFIG_FILE} -f ${inputs.param_project_root}/pom.xml ${inputs.param_java_build_phase}"
                         if (params.param_code_analysis == true) {
                             withSonarQubeEnv(inputs.param_sonarqube_server) {
                                 sh "mvn -B -s ${CONFIG_FILE} -f ${inputs.param_project_root}/pom.xml org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=${inputs.param_sonarqube_project_key} -Dsonar.projectVersion=${inputs.param_release_version} -Dsonar.host.url=${SONAR_HOST_URL} -Dsonar.token=${SONAR_AUTH_TOKEN}"
@@ -62,9 +64,11 @@ def exec(Map inputs) {
                     }
                 } else {
                     pathMap.get("gradle").call()
+                    inputs.param_java_build_phase = StringUtils.defaultIfEmpty(inputs.param_java_build_phase, "clean build -U -x test")
+
                     def gradleConfigId = inputs.param_gradle_config_env ? "${inputs.param_gradle_config_env}-gradle.config" : 'gradle.config'
                     configFileProvider([configFile(fileId: gradleConfigId, variable: 'CONFIG_FILE')]) {
-                        sh "gradle --no-daemon -Pdevelopment=false -I ${CONFIG_FILE} -p ${inputs.param_project_root} clean build -U -x test"
+                        sh "gradle --no-daemon -Pdevelopment=false -I ${CONFIG_FILE} -p ${inputs.param_project_root} ${inputs.param_java_build_phase}"
                         if (params.param_code_analysis == true) {
                             withSonarQubeEnv(inputs.param_sonarqube_server) {
                                 sh "gradle --no-daemon -Pdevelopment=false -I ${CONFIG_FILE} -p ${inputs.param_project_root} sonar -Dsonar.projectKey=${inputs.param_sonarqube_project_key} -Dsonar.projectName=${inputs.param_sonarqube_project_key} -Dsonar.projectVersion=${inputs.param_release_version} -Dsonar.host.url=${SONAR_HOST_URL} -Dsonar.token=${SONAR_AUTH_TOKEN}"
