@@ -8,7 +8,7 @@ x-traefik-label: &traefik-label
 services:
 
   consul:
-    image: hashicorp/consul:1.22.6
+    image: hashicorp/consul:2.0.4
     container_name: consul
     labels:
       <<: *traefik-label
