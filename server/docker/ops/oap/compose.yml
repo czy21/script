@@ -16,7 +16,9 @@ services:
       SW_ES_PASSWORD: {{ param_db_es_password }}
       SW_TELEMETRY: prometheus
       SW_PROMETHEUS_FETCHER: default
-      JAVA_OPTS: "-Xms2048m -Xmx2048m"
+      JAVA_OPTS: >-
+        -Xms2048m
+        -Xmx2048m
 
     healthcheck:
       test: [ "CMD-SHELL", "/skywalking/bin/swctl ch" ]

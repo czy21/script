@@ -19,6 +19,7 @@ services:
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/data/
     environment:
-      JAVA_OPTS: "-Dspring.datasource.url=jdbc:h2:/data/db/chat2db;MODE=MYSQL"
+      JAVA_OPTS: >-
+        -Dspring.datasource.url=jdbc:h2:/data/db/chat2db;MODE=MYSQL
       LOG_PATH: "/data/log/"
     restart: always

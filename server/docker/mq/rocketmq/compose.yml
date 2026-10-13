@@ -67,5 +67,6 @@ services:
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/dashboard/tmp/:/tmp/
     environment:
-      JAVA_OPTS: -Drocketmq.namesrv.addr=rocketmq-namesrv:9876
+      JAVA_OPTS: >-
+        -Drocketmq.namesrv.addr=rocketmq-namesrv:9876
     restart: always

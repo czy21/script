@@ -53,7 +53,9 @@ services:
       - "9200"
       - "9600"
     environment:
-      OPENSEARCH_JAVA_OPTS: "-Xms512m -Xmx512m"
+      OPENSEARCH_JAVA_OPTS: >-
+        -Xms512m
+        -Xmx512m
       node.name: {{ node_name }}
       cluster.name: {{ param_role_project_name }}
       cluster.initial_cluster_manager_nodes: {{ initial_master_nodes | join(',') }}
