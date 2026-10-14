@@ -15,13 +15,9 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/home/jenkins/
       - {{ param_docker_data }}/{{ param_role_name }}/data/.jenkins:/home/jenkins/.jenkins
       - {{ param_docker_data }}/{{ param_role_name }}/data/agent:/home/jenkins/agent
-      - {{ param_docker_data }}/docker/conf/certs/:/docker-certs/client:ro
       - /run/:/run/
       - /var/run/:/var/run/
       - /tmp/:/tmp/
     environment:
       JENKINS_AGENT_SSH_PUBKEY: "{{ param_user_ssh_public_key }}"
-      DOCKER_HOST: tcp://docker:2376
-      DOCKER_CERT_PATH: /docker-certs/client
-      DOCKER_TLS_VERIFY: 1
     restart: always

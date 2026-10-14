@@ -4,6 +4,19 @@ package org.ops
 import org.ops.util.PathUtils
 import org.ops.util.StringUtils
 
+def ssh_config(Map inputs, String target) {
+    return """
+    mkdir -p .jenkins/docker
+    printf 'Host docker-remote\n\tHostName ${inputs.get('param_docker_' + target + '_host')}\n\tUser ${inputs.get('param_docker_' + target + '_user')}\n\tIdentityFile ${inputs.param_ssh_file}\n\tIdentitiesOnly yes\n\tStrictHostKeyChecking no\n\tUserKnownHostsFile /dev/null' > .jenkins/docker/ssh_config_${target}
+    printf '#!/bin/bash\nexec /usr/bin/ssh -F $WORKSPACE/.jenkins/docker/ssh_config_${target} "\$@"' > .jenkins/docker/ssh
+    chmod +x .jenkins/docker/ssh
+
+    export PATH="$WORKSPACE/.jenkins/docker:$PATH"
+    export DOCKER_HOST=ssh://docker-remote
+    docker info
+    """
+}
+
 def build(Map inputs) {
 
     def dockerConfigId = inputs.param_docker_config_env ? "${inputs.param_gradle_config_env}-docker.config" : 'docker.config'
@@ -18,18 +31,19 @@ def build(Map inputs) {
     }
 
     def docker_image_tag = "${inputs.param_release_image}:${inputs.param_release_version}"
-    def cmd = [
-            "docker build",
-            "--build-arg BASE_IMAGE=${inputs.param_registry}/${inputs.param_registry_dir}/${inputs.get('param_tool_' + inputs.param_code_type + '_version')}",
-    ]
-    if (StringUtils.isNotEmpty(inputs.param_docker_build_args)) {
-        cmd.add(inputs.param_docker_build_args)
+
+    withCredentials([sshUserPrivateKey(credentialsId: 'opsor', keyFileVariable: 'SSH_FILE', usernameVariable: 'SSH_USER')]) {
+        inputs.param_ssh_file = "${SSH_FILE}"
+        inputs.param_ssh_user = "${SSH_USER}"
+        inputs.param_docker_build_user = StringUtils.defaultIfEmpty(inputs.param_docker_build_user, inputs.param_ssh_user)
+
+        sh """
+        ${StringUtils.isNotEmpty(inputs.param_docker_build_host) ? ssh_config(inputs, 'build') : ''}
+        docker build --build-arg BASE_IMAGE=${inputs.param_registry}/${inputs.param_registry_dir}/${inputs.get('param_tool_' + inputs.param_code_type + '_version')} ${inputs.param_docker_build_args ?: ''} --tag ${docker_image_tag} --file ${docker_file} ${inputs.param_docker_context} --pull
+        docker push ${docker_image_tag}
+        docker rmi ${docker_image_tag}
+        """
     }
-    cmd.add("--tag ${docker_image_tag} --file ${docker_file} ${inputs.param_docker_context} --pull")
-    sh """
-    ${cmd.join(' ')}
-    docker push ${docker_image_tag} && docker rmi ${docker_image_tag}
-    """
 }
 
 def deploy(Map inputs) {
@@ -41,16 +55,15 @@ def deploy(Map inputs) {
         def content = libraryResource "org/ops/docker-compose-${inputs.param_code_type}.yaml"
         writeFile file: compose_file, text: content, encoding: 'utf-8'
     }
-    def docker_ssh_text = libraryResource "org/ops/docker-ssh.sh"
-    writeFile file: '.jenkins/docker/docker-ssh.sh', text: docker_ssh_text, encoding: 'utf-8'
+    
     withCredentials([sshUserPrivateKey(credentialsId: 'opsor', keyFileVariable: 'SSH_FILE', usernameVariable: 'SSH_USER')]) {
-        inputs.param_docker_deploy_user = StringUtils.defaultIfEmpty(inputs.param_docker_deploy_user, "${SSH_USER}")
+        inputs.param_ssh_file = "${SSH_FILE}"
+        inputs.param_ssh_user = "${SSH_USER}"
+        inputs.param_docker_deploy_user = StringUtils.defaultIfEmpty(inputs.param_docker_deploy_user, inputs.param_ssh_user)
 
         sh """
-        export SSH_HOST=${inputs.param_docker_deploy_host}
-        export SSH_USER=${inputs.param_docker_deploy_user}
-        . .jenkins/docker/docker-ssh.sh
-        docker-compose --project-name ${inputs.param_release_name} --file ${compose_file} --env-file ${WORKSPACE}/.jenkins/inputs.yaml up --detach --remove-orphans
+        ${ssh_config(inputs, 'deploy')}
+        docker compose --project-name ${inputs.param_release_name} --file ${compose_file} --env-file ${WORKSPACE}/.jenkins/inputs.yaml up --detach --remove-orphans
         """
     }
 }
