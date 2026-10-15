@@ -26,10 +26,11 @@ services:
       GITEA__server__ROOT_URL: "{{ param_gitea_instance_url }}"
       GITEA__server__HTTP_PORT: "3000"
       GITEA__server__LANDING_PAGE: explore
-      GITEA__server__LFS_START_SERVER: true
-      GITEA__server__LFS_ALLOW_PURE_SSH: true
-      GITEA__service__DISABLE_REGISTRATION: true
-      GITEA__security__INSTALL_LOCK: true
+      GITEA__server__LFS_START_SERVER: "true"
+      GITEA__server__LFS_ALLOW_PURE_SSH: "true"
+      GITEA__service__DISABLE_REGISTRATION: "true"
+      GITEA__service__DEFAULT_ALLOW_CREATE_ORGANIZATION: "false"
+      GITEA__security__INSTALL_LOCK: "true"
       GITEA__security__ALLOWED_HOST_LIST: "*"
       GITEA__database__DB_TYPE: mysql
       GITEA__database__NAME: gitea
@@ -42,4 +43,9 @@ services:
       GITEA__ssh.minimum_key_sizes__RSA: 2048
       GITEA__attachment__MAX_SIZE: 1024
       GITEA__attachment__MAX_FILES: 20
+      GITEA__service__ENABLE_PASSWORD_SIGNIN_FORM: "false"
+      GITEA__oauth2_client__ENABLE_AUTO_REGISTRATION: "true"
+      GITEA__oauth2_client__ACCOUNT_LINKING: auto
+      GITEA__oauth2_client__USERNAME: preferred_username
+      GITEA__oauth2_client__OPENID_CONNECT_SCOPES: openid profile email gitea
     restart: always
