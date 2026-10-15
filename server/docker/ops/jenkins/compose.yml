@@ -21,7 +21,7 @@ services:
       - "50000:50000"
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/:/conf/
-      - {{ param_docker_data }}/{{ param_role_name }}/data/:/var/jenkins_home/
+      - jenkins_data:/var/jenkins_home/
     environment:
       JAVA_OPTS: >-
         -Xverify:none
@@ -32,3 +32,7 @@ services:
         limits:
           memory: 8g
     restart: always
+
+volumes:
+  jenkins_data:
+    name: jenkins_data

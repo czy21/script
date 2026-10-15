@@ -1,5 +1,3 @@
-
-
 x-traefik-label: &traefik-label
   traefik.enable: true
   traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}
@@ -11,12 +9,10 @@ services:
     container_name: nexus
     labels:
       <<: *traefik-label
-    privileged: true
-    user: root
     expose:
       - "8081"
     volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/data/:/nexus-data/
+      - nexus_data:/nexus-data/
     environment:
       INSTALL4J_ADD_VM_PARAMS: >-
         -Dnexus.scripts.allowCreation=true
@@ -26,3 +22,7 @@ services:
       NEXUS_SECURITY_INITIAL_PASSWORD: "{{ param_manage_password }}"
       NEXUS_DATASTORE_NEXUS_JDBCURL: jdbc:postgresql://{{ param_db_pgsql_host }}:{{ param_db_pgsql_port }}/nexus?user={{ param_db_pgsql_username }}&password={{ param_db_pgsql_password }}
     restart: always
+
+volumes:
+  nexus_data:
+    name: nexus_data

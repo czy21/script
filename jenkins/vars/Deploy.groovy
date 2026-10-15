@@ -17,7 +17,7 @@ def call(Map inputs) {
                     serviceAccountName: jenkins-agent
                     containers:
                       - name: jnlp
-                        image: "czy21/jenkins-inbound-agent:3386.v353e57a_1b_ea_0-3-jdk21"
+                        image: "czy21/jenkins-inbound-agent:3391.va_37fa_a_305d6d-5-jdk25"
                         imagePullPolicy: Always
                         securityContext:
                           runAsUser: 0
