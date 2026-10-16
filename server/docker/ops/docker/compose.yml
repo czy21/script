@@ -1,10 +1,8 @@
 
 
 services:
-
   docker:
     image: "docker:{{ param_docker_version }}"
-    pull_policy: always
     container_name: docker
     hostname: docker
     privileged: true

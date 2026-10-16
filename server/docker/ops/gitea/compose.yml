@@ -6,7 +6,7 @@ x-traefik-label: &traefik-label
 services:
 
   gitea:
-    image: gitea/gitea:1.27.3
+    image: gitea/gitea:28.1.0
     container_name: gitea
     labels:
       <<: *traefik-label
@@ -21,17 +21,14 @@ services:
       - {{ param_docker_data }}/{{ param_role_name }}/data/:/data/
     environment:
       TZ: Asia/Shanghai
-      GITEA__server__DOMAIN: gitea.czy21.com
-      GITEA__server__SSH_DOMAIN: gitea.czy21.com:2226
       GITEA__server__ROOT_URL: "{{ param_gitea_instance_url }}"
-      GITEA__server__HTTP_PORT: "3000"
+      GITEA__server__SSH_DOMAIN: "{{ param_gitea_ssh_domain }}"
       GITEA__server__LANDING_PAGE: explore
       GITEA__server__LFS_START_SERVER: "true"
       GITEA__server__LFS_ALLOW_PURE_SSH: "true"
       GITEA__service__DISABLE_REGISTRATION: "true"
       GITEA__service__DEFAULT_ALLOW_CREATE_ORGANIZATION: "false"
       GITEA__security__INSTALL_LOCK: "true"
-      GITEA__security__ALLOWED_HOST_LIST: "*"
       GITEA__database__DB_TYPE: mysql
       GITEA__database__NAME: gitea
       GITEA__database__HOST: "{{ param_db_mysql_host }}:{{ param_db_mysql_port }}"

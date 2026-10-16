@@ -32,18 +32,13 @@ def build(Map inputs) {
 
     def docker_image_tag = "${inputs.param_release_image}:${inputs.param_release_version}"
 
-    withCredentials([sshUserPrivateKey(credentialsId: 'opsor', keyFileVariable: 'SSH_FILE', usernameVariable: 'SSH_USER')]) {
-        inputs.param_ssh_file = "${SSH_FILE}"
-        inputs.param_ssh_user = "${SSH_USER}"
-        inputs.param_docker_build_user = StringUtils.defaultIfEmpty(inputs.param_docker_build_user, inputs.param_ssh_user)
-
-        sh """
-        ${StringUtils.isNotEmpty(inputs.param_docker_build_host) ? ssh_config(inputs, 'build') : ''}
-        docker build --build-arg BASE_IMAGE=${inputs.param_registry}/${inputs.param_registry_dir}/${inputs.get('param_tool_' + inputs.param_code_type + '_version')} ${inputs.param_docker_build_args ?: ''} --tag ${docker_image_tag} --file ${docker_file} ${inputs.param_docker_context} --pull
-        docker push ${docker_image_tag}
-        docker rmi ${docker_image_tag}
-        """
-    }
+    sh """
+    docker info
+    docker build --pull --tag ${docker_image_tag} --build-arg BASE_IMAGE=${inputs.param_registry}/${inputs.param_registry_dir}/${inputs.get('param_tool_' + inputs.param_code_type + '_version')} ${inputs.param_docker_build_args ?: ''} --file ${docker_file} ${inputs.param_docker_context}
+    docker push ${docker_image_tag}
+    docker rmi ${docker_image_tag}
+    """
+    
 }
 
 def deploy(Map inputs) {

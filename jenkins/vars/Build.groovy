@@ -106,7 +106,7 @@ def call(Map inputs) {
             }
             stage('Image') {
                 when {
-                    expression { StringUtils.isNotEmpty(inputs.param_docker_build_host) }
+                    expression { inputs.param_docker_build_enabled }
                 }
                 steps {
                     script {
