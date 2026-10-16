@@ -60,7 +60,7 @@ if [ "$clean" = true ];then
 fi
 
 dst_path="\$HOME/script-${name}"
-dst_exec=$([ $host = "local" ] && echo "eval" || echo "ssh -o StrictHostKeyChecking=no ${host}")
+dst_exec=$([ $host = "local" ] && echo "eval" || echo "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${host}")
 
 os_name=$($dst_exec "uname -s")
 
@@ -100,4 +100,4 @@ ${dst_exec} "${run_cmd}"
 ${dst_exec} "[ -d ${dst_path} ]" && ${dst_exec} "cd ${dst_path} && find . \( -type d \( -name build \) -o -type f -name *.log \) | tar -zcf - -T -" | tar -zxf - -C $([ -d "$src_plus" ] && echo ${src_plus} || echo ${src_path})
 [ "$debug" = true ] || ${dst_exec} "rm -rf ${dst_path}"
 
-exit 0
+echo

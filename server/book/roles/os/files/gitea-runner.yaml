@@ -97,7 +97,7 @@ runner:
   # If it's empty when execute `daemon`, will use labels in `.runner` file.
   labels:
    - self-hosted:host
-   - ubuntu-latest:docker://gitea/runner-images:ubuntu-latest
+   - ubuntu-latest:host
   #  - "ubuntu-24.04:docker://docker.gitea.com/runner-images:ubuntu-24.04"
   #  - "ubuntu-22.04:docker://docker.gitea.com/runner-images:ubuntu-22.04"
   # Allocate a pseudo-TTY for each step's process. Applies to both host and docker backends.

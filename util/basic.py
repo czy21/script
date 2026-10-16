@@ -62,18 +62,33 @@ def execute(
     if os.name == 'nt':
       cmd = cmd.replace('sudo ', '')
     if not cmd: return
-    logger.debug("\n{0}".format(re.sub(r'&&\s+', '&&\n', cmd)))
+    logger.debug('\n'+cmd)
     if is_input:
         input_exec = str(input("Are you sure you want to execute (y/n)?").strip())
         if input_exec != "y":
             return
     if not dry_run:
         if is_return:
-            with subprocess.Popen(["sh", "-c", "PATH=$PATH:/usr/local/bin;{0}".format(cmd)], stdout=subprocess.PIPE, encoding=encoding, shell=shell) as proc:
+            with subprocess.Popen(
+                ["sh", "-c", "PATH=$PATH:/usr/local/bin;{0}".format(cmd)], 
+                stdout=subprocess.PIPE, 
+                encoding=encoding, 
+                shell=shell
+            ) as proc:
                 func(iter(proc.stdout.readline, ''), proc, func_param)
                 ret = proc.stdout.read()
                 proc.stdout.close()
                 proc.wait()
                 return ret
         else:
-            subprocess.Popen(["sh", "-c", "PATH=$PATH:/usr/local/bin;{0}".format(cmd)], shell=shell).wait()
+            with subprocess.Popen(
+                ["sh", "-c", "PATH=$PATH:/usr/local/bin;{0}".format(cmd)],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                encoding=encoding,
+                shell=shell,
+                bufsize=1,
+            ) as proc:
+                for line in proc.stdout:
+                    logging.info(line.rstrip())
+                proc.wait()

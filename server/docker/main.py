@@ -40,6 +40,7 @@ class DockerRole(server.AbstractRole):
         if self.role_target_path.parents.__len__() <= 1:
             raise Exception('role_target_path: {} parents length <= 1'.format(self.role_target_path))
         self.role_target_conf_path = self.role_target_path.joinpath("conf")
+        self.role_target_back_path = self.role_target_path.joinpath('back')
 
     def gen_sudo(self):
         self.container_sudo = self.context.role_env.get("param_container_sudo", True)
@@ -64,7 +65,10 @@ class DockerRole(server.AbstractRole):
         cmd.append(option)
 
         cmd = collection_util.flat_to_str(cmd)
-        return f'(cd {self.context.role_out_path.as_posix()};{cmd})'
+        return f"""(
+    cd {self.context.role_out_path.as_posix()}
+    {cmd}
+)"""
 
     def install(self) -> list[str]:
         _cmds = []
@@ -180,7 +184,31 @@ class DockerRole(server.AbstractRole):
         return _cmds
 
     def backup(self) -> list[str]:
-        return []
+        _cmds = [
+            f"sudo mkdir -p {self.role_target_back_path.as_posix()}"
+        ]
+        for t in self.context.role_env.get("param_role_backups", []):
+            t_type = t.get('type')
+            rsync_option = t.get('rsync_option') or ''
+            rsync_option += " --exclude='*.log'" if '--include' not in rsync_option else ''
+            if t_type == 'bind':
+                _cmds.append(f"""(
+    sudo rsync -av {rsync_option} {t.get('source')} {self.role_target_back_path.as_posix()}/
+)""")
+            if t_type == 'volume':
+                _cmds.append(f"""(
+    mp=$(docker volume inspect {t.get('source')} --format '{{{{.Mountpoint}}}}')
+    if [ -n "$mp" ];then
+        mpp=$(realpath $mp/../)
+        echo $mpp 
+        sudo rsync -av {rsync_option} $mpp {self.role_target_back_path.as_posix()}/
+    fi
+)""")
+        _cmds.append(f"""
+    sudo tar zcf {self.role_target_back_path.parent / 'back.tar.gz'} -C {self.role_target_back_path.as_posix()} .
+    sudo rm -rf {self.role_target_back_path.as_posix()}
+""")
+        return _cmds
 
     def restore(self) -> list[str]:
         return []
