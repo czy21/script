@@ -60,7 +60,7 @@ if [ "$clean" = true ];then
 fi
 
 dst_path="\$HOME/script-${name}"
-dst_exec=$([ $host = "local" ] && echo "eval" || echo "ssh -o StrictHostKeyChecking=no ${host}")
+dst_exec=$([ $host = "local" ] && echo "eval" || echo "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${host}")
 
 os_name=$($dst_exec "uname -s")
 

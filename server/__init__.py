@@ -451,7 +451,7 @@ class Installer:
                 file_util.sync(role_out_path, any_doc_exclude, role_doc_path)
                 role_role_readme = role_out_path.joinpath("README.md")
                 file_util.write_text(role_build_path.joinpath("doc.md"), role_instance.role_doc_content + "\n" + (file_util.read_text(role_role_readme) if role_role_readme.exists() else ""))
-            execute(collection_util.flat_to_str(_cmds, delimiter=" && "), dry_run=args.dry_run)
+            execute(collection_util.flat_to_str(_cmds, delimiter="\n"), dry_run=args.dry_run)
 
         if args.parallel > 1:
             with ThreadPoolExecutor(max_workers=args.parallel) as executor:
