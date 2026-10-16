@@ -21,7 +21,7 @@ services:
       - "50000:50000"
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/:/conf/
-      - jenkins_data:/var/jenkins_home/
+      - jenkins-data:/var/jenkins_home/
       - {{ param_docker_data }}/docker/conf/certs/:/docker-certs/client:ro
     environment:
       JAVA_OPTS: >-
@@ -38,5 +38,5 @@ services:
     restart: always
 
 volumes:
-  jenkins_data:
-    name: jenkins_data
+  jenkins-data:
+    name: jenkins-data

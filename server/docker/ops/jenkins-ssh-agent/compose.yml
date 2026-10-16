@@ -9,9 +9,9 @@ services:
     ports:
       - "5022:22"
     volumes:
-      - jenkins-ssh-agent_data:/home/jenkins/
-      - jenkins-ssh-agent_empty:/home/jenkins/agent
-      - jenkins-ssh-agent_empty:/home/jenkins/.jenkins
+      - jenkins-ssh-agent-data:/home/jenkins/
+      - jenkins-ssh-agent-empty:/home/jenkins/agent
+      - jenkins-ssh-agent-empty:/home/jenkins/.jenkins
       - /run/:/run/
       - /var/run/:/var/run/
       - /tmp/:/tmp/
@@ -24,7 +24,7 @@ services:
     restart: always
 
 volumes:
-  jenkins-ssh-agent_data:
-    name: jenkins-ssh-agent_data
-  jenkins-ssh-agent_empty:
-    name: jenkins-ssh-agent_empty
+  jenkins-ssh-agent-data:
+    name: jenkins-ssh-agent-data
+  jenkins-ssh-agent-empty:
+    name: jenkins-ssh-agent-empty

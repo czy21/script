@@ -12,7 +12,7 @@ services:
     expose:
       - "8081"
     volumes:
-      - nexus_data:/nexus-data/
+      - nexus-data:/nexus-data/
     environment:
       INSTALL4J_ADD_VM_PARAMS: >-
         -Dnexus.scripts.allowCreation=true
@@ -24,5 +24,5 @@ services:
     restart: always
 
 volumes:
-  nexus_data:
-    name: nexus_data
+  nexus-data:
+    name: nexus-data

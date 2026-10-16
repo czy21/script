@@ -1,12 +1,10 @@
-
-
 services:
   homeassistant:
-    image: homeassistant/home-assistant:2026.9.3
+    image: homeassistant/home-assistant:2026.10.1
     container_name: homeassistant
     privileged: true
     network_mode: host
     user: root
     volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/data/:/config/
+      - {{ param_docker_data }}/{{ param_role_name }}/conf/:/config/
     restart: always
