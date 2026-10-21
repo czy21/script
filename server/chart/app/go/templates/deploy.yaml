@@ -34,7 +34,7 @@ spec:
     spec:
       containers:
         - name: {{ include "app.fullname" . }}
-          image: "{{ include "app.image" . }}"
+          image: "{{ include "app.image" . }}:{{ .Values.param_release_version }}"
           imagePullPolicy: "{{ include "app.imagePullPolicy" . }}"
           ports:
             - name: http

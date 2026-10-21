@@ -11,7 +11,7 @@
     .Values.param_registry
     .Values.param_registry_dir
     (include "app.fullname" .)
-    .Values.param_release_version }}
+}}
 {{- end }}
 {{- end }}
 

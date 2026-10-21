@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
         - name: {{ .Values.param_app_name | default .Release.Name }}
-          image: "{{ include "app.image" . }}"
+          image: "{{ include "app.image" . }}:{{ .Values.param_release_version }}"
           imagePullPolicy: "{{ include "app.imagePullPolicy" . }}"
           ports:
             - name: http
