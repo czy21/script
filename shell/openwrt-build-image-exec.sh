@@ -19,5 +19,5 @@ fi
 
 docker exec \
   -e mirror=$mirror -e origin=$origin -e branch=$branch -e TARGET=$target \
-  -e UPSTREAM_URL=$UPSTREAM_URL -e VERSION_PATH=$VERSION_PATH \
+  -e VERSION_PATH=$VERSION_PATH \
   -i ${container_name} bash -s -- "$@" < ./$(basename $0 | sed 's|-exec||')

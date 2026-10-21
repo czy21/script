@@ -2,7 +2,9 @@
 
 env
 
-sed -i -e '/^wget.*sha256sums.asc/d' -e '/^gpg.*/d' -e '/^sha256sum -c.*/d' setup.sh && ./setup.sh
+if [ ! -f setup.sh ];then
+  sed -i -e '/^wget.*sha256sums.asc/d' -e '/^gpg.*/d' -e '/^sha256sum -c.*/d' setup.sh && ./setup.sh
+fi
 
 [ -f "Makefile.bak" ] || cp -rv Makefile Makefile.bak
 cp -rv Makefile.bak Makefile
@@ -58,4 +60,4 @@ fi
 EOF
 fi
 # make image PROFILE=generic PACKAGES="" ROOTFS_PARTSIZE=1024 CONFIG_VMDK_IMAGES=y CONFIG_ISO_IMAGES=y FILES=files
-# make image PROFILE=ikuai_q3000-ubi PACKAGES="-dnsmasq kmod-tcp-bbr kmod-nf-tproxy kmod-nf-socket kmod-ipt-ipset dnsmasq-full softethervpn5-server openssh-client luci luci-compat luci-proto-wireguard qrencode luci-app-uhttpd luci-app-nlbwmon luci-app-wol luci-app-vlmcsd luci-app-acme acme-acmesh-dnsapi acme-sync luci-app-ddns ddns-scripts ddns-scripts-aliyun ddns-scripts-cloudflare luci-app-watchcat luci-app-ttyd luci-app-commands"
+# make image PROFILE=generic PACKAGES="coreutils-rm coreutils-cp coreutils-mv -dnsmasq bash kmod-tcp-bbr kmod-nf-tproxy kmod-nf-socket kmod-ipt-ipset dnsmasq-full netdata iperf3 softethervpn5-server openssh-client ipmitool luci luci-compat luci-proto-wireguard luci-proto-openconnect luci-proto-gre luci-proto-vxlan qrencode luci-app-uhttpd luci-app-attendedsysupgrade luci-app-nlbwmon luci-app-snmpd luci-app-qos luci-app-sqm luci-app-upnp luci-app-wol luci-app-vlmcsd luci-app-adguardhome luci-app-dnsproxy luci-app-smartdns luci-app-openvpn openvpn-openssl openvpn-easy-rsa openvpn-auth freeradius3-utils luci-app-ocserv luci-app-acme acme-acmesh-dnsapi luci-app-ddns ddns-scripts ddns-scripts-aliyun ddns-scripts-cloudflare luci-app-omcproxy luci-app-udpxy luci-app-watchcat luci-app-ttyd luci-app-commands luci-app-frpc luci-app-frps luci-app-nut luci-app-sshtunnel fdisk cfdisk blockd gcc sudo shadow-su sed vim python3 python3-bcrypt python3-venv rsync msmtp luci-app-aria2 ariang luci-app-ksmbd luci-app-nfs aliyun-cli kmod-macvlan dockerd docker-compose luci-app-dockerman" ROOTFS_PARTSIZE=1024 CONFIG_VMDK_IMAGES=y CONFIG_ISO_IMAGES=y FILES=files
