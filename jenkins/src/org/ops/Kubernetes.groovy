@@ -4,7 +4,7 @@ def deploy(Map inputs) {
     def helm_chart_file = inputs.param_helm_chart_file
 
     if (fileExists(helm_chart_file)) {
-        helm_cmd = "helm dep up ${inputs.param_helm_chart_context} && helm upgrade --install ${inputs.param_release_name} ${inputs.param_helm_chart_context} --version ${inputs.param_release_version} --namespace ${inputs.param_release_namespace} --values .jenkins/inputs.yaml --force --output yaml"
+        def helm_cmd = "helm dep up ${inputs.param_helm_chart_context} && helm upgrade --install ${inputs.param_release_name} ${inputs.param_helm_chart_context} --version ${inputs.param_release_version} --namespace ${inputs.param_release_namespace} --values .jenkins/inputs.yaml --force --output yaml"
         sh "${helm_cmd}"
         return
     }
@@ -33,7 +33,7 @@ def deploy(Map inputs) {
     ]
     chartMap.get(inputs.param_code_type).call()
 
-    helm_cmd = inputs.param_helm_repo.startsWith('oci://')
+    def helm_cmd = inputs.param_helm_repo.startsWith('oci://')
             ? "helm upgrade --install ${inputs.param_release_name} ${inputs.param_release_chart_name} --version ${inputs.param_release_chart_version} --namespace ${inputs.param_release_namespace} --repo ${inputs.param_helm_repo} --values .jenkins/inputs.yaml --force --output yaml"
             : "helm upgrade --install ${inputs.param_release_name} ${inputs.param_helm_repo}/${inputs.param_release_chart_name} --version ${inputs.param_release_chart_version} --namespace ${inputs.param_release_namespace} --values .jenkins/inputs.yaml --force --output yaml"
 

@@ -1,3 +1,2 @@
-param_k3s_token: e945664c-1d23-44e4-be04-902ab7bac90c
 param_k3s_svc_network_cidr: 10.2.0.0/16
 param_k3s_pod_network_cidr: 10.4.0.0/16
