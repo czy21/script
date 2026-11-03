@@ -1,5 +1,9 @@
 - name: hosts
   shell: cat {{ param_remote_role_path }}/{{ param_ansible_os_family }} | sudo tee /etc/hosts > /dev/null
+  tags:
+    - '{{ param_role_name }}'
 
 - name: set hostname
   shell: sudo hostnamectl set-hostname --static {{ param_node_name | split(',') | first }}
+  tags:
+    - '{{ param_role_name }}'

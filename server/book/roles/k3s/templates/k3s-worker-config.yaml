@@ -1,0 +1,6 @@
+{% if hostvars[inventory_hostname].param_node_ip | default('') %}
+node-ip: "{{ hostvars[inventory_hostname].param_node_ip }}"
+{% endif %}
+{% if hostvars[inventory_hostname].param_node_iface | default('') %}
+flannel-iface: "{{ hostvars[inventory_hostname].param_node_iface }}"
+{% endif %}

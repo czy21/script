@@ -1,0 +1,5 @@
+- name: hosts
+  shell: cat {{ param_remote_role_path }}/k3s-host-{{ param_ansible_os_family }} | sudo tee /etc/hosts > /dev/null
+
+- name: set hostname
+  shell: sudo hostnamectl set-hostname --static {{ param_node_name | split(',') | first }}

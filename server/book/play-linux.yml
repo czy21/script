@@ -1,6 +1,6 @@
 - name: os
   hosts: all
-  vars_files: ["vars/env.yml","vars/main.yml"]
+  vars_files: ["vars/main.yml","vars/env.yml"]
   vars:
     param_role_name: os
     param_role_tags:
@@ -35,7 +35,7 @@
 
 - name: hosts
   hosts: all
-  vars_files: ["vars/env.yml","vars/main.yml"]
+  vars_files: ["vars/main.yml","vars/env.yml"]
   vars:
     param_role_name: hosts
     param_role_tags:
@@ -52,7 +52,7 @@
 
 - name: docker
   hosts: all
-  vars_files: ["vars/env.yml","vars/main.yml"]
+  vars_files: ["vars/main.yml","vars/env.yml"]
   vars:
     param_role_name: docker
     param_role_tags:
@@ -72,7 +72,7 @@
 
 - name: podman
   hosts: all
-  vars_files: ["vars/env.yml","vars/main.yml"]
+  vars_files: ["vars/main.yml","vars/env.yml"]
   vars:
     param_role_name: podman
     param_role_tags:
@@ -89,7 +89,7 @@
 
 - name: haproxy
   hosts: all
-  vars_files: ["vars/env.yml","vars/main.yml"]
+  vars_files: ["vars/main.yml","vars/env.yml"]
   vars:
     param_role_name: haproxy
     param_role_tags:
@@ -107,7 +107,7 @@
 
 - name: kubernetes
   hosts: all
-  vars_files: ["vars/env.yml","vars/main.yml"]
+  vars_files: ["vars/main.yml","vars/env.yml"]
   vars:
     param_role_name: kubernetes
     param_role_tags:
@@ -132,10 +132,11 @@
 
 - name: k3s
   hosts: all
-  vars_files: ["vars/env.yml","vars/main.yml"]
+  vars_files: ["vars/main.yml","vars/env.yml"]
   vars:
     param_role_name: k3s
     param_role_tags:
+      - "{{ param_role_name }}-host"
       - "{{ param_role_name }}-init"
       - "{{ param_role_name }}-join"
       - "{{ param_role_name }}-post"
@@ -151,7 +152,7 @@
 
 - name: truenas
   hosts: all
-  vars_files: ["vars/env.yml","vars/main.yml"]
+  vars_files: ["vars/main.yml","vars/env.yml"]
   vars:
     param_role_name: truenas
     param_role_tags:
@@ -169,9 +170,9 @@
 - name: vm
   hosts: all
   vars_files: 
-    - "vars/env.yml"
     - "vars/main.yml"
     - "roles/kubernetes/vars/main.yml"
+    - "vars/env.yml"
   vars:
     param_role_name: vm
     param_role_tags:

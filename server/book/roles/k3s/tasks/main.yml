@@ -1,3 +1,8 @@
+- name: k3s host
+  import_tasks: k3s-host.yml
+  tags:
+    - 'k3s-host'
+
 - name: k3s conf
   import_tasks: k3s-conf.yml
   tags:
@@ -17,6 +22,4 @@
 - name: k3s post
   import_tasks: k3s-post.yml
   tags:
-    - 'k3s-init'
-    - 'k3s-join'
     - 'k3s-post'

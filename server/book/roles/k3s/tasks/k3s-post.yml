@@ -5,6 +5,7 @@
     sudo ln -sf /usr/local/bin/crictl /usr/bin/crictl
     sudo kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
     sudo crictl completion bash | sudo tee /etc/bash_completion.d/crictl > /dev/null
+  when: inventory_hostname in groups["master"]
 
 - include_tasks: roles/kubernetes/tasks/tool.yml
   when: inventory_hostname in groups["master"]
