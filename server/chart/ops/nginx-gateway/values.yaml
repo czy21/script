@@ -1,13 +1,11 @@
 nginx-gateway-fabric:
   nginxGateway:
     name: nginx-gateway
-{% if 'NodePort' == param_nginx_service_type %}
   nginx:
-    service:
-      type: NodePort
-      nodePorts:
-        - port: 80
-          listenerPort: 80
+    kind: daemonSet
+    container:
+      hostPorts:
         - port: 443
-          listenerPort: 443
-{% endif %}
+          containerPort: 443
+    service:
+      type: ClusterIP

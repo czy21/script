@@ -3,3 +3,6 @@
 
 - name: set hostname
   shell: sudo hostnamectl set-hostname --static {{ param_node_name | split(',') | first }}
+
+- name: set dns
+  shell: cat {{ param_remote_role_path }}/k3s-host-dns.conf | sudo tee /etc/systemd/resolved.conf.d/dns.conf > /dev/null
