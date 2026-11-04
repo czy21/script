@@ -7,14 +7,14 @@
 
 - name: velero install
   shell: |
-    sudo curl -fsSL {{ param_mirror_github if param_proxy else '' }}https://github.com/vmware-tanzu/velero/releases/download/v{{ param_velero_version }}/velero-v{{ param_velero_version }}-linux-amd64.tar.gz | sudo tar -zxf - --strip-components 1 -C /usr/local/bin/ velero-v{{ param_velero_version }}-linux-amd64/velero
+    sudo curl -fsSL {{ param_proxy and param_mirror_github or '' }}https://github.com/vmware-tanzu/velero/releases/download/v{{ param_velero_version }}/velero-v{{ param_velero_version }}-linux-amd64.tar.gz | sudo tar -zxf - --strip-components 1 -C /usr/local/bin/ velero-v{{ param_velero_version }}-linux-amd64/velero
     sudo chown root:root /usr/local/bin/velero && sudo chmod +x /usr/local/bin/velero
     sudo ln -sf /usr/local/bin/velero /usr/bin/velero
     velero completion bash | sudo tee /etc/bash_completion.d/velero > /dev/null
 
 - name: sops install
   shell: |
-    sudo curl -fsSL -o /usr/local/bin/sops {{ param_mirror_github if param_proxy else '' }}https://github.com/getsops/sops/releases/download/v{{ param_sops_version }}/sops-v{{ param_sops_version }}.linux.amd64
+    sudo curl -fsSL -o /usr/local/bin/sops {{ param_proxy and param_mirror_github or '' }}https://github.com/getsops/sops/releases/download/v{{ param_sops_version }}/sops-v{{ param_sops_version }}.linux.amd64
     sudo chown root:root /usr/local/bin/sops && sudo chmod +x /usr/local/bin/sops
     sudo ln -sf /usr/local/bin/sops /usr/bin/sops
     sops completion bash | sudo tee /etc/bash_completion.d/sops > /dev/null
