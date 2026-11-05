@@ -1,11 +1,18 @@
 nginx-gateway-fabric:
   nginxGateway:
     name: nginx-gateway
+    image:
+      repository: {{ param_proxy and param_registry_proxy or 'ghcr.io' }}/nginx/nginx-gateway-fabric
   nginx:
+    image:
+      repository: {{ param_proxy and param_registry_proxy or 'ghcr.io' }}/nginx/nginx-gateway-fabric/nginx
     kind: daemonSet
-    container:
-      hostPorts:
-        - port: 443
-          containerPort: 443
     service:
-      type: ClusterIP
+{% if 'NodePort' == param_nginx_service_type %}
+      type: NodePort
+      nodePorts:
+        - port: 80
+          listenerPort: 80
+        - port: 443
+          listenerPort: 443
+{% endif %}

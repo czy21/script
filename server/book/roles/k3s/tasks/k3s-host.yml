@@ -1,8 +1,9 @@
 - name: hosts
-  shell: cat {{ param_remote_role_path }}/k3s-host-{{ param_ansible_os_family }} | sudo tee /etc/hosts > /dev/null
+  shell: |
+    sudo hostnamectl set-hostname --static {{ param_node_name | split(',') | first }}
+    cat {{ param_remote_role_path }}/k3s-host-{{ param_ansible_os_family }} | sudo tee /etc/hosts > /dev/null
 
-- name: set hostname
-  shell: sudo hostnamectl set-hostname --static {{ param_node_name | split(',') | first }}
-
-- name: set dns
-  shell: cat {{ param_remote_role_path }}/k3s-host-dns.conf | sudo tee /etc/systemd/resolved.conf.d/dns.conf > /dev/null
+- name: systemd-resolved
+  shell: |
+    cat {{ param_remote_role_path }}/k3s-host-resolved.conf | sudo tee /etc/systemd/resolved.conf.d/dns.conf > /dev/null
+  when: param_ansible_os_family == "debian"

@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+    spec:
+      hostNetwork: true
+      containers:
+        - name: {{ .Release.Name }}
+          image: henrygd/beszel-agent:{{ .Values.param_beszel_version }}
+          imagePullPolicy: Always
+          env:
+            - name: LISTEN
+              value: "45876"
+            - name: KEY
+              value: {{ .Values.param_beszel_key }}
+            - name: TOKEN
+              value: {{ .Values.param_beszel_token }}
+            - name: HUB_URL
+              value: {{ .Values.param_beszel_url }}
+          ports:
+            - containerPort: 45876
+              hostPort: 45876
+      restartPolicy: Always
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/master
+          operator: Exists
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/control-plane
+          operator: Exists
+  updateStrategy:
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 100%
+    type: RollingUpdate

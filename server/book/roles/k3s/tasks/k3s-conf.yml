@@ -1,4 +1,16 @@
-- name: config
+- name: registries
   shell: |
     sudo mkdir -p /etc/rancher/k3s
     sudo cp {{ param_remote_role_path }}/registries.yaml /etc/rancher/k3s/registries.yaml
+
+- name: master config
+  shell: |
+    sudo mkdir -p /etc/rancher/k3s
+    sudo cp {{ param_remote_role_path }}/k3s-conf-master.yaml /etc/rancher/k3s/config.yaml
+  when: inventory_hostname in groups["master"]
+
+- name: worker config
+  shell: |
+    sudo mkdir -p /etc/rancher/k3s
+    sudo cp {{ param_remote_role_path }}/k3s-conf-worker.yaml /etc/rancher/k3s/config.yaml
+  when: inventory_hostname in groups["worker"]

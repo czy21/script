@@ -137,6 +137,7 @@
     param_role_name: k3s
     param_role_tags:
       - "{{ param_role_name }}-host"
+      - "{{ param_role_name }}-conf"
       - "{{ param_role_name }}-init"
       - "{{ param_role_name }}-join"
       - "{{ param_role_name }}-post"

@@ -65,7 +65,7 @@ class YamlPropertySourceLoader:
     def __init__(self, resources):
         self.resources = resources
 
-    def load(self, extra: dict | None = None) -> dict:
+    def load(self, extra: Union[dict, None] = None) -> dict:
         sources = []
         for r in reversed(self.resources):
             if r.suffix and r.suffix[1:] in self.file_extensions:

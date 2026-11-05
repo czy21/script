@@ -6,16 +6,23 @@
 - name: k3s conf
   import_tasks: k3s-conf.yml
   tags:
+    - 'k3s-conf'
     - 'k3s-init'
     - 'k3s-join'
 
 - name: k3s init
-  import_tasks: k3s-init.yml
+  shell: |
+    curl -sfL {{ param_proxy and 'https://rancher-mirror.rancher.cn/k3s/k3s-install.sh | INSTALL_K3S_MIRROR=cn' or 'https://get.k3s.io |' }} INSTALL_K3S_VERSION="v{{ param_k3s_version }}" INSTALL_K3S_EXEC="server" K3S_TOKEN="{{ param_k3s_token }}" sh -s -
+    sudo -i eval '[ -z ${KUBECONFIG} ] && echo 'export KUBECONFIG=/etc/rancher/k3s/k3s.yaml' >> ~/.bashrc;'
+    sudo -u {{ param_user }} bash -c "[ -z ${KUBECONFIG} ] && echo 'export KUBECONFIG=.kube/config' >> ~/.bashrc;set -e;cd;mkdir -p .kube;sudo cat /etc/rancher/k3s/k3s.yaml | tee .kube/config > /dev/null"
+  when: inventory_hostname in groups["master"]
   tags:
     - 'k3s-init'
 
 - name: k3s join
-  import_tasks: k3s-join.yml
+  shell: |
+    curl -sfL {{ param_proxy and 'https://rancher-mirror.rancher.cn/k3s/k3s-install.sh | INSTALL_K3S_MIRROR=cn' or 'https://get.k3s.io |' }} INSTALL_K3S_VERSION="v{{ param_k3s_version }}" INSTALL_K3S_EXEC="agent" K3S_TOKEN="{{ param_k3s_token }}" sh -s - --server https://{{ groups["master"][0] }}:6443
+  when: inventory_hostname in groups["worker"]
   tags:
     - 'k3s-join'
 

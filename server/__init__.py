@@ -42,7 +42,7 @@ class Command(Enum):
     build = "build"
 
 
-def dfs_dir(path: pathlib.Path, deep=1, exclude_rules: list | None = None, parent_key: str = "") -> list:
+def dfs_dir(path: pathlib.Path, deep=1, exclude_rules: typing.Union[list, None] = None, parent_key: str = "") -> list:
     ret = []
     _dirs = get_match_dirs(exclude_rules, filter(lambda a: a.is_dir(), sorted(path.iterdir())))
     for i, p in enumerate(_dirs, start=1):
@@ -68,7 +68,7 @@ def echo_action(role, content, exec_file=None) -> str:
     return 'echo "' + c + '"'
 
 
-def get_dir_dict(path: pathlib.Path, exclude_rules: list | None = None, select_tip="", col_num=5, args: argparse.Namespace | None = None) -> dict:
+def get_dir_dict(path: pathlib.Path, exclude_rules: typing.Union[list, None] = None, select_tip="", col_num=5, args: typing.Union[argparse.Namespace, None] = None) -> dict:
     _dirs = get_match_dirs(exclude_rules, list(filter(lambda a: a.is_dir(), sorted(path.iterdir()))))
     dir_dict: dict = {str(i): t for i, t in enumerate(_dirs, start=1)}
     if 'all' not in args.roles and select_tip:
@@ -279,12 +279,12 @@ class AbstractRole(metaclass=ABCMeta):
 
 class Installer:
     def __init__(self, root_path: pathlib.Path,
-                 arg_parser: argparse.ArgumentParser | None = None,
-                 role_impl: typing.Type[AbstractRole] | None = None,
+                 arg_parser: typing.Optional[argparse.ArgumentParser] = None,
+                 role_impl: typing.Optional[typing.Type[AbstractRole]] = None,
                  role_deep: int = 1) -> None:
         self.root_path: pathlib.Path = root_path
 
-        self.role_impl: typing.Type[AbstractRole] | None = role_impl
+        self.role_impl: typing.Optional[typing.Type[AbstractRole]] = role_impl
         self.role_deep: int = role_deep
         self.arg_parser: argparse.ArgumentParser = arg_parser or argparse.ArgumentParser(formatter_class=ArgParseHelpFormatter, usage='%(prog)s [command] [options]')
         self.set_common_argument(self.arg_parser)
@@ -296,7 +296,7 @@ class Installer:
         log_util.init_logger(file=self.root_path.joinpath("build.log"))
         [t.mkdir(exist_ok=True) for t in [self.tmp_path]]
 
-    def load_env_file(self, env_active: list[str] | None = None, env_extra: dict | None = None) -> dict:
+    def load_env_file(self, env_active: typing.Union[list[str], None] = None, env_extra: typing.Union[dict, None] = None) -> dict:
         env_files = []
 
         def scan_env_files(src_env_files):
