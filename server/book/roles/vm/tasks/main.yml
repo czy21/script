@@ -1,5 +1,5 @@
 - name: build
-  file: path={{ role_path }}/build state=directory mode=0777
+  file: path={{ param_remote_role_path }}/build state=directory mode=0777
   tags:
     - 'vm-fcos-vsphere'
     - 'vm-node-vsphere'

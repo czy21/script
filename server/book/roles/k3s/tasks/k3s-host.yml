@@ -5,6 +5,7 @@
 
 - name: systemd-resolved
   shell: |
+    sudo install -m 0755 -d /etc/systemd/resolved.conf.d/
     cat {{ param_remote_role_path }}/k3s-host-resolved.conf | sudo tee /etc/systemd/resolved.conf.d/dns.conf > /dev/null
     sudo systemctl restart systemd-resolved.service
   when: param_ansible_os_family == "debian"

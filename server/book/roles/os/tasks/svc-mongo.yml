@@ -1,11 +1,11 @@
 - name: mongo conf
-  template: src=files/mongod.cnf dest={{ role_path }}/mongod.cnf
+  template: src=files/mongod.cnf dest={{ param_remote_role_path }}/mongod.cnf
   tags:
     - "svc-mongo-conf"
     - "svc-mongo"
 
 - name: mongo conf
-  shell: cat {{ role_path }}/mongod.conf | sudo tee /etc/mongod.conf > /dev/null && sudo chmod 644 /etc/mongod.conf
+  shell: cat {{ param_remote_role_path }}/mongod.conf | sudo tee /etc/mongod.conf > /dev/null && sudo chmod 644 /etc/mongod.conf
   tags:
     - "svc-mongo-conf"
     - "svc-mongo"

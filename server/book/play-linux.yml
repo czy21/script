@@ -33,6 +33,25 @@
         - import_tasks: roles/common/tasks/clean.yml
           tags: "{{ param_role_tags }}"
 
+- name: mesh
+  hosts: all
+  vars_files: ["vars/main.yml","vars/env.yml"]
+  vars:
+    param_role_name: mesh
+    param_role_tags:
+      - "{{ param_role_name }}-conf"
+      - "{{ param_role_name }}-install"
+      - "{{ param_role_name }}-restart"
+  tasks:
+    - block:
+        - import_tasks: roles/common/tasks/copy.yml
+          tags: "{{ param_role_tags }}"
+        - import_role:
+            name: "{{ param_role_name }}"
+      always:
+        - import_tasks: roles/common/tasks/clean.yml
+          tags: "{{ param_role_tags }}"
+
 - name: hosts
   hosts: all
   vars_files: ["vars/main.yml","vars/env.yml"]

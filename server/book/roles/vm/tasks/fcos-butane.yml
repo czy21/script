@@ -1,5 +1,5 @@
 - name: fcos build ignition.yml
-  template: src=files/fcos-ignition-{{ param_vm_ignition_target }}.yml dest={{ role_path }}/build/fcos-ignition.yml
+  template: src=files/fcos-ignition-{{ param_vm_ignition_target }}.yml dest={{ param_remote_role_path }}/build/fcos-ignition.yml
 
 - name: fcos build ignition.json
-  shell: cat {{ role_path }}/build/fcos-ignition.yml | docker run --rm -i coreos/butane:release > {{ role_path }}/build/fcos-ignition.json
+  shell: cat {{ param_remote_role_path }}/build/fcos-ignition.yml | docker run --rm -i coreos/butane:release > {{ param_remote_role_path }}/build/fcos-ignition.json
