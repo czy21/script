@@ -19,6 +19,7 @@ velero:
       - name: default
         provider: aws
         bucket: velero
+        prefix: {{ param_cluster_name }}
         config:
           region: minio
           s3Url: https://{{ param_s3_endpoint }}
@@ -27,7 +28,7 @@ velero:
   upgradeCRDs: false
   cleanUpCRDs: false
   schedules:
-    {{ param_cluster_name }}:
+    daily:
       disabled: false
       schedule: 0 1 * * *
       template:

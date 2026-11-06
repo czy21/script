@@ -33,15 +33,20 @@ if __name__ == '__main__':
     if args.debug:
         logger.setLevel(logging.DEBUG)
     if not private_key.exists():
-        logger.error("ssh private-key not exists")
+        logger.error("ssh private-key not found")
         sys.exit(0)
     private_key = private_key.as_posix()
     env_dict = installer.load_env_file(args.env_active, args.param)
+    env_dict['param_debug'] = args.debug
     file_util.write_text(root_path.joinpath("vars/env.yml"), yaml_util.dump(env_dict))
     if not args.user:
         args.user = env_dict["param_user"]
     if args.ansible_host:
-        ansible_host_file = root_path.joinpath(args.ansible_host).as_posix()
+        ansible_host_file = root_path.joinpath(f'ansible-host-{args.ansible_host}')
+        if not ansible_host_file .exists():
+            logger.error(f"ansible-host-{args.ansible_host} not found")
+            sys.exit(0)
+        ansible_host_file = ansible_host_file.as_posix()
     ansible_inventory_file = pathlib.Path(args.file).as_posix() if pathlib.Path(args.file).is_absolute() else root_path.joinpath(args.file).as_posix()
     _cmds = ["chmod 600 {0}".format(private_key)]
     ansible_playbook_cmd = [

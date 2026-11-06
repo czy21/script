@@ -1,0 +1,29 @@
+- name: mesh conf
+  shell: |
+    sudo install -m 0700 -d /etc/wireguard
+  tags:
+    - 'mesh-conf'
+    - 'mesh-install'
+
+- name: mesh conf
+  ansible.builtin.copy:
+    dest: /etc/wireguard/wg0.conf
+    content: "{{ (param_mesh_servers | selectattr('param_mesh_node', 'equalto', param_mesh_node) | first).param_mesh_conf }}"
+    mode: "0600"
+  become: true
+  tags:
+    - 'mesh-conf'
+    - 'mesh-install'
+
+- name: mesh install
+  shell: |
+    bash {{ param_remote_role_path }}/{{ param_ansible_os_family }}-wireguard.sh
+  tags:
+    - 'mesh-install'
+
+- name: mesh restart
+  shell: |
+    sudo systemctl enable --now wg-quick@wg0.service
+    sudo systemctl restart wg-quick@wg0.service
+  tags:
+    - 'mesh-restart'

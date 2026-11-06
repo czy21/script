@@ -68,7 +68,7 @@ PYTHON_HOME="\$HOME/.python3"
 PYTHON_EXEC="${PYTHON_HOME}/bin/python3"
 [[ "$os_name" =~ "NT" ]] && PYTHON_EXEC="${PYTHON_HOME}/Scripts/python3"
 
-pypi="https://pypi.tuna.tsinghua.edu.cn/simple/"
+pypi="https://mirror.nju.edu.cn/pypi/web/simple/"
 
 run_cmd=$(cat <<EOF
 [ -f ${PYTHON_EXEC} ] || (python3 -m venv ${PYTHON_HOME} --without-pip --system-site-packages && wget -nv -O - https://bootstrap.pypa.io/get-pip.py | ${PYTHON_EXEC} - -i ${pypi})
