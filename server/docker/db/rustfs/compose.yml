@@ -1,15 +1,13 @@
 
 
 x-rustfs-common: &rustfs-common
-  image: rustfs/rustfs:1.0.0-alpha.85
-  privileged: true
-  user: root
+  image: rustfs/rustfs:1.0.4
   expose:
     - "9000"
     - "9001"
   environment:
-    RUSTFS_ACCESS_KEY: {{ param_db_rustfs_username }}
-    RUSTFS_SECRET_KEY: {{ param_db_rustfs_password }}
+    RUSTFS_ACCESS_KEY: {{ param_s3_access_key }}
+    RUSTFS_SECRET_KEY: {{ param_s3_secret_key }}
     RUSTFS_CONSOLE_ENABLE: "true"
   restart: always
 
@@ -28,6 +26,8 @@ services:
     labels:
       <<: *traefik-label
     volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/data/single:/data/
+      - rustfs-data:/data/
+volumes:
+  rustfs-data:
+    name: rustfs-data
   {%- endif %}
-

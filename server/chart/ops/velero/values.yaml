@@ -21,7 +21,7 @@ velero:
         bucket: velero
         config:
           region: minio
-          s3Url: http://{{ param_s3_endpoint }}
+          s3Url: https://{{ param_s3_endpoint }}
           s3ForcePathStyle: true
   snapshotsEnabled: false
   upgradeCRDs: false

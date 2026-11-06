@@ -1,7 +1,3 @@
 node-name: {{ param_node_name }}
-{% if param_node_ip %}
 node-ip: "{{ param_node_ip }}"
-{% endif %}
-{% if param_node_iface %}
 flannel-iface: "{{ param_node_iface }}"
-{% endif %}

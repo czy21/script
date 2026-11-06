@@ -3,7 +3,7 @@ argo-workflows:
   crds:
     upgradeJob:
       image:
-        repository: {{ param_proxy and param_registry_proxy or 'registry.k8s.io' }}/kubectl
+        registry: {{ param_proxy and param_registry_proxy or 'quay.io' }}
   controller:
     rbac:
       accessAllSecrets: true
