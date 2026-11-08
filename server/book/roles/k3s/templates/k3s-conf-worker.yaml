@@ -1,3 +1,8 @@
 node-name: {{ param_node_name }}
-node-ip: "{{ param_node_ip }}"
-flannel-iface: "{{ param_node_iface }}"
+node-ip: "{{ param_node_ip | default(inventory_hostname) }}"
+
+{% if param_k3s_worker_config | default('', true) %}
+{{ param_k3s_worker_config }}
+{% endif %}
+
+server: "{{ param_k3s_api_endpoint }}"

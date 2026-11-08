@@ -3,7 +3,7 @@
   vars_files: ["vars/main.yml","vars/env.yml"]
   tasks:
     - shell: |
-        echo
+        echo '{{ inventory_hostname }}'
   tags:
     - linux
 

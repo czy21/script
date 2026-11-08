@@ -1,6 +1,6 @@
 127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
 ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
 
-{% for t in ansible_play_hosts %}
-{{ hostvars[t].param_node_ip }} {{ hostvars[t].param_node_name | replace(',', ' ') }}
+{% for t in groups['all'] %}
+{{ hostvars[t].param_node_ip | default(t) }} {{ hostvars[t].param_node_name | replace(',', ' ') }}
 {% endfor %}

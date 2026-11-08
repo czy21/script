@@ -1,29 +1,40 @@
+- name: mesh install
+  shell: sh {{ param_remote_role_path }}/{{ param_ansible_os_family }}-wireguard.sh
+  tags:
+    - 'mesh-install'
+
 - name: mesh conf
   shell: |
     sudo install -m 0700 -d /etc/wireguard
+  when: "'wg_conf' in param_mesh_servers.get(inventory_hostname, {})"
   tags:
     - 'mesh-conf'
-    - 'mesh-install'
 
 - name: mesh conf
-  ansible.builtin.copy:
-    dest: /etc/wireguard/wg0.conf
-    content: "{{ (param_mesh_servers | selectattr('param_mesh_node', 'equalto', param_mesh_node) | first).param_mesh_conf }}"
-    mode: "0600"
   become: true
+  copy: content={{ param_mesh_servers.get(inventory_hostname, {}).get('wg_conf') }} dest=/etc/wireguard/wg0.conf mode=600
+  when: "'wg_conf' in param_mesh_servers.get(inventory_hostname, {})"
   tags:
     - 'mesh-conf'
-    - 'mesh-install'
-
-- name: mesh install
-  shell: |
-    bash {{ param_remote_role_path }}/{{ param_ansible_os_family }}-wireguard.sh
-  tags:
-    - 'mesh-install'
 
 - name: mesh restart
   shell: |
-    sudo systemctl enable --now wg-quick@wg0.service
+    sudo systemctl enable  wg-quick@wg0.service --now
     sudo systemctl restart wg-quick@wg0.service
+  when: "'wg_conf' in param_mesh_servers.get(inventory_hostname, {})"
   tags:
     - 'mesh-restart'
+
+- name: mesh netplan
+  become: true
+  copy: content={{ param_mesh_servers.get(inventory_hostname, {}).get('netplan') }} dest=/etc/netplan/99-mesh.yaml mode=600
+  when: "'netplan' in param_mesh_servers.get(inventory_hostname, {})"
+  tags:
+    - 'mesh-netplan'
+
+- name: mesh netplan
+  shell: |
+    sudo netplan generate && sudo netplan apply
+  when: param_mesh_servers.get(inventory_hostname, {}).get('netplan', '') is not none
+  tags:
+    - 'mesh-netplan'

@@ -39,9 +39,10 @@
   vars:
     param_role_name: mesh
     param_role_tags:
-      - "{{ param_role_name }}-conf"
       - "{{ param_role_name }}-install"
+      - "{{ param_role_name }}-conf"
       - "{{ param_role_name }}-restart"
+      - "{{ param_role_name }}-netplan"
   tasks:
     - block:
         - import_tasks: roles/common/tasks/copy.yml
@@ -155,6 +156,7 @@
   vars:
     param_role_name: k3s
     param_role_tags:
+      - "{{ param_role_name }}-prep"
       - "{{ param_role_name }}-host"
       - "{{ param_role_name }}-conf"
       - "{{ param_role_name }}-init"

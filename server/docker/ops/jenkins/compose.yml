@@ -1,5 +1,3 @@
-
-
 x-traefik-label: &traefik-label
   traefik.enable: true
   traefik.http.routers.{{ param_role_name }}.service: {{ param_role_name }}

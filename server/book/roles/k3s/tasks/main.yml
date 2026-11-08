@@ -1,3 +1,8 @@
+- name: k3s prep
+  shell: sh {{ param_remote_role_path }}/k3s-prep-{{ param_ansible_os_family }}.sh
+  tags:
+    - 'k3s-prep'
+
 - name: k3s host
   import_tasks: k3s-host.yml
   tags:
@@ -19,7 +24,7 @@
 
 - name: k3s join
   shell: |
-    curl -sfL {{ param_proxy and 'https://rancher-mirror.rancher.cn/k3s/k3s-install.sh | INSTALL_K3S_MIRROR=cn' or 'https://get.k3s.io |' }} INSTALL_K3S_VERSION="v{{ param_k3s_version }}" INSTALL_K3S_EXEC="agent" K3S_TOKEN="{{ param_k3s_token }}" sh -s - --server {{ param_k3s_api_endpoint }}
+    curl -sfL {{ param_proxy and 'https://rancher-mirror.rancher.cn/k3s/k3s-install.sh | INSTALL_K3S_MIRROR=cn' or 'https://get.k3s.io |' }} INSTALL_K3S_VERSION="v{{ param_k3s_version }}" INSTALL_K3S_EXEC="agent" K3S_TOKEN="{{ param_k3s_token }}" sh -s -
   when: inventory_hostname in groups["worker"]
   tags:
     - 'k3s-join'

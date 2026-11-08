@@ -1,6 +1,10 @@
 node-name: {{ param_node_name }}
-node-ip: "{{ param_node_ip }}"
-flannel-iface: "{{ param_node_iface }}"
+node-ip: "{{ param_node_ip | default(inventory_hostname) }}"
+
+{% if param_k3s_master_config | default('', true) %}
+{{ param_k3s_master_config }}
+{% endif %}
+
 disable: 
   - servicelb
   - traefik
@@ -11,6 +15,6 @@ service-cidr: "{{ param_k3s_svc_network_cidr }}"
 cluster-cidr: "{{ param_k3s_pod_network_cidr }}"
 # additional ip or dns for client access 6443 tls X509v3 Subject Alternative Name
 tls-san:
-{% for t in groups["master"] %}
-  - {{ hostvars[t].param_node_ip }}
+{% for t in param_k3s_tls_san | default([]) %}
+  - {{ t }}
 {% endfor %}

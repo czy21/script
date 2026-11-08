@@ -48,7 +48,7 @@ if [ "ubuntu" = "${os_distribution}" ]; then
     sources_file=/etc/apt/sources.list.d/ubuntu.sources
   fi
   [ -f "${sources_file}.bak" ] || cp -rv ${sources_file} ${sources_file}.bak
-  sed "s|https\?://.*\.ubuntu\.com|https://{{ param_mirror_apt }}|" ${sources_file}.bak | tee ${sources_file} > /dev/null
+  sed {{ param_mirror_apt_security and "-e 's|security.ubuntu.com/ubuntu|archive.ubuntu.com/ubuntu-security|'" or '' }} -e "s|https\?://.*archive\.ubuntu\.com|https://{{ param_mirror_apt }}|" ${sources_file}.bak | tee ${sources_file} > /dev/null
 fi
 
 if [ "kali" = "${os_distribution}" ]; then

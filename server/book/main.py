@@ -17,10 +17,10 @@ logger = logging.getLogger()
 if __name__ == '__main__':
     root_path = pathlib.Path(__file__).parent
     installer = server.Installer(root_path=root_path, arg_parser=argparse.ArgumentParser(formatter_class=server.ArgParseHelpFormatter, conflict_handler="resolve"))
-    private_key = installer.tmp_path.joinpath("private-key")
-    ansible_host_file = root_path.joinpath("ansible-host").as_posix()
-    installer.arg_parser.add_argument('--ansible-host', required=False, type=str, help="ansible host file (default=ansible-host)")
-    installer.arg_parser.add_argument('-f', '--file', required=True, type=str, help="inventory file")
+    private_key = installer.tmp_path.joinpath("private-key").as_posix()
+
+    installer.arg_parser.add_argument('--host', required=True,  type=str, help="playbook host")
+    installer.arg_parser.add_argument('--file', required=True,  type=str, help="playbook file")
     installer.arg_parser.add_argument('--list-tags', action="store_true", help="list all available tags")
     installer.arg_parser.add_argument('--list-tasks', action="store_true", help="list all available tasks")
 
@@ -30,24 +30,24 @@ if __name__ == '__main__':
     installer.arg_parser.add_argument('--no-step', action="store_true", help="disable one-step-at-a-time")
     args = installer.arg_parser.parse_args()
     args.param = dict(args.param)
+
     if args.debug:
         logger.setLevel(logging.DEBUG)
-    if not private_key.exists():
+
+    play_host = pathlib.Path(args.host).as_posix() if pathlib.Path(args.host).is_absolute() else root_path.joinpath(args.host).as_posix()
+    if not pathlib.Path(play_host).exists():
+        logger.error(f"{play_host} not found")
+        sys.exit(0)
+    play_file = pathlib.Path(args.file).as_posix() if pathlib.Path(args.file).is_absolute() else root_path.joinpath(args.file).as_posix()
+    if not pathlib.Path(private_key).exists():
         logger.error("ssh private-key not found")
         sys.exit(0)
-    private_key = private_key.as_posix()
+
     env_dict = installer.load_env_file(args.env_active, args.param)
     env_dict['param_debug'] = args.debug
     file_util.write_text(root_path.joinpath("vars/env.yml"), yaml_util.dump(env_dict))
     if not args.user:
         args.user = env_dict["param_user"]
-    if args.ansible_host:
-        ansible_host_file = root_path.joinpath(f'ansible-host-{args.ansible_host}')
-        if not ansible_host_file .exists():
-            logger.error(f"ansible-host-{args.ansible_host} not found")
-            sys.exit(0)
-        ansible_host_file = ansible_host_file.as_posix()
-    ansible_inventory_file = pathlib.Path(args.file).as_posix() if pathlib.Path(args.file).is_absolute() else root_path.joinpath(args.file).as_posix()
     _cmds = ["chmod 600 {0}".format(private_key)]
     ansible_playbook_cmd = [
         "LC_ALL=C.UTF-8",
@@ -62,7 +62,7 @@ if __name__ == '__main__':
         "--ssh-common-args \'-o StrictHostKeyChecking=no\'",
         "--ssh-extra-args \'-o StrictHostKeyChecking=no\'",
         "--scp-extra-args \'-o StrictHostKeyChecking=no\'",
-        "--inventory", ansible_host_file, ansible_inventory_file,
+        "--inventory", play_host, play_file,
         "--flush-cache",
         "--ask-pass" if args.ask_pass else ["--private-key", private_key]
     ]

@@ -7,6 +7,6 @@ ff00::0 ip6-mcastprefix
 ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
 
-{% for t in ansible_play_hosts %}
-{{ hostvars[t].param_node_ip }} {{ hostvars[t].param_node_name | replace(',', ' ') }}
+{% for t in groups['all'] %}
+{{ hostvars[t].param_node_ip | default(t) }} {{ hostvars[t].param_node_name | replace(',', ' ') }}
 {% endfor %}
