@@ -5,7 +5,7 @@ x-traefik-label: &traefik-label
 
 services:
   nexus:
-    image: sonatype/nexus3:3.97.3-alpine
+    image: sonatype/nexus3:3.76.1-alpine
     container_name: nexus
     labels:
       <<: *traefik-label
@@ -21,7 +21,7 @@ services:
         -Djava.util.prefs.userRoot=/nexus-data/javaprefs
         -Dnexus.scripts.allowCreation=true
       NEXUS_SECURITY_INITIAL_PASSWORD: "{{ param_manage_password }}"
-      NEXUS_DATASTORE_NEXUS_JDBCURL: jdbc:postgresql://{{ param_db_pgsql_host }}:{{ param_db_pgsql_port }}/nexus?user={{ param_db_pgsql_username }}&password={{ param_db_pgsql_password }}
+      # NEXUS_DATASTORE_NEXUS_JDBCURL: jdbc:postgresql://{{ param_db_pgsql_host }}:{{ param_db_pgsql_port }}/nexus?user={{ param_db_pgsql_username }}&password={{ param_db_pgsql_password }}
     restart: always
 
 volumes:

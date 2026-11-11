@@ -24,20 +24,25 @@ if __name__ == '__main__':
     installer.arg_parser.add_argument('--list-tags', action="store_true", help="list all available tags")
     installer.arg_parser.add_argument('--list-tasks', action="store_true", help="list all available tasks")
 
-    installer.arg_parser.add_argument('-t', '--tags', required=False, type=str, help="t1,t2")
+    installer.arg_parser.add_argument('-l', '--limit', required=False, type=str, help="further limit selected hosts to an additional pattern")
+    installer.arg_parser.add_argument('-t', '--tags', required=False, type=str, help="only run plays and tasks tagged with these values. This argument may be specified multiple times.")
     installer.arg_parser.add_argument('-k', '--ask-pass', action="store_true", help="ask for connection password")
     installer.arg_parser.add_argument('-u', '--user', required=False, type=str, help="connect as this user (default=[param_user])")
-    installer.arg_parser.add_argument('--no-step', action="store_true", help="disable one-step-at-a-time")
+    installer.arg_parser.add_argument('--step', action="store_true", help="one-step-at-a-time: confirm each task before running")
     args = installer.arg_parser.parse_args()
     args.param = dict(args.param)
 
     if args.debug:
         logger.setLevel(logging.DEBUG)
 
-    play_host = pathlib.Path(args.host).as_posix() if pathlib.Path(args.host).is_absolute() else root_path.joinpath(args.host).as_posix()
-    if not pathlib.Path(play_host).exists():
-        logger.error(f"{play_host} not found")
-        sys.exit(0)
+    play_host = args.host
+
+    if "," not in play_host:
+        play_host = pathlib.Path(args.host).as_posix() if pathlib.Path(args.host).is_absolute() else root_path.joinpath(args.host).as_posix()
+        if not pathlib.Path(play_host).exists():
+            logger.error(f"{play_host} not found")
+            sys.exit(0)
+
     play_file = pathlib.Path(args.file).as_posix() if pathlib.Path(args.file).is_absolute() else root_path.joinpath(args.file).as_posix()
     if not pathlib.Path(private_key).exists():
         logger.error("ssh private-key not found")
@@ -71,6 +76,8 @@ if __name__ == '__main__':
         ansible_playbook_cmd.append("--list-tags")
     if args.list_tasks:
         ansible_playbook_cmd.append("--list-tasks")
+    if args.limit:
+        ansible_playbook_cmd.append(f"--limit {args.limit}")
     if args.tags:
         ansible_playbook_cmd.append(f"--tags {args.tags}")
     if args.user:
@@ -78,7 +85,7 @@ if __name__ == '__main__':
     if args.param:
         ansible_playbook_cmd.append(f"--extra-vars \"{args.param}\"")
 
-    if not args.no_step:
+    if args.step:
         ansible_playbook_cmd.append("--step")
     ansible_playbook_cmd.append("-v")
     if args.dry_run:
