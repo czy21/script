@@ -27,8 +27,6 @@ jobs:
         run: |
 
           PATHS=(
-              server/docker/app/hugo
-              server/docker/app/mkdoc
               server/docker/app/nginx-spa
               server/docker/ops/jenkins
               server/docker/ops/jenkins-ssh-agent
@@ -40,7 +38,12 @@ jobs:
           )
 
           source=server/docker
-          TARGETS="${{ inputs.targets }}"
+          if [[ " ${{ inputs.targets }} " == *" all "* ]]; then
+            TARGETS=$(printf '%s\n' "${PATHS[@]}" | $HOME/.python3/bin/python3 -c 'import sys; print(" ".join(t.removeprefix(sys.argv[1]) for t in sys.stdin.read().splitlines()))' "${source}/")
+          else
+            TARGETS=$($HOME/.python3/bin/python3 -c 'import sys; source=sys.argv[1]; targets=sys.argv[2]; print(" ".join(t.removeprefix(source) for t in targets.split() if t.startswith(source)))' "${source}/" "${{ inputs.targets }}")
+          fi
+
           if [ "${{ github.event_name }}" = "push" ];then
             DIFFS=$(git diff --diff-filter=d --name-only HEAD~)
   
@@ -78,7 +81,12 @@ jobs:
           )
 
           source=server/chart
-          TARGETS="${{ inputs.targets }}"
+          if [[ " ${{ inputs.targets }} " == *" all "* ]]; then
+            TARGETS=$(printf '%s\n' "${PATHS[@]}" | $HOME/.python3/bin/python3 -c 'import sys; print(" ".join(t.removeprefix(sys.argv[1]) for t in sys.stdin.read().splitlines()))' "${source}/")
+          else
+            TARGETS=$($HOME/.python3/bin/python3 -c 'import sys; source=sys.argv[1]; targets=sys.argv[2]; print(" ".join(t.removeprefix(source) for t in targets.split() if t.startswith(source)))' "${source}/" "${{ inputs.targets }}")
+          fi
+
           if [ "${{ github.event_name }}" = "push" ];then
             DIFFS=$(git diff --diff-filter=d --name-only HEAD~)
   

@@ -8,7 +8,7 @@ x-traefik-label: &traefik-label
 services:
 
   traefik:
-    image: traefik:v3.7.13
+    image: traefik:v3.7.18
     container_name: traefik
     labels:
       <<: *traefik-label
@@ -20,7 +20,7 @@ services:
     ports:
       - "8000:8000"
       - "8080:8080"
-    extra_hosts: 
+    extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
       - {{ param_docker_data }}/{{ param_role_name }}/conf/traefik.yml:/etc/traefik/traefik.yml

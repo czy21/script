@@ -5,7 +5,7 @@ x-traefik-label: &traefik-label
 
 services:
   homarr:
-    image: {{ param_proxy and param_registry_proxy or 'ghcr.io' }}/homarr-labs/homarr:v1.77.2
+    image: {{ param_proxy and param_registry_proxy or 'ghcr.io' }}/homarr-labs/homarr:v2.12.0
     container_name: homarr
     labels:
       <<: *traefik-label
