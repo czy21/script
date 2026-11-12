@@ -1,0 +1,4 @@
+param_beszel_version: {{ param_beszel_version }}
+param_beszel_key: {{ param_beszel_key }}
+param_beszel_token: {{ param_beszel_token }}
+param_beszel_url: {{ param_beszel_url }}

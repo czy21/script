@@ -1,3 +1,8 @@
-pod: {}
-  # tolerations: []
-  # nodeSelector: {}
+java-template:
+  param_release_image: "xuxueli/xxl-job-admin"
+  param_release_version: "3.5.0"
+  param_data_claim_name: "data-app"
+  param_replicas: "1"
+  param_app_args: >-
+    -Dspring.config.additional-location=file:/app/config/
+    -DLOG_HOME=/app/log

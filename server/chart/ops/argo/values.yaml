@@ -1,15 +1,9 @@
 argo-workflows:
   fullnameOverride: argo-workflows
-  crds:
-    upgradeJob:
-      image:
-        registry: {{ param_proxy and param_registry_proxy or 'quay.io' }}
   controller:
     rbac:
       accessAllSecrets: true
       writeConfigMaps: true
-    image:
-      registry: {{ param_proxy and param_registry_proxy or 'quay.io' }}
     workflowNamespaces: []
     synchronization:
       mysql:
@@ -17,24 +11,18 @@ argo-workflows:
         port: {{ param_db_mysql_port }}
         database: argo
         userNameSecret:
-          name: argo-mysql-config
+          name: {{ param_role_name }}-mysql-config
           key: username
         passwordSecret:
-          name: argo-mysql-config
+          name: {{ param_role_name }}-mysql-config
           key: password
-  server:
-    image:
-      registry: {{ param_proxy and param_registry_proxy or 'quay.io' }}
-  executor:
-    image:
-      registry: {{ param_proxy and param_registry_proxy or 'quay.io' }}
   artifactRepository:
     s3: 
       endpoint: "{{ param_s3_endpoint }}"
       bucket: "{{ param_s3_bucket or 'argo' }}"
       accessKeySecret:
-        name: argo-artifact-credentials
+        name: {{ param_role_name }}-artifact-credentials
         key: accessKey
       secretKeySecret:
-        name: argo-artifact-credentials
+        name: {{ param_role_name }}-artifact-credentials
         key: secretKey

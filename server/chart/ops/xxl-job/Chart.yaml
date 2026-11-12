@@ -1,3 +1,8 @@
 apiVersion: v2
 name: xxl-job
 version: 0.1.0
+
+dependencies:
+  - name: java-template
+    version: 0.1.0
+    repository: "oci://registry.czy21.com/charts"

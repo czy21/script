@@ -3,6 +3,6 @@ name: nfs
 version: 0.1.0
 
 dependencies:
-  - name: nfs-subdir-external-provisioner
-    version: 4.0.18
-    repository: "https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner"
+  - name: csi-driver-nfs
+    version: 4.13.6
+    repository: https://kubernetes-csi.github.io/csi-driver-nfs

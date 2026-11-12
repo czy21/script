@@ -1,12 +1,12 @@
-nfs-subdir-external-provisioner:
-  replicaCount: 1
-{% if param_proxy %}
-  image:
-    repository: {{ param_registry_proxy }}/sig-storage/nfs-subdir-external-provisioner
-{% endif %}
-  storageClass:
-    name: nfs
-    defaultClass: true
-  nfs:
-    server: {{ param_nfs_kube_server }}
-    path: {{ param_nfs_kube_data }}-{{ param_cluster_name }}
+csi-driver-nfs:
+  storageClasses:
+    - name: nfs
+      annotations:
+        storageclass.kubernetes.io/is-default-class: "true"
+      parameters:
+        server: {{ param_nfs_kube_server }}
+        share: {{ param_nfs_kube_data }}-{{ param_cluster_name }}
+      reclaimPolicy: Delete
+      volumeBindingMode: Immediate
+      mountOptions:
+        - nfsvers=4.1

@@ -13,8 +13,6 @@ component:
 kiali-server:
   auth:
     strategy: anonymous
-  deployment:
-    image_name: {{ param_proxy and param_registry_proxy or 'quay.io' }}/kiali/kiali
   external_services:
     prometheus:
       url: http://prometheus.ops.svc:9090

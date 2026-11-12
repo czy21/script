@@ -1,28 +1,10 @@
 #!/bin/bash
 
-cert_dir={{ param_role_path }}/cert
-
-certs=$(find "$cert_dir" -mindepth 1 -maxdepth 1 -type d)
-
-for t in $certs;do
-
+for t in $(find "{{ param_role_path }}/cert" -mindepth 1 -maxdepth 1 -type d);do
   t_name=$(basename $t)
 
   t_crt=$t/${t_name}.crt
   t_key=$t/${t_name}.key
 
-  t_crt_base64=$(openssl base64 -A -in $t_crt)
-  t_key_base64=$(openssl base64 -A -in $t_key)
-  
-  kubectl apply -f - <<EOF
-apiVersion: v1
-kind: Secret
-type: kubernetes.io/tls
-metadata:
-  name: ${t_name}-secret
-  namespace: {{ param_namespace }}
-data:
-  tls.crt: ${t_crt_base64}
-  tls.key: ${t_key_base64}
-EOF
+  kubectl create secret tls "${t_name}-secret" --cert="${t_crt}" --key="${t_key}" -n "{{ param_namespace }}" --dry-run=client -o yaml | kubectl apply -f -
 done

@@ -1,9 +1,3 @@
 nginx-gateway-fabric:
   nginxGateway:
     name: nginx-gateway
-    image:
-      repository: {{ param_proxy and param_registry_proxy or 'ghcr.io' }}/nginx/nginx-gateway-fabric
-  nginx:
-    image:
-      repository: {{ param_proxy and param_registry_proxy or 'ghcr.io' }}/nginx/nginx-gateway-fabric/nginx
-    kind: daemonSet

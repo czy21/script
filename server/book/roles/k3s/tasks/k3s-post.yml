@@ -1,6 +1,6 @@
 - name: k3s link
   shell: |
-    sudo -u {{ param_user }} bash -c "sed -i "/KUBECONFIG/d" ~/.bashrc;echo 'export KUBECONFIG=.kube/config' >> ~/.bashrc;mkdir -p ~/.kube;sudo cat /etc/rancher/k3s/k3s.yaml | tee ~/.kube/config > /dev/null"
+    sudo -u {{ param_user }} bash -c "sed -i '/KUBECONFIG/d' ~/.bashrc;sed -i '1i export KUBECONFIG=$HOME/.kube/config' ~/.bashrc;mkdir -p ~/.kube;sudo cat /etc/rancher/k3s/k3s.yaml | tee ~/.kube/config > /dev/null"
     sudo ln -sf /usr/local/bin/k3s /usr/bin/k3s
     sudo ln -sf /usr/local/bin/kubectl /usr/bin/kubectl
     sudo ln -sf /usr/local/bin/crictl /usr/bin/crictl

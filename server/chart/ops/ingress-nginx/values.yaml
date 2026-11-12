@@ -10,8 +10,6 @@ ingress-nginx:
       kubernetes.io/hostname: k8s-worker-1
     terminationGracePeriodSeconds: 60
     allowSnippetAnnotations: true
-    image:
-      registry: {{ param_proxy and param_registry_proxy or 'registry.k8s.io' }}
     ingressClassResource:
       default: true
     hostNetwork: true

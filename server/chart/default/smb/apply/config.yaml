@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ param_role_name }}-secret
+  namespace: {{ param_namespace }}
+stringData:
+  username: {{ param_smb_kube_username}}
+  password: {{ param_smb_kube_password}}

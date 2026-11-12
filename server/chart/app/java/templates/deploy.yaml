@@ -36,6 +36,9 @@ spec:
       annotations:
         helm.sh/revision: "{{ .Release.Revision }}"
     spec:
+      {{- with .Values.pod }}
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
       containers:
         - name: {{ include "app.fullname" . }}
           image: "{{ include "app.image" . }}:{{ .Values.param_release_version }}"

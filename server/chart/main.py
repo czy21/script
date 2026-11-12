@@ -25,27 +25,31 @@ class ChartRole(server.AbstractRole):
         super().__init__(context)
 
         self.role_init_sh = context.role_out_path.joinpath("init.sh")
+
+        self.role_apply_path = context.role_out_path / "apply"
         self.role_chart_file = self.context.role_path / "Chart.yaml"
-        self.role_values_node_file = context.role_out_path / f"values.{context.role_env.get('param_node_name')}.yaml"
-        self.role_values_override_file = context.role_out_path.joinpath("env.yml")
+
+        self.role_node_values_file = self.context.role_node_path.joinpath("values.yaml")
 
     def install(self) -> list[str]:
         _cmds = []
         if self.role_init_sh.exists():
             _cmds.append("bash {}".format(self.role_init_sh.as_posix()))
+        if self.role_apply_path.exists():
+             _cmds.append(f"kubectl apply -f {self.role_apply_path.as_posix()}")
         _cmds.append(f'helm dep up {self.context.role_out_path.as_posix()}')
         cmd = [
             f"helm upgrade --install {self.context.role_name} {self.context.role_out_path.as_posix()}"
         ]
-        if self.role_values_node_file.exists():
-            cmd.append(f"-f {self.role_values_node_file.as_posix()}")
-        cmd.append(f"-f {self.role_values_override_file.as_posix()}")
+        if self.role_node_values_file.exists():
+            cmd.append(f"-f {self.role_node_values_file.as_posix()}")
         if not self.context.args.ignore_namespace:
             cmd.append("--namespace {0}".format(self.context.namespace))
         if self.context.args.create_namespace:
             cmd.append("--create-namespace")
         if self.context.args.dry_run:
             cmd.append("--dry-run")
+        cmd.append("--reset-values")
         cmd = collection_util.flat_to_str(cmd)
         _cmds.append(cmd)
         return _cmds
@@ -55,6 +59,7 @@ class ChartRole(server.AbstractRole):
         helm_repo_url = self.context.role_env.get("param_helm_repo_url")
         if self.context.args.target == "Chart":
             if self.context.args.push:
+                _cmds.append(f'helm dep up {self.context.role_out_path.as_posix()}')
                 _cmds.append(f"helm package {self.context.role_out_path} --destination {self.context.role_out_path} | sed 's/Successfully\\(.*\\)to: //g' | xargs -I{{}} helm push {{}} {helm_repo_url}")
             else:
                 _cmds.append(f"helm package {self.context.role_out_path} --destination {self.context.role_out_path}")
@@ -122,6 +127,9 @@ class ChartRole(server.AbstractRole):
 
     def restore(self) -> list[str]:
         return []
+
+    def get_merge_ignore_pattern(self):
+        return ["values.yaml"]
 
 
 if __name__ == '__main__':
