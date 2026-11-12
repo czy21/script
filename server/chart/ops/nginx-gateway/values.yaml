@@ -7,12 +7,3 @@ nginx-gateway-fabric:
     image:
       repository: {{ param_proxy and param_registry_proxy or 'ghcr.io' }}/nginx/nginx-gateway-fabric/nginx
     kind: daemonSet
-    service:
-{% if 'NodePort' == param_nginx_service_type %}
-      type: NodePort
-      nodePorts:
-        - port: 80
-          listenerPort: 80
-        - port: 443
-          listenerPort: 443
-{% endif %}

@@ -414,8 +414,8 @@ class Installer:
             # process env
             if role_env_file and role_env_file.exists():
                 role_env |= yaml_util.load(template_util.Template(file_util.read_text(role_env_file)).render(**role_env))
-            file_util.write_text(role_out_path.joinpath("env.yml"), yaml_util.dump(role_env))
             role_env |= args.param
+            file_util.write_text(role_out_path.joinpath("env.yml"), yaml_util.dump(role_env))
             # process template
             for t in filter(lambda f: f.is_file() and not any(regex_util.match_rules(["build/", ".tmp/", role_env_file.name], f.as_posix()).values()), r.role_path.rglob("*")):
                 _rules = regex_util.match_rules([*jinja2ignore_rules], t.as_posix())

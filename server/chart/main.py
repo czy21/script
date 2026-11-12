@@ -2,7 +2,7 @@
 
 import json
 import logging
-import re
+import re,os
 
 import pathlib
 import requests
@@ -26,8 +26,8 @@ class ChartRole(server.AbstractRole):
 
         self.role_init_sh = context.role_out_path.joinpath("init.sh")
         self.role_chart_file = self.context.role_path / "Chart.yaml"
-        self.role_values_override_file = context.role_out_path.joinpath("values.override.yaml")
-        file_util.write_text(self.role_values_override_file, yaml_util.dump(context.role_env))
+        self.role_values_node_file = context.role_out_path / f"values.{context.role_env.get('param_node_name')}.yaml"
+        self.role_values_override_file = context.role_out_path.joinpath("env.yml")
 
     def install(self) -> list[str]:
         _cmds = []
@@ -35,8 +35,11 @@ class ChartRole(server.AbstractRole):
             _cmds.append("bash {}".format(self.role_init_sh.as_posix()))
         _cmds.append(f'helm dep up {self.context.role_out_path.as_posix()}')
         cmd = [
-            f"helm upgrade --install {self.context.role_name} {self.context.role_out_path.as_posix()} --values {self.role_values_override_file}"
+            f"helm upgrade --install {self.context.role_name} {self.context.role_out_path.as_posix()}"
         ]
+        if self.role_values_node_file.exists():
+            cmd.append(f"-f {self.role_values_node_file.as_posix()}")
+        cmd.append(f"-f {self.role_values_override_file.as_posix()}")
         if not self.context.args.ignore_namespace:
             cmd.append("--namespace {0}".format(self.context.namespace))
         if self.context.args.create_namespace:

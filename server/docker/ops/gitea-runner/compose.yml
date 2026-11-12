@@ -2,7 +2,7 @@
 services:
 
   gitea-runner:
-    image: gitea/runner:3.5.0
+    image: gitea/runner:{{ param_gitea_runner_version }}
     container_name: gitea-runner
     privileged: true
     user: root
