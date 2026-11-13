@@ -6,3 +6,9 @@ param_replicas: 2
 param_data_claim_name: "data-app"
 param_app_args: -Xms128m -Xmx512m -XX:MetaspaceSize=256m -XX:MaxMetaspaceSize=256m
 pod: {}
+container:
+  extraArgs: []
+  extraEnv: []
+  extraPorts: []
+service:
+  extraPorts: []
