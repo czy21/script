@@ -1,3 +1,6 @@
 gateway:
+  podAnnotations:
+    proxy.istio.io/config: |
+      {"gatewayTopology":{"numTrustedProxies":1}}
   service:
     type: ClusterIP
