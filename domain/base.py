@@ -47,8 +47,6 @@ class AbstractDBSource(metaclass=abc.ABCMeta):
             release_path = pathlib.Path(self.context.param.get(f'param_main_db_{self.key()}_version_path')).joinpath(release_name)
             if not self.context.param.get(f'param_main_db_{self.key()}_release_name') and not version_file.exists():
                 raise Exception(f"param_main_db_{self.key()}_release_name must be not null")
-            if not release_path.exists():
-                raise Exception(f"{release_path.as_posix()} not exist")
             contents.extend(db_util.assemble_ql(release_path, self.meta(), self.ext()))
         else:
             contents.extend(db_util.assemble_ql(pathlib.Path(self.context.param.get(f'param_main_db_{self.key()}_version_path')), self.meta(), self.ext()))

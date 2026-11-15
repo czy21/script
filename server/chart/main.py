@@ -36,7 +36,7 @@ class ChartRole(server.AbstractRole):
         if self.role_init_sh.exists():
             _cmds.append("bash {}".format(self.role_init_sh.as_posix()))
         if self.role_apply_path.exists():
-             _cmds.append(f"kubectl apply -f {self.role_apply_path.as_posix()}")
+            _cmds.append(f"kubectl apply -f {self.role_apply_path.as_posix()}")
         _cmds.append(f'helm dep up {self.context.role_out_path.as_posix()}')
         cmd = [
             f"helm upgrade --install {self.context.role_name} {self.context.role_out_path.as_posix()}"

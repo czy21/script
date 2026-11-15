@@ -45,5 +45,4 @@ if __name__ == '__main__':
     default_params |= args.param
     project_params = yaml_util.YamlPropertySourceLoader(env_files).load(default_params)
     context = ExecutionContext(root_path=root_path, out_path=out_path, param=EnhancedNamespace(**project_params))
-    file_util.write_text(context.out_path.joinpath("env.yml"), yaml_util.dump(context.param.__dict__))
     exec(args.exec, globals(), {'context': context})
