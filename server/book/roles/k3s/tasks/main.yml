@@ -1,7 +1,7 @@
-- name: k3s prep
-  shell: sh {{ param_remote_role_path }}/k3s-prep-{{ param_ansible_os_family }}.sh
+- name: k3s
+  shell: sh {{ param_remote_role_path }}/{{ param_ansible_os_family }}.sh
   tags:
-    - 'k3s-prep'
+    - 'k3s'
 
 - name: k3s host
   import_tasks: k3s-host.yml

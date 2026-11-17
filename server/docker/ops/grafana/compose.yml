@@ -7,7 +7,7 @@ x-traefik-label: &traefik-label
 
 services:
   grafana:
-    image: grafana/grafana:9.2.2
+    image: grafana/grafana:9.5.21
     container_name: grafana
     labels:
       <<: *traefik-label

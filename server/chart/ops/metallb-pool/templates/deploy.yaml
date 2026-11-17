@@ -4,7 +4,7 @@ metadata:
   name: first-pool
 spec:
   addresses:
-  - 192.168.20.30-192.168.20.35
+    {{- toYaml .Values.ipAddressPool.addresses | nindent 4 }}
 ---
 apiVersion: metallb.io/v1beta1
 kind: L2Advertisement

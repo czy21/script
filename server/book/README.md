@@ -24,35 +24,3 @@ sudo brew install sshpass
 # ubuntu 22.04 (jammy)
 sudo apt install sshpass -y
 ```
-
-### Kubernetes
-```shell
-# get join command on master node
-sudo kubeadm token create --print-join-command
-
-# get certificate-key will be deleted in two hours
-sudo kubeadm init phase upload-certs --upload-certs
-# join master as master: [join-command] --control-plane --certificate-key [certificate-key]
-# join master as worker: [join-command]
-
-# allow master scheduling
-kubectl taint node --selector='node-role.kubernetes.io/control-plane' node-role.kubernetes.io/control-plane- node-role.kubernetes.io/master-
-
-# deny master scheduling
-kubectl taint node --selector='node-role.kubernetes.io/control-plane' node-role.kubernetes.io/control-plane="":NoSchedule node-role.kubernetes.io/master="":NoSchedule
-
-# add label to node
-kubectl label nodes k8s-nodeX slave=X
-
-# show node label
-kubectl get node --show-labels
-```
-
-## Windows
-```powershell
-# openssh enable
-Get-WindowsCapability -Online | Where-Object Name -like 'OpenSSH.Server*'
-Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
-Start-Service sshd
-Set-Service -Name sshd -StartupType 'Automatic'
-```

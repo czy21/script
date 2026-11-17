@@ -37,11 +37,19 @@ if __name__ == '__main__':
 
     play_host = args.host
 
-    if "," not in play_host:
-        play_host = pathlib.Path(args.host).as_posix() if pathlib.Path(args.host).is_absolute() else root_path.joinpath(args.host).as_posix()
-        if not pathlib.Path(play_host).exists():
+    if not play_host:
+        play_host = root_path / "host"
+    elif "," not in play_host:
+        play_host = pathlib.Path(play_host)
+
+        if not play_host.is_absolute():
+            play_host = root_path / f"host-{args.host}"
+
+        if not play_host.exists():
             logger.error(f"{play_host} not found")
             sys.exit(0)
+
+    play_host = pathlib.Path(play_host).as_posix() if isinstance(play_host, pathlib.Path) else play_host
 
     play_file = pathlib.Path(args.file).as_posix() if pathlib.Path(args.file).is_absolute() else root_path.joinpath(args.file).as_posix()
     if not pathlib.Path(private_key).exists():

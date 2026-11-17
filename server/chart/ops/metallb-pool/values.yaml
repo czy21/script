@@ -1,0 +1,2 @@
+ipAddressPool:
+  addresses: {{ param_metallb_addresses }}

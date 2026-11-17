@@ -6,7 +6,7 @@ x-traefik-label: &traefik-label
 services:
 
   gitea:
-    image: gitea/gitea:28.1.0
+    image: gitea/gitea:28.4.0
     container_name: gitea
     labels:
       <<: *traefik-label

@@ -10,6 +10,10 @@ metadata:
   name: nginx
   namespace: ops
 spec:
+  infrastructure:
+    annotations:
+      metallb.io/address-pool: first-pool
+      metallb.io/loadBalancerIPs: 
   gatewayClassName: nginx
   listeners:
     - allowedRoutes:

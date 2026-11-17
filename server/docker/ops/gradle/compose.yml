@@ -8,7 +8,7 @@ x-traefik-label: &traefik-label
 services:
 
   gradle-build-cache:
-    image: gradle/build-cache-node:14.0
+    image: gradle/build-cache-node:21.2
     pull_policy: always
     container_name: gradle-build-cache
     hostname: gradle-build-cache
@@ -18,6 +18,9 @@ services:
     user: root
     expose:
       - "5071"
+      - "6011"
+    ports:
+      - 6011:6011
     volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/data/cache/:/data/
+      - {{ param_docker_data }}/{{ param_role_name }}/data/:/data/
     restart: always
