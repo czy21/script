@@ -6,7 +6,7 @@ metadata:
     app.kubernetes.io/name: {{ .Release.Name }}
     app.kubernetes.io/version: {{ .Values.version }}
   name: {{ .Release.Name }}
-  namespace: {{ .Release.Namespace }}
+  
 rules:
 - apiGroups:
   - ""
@@ -117,7 +117,7 @@ metadata:
     app.kubernetes.io/name: {{ .Release.Name }}
     app.kubernetes.io/version: {{ .Values.version }}
   name: {{ .Release.Name }}
-  namespace: {{ .Release.Namespace }}
+  
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -125,4 +125,4 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: {{ .Release.Name }}
-  namespace: {{ .Release.Namespace }}
+  

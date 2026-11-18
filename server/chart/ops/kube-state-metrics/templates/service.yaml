@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/name: {{ .Release.Name }}
     app.kubernetes.io/version: {{ .Values.version }}
   name: {{ .Release.Name }}
-  namespace: {{ .Release.Namespace }}
+  
 spec:
   clusterIP: None
   ports:
@@ -26,4 +26,4 @@ metadata:
     app.kubernetes.io/name: {{ .Release.Name }}
     app.kubernetes.io/version: {{ .Values.version }}
   name: {{ .Release.Name }}
-  namespace: {{ .Release.Namespace }}
+  

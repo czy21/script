@@ -6,7 +6,7 @@ metadata:
     app.kubernetes.io/name: {{ .Release.Name }}
     app.kubernetes.io/version: {{ .Values.version }}
   name: {{ .Release.Name }}
-  namespace: {{ .Release.Namespace }}
+  
 spec:
   replicas: {{ .Values.replicas }}
   selector:

@@ -2,7 +2,7 @@ apiVersion: rabbitmq.com/v1beta1
 kind: RabbitmqCluster
 metadata:
   name: {{ .Release.Name }}
-  namespace: {{ .Release.Namespace }}
+  
 spec:
   replicas: 2
   rabbitmq:

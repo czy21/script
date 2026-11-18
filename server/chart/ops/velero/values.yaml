@@ -3,7 +3,7 @@ velero:
     sidecar.istio.io/inject: "false"
   initContainers:
     - name: velero-plugin-for-aws
-      image: velero/velero-plugin-for-aws:v1.13.1
+      image: velero/velero-plugin-for-aws:v1.14.4
       imagePullPolicy: IfNotPresent
       volumeMounts:
         - mountPath: /target
@@ -34,5 +34,6 @@ velero:
       template:
         ttl: 168h
         storageLocation: default
-        includedNamespaces:
-          - stable
+        labelSelector:
+          matchLabels:
+            velero.io/backup: "true"

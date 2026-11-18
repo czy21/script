@@ -3,7 +3,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ .Release.Name }}-namenode
-  namespace: {{ .Release.Namespace }}
+  
 spec:
   selector:
     app: {{ .Release.Name }}-namenode
@@ -20,7 +20,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Release.Name }}-namenode
-  namespace: {{ .Release.Namespace }}
+  
 spec:
   strategy:
     type: Recreate
@@ -86,7 +86,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: data-{{ .Release.Name }}-namenode
-  namespace: {{ .Release.Namespace }}
+  
 spec:
   accessModes:
   - ReadWriteOnce

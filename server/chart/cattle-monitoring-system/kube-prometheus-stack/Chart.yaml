@@ -1,0 +1,8 @@
+apiVersion: v2
+name: rancher
+version: 0.1.0
+
+dependencies:
+  - name: kube-prometheus-stack
+    version: 93.3.1
+    repository: "https://prometheus-community.github.io/helm-charts"

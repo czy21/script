@@ -1,5 +1,5 @@
 ## Supported Kubernetes Platforms for Rancher Manager 
-- https://www.suse.com/ja-jp/suse-rancher/support-matrix/all-supported-versions/rancher-v2-13-3/
+- https://www.suse.com/ja-jp/suse-rancher/support-matrix/all-supported-versions/rancher-v2-15-3/
 
 ## Uninstall
 ```shell
