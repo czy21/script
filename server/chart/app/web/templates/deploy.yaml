@@ -6,13 +6,7 @@ metadata:
   labels:
     app: {{ .Values.param_app_name | default .Release.Name }}
     version: {{ .Values.param_app_version | default .Values.param_release_version }}
-  annotations:
-    helm.sh/revision: "{{ .Release.Revision }}"
 spec:
-  revisionHistoryLimit: 3
-  replicas: {{ .Values.param_replicas }}
-  strategy:
-    type: RollingUpdate
   selector:
     matchLabels:
       app: {{ .Values.param_app_name | default .Release.Name }}

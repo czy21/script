@@ -20,10 +20,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "app.fullname" . }}
-  annotations:
-    helm.sh/revision: "{{ .Release.Revision }}"
 spec:
-  replicas: {{ .Values.param_replicas }}
   strategy:
     type: RollingUpdate
   selector:
