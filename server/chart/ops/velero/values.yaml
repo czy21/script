@@ -21,7 +21,7 @@ velero:
         bucket: velero
         prefix: {{ param_cluster_name }}
         config:
-          region: minio
+          region: us-east-1
           s3Url: https://{{ param_s3_endpoint }}
           s3ForcePathStyle: true
   snapshotsEnabled: false
@@ -30,7 +30,7 @@ velero:
   schedules:
     daily:
       disabled: false
-      schedule: 0 1 * * *
+      schedule: 0 12 * * *
       template:
         ttl: 168h
         storageLocation: default

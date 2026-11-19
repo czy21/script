@@ -10,7 +10,11 @@ services:
     labels:
       <<: *traefik-label
     volumes:
-      - {{ param_docker_data }}/{{ param_role_name }}/data/:/var/lib/registry
+      - registry-data:/var/lib/registry
     environment:
       REGISTRY_LOG_LEVEL: info
     restart: always
+
+volumes:
+  registry-data:
+    name: registry-data

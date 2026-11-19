@@ -37,21 +37,22 @@ class ChartRole(server.AbstractRole):
             _cmds.append("bash {}".format(self.role_init_sh.as_posix()))
         if self.role_apply_path.exists():
             _cmds.append(f"kubectl apply -f {self.role_apply_path.as_posix()}")
-        _cmds.append(f'helm dep up {self.context.role_out_path.as_posix()}')
-        cmd = [
-            f"helm upgrade --install {self.context.role_name} {self.context.role_out_path.as_posix()}"
-        ]
-        if self.role_node_values_file.exists():
-            cmd.append(f"-f {self.role_node_values_file.as_posix()}")
-        if not self.context.args.ignore_namespace:
-            cmd.append("--namespace {0}".format(self.context.namespace))
-        if self.context.args.create_namespace:
-            cmd.append("--create-namespace")
-        if self.context.args.dry_run:
-            cmd.append("--dry-run")
-        cmd.append("--reset-values")
-        cmd = collection_util.flat_to_str(cmd)
-        _cmds.append(cmd)
+        if self.role_chart_file.exists():
+            _cmds.append(f'helm dep up {self.context.role_out_path.as_posix()}')
+            cmd = [
+                f"helm upgrade --install {self.context.role_name} {self.context.role_out_path.as_posix()}"
+            ]
+            if self.role_node_values_file.exists():
+                cmd.append(f"-f {self.role_node_values_file.as_posix()}")
+            if not self.context.args.ignore_namespace:
+                cmd.append("--namespace {0}".format(self.context.namespace))
+            if self.context.args.create_namespace:
+                cmd.append("--create-namespace")
+            if self.context.args.dry_run:
+                cmd.append("--dry-run")
+            cmd.append("--reset-values --server-side=true")
+            cmd = collection_util.flat_to_str(cmd)
+            _cmds.append(cmd)
         return _cmds
 
     def build(self) -> list[str]:

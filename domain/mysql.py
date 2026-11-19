@@ -24,7 +24,7 @@ class MySQLSource(base.AbstractDBSource):
         self.host = self.context.param.param_main_db_mysql_host
         self.port = self.context.param.param_main_db_mysql_port
         self.username = self.context.param.param_main_db_mysql_username
-        self.password = self.context.param.param_main_db_mysql_password
+        self.password = self.context.param.param_main_db_mysql_password or pathlib.Path(self.context.param.param_main_db_mysql_password_file).read_text().strip("\r\n")
         self.database = self.context.param.param_main_db_mysql_database
 
         self.out_db_ql = pathlib.Path(self.context.param.out_path).joinpath(f'{self.key()}-{self.database}.sql').as_posix()
