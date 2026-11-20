@@ -22,7 +22,7 @@ class MsSQLSource(base.AbstractDBSource):
         self.host = self.context.param.param_main_db_mssql_host
         self.port = self.context.param.param_main_db_mssql_port
         self.username = self.context.param.param_main_db_mssql_username
-        self.password = self.context.param.param_main_db_mssql_password or pathlib.Path(self.context.param.param_main_db_mssql_password_file).read_text().strip("\r\n")
+        self.password = self.context.param.get('param_main_db_mssql_password') or pathlib.Path(self.context.param.param_main_db_mssql_password_file).read_text().strip("\r\n")
         self.database = self.context.param.param_main_db_mssql_database
 
     def key(self) -> str:

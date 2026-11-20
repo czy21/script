@@ -23,7 +23,7 @@ class PgSQLSource(base.AbstractDBSource):
         self.host = self.context.param.param_main_db_pgsql_host
         self.port = self.context.param.param_main_db_pgsql_port
         self.username = self.context.param.param_main_db_pgsql_username
-        self.password = self.context.param.param_main_db_pgsql_password or or pathlib.Path(self.context.param.param_main_db_pgsql_password_file).read_text().strip("\r\n")
+        self.password = self.context.param.get('param_main_db_pgsql_password') or pathlib.Path(self.context.param.param_main_db_pgsql_password_file).read_text().strip("\r\n")
         self.database = self.context.param.param_main_db_pgsql_database
 
         self.out_db_ql = pathlib.Path(self.context.param.out_path).joinpath(f'{self.key()}-{self.database}.sql').as_posix()

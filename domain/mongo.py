@@ -17,7 +17,7 @@ class MongoSource(base.AbstractDBSource):
         self.host = self.context.param.param_main_db_mongo_host
         self.port = self.context.param.param_main_db_mongo_port
         self.username = self.context.param.param_main_db_mongo_username
-        self.password = self.context.param.param_main_db_mongo_password or pathlib.Path(self.context.param.param_main_db_mongo_password_file).read_text().strip("\r\n")
+        self.password = self.context.param.get('param_main_db_mongo_password') or pathlib.Path(self.context.param.param_main_db_mongo_password_file).read_text().strip("\r\n")
         self.database = self.context.param.param_main_db_mongo_database
 
     def key(self) -> str:
