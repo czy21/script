@@ -33,9 +33,7 @@ def deploy(Map inputs) {
     ]
     chartMap.get(inputs.param_code_type).call()
 
-    def helm_cmd = inputs.param_helm_repo.startsWith('oci://')
-            ? "helm upgrade --install ${inputs.param_release_name} ${inputs.param_release_chart_name} --version ${inputs.param_release_chart_version} --namespace ${inputs.param_release_namespace} --repo ${inputs.param_helm_repo} --values .jenkins/inputs.yaml --reset-values --server-side=true --output yaml"
-            : "helm upgrade --install ${inputs.param_release_name} ${inputs.param_helm_repo}/${inputs.param_release_chart_name} --version ${inputs.param_release_chart_version} --namespace ${inputs.param_release_namespace} --values .jenkins/inputs.yaml --reset-values --server-side=true --output yaml"
+    def helm_cmd = "helm upgrade --install ${inputs.param_release_name} ${inputs.param_helm_repo}/${inputs.param_release_chart_name} --version ${inputs.param_release_chart_version} --namespace ${inputs.param_release_namespace} --values .jenkins/inputs.yaml --reset-values --server-side=true --output yaml"
 
     sh "${helm_cmd}"
 }

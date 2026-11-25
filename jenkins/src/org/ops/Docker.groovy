@@ -32,9 +32,19 @@ def build(Map inputs) {
 
     def docker_image_tag = "${inputs.param_release_image}:${inputs.param_release_version}"
 
+    def docker_base_image_arg = ""
+
+    if (!"empty".equals(inputs.param_docker_base_image)) {
+        if (StringUtils.isNotEmpty(inputs.param_docker_base_image)) {
+            docker_base_image_arg = "--build-arg BASE_IMAGE=${inputs.param_docker_base_image}"
+        } else {
+            docker_base_image_arg = "--build-arg BASE_IMAGE=${inputs.param_registry}/${inputs.param_registry_dir}/${inputs.get('param_tool_' + inputs.param_code_type + '_version')}"
+        }
+    }
+
     sh """
     docker info
-    docker build --pull --tag ${docker_image_tag} --build-arg BASE_IMAGE=${inputs.param_registry}/${inputs.param_registry_dir}/${inputs.get('param_tool_' + inputs.param_code_type + '_version')} ${inputs.param_docker_build_args ?: ''} --file ${docker_file} ${inputs.param_docker_context}
+    docker build --pull --tag ${docker_image_tag} ${docker_base_image_arg ?: ''} ${inputs.param_docker_build_args ?: ''} --file ${docker_file} ${inputs.param_docker_context}
     docker push ${docker_image_tag}
     docker rmi ${docker_image_tag}
     """

@@ -26,6 +26,3 @@ spec:
           ports:
             - name: http
               containerPort: 80
-          env:
-            - name: TZ
-              value: Asia/Shanghai
